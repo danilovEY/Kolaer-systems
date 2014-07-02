@@ -1,3 +1,4 @@
+
 package ru.kolaer.GUI;
 
 import java.awt.BorderLayout;
@@ -12,12 +13,15 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import ru.kolaer.tools.XMLFile;
 
 import com.alee.laf.menu.WebMenu;
 import com.alee.laf.menu.WebMenuBar;
 import com.alee.laf.menu.WebMenuItem;
+import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.tabbedpane.WebTabbedPane;
@@ -64,8 +68,7 @@ public class MainFrame extends WebFrame
 	{
 		
 
-		this.data = new XMLFile("Data.xml");
-		final ArrayList<GroupDesktopLabels> groupDesktopLabels = data.getAllGroupDesktopLabels();
+		
 		
 		Image img = new ImageIcon(Resources.AER_LOGO).getImage();
 		
@@ -78,6 +81,7 @@ public class MainFrame extends WebFrame
 	    this.setLocationRelativeTo(null);
 		this.setTopBg(new Color(100, 100, 100));
 		this.setMiddleBg(new Color(100, 100, 100));
+		this.getContentPane().setBackground(new Color(100, 100, 100));
 		this.addWindowListener(new WindowAdapter()
 		{
 			@Override
@@ -92,30 +96,35 @@ public class MainFrame extends WebFrame
 		final WebTabbedPane tabbedPane = new WebTabbedPane ();
 		tabbedPane.setPreferredSize ( new Dimension ( 600, 500 ) );
 		tabbedPane.setTabPlacement ( WebTabbedPane.LEFT );
-		tabbedPane.setFont(new Font("Tahoma", Font.BOLD, 17));
+		tabbedPane.setFont(new Font("Tahoma", Font.BOLD, 15));
 		tabbedPane.setTopBg(new Color(150, 150, 150));
+		tabbedPane.setBackground(new Color(150, 150, 150));
 		tabbedPane.setBottomBg(new Color(150, 150, 150));
 		//tabbedPane.setForeground(Color.RED); - цвет текста
-
-
 		
-
-
-		
-		
-        
-        for(int iGroup = 0; iGroup<groupDesktopLabels.size();iGroup++)
-        {
-        	GroupDesktopLabels groupLabels = groupDesktopLabels.get(iGroup);
-        	groupLabels.setEditMode(editMode);
-        	WebScrollPane scrollPanel = new WebScrollPane(groupLabels, false, true);
-        	tabbedPane.add(groupLabels.getGroupName(),scrollPanel);
-        }
+		new Thread(new Runnable()
+		{
+			
+			@Override
+			public void run()
+			{
+				data = new XMLFile("Data.xml");
+				final ArrayList<GroupDesktopLabels> groupDesktopLabels = data.getAllGroupDesktopLabels();
+		        
+		        for(int iGroup = 0; iGroup<groupDesktopLabels.size();iGroup++)
+		        {
+		        	GroupDesktopLabels groupLabels = groupDesktopLabels.get(iGroup);
+		        	groupLabels.setEditMode(editMode);
+		        	WebScrollPane scrollPanel = new WebScrollPane(groupLabels, false, true);
+		        	tabbedPane.add(groupLabels.getGroupName(),scrollPanel);
+		        }
+			}
+		}).start();
 		
 		//=============Menu bar==================
 		menuBar = new WebMenuBar();
 		menuBar.setUndecorated ( true );
-		menuBar.setBackground(new Color(150, 150, 150));
+		menuBar.setBackground(new Color(100, 100, 100));
 				
 		WebMenu fileMenu = new WebMenu ( "Файл" );
 		WebMenu tabsMenu = new WebMenu("Вкладки");
@@ -138,10 +147,38 @@ public class MainFrame extends WebFrame
 				{
 					groupLabels.setXmlElement(data.creatGroupDesktopLabels());
 					groupLabels.updataXML();
-					groupDesktopLabels.add(groupLabels);
+					groupLabels.setEditMode(editMode);
 					WebScrollPane scrollPanel = new WebScrollPane(groupLabels, false, true);
 					tabbedPane.add(groupLabels.getGroupName(),scrollPanel);
 				}
+			}
+		});
+		
+		final WebMenuItem removeTab = new WebMenuItem("Удалить вкладку");
+		removeTab.setVisible(false);
+			
+		removeTab.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				WebScrollPane scPanel = (WebScrollPane) tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
+				if(scPanel == null)
+				{
+					return;
+				}
+				GroupDesktopLabels groupLabels = (GroupDesktopLabels) scPanel.getViewport().getView();
+				
+				if(WebOptionPane.showConfirmDialog ( getOwner(), "Вы действительно хотите удалить вкладку \""+groupLabels.getGroupName()+"\" и все ее ярлыки?",
+						"Удалить вкладку?",
+                        WebOptionPane.YES_NO_OPTION,
+                        WebOptionPane.QUESTION_MESSAGE ) == WebOptionPane.YES_OPTION)
+				{
+				tabbedPane.remove(tabbedPane.getComponentAt(tabbedPane.getSelectedIndex()));
+				groupLabels.getXmlElement().getParentNode().removeChild(groupLabels.getXmlElement());
+				}
+			
 			}
 		});
 		
@@ -155,11 +192,41 @@ public class MainFrame extends WebFrame
 				System.exit(0);
 			}
 		});
+		
+		tabsMenu.addMenuListener(new MenuListener()
+		{
+			
+			@Override
+			public void menuSelected(MenuEvent arg0)
+			{
+
+				if(tabbedPane.getTabCount()>0)
+				{
+					removeTab.setText("Удалить вкладку: "+tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
+					removeTab.setVisible(true);
+				}
+				else
+				{
+					removeTab.setVisible(false);
+				}
+			}
+			
+			@Override
+			public void menuDeselected(MenuEvent arg0)
+			{
+			}
+			
+			@Override
+			public void menuCanceled(MenuEvent arg0)
+			{
+			}
+		});
 				
 		fileMenu.addSeparator();
 		fileMenu.add(exitMenuItem);
 		
 		tabsMenu.add(addTab);
+		tabsMenu.add(removeTab);
 				
 		menuBar.add(fileMenu);
 		menuBar.add(tabsMenu);
@@ -167,7 +234,9 @@ public class MainFrame extends WebFrame
 		
 
         if(editMode)
-           this.setJMenuBar(this.menuBar);
+        {
+        	this.add(this.menuBar,BorderLayout.NORTH);
+        }
 		
         this.add(tabbedPane,BorderLayout.CENTER);
 

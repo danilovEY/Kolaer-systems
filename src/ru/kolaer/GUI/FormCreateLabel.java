@@ -103,15 +103,15 @@ public class FormCreateLabel extends WebDialog
 		this.nameLabelText.setText(this.label.getTitleName());
 		
 		//=========Image=============
-		if(this.label.getImage()== null)
+		if(this.label.getImage().equals("null"))
 		{
 			noneIcon.setSelected(true);
 			iconLabelImage.setImage(new WebImage("").getImage());
-			pathImageText.setText("");
+			pathImageText.setText("null");
 		}
 		else
 		{
-			if(this.label.getImage().equals(""))
+			if(this.label.getImage().equals("default"))
 			{
 				defaultIcon.setSelected(true);
 				iconLabelImage.setImage(new WebImage(Resources.AER_ICON).getImage());
@@ -119,6 +119,7 @@ public class FormCreateLabel extends WebDialog
 			}
 			else
 			{
+				fileIcon.setSelected(true);
 				iconLabelImage.setImage(new WebImage(this.label.getImage()).getImage());
 				pathImageText.setText(this.label.getImage());
 			}
@@ -191,7 +192,7 @@ public class FormCreateLabel extends WebDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				pathImageText.setText("");
+				pathImageText.setText("null");
 				pathImageText.setEditable(false);
 				iconLabelImage.setImage( new WebImage("").getImage());
 			}
@@ -199,7 +200,7 @@ public class FormCreateLabel extends WebDialog
         
         //===============Иконка по-умолчанию================
         defaultIcon = new WebRadioButton ( "Стандартная" );
-        defaultIcon.setSelected ( true );
+        //defaultIcon.setSelected ( true );
         defaultIcon.addActionListener(new ActionListener()
 		{
 			
@@ -317,7 +318,7 @@ public class FormCreateLabel extends WebDialog
         appLabelPanel.add(new GroupPanel(10,false,chooseFile,chooseURL),BorderLayout.CENTER);
         
         //=====================Info================================
-        infoTextArea = new WebTextArea ();
+        infoTextArea = new WebTextArea ("");
         infoTextArea.setLineWrap ( true );
         infoTextArea.setWrapStyleWord ( true );
         
@@ -332,6 +333,7 @@ public class FormCreateLabel extends WebDialog
         WebPanel infoPanel =new WebPanel(new BorderLayout());
         infoPanel.add(infoLabel,BorderLayout.NORTH);
         infoPanel.add(textInfoScroll,BorderLayout.CENTER);
+        infoPanel.setVisible(true);
         
         //========================Button===========================
         WebButton createLabel = new WebButton(TEXT_MODE_LABEL);
@@ -347,12 +349,15 @@ public class FormCreateLabel extends WebDialog
 				String titleName = nameLabelText.getText();
 
 				String app = null;
+				
 				if (urlRadioBut.isSelected())
 				{
+					app = urlText.getText();
+					
 					if(!Application.isURL(app))
 					{
 						showErr = true;
-						messErr += "-Ссылка имеет неправильный формат. Возможно нет добовления: \"http:\\\\\".\n";
+						messErr += "-Ссылка имеет неправильный формат. Возможно нет добовления: \"http://\".\n";
 					}
 					else
 					{
@@ -382,6 +387,7 @@ public class FormCreateLabel extends WebDialog
 				if (!edit)
 				{
 					label = new DefaultDesktopLabel(titleName, app, image, info);
+					
 				} 
 				else
 				{
@@ -391,6 +397,8 @@ public class FormCreateLabel extends WebDialog
 					label.setInfo(info);
 					label.update();
 				}
+				
+				label.setEditMode(true);
 				
 				setVisible(false);
 			}

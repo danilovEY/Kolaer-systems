@@ -6,9 +6,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.SwingConstants;
 
 import org.w3c.dom.Element;
@@ -16,13 +17,15 @@ import org.w3c.dom.Element;
 import com.alee.extended.image.DisplayType;
 import com.alee.extended.image.WebImage;
 import com.alee.extended.painter.BorderPainter;
-import com.alee.extended.panel.WebButtonGroup;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
+import com.alee.laf.menu.WebMenuItem;
+import com.alee.laf.menu.WebPopupMenu;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.text.WebTextArea;
-import com.alee.utils.SwingUtils;
+import com.alee.managers.tooltip.TooltipManager;
+import com.alee.managers.tooltip.TooltipWay;
 
 /**
  * Стандартный вид ярлыка.
@@ -42,10 +45,15 @@ public class DefaultDesktopLabel extends DesktopLabel
 	private WebImage iconLabel;
 	
 	/**Панель я информацией о ярлыке.*/
-	private WebTextArea editPanel;
+	//private WebTextArea editPanel;
 	
-	/**Системная панель.*/
-	private WebPanel sysPanel;
+	/**Кнопка запускающая задачу.*/
+	private WebButton runBut;
+	
+	/**Меню.*/
+	private WebPopupMenu popMenu;
+	
+	private boolean editMode = false;
 	
 	protected DefaultDesktopLabel()
 	{
@@ -77,15 +85,12 @@ public class DefaultDesktopLabel extends DesktopLabel
 	{	
 		this.application = new Application(this.app);
 		
-		//==============System Panel==================
-		sysPanel = new WebPanel();
-		sysPanel.setLayout(new BorderLayout());
-		sysPanel.setBackground(new Color(50,50,50));
-		sysPanel.setVisible(false);
+		//=================PopUp Menu===========================
+		this.popMenu = new WebPopupMenu();
+	    this.popMenu.setBackground(new Color(150,150,150));
 		
-		//=============Button Edit Label===============
-		WebButton editLabel = new WebButton("Редактировать ярлык");
-		editLabel.addActionListener(new ActionListener()
+		WebMenuItem editLabelMenu = new WebMenuItem("Редактировать ярлык");
+		editLabelMenu.addActionListener(new ActionListener()
 		{
 			
 			@Override
@@ -99,11 +104,9 @@ public class DefaultDesktopLabel extends DesktopLabel
 				updataXML();
 			}
 		});
-
 		
-		//=============Button Del Label===============
-		WebButton removeLabel = new WebButton("Удалить ярлык");
-		removeLabel.addActionListener(new ActionListener()
+		WebMenuItem removeLabelMenu = new WebMenuItem("Удалить ярлык");
+		removeLabelMenu.addActionListener(new ActionListener()
 		{
 			
 			@Override
@@ -111,23 +114,43 @@ public class DefaultDesktopLabel extends DesktopLabel
 			{
 				if(xmlLabelElement!=null)
 				  xmlLabelElement.getParentNode().removeChild(xmlLabelElement);
+				
 				setVisible(false);
 			}
 		});
 		
+		this.popMenu.add(editLabelMenu);
+		this.popMenu.add(removeLabelMenu);
 		
-		//=============Sys Button group===============
-		WebButtonGroup sysButGroup = new WebButtonGroup ( true, editLabel, removeLabel );
-		SwingUtils.equalizeComponentsWidths(editLabel,removeLabel);
+		this.addMouseListener(new MouseAdapter()
+		{
+		    public void mousePressed(MouseEvent e){
+		        if (e.isPopupTrigger())
+		            doPop(e);
+		    }
+
+		    public void mouseReleased(MouseEvent e){
+		        if (e.isPopupTrigger())
+		            doPop(e);
+		    }
+
+		    private void doPop(MouseEvent e)
+		    {
+		    	if(editMode)
+		    		popMenu.show(e.getComponent(), e.getX()-30, e.getY());
+		    }
+		});
+		
 
 		//==============Desktop Panel=================
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		this.setBackground(new Color(50,50,50));
-		Dimension sizeDLabel = new Dimension(400, 130);
+		Dimension sizeDLabel = new Dimension(500, 100);
 		this.setPreferredSize(sizeDLabel);
 		this.setMinimumSize(sizeDLabel);
-		
+	    this.setMaximumSize(sizeDLabel);
+	    
 		//==============Border for Main panel=================
 		@SuppressWarnings("rawtypes")
 		BorderPainter borderPainterMainPanel = new BorderPainter ();
@@ -146,10 +169,13 @@ public class DefaultDesktopLabel extends DesktopLabel
 		
 		//==============Panel for Button and TextInfo=================
 		WebPanel contPanel = new WebPanel();
-		contPanel.setLayout(new BoxLayout(contPanel, BoxLayout.Y_AXIS));
+		contPanel.setLayout(new WrapLayout());
+		contPanel.setBackground(new Color(50,50,50));
 		
 		//==============Button=================
-		WebButton runBut = new WebButton("Открыть");
+		runBut = new WebButton(this.info);
+		Dimension sizeBut = new Dimension(350, 30);
+		runBut.setPreferredSize(sizeBut);
 		runBut.setBottomBgColor(new Color(20,20,20));
 		runBut.setTopBgColor(new Color(100,100,100));
 		runBut.setShadeColor(Color.YELLOW);
@@ -167,7 +193,7 @@ public class DefaultDesktopLabel extends DesktopLabel
 		});
 		
 		//==============TextInfo=================
-		this.editPanel = new WebTextArea();
+		/*this.editPanel = new WebTextArea();
 		this.editPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		this.editPanel.setEditable(false);
 		this.editPanel.setText(this.info);
@@ -175,53 +201,47 @@ public class DefaultDesktopLabel extends DesktopLabel
 		this.editPanel.setWrapStyleWord ( true );
 
         WebScrollPane textInfoScroll = new WebScrollPane ( this.editPanel );
-        textInfoScroll.setPreferredSize ( new Dimension ( 200, 150 ) );
+        textInfoScroll.setPreferredSize ( new Dimension ( 200, 150 ) );*/
         
         //==============Image=================
         iconLabel = new WebImage(this.image);
+        
         if(this.image.equals("default"))
         {
         	iconLabel = new WebImage(Resources.AER_ICON);
         }
-        iconLabel.setDisplayType ( DisplayType.fitComponent );
-        iconLabel.setPreferredSize ( new Dimension(100, 100) );
-        if(this.image.equals(""))
+        else
         {
-        	iconLabel.setVisible(false);
+        	if(this.image.equals("null"))
+            {
+            	iconLabel.setVisible(false);
+            }
         }
+        iconLabel.setDisplayType ( DisplayType.fitComponent );
+        
+        iconLabel.setPreferredSize ( new Dimension(100, 100) );
+       
 		
+        //============Tooltip===========================
+        TooltipManager.setTooltip ( runBut, this.info, TooltipWay.down, 0 );
+        
         //==============Panel for icon=================
         WebPanel iconPanel = new WebPanel(new BorderLayout());
         iconPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         iconPanel.setBackground(new Color(50,50,50));
         iconPanel.add(iconLabel);
-        
-		//==============Panel for Button=================
-		WebPanel runButPanel = new WebPanel(new BorderLayout());
-		runButPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		runButPanel.setBackground(new Color(50,50,50));
-		runButPanel.add(runBut);
+        iconPanel.setVisible(iconLabel.isVisible());
 		
 		//==============Panel for TextInfo=================
-		WebPanel panelEditPanel = new WebPanel(new BorderLayout());
+		/*WebPanel panelEditPanel = new WebPanel(new BorderLayout());
 		panelEditPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		panelEditPanel.setBackground(new Color(50,50,50));
-		panelEditPanel.add(textInfoScroll);
-		
-		//==============System Panel=================
-		WebPanel sysAndLabelPanel = new WebPanel(new BorderLayout());
-		sysAndLabelPanel.setBackground(new Color(50,50,50));
-		sysAndLabelPanel.add(sysPanel,BorderLayout.CENTER);
-		sysAndLabelPanel.add(this.labelTitle,BorderLayout.NORTH);
+		panelEditPanel.add(textInfoScroll);*/
 		
 		
+		contPanel.add(labelTitle);
+		contPanel.add(runBut);
 		
-		sysPanel.add(sysButGroup,BorderLayout.LINE_END);
-		
-		contPanel.add(runButPanel);
-		contPanel.add(panelEditPanel);
-		
-		mainPanel.add(sysAndLabelPanel,BorderLayout.NORTH);
 		mainPanel.add(contPanel,BorderLayout.CENTER);
 		mainPanel.add(iconPanel,BorderLayout.WEST);
 		
@@ -230,7 +250,7 @@ public class DefaultDesktopLabel extends DesktopLabel
 
 	public void setEditMode(boolean mode)
 	{
-		this.sysPanel.setVisible(mode);
+		this.editMode=mode;
 	}
 	
 	private DesktopLabel getThis()
@@ -242,14 +262,33 @@ public class DefaultDesktopLabel extends DesktopLabel
 	public void update()
 	{
 		this.labelTitle.setText(this.titleName);
-		this.iconLabel.setImage(new WebImage(this.image).getImage());
+		if (this.image.equals("default"))
+		{
+			this.iconLabel.setImage(new WebImage(Resources.AER_ICON).getImage());
+		} 
+		else
+		{
+			if (this.image.equals("null"))
+			{
+				iconLabel.setVisible(false);
+			} 
+			else
+			{
+				this.iconLabel.setImage(new WebImage(this.image).getImage());
+			}
+		}
+
 		this.application = new Application(this.app);
-		this.editPanel.setText(this.info);
+		// this.editPanel.setText(this.info);
+		this.runBut.setText(this.info);
+		
+		
+		
 	}
 
 	@Override
 	public boolean isEditMode()
 	{
-		return this.sysPanel.isVisible();
+		return this.editMode;
 	}
 }

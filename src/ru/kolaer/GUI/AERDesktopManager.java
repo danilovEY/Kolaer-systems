@@ -16,7 +16,7 @@ public class AERDesktopManager
 			{
                 WebLookAndFeel.install();
                 
-                WebLookAndFeel.setDecorateAllWindows(true);
+                //WebLookAndFeel.setDecorateAllWindows(true);
                 
 				MainFrame frame = new MainFrame(args);
 				frame.setVisible(true);

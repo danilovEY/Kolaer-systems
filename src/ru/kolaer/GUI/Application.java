@@ -1,5 +1,6 @@
 package ru.kolaer.GUI;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -97,7 +98,14 @@ public class Application implements ApplicationInt, Runnable
 				}
 				else
 				{
-					r.exec("cmd /C "+"\""+this.pathApp+"\"");
+					if(new File(this.pathApp).isDirectory())
+					{
+						r.exec("explorer.exe "+"\""+this.pathApp+"\"");
+					}
+					else
+					{
+						r.exec("cmd /C "+"\""+this.pathApp+"\"");
+					}
 				}
 			}
 			else

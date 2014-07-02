@@ -7,8 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
-
 import org.w3c.dom.Element;
 
 import ru.kolaer.tools.XMLFile;
@@ -100,7 +98,7 @@ public class GroupDesktopLabels extends WebPanel implements DataXML
 		
 		//===========Panel for list labels==============
 		this.contentPanel = new WebPanel();
- 		this.contentPanel.setLayout(new BoxLayout(this.contentPanel, BoxLayout.Y_AXIS));
+ 		this.contentPanel.setLayout(new WrapLayout());
  		this.contentPanel.setBackground(new Color(50,50,50));
 				
 		
