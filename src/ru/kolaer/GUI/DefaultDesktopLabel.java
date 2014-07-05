@@ -212,7 +212,7 @@ public class DefaultDesktopLabel extends DesktopLabel
         }
         else
         {
-        	if(this.image.equals("null"))
+        	if(this.image.equals("null") || this.image.equals(""))
             {
             	iconLabel.setVisible(false);
             }
@@ -238,9 +238,13 @@ public class DefaultDesktopLabel extends DesktopLabel
 		panelEditPanel.setBackground(new Color(50,50,50));
 		panelEditPanel.add(textInfoScroll);*/
 		
+        WebPanel labelAndButPanel = new WebPanel(new BorderLayout());
+        labelAndButPanel.setBackground(new Color(50,50,50));
+        labelAndButPanel.add(labelTitle,BorderLayout.NORTH);
+        labelAndButPanel.add(runBut,BorderLayout.CENTER);
 		
-		contPanel.add(labelTitle);
-		contPanel.add(runBut);
+		contPanel.add(labelAndButPanel);
+		//contPanel.add(runBut);
 		
 		mainPanel.add(contPanel,BorderLayout.CENTER);
 		mainPanel.add(iconPanel,BorderLayout.WEST);

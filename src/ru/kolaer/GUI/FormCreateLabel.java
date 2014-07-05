@@ -149,7 +149,6 @@ public class FormCreateLabel extends WebDialog
 		this.setDefaultCloseOperation ( WebDialog.DISPOSE_ON_CLOSE );
 		this.setResizable ( false );
 		this.setModal ( true );
-		this.setLocationRelativeTo(getRootPane());
         
 		//==================Основная форма======================
 		TableLayout layout = new TableLayout ( new double[][]{ { TableLayout.FILL},
@@ -427,6 +426,9 @@ public class FormCreateLabel extends WebDialog
         mainPanel.add(butPanel,      "0,4");
         
         this.add(mainPanel,BorderLayout.CENTER);
+        
+        pack();
+        this.setLocationRelativeTo(null);
 	}
 	
 	public DesktopLabel getCreatedDesktopLabel()

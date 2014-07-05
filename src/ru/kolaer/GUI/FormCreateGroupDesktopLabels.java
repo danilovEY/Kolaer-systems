@@ -98,6 +98,9 @@ public class FormCreateGroupDesktopLabels extends WebDialog
         
         add(mainPanel,BorderLayout.CENTER);
         add(groupBut,BorderLayout.SOUTH);
+        
+        pack();
+        this.setLocationRelativeTo(null);
 	}
 
 	public GroupDesktopLabels getCreatedGroupLabels()
