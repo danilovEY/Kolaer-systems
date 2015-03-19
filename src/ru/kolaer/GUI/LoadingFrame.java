@@ -17,20 +17,23 @@ import com.alee.laf.rootpane.WebDialog;
 @SuppressWarnings("serial")
 public class LoadingFrame extends WebDialog
 {
+	private WebProgressBar progressBar;
+	
 	public LoadingFrame(JRootPane pane, String title)
 	{
 		super(pane, title);
 
-		WebProgressBar progressBar3 = new WebProgressBar();
-		progressBar3.setIndeterminate(true);
-		progressBar3.setStringPainted(true);
-		progressBar3.setString("Пожалуйста подождите...");
+		this.progressBar = new WebProgressBar();
+		this.progressBar.setIndeterminate(true);
+		this.progressBar.setStringPainted(true);
+		this.progressBar.setString("Пожалуйста подождите...");
 
 		WebPanel mainPanel = new WebPanel(new BorderLayout());
-		mainPanel.add(progressBar3, BorderLayout.CENTER);
+		mainPanel.add(this.progressBar, BorderLayout.CENTER);
 		setContentPane(mainPanel);
 		setResizable(false);
 		pack();
 		setLocationRelativeTo(null);
 	}
+	
 }

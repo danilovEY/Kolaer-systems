@@ -6,10 +6,15 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import ru.kolaer.tools.XMLFile;
+import ru.kolaer.tools.DataBaseSettingXml;
+import ru.kolaer.tools.XmlElementInt;
+import ru.kolaer.tools.DataBaseLabelsXml;
 
 import com.alee.extended.painter.BorderPainter;
 import com.alee.laf.button.WebButton;
@@ -21,8 +26,10 @@ import com.alee.laf.panel.WebPanel;
  *
  */
 @SuppressWarnings("serial")
-public class GroupDesktopLabels extends WebPanel implements DataXML
+public class GroupDesktopLabels extends WebPanel implements XmlElementInt
 {
+	private static final Logger log = LoggerFactory.getLogger(GroupDesktopLabels.class);	
+	
 	/**Сохранение данных в xml док-те.*/
 	private Element xmlElement;
 	
@@ -35,10 +42,16 @@ public class GroupDesktopLabels extends WebPanel implements DataXML
 	/**Системная панель.*/
 	private WebPanel systemPanel;
 	
-	public GroupDesktopLabels(Element groupEl)
+	private DataBaseSettingXml setting;
+	
+	private DataBaseLabelsXml xmlFile;
+	
+	public GroupDesktopLabels(DataBaseSettingXml setting, DataBaseLabelsXml xmlFile,Element groupEl)
 	{
 		this.xmlElement = groupEl;
+		this.xmlFile = xmlFile;
 		this.groupName = this.xmlElement.getAttribute("name");
+		this.setting = setting;
 		init();
 	}
 
@@ -46,10 +59,13 @@ public class GroupDesktopLabels extends WebPanel implements DataXML
 	 * 
 	 * @param name - Название группы.
 	 */
-	public GroupDesktopLabels(String name)
+	public GroupDesktopLabels(DataBaseSettingXml setting, String name)
 	{
 		this.groupName = name;
+		this.xmlFile = null;
+		this.setting = setting;
 		init();
+		
 	}
 	
 	private void init()
@@ -72,7 +88,7 @@ public class GroupDesktopLabels extends WebPanel implements DataXML
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				FormCreateLabel form = new FormCreateLabel(getRootPane());
+				FormCreateLabel form = new FormCreateLabel(GroupDesktopLabels.this.setting, getRootPane());
 				form.pack();
 				form.setVisible(true);
 				
@@ -81,11 +97,12 @@ public class GroupDesktopLabels extends WebPanel implements DataXML
 				{
 					contentPanel.add(label);
 
-					Element labelElement = xmlElement.getOwnerDocument().createElement(XMLFile.LABEL);
+					Element labelElement = xmlElement.getOwnerDocument().createElement(DataBaseLabelsXml.LABEL);
 
 					xmlElement.appendChild(labelElement);
 					
 					label.setXmlLabelElement(labelElement);
+					label.setXmlFile(xmlFile);
 					label.updataXML();
 				}
 			}
@@ -158,6 +175,27 @@ public class GroupDesktopLabels extends WebPanel implements DataXML
 	public void updataXML()
 	{
 		this.xmlElement.setAttribute("name", this.groupName);
+		
+		try
+		{
+			if(this.xmlFile != null)
+				this.xmlFile.save();
+		} catch (IOException e)
+		{
+			log.error("Сохранить группу ярлыков \""+this.groupName+"\" не удалось");
+			log.error(e.getMessage());
+		}
+		
+	}
+
+	public DataBaseLabelsXml getXmlFile()
+	{
+		return xmlFile;
+	}
+
+	public void setXmlFile(DataBaseLabelsXml xmlFile)
+	{
+		this.xmlFile = xmlFile;
 	}
 	
 	

@@ -5,12 +5,20 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 
 import javax.swing.JRootPane;
 import javax.swing.SwingConstants;
+
+import ru.kolaer.tools.Application;
+import ru.kolaer.tools.DataBaseSettingXml;
+import ru.kolaer.tools.Resources;
 
 import com.alee.extended.filechooser.WebFileChooserField;
 import com.alee.extended.image.DisplayType;
@@ -48,6 +56,7 @@ public class FormCreateLabel extends WebDialog
 	
 	/**Иконка ярлыка.*/
 	private  WebImage iconLabelImage;
+	private  WebPanel iconLabelImagePanel;
 	
 	/**Флаг - без иконки.*/
 	private WebRadioButton noneIcon;
@@ -72,28 +81,32 @@ public class FormCreateLabel extends WebDialog
 	/**Поле для информации о ярлыке.*/
 	private  WebTextArea infoTextArea;
 	
+	private DataBaseSettingXml setting;
+	
 	/**Текст на кнопке.*/
 	private String TEXT_MODE_LABEL = "";
 	private final static String TEXT_EDIT_LABEL = "Редактировать ярлык";
 	private final static String TEXT_CREATE_LABEL = "Создать ярлык";
 	
 	
-	public FormCreateLabel(JRootPane rootPanel,DesktopLabel label)
+	public FormCreateLabel(DataBaseSettingXml setting, JRootPane rootPanel,DesktopLabel label)
 	{
 		super(rootPanel,TEXT_EDIT_LABEL);
-		TEXT_MODE_LABEL = TEXT_EDIT_LABEL;
+		this.TEXT_MODE_LABEL = TEXT_EDIT_LABEL;
 		this.label = label;
 		this.edit = true;
+		this.setting = setting;
 		init();
 		editInit();
 	}
 	
-	public FormCreateLabel(JRootPane rootPanel)
+	public FormCreateLabel(DataBaseSettingXml setting, JRootPane rootPanel)
 	{
 		super(rootPanel,TEXT_CREATE_LABEL);
-		TEXT_MODE_LABEL = TEXT_CREATE_LABEL;
+		this.TEXT_MODE_LABEL = TEXT_CREATE_LABEL;
 		this.label = null; 
 		this.edit = false;
+		this.setting = setting;
 		init();
 	}
 	
@@ -153,11 +166,11 @@ public class FormCreateLabel extends WebDialog
 		//==================Основная форма======================
 		TableLayout layout = new TableLayout ( new double[][]{ { TableLayout.FILL},
                 { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL } } );
-        layout.setHGap ( 5 );
+        layout.setHGap ( 15 );
         layout.setVGap ( 15 );
         
         WebPanel mainPanel = new WebPanel(layout);
-        
+        iconLabelImagePanel = new WebPanel(new BorderLayout());
         //================Named Labels=======================
         WebLabel nameLabel = new WebLabel("Название ярлыка");
         nameLabel.setForeground(Color.BLACK);
@@ -178,7 +191,7 @@ public class FormCreateLabel extends WebDialog
         iconLabelImage = new WebImage(Resources.AER_ICON);
         iconLabelImage.setDisplayType ( DisplayType.fitComponent );
         iconLabelImage.setPreferredSize ( new Dimension(64, 64) );
-        
+        iconLabelImagePanel.add(iconLabelImage,BorderLayout.CENTER);
         //=============Path Image======================
         pathImageText = new WebTextField ("default");
         pathImageText.setEditable(false);
@@ -208,7 +221,13 @@ public class FormCreateLabel extends WebDialog
 			{
 				pathImageText.setText("default");
 				pathImageText.setEditable(false);
-				iconLabelImage.setImage( new WebImage(Resources.AER_ICON).getImage());
+				//iconLabelImage.setImage( new WebImage(Resources.AER_ICON).getImage());
+				iconLabelImage = new WebImage(Resources.AER_ICON);
+		        iconLabelImage.setDisplayType ( DisplayType.fitComponent );
+		        iconLabelImage.setPreferredSize ( new Dimension(64, 64) );
+		        iconLabelImagePanel.removeAll();
+		        iconLabelImagePanel.add(iconLabelImage,BorderLayout.CENTER);
+		        iconLabelImagePanel.updateUI();
 			}
 		});
         
@@ -216,12 +235,16 @@ public class FormCreateLabel extends WebDialog
         fileIcon = new WebRadioButton ( "Из файла" );
         fileIcon.addActionListener ( new ActionListener ()
         {
-            private WebFileChooser fileChooser = null;
+            private WebFileChooser fileChooser = new WebFileChooser();
             private File file = null;
 
             @Override
             public void actionPerformed ( ActionEvent e )
             {
+            	fileChooser.setMultiSelectionEnabled ( false );
+            	fileChooser.setAcceptAllFileFilterUsed ( false );
+            	fileChooser.addChoosableFileFilter ( com.alee.global.GlobalConstants.IMAGES_FILTER );
+            	
                 if ( fileChooser == null )
                 {
                     fileChooser = new WebFileChooser ();
@@ -236,10 +259,41 @@ public class FormCreateLabel extends WebDialog
                     file = fileChooser.getSelectedFile ();
                     pathImageText.setEditable(false);
                     pathImageText.setText(file.getPath());
-                    iconLabelImage.setImage( new WebImage(pathImageText.getText()).getImage());
+    				iconLabelImage = new WebImage(pathImageText.getText());
+    		        iconLabelImage.setDisplayType ( DisplayType.fitComponent );
+    		        iconLabelImage.setPreferredSize ( new Dimension(64, 64) );
+    		        iconLabelImagePanel.removeAll();
+    		        iconLabelImagePanel.add(iconLabelImage,BorderLayout.CENTER);
+    		        iconLabelImagePanel.updateUI();
                 }
             }
         } );
+        
+        pathImageText.addKeyListener(new KeyListener()
+		{
+			
+			@Override
+			public void keyTyped(KeyEvent e)
+			{
+				iconLabelImage = new WebImage(pathImageText.getText());
+		        iconLabelImage.setDisplayType ( DisplayType.fitComponent );
+		        iconLabelImage.setPreferredSize ( new Dimension(64, 64) );
+		        iconLabelImagePanel.removeAll();
+		        iconLabelImagePanel.add(iconLabelImage,BorderLayout.CENTER);
+		        iconLabelImagePanel.updateUI();
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+			}
+		});
+
         
       //===============Ввести путь к иконки================
         WebRadioButton enterIcon = new WebRadioButton ( "Ввести путь вручную" );
@@ -263,8 +317,8 @@ public class FormCreateLabel extends WebDialog
         WebPanel iconLabelPanel = new WebPanel(); 
         iconLabelPanel.setLayout(new BorderLayout());
         iconLabelPanel.add(iconLabel,BorderLayout.NORTH);
-        iconLabelPanel.add(iconLabelImage,BorderLayout.WEST);
-        iconLabelPanel.add(new GroupPanel(4,false,noneIcon,defaultIcon,fileIcon,enterIcon),BorderLayout.CENTER);
+        iconLabelPanel.add(iconLabelImagePanel,BorderLayout.CENTER);
+        iconLabelPanel.add(new GroupPanel(4,false,noneIcon,defaultIcon,fileIcon,enterIcon),BorderLayout.EAST);
         iconLabelPanel.add(pathImageText,BorderLayout.SOUTH);
         
         //==================Apps Label=======================
@@ -385,7 +439,7 @@ public class FormCreateLabel extends WebDialog
 				
 				if (!edit)
 				{
-					label = new DefaultDesktopLabel(titleName, app, image, info);
+					label = new DefaultDesktopLabel(FormCreateLabel.this.setting, titleName, app, image, info);
 					
 				} 
 				else
@@ -400,6 +454,7 @@ public class FormCreateLabel extends WebDialog
 				label.setEditMode(true);
 				
 				setVisible(false);
+				//dispose();
 			}
 		});
         
@@ -411,6 +466,7 @@ public class FormCreateLabel extends WebDialog
 			public void actionPerformed(ActionEvent e)
 			{
 				setVisible(false);
+				//dispose();
 			}
 		});
         
@@ -419,7 +475,7 @@ public class FormCreateLabel extends WebDialog
         butPanel.add(cancel);
         
         
-        mainPanel.add(nameLabelPanel,"0,0");
+        mainPanel.add(nameLabelPanel,"0,0");  
         mainPanel.add(iconLabelPanel,"0,1");
         mainPanel.add(appLabelPanel, "0,2");
         mainPanel.add(infoPanel,     "0,3");

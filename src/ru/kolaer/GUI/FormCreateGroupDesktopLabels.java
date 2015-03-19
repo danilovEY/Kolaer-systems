@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JRootPane;
 
+import ru.kolaer.tools.DataBaseSettingXml;
+
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.optionpane.WebOptionPane;
@@ -26,10 +28,13 @@ public class FormCreateGroupDesktopLabels extends WebDialog
 {	
 	private GroupDesktopLabels createdGroupLabels;
 	
-	public FormCreateGroupDesktopLabels(JRootPane rootPanel)
+	private DataBaseSettingXml setting;
+	
+	public FormCreateGroupDesktopLabels(DataBaseSettingXml setting, JRootPane rootPanel)
 	{
 		super(rootPanel,"Создать группу для ярлыков");
 		this.createdGroupLabels = null;
+		this.setting = setting;
 		this.init();
 	}
 	
@@ -72,7 +77,7 @@ public class FormCreateGroupDesktopLabels extends WebDialog
 					return;
 				}
 				
-				createdGroupLabels = new GroupDesktopLabels(nameGroup.getText());
+				createdGroupLabels = new GroupDesktopLabels(FormCreateGroupDesktopLabels.this.setting, nameGroup.getText());
 				setVisible(false);
 			}
 		});

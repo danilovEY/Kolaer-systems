@@ -14,6 +14,12 @@ import javax.swing.SwingConstants;
 
 import org.w3c.dom.Element;
 
+import ru.kolaer.tools.Application;
+import ru.kolaer.tools.ApplicationInt;
+import ru.kolaer.tools.DataBaseSettingXml;
+import ru.kolaer.tools.Resources;
+import ru.kolaer.tools.DataBaseLabelsXml;
+
 import com.alee.extended.image.DisplayType;
 import com.alee.extended.image.WebImage;
 import com.alee.extended.painter.BorderPainter;
@@ -22,10 +28,9 @@ import com.alee.laf.label.WebLabel;
 import com.alee.laf.menu.WebMenuItem;
 import com.alee.laf.menu.WebPopupMenu;
 import com.alee.laf.panel.WebPanel;
-import com.alee.laf.scroll.WebScrollPane;
-import com.alee.laf.text.WebTextArea;
+import com.alee.managers.notification.NotificationIcon;
+import com.alee.managers.notification.NotificationManager;
 import com.alee.managers.tooltip.TooltipManager;
-import com.alee.managers.tooltip.TooltipWay;
 
 /**
  * Стандартный вид ярлыка.
@@ -47,6 +52,8 @@ public class DefaultDesktopLabel extends DesktopLabel
 	/**Панель я информацией о ярлыке.*/
 	//private WebTextArea editPanel;
 	
+	private WebPanel iconPanel;
+	
 	/**Кнопка запускающая задачу.*/
 	private WebButton runBut;
 	
@@ -55,9 +62,9 @@ public class DefaultDesktopLabel extends DesktopLabel
 	
 	private boolean editMode = false;
 	
-	protected DefaultDesktopLabel()
+	protected DefaultDesktopLabel(DataBaseSettingXml setting)
 	{
-		super();
+		super(setting);
 		initialize();
 	}
 	
@@ -68,22 +75,22 @@ public class DefaultDesktopLabel extends DesktopLabel
 	 * @param image - Путь для иконки.
 	 * @param info - Информация.
 	 */
-	protected DefaultDesktopLabel(String titleName, String app,
+	protected DefaultDesktopLabel(DataBaseSettingXml setting, String titleName, String app,
 			String image, String info)
 	{
-		super(titleName, app, image, info);
+		super(setting,titleName, app, image, info);
 		initialize();
 	}
 
-	public DefaultDesktopLabel(Element element)
+	public DefaultDesktopLabel(DataBaseSettingXml setting,DataBaseLabelsXml xmlFile, Element element)
 	{
-		super(element);		
+		super(setting,xmlFile, element);		
 		initialize();
 	}
 
 	private void initialize()
 	{	
-		this.application = new Application(this.app);
+		this.application = new Application(this.setting, this.app);
 		
 		//=================PopUp Menu===========================
 		this.popMenu = new WebPopupMenu();
@@ -96,7 +103,7 @@ public class DefaultDesktopLabel extends DesktopLabel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				FormCreateLabel form = new FormCreateLabel(getRootPane(), getThis());
+				FormCreateLabel form = new FormCreateLabel(DefaultDesktopLabel.this.setting, getRootPane(), DefaultDesktopLabel.this);
 				form.pack();
 				form.setVisible(true);
 				
@@ -113,7 +120,11 @@ public class DefaultDesktopLabel extends DesktopLabel
 			public void actionPerformed(ActionEvent e)
 			{
 				if(xmlLabelElement!=null)
+				{
 				  xmlLabelElement.getParentNode().removeChild(xmlLabelElement);
+				  updataXML();
+				  NotificationManager.showNotification ( "Ярлык удален.", NotificationIcon.information.getIcon() );
+				}
 				
 				setVisible(false);
 			}
@@ -204,29 +215,34 @@ public class DefaultDesktopLabel extends DesktopLabel
         textInfoScroll.setPreferredSize ( new Dimension ( 200, 150 ) );*/
         
         //==============Image=================
-        iconLabel = new WebImage(this.image);
-        
-        if(this.image.equals("default"))
-        {
-        	iconLabel = new WebImage(Resources.AER_ICON);
-        }
-        else
-        {
-        	if(this.image.equals("null") || this.image.equals(""))
-            {
-            	iconLabel.setVisible(false);
-            }
-        }
-        iconLabel.setDisplayType ( DisplayType.fitComponent );
-        
+		iconLabel = new WebImage();
+
+		if (this.image.equals("default"))
+		{
+			iconLabel = new WebImage(Resources.AER_ICON);
+		} 
+		else
+		{
+			if (this.image.equals("null") || this.image.equals(""))
+			{
+				iconLabel.setVisible(false);
+			} 
+			else
+			{
+				iconLabel = new WebImage(this.image);
+			}
+		}
+
+		iconLabel.setDisplayType(DisplayType.fitComponent);
+
         iconLabel.setPreferredSize ( new Dimension(100, 100) );
        
 		
         //============Tooltip===========================
-        TooltipManager.setTooltip ( runBut, this.info, TooltipWay.down, 0 );
+        TooltipManager.setTooltip ( runBut, this.info, com.alee.managers.language.data.TooltipWay.down, 0 );
         
         //==============Panel for icon=================
-        WebPanel iconPanel = new WebPanel(new BorderLayout());
+        iconPanel = new WebPanel(new BorderLayout());
         iconPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         iconPanel.setBackground(new Color(50,50,50));
         iconPanel.add(iconLabel);
@@ -256,33 +272,37 @@ public class DefaultDesktopLabel extends DesktopLabel
 	{
 		this.editMode=mode;
 	}
-	
-	private DesktopLabel getThis()
-	{
-		return this;
-	}
 
 	@Override
 	public void update()
 	{
 		this.labelTitle.setText(this.titleName);
+		iconLabel = new WebImage();
+
 		if (this.image.equals("default"))
 		{
-			this.iconLabel.setImage(new WebImage(Resources.AER_ICON).getImage());
+			iconLabel = new WebImage(Resources.AER_ICON);
 		} 
 		else
 		{
-			if (this.image.equals("null"))
+			if (this.image.equals("null") || this.image.equals(""))
 			{
 				iconLabel.setVisible(false);
 			} 
 			else
 			{
-				this.iconLabel.setImage(new WebImage(this.image).getImage());
+				iconLabel = new WebImage(this.image);
 			}
 		}
 
-		this.application = new Application(this.app);
+		iconLabel.setDisplayType(DisplayType.fitComponent);
+
+        iconLabel.setPreferredSize ( new Dimension(100, 100) );
+        
+		iconPanel.removeAll();
+		iconPanel.add(this.iconLabel,BorderLayout.CENTER);
+		
+		this.application = new Application(this.setting, this.app);
 		// this.editPanel.setText(this.info);
 		this.runBut.setText(this.info);
 		
