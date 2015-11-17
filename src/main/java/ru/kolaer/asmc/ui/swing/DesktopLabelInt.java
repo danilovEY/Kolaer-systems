@@ -1,4 +1,4 @@
-package ru.kolaer.asmc.GUI;
+package ru.kolaer.asmc.ui.swing;
 
 /**
  * Интерфейс для ярлыка.
