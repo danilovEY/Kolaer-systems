@@ -25,6 +25,7 @@ import com.alee.laf.panel.WebPanel;
 import com.alee.managers.notification.NotificationIcon;
 import com.alee.managers.notification.NotificationManager;
 import com.alee.managers.tooltip.TooltipManager;
+import com.alee.managers.tooltip.TooltipWay;
 
 import ru.kolaer.asmc.tools.Application;
 import ru.kolaer.asmc.tools.ApplicationInt;
@@ -239,7 +240,7 @@ public class DefaultDesktopLabel extends DesktopLabel
        
 		
         //============Tooltip===========================
-        TooltipManager.setTooltip ( runBut, this.info, com.alee.managers.language.data.TooltipWay.down, 0 );
+        TooltipManager.setTooltip ( runBut, this.info, TooltipWay.down, 0 );
         
         //==============Panel for icon=================
         iconPanel = new WebPanel(new BorderLayout());

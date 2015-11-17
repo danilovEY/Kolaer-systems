@@ -19,6 +19,7 @@ import com.alee.extended.image.DisplayType;
 import com.alee.extended.image.WebImage;
 import com.alee.extended.layout.TableLayout;
 import com.alee.extended.panel.GroupPanel;
+import com.alee.laf.GlobalConstants;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.filechooser.WebFileChooser;
 import com.alee.laf.label.WebLabel;
@@ -241,7 +242,7 @@ public class FormCreateLabel extends WebDialog
             {
             	fileChooser.setMultiSelectionEnabled ( false );
             	fileChooser.setAcceptAllFileFilterUsed ( false );
-            	fileChooser.addChoosableFileFilter ( com.alee.global.GlobalConstants.IMAGES_FILTER );
+            	fileChooser.addChoosableFileFilter ( GlobalConstants.IMAGES_FILTER );
             	
                 if ( fileChooser == null )
                 {
