@@ -25,22 +25,15 @@ import javax.swing.event.MenuListener;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
-//import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import ru.kolaer.asmc.tools.Application;
 import ru.kolaer.asmc.tools.DataBaseLabelsXml;
-//import ch.qos.logback.classic.LoggerContext;
-//import ch.qos.logback.core.FileAppender;
 import ru.kolaer.asmc.tools.DataBaseSettingXml;
 import ru.kolaer.asmc.tools.FTPUpload;
 import ru.kolaer.asmc.tools.Language;
 import ru.kolaer.asmc.tools.Resources;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.core.joran.spi.JoranException;
-import ch.qos.logback.core.util.StatusPrinter;
 
 import com.alee.extended.image.DisplayType;
 import com.alee.extended.image.WebImage;
@@ -64,7 +57,6 @@ import com.alee.managers.notification.WebNotificationPopup;
  * @author Danilov E.Y.
  *
  */
-@SuppressWarnings("serial")
 public class MainFrame extends WebFrame
 {
 	private static final Logger log = LoggerFactory.getLogger(MainFrame.class);	
@@ -127,26 +119,6 @@ public class MainFrame extends WebFrame
 				if (args[i].equals(accesKey))
 				{
 					editMode = true;
-					try
-                    {
-						LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-				        JoranConfigurator configurator = new JoranConfigurator();
-				        configurator.setContext(context);
-				        context.reset();
-				 
-				        try {
-				            configurator.doConfigure(getClass().getClassLoader().getResourceAsStream("logback1.xml"));
-				        } 
-				        catch (JoranException je) 
-				        {
-				            StatusPrinter.print(context);
-				        }
-                    }
-                    catch(SecurityException e)
-                    {
-	                    // TODO Auto-generated catch block
-	                    e.printStackTrace();
-                    }
 				} 
 				else if (args[i].equals(makeMD5HashKey))
 				{
