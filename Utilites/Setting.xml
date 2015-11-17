@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<Settings>
+  <TopBannerElement id="TopBanner" path="null"/>
+  <WebBrowserElement id="WebBrowser" path="D:\workspace\ru.kolaer.asmc\Utilites\WebBrowser.exe"/>
+  <FrameSizeElement Height="0" Static="false" Width="0" id="FrameSize"/>
+</Settings>
