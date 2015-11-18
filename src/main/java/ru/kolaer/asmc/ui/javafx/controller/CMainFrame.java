@@ -14,8 +14,10 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
+import ru.kolaer.asmc.tools.serializations.SerializationGroups;
+import ru.kolaer.asmc.ui.javafx.model.GroupLabelsModel;
 
-public class CMainFrame extends Application {
+public class CMainFrame extends Application implements Observer {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(CMainFrame.class);
 	
@@ -27,7 +29,12 @@ public class CMainFrame extends Application {
 	
     @FXML
     public void initialize(){
-    	
+    	SerializationGroups serial = new SerializationGroups();
+    	serial.getSerializeGroups().forEach((group) ->{
+    		CGroupLabels cGroup = new CGroupLabels(group);
+    		this.navigatePanel.getChildren().add(cGroup);
+    		cGroup.registerOberver(this);
+    	});
     }
     
 	@Override
@@ -48,5 +55,13 @@ public class CMainFrame extends Application {
         primaryStage.setScene(new Scene(root));
         
         primaryStage.show();
+	}
+
+	@Override
+	public void updateClick(GroupLabelsModel group) {
+		group.getLabelList().forEach((l) -> {
+			CLabel label = new CLabel(l);
+			this.contentPanel.getChildren().add(label);
+		});
 	}
 }
