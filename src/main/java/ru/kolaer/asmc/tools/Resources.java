@@ -11,7 +11,7 @@ public interface Resources
 {
 	/*==========View Resources=============*/
 	public static final URL V_MAIN_FRAME = Resources.class.getResource("/ru/kolaer/asmc/ui/javafx/view/VMainFrame.fxml");
-	
+	public static final URL V_GROUP_LABELS = Resources.class.getResource("/ru/kolaer/asmc/ui/javafx/view/VGroupLabels.fxml");
 	
 	/**Стандарткая иконка для ярлыка.*/
 	public static final URL AER_ICON = Resources.class.getResource("/aerIcon.png");

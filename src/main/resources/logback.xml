@@ -9,7 +9,7 @@
     </encoder>
   </appender>
   
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <!-- <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <prudent>true</prudent>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
         <fileNamePattern>Logs/${HOSTNAME}/AERDesktopManager-%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -18,7 +18,7 @@
     <encoder>
         <pattern>${HOSTNAME} %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
-</appender>
+</appender> -->
 
 
   <root level="INFO">              

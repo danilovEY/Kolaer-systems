@@ -28,8 +28,6 @@
 			<version>3.2</version>
 		</dependency>
 
-
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -43,10 +41,17 @@
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testOutputDirectory>target/test-classes</testOutputDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
-		<defaultGoal>clean compile bundle:manifest assembly:single</defaultGoal>
+		<defaultGoal>clean compile</defaultGoal>
 
 		<!-- Ресурсы -->
 		<resources>
+		 <resource>
+                <filtering>false</filtering>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                </includes>
+            </resource>
 			<resource>
 				<directory>src/main/resources</directory>
 			</resource>
@@ -59,29 +64,6 @@
 
 		<!-- Плагины для сценария -->
 		<plugins>
-
-			<!-- Плагин для создания jar файла с манифестом -->
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<finalName>${artifactId}-${version}</finalName>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<appendAssemblyId>false</appendAssemblyId>
-					<archive>
-						<manifestFile>${basedir}/target/classes/META-INF/MANIFEST.MF</manifestFile>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 
 			<!-- Плагин позволяет использовать указанную версию jdk -->
 			<plugin>
