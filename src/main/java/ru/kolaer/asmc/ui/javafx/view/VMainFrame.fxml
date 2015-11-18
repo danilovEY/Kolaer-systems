@@ -30,7 +30,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Файл">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Получить доступ к редактированию" />
+                    <MenuItem fx:id="rootMenuItem" mnemonicParsing="false" text="Получить доступ к редактированию" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Выход" />
                   </items>
