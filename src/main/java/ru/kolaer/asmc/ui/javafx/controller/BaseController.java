@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 import ru.kolaer.asmc.tools.Resources;
 
 /**
@@ -16,7 +16,7 @@ import ru.kolaer.asmc.tools.Resources;
  * @author Danilov
  * @version 0.1
  */
-public abstract class BaseController extends Pane implements Initializable {
+public abstract class BaseController extends BorderPane implements Initializable {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(BaseController.class);
 	

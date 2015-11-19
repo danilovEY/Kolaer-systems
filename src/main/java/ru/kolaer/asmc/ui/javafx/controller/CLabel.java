@@ -1,61 +1,73 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
-import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import ru.kolaer.asmc.tools.Resources;
-import ru.kolaer.asmc.ui.javafx.model.LabelModel;
+import ru.kolaer.asmc.ui.javafx.model.MLabel;
 
-public class CLabel extends BorderPane implements Initializable {
+/**
+ * Контроллер ярлыка.
+ * @author Danilov
+ * @version 0.1
+ */
+public class CLabel extends BaseController implements Initializable, ObservableLabel {
 	
+	/**Список слушателей.*/
+	private final List<ObserverLabel> obsList = new ArrayList<>();
+	/**Кнопка запускающие приложение.*/
 	@FXML
 	private Button button;
-	
+	/**Иконка.*/
 	@FXML
 	private ImageView image;
-	
+	/**Текст с описанием.*/
 	@FXML
 	private TextArea infoText;
-	
+	/**Имя ярлыка.*/
 	@FXML
 	private Label nameLabel;
-	
-	private LabelModel label;
+	/**Модель.*/
+	private MLabel model;
 	
 	public CLabel() {
-		this.init();
+		super(Resources.V_LABEL);
 	}
 	
-	public CLabel(LabelModel label){
-		this.label = label;
-		this.init();
-	}
-	
-	private void init(){
-		FXMLLoader loader = new FXMLLoader(Resources.V_LABEL);
-		loader.setRoot(this);
-		loader.setController(this);
+	public CLabel(MLabel model){
+		super(Resources.V_LABEL);
+		this.model = model;
 		
-		try {
-			loader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		if(this.model == null) return;
+		
+		this.button.setText(this.model.getName());
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		if(this.label == null) return;
-		
-		this.button.setText(this.label.getName());
+		this.button.setOnMouseClicked(e -> this.notifyObserverClick());
+	}
+
+	@Override
+	public void notifyObserverClick() {
+		this.obsList.forEach(o -> o.update(this.model));
+	}
+
+	@Override
+	public void registerOberver(ObserverLabel observer) {
+		this.obsList.add(observer);
+	}
+
+	@Override
+	public void removeObserver(ObserverLabel observer) {
+		this.obsList.remove(observer);
 	}
 }

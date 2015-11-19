@@ -13,8 +13,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.kolaer.asmc.ui.javafx.model.GroupLabelsModel;
+import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
+/**
+ * (Де)сериализация объектов.
+ * @author Danilov
+ * @version 0.1
+ */
 public class SerializationGroups {
 	private static final Logger LOG = LoggerFactory.getLogger(SerializationGroups.class);
 
@@ -24,7 +29,19 @@ public class SerializationGroups {
 	private final File fileSer = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
 
 	public SerializationGroups() {
+		
+		if(!this.checkFile()){
+			LOG.error("Не удалось создать файл: {}", fileSer.getAbsolutePath());
+			System.exit(-9);
+		}
+	}
 
+	/**
+	 * Проверяет файл {@link #fileNameSerializeObjects} на его наличие.
+	 * Иначе создает.
+	 * @return true - если файл создан.
+	 */
+	private boolean checkFile() {
 		try {
 			if (!dir.exists()) {
 				dir.mkdirs();
@@ -35,40 +52,48 @@ public class SerializationGroups {
 				fileSer.createNewFile();
 			}
 		} catch (IOException e1) {
-			throw new RuntimeException(e1);
+			LOG.error("Не удалось создать файл: {}", fileSer.getAbsolutePath());
+			return false;
 		}
+		return true;
 	}
-
-	public List<GroupLabelsModel> getSerializeGroups() {
-
+	
+	/**Получить сериализованные группы.*/
+	public List<MGroupLabels> getSerializeGroups() {
+		
+		if(!this.checkFile())
+			LOG.error("Файл был удален: {}", fileSer.getAbsolutePath());
+		
 		try (FileInputStream fileInput = new FileInputStream(fileSer);
 				ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
 			try {
-				List<GroupLabelsModel> groupList = (List<GroupLabelsModel>) objectInput.readObject();
+				List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
 				return groupList;
 			} catch (ClassNotFoundException e) {
 				LOG.error("Класс не найден!", e);
+				return Collections.emptyList();
 			}
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			LOG.error("Не удалось открыть файл: " + fileSer.getAbsolutePath(), e);
+			return Collections.emptyList();
 		}
-
-		return Collections.emptyList();
 	}
 
-	public void setSerializeGroups(List<GroupLabelsModel> groupModels) {
-
+	/**Сериализовать группы.*/
+	public void setSerializeGroups(List<MGroupLabels> groupModels) {
+		
+		if(!this.checkFile())
+			LOG.error("Файл был удален: {}", fileSer.getAbsolutePath());
+		
 		try (FileOutputStream fileOutSer = new FileOutputStream(fileSer);
 				ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
 
 			objectOutputStream.writeObject(groupModels);
 
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
+			LOG.error("Не найден файл: " + fileSer.getAbsolutePath(), e);
 		} catch (IOException e1) {
-			throw new RuntimeException(e1);
+			System.exit(-9);
 		}
-
 	}
-
 }

@@ -2,7 +2,7 @@ package ru.kolaer.asmc.ui.javafx.model;
 
 import java.io.Serializable;
 
-public class LabelModel implements Serializable {
+public class MLabel implements Serializable {
 	private static final long serialVersionUID = -8342840478051620237L;
 	
 	private String name;
@@ -10,7 +10,7 @@ public class LabelModel implements Serializable {
 	private String pathImage;
 	private String pathApplication;
 	
-	public LabelModel(String name, String info, String pathImage, String pathApplication) {
+	public MLabel(String name, String info, String pathImage, String pathApplication) {
 		this.name = name;
 		this.info = info;
 		this.pathImage = pathImage;

@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupLabelsModel implements Serializable {
+public class MGroupLabels implements Serializable {
 
 	private static final long serialVersionUID = -178505769987411468L;
 	
 	private String nameGroup;
-	private final List<LabelModel> labelList = new ArrayList<>();
+	private final List<MLabel> labelList = new ArrayList<>();
 	
-	public void addLabel(LabelModel label){
+	public void addLabel(MLabel label){
 		this.labelList.add(label);
 	}
 	
@@ -21,10 +21,10 @@ public class GroupLabelsModel implements Serializable {
 	public void setNameGroup(String nameGroup) {
 		this.nameGroup = nameGroup;
 	}
-	public List<LabelModel> getLabelList() {
+	public List<MLabel> getLabelList() {
 		return labelList;
 	}
-	public void setLabelList(List<LabelModel> labelList) {
+	public void setLabelList(List<MLabel> labelList) {
 		this.labelList.clear();
 		this.labelList.addAll(labelList);
 	}
