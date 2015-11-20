@@ -11,6 +11,14 @@ public class MGroupLabels implements Serializable {
 	private String nameGroup;
 	private final List<MLabel> labelList = new ArrayList<>();
 	
+	public MGroupLabels() {
+		
+	}
+	
+	public MGroupLabels(String text) {
+		this.nameGroup = text;
+	}
+
 	public void addLabel(MLabel label){
 		this.labelList.add(label);
 	}
@@ -28,5 +36,4 @@ public class MGroupLabels implements Serializable {
 		this.labelList.clear();
 		this.labelList.addAll(labelList);
 	}
-	
 }

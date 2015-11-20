@@ -8,21 +8,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
-import ru.kolaer.asmc.tools.SettingSingleton;
+import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
-public class CAuthentication extends BaseController {
-
+public class CAddingGroupLabels extends BaseController {
+	
 	private final Stage dialog = new Stage();
 	
-	@FXML
-	private TextField loginText;
+	private MGroupLabels result;
 	
 	@FXML
-	private PasswordField passText;
+	private TextField groupNameText;
 	
 	@FXML
 	private Button okButton;
@@ -30,37 +28,28 @@ public class CAuthentication extends BaseController {
 	@FXML
 	private Button cancelButton;
 	
-	public CAuthentication() {
-		super(Resources.V_AUTHENTICATION);
+	public CAddingGroupLabels() {
+		super(Resources.V_ADDING_GROUP_LABELS);
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
 		this.okButton.setOnMouseClicked(e -> {
-			SettingSingleton setting = SettingSingleton.getInstance();
-			if(setting.getRootLoginName().equals(this.loginText.getText()) 
-					&& setting.getRootPass().equals(this.passText.getText())){
-				setting.setRoot(true);
-				this.dialog.close();
-			}
-			else {
-				Alert alert = new Alert(AlertType.ERROR);
-        		alert.setTitle("Ошибка");
-        		alert.setHeaderText("Не правельный логин или пароль!");
-        		alert.showAndWait();
-			}
-		});
-		
-		this.cancelButton.setOnMouseClicked(e -> {
+			this.result = new MGroupLabels(this.groupNameText.getText());
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.show();
 			this.dialog.close();
 		});
 	}
-	
+
 	public void showAndWait(){
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
 		this.dialog.showAndWait();
+	}
+	
+	public MGroupLabels getResult() {
+		return this.result;
 	}
 }

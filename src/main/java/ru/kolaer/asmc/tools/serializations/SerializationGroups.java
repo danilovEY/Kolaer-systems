@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class SerializationGroups {
 	private final String fileNameSerializeObjects = "objects.aer";
 	private final File dir = new File(pathDitSerializedObject);
 	private final File fileSer = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
+	private List<MGroupLabels> cacheObjects;
 
 	public SerializationGroups() {
 		
@@ -61,25 +63,33 @@ public class SerializationGroups {
 	/**Получить сериализованные группы.*/
 	public List<MGroupLabels> getSerializeGroups() {
 		
+		if(this.cacheObjects != null)
+			return this.cacheObjects;
+		
 		if(!this.checkFile())
 			LOG.error("Файл был удален: {}", fileSer.getAbsolutePath());
 		
 		try (FileInputStream fileInput = new FileInputStream(fileSer);
 				ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
 			try {
-				List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
-				return groupList;
+				if(this.cacheObjects == null) {
+					 this.cacheObjects = new ArrayList<>();
+					 final List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
+					 this.cacheObjects.addAll(groupList);
+				}				
+		
+				return this.cacheObjects;
 			} catch (ClassNotFoundException e) {
 				LOG.error("Класс не найден!", e);
-				return Collections.emptyList();
+				return this.cacheObjects;
 			}
 		} catch (IOException e) {
 			LOG.error("Не удалось открыть файл: " + fileSer.getAbsolutePath(), e);
-			return Collections.emptyList();
+			return this.cacheObjects;
 		}
 	}
 
-	/**Сериализовать группы.*/
+	/**Сериализовать список групп.*/
 	public void setSerializeGroups(List<MGroupLabels> groupModels) {
 		
 		if(!this.checkFile())

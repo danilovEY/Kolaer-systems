@@ -14,6 +14,7 @@ public interface Resources
 	public static final URL V_GROUP_LABELS = Resources.class.getResource("/ru/kolaer/asmc/ui/javafx/view/VGroupLabels.fxml");
 	public static final URL V_LABEL = Resources.class.getResource("/ru/kolaer/asmc/ui/javafx/view/VLabel.fxml");
 	public static final URL V_AUTHENTICATION = Resources.class.getResource("/ru/kolaer/asmc/ui/javafx/view/VAuthentication.fxml");
+	public static final URL V_ADDING_GROUP_LABELS = Resources.class.getResource("/ru/kolaer/asmc/ui/javafx/view/VAddingGroupLabels.fxml");
 	
 	
 	/**Стандарткая иконка для ярлыка.*/

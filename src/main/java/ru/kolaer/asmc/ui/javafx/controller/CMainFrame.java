@@ -1,34 +1,26 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.sun.tools.xjc.generator.bean.ImplStructureStrategy.Result;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.tools.serializations.SerializationGroups;
+import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
 /**
  * Контроллер главного окна приложения.
@@ -39,8 +31,6 @@ import ru.kolaer.asmc.tools.serializations.SerializationGroups;
 public class CMainFrame extends Application {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(CMainFrame.class);
-	/**Флаг админ. прав.*/
-	private boolean isRoot = false;
 	/**Элемент в меню для получения админ. прав.*/
 	@FXML
 	private MenuItem rootMenuItem;
@@ -62,16 +52,23 @@ public class CMainFrame extends Application {
     	final ContextMenu contextNavigationPanel = new ContextMenu();
     	
     	MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);
-    	
+
     	contextNavigationPanel.getItems().add(addGroupLabels);
     	
     	this.navigatePanel.setOnContextMenuRequested((event) -> {
     		
-    		if(!isRoot) return;
+    		if(!SettingSingleton.getInstance().isRoot()) return;
     		
     		contextNavigationPanel.show(this.navigatePanel, event.getScreenX(), event.getScreenY());
     	}); 	
 
+    	addGroupLabels.setOnAction(e -> {
+    		CAddingGroupLabels addingGroup = new CAddingGroupLabels();
+    		addingGroup.showAndWait();
+    		MGroupLabels result = addingGroup.getResult();
+    		System.out.println(result.getNameGroup());
+    	});
+    	
     	CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
     	observer.loadAndRegGroups(this.serial);
     }
@@ -91,7 +88,7 @@ public class CMainFrame extends Application {
 		}
 		primaryStage.setTitle(Resources.MAIN_FRAME_TITLE);
         primaryStage.setScene(new Scene(root));
-        
+        primaryStage.centerOnScreen();
         primaryStage.show();
 	}
 }
