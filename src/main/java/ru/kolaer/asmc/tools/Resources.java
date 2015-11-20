@@ -13,6 +13,8 @@ public interface Resources
 	public static final URL V_MAIN_FRAME = Resources.class.getResource("/ru/kolaer/asmc/ui/javafx/view/VMainFrame.fxml");
 	public static final URL V_GROUP_LABELS = Resources.class.getResource("/ru/kolaer/asmc/ui/javafx/view/VGroupLabels.fxml");
 	public static final URL V_LABEL = Resources.class.getResource("/ru/kolaer/asmc/ui/javafx/view/VLabel.fxml");
+	public static final URL V_AUTHENTICATION = Resources.class.getResource("/ru/kolaer/asmc/ui/javafx/view/VAuthentication.fxml");
+	
 	
 	/**Стандарткая иконка для ярлыка.*/
 	public static final URL AER_ICON = Resources.class.getResource("/aerIcon.png");
@@ -27,6 +29,17 @@ public interface Resources
 	
 	
 	public static final String DIALOG_LOADING_COMPONENTS = "Загрузка компонентов";
+	
+	public static final String MAIN_FRAME_TITLE = "АСУП - АЭР";
+	public static final String LOGIN_FRAME_TITLE = "Получить root доступ";
+	
+	public static final String LOGIN_LABEL = "Логин";
+	public static final String PASS_LABEL = "Пароль";
+	
+	public static final String LOGIN_BUTTON = "Войти";
+	public static final String LOGUOT_BUTTON = "Отмена";
+	
+	public static final String MENU_ITEM_ADD_GROUP = "Добавить группу";
 	
 	public static final String MENU_BAR_FILE = "Файл";
 	public static final String MENU_BAR_HELP = "Справка";
