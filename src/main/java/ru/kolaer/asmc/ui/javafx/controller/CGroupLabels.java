@@ -47,8 +47,6 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 		super(Resources.V_GROUP_LABELS);
 		this.groupModel = group;
 		
-		if(this.groupModel == null) return;
-		
 		this.setText(this.groupModel.getNameGroup());
 
 	}

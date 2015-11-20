@@ -37,7 +37,7 @@ public class CAddingGroupLabels extends BaseController {
 	public void initialize(URL location, ResourceBundle resources) {		
 		this.okButton.setOnMouseClicked(e -> {
 			this.result = new MGroupLabels(this.groupNameText.getText());
-			Alert alert = new Alert(AlertType.INFORMATION);
+			final Alert alert = new Alert(AlertType.INFORMATION);
 			alert.show();
 			this.dialog.close();
 		});

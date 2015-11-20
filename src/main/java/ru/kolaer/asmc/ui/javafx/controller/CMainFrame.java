@@ -44,7 +44,7 @@ public class CMainFrame extends Application {
 	
     @FXML
     public void initialize(){
-    	CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
+    	final CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
     	observer.loadAndRegGroups(this.serial);
     	
     	this.rootMenuItem.setOnAction((event) -> {
@@ -52,8 +52,7 @@ public class CMainFrame extends Application {
     	});
     	
     	final ContextMenu contextNavigationPanel = new ContextMenu();
-    	
-    	MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);
+    	final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);
 
     	contextNavigationPanel.getItems().add(addGroupLabels);
     	
@@ -65,9 +64,12 @@ public class CMainFrame extends Application {
     	}); 	
 
     	addGroupLabels.setOnAction(e -> {
-    		CAddingGroupLabels addingGroup = new CAddingGroupLabels();
+    		final CAddingGroupLabels addingGroup = new CAddingGroupLabels();
     		addingGroup.showAndWait();
-    		MGroupLabels result = addingGroup.getResult();
+    		final MGroupLabels result = addingGroup.getResult();
+    		if(result!=null) {
+    			observer.addGroupLabels(result);
+    		}
     	});
     	
     	
