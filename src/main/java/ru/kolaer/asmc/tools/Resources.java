@@ -3,7 +3,7 @@ package ru.kolaer.asmc.tools;
 import java.net.URL;
 
 /**
- * Ресурсы приложения.
+ * Ресурсы и константы.
  * @author Danilov E.Y.
  *
  */
@@ -25,4 +25,12 @@ public interface Resources
 	/**Версия*/
 	public static final String VERSION = "0.7.7.3";
 	
+	
+	public static final String DIALOG_LOADING_COMPONENTS = "Загрузка компонентов";
+	
+	public static final String MENU_BAR_FILE = "Файл";
+	public static final String MENU_BAR_HELP = "Справка";
+	public static final String MENU_BAR_ITEM_SETTING = "Настройки";
+	public static final String MENU_BAR_ITEM_EXIT = "Выход";
+	public static final String MENU_BAR_ITEM_ABOUT = "О программе";	
 }
