@@ -17,12 +17,6 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>de.sciss</groupId>
-			<artifactId>weblaf</artifactId>
-			<version>1.27</version>
-		</dependency>
-
-		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
 			<version>3.2</version>

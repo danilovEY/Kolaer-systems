@@ -1,35 +1,25 @@
 package ru.kolaer.asmc.tools;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.alee.laf.optionpane.WebOptionPane;
-import com.alee.managers.notification.NotificationIcon;
-import com.alee.managers.notification.NotificationManager;
 
 /**
  * Запускает задачу.
  * @author Danilov E.Y.
  *
  */
-public class Application implements ApplicationInt, Runnable
+public class Application implements Runnable
 {
 	private static final Logger log = LoggerFactory.getLogger(Application.class);	
 	
-	private DataBaseSettingXml setting;
 	private String pathApp;
 	
-	public Application(DataBaseSettingXml setting, String path)
+	public Application(String path)
 	{
 		this.pathApp = path;
-		this.setting = setting;
 	}
 	
 	public void start()
@@ -38,7 +28,7 @@ public class Application implements ApplicationInt, Runnable
 			new Thread(this).start();
 		else
 		{
-			NotificationManager.showNotification ("Путь к файлу/ссылке отсутствует!!", NotificationIcon.error.getIcon() );
+			//NotificationManager.showNotification ("Путь к файлу/ссылке отсутствует!!", NotificationIcon.error.getIcon() );
 			
 		}
 
@@ -121,10 +111,10 @@ public class Application implements ApplicationInt, Runnable
 	@Override
 	public void run()
 	{
-		if(this.pathApp == null || this.pathApp.equals(""))
+		/*if(this.pathApp == null || this.pathApp.equals(""))
 		{
 			 //WebOptionPane.showMessageDialog ( null, "Не указан файл!", "Ошибка", WebOptionPane.ERROR_MESSAGE );
-			 NotificationManager.showNotification ( "Не указан файл!", NotificationIcon.error.getIcon() );
+			 //NotificationManager.showNotification ( "Не указан файл!", NotificationIcon.error.getIcon() );
 	
 			 return;
 		}
@@ -162,7 +152,7 @@ public class Application implements ApplicationInt, Runnable
 						File simpleWebBrowser = new File(this.setting.getPathWebBrowser());
 						if(!simpleWebBrowser.exists())
 						{
-							 NotificationManager.showNotification ("Утилита \""+this.setting.getPathWebBrowser()+"\" не найдена!", NotificationIcon.error.getIcon() );
+							 //NotificationManager.showNotification ("Утилита \""+this.setting.getPathWebBrowser()+"\" не найдена!", NotificationIcon.error.getIcon() );
 						}
 						else
 						{
@@ -189,13 +179,13 @@ public class Application implements ApplicationInt, Runnable
 			{
 				if(isUnix())
 				{
-					WebOptionPane.showMessageDialog ( null, "В данной версии Unix системы не поддерживаются!", "Ошибка", WebOptionPane.ERROR_MESSAGE );
+					//WebOptionPane.showMessageDialog ( null, "В данной версии Unix системы не поддерживаются!", "Ошибка", WebOptionPane.ERROR_MESSAGE );
 				}
 				else
 				{
 					if(isMac())
 					{
-						WebOptionPane.showMessageDialog ( null, "В данной версии Mac системы не поддерживаются!", "Ошибка", WebOptionPane.ERROR_MESSAGE );
+						//WebOptionPane.showMessageDialog ( null, "В данной версии Mac системы не поддерживаются!", "Ошибка", WebOptionPane.ERROR_MESSAGE );
 					}
 				}
 			}
@@ -203,10 +193,10 @@ public class Application implements ApplicationInt, Runnable
 		} 
 		catch (IOException e)
 		{
-			NotificationManager.showNotification ( "Не удалось запустить программу/ссылку!", NotificationIcon.error.getIcon() );
+			//NotificationManager.showNotification ( "Не удалось запустить программу/ссылку!", NotificationIcon.error.getIcon() );
 			log.error("Не удалось запустить программу/ссылку");
 			log.error(e.getMessage());
-		}
+		}*/
 	}
 
 	public String getPathApp()
