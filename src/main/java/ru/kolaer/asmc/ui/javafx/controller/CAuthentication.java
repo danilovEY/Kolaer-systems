@@ -10,6 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
@@ -36,7 +37,7 @@ public class CAuthentication extends BaseController {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 		this.okButton.setOnMouseClicked(e -> {
 			SettingSingleton setting = SettingSingleton.getInstance();
 			if(setting.getRootLoginName().equals(this.loginText.getText()) 
@@ -61,6 +62,7 @@ public class CAuthentication extends BaseController {
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
+		this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		this.dialog.showAndWait();
 	}
 }

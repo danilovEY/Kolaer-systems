@@ -5,8 +5,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.tools.xjc.generator.bean.ImplStructureStrategy.Result;
-
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -45,6 +44,9 @@ public class CMainFrame extends Application {
 	
     @FXML
     public void initialize(){
+    	CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
+    	observer.loadAndRegGroups(this.serial);
+    	
     	this.rootMenuItem.setOnAction((event) -> {
     		new CAuthentication().showAndWait();
     	});
@@ -66,11 +68,9 @@ public class CMainFrame extends Application {
     		CAddingGroupLabels addingGroup = new CAddingGroupLabels();
     		addingGroup.showAndWait();
     		MGroupLabels result = addingGroup.getResult();
-    		System.out.println(result.getNameGroup());
     	});
     	
-    	CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
-    	observer.loadAndRegGroups(this.serial);
+    	
     }
     
 	@Override
@@ -87,6 +87,7 @@ public class CMainFrame extends Application {
 			}
 		}
 		primaryStage.setTitle(Resources.MAIN_FRAME_TITLE);
+		primaryStage.getIcons().add(new Image(Resources.AER_LOGO.toString()));
         primaryStage.setScene(new Scene(root));
         primaryStage.centerOnScreen();
         primaryStage.show();

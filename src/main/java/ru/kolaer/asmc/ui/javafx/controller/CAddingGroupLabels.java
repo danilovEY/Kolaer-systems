@@ -9,6 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
@@ -33,7 +34,7 @@ public class CAddingGroupLabels extends BaseController {
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void initialize(URL location, ResourceBundle resources) {		
 		this.okButton.setOnMouseClicked(e -> {
 			this.result = new MGroupLabels(this.groupNameText.getText());
 			Alert alert = new Alert(AlertType.INFORMATION);
@@ -46,6 +47,7 @@ public class CAddingGroupLabels extends BaseController {
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
+		this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		this.dialog.showAndWait();
 	}
 	

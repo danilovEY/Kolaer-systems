@@ -25,6 +25,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	
 	/**Загрузить и добавить группы.*/
 	public void loadAndRegGroups(SerializationGroups data) {
+		this.panelWithGroups.getChildren().clear();
 		data.getSerializeGroups().forEach((group) ->{
     		CGroupLabels cGroup = new CGroupLabels(group);
     		this.panelWithGroups.getChildren().add(cGroup);
