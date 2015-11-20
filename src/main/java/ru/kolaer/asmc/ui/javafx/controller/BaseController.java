@@ -1,7 +1,7 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +24,11 @@ public abstract class BaseController extends BorderPane implements Initializable
 	 * {@linkplain BaseController}
 	 * @param urlView Путь к .fxml.
 	 */
-	public BaseController(URL urlView) {
-		FXMLLoader loader = new FXMLLoader(urlView);
-		loader.setRoot(this);
-		loader.setController(this);
-		
+	public BaseController(String pathView) {
 		try {
+			FXMLLoader loader = new FXMLLoader(URI.create(pathView).toURL());
+			loader.setRoot(this);
+			loader.setController(this);
 			loader.load();
 		} catch (IOException e) {
 			LOG.error("Не найден view: " + Resources.V_MAIN_FRAME, e);

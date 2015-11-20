@@ -1,6 +1,7 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +80,7 @@ public class CMainFrame extends Application {
 	public void start(Stage primaryStage) {
 		Parent root = null;
 		try {
-			root = FXMLLoader.load(Resources.V_MAIN_FRAME);
+			root = FXMLLoader.load(URI.create(Resources.V_MAIN_FRAME).toURL());
 		} catch (IOException e) {
 			LOG.error("Не найден view: " + Resources.V_MAIN_FRAME, e);
 			try {
