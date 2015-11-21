@@ -10,7 +10,10 @@ import org.slf4j.LoggerFactory;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import ru.kolaer.asmc.tools.Resources;
+import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
 /**
@@ -23,7 +26,7 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 	
 	private static final Logger LOG = LoggerFactory.getLogger(CGroupLabels.class);
 	/**Модель.*/
-	private MGroupLabels groupModel;
+	private MGroupLabels model;
 	/**Список слушателей.*/
 	private final List<ObserverGroupLabels> observerList = new ArrayList<>();
 	
@@ -45,9 +48,9 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 	 */
 	public CGroupLabels(MGroupLabels group) {
 		super(Resources.V_GROUP_LABELS);
-		this.groupModel = group;
+		this.model = group;
 		
-		this.setText(this.groupModel.getNameGroup());
+		this.setText(this.model.getNameGroup());
 
 	}
 	
@@ -57,13 +60,30 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		final ContextMenu contextGroupPanel = new ContextMenu();
+		final MenuItem editGroupLabels = new MenuItem(Resources.MENU_ITEM_ETID_GROUP);
 
-		this.button.setOnMouseClicked((e)->this.notifyObserverClick());
+		contextGroupPanel.getItems().add(editGroupLabels);
+		
+		this.button.setContextMenu(contextGroupPanel);
+		this.button.setOnContextMenuRequested(event -> {
+			if(!SettingSingleton.getInstance().isRoot()) return;
+			contextGroupPanel.show(this, event.getScreenX(), event.getScreenY());
+		});
+		
+		editGroupLabels.setOnAction(e -> {
+			this.model = new CAddingGroupLabelsDialog(this.model).showAndWait().get();
+			this.button.setText(this.model.getNameGroup());
+			this.notifyObserverEdit();
+		});
+
+		this.button.setOnAction((e)->this.notifyObserverClick());
 	}
 
 	@Override
 	public void notifyObserverClick() {
-		observerList.forEach((o) -> o.updateClick(this.groupModel));
+		observerList.forEach((o) -> o.updateClick(this.model));
 	}
 
 	@Override
@@ -74,5 +94,24 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 	@Override
 	public void removeObserver(ObserverGroupLabels observer) {
 		observerList.remove(observer);
+	}
+
+	@Override
+	public void notifyObserverEdit() {
+		observerList.forEach((o) -> o.updateEdit(this.model));
+	}
+
+	/**
+	 * @return the {@linkplain #model}
+	 */
+	public MGroupLabels getModel() {
+		return model;
+	}
+
+	/**
+	 * @param model the {@linkplain #model} to set
+	 */
+	public void setModel(MGroupLabels model) {
+		this.model = model;
 	}
 }

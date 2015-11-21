@@ -90,4 +90,18 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 	public void removeObserver(ObserverLabel observer) {
 		this.obsList.remove(observer);
 	}
+
+	/**
+	 * @return the {@linkplain #model}
+	 */
+	public MLabel getModel() {
+		return model;
+	}
+
+	/**
+	 * @param model the {@linkplain #model} to set
+	 */
+	public void setModel(MLabel model) {
+		this.model = model;
+	}
 }

@@ -9,6 +9,8 @@ package ru.kolaer.asmc.ui.javafx.controller;
 public interface ObservableGroupLabels {
 	/**Оповестить слушателей о нажатии на элемет {@linkplain CGroupLabels}.*/
 	void notifyObserverClick();
+	/**Оповестить слушателей о изменении элемета {@linkplain CGroupLabels}.*/
+	void notifyObserverEdit();
 	
 	void registerOberver(ObserverGroupLabels observer);
 	void removeObserver(ObserverGroupLabels observer);

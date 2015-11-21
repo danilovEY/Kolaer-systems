@@ -31,6 +31,7 @@ public interface Resources
 	public static final String MAIN_FRAME_TITLE = "АСУП - АЭР";
 	public static final String LOGIN_FRAME_TITLE = "Получить root доступ";
 	public static final String ADDING_GROUP_FRAME_TITLE = "Добавить группу";
+	public static final String EDING_GROUP_FRAME_TITLE = "Редактировать группу";
 	public static final String ADDING_LABEL_FRAME_TITLE = "Добавить ярлык";
 	
 	
@@ -41,6 +42,8 @@ public interface Resources
 	public static final String LOGUOT_BUTTON = "Отмена";
 	
 	public static final String MENU_ITEM_ADD_GROUP = "Добавить группу";
+	public static final String MENU_ITEM_ETID_GROUP = "Редактировать группу";
+	public static final String MENU_ITEM_DELETE_GROUP = "Удалить группу";
 	
 	public static final String MENU_ITEM_ADD_LABEL = "Добавить ярлык";
 }

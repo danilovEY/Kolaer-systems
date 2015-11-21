@@ -16,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -44,13 +45,17 @@ public class CMainFrame extends Application {
 	/** Панель с ярлыками. */
 	@FXML
 	private FlowPane contentPanel;
+	@FXML
+	private ScrollPane navigateScrollPanel;
+	@FXML
+	private ScrollPane contentScrollPanel;
 	/** (Де)сериализация объектов. */
-	private final SerializationGroups serial = new SerializationGroups();
+	private final SerializationGroups serial = SettingSingleton.getInstance().getSerializationGroups();
 
 	@FXML
 	public void initialize() {
 		final CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
-		observer.loadAndRegGroups(this.serial);
+		observer.loadAndRegGroups();
 
 		final ContextMenu contextNavigationPanel = new ContextMenu();
 		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);
@@ -61,9 +66,10 @@ public class CMainFrame extends Application {
 		final MenuItem addLabel = new MenuItem(Resources.MENU_ITEM_ADD_LABEL);
 
 		contextContentPanel.getItems().add(addLabel);
-
+		this.navigateScrollPanel.setContextMenu(contextNavigationPanel);
+		this.contentScrollPanel.setContextMenu(contextContentPanel);
 		// =====Events======
-		this.navigatePanel.setOnContextMenuRequested((event) -> {
+		this.navigateScrollPanel.setOnContextMenuRequested((event) -> {
 
 			if(!SettingSingleton.getInstance().isRoot()) return;
 
@@ -87,7 +93,7 @@ public class CMainFrame extends Application {
 				final MGroupLabels res = result.get();
 				observer.addGroupLabels(res);
 				serial.getSerializeGroups().add(res);
-				serial.setSerializeGroups(serial.getSerializeGroups());
+				SettingSingleton.getInstance().saveGroups();
 			}
 		});
 		
@@ -99,7 +105,7 @@ public class CMainFrame extends Application {
 				listLabels.forEach(l -> {
 					observer.addLabel(l);
 				});
-				serial.setSerializeGroups(serial.getSerializeGroups());
+				SettingSingleton.getInstance().saveGroups();
 			}
 		});
 	}

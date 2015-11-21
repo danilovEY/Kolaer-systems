@@ -9,4 +9,10 @@ public interface ObserverGroupLabels {
 	 * @param group Модель нажатой группы.
 	 */
 	void updateClick(MGroupLabels group);
+	
+	/**
+	 * Получить оповещение о изменении группы.
+	 * @param group Модель измененной группы.
+	 */
+	void updateEdit(MGroupLabels group);
 }

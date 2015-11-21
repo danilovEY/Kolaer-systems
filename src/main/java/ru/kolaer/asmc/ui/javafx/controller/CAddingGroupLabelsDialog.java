@@ -6,13 +6,12 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
+import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
 /**
@@ -40,20 +39,39 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 		super(Resources.V_ADDING_GROUP_LABELS);
 	}
 
+	/**
+	 * {@linkplain CAddingGroupLabelsDialog.java}
+	 * @param groupModel - Редактировать группу.
+	 */
+	public CAddingGroupLabelsDialog(MGroupLabels groupModel) {
+		super(Resources.V_ADDING_GROUP_LABELS);
+		this.result = groupModel;
+	}
+
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {		
+	public void initialize(URL location, ResourceBundle resources) {	
+		
 		this.okButton.setOnMouseClicked(e -> {
-			this.result = new MGroupLabels(this.groupNameText.getText());
-			final Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Элемент добавлен");
-			alert.setHeaderText("Группа \"" + this.result.getNameGroup() + "\" добавлена!");
-			alert.show();
+			if(this.result == null) {
+				this.result = new MGroupLabels(this.groupNameText.getText());
+			}
+			else {
+				this.result.setNameGroup(this.groupNameText.getText());
+				SettingSingleton.getInstance().saveGroups();
+			}
 			this.dialog.close();
 		});
+		
+
 	}
 
 	public Optional<MGroupLabels> showAndWait(){
-		this.dialog.setTitle(Resources.ADDING_GROUP_FRAME_TITLE);
+		if(this.result != null){
+			this.groupNameText.setText(this.result.getNameGroup());
+		}
+
+		String title = this.result == null ? Resources.ADDING_GROUP_FRAME_TITLE : Resources.EDING_GROUP_FRAME_TITLE;
+		this.dialog.setTitle(title);
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
