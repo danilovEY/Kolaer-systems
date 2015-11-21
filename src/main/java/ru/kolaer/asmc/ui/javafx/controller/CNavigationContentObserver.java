@@ -55,7 +55,10 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		});
 		this.panelWithLabels.getChildren().clear();
 		
-		data.getSerializeGroups().forEach((group) ->{
+		data.getSerializeGroups()
+		.stream()
+		.sorted((a,b) -> String.CASE_INSENSITIVE_ORDER.compare(a.getNameGroup(), b.getNameGroup()))
+		.forEach((group) ->{
     		final CGroupLabels cGroup = new CGroupLabels(group);
     		cGroup.registerOberver(this);
     		this.panelWithGroups.getChildren().add(cGroup);
@@ -72,7 +75,10 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		});
 		this.panelWithLabels.getChildren().clear();
 		
-		mGroup.getLabelList().forEach((g) -> {
+		mGroup.getLabelList()
+		.stream()
+		.sorted((a,b) -> String.CASE_INSENSITIVE_ORDER.compare(a.getName(), b.getName()))
+		.forEach((g) -> {
 			final CLabel label = new CLabel(g);
 			this.panelWithLabels.getChildren().add(label);
 			label.registerOberver(this);
