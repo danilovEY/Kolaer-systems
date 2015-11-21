@@ -21,14 +21,14 @@
          <center>
             <AnchorPane prefHeight="208.0" prefWidth="306.0" BorderPane.alignment="CENTER">
                <children>
-                  <TextArea fx:id="infoText" layoutX="9.0" layoutY="-10.0" prefHeight="35.0" prefWidth="277.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="10.0" />
+                  <TextArea fx:id="infoText" editable="false" layoutX="9.0" layoutY="-10.0" prefHeight="35.0" prefWidth="277.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="10.0" />
                </children>
             </AnchorPane>
          </center>
          <bottom>
             <AnchorPane prefHeight="65.0" prefWidth="295.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="button" layoutX="122.0" layoutY="20.0" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <Button fx:id="button" layoutX="122.0" layoutY="20.0" mnemonicParsing="false" text="Открыть" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
                </children>
             </AnchorPane>
          </bottom>

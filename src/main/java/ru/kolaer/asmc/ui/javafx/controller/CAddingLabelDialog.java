@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -30,6 +33,7 @@ import ru.kolaer.asmc.ui.javafx.model.MLabel;
  * @version 0.1
  */
 public class CAddingLabelDialog extends BaseController implements Dialog {
+	private static Logger LOG = LoggerFactory.getLogger(CAddingLabelDialog.class);
 
 	private final List<MLabel> results = new ArrayList<>();
 	
@@ -89,7 +93,12 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 				this.rbDefaultIcon.setSelected(false);
 				this.rbNoneIcon.setSelected(false);
 				this.pathIconText.setText(new String(file.get().getAbsolutePath()));
-				this.image.setImage(new Image("file:"+new String(file.get().getAbsolutePath())));
+				try{
+					this.image.setImage(new Image(file.get().toURI().toURL().toString()));
+				}
+				catch(Exception e){
+					LOG.error("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath(), e);
+				}
 		        fileChooser.setInitialDirectory(file.get()); 
 			}
 		});
@@ -134,7 +143,12 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			this.rbDefaultIcon.setSelected(false);
 			this.rbNoneIcon.setSelected(false);
 			this.pathIconText.setText(new String(file.get().getAbsolutePath()));
-			this.image.setImage(new Image("file:"+new String(file.get().getAbsolutePath())));
+			try{
+				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
+			}
+			catch(Exception e){
+				LOG.error("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath(), e);
+			}
 	        fileChooser.setInitialDirectory(file.get()); 
 		}
 	}

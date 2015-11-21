@@ -1,15 +1,21 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
@@ -20,6 +26,7 @@ import ru.kolaer.asmc.ui.javafx.model.MLabel;
  * @version 0.1
  */
 public class CLabel extends BaseController implements Initializable, ObservableLabel {
+	private static final Logger LOG = LoggerFactory.getLogger(CLabel.class);
 	
 	/**Список слушателей.*/
 	private final List<ObserverLabel> obsList = new ArrayList<>();
@@ -48,7 +55,20 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 		
 		if(this.model == null) return;
 		
-		this.button.setText(this.model.getName());
+		this.nameLabel.setText(this.model.getName());
+		this.infoText.setText(this.model.getInfo());
+		
+		final Optional<File> file = Optional.of(new File(this.model.getPathImage()));
+		
+		if(file.isPresent() && (file.get().exists() && file.get().isFile())) {
+			try{
+				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
+			}
+			catch(Exception e){
+				LOG.error("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath(), e);
+			}
+		}
+		
 	}
 
 	@Override
