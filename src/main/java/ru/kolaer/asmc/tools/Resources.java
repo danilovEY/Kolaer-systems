@@ -10,11 +10,11 @@ import java.net.URL;
 public interface Resources
 {
 	/*==========View Resources=============*/
-	public static final String V_MAIN_FRAME = "file:View/VMainFrame.fxml";
-	public static final String V_GROUP_LABELS = "file:View/VGroupLabels.fxml";
-	public static final String V_LABEL = "file:View/VLabel.fxml";
-	public static final String V_AUTHENTICATION = "file:View/VAuthentication.fxml";
-	public static final String V_ADDING_GROUP_LABELS = "file:View/VAddingGroupLabels.fxml";
+	public static final String V_MAIN_FRAME = "file:view/VMainFrame.fxml";
+	public static final String V_GROUP_LABELS = "file:view/VGroupLabels.fxml";
+	public static final String V_LABEL = "file:view/VLabel.fxml";
+	public static final String V_AUTHENTICATION = "file:view/VAuthentication.fxml";
+	public static final String V_ADDING_GROUP_LABELS = "file:view/VAddingGroupLabels.fxml";
 	
 	
 	/**Стандарткая иконка для ярлыка.*/
