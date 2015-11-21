@@ -40,4 +40,8 @@ public class MLabel implements Serializable {
 	public void setPathApplication(String pathApplication) {
 		this.pathApplication = pathApplication;
 	}
+	@Override
+	public String toString() {
+		return "MLabel [name=" + name + ", info=" + info + ", pathImage=" + pathImage + ", pathApplication=" + pathApplication + "]";
+	}
 }

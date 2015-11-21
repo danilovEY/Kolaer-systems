@@ -14,6 +14,8 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	private final Pane panelWithGroups;
 	private final Pane panelWithLabels;
+	private MGroupLabels selectedGroup;
+	
 	/**
 	 * {@linkplain CNavigationContentObserver}
 	 */
@@ -28,12 +30,30 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		this.panelWithGroups.getChildren().add(cGroup);
 	}
 	
+	public void addLabel(MLabel label) {
+		this.selectedGroup.addLabel(label);
+		final CLabel cLabel = new CLabel(label);
+		cLabel.registerOberver(this);
+		this.panelWithLabels.getChildren().add(cLabel);
+	}
+	
+	public MGroupLabels getSelectedItem() {
+		return this.selectedGroup;
+	}
+	
 	/**Загрузить и добавить группы.*/
 	public void loadAndRegGroups(SerializationGroups data) {
+		this.selectedGroup = null;
+		
 		this.panelWithGroups.getChildren().forEach(g -> {
 			((CGroupLabels)g).removeObserver(this);
 		});
 		this.panelWithGroups.getChildren().clear();
+		
+		this.panelWithLabels.getChildren().forEach(g -> {
+			((CLabel)g).removeObserver(this);
+		});
+		this.panelWithLabels.getChildren().clear();
 		
 		data.getSerializeGroups().forEach((group) ->{
     		final CGroupLabels cGroup = new CGroupLabels(group);
@@ -44,6 +64,9 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	
 	@Override
 	public void updateClick(MGroupLabels mGroup) {
+		selectedGroup = null;
+		selectedGroup = mGroup;
+		
 		this.panelWithLabels.getChildren().forEach(g -> {
 			((CLabel)g).removeObserver(this);
 		});

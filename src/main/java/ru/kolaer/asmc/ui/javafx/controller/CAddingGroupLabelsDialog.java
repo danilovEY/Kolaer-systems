@@ -53,6 +53,7 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 	}
 
 	public Optional<MGroupLabels> showAndWait(){
+		this.dialog.setTitle(Resources.ADDING_GROUP_FRAME_TITLE);
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();

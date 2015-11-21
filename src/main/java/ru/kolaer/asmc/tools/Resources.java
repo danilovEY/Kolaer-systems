@@ -13,6 +13,7 @@ public interface Resources
 	public static final String V_LABEL = "file:view/VLabel.fxml";
 	public static final String V_AUTHENTICATION = "file:view/VAuthentication.fxml";
 	public static final String V_ADDING_GROUP_LABELS = "file:view/VAddingGroupLabels.fxml";
+	public static final String V_ADDING_LABEL = "file:view/VAddingLabel.fxml";
 	
 	
 	/**Стандарткая иконка для ярлыка.*/
@@ -29,6 +30,9 @@ public interface Resources
 	
 	public static final String MAIN_FRAME_TITLE = "АСУП - АЭР";
 	public static final String LOGIN_FRAME_TITLE = "Получить root доступ";
+	public static final String ADDING_GROUP_FRAME_TITLE = "Добавить группу";
+	public static final String ADDING_LABEL_FRAME_TITLE = "Добавить ярлык";
+	
 	
 	public static final String LOGIN_LABEL = "Логин";
 	public static final String PASS_LABEL = "Пароль";
@@ -37,4 +41,6 @@ public interface Resources
 	public static final String LOGUOT_BUTTON = "Отмена";
 	
 	public static final String MENU_ITEM_ADD_GROUP = "Добавить группу";
+	
+	public static final String MENU_ITEM_ADD_LABEL = "Добавить ярлык";
 }

@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<fx:root prefHeight="364.0" prefWidth="451.0" type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<fx:root prefHeight="364.0" prefWidth="451.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <GridPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="354.0" prefWidth="428.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -29,8 +28,8 @@
             <Label text="Путь к файлу/URL:" GridPane.rowIndex="3" />
             <FlowPane alignment="CENTER_RIGHT" hgap="10.0" prefHeight="70.0" prefWidth="69.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
-                  <Button fx:id="okButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="OK" />
-                  <Button fx:id="buttonCancel" mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="Отмена" />
+                  <Button fx:id="okButton" mnemonicParsing="false" onAction="#actionButtonOK" prefHeight="25.0" prefWidth="60.0" text="OK" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#actionButtonCancel" prefHeight="25.0" prefWidth="60.0" text="Отмена" />
                </children>
             </FlowPane>
             <TextField fx:id="nameLabelText" prefHeight="25.0" prefWidth="171.0" GridPane.columnIndex="1" />
@@ -43,9 +42,12 @@
                <center>
                   <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="180.0" spacing="10.0" BorderPane.alignment="CENTER">
                      <children>
-                        <RadioButton fx:id="rbNoneIcon" mnemonicParsing="false" text="Без иконки" />
-                        <RadioButton fx:id="rbDefaultIcon" mnemonicParsing="false" text="Стандартная иконка" />
-                        <RadioButton fx:id="rbSetPathIcon" mnemonicParsing="false" text="Указать путь к иконке" />
+                        <RadioButton fx:id="rbNoneIcon" mnemonicParsing="false" onAction="#actionRBNoneIcon" text="Без иконки">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="icon" />
+                           </toggleGroup></RadioButton>
+                        <RadioButton fx:id="rbDefaultIcon" mnemonicParsing="false" onAction="#actionRBDefaultIcon" text="Стандартная иконка" toggleGroup="$icon" />
+                        <Button fx:id="setPathIconButton" mnemonicParsing="false" onAction="#actionButtonSetPathIcon" text="Указать путь к иконке..." />
                      </children>
                      <BorderPane.margin>
                         <Insets bottom="10.0" />
@@ -59,14 +61,14 @@
                   </VBox>
                </center>
                <left>
-                  <ImageView fx:id="image" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                  <ImageView fx:id="image" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" BorderPane.alignment="CENTER">
                      <BorderPane.margin>
                         <Insets bottom="10.0" />
                      </BorderPane.margin>
                   </ImageView>
                </left>
                <bottom>
-                  <TextField fx:id="pathIconText" BorderPane.alignment="CENTER" />
+                  <TextField fx:id="pathIconText" editable="true" BorderPane.alignment="CENTER" />
                </bottom>
                <GridPane.margin>
                   <Insets />
