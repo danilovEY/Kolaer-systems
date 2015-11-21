@@ -65,6 +65,6 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 		this.dialog.centerOnScreen();
 		this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		this.dialog.showAndWait();
-		return Optional.ofNullable(SettingSingleton.getInstance().isRoot());
+		return Optional.of(SettingSingleton.getInstance().isRoot());
 	}
 }

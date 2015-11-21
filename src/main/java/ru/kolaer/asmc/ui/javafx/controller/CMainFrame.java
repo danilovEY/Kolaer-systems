@@ -71,7 +71,9 @@ public class CMainFrame extends Application {
     		final CAddingGroupLabelsDialog addingGroup = new CAddingGroupLabelsDialog();
     		final Optional<MGroupLabels> result = addingGroup.showAndWait();
     		if(result.isPresent()) {
-    			observer.addGroupLabels(result.get());
+    			final MGroupLabels res = result.get();
+    			observer.addGroupLabels(res);
+    			serial.getSerializeGroups().add(res);
     		}
     	});    	
     }
