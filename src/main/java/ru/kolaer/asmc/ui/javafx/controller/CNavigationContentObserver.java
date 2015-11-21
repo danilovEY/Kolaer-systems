@@ -34,6 +34,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 			((CGroupLabels)g).removeObserver(this);
 		});
 		this.panelWithGroups.getChildren().clear();
+		
 		data.getSerializeGroups().forEach((group) ->{
     		final CGroupLabels cGroup = new CGroupLabels(group);
     		cGroup.registerOberver(this);

@@ -2,6 +2,7 @@ package ru.kolaer.asmc.ui.javafx.controller;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,7 @@ public class CMainFrame extends Application {
     	observer.loadAndRegGroups(this.serial);
     	
     	this.rootMenuItem.setOnAction((event) -> {
-    		new CAuthentication().showAndWait();
+    		new CAuthenticationDialog().showAndWait();
     	});
     	
     	final ContextMenu contextNavigationPanel = new ContextMenu();
@@ -57,6 +58,8 @@ public class CMainFrame extends Application {
 
     	contextNavigationPanel.getItems().add(addGroupLabels);
     	
+    	
+    	//=====Events======
     	this.navigatePanel.setOnContextMenuRequested((event) -> {
     		
     		if(!SettingSingleton.getInstance().isRoot()) return;
@@ -65,15 +68,12 @@ public class CMainFrame extends Application {
     	}); 	
 
     	addGroupLabels.setOnAction(e -> {
-    		final CAddingGroupLabels addingGroup = new CAddingGroupLabels();
-    		addingGroup.showAndWait();
-    		final MGroupLabels result = addingGroup.getResult();
-    		if(result!=null) {
-    			observer.addGroupLabels(result);
+    		final CAddingGroupLabelsDialog addingGroup = new CAddingGroupLabelsDialog();
+    		final Optional<MGroupLabels> result = addingGroup.showAndWait();
+    		if(result.isPresent()) {
+    			observer.addGroupLabels(result.get());
     		}
-    	});
-    	
-    	
+    	});    	
     }
     
 	@Override

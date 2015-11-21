@@ -1,6 +1,7 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -15,7 +16,7 @@ import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 
-public class CAuthentication extends BaseController {
+public class CAuthenticationDialog extends BaseController implements Dialog {
 
 	private final Stage dialog = new Stage();
 	
@@ -31,7 +32,7 @@ public class CAuthentication extends BaseController {
 	@FXML
 	private Button cancelButton;
 	
-	public CAuthentication() {
+	public CAuthenticationDialog() {
 		super(Resources.V_AUTHENTICATION);
 	}
 
@@ -58,11 +59,12 @@ public class CAuthentication extends BaseController {
 		});
 	}
 	
-	public void showAndWait(){
+	public Optional<Boolean> showAndWait(){
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
 		this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		this.dialog.showAndWait();
+		return Optional.ofNullable(SettingSingleton.getInstance().isRoot());
 	}
 }

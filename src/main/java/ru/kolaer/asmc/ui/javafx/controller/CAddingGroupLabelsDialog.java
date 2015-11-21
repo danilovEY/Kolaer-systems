@@ -1,6 +1,7 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -14,7 +15,13 @@ import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
-public class CAddingGroupLabels extends BaseController {
+/**
+ * Окно для добавления группы.
+ *
+ * @author Danilov
+ * @version 0.2
+ */
+public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 	
 	private final Stage dialog = new Stage();
 	
@@ -29,7 +36,7 @@ public class CAddingGroupLabels extends BaseController {
 	@FXML
 	private Button cancelButton;
 	
-	public CAddingGroupLabels() {
+	public CAddingGroupLabelsDialog() {
 		super(Resources.V_ADDING_GROUP_LABELS);
 	}
 
@@ -38,20 +45,19 @@ public class CAddingGroupLabels extends BaseController {
 		this.okButton.setOnMouseClicked(e -> {
 			this.result = new MGroupLabels(this.groupNameText.getText());
 			final Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Элемент добавлен");
+			alert.setHeaderText("Группа \"" + this.result.getNameGroup() + "\" добавлена!");
 			alert.show();
 			this.dialog.close();
 		});
 	}
 
-	public void showAndWait(){
+	public Optional<MGroupLabels> showAndWait(){
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
 		this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		this.dialog.showAndWait();
-	}
-	
-	public MGroupLabels getResult() {
-		return this.result;
+		return Optional.ofNullable(this.result);
 	}
 }
