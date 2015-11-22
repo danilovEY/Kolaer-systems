@@ -7,8 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -27,13 +27,13 @@ public class SerializationGroups {
 	private final String pathDitSerializedObject = "data";
 	private final String fileNameSerializeObjects = "objects.aer";
 	private final File dir = new File(pathDitSerializedObject);
-	private final File fileSer = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
+	private File fileSer = null;
 	private List<MGroupLabels> cacheObjects;
 
 	public SerializationGroups() {
 		
 		if(!this.checkFile()){
-			LOG.error("Не удалось создать файл: {}", fileSer.getAbsolutePath());
+			LOG.error("Не удалось создать файл!");
 			System.exit(-9);
 		}
 	}
@@ -44,18 +44,36 @@ public class SerializationGroups {
 	 * @return true - если файл создан.
 	 */
 	private boolean checkFile() {
-		try {
-			if (!dir.exists()) {
-				dir.mkdirs();
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		final File[] files = dir.listFiles();
+		long lastTimeMod = -1;
+		this.fileSer = null;
+		for(File file : files) {
+			if(lastTimeMod < file.lastModified() && file.isFile() && file.getName().endsWith("aer")) {
+				lastTimeMod = file.lastModified();
+				this.fileSer = file;
 			}
-
-			if (!fileSer.exists()) {
-				LOG.debug("Создание файла: {}", fileSer.getAbsolutePath());
-				fileSer.createNewFile();
+		}
+		
+		if(files.length >= 10) {
+			for(File file : files) {
+				if(file != this.fileSer)
+					file.delete();
 			}
-		} catch (IOException e1) {
-			LOG.error("Не удалось создать файл: {}", fileSer.getAbsolutePath());
-			return false;
+		}
+		
+		if (this.fileSer == null) {
+			LOG.debug("Создание файла.");
+			this.fileSer = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
+			try (FileOutputStream fileOutSer = new FileOutputStream(this.fileSer);
+					ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
+			} catch (FileNotFoundException e) {
+				LOG.error("Не найден файл: " + this.fileSer.getAbsolutePath(), e);
+			} catch (IOException e2) {
+				System.exit(-9);
+			}
 		}
 		return true;
 	}
@@ -67,41 +85,49 @@ public class SerializationGroups {
 			return this.cacheObjects;
 		
 		if(!this.checkFile())
-			LOG.error("Файл был удален: {}", fileSer.getAbsolutePath());
-		
-		try (FileInputStream fileInput = new FileInputStream(fileSer);
+			LOG.error("Файл был удален: {}", this.fileSer.getAbsolutePath());
+
+		try (FileInputStream fileInput = new FileInputStream(this.fileSer);
 				ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
 			try {
 				if(this.cacheObjects == null) {
 					 this.cacheObjects = new ArrayList<>();
-					 final List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
-					 this.cacheObjects.addAll(groupList);
+					 if(objectInput.available() != -1) {
+						 final List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
+						 this.cacheObjects.addAll(groupList);
+					 }
 				}				
-		
 				return this.cacheObjects;
 			} catch (ClassNotFoundException e) {
 				LOG.error("Класс не найден!", e);
 				return this.cacheObjects;
 			}
 		} catch (IOException e) {
-			LOG.error("Не удалось открыть файл: " + fileSer.getAbsolutePath(), e);
-			return this.cacheObjects;
+			LOG.error("Не удалось открыть файл: " + this.fileSer.getAbsolutePath(), e);
+			this.fileSer.delete();
+			this.fileSer = null;
+			return this.getSerializeGroups();
 		}
 	}
 
 	/**Сериализовать список групп.*/
 	public void setSerializeGroups(List<MGroupLabels> groupModels) {
-		
-		if(!this.checkFile())
-			LOG.error("Файл был удален: {}", fileSer.getAbsolutePath());
-		
-		try (FileOutputStream fileOutSer = new FileOutputStream(fileSer);
+
+		File newSerObj = new File(pathDitSerializedObject + "/" + new SimpleDateFormat("MM.dd.yyyy_HH.mm.ss").format(System.currentTimeMillis())
+				+ "_" + fileNameSerializeObjects);
+		try{
+			newSerObj.createNewFile();
+		}
+		catch(IOException e2){
+			LOG.error("Не удалось открыть файл: " + newSerObj.getAbsolutePath(), e2);
+		}
+		try (FileOutputStream fileOutSer = new FileOutputStream(newSerObj);
 				ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
 
 			objectOutputStream.writeObject(groupModels);
 
 		} catch (FileNotFoundException e) {
-			LOG.error("Не найден файл: " + fileSer.getAbsolutePath(), e);
+			LOG.error("Не найден файл: " + newSerObj.getAbsolutePath(), e);
 		} catch (IOException e1) {
 			System.exit(-9);
 		}

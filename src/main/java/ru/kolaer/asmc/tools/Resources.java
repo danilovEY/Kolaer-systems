@@ -42,7 +42,7 @@ public interface Resources
 	public static final String LOGUOT_BUTTON = "Отмена";
 	
 	public static final String MENU_ITEM_ADD_GROUP = "Добавить группу";
-	public static final String MENU_ITEM_ETID_GROUP = "Редактировать группу";
+	public static final String MENU_ITEM_EDIT_GROUP = "Редактировать группу";
 	public static final String MENU_ITEM_DELETE_GROUP = "Удалить группу";
 	
 	public static final String MENU_ITEM_ADD_LABEL = "Добавить ярлык";

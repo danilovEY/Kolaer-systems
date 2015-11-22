@@ -15,4 +15,10 @@ public interface ObserverGroupLabels {
 	 * @param group Модель измененной группы.
 	 */
 	void updateEdit(MGroupLabels group);
+
+	/**
+	 * Получить оповещение о удалении группы.
+	 * @param group Модель измененной группы.
+	 */
+	void updateDelete(MGroupLabels model);
 }

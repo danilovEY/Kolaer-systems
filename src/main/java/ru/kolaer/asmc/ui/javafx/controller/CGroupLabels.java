@@ -9,7 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import ru.kolaer.asmc.tools.Resources;
@@ -62,14 +65,24 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 	public void initialize(URL location, ResourceBundle resources) {
 		
 		final ContextMenu contextGroupPanel = new ContextMenu();
-		final MenuItem editGroupLabels = new MenuItem(Resources.MENU_ITEM_ETID_GROUP);
-
-		contextGroupPanel.getItems().add(editGroupLabels);
+		final MenuItem editGroupLabels = new MenuItem(Resources.MENU_ITEM_EDIT_GROUP);
+		final MenuItem deleteGroupLabels = new MenuItem(Resources.MENU_ITEM_DELETE_GROUP);
+		
+		contextGroupPanel.getItems().addAll(editGroupLabels, deleteGroupLabels);
 		
 		this.button.setContextMenu(contextGroupPanel);
+		
 		this.button.setOnContextMenuRequested(event -> {
 			if(!SettingSingleton.getInstance().isRoot()) return;
 			contextGroupPanel.show(this, event.getScreenX(), event.getScreenY());
+		});
+		
+		deleteGroupLabels.setOnAction(e -> {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setHeaderText("Вы действительно хотите удалить группу \""+ this.model.getNameGroup() + "\"?");
+			if(alert.showAndWait().get() == ButtonType.OK) {
+				this.notifyObserverDelete();
+			}
 		});
 		
 		editGroupLabels.setOnAction(e -> {
@@ -113,5 +126,13 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 	 */
 	public void setModel(MGroupLabels model) {
 		this.model = model;
+	}
+
+	@Override
+	public void notifyObserverDelete() {
+		observerList.forEach((o) -> {
+			o.updateDelete(this.model);
+		});
+		observerList.clear();
 	}
 }

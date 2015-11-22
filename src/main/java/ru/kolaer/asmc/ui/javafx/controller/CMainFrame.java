@@ -70,20 +70,16 @@ public class CMainFrame extends Application {
 		this.contentScrollPanel.setContextMenu(contextContentPanel);
 		// =====Events======
 		this.navigateScrollPanel.setOnContextMenuRequested((event) -> {
-
-			if(!SettingSingleton.getInstance().isRoot()) return;
-
-			contextNavigationPanel.show(this.navigatePanel, event.getScreenX(), event.getScreenY());
+			if(!SettingSingleton.getInstance().isRoot()) {
+				this.navigateScrollPanel.getContextMenu().hide();
+			}
 		});
 
-		this.contentPanel.setOnContextMenuRequested((event) -> {
-
+		this.contentScrollPanel.setOnContextMenuRequested((event) -> {
 			if(observer.getSelectedItem() == null 
 					|| !SettingSingleton.getInstance().isRoot()) {
-				return;
+				this.contentScrollPanel.getContextMenu().hide();
 			}
-			
-			contextContentPanel.show(this.navigatePanel, event.getScreenX(), event.getScreenY());
 		});
 		
 		addGroupLabels.setOnAction(e -> {
