@@ -87,11 +87,6 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	}
 
 	@Override
-	public void update(MLabel model) {
-		System.out.println(model.getName());
-	}
-
-	@Override
 	public void updateEdit(MGroupLabels group) {
 		this.panelWithGroups.getChildren().setAll(this.panelWithGroups.getChildren().stream().map(g -> {
 			return((CGroupLabels) g);
@@ -121,5 +116,21 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		this.panelWithGroups.getChildren().remove(array[0]);
 		SettingSingleton.getInstance().getSerializationGroups().getSerializeGroups().remove(model);
 		SettingSingleton.getInstance().saveGroups();
+	}
+
+	@Override
+	public void updateClick(MLabel model) {
+		System.out.println(model.getName());
+	}
+	
+	@Override
+	public void updateEdit(MLabel model) {
+		
+	}
+
+	@Override
+	public void updateDelete(MLabel model) {
+		// TODO Auto-generated method stub
+		
 	}
 }

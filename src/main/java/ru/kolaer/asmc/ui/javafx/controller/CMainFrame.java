@@ -2,7 +2,6 @@ package ru.kolaer.asmc.ui.javafx.controller;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -95,12 +94,9 @@ public class CMainFrame extends Application {
 		
 		addLabel.setOnAction(e -> {
 			final CAddingLabelDialog addingLabel = new CAddingLabelDialog();
-			final Optional<List<MLabel>> results = addingLabel.showAndWait();
-			List<MLabel> listLabels = results.get();
-			if(!listLabels.isEmpty()){
-				listLabels.forEach(l -> {
-					observer.addLabel(l);
-				});
+			final Optional<MLabel> result = addingLabel.showAndWait();
+			if(result.isPresent()){
+				observer.addLabel(result.get());
 				SettingSingleton.getInstance().saveGroups();
 			}
 		});

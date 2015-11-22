@@ -2,8 +2,6 @@ package ru.kolaer.asmc.ui.javafx.controller;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -13,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -35,8 +30,7 @@ import ru.kolaer.asmc.ui.javafx.model.MLabel;
 public class CAddingLabelDialog extends BaseController implements Dialog {
 	private static Logger LOG = LoggerFactory.getLogger(CAddingLabelDialog.class);
 
-	private final List<MLabel> results = new ArrayList<>();
-	
+	private MLabel result;
 	@FXML
 	private TextField nameLabelText;
 	@FXML
@@ -66,6 +60,15 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	public CAddingLabelDialog() {
 		super(Resources.V_ADDING_LABEL);
 		this.init();
+	}
+	/**
+	 * {@linkplain CAddingLabelDialog.java}
+	 * @param model
+	 */
+	public CAddingLabelDialog(MLabel model) {
+		super(Resources.V_ADDING_LABEL);
+		this.init();
+		this.result = model;
 	}
 	private void init() {
 		this.fileChooser.setTitle("Выбор иконки ярлыка");
@@ -106,16 +109,14 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	}
 	
 	@FXML
-	public void actionButtonOK(ActionEvent event) {
+	public void actionButtonOK(ActionEvent event) {	
 		final MLabel label = new MLabel(this.nameLabelText.getText(), 
 				this.infoLabelText.getText(), 
 				this.pathIconText.getText(), 
 				this.pathAppText.getText());
-		Alert alter = new Alert(AlertType.CONFIRMATION,"Добавить ярлык?\n" + label.toString(), ButtonType.YES, ButtonType.NO);
-		if(alter.showAndWait().get() == ButtonType.YES){
-			this.results.add(label);
-			new Alert(AlertType.INFORMATION,"Ярлык добавлен!").show();
-		}
+				
+		this.result = label;
+		this.dialog.close();
 	}
 	
 	@FXML
@@ -154,14 +155,27 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	}
 	
 	@Override
-	public Optional<List<MLabel>> showAndWait() {
+	public Optional<MLabel> showAndWait() {
+		if(this.result != null) {
+			this.nameLabelText.setText(this.result.getName());
+			this.infoLabelText.setText(this.result.getInfo());
+			System.out.println(this.result.getPathImage());
+			if(this.result.getPathImage() == null || this.result.getPathImage().isEmpty()) {
+				this.rbNoneIcon.setSelected(true);
+			}
+			else if(this.result.getPathImage().equals(Resources.AER_LOGO)) {
+				this.rbDefaultIcon.setSelected(true);
+			}
+			
+		}
+		
 		this.dialog.setTitle(Resources.ADDING_LABEL_FRAME_TITLE);
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
 		this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		this.dialog.showAndWait();
-		return Optional.ofNullable(this.results);
+		return Optional.ofNullable(this.result);
 	}
 
 }

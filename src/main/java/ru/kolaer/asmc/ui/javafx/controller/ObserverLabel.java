@@ -12,5 +12,17 @@ public interface ObserverLabel {
 	 * Получить оповещение о нажатии на ярлык.
 	 * @param model Модель нажатого ярлыка.
 	 */
-	void update(MLabel model);
+	void updateClick(MLabel model);
+
+	/**
+	 * Получить оповещение о изменении ярлыка.
+	 * @param model Модель нажатого ярлыка.
+	 */
+	void updateEdit(MLabel model);
+
+	/**
+	 * Получить оповещение о удалении ярлыка.
+	 * @param model Модель нажатого ярлыка.
+	 */
+	void updateDelete(MLabel model);
 }
