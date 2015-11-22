@@ -78,7 +78,6 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 				LOG.error("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath(), e);
 			}
 		}
-
 	}
 
 	@Override
