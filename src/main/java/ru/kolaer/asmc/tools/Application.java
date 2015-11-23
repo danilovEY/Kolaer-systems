@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -20,7 +17,6 @@ import ru.kolaer.asmc.ui.javafx.controller.CWebBrowser;
  *
  */
 public class Application implements Runnable {
-	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
 	private String pathApp;
 

@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,7 +34,6 @@ import ru.kolaer.asmc.ui.javafx.model.MLabel;
  * @version 0.1
  */
 public class CLabel extends BaseController implements Initializable, ObservableLabel {
-	private static final Logger LOG = LoggerFactory.getLogger(CLabel.class);
 
 	/** Список слушателей. */
 	private final List<ObserverLabel> obsList = new ArrayList<>();
@@ -117,7 +113,11 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
 			}
 			catch(Exception e1){
-				LOG.error("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath(), e1);
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка!");
+				alert.setHeaderText("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath());
+				alert.setContentText(e1.toString());
+				alert.showAndWait();
 			}
 		}
 		else {

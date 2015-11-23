@@ -5,22 +5,20 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
-import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
 
 /**
@@ -29,8 +27,7 @@ import ru.kolaer.asmc.ui.javafx.model.MLabel;
  * @version 0.1
  */
 public class CAddingLabelDialog extends BaseController implements Dialog {
-	private static Logger LOG = LoggerFactory.getLogger(CAddingLabelDialog.class);
-
+	
 	private MLabel result;
 	@FXML
 	private TextField nameLabelText;
@@ -103,7 +100,11 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 					this.image.setImage(new Image(file.get().toURI().toURL().toString()));
 				}
 				catch(Exception e){
-					LOG.error("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath(), e);
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Ошибка!");
+					alert.setHeaderText("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath());
+					alert.setContentText(e.toString());
+					alert.showAndWait();
 				}
 		        fileChooser.setInitialDirectory(file.get()); 
 			}
@@ -158,7 +159,11 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
 			}
 			catch(Exception e){
-				LOG.error("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath(), e);
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка!");
+				alert.setHeaderText("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath());
+				alert.setContentText(e.toString());
+				alert.showAndWait();
 			}
 	        fileChooser.setInitialDirectory(file.get()); 
 		}
@@ -192,7 +197,11 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 						this.image.setImage(new Image(file.toURI().toURL().toString()));
 					}
 					catch(Exception e){
-						LOG.error("Невозможно переконвертировать в URL файл:" +file.getAbsolutePath(), e);
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Ошибка!");
+						alert.setHeaderText("Невозможно переконвертировать в URL файл:" +file.getAbsolutePath());
+						alert.setContentText(e.toString());
+						alert.showAndWait();
 					}
 				}
 			}
@@ -202,8 +211,18 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
-		this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
+		
+		try {
+			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
+		} catch(IllegalArgumentException e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Ошибка!");
+			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
+			alert.showAndWait();
+		}
+		
 		this.dialog.showAndWait();
+		
 		return Optional.ofNullable(this.result);
 	}
 }

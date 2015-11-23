@@ -63,8 +63,18 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
-		this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
+
+		try {
+			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
+		} catch(IllegalArgumentException e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Ошибка!");
+			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
+			alert.showAndWait();
+		}
+		
 		this.dialog.showAndWait();
+		
 		return Optional.of(SettingSingleton.getInstance().isRoot());
 	}
 }

@@ -11,9 +11,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
 /**
@@ -22,7 +22,6 @@ import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
  * @version 0.1
  */
 public class SerializationGroups {
-	private static final Logger LOG = LoggerFactory.getLogger(SerializationGroups.class);
 
 	private final String pathDitSerializedObject = "data";
 	private final String fileNameSerializeObjects = "objects.aer";
@@ -33,8 +32,13 @@ public class SerializationGroups {
 	public SerializationGroups() {
 		
 		if(!this.checkFile()){
-			LOG.error("Не удалось создать файл!");
-			System.exit(-9);
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка!");
+				alert.setHeaderText("Не удалость создать файл для объектов!");
+				alert.showAndWait();
+				System.exit(-9);
+			});
 		}
 	}
 
@@ -65,12 +69,16 @@ public class SerializationGroups {
 		}
 		
 		if (this.fileSer == null) {
-			LOG.debug("Создание файла.");
 			this.fileSer = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
 			try (FileOutputStream fileOutSer = new FileOutputStream(this.fileSer);
 					ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
 			} catch (FileNotFoundException e) {
-				LOG.error("Не найден файл: " + this.fileSer.getAbsolutePath(), e);
+				Platform.runLater(() -> {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Ошибка!");
+					alert.setHeaderText("Не найден файл: " + this.fileSer.getAbsolutePath());
+					alert.showAndWait();
+				});
 			} catch (IOException e2) {
 				System.exit(-9);
 			}
@@ -84,8 +92,14 @@ public class SerializationGroups {
 		if(this.cacheObjects != null)
 			return this.cacheObjects;
 		
-		if(!this.checkFile())
-			LOG.error("Файл был удален: {}", this.fileSer.getAbsolutePath());
+		if(!this.checkFile()) {
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка!");
+				alert.setHeaderText("Файл был удален: " + this.fileSer.getAbsolutePath());
+				alert.showAndWait();
+			});
+		}
 
 		try (FileInputStream fileInput = new FileInputStream(this.fileSer);
 				ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
@@ -99,11 +113,16 @@ public class SerializationGroups {
 				}				
 				return this.cacheObjects;
 			} catch (ClassNotFoundException e) {
-				LOG.error("Класс не найден!", e);
+				Platform.runLater(() -> {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Ошибка!");
+					alert.setHeaderText("Класс не найден!" + this.fileSer.getAbsolutePath());
+					alert.setContentText(e.getMessage());
+					alert.showAndWait();
+				});
 				return this.cacheObjects;
 			}
 		} catch (IOException e) {
-			LOG.error("Не удалось открыть файл: " + this.fileSer.getAbsolutePath(), e);
 			this.fileSer.delete();
 			this.fileSer = null;
 			return this.getSerializeGroups();
@@ -119,15 +138,28 @@ public class SerializationGroups {
 			newSerObj.createNewFile();
 		}
 		catch(IOException e2){
-			LOG.error("Не удалось открыть файл: " + newSerObj.getAbsolutePath(), e2);
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка!");
+				alert.setHeaderText("Не удалось создать файл: " + newSerObj.getAbsolutePath());
+				alert.setContentText(e2.getMessage());
+				alert.showAndWait();
+			});
 		}
+		
 		try (FileOutputStream fileOutSer = new FileOutputStream(newSerObj);
 				ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
 
 			objectOutputStream.writeObject(groupModels);
 
 		} catch (FileNotFoundException e) {
-			LOG.error("Не найден файл: " + newSerObj.getAbsolutePath(), e);
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка!");
+				alert.setHeaderText("Не найден файл: " + newSerObj.getAbsolutePath());
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+			});
 		} catch (IOException e1) {
 			System.exit(-9);
 		}

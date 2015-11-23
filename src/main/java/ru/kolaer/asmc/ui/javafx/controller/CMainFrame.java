@@ -4,21 +4,18 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
@@ -34,8 +31,6 @@ import ru.kolaer.asmc.ui.javafx.model.MLabel;
  * @version 0.2
  */
 public class CMainFrame extends Application {
-
-	private static final Logger LOG = LoggerFactory.getLogger(CMainFrame.class);
 	/** Элемент в меню для получения админ. прав. */
 	@FXML
 	private MenuItem rootMenuItem;
@@ -118,7 +113,10 @@ public class CMainFrame extends Application {
 			root = FXMLLoader.load(URI.create(Resources.V_MAIN_FRAME).toURL());
 		}
 		catch(IOException e){
-			LOG.error("Не найден view: " + Resources.V_MAIN_FRAME, e);
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Ошибка!");
+			alert.setHeaderText("Не найден view: \""+Resources.V_MAIN_FRAME+"\"");
+			alert.showAndWait();
 			try{
 				this.stop();
 			}
@@ -127,7 +125,14 @@ public class CMainFrame extends Application {
 			}
 		}
 		primaryStage.setTitle(Resources.MAIN_FRAME_TITLE);
-		primaryStage.getIcons().add(new Image(Resources.AER_LOGO.toString()));
+		try {
+			primaryStage.getIcons().add(new Image(Resources.AER_LOGO.toString()));
+		} catch(IllegalArgumentException e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Ошибка!");
+			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
+			alert.showAndWait();
+		}
 		primaryStage.setScene(new Scene(root));
 		primaryStage.centerOnScreen();
 		primaryStage.show();

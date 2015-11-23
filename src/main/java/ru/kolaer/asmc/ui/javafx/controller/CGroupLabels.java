@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -26,8 +23,7 @@ import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
  * @version 0.2
  */
 public class CGroupLabels extends BaseController implements ObservableGroupLabels{
-	
-	private static final Logger LOG = LoggerFactory.getLogger(CGroupLabels.class);
+
 	/**Модель.*/
 	private MGroupLabels model;
 	/**Список слушателей.*/
