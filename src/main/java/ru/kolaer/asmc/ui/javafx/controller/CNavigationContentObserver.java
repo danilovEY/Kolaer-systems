@@ -132,7 +132,20 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	@Override
 	public void updateDelete(MLabel model) {
-		// TODO Auto-generated method stub
+		if(this.selectedGroup == null) return;
 		
+		this.selectedGroup.getLabelList().remove(model);
+		
+		final CLabel[] array = new CLabel[1];
+		this.panelWithLabels.getChildren().forEach(l -> {
+			final CLabel label = ((CLabel) l);
+			if(label.getModel() == model) {
+				array[0] = label;
+				return;
+			}
+			
+		});
+
+		this.panelWithLabels.getChildren().remove(array[0]);
 	}
 }

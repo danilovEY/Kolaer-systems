@@ -13,12 +13,15 @@ import org.slf4j.LoggerFactory;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
@@ -92,7 +95,11 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 		});
 		
 		deleteLabel.setOnAction(e -> {
-			this.notifyObserverDelete();
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setHeaderText("Вы действительно хотите удалить ярлык \""+ this.model.getName() + "\"?");
+			if(alert.showAndWait().get() == ButtonType.OK) {
+				this.notifyObserverDelete();
+			}
 		});
 		
 		this.button.setOnAction(e -> this.notifyObserverClick());
@@ -151,6 +158,9 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 
 	@Override
 	public void notifyObserverDelete() {
-		this.obsList.forEach(o -> o.updateDelete(this.model));
+		this.obsList.forEach((o) -> {
+			o.updateDelete(this.model);
+		});
+		this.obsList.clear();
 	}
 }
