@@ -3,6 +3,7 @@ package ru.kolaer.asmc.ui.javafx.controller;
 import java.util.stream.Collectors;
 
 import javafx.scene.layout.Pane;
+import ru.kolaer.asmc.tools.Application;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
@@ -120,7 +121,11 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	@Override
 	public void updateClick(MLabel model) {
-		System.out.println(model.getName());
+		if(Application.isURL(model.getPathApplication())) {
+			final CWebBrowser web = new CWebBrowser();
+			web.show();
+			web.load(model.getPathApplication());
+		}
 	}
 	
 	@Override

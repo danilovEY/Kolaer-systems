@@ -14,6 +14,7 @@ public interface Resources
 	public static final String V_AUTHENTICATION = "file:view/VAuthentication.fxml";
 	public static final String V_ADDING_GROUP_LABELS = "file:view/VAddingGroupLabels.fxml";
 	public static final String V_ADDING_LABEL = "file:view/VAddingLabel.fxml";
+	public static final String V_WEB_BROWSER = "file:view/VWebBrowser.fxml";
 	
 	
 	/**Стандарткая иконка для ярлыка.*/
