@@ -126,7 +126,7 @@ public class CMainFrame extends Application {
 		}
 		primaryStage.setTitle(Resources.MAIN_FRAME_TITLE);
 		try {
-			primaryStage.getIcons().add(new Image(Resources.AER_LOGO.toString()));
+			primaryStage.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));
 		} catch(IllegalArgumentException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");

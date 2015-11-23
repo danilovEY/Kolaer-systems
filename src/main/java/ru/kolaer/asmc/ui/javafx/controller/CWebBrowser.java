@@ -7,6 +7,8 @@ import javafx.concurrent.Worker.State;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -46,7 +48,16 @@ public class CWebBrowser extends BaseController implements Initializable {
 		this.dialog.setMaximized(true);
 		this.dialog.setScene(new Scene(this));
 		this.dialog.centerOnScreen();
-		this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
+		
+		try {
+			this.dialog.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));
+		} catch(IllegalArgumentException e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Ошибка!");
+			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
+			alert.showAndWait();
+		}
+		
 		this.dialog.show();
 	}
 }

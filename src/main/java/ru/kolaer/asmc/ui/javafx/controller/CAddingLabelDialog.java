@@ -143,7 +143,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	
 	@FXML
 	public void actionRBDefaultIcon(ActionEvent event) {
-		this.image.setImage(new Image(Resources.AER_ICON));
+		this.image.setImage(new Image("file:"+Resources.AER_ICON));
 		this.pathIconText.setText(Resources.AER_ICON);
 	}
 	
@@ -181,7 +181,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 				this.pathIconText.setText("");
 			}
 			else if(this.result.getPathImage().equals(Resources.AER_ICON)) {
-				this.image.setImage(new Image(Resources.AER_ICON));
+				this.image.setImage(new Image("file:"+Resources.AER_ICON));
 				this.pathIconText.setText(Resources.AER_ICON);
 				this.rbDefaultIcon.setSelected(true);
 				this.rbNoneIcon.setSelected(false);
@@ -207,13 +207,14 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			}
 		}
 		
-		this.dialog.setTitle(Resources.ADDING_LABEL_FRAME_TITLE);
+		String title = this.result == null ? Resources.ADDING_LABEL_FRAME_TITLE : Resources.EDDING_LABEL_FRAME_TITLE;
+		this.dialog.setTitle(title);
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
 		
 		try {
-			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
+			this.dialog.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));
 		} catch(IllegalArgumentException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");

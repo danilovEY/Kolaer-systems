@@ -34,7 +34,7 @@ public interface Resources
 	public static final String ADDING_GROUP_FRAME_TITLE = "Добавить группу";
 	public static final String EDING_GROUP_FRAME_TITLE = "Редактировать группу";
 	public static final String ADDING_LABEL_FRAME_TITLE = "Добавить ярлык";
-	
+	public static final String EDDING_LABEL_FRAME_TITLE = "Редактировать ярлык";
 	
 	public static final String LOGIN_LABEL = "Логин";
 	public static final String PASS_LABEL = "Пароль";
