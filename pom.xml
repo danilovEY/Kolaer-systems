@@ -4,36 +4,82 @@
 
 	<groupId>ru.kolaer</groupId>
 	<artifactId>ru.kolaer.asmc</artifactId>
-	<version>0.0.1</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
-	<name>ru.kolaer.asmc</name>
-	<url>http://maven.apache.org</url>
+	<name>ASMC</name>
+	<url>http://www.kolaer.ru/</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>de.sciss</groupId>
-			<artifactId>weblaf</artifactId>
-			<version>1.28</version>
-			<type>pom</type>
-		</dependency>
-		<dependency>
-			<groupId>commons-net</groupId>
-			<artifactId>commons-net</artifactId>
-			<version>3.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.3</version>
-		</dependency>
-
-
 
 	</dependencies>
+	<!-- Сценарий для построения проекта -->
+	<build>
+		<outputDirectory>target/classes</outputDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testOutputDirectory>target/test-classes</testOutputDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<defaultGoal>clean compile assembly:single</defaultGoal>
+
+		<!-- Ресурсы -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+
+		<!-- Плагины для сценария -->
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<finalName>ASMC-v${project.version}</finalName>
+					<archive>
+						<manifest>
+							<mainClass>ru.kolaer.asmc.runnable.JavaFXLauncher</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<descriptors>
+						<descriptor>src/main/resources/jar.xml</descriptor>
+						<descriptor>src/main/resources/zip.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Плагин позволяет использовать указанную версию jdk -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
 </project>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <center>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="49.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="10.0" prefWidth="151.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" />
+        </rowConstraints>
+         <children>
+            <Label text="Логин:" />
+            <TextField fx:id="loginText" GridPane.columnIndex="1" />
+            <Label text="Пароль:" GridPane.rowIndex="1" />
+            <PasswordField fx:id="passText" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <FlowPane alignment="CENTER_RIGHT" columnHalignment="RIGHT" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <Button fx:id="okButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="OK" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="Cancel" />
+               </children>
+            </FlowPane>
+         </children>
+      </GridPane>
+   </center>
+   <padding>
+      <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+   </padding>
+</fx:root>

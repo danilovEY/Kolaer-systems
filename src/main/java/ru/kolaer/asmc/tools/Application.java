@@ -1,223 +1,147 @@
 package ru.kolaer.asmc.tools;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.URL;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alee.laf.optionpane.WebOptionPane;
-import com.alee.managers.notification.NotificationIcon;
-import com.alee.managers.notification.NotificationManager;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import ru.kolaer.asmc.ui.javafx.controller.CWebBrowser;
 
 /**
  * Запускает задачу.
+ * 
  * @author Danilov E.Y.
  *
  */
-public class Application implements ApplicationInt, Runnable
-{
-	private static final Logger log = LoggerFactory.getLogger(Application.class);	
-	
-	private DataBaseSettingXml setting;
+public class Application implements Runnable {
+
 	private String pathApp;
-	
-	public Application(DataBaseSettingXml setting, String path)
-	{
+
+	public Application(String path) {
 		this.pathApp = path;
-		this.setting = setting;
 	}
-	
-	public void start()
-	{
+
+	public void start() {
 		if (this.pathApp != null && !this.pathApp.equals(""))
 			new Thread(this).start();
-		else
-		{
-			NotificationManager.showNotification ("Путь к файлу/ссылке отсутствует!!", NotificationIcon.error.getIcon() );
-			
+		else {
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка!");
+				alert.setHeaderText("Не указан файл или ссылка!");
+				alert.show();
+			});
+
 		}
 
 	}
-	
-	public void startUpdate()
-	{
-		new Thread(new Runnable()
-		{
-			
-			@Override
-			public void run()
-			{				
-		    	try
-                {
-		    		Process p = Runtime.getRuntime().exec("cmd /C "+"\"AER-DM-WindowsLauncher.exe "+"-root_set "+"-update "+new File(pathApp).getName());
-                }
-                catch(IOException e)
-                {
-                	log.error("Не удалось запустить AER-DM-WindowsLauncher.exe");
-					log.error(e.getMessage());
-                }
-		    	
-		    	System.exit(0);
 
-			    
-			}
-		}).start();
+	public static boolean isWindows() {
+		String os = System.getProperty("os.name").toLowerCase();
+		return (os.indexOf("win") >= 0);
 	}
-	
-    public static boolean isWindows(){
 
-        String os = System.getProperty("os.name").toLowerCase();
-        //windows
-        return (os.indexOf( "win" ) >= 0); 
+	public static boolean isMac() {
+		String os = System.getProperty("os.name").toLowerCase();
+		return (os.indexOf("mac") >= 0);
+	}
 
-    }
+	public static boolean isUnix() {
+		String os = System.getProperty("os.name").toLowerCase();
+		return (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0);
+	}
 
-    public static boolean isMac(){
+	public static String getOSVerion() {
+		String os = System.getProperty("os.version");
+		return os;
+	}
 
-        String os = System.getProperty("os.name").toLowerCase();
-        //Mac
-        return (os.indexOf( "mac" ) >= 0); 
-
-    }
-    	
-    public static boolean isUnix (){
-
-        String os = System.getProperty("os.name").toLowerCase();
-        //linux or unix
-        return (os.indexOf( "nix") >=0 || os.indexOf( "nux") >=0);
-
-    }
-    public static String getOSVerion() {
-        String os = System.getProperty("os.version");
-        return os;
-    }
-    
-    /**
-     * Проверка на правильность url-ссылки.
-     * @param url - Ссылка.
-     * @return - Возвращает true если это ссылка.
-     */
-    public static boolean isURL(String url)
-    {
-    	boolean urlCheck = false;
-    	try
-		{
-			new java.net.URL(url);
-			urlCheck = true;
-		} 
-    	catch (MalformedURLException e)
-		{
-    		urlCheck = false;
+	/**
+	 * Проверка на правильность url-ссылки.
+	 * 
+	 * @param url
+	 *            - Ссылка.
+	 * @return - Возвращает true если это ссылка.
+	 */
+	public static boolean isURL(String url) {
+		try {
+			new URL(url);
+			return true;
+		} catch (MalformedURLException e) {
+			return false;
 		}
-
-    	return urlCheck;
-    }
+	}
 
 	@Override
-	public void run()
-	{
-		if(this.pathApp == null || this.pathApp.equals(""))
-		{
-			 //WebOptionPane.showMessageDialog ( null, "Не указан файл!", "Ошибка", WebOptionPane.ERROR_MESSAGE );
-			 NotificationManager.showNotification ( "Не указан файл!", NotificationIcon.error.getIcon() );
-	
-			 return;
-		}
-		
-		try
-		{
-			Runtime r =Runtime.getRuntime();
-			
-			if(isWindows())
-			{
-				if(isURL(pathApp))
-				{
-					if(this.setting.getPathWebBrowser().equals("") )
-					{
-						Desktop desktop;
-				        if (Desktop.isDesktopSupported()) {
-				            desktop = Desktop.getDesktop();
-				            if (desktop.isSupported(Desktop.Action.BROWSE)) {
-				                URI uri;
-				                try {
-				                    uri = new URI(this.pathApp);
-				                    desktop.browse(uri);
-				                }
-				                catch (IOException ioe) {
-				                    ioe.printStackTrace();
-				                }
-				                catch (URISyntaxException use) {
-				                    use.printStackTrace();
-				                }
-				            }
-				        }
-					}
-					else
-					{
-						File simpleWebBrowser = new File(this.setting.getPathWebBrowser());
-						if(!simpleWebBrowser.exists())
-						{
-							 NotificationManager.showNotification ("Утилита \""+this.setting.getPathWebBrowser()+"\" не найдена!", NotificationIcon.error.getIcon() );
+	public void run() {
+		try {
+
+			Runtime r = Runtime.getRuntime();
+
+			if (isWindows()) {
+				if (isURL(pathApp)) {
+					if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
+						Platform.runLater(() -> {
+							final CWebBrowser web = new CWebBrowser();
+							web.show();
+							web.load(pathApp);
+						});
+					} else {
+						File simpleWebBrowser = new File(SettingSingleton.getInstance().getPathWebBrowser());
+						if (simpleWebBrowser.exists() && simpleWebBrowser.isFile()) {
+							r.exec(simpleWebBrowser.getAbsolutePath() + " \"" + this.pathApp + "\"");
+						} else {
+							Platform.runLater(() -> {
+								Alert alert = new Alert(AlertType.ERROR);
+								alert.setTitle("Ошибка!");
+								alert.setHeaderText("Браузер \"" + this.pathApp + "\" не найден.");
+								alert.setContentText("Запуск стандартного браузера...");
+								alert.show();
+
+								final CWebBrowser web = new CWebBrowser();
+								web.show();
+								web.load(pathApp);
+							});
 						}
-						else
-						{
-							r.exec(this.setting.getPathWebBrowser()+" "+"\""+this.pathApp+"\"");
+					}
+				} else {
+					File file = new File(this.pathApp);
+					if (file.exists()) {
+						if (file.isDirectory()) {
+							r.exec("explorer.exe \"" + this.pathApp + "\"");
+						} else {
+							r.exec("cmd /C \"" + this.pathApp + "\"");
 						}
-					
-					}
-					
-					
-				}
-				else
-				{
-					if(new File(this.pathApp).isDirectory())
-					{
-						r.exec("explorer.exe "+"\""+this.pathApp+"\"");
-					}
-					else
-					{
-						r.exec("cmd /C "+"\""+this.pathApp+"\"");
+					} else {
+						Platform.runLater(() -> {
+							Alert alert = new Alert(AlertType.ERROR);
+							alert.setTitle("Ошибка!");
+							alert.setHeaderText("Файл \"" + this.pathApp + "\" не найден.");
+							alert.setContentText("Если это ссылка, добавьте \"http://\"");
+							alert.show();
+						});
 					}
 				}
 			}
-			else
-			{
-				if(isUnix())
-				{
-					WebOptionPane.showMessageDialog ( null, "В данной версии Unix системы не поддерживаются!", "Ошибка", WebOptionPane.ERROR_MESSAGE );
-				}
-				else
-				{
-					if(isMac())
-					{
-						WebOptionPane.showMessageDialog ( null, "В данной версии Mac системы не поддерживаются!", "Ошибка", WebOptionPane.ERROR_MESSAGE );
-					}
-				}
-			}
-			
-		} 
-		catch (IOException e)
-		{
-			NotificationManager.showNotification ( "Не удалось запустить программу/ссылку!", NotificationIcon.error.getIcon() );
-			log.error("Не удалось запустить программу/ссылку");
-			log.error(e.getMessage());
+		} catch (IOException e) {
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка!");
+				alert.setHeaderText("Не удалось запустить \"" + this.pathApp);
+				alert.setContentText(e.getMessage());
+				alert.show();
+			});
 		}
 	}
 
-	public String getPathApp()
-	{
+	public String getPathApp() {
 		return pathApp;
 	}
 
-	public void setPathApp(String pathApp)
-	{
+	public void setPathApp(String pathApp) {
 		this.pathApp = pathApp;
 	}
-	
-	
 }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.kolaer.asmc.ui.javafx.controller.CMainFrame">
+   <children>
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <SplitPane dividerPositions="0.3351893095768374" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+               <items>
+                  <ScrollPane fx:id="navigateScrollPanel" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" pannable="true">
+                     <content>
+                        <VBox fx:id="navigatePanel" prefHeight="200.0" prefWidth="100.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+                  <ScrollPane fx:id="contentScrollPanel" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
+                     <content>
+                        <FlowPane fx:id="contentPanel" prefHeight="100.0" prefWidth="100.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding></FlowPane>
+                     </content>
+                  </ScrollPane>
+               </items>
+            </SplitPane>
+         </center>
+         <top>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="Файл">
+                  <items>
+                    <MenuItem fx:id="rootMenuItem" mnemonicParsing="false" onAction="#actionGettingRootMenuItem" text="Получить доступ к редактированию" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#actionExitMenuItem" text="Выход" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Помощь">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="О программе" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+      </BorderPane>
+   </children>
+</AnchorPane>

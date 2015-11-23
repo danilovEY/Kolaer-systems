@@ -1,5 +1,6 @@
 /*
 !/src
-!.gitignore
-!pom.xml
-!/Utilites
+!/.gitignore
+!/pom.xml
+!/view
+!/resources
