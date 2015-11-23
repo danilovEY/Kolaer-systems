@@ -7,7 +7,7 @@
 	<version>1.0</version>
 	<packaging>jar</packaging>
 
-	<name>АСУП</name>
+	<name>ASMC</name>
 	<url>http://www.kolaer.ru/</url>
 
 	<properties>
@@ -38,21 +38,33 @@
 		</testResources>
 
 		<!-- Плагины для сценария -->
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<finalName>ASMC-v${project.version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
 							<mainClass>ru.kolaer.asmc.runnable.JavaFXLauncher</mainClass>
 						</manifest>
 					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
 				</configuration>
+				<executions>
+					<execution>
+						<id>make-my-jar-with-dependenciess</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
-			
+
 			<!-- Плагин позволяет использовать указанную версию jdk -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
