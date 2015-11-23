@@ -11,7 +11,7 @@
 
 <fx:root prefHeight="201.0" prefWidth="525.0" stylesheets="@../resources/CSS/Default/Default.css" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <ScrollPane fx:id="scrollBackPanel" focusTraversable="false" hbarPolicy="NEVER" prefHeight="201.0" prefWidth="538.0" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="scrollBackPanel" focusTraversable="false" hbarPolicy="NEVER" hmax="0.0" prefHeight="201.0" prefWidth="538.0" vbarPolicy="NEVER" vmax="0.0" BorderPane.alignment="CENTER">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="518.0">
                <children>

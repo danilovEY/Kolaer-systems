@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,8 +18,8 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
@@ -55,7 +56,7 @@ public class CMainFrame extends Application {
 	public void initialize() {
 		final CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
 		observer.loadAndRegGroups();
-
+		
 		final ContextMenu contextNavigationPanel = new ContextMenu();
 		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);
 
@@ -67,7 +68,7 @@ public class CMainFrame extends Application {
 		contextContentPanel.getItems().add(addLabel);
 		this.navigateScrollPanel.setContextMenu(contextNavigationPanel);
 		this.contentScrollPanel.setContextMenu(contextContentPanel);
-		// =====Events======
+		// =====Events======		
 		this.navigateScrollPanel.setOnContextMenuRequested((event) -> {
 			if(!SettingSingleton.getInstance().isRoot()) {
 				this.navigateScrollPanel.getContextMenu().hide();
