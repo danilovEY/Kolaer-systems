@@ -43,20 +43,23 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
 					<finalName>ASMC-v${project.version}</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
 							<mainClass>ru.kolaer.asmc.runnable.JavaFXLauncher</mainClass>
 						</manifest>
 					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<descriptors>
+						<descriptor>src/main/resources/jar.xml</descriptor>
+						<descriptor>src/main/resources/zip.xml</descriptor>
+					</descriptors>
 				</configuration>
 				<executions>
 					<execution>
-						<id>make-my-jar-with-dependenciess</id>
+						<id>make-assembly</id>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
