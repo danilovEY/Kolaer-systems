@@ -40,7 +40,7 @@ public class CMainFrame extends Application {
 	private MenuItem rootMenuItem;
 	/** Панель с группами ярлыков. */
 	@FXML
-	private VBox navigatePanel;
+	private FlowPane navigatePanel;
 	/** Панель с ярлыками. */
 	@FXML
 	private FlowPane contentPanel;

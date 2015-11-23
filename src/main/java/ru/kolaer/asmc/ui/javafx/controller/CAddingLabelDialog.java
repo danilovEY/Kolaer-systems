@@ -126,8 +126,6 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			this.result.setPathApplication(this.pathAppText.getText());
 		}
 		
-		SettingSingleton.getInstance().saveGroups();
-		
 		this.dialog.close();
 	}
 	

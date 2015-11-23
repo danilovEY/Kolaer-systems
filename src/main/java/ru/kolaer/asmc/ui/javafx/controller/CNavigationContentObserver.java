@@ -38,6 +38,8 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	public void addLabel(MLabel label) {
 		if(this.selectedGroup == null) return;
 		this.selectedGroup.addLabel(label);
+		SettingSingleton.getInstance().saveGroups();
+		
 		final CLabel cLabel = new CLabel(label);
 		cLabel.registerOberver(this);
 		this.panelWithLabels.getChildren().add(cLabel);
