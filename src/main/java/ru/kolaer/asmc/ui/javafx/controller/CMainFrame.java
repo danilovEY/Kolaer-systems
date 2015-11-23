@@ -17,6 +17,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
@@ -36,7 +37,7 @@ public class CMainFrame extends Application {
 	private MenuItem rootMenuItem;
 	/** Панель с группами ярлыков. */
 	@FXML
-	private FlowPane navigatePanel;
+	private VBox navigatePanel;
 	/** Панель с ярлыками. */
 	@FXML
 	private FlowPane contentPanel;
