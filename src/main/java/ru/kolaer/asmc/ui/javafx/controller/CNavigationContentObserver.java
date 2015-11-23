@@ -40,7 +40,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		final CLabel cLabel = new CLabel(label);
 		cLabel.registerOberver(this);
 		this.panelWithLabels.getChildren().add(cLabel);
-		this.panelWithGroups.getChildren().setAll(this.panelWithGroups.getChildren().sorted((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(((CLabel) a).getModel().getName(), ((CLabel) b).getModel().getName())));
+		this.panelWithLabels.getChildren().setAll(this.panelWithLabels.getChildren().sorted((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(((CLabel) a).getModel().getName(), ((CLabel) b).getModel().getName())));
 	}
 
 	public MGroupLabels getSelectedItem() {
@@ -125,7 +125,9 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	
 	@Override
 	public void updateEdit(MLabel model) {
-		
+		this.panelWithLabels.getChildren().setAll(this.panelWithLabels.getChildren().stream().map(l -> {
+			return((CLabel) l);
+		}).sorted((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.getModel().getName(), b.getModel().getName())).collect(Collectors.toList()));
 	}
 
 	@Override

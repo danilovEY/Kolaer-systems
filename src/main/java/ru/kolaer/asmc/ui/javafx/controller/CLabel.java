@@ -65,19 +65,7 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 
 		if(this.model == null) return;
 
-		this.nameLabel.setText(this.model.getName());
-		this.infoText.setText(this.model.getInfo());
-
-		final Optional<File> file = Optional.of(new File(this.model.getPathImage()));
-
-		if(file.isPresent() && (file.get().exists() && file.get().isFile())){
-			try{
-				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
-			}
-			catch(Exception e){
-				LOG.error("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath(), e);
-			}
-		}
+		this.updateView(this.model);
 	}
 
 	@Override
@@ -99,7 +87,7 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 
 		editLabel.setOnAction(e -> {
 			this.model = new CAddingLabelDialog(this.model).showAndWait().get();
-
+			this.updateView(this.model);
 			this.notifyObserverEdit();
 		});
 		
@@ -110,6 +98,22 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 		this.button.setOnAction(e -> this.notifyObserverClick());
 	}
 
+	private void updateView(MLabel label) {
+		this.nameLabel.setText(label.getName());
+		this.infoText.setText(label.getInfo());
+
+		final Optional<File> file = Optional.of(new File(model.getPathImage()));
+
+		if(file.isPresent() && (file.get().exists() && file.get().isFile())){
+			try{
+				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
+			}
+			catch(Exception e1){
+				LOG.error("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath(), e1);
+			}
+		}
+	}
+	
 	@Override
 	public void notifyObserverClick() {
 		this.obsList.forEach(o -> o.updateClick(this.model));
