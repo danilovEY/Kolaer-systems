@@ -147,5 +147,6 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		});
 
 		this.panelWithLabels.getChildren().remove(array[0]);
+		SettingSingleton.getInstance().saveGroups();
 	}
 }
