@@ -15,6 +15,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.serializations.SerializationGroups;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
@@ -63,6 +64,7 @@ public class ConvertXMLtoSer {
 					String app = labelElement.getAttribute(APP_PATH_ATR);
 					String image = labelElement.getAttribute(IMAGE_PATH_ATR);
 					//image = image.substring("\\\\kolaer.local\\asup$\\".length());
+					image = Resources.AER_ICON;
 					String info = labelElement.getAttribute(INFO_ATR);
 					System.out.printf("Label: %s %s %s %s ", titleName, info, image, app);
 					group.addLabel(new MLabel(titleName, info, image, app));

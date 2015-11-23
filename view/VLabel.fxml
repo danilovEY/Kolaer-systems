@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -9,49 +11,43 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<fx:root prefHeight="201.0" prefWidth="525.0" stylesheets="@../resources/CSS/Default/Default.css" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="132.0" prefWidth="470.0" styleClass="lableMainPane" stylesheets="@../resources/CSS/Default/Default.css" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <ScrollPane fx:id="scrollBackPanel" focusTraversable="false" hbarPolicy="NEVER" hmax="0.0" prefHeight="224.0" prefWidth="536.0" vbarPolicy="NEVER" vmax="0.0" BorderPane.alignment="CENTER">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="518.0">
+      <ScrollPane fx:id="scrollBackPanel" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" hmax="0.0" prefHeight="155.0" prefWidth="513.0" styleClass="lableSecontPanel" vbarPolicy="NEVER" vmax="0.0" BorderPane.alignment="CENTER">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="83.0" prefWidth="497.0">
                <children>
-                  <BorderPane prefHeight="201.0" prefWidth="728.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <left>
-                        <AnchorPane prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-                           <children>
-                              <ImageView fx:id="image" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                 <viewport>
-                                    <Rectangle2D />
-                                 </viewport>
-                              </ImageView>
-                           </children>
-                        </AnchorPane>
-                     </left>
-                     <center>
-                        <BorderPane BorderPane.alignment="CENTER">
-                           <top>
-                              <Label fx:id="nameLabel" alignment="CENTER" text="Label" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                           </top>
-                           <center>
-                              <TextArea fx:id="infoText" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="116.0" prefWidth="391.0" BorderPane.alignment="CENTER" />
-                           </center>
-                           <bottom>
-                              <Button fx:id="button" mnemonicParsing="false" prefHeight="40.0" prefWidth="302.0" text="Открыть" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </Button>
-                           </bottom>
-                        </BorderPane>
-                     </center>
-                  </BorderPane>
+                  <ImageView fx:id="image" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+                  <VBox alignment="CENTER" layoutX="120.0" layoutY="-1.0" prefHeight="123.0" prefWidth="378.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label fx:id="nameLabel" alignment="CENTER" text="Label">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="button" mnemonicParsing="false" prefHeight="40.0" prefWidth="302.0" styleClass="record-sales" text="Открыть" textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                     </padding>
+                  </VBox>
                </children>
             </AnchorPane>
-        </content>
+         </content>
+         <tooltip>
+            <Tooltip fx:id="toolTip" text="Empty Tooltip" />
+         </tooltip>
       </ScrollPane>
    </center>
 </fx:root>

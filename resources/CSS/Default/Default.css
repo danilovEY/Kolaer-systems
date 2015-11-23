@@ -1,11 +1,61 @@
-.scroll-pane {
-    -fx-background-color:transparent;
+.tooltip {
+    -fx-background: rgba(30,30,30);
+    -fx-text-fill: white;
+    -fx-background-color: rgba(30,30,30,0.8);
+    -fx-background-radius: 6px;
+    -fx-background-insets: 0;
+    -fx-padding: 0.667em 0.75em 0.667em 0.75em; /* 10px */
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 10, 0.0 , 0 , 3 );
+    -fx-font-size: 0.85em;
 }
 
-.button{
-    -fx-text-fill: #006464;
-    -fx-background-color: #DFB951;
-    -fx-border-radius: 20;
-    -fx-background-radius: 20;
-    -fx-padding: 5;
+
+.record-sales {
+    -fx-padding: 8 15 15 15;
+    -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+    -fx-background-radius: 8;
+    -fx-background-color: 
+        linear-gradient(from 0% 93% to 0% 100%, rgb(64,103,143) 0%, rgb(64,103,143) 100%),
+        rgb(64,103,143),
+        rgb(94,133,173),
+        radial-gradient(center 50% 50%, radius 100%, rgb(94,133,173), rgb(94,133,173));
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );
+    -fx-font-weight: bold;
+    -fx-font-size: 1.1em;
+}
+
+.record-sales:hover {
+    -fx-padding: 8 15 15 15;
+    -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+    -fx-background-radius: 8;
+    -fx-background-color: 
+        linear-gradient(from 0% 93% to 0% 100%, rgb(64,103,143) 0%, rgb(64,103,143) 100%),
+        rgb(64,103,143),
+        rgb(94,133,173),
+        radial-gradient(center 50% 50%, radius 100%, rgb(94,133,173), rgb(94,133,173));
+    -fx-effect: dropshadow( gaussian , rgba(255,0,0,1) , 4,0,0,1 );
+    -fx-font-weight: bold;
+    -fx-font-size: 1.1em;
+}
+
+.record-sales:pressed, .record-sales:default:hover:pressed {
+     -fx-padding: 8 15 8 15;
+    -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+    -fx-background-radius: 8;
+    -fx-background-color: 
+        radial-gradient(center 50% 50%, radius 100%, rgb(94,133,173), rgb(94,133,173));
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );
+    -fx-font-weight: bold;
+    -fx-font-size: 1.1em;
+}
+
+.lableMainPane{
+	-fx-background-color: rgb(94,133,173);
+    -fx-background-radius: 15.0; 
+    -fx-padding: 8;
+}
+
+.lableSecontPanel{
+    -fx-background-radius: 15.0; 
+    -fx-padding: 8;
 }

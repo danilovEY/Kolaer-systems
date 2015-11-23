@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javax.swing.ToolTipManager;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,7 +20,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,14 +44,13 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 	/** Иконка. */
 	@FXML
 	private ImageView image;
-	/** Текст с описанием. */
-	@FXML
-	private TextArea infoText;
 	/** Имя ярлыка. */
 	@FXML
 	private Label nameLabel;
 	@FXML
 	private ScrollPane scrollBackPanel;
+	@FXML
+	private Tooltip toolTip;
 	/** Модель. */
 	private MLabel model;
 	
@@ -104,8 +104,11 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 
 	private void updateView(MLabel label) {
 		this.nameLabel.setText(label.getName());
-		this.infoText.setText(label.getInfo());
-
+		this.button.setText(label.getInfo());
+		
+		ToolTipManager.sharedInstance().setDismissDelay(0);
+		toolTip.setText(label.getInfo());
+		
 		final Optional<File> file = Optional.of(new File(label.getPathImage()));
 
 		if(file.isPresent() && (file.get().exists() && file.get().isFile())){
