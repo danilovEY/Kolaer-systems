@@ -45,7 +45,7 @@ public class CMainFrame extends Application {
 	@FXML
 	private ScrollPane contentScrollPanel;
 	/** (Де)сериализация объектов. */
-	private final SerializationGroups serial = SettingSingleton.getInstance().getSerializationGroups();
+	//private final SerializationGroups serial = SettingSingleton.getInstance().getSerializationGroups();
 
 	@FXML
 	public void initialize() {
@@ -83,7 +83,6 @@ public class CMainFrame extends Application {
 			if(result.isPresent()){
 				final MGroupLabels res = result.get();
 				observer.addGroupLabels(res);
-				serial.getSerializeGroups().add(res);
 			}
 		});
 		
@@ -124,7 +123,9 @@ public class CMainFrame extends Application {
 				System.exit(-9);
 			}
 		}
+		
 		primaryStage.setTitle(Resources.MAIN_FRAME_TITLE);
+		
 		try {
 			primaryStage.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));
 		} catch(IllegalArgumentException e) {
@@ -133,6 +134,7 @@ public class CMainFrame extends Application {
 			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
 			alert.showAndWait();
 		}
+		
 		primaryStage.setScene(new Scene(root));
 		primaryStage.centerOnScreen();
 		primaryStage.show();

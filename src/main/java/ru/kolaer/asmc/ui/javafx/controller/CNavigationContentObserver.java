@@ -29,6 +29,9 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	}
 
 	public void addGroupLabels(MGroupLabels group) {
+		SettingSingleton.getInstance().getSerializationGroups().getSerializeGroups().add(group);
+		SettingSingleton.getInstance().saveGroups();
+		
 		final CGroupLabels cGroup = new CGroupLabels(group);
 		cGroup.registerOberver(this);
 		this.panelWithGroups.getChildren().add(cGroup);
@@ -91,6 +94,8 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	@Override
 	public void updateEdit(MGroupLabels group) {
+		SettingSingleton.getInstance().saveGroups();
+		
 		this.panelWithGroups.getChildren().setAll(this.panelWithGroups.getChildren().stream().map(g -> {
 			return((CGroupLabels) g);
 		}).sorted((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.getModel().getNameGroup(), b.getModel().getNameGroup())).collect(Collectors.toList()));
@@ -98,6 +103,9 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	@Override
 	public void updateDelete(MGroupLabels model) {
+		SettingSingleton.getInstance().getSerializationGroups().getSerializeGroups().remove(model);
+		SettingSingleton.getInstance().saveGroups();
+		
 		if(model == this.selectedGroup){
 			this.selectedGroup = null;
 
@@ -117,8 +125,6 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 			}
 		});
 		this.panelWithGroups.getChildren().remove(array[0]);
-		SettingSingleton.getInstance().getSerializationGroups().getSerializeGroups().remove(model);
-		SettingSingleton.getInstance().saveGroups();
 	}
 
 	@Override
@@ -128,6 +134,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	
 	@Override
 	public void updateEdit(MLabel model) {
+		SettingSingleton.getInstance().saveGroups();
 		this.panelWithLabels.getChildren().setAll(this.panelWithLabels.getChildren().stream().map(l -> {
 			return((CLabel) l);
 		}).sorted((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.getModel().getName(), b.getModel().getName())).collect(Collectors.toList()));
@@ -139,6 +146,8 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		
 		this.selectedGroup.getLabelList().remove(model);
 		
+		SettingSingleton.getInstance().saveGroups();
+		
 		final CLabel[] array = new CLabel[1];
 		this.panelWithLabels.getChildren().forEach(l -> {
 			final CLabel label = ((CLabel) l);
@@ -146,10 +155,8 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 				array[0] = label;
 				return;
 			}
-			
 		});
 
-		this.panelWithLabels.getChildren().remove(array[0]);
-		SettingSingleton.getInstance().saveGroups();
+		this.panelWithLabels.getChildren().remove(array[0]);		
 	}
 }

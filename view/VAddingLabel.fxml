@@ -74,7 +74,18 @@
                   <Insets />
                </GridPane.margin>
             </BorderPane>
-            <TextField fx:id="pathAppText" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <FlowPane alignment="CENTER_LEFT" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <TextField fx:id="pathAppText" prefHeight="25.0" prefWidth="232.0" />
+                  <Button fx:id="buttonSetFile" mnemonicParsing="false" text="Обзор..." />
+               </children>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </FlowPane>
          </children>
          <BorderPane.margin>
             <Insets />
