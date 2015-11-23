@@ -57,8 +57,10 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 			}
 			else {
 				this.result.setNameGroup(this.groupNameText.getText());
-				SettingSingleton.getInstance().saveGroups();
 			}
+			
+			SettingSingleton.getInstance().saveGroups();
+			
 			this.dialog.close();
 		});
 		

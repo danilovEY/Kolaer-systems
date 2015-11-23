@@ -20,6 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
+import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
 
 /**
@@ -54,6 +55,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	
 	private final FileChooser fileChooser = new FileChooser();
 	private final Stage dialog = new Stage();
+	
 	/**
 	 * {@linkplain CAddingLabelDialog}
 	 */
@@ -61,6 +63,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 		super(Resources.V_ADDING_LABEL);
 		this.init();
 	}
+	
 	/**
 	 * {@linkplain CAddingLabelDialog.java}
 	 * @param model
@@ -110,12 +113,15 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	
 	@FXML
 	public void actionButtonOK(ActionEvent event) {	
-		final MLabel label = new MLabel(this.nameLabelText.getText(), 
-				this.infoLabelText.getText(), 
-				this.pathIconText.getText(), 
-				this.pathAppText.getText());
-				
-		this.result = label;
+		if(this.result == null) {
+			this.result = new MLabel(this.nameLabelText.getText(), 
+					this.infoLabelText.getText(), 
+					this.pathIconText.getText(), 
+					this.pathAppText.getText());
+		}
+		
+		SettingSingleton.getInstance().saveGroups();
+		
 		this.dialog.close();
 	}
 	
@@ -159,14 +165,31 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 		if(this.result != null) {
 			this.nameLabelText.setText(this.result.getName());
 			this.infoLabelText.setText(this.result.getInfo());
-			System.out.println(this.result.getPathImage());
 			if(this.result.getPathImage() == null || this.result.getPathImage().isEmpty()) {
 				this.rbNoneIcon.setSelected(true);
+				this.image.setImage(null);
+				this.pathIconText.setText("");
 			}
 			else if(this.result.getPathImage().equals(Resources.AER_LOGO)) {
 				this.rbDefaultIcon.setSelected(true);
+				this.image.setImage(new Image(Resources.AER_ICON));
+				this.pathIconText.setText(Resources.AER_ICON);
 			}
-			
+			else {
+				File file = new File(this.result.getPathImage());
+				
+				if(file != null && file.exists() && file.isFile()) {
+					this.rbDefaultIcon.setSelected(false);
+					this.rbNoneIcon.setSelected(false);
+					this.pathIconText.setText(new String(file.getAbsolutePath()));
+					try{
+						this.image.setImage(new Image(file.toURI().toURL().toString()));
+					}
+					catch(Exception e){
+						LOG.error("Невозможно переконвертировать в URL файл:" +file.getAbsolutePath(), e);
+					}
+				}
+			}
 		}
 		
 		this.dialog.setTitle(Resources.ADDING_LABEL_FRAME_TITLE);
@@ -177,5 +200,4 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 		this.dialog.showAndWait();
 		return Optional.ofNullable(this.result);
 	}
-
 }

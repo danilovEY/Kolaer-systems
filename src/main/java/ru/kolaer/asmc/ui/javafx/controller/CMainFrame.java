@@ -88,7 +88,6 @@ public class CMainFrame extends Application {
 				final MGroupLabels res = result.get();
 				observer.addGroupLabels(res);
 				serial.getSerializeGroups().add(res);
-				SettingSingleton.getInstance().saveGroups();
 			}
 		});
 		
@@ -97,7 +96,6 @@ public class CMainFrame extends Application {
 			final Optional<MLabel> result = addingLabel.showAndWait();
 			if(result.isPresent()){
 				observer.addLabel(result.get());
-				SettingSingleton.getInstance().saveGroups();
 			}
 		});
 	}
