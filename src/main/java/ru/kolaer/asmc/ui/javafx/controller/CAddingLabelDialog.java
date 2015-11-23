@@ -171,15 +171,17 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 		if(this.result != null) {
 			this.nameLabelText.setText(this.result.getName());
 			this.infoLabelText.setText(this.result.getInfo());
+			this.pathAppText.setText(this.result.getPathApplication());
 			if(this.result.getPathImage() == null || this.result.getPathImage().isEmpty()) {
 				this.rbNoneIcon.setSelected(true);
 				this.image.setImage(null);
 				this.pathIconText.setText("");
 			}
-			else if(this.result.getPathImage().equals(Resources.AER_LOGO)) {
-				this.rbDefaultIcon.setSelected(true);
+			else if(this.result.getPathImage().equals(Resources.AER_ICON)) {
 				this.image.setImage(new Image(Resources.AER_ICON));
 				this.pathIconText.setText(Resources.AER_ICON);
+				this.rbDefaultIcon.setSelected(true);
+				this.rbNoneIcon.setSelected(false);
 			}
 			else {
 				File file = new File(this.result.getPathImage());

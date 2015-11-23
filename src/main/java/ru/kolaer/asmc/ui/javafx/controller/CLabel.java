@@ -109,7 +109,7 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 		this.nameLabel.setText(label.getName());
 		this.infoText.setText(label.getInfo());
 
-		final Optional<File> file = Optional.of(new File(model.getPathImage()));
+		final Optional<File> file = Optional.of(new File(label.getPathImage()));
 
 		if(file.isPresent() && (file.get().exists() && file.get().isFile())){
 			try{
@@ -118,6 +118,9 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 			catch(Exception e1){
 				LOG.error("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath(), e1);
 			}
+		}
+		else {
+			this.image.setImage(null);
 		}
 	}
 	
