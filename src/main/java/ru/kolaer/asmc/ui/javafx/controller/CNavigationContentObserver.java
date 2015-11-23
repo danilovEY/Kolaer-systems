@@ -121,11 +121,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	@Override
 	public void updateClick(MLabel model) {
-		if(Application.isURL(model.getPathApplication())) {
-			final CWebBrowser web = new CWebBrowser();
-			web.show();
-			web.load(model.getPathApplication());
-		}
+		new Application(model.getPathApplication()).start();
 	}
 	
 	@Override
