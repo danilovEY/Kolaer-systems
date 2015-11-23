@@ -73,8 +73,8 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 		this.button.setContextMenu(contextGroupPanel);
 		
 		this.button.setOnContextMenuRequested(event -> {
-			if(!SettingSingleton.getInstance().isRoot()) return;
-			contextGroupPanel.show(this, event.getScreenX(), event.getScreenY());
+			if(!SettingSingleton.getInstance().isRoot()) 
+				contextGroupPanel.hide();
 		});
 		
 		deleteGroupLabels.setOnAction(e -> {
