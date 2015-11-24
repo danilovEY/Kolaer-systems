@@ -38,6 +38,7 @@
                 <Menu mnemonicParsing="false" text="Файл">
                   <items>
                     <MenuItem fx:id="rootMenuItem" mnemonicParsing="false" onAction="#actionGettingRootMenuItem" text="Получить доступ к редактированию" />
+                        <MenuItem fx:id="settingMenuItem" mnemonicParsing="false" text="Настроки" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#actionExitMenuItem" text="Выход" />
                   </items>

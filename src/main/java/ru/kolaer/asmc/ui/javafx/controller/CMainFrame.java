@@ -35,6 +35,8 @@ public class CMainFrame extends Application {
 	/** Элемент в меню для получения админ. прав. */
 	@FXML
 	private MenuItem rootMenuItem;
+	@FXML
+	private MenuItem settingMenuItem;
 	/** Панель с группами ярлыков. */
 	@FXML
 	private VBox navigatePanel;
@@ -64,6 +66,8 @@ public class CMainFrame extends Application {
 		contextContentPanel.getItems().add(addLabel);
 		this.navigateScrollPanel.setContextMenu(contextNavigationPanel);
 		this.contentScrollPanel.setContextMenu(contextContentPanel);
+		
+		this.settingMenuItem.setDisable(!SettingSingleton.getInstance().isRoot());
 		// =====Events======		
 		this.navigateScrollPanel.setOnContextMenuRequested((event) -> {
 			if(!SettingSingleton.getInstance().isRoot()) {
@@ -94,6 +98,11 @@ public class CMainFrame extends Application {
 				observer.addLabel(result.get());
 			}
 		});
+		
+		this.settingMenuItem.setOnAction(e -> {
+			final CSetting setting = new CSetting();
+			setting.showAndWait();
+		});
 	}
 	
 	@FXML
@@ -103,7 +112,7 @@ public class CMainFrame extends Application {
 	
 	@FXML
 	public void actionGettingRootMenuItem(ActionEvent event) {
-		new CAuthenticationDialog().showAndWait();
+		this.settingMenuItem.setDisable(new CAuthenticationDialog().showAndWait().get());
 	}
 	
 	@Override

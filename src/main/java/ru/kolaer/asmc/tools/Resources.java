@@ -15,6 +15,7 @@ public interface Resources
 	public static final String V_ADDING_GROUP_LABELS = "file:view/VAddingGroupLabels.fxml";
 	public static final String V_ADDING_LABEL = "file:view/VAddingLabel.fxml";
 	public static final String V_WEB_BROWSER = "file:view/VWebBrowser.fxml";
+	public static final String V_SETTING = "file:view/VSetting.fxml";
 	
 	
 	/**Стандарткая иконка для ярлыка.*/
@@ -30,6 +31,7 @@ public interface Resources
 	public static final String DIALOG_LOADING_COMPONENTS = "Загрузка компонентов";
 	
 	public static final String MAIN_FRAME_TITLE = "АСУП - АЭР";
+	public static final String SETTING_LABEL_FRAME_TITLE = "Настройки";
 	public static final String LOGIN_FRAME_TITLE = "Получить root доступ";
 	public static final String ADDING_GROUP_FRAME_TITLE = "Добавить группу";
 	public static final String EDING_GROUP_FRAME_TITLE = "Редактировать группу";

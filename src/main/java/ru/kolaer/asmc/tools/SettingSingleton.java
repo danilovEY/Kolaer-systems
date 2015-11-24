@@ -19,9 +19,11 @@ public class SettingSingleton {
 	
 	private volatile boolean isRoot = false;
 	private final String ROOT_LOGIN_NAME = "root";
-	private volatile String rootPass = "root";
+	private String rootPass = "root";
+	private boolean isAllLabels = true;
 	private boolean defaultWebBrowser = true;
 	private String pathWebBrowser = "";
+	private String pathBanner = "";
 	
 	private transient final SerializationGroups serializationGroups = new SerializationGroups();
 	
@@ -74,5 +76,21 @@ public class SettingSingleton {
 
 	public void setPathWebBrowser(String pathWebBrowser) {
 		this.pathWebBrowser = pathWebBrowser;
+	}
+
+	public boolean isAllLabels() {
+		return isAllLabels;
+	}
+
+	public void setAllLabels(boolean isAllLabels) {
+		this.isAllLabels = isAllLabels;
+	}
+
+	public String getPathBanner() {
+		return pathBanner;
+	}
+
+	public void setPathBanner(String pathBanner) {
+		this.pathBanner = pathBanner;
 	}
 }
