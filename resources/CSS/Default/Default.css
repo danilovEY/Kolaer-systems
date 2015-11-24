@@ -19,7 +19,7 @@
         rgb(64,103,143),
         rgb(94,133,173),
         radial-gradient(center 50% 50%, radius 100%, rgb(94,133,173), rgb(94,133,173));
-    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );
+    -fx-effect: dropshadow( gaussian , #868686  , 4,0,0,1 );
     -fx-font-weight: bold;
     -fx-font-size: 1.1em;
 }
@@ -33,7 +33,7 @@
         rgb(64,103,143),
         rgb(94,133,173),
         radial-gradient(center 50% 50%, radius 100%, rgb(94,133,173), rgb(94,133,173));
-    -fx-effect: dropshadow( gaussian , rgba(255,0,0,1) , 4,0,0,1 );
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75), 4,0,0,1 );
     -fx-font-weight: bold;
     -fx-font-size: 1.1em;
 }
@@ -51,11 +51,17 @@
 
 .lableMainPane{
 	-fx-background-color: rgb(94,133,173);
-    -fx-background-radius: 15.0; 
-    -fx-padding: 8;
+    -fx-background-radius: 30.0; 
+    -fx-padding: 3;
 }
 
 .lableSecontPanel{
-    -fx-background-radius: 15.0; 
+    -fx-background-radius: 30.0; 
     -fx-padding: 8;
+}
+
+.lableTherdPanel{
+    -fx-background-radius: 30.0; 
+    -fx-padding: 10
+    ;
 }
