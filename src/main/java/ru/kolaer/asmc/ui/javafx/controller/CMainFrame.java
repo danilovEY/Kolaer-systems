@@ -53,6 +53,9 @@ public class CMainFrame extends Application {
 	public void initialize() {
 		final CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
 		observer.loadAndRegGroups();
+			
+		String image = "file:"+ Resources.BACKGROUND_IMAGE.toString();
+		this.contentPanel.setStyle("-fx-background-image: url('" + image + "'); ");
 		
 		final ContextMenu contextNavigationPanel = new ContextMenu();
 		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);

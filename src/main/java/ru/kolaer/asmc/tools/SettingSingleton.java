@@ -14,17 +14,8 @@ public class SettingSingleton implements Serializable {
 	private static final long serialVersionUID = -360823673740807137L;
 	
 	private transient static SettingSingleton inctance;
-	
-	/**/
-	public static synchronized SettingSingleton getInstance() {
-		return inctance;
-	}
-	
-	public static synchronized void setInstance(SettingSingleton in) {
-		inctance = in;
-	}
-	
-	private boolean isRoot = false;
+
+	private transient boolean isRoot = false;
 	private final String ROOT_LOGIN_NAME = "root";
 	private String rootPass = "root";
 	private boolean isAllLabels = true;
@@ -32,12 +23,26 @@ public class SettingSingleton implements Serializable {
 	private String pathWebBrowser = "";
 	private String pathBanner = "";
 	
-	private transient SerializationObjects serializationObjects = new SerializationObjects();
+	private transient SerializationObjects serializationObjects;
 	
-	public SettingSingleton() {
-		
+	private SettingSingleton() {
 	}
 
+	public static synchronized SettingSingleton getInstance() {
+		return inctance;
+	}
+	
+	public static synchronized void initialization() {
+		final SerializationObjects serializationObjects = new SerializationObjects();
+		SettingSingleton.inctance = serializationObjects.getSerializeSetting();
+		if(SettingSingleton.inctance == null) {
+			SettingSingleton.inctance = new SettingSingleton();
+			serializationObjects.setSerializeSetting(SettingSingleton.inctance);
+			
+		}
+		SettingSingleton.inctance.setSerializationObjects(serializationObjects);
+	}
+	
 	public String getRootPass() {
 		return rootPass;
 	}

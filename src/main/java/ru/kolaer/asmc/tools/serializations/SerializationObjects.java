@@ -116,7 +116,7 @@ public class SerializationObjects {
 	public SettingSingleton getSerializeSetting() {
 		
 		if(!this.settingFile.exists())
-			this.setSerializeSetting(new SettingSingleton());
+			return SettingSingleton.getInstance();
 		
 		try (FileInputStream fileInput = new FileInputStream(this.settingFile);
 				ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {

@@ -24,13 +24,14 @@ public interface Resources
 	public static final String AER_LOGO = "resources/aerLogo.png";
 	/**Иконка для приложения.*/
 	public static final String ABOUT_INFO_IMAGE = "resources/aboutInfo.jpg";
+	/**Фон.*/
+	public static final String BACKGROUND_IMAGE = "resources/geometric-background.png";
 	/**Версия*/
-	public static final String VERSION = "1.0";
-	
+	public static final String VERSION = "1.0";	
 	
 	public static final String DIALOG_LOADING_COMPONENTS = "Загрузка компонентов";
 	
-	public static final String MAIN_FRAME_TITLE = "АСУП - АЭР";
+	public static final String MAIN_FRAME_TITLE = "АСУП - АЭР" + " v" + VERSION;
 	public static final String SETTING_LABEL_FRAME_TITLE = "Настройки";
 	public static final String LOGIN_FRAME_TITLE = "Получить root доступ";
 	public static final String ADDING_GROUP_FRAME_TITLE = "Добавить группу";

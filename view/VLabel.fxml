@@ -29,7 +29,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Button fx:id="button" mnemonicParsing="false" prefHeight="40.0" prefWidth="302.0" styleClass="record-sales" text="Открыть" textAlignment="CENTER" wrapText="true">
+                        <Button fx:id="button" mnemonicParsing="false" prefHeight="40.0" prefWidth="302.0" styleClass="record-sales" text="Открыть" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                            <font>
                               <Font size="17.0" />
                            </font>
