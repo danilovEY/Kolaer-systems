@@ -14,7 +14,7 @@ public class JavaFXLauncher extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		SerializationObjects ser = new SerializationObjects();
 		SettingSingleton.setInstance(ser.getSerializeSetting());
-		SettingSingleton.getInstance().setSerializationGroups(ser);	
+		SettingSingleton.getInstance().setSerializationObjects(ser);	
 		
 		if(!this.getParameters().getNamed().isEmpty()) {
 			String passRoot = this.getParameters().getNamed().get("root_set");

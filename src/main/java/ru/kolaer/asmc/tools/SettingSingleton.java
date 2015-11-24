@@ -32,7 +32,7 @@ public class SettingSingleton implements Serializable {
 	private String pathWebBrowser = "";
 	private String pathBanner = "";
 	
-	private transient SerializationObjects serializationGroups = new SerializationObjects();
+	private transient SerializationObjects serializationObjects = new SerializationObjects();
 	
 	public SettingSingleton() {
 		
@@ -59,16 +59,20 @@ public class SettingSingleton implements Serializable {
 	}
 
 	/**
-	 * @return the {@linkplain #serializationGroups}
+	 * @return the {@linkplain #serializationObjects}
 	 */
-	public SerializationObjects getSerializationGroups() {
-		return serializationGroups;
+	public SerializationObjects getSerializationObjects() {
+		return serializationObjects;
 	}
 	
 	public void saveGroups() {
-		this.serializationGroups.setSerializeGroups(this.serializationGroups.getSerializeGroups());
+		this.serializationObjects.setSerializeGroups(this.serializationObjects.getSerializeGroups());
 	}
-
+	
+	public void saveSetting() {
+		this.serializationObjects.setSerializeSetting(this);
+	}
+	
 	public boolean isDefaultWebBrowser() {
 		return defaultWebBrowser;
 	}
@@ -101,7 +105,7 @@ public class SettingSingleton implements Serializable {
 		this.pathBanner = pathBanner;
 	}
 
-	public void setSerializationGroups(SerializationObjects serializationGroups) {
-		this.serializationGroups = serializationGroups;
+	public void setSerializationObjects(SerializationObjects serializationGroups) {
+		this.serializationObjects = serializationGroups;
 	}
 }

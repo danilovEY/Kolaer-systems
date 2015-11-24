@@ -77,7 +77,7 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 	}
 
 	public Optional<MGroupLabels> showAndWait(){
-		this.textPriority.setText(String.valueOf(SettingSingleton.getInstance().getSerializationGroups().getSerializeGroups().size()));
+		this.textPriority.setText(String.valueOf(SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups().size()));
 		if(this.result != null){
 			this.groupNameText.setText(this.result.getNameGroup());
 			this.textPriority.setText(String.valueOf(this.result.getPriority()));

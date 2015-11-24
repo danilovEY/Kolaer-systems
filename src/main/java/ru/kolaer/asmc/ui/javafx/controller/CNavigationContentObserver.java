@@ -29,7 +29,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	}
 
 	public void addGroupLabels(MGroupLabels group) {
-		SettingSingleton.getInstance().getSerializationGroups().getSerializeGroups().add(group);
+		SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups().add(group);
 		SettingSingleton.getInstance().saveGroups();
 		
 		final CGroupLabels cGroup = new CGroupLabels(group);
@@ -67,7 +67,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		});
 		this.panelWithLabels.getChildren().clear();
 
-		SettingSingleton.getInstance().getSerializationGroups().getSerializeGroups()
+		SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups()
 		.stream()
 		.sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority()))
 		.forEach((group) -> {
@@ -109,7 +109,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	@Override
 	public void updateDelete(MGroupLabels model) {
-		SettingSingleton.getInstance().getSerializationGroups().getSerializeGroups().remove(model);
+		SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups().remove(model);
 		SettingSingleton.getInstance().saveGroups();
 		
 		if(model == this.selectedGroup){

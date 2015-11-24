@@ -1,5 +1,6 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -14,6 +15,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
@@ -40,6 +42,8 @@ public class CSetting extends BaseController implements Dialog {
 	
 	@FXML
 	private PasswordField textPassRoot;
+	@FXML
+	private Button changePassButton;
 	
 	@FXML
 	private Button okButton;
@@ -64,6 +68,7 @@ public class CSetting extends BaseController implements Dialog {
 			this.rbDefaultWB.setSelected(true);
 			this.rbSetWB.setSelected(false);
 			this.textPathWB.setDisable(true);
+			this.buttonSetPathWB.setDisable(true);
 		} else {
 			this.rbDefaultWB.setSelected(false);
 			this.rbSetWB.setSelected(true);
@@ -76,10 +81,66 @@ public class CSetting extends BaseController implements Dialog {
 			this.cbAllLabels.setSelected(false);
 		}
 		
-		this.okButton.setOnAction(e -> {
+		this.buttonSetPathBanner.setOnAction(e -> {
+			final FileChooser fileC = new FileChooser();
+			fileC.setTitle("Выбор файла");
+			fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
 			
+			final File startDir = new File(this.textPathBanner.getText());
+			String startPath = System.getProperty("user.home");
+			if(startDir.isFile()) {
+				startPath = startDir.getAbsolutePath().substring(0, startDir.getAbsolutePath().length() - startDir.getName().length());
+			} else {
+				startPath = startDir.getAbsolutePath();
+			}
+			fileC.setInitialDirectory(new File(startPath));
+
+			final Optional<File> file = Optional.ofNullable(fileC.showOpenDialog(dialog));
+
+			if (file.isPresent() && file.get().exists()) {
+				this.textPathBanner.setText(file.get().getAbsolutePath());
+			}
 		});
 		
+		this.buttonSetPathWB.setOnAction(e -> {
+			final FileChooser fileC = new FileChooser();
+			fileC.setTitle("Выбор файла");
+			fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
+			
+			final File startDir = new File(this.textPathWB.getText());
+			String startPath = System.getProperty("user.home");
+			if(startDir.isFile()) {
+				startPath = startDir.getAbsolutePath().substring(0, startDir.getAbsolutePath().length() - startDir.getName().length());
+			} else {
+				startPath = startDir.getAbsolutePath();
+			}
+			fileC.setInitialDirectory(new File(startPath));
+
+			final Optional<File> file = Optional.ofNullable(fileC.showOpenDialog(dialog));
+
+			if (file.isPresent() && file.get().exists()) {
+				this.textPathWB.setText(file.get().getAbsolutePath());
+			}
+		});
+		
+		this.changePassButton.setOnAction(e -> {
+			SettingSingleton.getInstance().setRootPass(this.textPassRoot.getText());
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Пароль сохранен!");
+			alert.setHeaderText("Пароль успешно изменен!");
+			alert.showAndWait();
+			SettingSingleton.getInstance().saveSetting();
+		});
+		
+		this.okButton.setOnAction(e -> {
+			final SettingSingleton set = SettingSingleton.getInstance();
+			set.setAllLabels(this.cbAllLabels.isSelected());
+			set.setDefaultWebBrowser(this.rbDefaultWB.isSelected());
+			set.setPathBanner(this.textPathBanner.getText());
+			set.setPathWebBrowser(this.textPathWB.getText());
+			SettingSingleton.getInstance().saveSetting();
+			this.dialog.close();
+		});
 	}
 
 	@Override

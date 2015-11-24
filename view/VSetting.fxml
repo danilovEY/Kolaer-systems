@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<fx:root prefHeight="307.0" prefWidth="332.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="307.0" prefWidth="339.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -40,6 +40,7 @@
                                        <children>
                                           <Label layoutX="14.0" layoutY="14.0" text="Изменить пароль:" />
                                           <PasswordField fx:id="textPassRoot" layoutX="122.0" layoutY="10.0" prefHeight="25.0" prefWidth="190.0" />
+                                          <Button fx:id="changePassButton" layoutX="242.0" layoutY="43.0" mnemonicParsing="false" text="Изменить" />
                                        </children>
                                     </AnchorPane>
                               </content>
@@ -54,7 +55,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TitledPane animated="false" layoutX="14.0" layoutY="14.0" prefHeight="78.0" prefWidth="307.0" text="Баннер">
+                        <TitledPane animated="false" layoutX="14.0" layoutY="14.0" prefHeight="78.0" prefWidth="312.0" text="Баннер">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="46.0" prefWidth="269.0">
                                  <children>
