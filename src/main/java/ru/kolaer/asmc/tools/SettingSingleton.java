@@ -1,23 +1,30 @@
 package ru.kolaer.asmc.tools;
 
-import ru.kolaer.asmc.tools.serializations.SerializationGroups;
+import java.io.Serializable;
+
+import ru.kolaer.asmc.tools.serializations.SerializationObjects;
 
 /**
  * Sigleton-настроек.
  * @author Danilov E.Y.
  *
  */
-public class SettingSingleton {
+public class SettingSingleton implements Serializable {
+
+	private static final long serialVersionUID = -360823673740807137L;
+	
 	private transient static SettingSingleton inctance;
 	
 	/**/
 	public static synchronized SettingSingleton getInstance() {
-		if(inctance == null)
-			inctance = new SettingSingleton();
 		return inctance;
 	}
 	
-	private volatile boolean isRoot = false;
+	public static synchronized void setInstance(SettingSingleton in) {
+		inctance = in;
+	}
+	
+	private boolean isRoot = false;
 	private final String ROOT_LOGIN_NAME = "root";
 	private String rootPass = "root";
 	private boolean isAllLabels = true;
@@ -25,9 +32,9 @@ public class SettingSingleton {
 	private String pathWebBrowser = "";
 	private String pathBanner = "";
 	
-	private transient final SerializationGroups serializationGroups = new SerializationGroups();
+	private transient SerializationObjects serializationGroups = new SerializationObjects();
 	
-	private SettingSingleton() {
+	public SettingSingleton() {
 		
 	}
 
@@ -54,7 +61,7 @@ public class SettingSingleton {
 	/**
 	 * @return the {@linkplain #serializationGroups}
 	 */
-	public SerializationGroups getSerializationGroups() {
+	public SerializationObjects getSerializationGroups() {
 		return serializationGroups;
 	}
 	
@@ -92,5 +99,9 @@ public class SettingSingleton {
 
 	public void setPathBanner(String pathBanner) {
 		this.pathBanner = pathBanner;
+	}
+
+	public void setSerializationGroups(SerializationObjects serializationGroups) {
+		this.serializationGroups = serializationGroups;
 	}
 }

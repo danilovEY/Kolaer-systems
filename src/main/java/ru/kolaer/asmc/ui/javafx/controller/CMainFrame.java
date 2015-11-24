@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
-import ru.kolaer.asmc.tools.serializations.SerializationGroups;
+import ru.kolaer.asmc.tools.serializations.SerializationObjects;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
 

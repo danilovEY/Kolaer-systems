@@ -14,6 +14,7 @@ import java.util.List;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
 /**
@@ -21,15 +22,16 @@ import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
  * @author Danilov
  * @version 0.1
  */
-public class SerializationGroups {
+public class SerializationObjects {
 
 	private final String pathDitSerializedObject = "data";
 	private final String fileNameSerializeObjects = "objects.aer";
 	private final File dir = new File(pathDitSerializedObject);
+	private final File settingFile = new File("setting.aer");
 	private File fileSer = null;
 	private List<MGroupLabels> cacheObjects;
 
-	public SerializationGroups() {
+	public SerializationObjects() {
 		
 		if(!this.checkFile()){
 			Platform.runLater(() -> {
@@ -84,6 +86,57 @@ public class SerializationGroups {
 			}
 		}
 		return true;
+	}
+	
+	public void setSerializeSetting(SettingSingleton setting) {
+		if(!this.settingFile.exists())
+			try {
+				this.settingFile.createNewFile();
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+		try (FileOutputStream fileOutSer = new FileOutputStream(this.settingFile);
+				ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
+
+			objectOutputStream.writeObject(setting);
+
+		} catch (FileNotFoundException e) {
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка!");
+				alert.setHeaderText("Не найден файл: " + this.settingFile.getAbsolutePath());
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+			});
+		} catch (IOException e1) {
+			System.exit(-9);
+		}
+	}
+	
+	public SettingSingleton getSerializeSetting() {
+		
+		if(!this.settingFile.exists())
+			this.setSerializeSetting(new SettingSingleton());
+		
+		try (FileInputStream fileInput = new FileInputStream(this.settingFile);
+				ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
+				if(SettingSingleton.getInstance() == null) {
+					return (SettingSingleton) objectInput.readObject();
+				}				
+				return SettingSingleton.getInstance();
+			} catch (ClassNotFoundException e) {
+				Platform.runLater(() -> {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Ошибка!");
+					alert.setHeaderText("Класс не найден!" + this.settingFile.getAbsolutePath());
+					alert.setContentText(e.getMessage());
+					alert.showAndWait();
+				});
+				return SettingSingleton.getInstance();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		return SettingSingleton.getInstance();
 	}
 	
 	/**Получить сериализованные группы.*/

@@ -16,7 +16,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import ru.kolaer.asmc.tools.Resources;
-import ru.kolaer.asmc.tools.serializations.SerializationGroups;
+import ru.kolaer.asmc.tools.serializations.SerializationObjects;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
 
@@ -43,7 +43,7 @@ public class ConvertXMLtoSer {
 
 		NodeList desktopLabelList = document.getElementsByTagName(LABEL_GROUP);
 
-		SerializationGroups ser = new SerializationGroups();
+		SerializationObjects ser = new SerializationObjects();
 		List<MGroupLabels> listGroups = new ArrayList<>();
 		
 		// List of GroupLabel

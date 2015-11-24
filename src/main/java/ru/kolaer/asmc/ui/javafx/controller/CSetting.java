@@ -76,6 +76,9 @@ public class CSetting extends BaseController implements Dialog {
 			this.cbAllLabels.setSelected(false);
 		}
 		
+		this.okButton.setOnAction(e -> {
+			
+		});
 		
 	}
 
