@@ -111,7 +111,7 @@ public class CMainFrame extends Application {
 	
 	@FXML
 	public void actionGettingRootMenuItem(ActionEvent event) {
-		this.settingMenuItem.setDisable(new CAuthenticationDialog().showAndWait().get());
+		this.settingMenuItem.setDisable(!new CAuthenticationDialog().showAndWait().get());
 	}
 	
 	@Override

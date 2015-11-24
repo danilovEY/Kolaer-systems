@@ -97,7 +97,7 @@ public class Application implements Runnable {
 							Platform.runLater(() -> {
 								Alert alert = new Alert(AlertType.ERROR);
 								alert.setTitle("Ошибка!");
-								alert.setHeaderText("Браузер \"" + this.pathApp + "\" не найден.");
+								alert.setHeaderText("Браузер \"" + SettingSingleton.getInstance().getPathWebBrowser() + "\" не найден.");
 								alert.setContentText("Запуск стандартного браузера...");
 								alert.show();
 

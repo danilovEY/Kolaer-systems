@@ -73,6 +73,7 @@ public class CSetting extends BaseController implements Dialog {
 			this.rbDefaultWB.setSelected(false);
 			this.rbSetWB.setSelected(true);
 			this.textPathWB.setDisable(false);
+			this.buttonSetPathWB.setDisable(false);
 		}
 		
 		if(SettingSingleton.getInstance().isAllLabels()) {
@@ -80,6 +81,20 @@ public class CSetting extends BaseController implements Dialog {
 		} else {
 			this.cbAllLabels.setSelected(false);
 		}
+		
+		this.rbDefaultWB.setOnAction(e -> {
+			this.rbDefaultWB.setSelected(true);
+			this.rbSetWB.setSelected(false);
+			this.textPathWB.setDisable(true);
+			this.buttonSetPathWB.setDisable(true);
+		});
+		
+		this.rbSetWB.setOnAction(e -> {
+			this.rbDefaultWB.setSelected(false);
+			this.rbSetWB.setSelected(true);
+			this.textPathWB.setDisable(false);
+			this.buttonSetPathWB.setDisable(false);
+		});
 		
 		this.buttonSetPathBanner.setOnAction(e -> {
 			final FileChooser fileC = new FileChooser();
