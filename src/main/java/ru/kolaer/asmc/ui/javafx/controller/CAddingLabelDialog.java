@@ -51,7 +51,9 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	private Button okButton;
 	@FXML
 	private Button cancelButton;
-
+	@FXML
+	private TextField textPriority;
+	
 	private final FileChooser fileChooser = new FileChooser();
 	private final Stage dialog = new Stage();
 
@@ -135,14 +137,23 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 
 	@FXML
 	public void actionButtonOK(ActionEvent event) {
+		if(!this.textPriority.getText().matches("[0-9]*")) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Внимание!");
+			alert.setHeaderText("Приоритет может быть только числом!");
+			alert.show();
+			return;
+		}
+		
 		if (this.result == null) {
 			this.result = new MLabel(this.nameLabelText.getText(), this.infoLabelText.getText(),
-					this.pathIconText.getText(), this.pathAppText.getText());
+					this.pathIconText.getText(), this.pathAppText.getText(), Integer.valueOf(textPriority.getText()));
 		} else {
 			this.result.setName(this.nameLabelText.getText());
 			this.result.setInfo(this.infoLabelText.getText());
 			this.result.setPathImage(this.pathIconText.getText());
 			this.result.setPathApplication(this.pathAppText.getText());
+			this.result.setPriority(Integer.valueOf(textPriority.getText()));
 		}
 
 		this.dialog.close();
@@ -198,6 +209,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	@Override
 	public Optional<MLabel> showAndWait() {
 		if (this.result != null) {
+			this.textPriority.setText(String.valueOf(this.result.getPriority()));
 			this.nameLabelText.setText(this.result.getName());
 			this.infoLabelText.setText(this.result.getInfo());
 			this.pathAppText.setText(this.result.getPathApplication());

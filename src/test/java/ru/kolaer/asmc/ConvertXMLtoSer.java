@@ -53,7 +53,7 @@ public class ConvertXMLtoSer {
 			if (nodeGroup.getNodeType() == Node.ELEMENT_NODE) {
 				Element groupEl = (Element) nodeGroup;
 				String name = groupEl.getAttribute("name");
-				MGroupLabels group = new MGroupLabels(name);
+				MGroupLabels group = new MGroupLabels(name, je);
 				
 				System.out.println("Group name: " + name);
 				// List of Label
@@ -63,11 +63,13 @@ public class ConvertXMLtoSer {
 					String titleName = labelElement.getAttribute(NAME_ATR);
 					String app = labelElement.getAttribute(APP_PATH_ATR);
 					String image = labelElement.getAttribute(IMAGE_PATH_ATR);
-					//image = image.substring("\\\\kolaer.local\\asup$\\".length());
-					image = Resources.AER_ICON;
+					image = image.substring("\\\\kolaer.local\\asup$\\ico\\".length());
+					image = "\\\\kolaer.local\\asup$\\ASMC-v1.0-bin\\resources\\" + image.replaceFirst(".png", ".gif").replaceAll(".PNG", ".gif");
+					
+					//image = Resources.AER_ICON;
 					String info = labelElement.getAttribute(INFO_ATR);
 					System.out.printf("Label: %s %s %s %s ", titleName, info, image, app);
-					group.addLabel(new MLabel(titleName, info, image, app));
+					group.addLabel(new MLabel(titleName, info, image, app, i));
 				}
 				listGroups.add(group);
 			}

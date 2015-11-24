@@ -6,28 +6,33 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<fx:root prefHeight="94.0" prefWidth="265.0" type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<fx:root prefHeight="116.0" prefWidth="265.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <GridPane BorderPane.alignment="CENTER">
+      <GridPane hgap="5.0" vgap="15.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="127.0" minWidth="10.0" prefWidth="84.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="201.0" minWidth="10.0" prefWidth="181.0" />
         </columnConstraints>
         <rowConstraints>
+            <RowConstraints maxHeight="58.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="58.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="57.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="Имя группы:" />
             <TextField fx:id="groupNameText" GridPane.columnIndex="1" />
-            <FlowPane alignment="CENTER_RIGHT" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <FlowPane alignment="CENTER_RIGHT" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
                   <Button fx:id="okButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="OK" />
                   <Button fx:id="cancelButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="Отмена" />
                </children>
             </FlowPane>
+            <Label text="Приоритет:" GridPane.rowIndex="1" />
+            <TextField fx:id="textPriority" promptText="Любое число" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
+         <BorderPane.margin>
+            <Insets top="5.0" />
+         </BorderPane.margin>
       </GridPane>
    </center>
    <padding>

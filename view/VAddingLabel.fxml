@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<fx:root prefHeight="364.0" prefWidth="451.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="378.0" prefWidth="451.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="354.0" prefWidth="428.0" BorderPane.alignment="CENTER">
+      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="372.0" prefWidth="428.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="158.0" minWidth="10.0" prefWidth="118.0" />
           <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="310.0" />
@@ -18,15 +18,16 @@
           <RowConstraints maxHeight="69.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="189.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="107.0" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="107.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="Имя ярлыка:" />
             <Label text="Описание:" GridPane.rowIndex="1" />
             <Label text="Иконка:" GridPane.rowIndex="2" />
             <Label text="Путь к файлу/URL:" GridPane.rowIndex="3" />
-            <FlowPane alignment="CENTER_RIGHT" hgap="10.0" prefHeight="70.0" prefWidth="69.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <FlowPane alignment="CENTER_RIGHT" hgap="10.0" prefHeight="48.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
                   <Button fx:id="okButton" mnemonicParsing="false" onAction="#actionButtonOK" prefHeight="25.0" prefWidth="60.0" text="OK" />
                   <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#actionButtonCancel" prefHeight="25.0" prefWidth="60.0" text="Отмена" />
@@ -86,6 +87,8 @@
                   <Insets />
                </opaqueInsets>
             </FlowPane>
+            <Label text="Приоритет:" GridPane.rowIndex="4" />
+            <TextField fx:id="textPriority" prefHeight="25.0" prefWidth="194.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
          <BorderPane.margin>
             <Insets />

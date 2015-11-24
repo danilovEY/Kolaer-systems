@@ -30,12 +30,12 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 	
 	@FXML
 	private TextField groupNameText;
-	
 	@FXML
 	private Button okButton;
-	
 	@FXML
 	private Button cancelButton;
+	@FXML
+	private TextField textPriority;
 	
 	public CAddingGroupLabelsDialog() {
 		super(Resources.V_ADDING_GROUP_LABELS);
@@ -52,23 +52,37 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {		
-		this.okButton.setOnMouseClicked(e -> {
+		this.okButton.setOnAction(e -> {
+			if(!this.textPriority.getText().matches("[0-9]*")) {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Внимание!");
+				alert.setHeaderText("Приоритет может быть только числом!");
+				alert.show();
+				return;
+			}
 			if(this.result == null) {
-				this.result = new MGroupLabels(this.groupNameText.getText());
+				this.result = new MGroupLabels(this.groupNameText.getText(), Integer.valueOf(this.textPriority.getText()));
 			}
 			else {
 				this.result.setNameGroup(this.groupNameText.getText());
+				this.result.setPriority(Integer.valueOf(this.textPriority.getText()));
 			}
 			
+			this.dialog.close();
+		});
+		
+		this.cancelButton.setOnAction(e -> {
 			this.dialog.close();
 		});
 	}
 
 	public Optional<MGroupLabels> showAndWait(){
+		this.textPriority.setText(String.valueOf(SettingSingleton.getInstance().getSerializationGroups().getSerializeGroups().size()));
 		if(this.result != null){
 			this.groupNameText.setText(this.result.getNameGroup());
+			this.textPriority.setText(String.valueOf(this.result.getPriority()));
 		}
-
+		
 		String title = this.result == null ? Resources.ADDING_GROUP_FRAME_TITLE : Resources.EDING_GROUP_FRAME_TITLE;
 		this.dialog.setTitle(title);
 		this.dialog.setScene(new Scene(this));

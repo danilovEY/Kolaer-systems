@@ -9,12 +9,14 @@ public class MLabel implements Serializable {
 	private String info;
 	private String pathImage;
 	private String pathApplication;
+	private int priority = 0;
 	
-	public MLabel(String name, String info, String pathImage, String pathApplication) {
+	public MLabel(String name, String info, String pathImage, String pathApplication, int priority) {
 		this.name = name;
 		this.info = info;
 		this.pathImage = pathImage;
 		this.pathApplication = pathApplication;
+		this.priority = priority;
 	}
 	public String getName() {
 		return name;
@@ -43,5 +45,11 @@ public class MLabel implements Serializable {
 	@Override
 	public String toString() {
 		return "MLabel [name=" + name + ", info=" + info + ", pathImage=" + pathImage + ", pathApplication=" + pathApplication + "]";
+	}
+	public int getPriority() {
+		return priority;
+	}
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 }
