@@ -24,7 +24,7 @@
     -fx-background-radius: 3,2,2,2;
     -fx-padding: 12 30 12 30;
     -fx-text-fill: white;
-    -fx-font-size: 12px;
+    -fx-font-size: 10px;
 }
 
 .rich-blue:hover {
@@ -35,9 +35,8 @@
         linear-gradient(#4167c0, #223768);
     -fx-background-insets: 0,1,2,3;
     -fx-background-radius: 3,2,2,2;
-    -fx-padding: 12 30 12 30;
+    -fx-padding: 1 30 12 30;
     -fx-text-fill: white;
-    -fx-font-size: 12px;
 }
 
 .rich-blue Text {
@@ -86,6 +85,7 @@
 .lableMainPane{
 	-fx-background-color: rgb(94,133,173);
     -fx-background-radius: 30.0; 
+    -fx-effect: dropshadow( gaussian , #868686  , 4,0,0,1 );
     -fx-padding: 3;
 }
 
