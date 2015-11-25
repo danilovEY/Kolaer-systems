@@ -20,6 +20,7 @@ public class SettingSingleton implements Serializable {
 	private String rootPass = "root";
 	private boolean isAllLabels = true;
 	private boolean defaultWebBrowser = true;
+	private boolean defaultUserWebBrowser = false;
 	private String pathWebBrowser = "";
 	private String pathBanner = "";
 	
@@ -112,5 +113,13 @@ public class SettingSingleton implements Serializable {
 
 	public void setSerializationObjects(SerializationObjects serializationGroups) {
 		this.serializationObjects = serializationGroups;
+	}
+
+	public boolean isDefaultUserWebBrowser() {
+		return defaultUserWebBrowser;
+	}
+
+	public void setDefaultUserWebBrowser(boolean defaultUserWebBrowser) {
+		this.defaultUserWebBrowser = defaultUserWebBrowser;
 	}
 }

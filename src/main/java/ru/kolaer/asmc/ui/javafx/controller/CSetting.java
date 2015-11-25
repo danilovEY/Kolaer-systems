@@ -27,6 +27,8 @@ public class CSetting extends BaseController implements Dialog {
 	@FXML
 	private RadioButton rbDefaultWB;
 	@FXML
+	private RadioButton rbDefaultUserWB;
+	@FXML
 	private RadioButton rbSetWB;
 	@FXML
 	private TextField textPathWB;
@@ -65,11 +67,19 @@ public class CSetting extends BaseController implements Dialog {
 		this.textPathBanner.setText(SettingSingleton.getInstance().getPathBanner());		
 		
 		if(SettingSingleton.getInstance().isDefaultWebBrowser()) {
+			this.rbDefaultUserWB.setSelected(false);
 			this.rbDefaultWB.setSelected(true);
 			this.rbSetWB.setSelected(false);
 			this.textPathWB.setDisable(true);
 			this.buttonSetPathWB.setDisable(true);
+		} else if(SettingSingleton.getInstance().isDefaultUserWebBrowser()) {
+			this.rbDefaultWB.setSelected(false);
+			this.rbSetWB.setSelected(false);
+			this.rbDefaultUserWB.setSelected(true);
+			this.textPathWB.setDisable(true);
+			this.buttonSetPathWB.setDisable(true);
 		} else {
+			this.rbDefaultUserWB.setSelected(false);
 			this.rbDefaultWB.setSelected(false);
 			this.rbSetWB.setSelected(true);
 			this.textPathWB.setDisable(false);
@@ -82,16 +92,23 @@ public class CSetting extends BaseController implements Dialog {
 			this.cbAllLabels.setSelected(false);
 		}
 		
+		this.rbDefaultUserWB.setOnAction(e -> {
+			this.rbDefaultWB.setSelected(false);
+			this.rbSetWB.setSelected(false);
+			this.textPathWB.setDisable(true);
+			this.buttonSetPathWB.setDisable(true);
+		});
+		
 		this.rbDefaultWB.setOnAction(e -> {
-			this.rbDefaultWB.setSelected(true);
+			this.rbDefaultUserWB.setSelected(false);
 			this.rbSetWB.setSelected(false);
 			this.textPathWB.setDisable(true);
 			this.buttonSetPathWB.setDisable(true);
 		});
 		
 		this.rbSetWB.setOnAction(e -> {
+			this.rbDefaultUserWB.setSelected(false);
 			this.rbDefaultWB.setSelected(false);
-			this.rbSetWB.setSelected(true);
 			this.textPathWB.setDisable(false);
 			this.buttonSetPathWB.setDisable(false);
 		});
@@ -153,6 +170,7 @@ public class CSetting extends BaseController implements Dialog {
 			set.setDefaultWebBrowser(this.rbDefaultWB.isSelected());
 			set.setPathBanner(this.textPathBanner.getText());
 			set.setPathWebBrowser(this.textPathWB.getText());
+			set.setDefaultUserWebBrowser(this.rbDefaultUserWB.isSelected());
 			SettingSingleton.getInstance().saveSetting();
 			this.dialog.close();
 		});

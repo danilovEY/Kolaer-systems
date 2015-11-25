@@ -21,15 +21,16 @@
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <Label layoutX="14.0" layoutY="46.0" text="Путь:" />
-                                          <CheckBox fx:id="cbAllLabels" layoutX="14.0" layoutY="71.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="131.0" selected="true" text="Для всех ярлыков" />
-                                          <TextField fx:id="textPathWB" layoutX="57.0" layoutY="42.0" prefHeight="25.0" prefWidth="177.0" />
-                                          <Button fx:id="buttonSetPathWB" layoutX="245.0" layoutY="42.0" mnemonicParsing="false" text="Обзор..." />
-                                          <RadioButton fx:id="rbSetWB" layoutX="7.0" layoutY="23.0" mnemonicParsing="false" text="Использовать внешний браузер">
+                                          <Label layoutX="14.0" layoutY="64.0" text="Путь:" />
+                                          <CheckBox fx:id="cbAllLabels" layoutX="14.0" layoutY="89.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="131.0" selected="true" text="Для всех ярлыков" />
+                                          <TextField fx:id="textPathWB" layoutX="57.0" layoutY="60.0" prefHeight="25.0" prefWidth="177.0" />
+                                          <Button fx:id="buttonSetPathWB" layoutX="245.0" layoutY="60.0" mnemonicParsing="false" text="Обзор..." />
+                                          <RadioButton fx:id="rbSetWB" layoutX="7.0" layoutY="41.0" mnemonicParsing="false" text="Использовать внешний браузер">
                                              <toggleGroup>
                                                 <ToggleGroup fx:id="web" />
                                              </toggleGroup></RadioButton>
                                           <RadioButton fx:id="rbDefaultWB" layoutX="7.0" layoutY="6.0" mnemonicParsing="false" text="Использовать внутренний браузер" toggleGroup="$web" />
+                                          <RadioButton fx:id="rbDefaultUserWB" layoutX="7.0" layoutY="23.0" mnemonicParsing="false" text="Использовать браузер пользователя" toggleGroup="$web" />
                                        </children>
                                     </AnchorPane>
                               </content>

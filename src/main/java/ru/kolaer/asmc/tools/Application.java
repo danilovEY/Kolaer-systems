@@ -3,6 +3,7 @@ package ru.kolaer.asmc.tools;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 import javafx.application.Platform;
@@ -94,9 +95,12 @@ public class Application implements Runnable {
 								web.load(pathApp);
 							});
 							return;
+						} else if(SettingSingleton.getInstance().isDefaultUserWebBrowser()) {
+							r.exec("explorer \"" + this.pathApp + "\"");
+							return;
 						} else {
 							pathWeb = SettingSingleton.getInstance().getPathWebBrowser();
-						}	
+						}
 					} else {
 						pathWeb = this.openWith;
 					}
