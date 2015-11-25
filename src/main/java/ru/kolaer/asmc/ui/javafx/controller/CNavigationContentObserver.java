@@ -135,7 +135,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	@Override
 	public void updateClick(MLabel model) {
-		new Application(model.getPathApplication()).start();
+		new Application(model.getPathApplication(), model.getPathOpenAppWith()).start();
 	}
 	
 	@Override

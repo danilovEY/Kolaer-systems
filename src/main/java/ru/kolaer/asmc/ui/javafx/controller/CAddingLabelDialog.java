@@ -53,6 +53,10 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	private Button cancelButton;
 	@FXML
 	private TextField textPriority;
+	@FXML
+	private TextField pathOpenAppWith;
+	@FXML
+	private Button buttonSetAppWith;
 	
 	private final FileChooser fileChooser = new FileChooser();
 	private final Stage dialog = new Stage();
@@ -88,13 +92,38 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		this.buttonSetAppWith.setOnAction(e -> {
+			final FileChooser fileC = new FileChooser();
+			fileC.setTitle("Выбор файла");
+			fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
+			
+			String path = this.pathOpenAppWith.getText() == null ? System.getProperty("user.home") : this.pathOpenAppWith.getText();
+			
+			final File startDir = new File(path);
+			String startPath = System.getProperty("user.home");
+			if(startDir.isFile()) {
+				startPath = startDir.getAbsolutePath().substring(0, startDir.getAbsolutePath().length() - startDir.getName().length());
+			} else {
+				startPath = startDir.getAbsolutePath();
+			}
+			fileC.setInitialDirectory(new File(startPath));
 
+			final Optional<File> file = Optional.ofNullable(fileC.showOpenDialog(dialog));
+
+			if (file.isPresent() && file.get().exists()) {
+				this.pathOpenAppWith.setText(file.get().getAbsolutePath());
+			}
+		});
+		
 		this.buttonSetFile.setOnAction(e -> {
 			final FileChooser fileC = new FileChooser();
 			fileC.setTitle("Выбор файла");
 			fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
 			
-			final File startDir = new File(this.pathAppText.getText());
+			String path = this.pathOpenAppWith.getText() == null ? System.getProperty("user.home") : this.pathOpenAppWith.getText();
+			
+			final File startDir = new File(path);
 			String startPath = System.getProperty("user.home");
 			if(startDir.isFile()) {
 				startPath = startDir.getAbsolutePath().substring(0, startDir.getAbsolutePath().length() - startDir.getName().length());
@@ -147,13 +176,14 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 		
 		if (this.result == null) {
 			this.result = new MLabel(this.nameLabelText.getText(), this.infoLabelText.getText(),
-					this.pathIconText.getText(), this.pathAppText.getText(), Integer.valueOf(textPriority.getText()));
+					this.pathIconText.getText(), this.pathAppText.getText(), this.pathOpenAppWith.getText(), Integer.valueOf(textPriority.getText()));
 		} else {
 			this.result.setName(this.nameLabelText.getText());
 			this.result.setInfo(this.infoLabelText.getText());
 			this.result.setPathImage(this.pathIconText.getText());
 			this.result.setPathApplication(this.pathAppText.getText());
 			this.result.setPriority(Integer.valueOf(textPriority.getText()));
+			this.result.setPathOpenAppWith(this.pathOpenAppWith.getText());
 		}
 
 		this.dialog.close();
@@ -213,6 +243,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			this.nameLabelText.setText(this.result.getName());
 			this.infoLabelText.setText(this.result.getInfo());
 			this.pathAppText.setText(this.result.getPathApplication());
+			this.pathOpenAppWith.setText(this.result.getPathOpenAppWith());
 			if (this.result.getPathImage() == null || this.result.getPathImage().isEmpty()) {
 				this.rbNoneIcon.setSelected(true);
 				this.image.setImage(null);

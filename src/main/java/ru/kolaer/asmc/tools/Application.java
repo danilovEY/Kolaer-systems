@@ -19,9 +19,11 @@ import ru.kolaer.asmc.ui.javafx.controller.CWebBrowser;
 public class Application implements Runnable {
 
 	private String pathApp;
-
-	public Application(String path) {
+	private String openWith;
+	
+	public Application(String path, String openWith) {
 		this.pathApp = path;
+		this.openWith = openWith;
 	}
 
 	public void start() {
@@ -83,37 +85,50 @@ public class Application implements Runnable {
 
 			if (isWindows()) {
 				if (isURL(pathApp)) {
-					if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
-						Platform.runLater(() -> {
-							final CWebBrowser web = new CWebBrowser();
-							web.show();
-							web.load(pathApp);
-						});
-					} else {
-						File simpleWebBrowser = new File(SettingSingleton.getInstance().getPathWebBrowser());
-						if (simpleWebBrowser.exists() && simpleWebBrowser.isFile()) {
-							r.exec(simpleWebBrowser.getAbsolutePath() + " \"" + this.pathApp + "\"");
-						} else {
+					String pathWeb = "";
+					if(SettingSingleton.getInstance().isAllLabels()) {
+						if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
 							Platform.runLater(() -> {
-								Alert alert = new Alert(AlertType.ERROR);
-								alert.setTitle("Ошибка!");
-								alert.setHeaderText("Браузер \"" + SettingSingleton.getInstance().getPathWebBrowser() + "\" не найден.");
-								alert.setContentText("Запуск стандартного браузера...");
-								alert.show();
-
 								final CWebBrowser web = new CWebBrowser();
 								web.show();
 								web.load(pathApp);
 							});
-						}
-					}
-				} else {
-					File file = new File(this.pathApp);
-					if (file.exists()) {
-						if (file.isDirectory()) {
-							r.exec("explorer.exe \"" + this.pathApp + "\"");
+							return;
 						} else {
-							r.exec("cmd /C \"" + this.pathApp + "\"");
+							pathWeb = SettingSingleton.getInstance().getPathWebBrowser();
+						}	
+					} else {
+						pathWeb = this.openWith;
+					}
+					
+					final File simpleWebBrowser = new File(pathWeb);
+					if (simpleWebBrowser.exists() && simpleWebBrowser.isFile()) {
+						r.exec(simpleWebBrowser.getAbsolutePath() + " \"" + this.pathApp + "\"");
+					} else {
+						Platform.runLater(() -> {
+							Alert alert = new Alert(AlertType.ERROR);
+							alert.setTitle("Ошибка!");
+							alert.setHeaderText("Браузер \"" + simpleWebBrowser.getAbsolutePath() + "\" не найден.");
+							alert.setContentText("Запуск стандартного браузера...");
+							alert.show();
+
+							final CWebBrowser web = new CWebBrowser();
+							web.show();
+							web.load(pathApp);
+						});
+					}
+				} else {		
+					final File file = new File(this.pathApp);
+					
+					if (file.exists()) {	
+						if(this.openWith!= null && !this.openWith.isEmpty()) {
+							r.exec(this.openWith + " " + this.pathApp);
+						} else {
+							if (file.isDirectory()) {
+								r.exec("explorer.exe \"" + this.pathApp + "\"");
+							} else {
+								r.exec("cmd /C \"" + this.pathApp + "\"");
+							}
 						}
 					} else {
 						Platform.runLater(() -> {

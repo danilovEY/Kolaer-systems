@@ -69,7 +69,7 @@ public class ConvertXMLtoSer {
 					//image = Resources.AER_ICON;
 					String info = labelElement.getAttribute(INFO_ATR);
 					System.out.printf("Label: %s %s %s %s ", titleName, info, image, app);
-					group.addLabel(new MLabel(titleName, info, image, app, i));
+					group.addLabel(new MLabel(titleName, info, image, app,"", i));
 				}
 				listGroups.add(group);
 			}
