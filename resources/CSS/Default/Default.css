@@ -26,6 +26,20 @@
     -fx-text-fill: white;
     -fx-font-size: 12px;
 }
+
+.rich-blue:hover {
+    -fx-background-color: 
+        #000000,
+        linear-gradient(#aad3f1, #3c5fb5),
+        linear-gradient(#6586c7, #33529b),
+        linear-gradient(#4167c0, #223768);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 12 30 12 30;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
+
 .rich-blue Text {
     -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , 1);
 }
