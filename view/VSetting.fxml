@@ -56,7 +56,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TitledPane animated="false" disable="true" layoutX="14.0" layoutY="14.0" prefHeight="78.0" prefWidth="312.0" text="Баннер">
+                        <TitledPane animated="false" layoutX="14.0" layoutY="14.0" prefHeight="78.0" prefWidth="312.0" text="Баннер">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="46.0" prefWidth="269.0">
                                  <children>

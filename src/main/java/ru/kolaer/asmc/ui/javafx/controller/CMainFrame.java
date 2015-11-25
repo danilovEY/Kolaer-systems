@@ -1,5 +1,6 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
@@ -16,6 +17,8 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -23,6 +26,7 @@ import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
+import ru.kolaer.asmc.ui.javafx.view.ImageViewPane;
 
 /**
  * Контроллер главного окна приложения.
@@ -41,6 +45,8 @@ public class CMainFrame extends Application {
 	private VBox navigatePanel;
 	/** Панель с ярлыками. */
 	@FXML
+	private BorderPane mainPanel;
+	@FXML
 	private FlowPane contentPanel;
 	@FXML
 	private ScrollPane navigateScrollPanel;
@@ -53,10 +59,16 @@ public class CMainFrame extends Application {
 	public void initialize() {
 		final CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
 		observer.loadAndRegGroups();
-			
+
 		String image = "file:"+ Resources.BACKGROUND_IMAGE.toString();
 		this.contentPanel.setStyle("-fx-background-image: url('" + image + "'); ");
 		
+		final File img = new File(SettingSingleton.getInstance().getPathBanner());
+		if(img.exists() && img.isFile()) {
+			mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner()))));
+		} else {
+			mainPanel.setTop(null);
+		}
 		final ContextMenu contextNavigationPanel = new ContextMenu();
 		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);
 
@@ -104,6 +116,12 @@ public class CMainFrame extends Application {
 		this.settingMenuItem.setOnAction(e -> {
 			final CSetting setting = new CSetting();
 			setting.showAndWait();
+			final File imgage = new File(SettingSingleton.getInstance().getPathBanner());
+			if(imgage.exists() && imgage.isFile()) {
+				mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner()))));
+			} else {
+				mainPanel.setTop(null);
+			}
 		});
 	}
 	

@@ -11,7 +11,7 @@
    <children>
       <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <BorderPane fx:id="mainPanel" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <center>
                   <SplitPane dividerPositions="0.25705939629990265" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
                      <items>
@@ -19,7 +19,7 @@
                            <content>
                               <VBox fx:id="navigatePanel" prefHeight="200.0" prefWidth="100.0">
                                  <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets bottom="5.0" right="5.0" top="7.0" />
                                  </padding>
                               </VBox>
                            </content>
@@ -42,27 +42,27 @@
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
-               <top>
-                  <MenuBar BorderPane.alignment="CENTER">
-                    <menus>
-                      <Menu mnemonicParsing="false" text="Файл">
-                        <items>
-                          <MenuItem fx:id="rootMenuItem" mnemonicParsing="false" onAction="#actionGettingRootMenuItem" text="Получить доступ к редактированию" />
-                              <MenuItem fx:id="settingMenuItem" mnemonicParsing="false" text="Настроки" />
-                              <SeparatorMenuItem mnemonicParsing="false" />
-                              <MenuItem mnemonicParsing="false" onAction="#actionExitMenuItem" text="Выход" />
-                        </items>
-                      </Menu>
-                      <Menu mnemonicParsing="false" text="Помощь">
-                        <items>
-                          <MenuItem mnemonicParsing="false" text="О программе" />
-                        </items>
-                      </Menu>
-                    </menus>
-                  </MenuBar>
-               </top>
             </BorderPane>
          </center>
+         <top>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="Файл">
+                  <items>
+                    <MenuItem fx:id="rootMenuItem" mnemonicParsing="false" onAction="#actionGettingRootMenuItem" text="Получить доступ к редактированию" />
+                        <MenuItem fx:id="settingMenuItem" mnemonicParsing="false" text="Настроки" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#actionExitMenuItem" text="Выход" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Помощь">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="О программе" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
       </BorderPane>
    </children>
 </AnchorPane>
