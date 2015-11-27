@@ -4,11 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -148,12 +145,11 @@ public class CMainFrame extends Application {
 	
 	@FXML
 	public void actionGettingRootMenuItem(ActionEvent event) {
-		this.settingMenuItem.setDisable(!new CAuthenticationDialog().showAndWait().get());
+		new CAuthenticationDialog().showAndWait().get();
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
-
 		Parent root = null;
 
 		try{

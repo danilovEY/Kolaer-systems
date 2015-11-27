@@ -127,12 +127,6 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	/**Добавить группу и ярлыки в кэш.*/
 	private synchronized void addCache(CGroupLabels group, List<CLabel> labels) {
 		this.cache.put(group, labels);
-		/*try {
-			TimeUnit.SECONDS.sleep(2);
-		} catch (InterruptedException e) {
-			//e.printStackTrace();
-		}*/
-		System.out.println(this.cache.size());
 	}
 	
 	@Override

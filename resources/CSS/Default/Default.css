@@ -9,11 +9,6 @@
     -fx-font-size: 0.85em;
 }
 
-.pane{
-    -fx-background-image: url('@./resources/geometric-background.png');
-
-}
-
 .rich-blue {
     -fx-background-color: 
         #000000,
@@ -36,7 +31,6 @@
     -fx-background-insets: 0,1,2,3;
     -fx-background-radius: 3,2,2,2;
     -fx-padding: 1 30 12 30;
-    -fx-text-fill: white;
 }
 
 .rich-blue Text {
