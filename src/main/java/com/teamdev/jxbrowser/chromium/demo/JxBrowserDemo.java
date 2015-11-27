@@ -6,15 +6,21 @@
 
 package com.teamdev.jxbrowser.chromium.demo;
 
+import java.io.File;
+import java.util.Optional;
+
 import com.teamdev.jxbrowser.chromium.Browser;
+import com.teamdev.jxbrowser.chromium.DownloadItem;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 
@@ -31,6 +37,22 @@ public class JxBrowserDemo{
 			Platform.runLater(() -> {
 				dialog.setTitle(event.getTitle());
 			});				
+		});
+        browser.setDownloadHandler(download -> {
+        	Platform.runLater(() -> {
+	        	final FileChooser fileC = new FileChooser();
+				fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.xls*"));
+				fileC.setTitle("Выбор файла");
+	
+				final Optional<File> file = Optional.ofNullable(fileC.showSaveDialog(dialog));
+	
+				if (file.isPresent()) {
+					download.setDestinationFile(file.get());
+				}
+				System.out.println(download.getDestinationFile().getAbsoluteFile());
+        	});
+        	
+			return true;
 		});
         
         StackPane pane = new StackPane();
