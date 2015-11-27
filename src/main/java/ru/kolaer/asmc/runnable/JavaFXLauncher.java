@@ -1,30 +1,23 @@
 package ru.kolaer.asmc.runnable;
 
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.controller.CMainFrame;
 
+/**
+ * Лаунчер (старт) программы.
+ * @author danilovey
+ */
 public class JavaFXLauncher extends Application {
 
-	@Override
-	public void start(Stage primaryStage) throws IOException {
-		
+	public static void main(String[] args) {
 		SettingSingleton.initialization();
-		
-		if(!this.getParameters().getNamed().isEmpty()) {
-			String passRoot = this.getParameters().getNamed().get("root_set");
-			if(SettingSingleton.getInstance().getRootPass().equals(passRoot)){
-				SettingSingleton.getInstance().setRoot(true);
-			}
-		}
-		
-		new CMainFrame().start(primaryStage);
+		launch(CMainFrame.class, args);
 	}
 
-	public static void main(String[] args) {
-		launch(args);
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		
 	}
 }

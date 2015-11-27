@@ -1,6 +1,9 @@
 package ru.kolaer.asmc.tools;
 
 import java.io.Serializable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import ru.kolaer.asmc.tools.serializations.SerializationObjects;
 
@@ -12,18 +15,25 @@ import ru.kolaer.asmc.tools.serializations.SerializationObjects;
 public class SettingSingleton implements Serializable {
 
 	private static final long serialVersionUID = -360823673740807137L;
-	
-	private transient static SettingSingleton inctance;
 
+	private transient static SettingSingleton inctance;
+	private static final transient ExecutorService executor = Executors.newFixedThreadPool(2);
+	private static transient Future<Boolean> futureInitSetting ;
+	
 	private transient boolean isRoot = false;
 	private final String ROOT_LOGIN_NAME = "root";
 	private String rootPass = "root";
+	/**Правило запуска для всех ярлыков.*/
 	private boolean isAllLabels = true;
+	/**Запуск через внутреннего браузера.*/
 	private boolean defaultWebBrowser = true;
+	/**Запуск через браузер пользователя.*/
 	private boolean defaultUserWebBrowser = false;
+	/**Путь к браузеру.*/
 	private String pathWebBrowser = "";
+	/**Путь к банеру.*/
 	private String pathBanner = "";
-	
+	/**Сериализованные объекты.*/
 	private transient SerializationObjects serializationObjects;
 	
 	private SettingSingleton() {
@@ -35,13 +45,25 @@ public class SettingSingleton implements Serializable {
 	
 	public static synchronized void initialization() {
 		final SerializationObjects serializationObjects = new SerializationObjects();
-		SettingSingleton.inctance = serializationObjects.getSerializeSetting();
-		if(SettingSingleton.inctance == null) {
-			SettingSingleton.inctance = new SettingSingleton();
-			serializationObjects.setSerializeSetting(SettingSingleton.inctance);
+		futureInitSetting = executor.submit(() -> {	
+			SettingSingleton.inctance = serializationObjects.getSerializeSetting();
+			if(SettingSingleton.inctance == null) {
+				SettingSingleton.inctance = new SettingSingleton();
+				serializationObjects.setSerializeSetting(SettingSingleton.inctance);			
+			}
+			SettingSingleton.inctance.setSerializationObjects(serializationObjects);
 			
-		}
-		SettingSingleton.inctance.setSerializationObjects(serializationObjects);
+			return true;
+		});
+		
+		executor.submit(() -> {
+			serializationObjects.getSerializeGroups();
+			return;
+		});		
+	}
+	
+	public static synchronized boolean isInitialized() {
+		return futureInitSetting.isDone();
 	}
 	
 	public String getRootPass() {

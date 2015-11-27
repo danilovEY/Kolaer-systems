@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -52,37 +56,49 @@ public class CMainFrame extends Application {
 	private ScrollPane navigateScrollPanel;
 	@FXML
 	private ScrollPane contentScrollPanel;
-	/** (Де)сериализация объектов. */
-	//private final SerializationGroups serial = SettingSingleton.getInstance().getSerializationGroups();
-
 	@FXML
 	public void initialize() {
+		ExecutorService threadPool = Executors.newFixedThreadPool(2);
+		
 		final CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
 		observer.loadAndRegGroups();
-
-		String image = "file:"+ Resources.BACKGROUND_IMAGE.toString();
-		this.contentPanel.setStyle("-fx-background-image: url('" + image + "'); ");
+		threadPool.submit(() -> {
+			String image = "file:"+ Resources.BACKGROUND_IMAGE.toString();
+			this.contentPanel.setStyle("-fx-background-image: url('" + image + "'); ");
+		});
 		
-		final File img = new File(SettingSingleton.getInstance().getPathBanner());
-		if(img.exists() && img.isFile()) {
-			mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner()))));
-		} else {
-			mainPanel.setTop(null);
-		}
+		threadPool.submit(() -> {
+			final File img = new File(SettingSingleton.getInstance().getPathBanner());
+			if(img.exists() && img.isFile()) {
+				this.mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner()))));
+			} else {
+				this.mainPanel.setTop(null);
+			}
+		});
+		
+		threadPool.shutdown();
+		
 		final ContextMenu contextNavigationPanel = new ContextMenu();
-		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);
-
-		contextNavigationPanel.getItems().add(addGroupLabels);
+		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);	
 
 		final ContextMenu contextContentPanel = new ContextMenu();
 		final MenuItem addLabel = new MenuItem(Resources.MENU_ITEM_ADD_LABEL);
 
 		contextContentPanel.getItems().add(addLabel);
+		contextNavigationPanel.getItems().add(addGroupLabels);
+		
 		this.navigateScrollPanel.setContextMenu(contextNavigationPanel);
 		this.contentScrollPanel.setContextMenu(contextContentPanel);
+
+		// =====Events======
+		this.settingMenuItem.getParentMenu().setOnShowing(e -> {
+			if(SettingSingleton.getInstance().isRoot()) {
+				this.settingMenuItem.setDisable(false);
+			} else {
+				this.settingMenuItem.setDisable(true);
+			}
+		});
 		
-		this.settingMenuItem.setDisable(!SettingSingleton.getInstance().isRoot());
-		// =====Events======		
 		this.navigateScrollPanel.setOnContextMenuRequested((event) -> {
 			if(!SettingSingleton.getInstance().isRoot()) {
 				this.navigateScrollPanel.getContextMenu().hide();
@@ -137,21 +153,17 @@ public class CMainFrame extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
+
 		Parent root = null;
+
 		try{
 			root = FXMLLoader.load(URI.create(Resources.V_MAIN_FRAME).toURL());
 		}
 		catch(IOException e){
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");
-			alert.setHeaderText("Не найден view: \""+Resources.V_MAIN_FRAME+"\"");
+			alert.setHeaderText("Ошибка при инициализации view: \""+Resources.V_MAIN_FRAME+"\"");
 			alert.showAndWait();
-			try{
-				this.stop();
-			}
-			catch(Exception e1){
-				System.exit(-9);
-			}
 		}
 		
 		primaryStage.setTitle(Resources.MAIN_FRAME_TITLE);
@@ -165,7 +177,18 @@ public class CMainFrame extends Application {
 			alert.showAndWait();
 		}
 		
-		primaryStage.setScene(new Scene(root));
+		if(root != null)
+			primaryStage.setScene(new Scene(root));
+		
+		while(!SettingSingleton.isInitialized());
+		
+		if(!this.getParameters().getNamed().isEmpty()) {
+			String passRoot = this.getParameters().getNamed().get("root_set");
+			if(SettingSingleton.getInstance().getRootPass().equals(passRoot)){
+				SettingSingleton.getInstance().setRoot(true);
+			}
+		}
+		
 		primaryStage.centerOnScreen();
 		primaryStage.show();
 	}

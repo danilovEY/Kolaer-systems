@@ -32,16 +32,7 @@ public class SerializationObjects {
 	private List<MGroupLabels> cacheObjects;
 
 	public SerializationObjects() {
-		
-		if(!this.checkFile()){
-			Platform.runLater(() -> {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка!");
-				alert.setHeaderText("Не удалость создать файл для объектов!");
-				alert.showAndWait();
-				System.exit(-9);
-			});
-		}
+
 	}
 
 	/**
@@ -157,13 +148,11 @@ public class SerializationObjects {
 		try (FileInputStream fileInput = new FileInputStream(this.fileSer);
 				ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
 			try {
-				if(this.cacheObjects == null) {
-					 this.cacheObjects = new ArrayList<>();
-					 if(objectInput.available() != -1) {
-						 final List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
-						 this.cacheObjects.addAll(groupList);
-					 }
-				}				
+				 this.cacheObjects = new ArrayList<>();
+				 if(objectInput.available() != -1) {
+					 final List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
+					 this.cacheObjects.addAll(groupList);
+				 }			
 				return this.cacheObjects;
 			} catch (ClassNotFoundException e) {
 				Platform.runLater(() -> {
