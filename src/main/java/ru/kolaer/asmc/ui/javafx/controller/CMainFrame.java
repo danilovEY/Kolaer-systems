@@ -163,6 +163,9 @@ public class CMainFrame extends Application {
 		}
 		
 		primaryStage.setTitle(Resources.MAIN_FRAME_TITLE);
+		primaryStage.setOnCloseRequest(e -> {
+			System.exit(0);
+		});
 		
 		try {
 			primaryStage.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));

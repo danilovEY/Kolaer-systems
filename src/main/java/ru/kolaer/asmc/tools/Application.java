@@ -3,13 +3,13 @@ package ru.kolaer.asmc.tools;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
+
+import com.teamdev.jxbrowser.chromium.demo.JxBrowserDemo;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import ru.kolaer.asmc.ui.javafx.controller.CWebBrowser;
 
 /**
  * Запускает задачу.
@@ -90,7 +90,7 @@ public class Application implements Runnable {
 					if(SettingSingleton.getInstance().isAllLabels()) {
 						if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
 							Platform.runLater(() -> {
-								final CWebBrowser web = new CWebBrowser();
+								final JxBrowserDemo web = new JxBrowserDemo();
 								web.show();
 								web.load(pathApp);
 							});
@@ -116,7 +116,7 @@ public class Application implements Runnable {
 							alert.setContentText("Запуск стандартного браузера...");
 							alert.show();
 
-							final CWebBrowser web = new CWebBrowser();
+							final JxBrowserDemo web = new JxBrowserDemo();
 							web.show();
 							web.load(pathApp);
 						});
