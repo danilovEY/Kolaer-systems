@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import com.teamdev.jxbrowser.chromium.demo.JxBrowserDemo;
 
@@ -21,6 +24,7 @@ public class Application implements Runnable {
 
 	private String pathApp;
 	private String openWith;
+	private ExecutorService thread = Executors.newSingleThreadExecutor();
 	
 	public Application(String path, String openWith) {
 		this.pathApp = path;
@@ -29,7 +33,7 @@ public class Application implements Runnable {
 
 	public void start() {
 		if (this.pathApp != null && !this.pathApp.equals(""))
-			new Thread(this).start();
+			thread.submit(this);
 		else {
 			Platform.runLater(() -> {
 				Alert alert = new Alert(AlertType.ERROR);
@@ -37,9 +41,8 @@ public class Application implements Runnable {
 				alert.setHeaderText("Не указан файл или ссылка!");
 				alert.show();
 			});
-
 		}
-
+		thread.shutdown();
 	}
 
 	public static boolean isWindows() {
@@ -81,7 +84,13 @@ public class Application implements Runnable {
 	@Override
 	public void run() {
 		try {
-
+			try{
+				TimeUnit.SECONDS.sleep(5);
+			}
+			catch(InterruptedException e){
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Runtime r = Runtime.getRuntime();
 
 			if (isWindows()) {

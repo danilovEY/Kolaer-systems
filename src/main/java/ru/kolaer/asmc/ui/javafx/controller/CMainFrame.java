@@ -154,9 +154,12 @@ public class CMainFrame extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		Parent root = null;
-
+		
 		try{
 			root = FXMLLoader.load(URI.create(Resources.V_MAIN_FRAME).toURL());
+			if(root != null) {
+				primaryStage.setScene(new Scene(root));
+			}
 		}
 		catch(IOException e){
 			Alert alert = new Alert(AlertType.ERROR);
@@ -179,12 +182,12 @@ public class CMainFrame extends Application {
 			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
 			alert.showAndWait();
 		}
-		
+
 		ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			while(!SettingSingleton.isInitialized()){
 				try{
-					TimeUnit.MICROSECONDS.sleep(500);
+					TimeUnit.MICROSECONDS.sleep(5000);
 				}
 				catch(Exception e1){
 					e1.printStackTrace();
@@ -200,9 +203,6 @@ public class CMainFrame extends Application {
 		});
 		
 		thread.shutdown();
-		
-		if(root != null)
-			primaryStage.setScene(new Scene(root));
 		
 		primaryStage.centerOnScreen();
 		primaryStage.show();
