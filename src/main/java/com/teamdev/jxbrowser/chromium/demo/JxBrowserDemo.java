@@ -6,66 +6,42 @@
 
 package com.teamdev.jxbrowser.chromium.demo;
 
-import java.io.File;
-import java.util.Optional;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import com.teamdev.jxbrowser.chromium.Browser;
-import com.teamdev.jxbrowser.chromium.DownloadItem;
-import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
-
-import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import ru.kolaer.asmc.tools.Resources;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 public class JxBrowserDemo{
 	
-	private final Stage dialog = new Stage();
-    private final Scene scene;
-    private final Browser browser = new Browser();
+	//private final Stage dialog = new Stage();
+    //private final Scene scene;
+   // private final Browser browser = new Browser();
     
-    public JxBrowserDemo() {   	
-        BrowserView browserView = new BrowserView(browser);
+    public JxBrowserDemo() {  
+       /* BrowserView browserView = new BrowserView(browser);
 
         browser.addTitleListener(event -> {
 			Platform.runLater(() -> {
 				dialog.setTitle(event.getTitle());
 			});				
 		});
-        browser.setDownloadHandler(download -> {
-        	Platform.runLater(() -> {
-	        	final FileChooser fileC = new FileChooser();
-				fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.xls*"));
-				fileC.setTitle("Выбор файла");
-	
-				final Optional<File> file = Optional.ofNullable(fileC.showSaveDialog(dialog));
-	
-				if (file.isPresent()) {
-					download.setDestinationFile(file.get());
-				}
-				System.out.println(download.getDestinationFile().getAbsoluteFile());
-        	});
-        	
-			return true;
-		});
         
         StackPane pane = new StackPane();
         pane.getChildren().add(browserView);
-        this.scene = new Scene(pane, 700, 500);
+        this.scene = new Scene(pane, 700, 500);*/
 	}
     
     public void load(String url) {
-    	browser.loadURL(url);
+    	initAndDisplayUI(url);
+    	//browser.loadURL(url);
     }
     
     public void show() {
-		this.dialog.setTitle("Загрузка...");
+		/*this.dialog.setTitle("Загрузка...");
 		this.dialog.setScene(this.scene);
 		this.dialog.setMaximized(true);
 		this.dialog.centerOnScreen();
@@ -79,6 +55,48 @@ public class JxBrowserDemo{
 			alert.showAndWait();
 		}
 		
-		this.dialog.show();
+		this.dialog.setOnCloseRequest(e -> {
+			this.browser.dispose();
+			this.dialog.close();
+		});
+		
+		this.dialog.show();*/
 	}
+
+    private static void initAndDisplayUI(String url) {
+        final TabbedPane tabbedPane = new TabbedPane();
+        insertTab(tabbedPane, TabFactory.createTab(url));
+        insertNewTabButton(tabbedPane);
+
+        JFrame frame = new JFrame("JxBrowser Demo");
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                tabbedPane.disposeAllTabs();
+            }
+        });
+        frame.add(tabbedPane, BorderLayout.CENTER);
+        frame.setSize(1024, 768);
+        frame.setLocationRelativeTo(null);
+        frame.setIconImage(com.teamdev.jxbrowser.chromium.demo.resources.Resources.getIcon("jxbrowser16x16.png").getImage());
+        frame.setVisible(true);
+    }
+
+    private static void insertNewTabButton(final TabbedPane tabbedPane) {
+        TabButton button = new TabButton(com.teamdev.jxbrowser.chromium.demo.resources.Resources.getIcon("new-tab.png"), "New tab");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                insertTab(tabbedPane, TabFactory.createTab());
+            }
+        });
+        tabbedPane.addTabButton(button);
+    }
+
+    private static void insertTab(TabbedPane tabbedPane, Tab tab) {
+        tabbedPane.addTab(tab);
+        tabbedPane.selectTab(tab);
+    }
+    
+    
 }
