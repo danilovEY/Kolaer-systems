@@ -6,6 +6,8 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -59,6 +61,7 @@ public class CMainFrame extends Application {
 		
 		final CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
 		observer.loadAndRegGroups();
+		
 		threadPool.submit(() -> {
 			String image = "file:"+ Resources.BACKGROUND_IMAGE.toString();
 			this.contentPanel.setStyle("-fx-background-image: url('" + image + "'); ");
@@ -73,7 +76,7 @@ public class CMainFrame extends Application {
 			}
 		});
 		
-		threadPool.shutdown();
+		threadPool.shutdown();	
 		
 		final ContextMenu contextNavigationPanel = new ContextMenu();
 		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);	
@@ -159,6 +162,7 @@ public class CMainFrame extends Application {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");
 			alert.setHeaderText("Ошибка при инициализации view: \""+Resources.V_MAIN_FRAME+"\"");
+			
 			alert.showAndWait();
 		}
 		
@@ -176,17 +180,29 @@ public class CMainFrame extends Application {
 			alert.showAndWait();
 		}
 		
+		ExecutorService thread = Executors.newSingleThreadExecutor();
+		thread.submit(() -> {
+			while(!SettingSingleton.isInitialized()){
+				try{
+					TimeUnit.MICROSECONDS.sleep(500);
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}	
+			}
+			
+			if(!this.getParameters().getNamed().isEmpty()) {
+				String passRoot = this.getParameters().getNamed().get("root_set");
+				if(SettingSingleton.getInstance().getRootPass().equals(passRoot)){
+					SettingSingleton.getInstance().setRoot(true);
+				}
+			}
+		});
+		
+		thread.shutdown();
+		
 		if(root != null)
 			primaryStage.setScene(new Scene(root));
-		
-		while(!SettingSingleton.isInitialized());
-		
-		if(!this.getParameters().getNamed().isEmpty()) {
-			String passRoot = this.getParameters().getNamed().get("root_set");
-			if(SettingSingleton.getInstance().getRootPass().equals(passRoot)){
-				SettingSingleton.getInstance().setRoot(true);
-			}
-		}
 		
 		primaryStage.centerOnScreen();
 		primaryStage.show();

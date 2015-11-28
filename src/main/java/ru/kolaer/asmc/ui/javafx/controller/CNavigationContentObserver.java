@@ -1,7 +1,6 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +50,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		cGroup.registerOberver(this);
 		this.panelWithGroups.getChildren().add(cGroup);
 		this.panelWithGroups.getChildren().setAll(this.panelWithGroups.getChildren().sorted((a, b) -> Integer.compare(((CGroupLabels) a).getModel().getPriority(), ((CGroupLabels) b).getModel().getPriority())));
+		this.addCache(cGroup, new ArrayList<>());
 	}
 
 	public void addLabel(MLabel label) {
@@ -62,6 +62,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		cLabel.registerOberver(this);
 		this.panelWithLabels.getChildren().add(cLabel);
 		this.panelWithLabels.getChildren().setAll(this.panelWithLabels.getChildren().sorted((a, b) -> Integer.compare(((CLabel) a).getModel().getPriority(), ((CLabel) b).getModel().getPriority())));
+		this.cache.get(this.getCGroupLabelCache(this.selectedGroup)).add(cLabel);
 	}
 
 	public MGroupLabels getSelectedItem() {
@@ -87,8 +88,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		this.panelWithLabels.getChildren().clear();
 		
 		List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups();
-		this.threadCache = Executors.newFixedThreadPool(groupsList.size());
-		
+		this.threadCache = Executors.newFixedThreadPool(groupsList.size() + 1);
 		groupsList.stream()
 		.sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority()))
 		.forEach((group) -> {

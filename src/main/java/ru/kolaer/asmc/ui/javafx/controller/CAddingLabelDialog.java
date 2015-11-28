@@ -9,10 +9,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -174,15 +174,17 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			return;
 		}
 		
+		int prior = this.textPriority.getText().isEmpty() ? 0 : Integer.valueOf(textPriority.getText());
+		
 		if (this.result == null) {
 			this.result = new MLabel(this.nameLabelText.getText(), this.infoLabelText.getText(),
-					this.pathIconText.getText(), this.pathAppText.getText(), this.pathOpenAppWith.getText(), Integer.valueOf(textPriority.getText()));
+					this.pathIconText.getText(), this.pathAppText.getText(), this.pathOpenAppWith.getText(), prior);
 		} else {
 			this.result.setName(this.nameLabelText.getText());
 			this.result.setInfo(this.infoLabelText.getText());
 			this.result.setPathImage(this.pathIconText.getText());
 			this.result.setPathApplication(this.pathAppText.getText());
-			this.result.setPriority(Integer.valueOf(textPriority.getText()));
+			this.result.setPriority(prior);
 			this.result.setPathOpenAppWith(this.pathOpenAppWith.getText());
 		}
 
