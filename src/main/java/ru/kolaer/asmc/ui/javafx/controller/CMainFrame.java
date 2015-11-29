@@ -68,6 +68,14 @@ public class CMainFrame extends Application {
 		});
 		
 		threadPool.submit(() -> {
+			while(!SettingSingleton.isInitialized()){
+				try{
+					TimeUnit.MICROSECONDS.sleep(500);
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}	
+			}
 			final File img = new File(SettingSingleton.getInstance().getPathBanner());
 			if(img.exists() && img.isFile()) {
 				this.mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner()))));
@@ -187,7 +195,7 @@ public class CMainFrame extends Application {
 		thread.submit(() -> {
 			while(!SettingSingleton.isInitialized()){
 				try{
-					TimeUnit.MICROSECONDS.sleep(5000);
+					TimeUnit.MICROSECONDS.sleep(500);
 				}
 				catch(Exception e1){
 					e1.printStackTrace();
