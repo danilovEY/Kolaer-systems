@@ -1,7 +1,14 @@
 package com.teamdev.jxbrowser.chromium.demo;
 
+import java.io.File;
+import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
+import com.teamdev.jxbrowser.chromium.javafx.DefaultPopupHandler;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -9,6 +16,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 
@@ -27,7 +35,32 @@ public class JxBrowserDemo{
 			});				
 		});
         
-        StackPane pane = new StackPane();
+        browser.setPopupHandler(new DefaultPopupHandler());
+        browser.setDownloadHandler(download -> {
+        	final CountDownLatch doneLatch = new CountDownLatch(1);
+        	
+        	Platform.runLater(() -> {
+        		final String urlFile = download.getDestinationFile().getAbsolutePath();
+        		final String type = urlFile.substring(urlFile.lastIndexOf('.'));
+        		
+        		final FileChooser fileChooser = new FileChooser();
+				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter(type, type));
+				final Optional<File> file =  Optional.ofNullable(fileChooser.showSaveDialog(this.dialog));
+				download.setDestinationFile(file.get());
+				doneLatch.countDown();
+        	});	
+        	
+        	try{
+				doneLatch.await();
+			}
+			catch(Exception e){
+				return false;
+			}
+        	
+        	return true;
+        });
+        
+        final StackPane pane = new StackPane();
         pane.getChildren().add(browserView);
         this.scene = new Scene(pane, 700, 500);
 	}
@@ -45,14 +78,19 @@ public class JxBrowserDemo{
 		try {
 			this.dialog.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));
 		} catch(IllegalArgumentException e) {
-			Alert alert = new Alert(AlertType.ERROR);
+			final Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");
 			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
 			alert.showAndWait();
 		}
 		
 		this.dialog.setOnCloseRequest(e -> {
-			this.browser.dispose();
+			final ExecutorService thread = Executors.newSingleThreadExecutor();
+			thread.submit(() -> {
+				this.browser.stop();
+				this.browser.dispose();
+			});
+			thread.shutdown();
 			this.dialog.close();
 		});
 		

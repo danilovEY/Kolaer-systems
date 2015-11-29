@@ -77,7 +77,14 @@ public class Application implements Runnable {
 			new URL(url);
 			return true;
 		} catch (MalformedURLException e) {
-			return false;
+    		String urlFile = url;
+    		String type = urlFile.substring(urlFile.lastIndexOf('.'));
+    		
+    		switch(type) {
+    			case ".html" : return true;
+    			case ".php" : return true;
+    			default : return false;
+    		}
 		}
 	}
 
