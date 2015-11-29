@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import com.teamdev.jxbrowser.chromium.demo.JxBrowserDemo;
 
@@ -91,13 +90,6 @@ public class Application implements Runnable {
 	@Override
 	public void run() {
 		try {
-			try{
-				TimeUnit.SECONDS.sleep(5);
-			}
-			catch(InterruptedException e){
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			Runtime r = Runtime.getRuntime();
 
 			if (isWindows()) {
