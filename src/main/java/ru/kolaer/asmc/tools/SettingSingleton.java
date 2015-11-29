@@ -59,7 +59,9 @@ public class SettingSingleton implements Serializable {
 		executor.submit(() -> {
 			serializationObjects.getSerializeGroups();
 			return;
-		});		
+		});
+		
+		executor.shutdown();
 	}
 	
 	public static synchronized boolean isInitialized() {

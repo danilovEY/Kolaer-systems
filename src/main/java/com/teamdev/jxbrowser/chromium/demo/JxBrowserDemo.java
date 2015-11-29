@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
-import com.teamdev.jxbrowser.chromium.javafx.DefaultPopupHandler;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -35,7 +34,46 @@ public class JxBrowserDemo{
 			});				
 		});
         
-        browser.setPopupHandler(new DefaultPopupHandler());
+        browser.setPopupHandler(pop -> {
+        	return (br, r) -> {
+        		Platform.runLater(() -> {
+	        		BrowserView brView = new BrowserView(br);
+	        		final StackPane pane = new StackPane();
+	                pane.getChildren().add(brView);
+	                Scene scene = new Scene(pane, 700, 500);
+	                Stage dialog = new Stage();
+	                dialog.setTitle("Загрузка...");
+	        		dialog.setScene(scene);
+	        		dialog.centerOnScreen();
+	        		
+	        		try {
+	        			dialog.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));
+	        		} catch(IllegalArgumentException e) {
+	        			final Alert alert = new Alert(AlertType.ERROR);
+	        			alert.setTitle("Ошибка!");
+	        			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
+	        			alert.showAndWait();
+	        		}
+	        		
+	        		dialog.setOnCloseRequest(e -> {
+	        			final ExecutorService thread = Executors.newSingleThreadExecutor();
+	        			thread.submit(() -> {
+	        				br.stop();
+	        				br.dispose();
+	        			});
+	        			thread.shutdown();
+	        			dialog.close();
+	        		});
+	        		
+	        		br.setDownloadHandler(this.browser.getDownloadHandler());
+        			br.setPopupHandler(this.browser.getPopupHandler());
+        			br.addTitleListener(e -> dialog.setTitle(e.getTitle()));
+	        		
+	        		dialog.show();
+        		});
+        	};
+		});
+        
         browser.setDownloadHandler(download -> {
         	final CountDownLatch doneLatch = new CountDownLatch(1);
         	
