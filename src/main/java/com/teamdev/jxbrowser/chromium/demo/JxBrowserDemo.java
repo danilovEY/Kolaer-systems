@@ -161,7 +161,7 @@ public class JxBrowserDemo{
 	        			thread.shutdown();
 	        			dialog.close();
 	        		});
-	        		
+	        		br.setPrintHandler(this.browser.getPrintHandler());
 	        		br.setDownloadHandler(this.browser.getDownloadHandler());
         			br.setPopupHandler(this.browser.getPopupHandler());
         			br.addTitleListener(e -> {
