@@ -13,6 +13,8 @@ import com.teamdev.jxbrowser.chromium.KeyFilter;
 import com.teamdev.jxbrowser.chromium.PrintJob;
 import com.teamdev.jxbrowser.chromium.PrintSettings;
 import com.teamdev.jxbrowser.chromium.PrintStatus;
+import com.teamdev.jxbrowser.chromium.events.PrintJobEvent;
+import com.teamdev.jxbrowser.chromium.events.PrintJobListener;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
 
 import javafx.application.Platform;
@@ -47,6 +49,7 @@ public class JxBrowserDemo{
 		final MenuItem contextBrowserPlase = new MenuItem(Resources.MENU_ITEM_BROWSER_PLASE);
 		contextBrowser.getItems().addAll(contextBrowserCopy,contextBrowserPlase);	
 		
+		//browser.getCacheStorage().clearCache();
 		
 		contextBrowserPlase.setOnAction(e -> {
 			final Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -59,9 +62,22 @@ public class JxBrowserDemo{
 			});
 		});
 
+		browser.setPrintHandler(print -> {
+			ExecutorService threadPool = Executors.newSingleThreadExecutor();
+			threadPool.submit(() -> {
+				File temp = new File("C:\\Temp\\web_page_pring.pdf");
+				temp.delete();
+
+				browser.printToPDF(temp.getAbsolutePath(), null);
+
+				new Application(temp.getAbsolutePath(), "").start();
+			});
+			
+			return PrintStatus.CANCEL;
+		});
+		
         browserView.setKeyFilter(event -> {
         	if(event.isControlDown() && event.getCode() == KeyCode.P){
-        		browserView.focus();
         		browser.getPrintHandler().onPrint(null);
         	}
             return event.isControlDown() && event.getCode() == KeyCode.P;
@@ -87,18 +103,7 @@ public class JxBrowserDemo{
 				});
 			});
 		});
-
-		browser.setPrintHandler(print -> {			
-			browser.printToPDF("C:\\Temp\\web_page_pring.pdf");
-			try {
-				TimeUnit.SECONDS.sleep(1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			new Application("C:\\Temp\\web_page_pring.pdf", "").start();
-			return PrintStatus.CANCEL;
-		});
+		
 
 		
     	browser.setContextMenuHandler(context -> {	
@@ -159,7 +164,11 @@ public class JxBrowserDemo{
 	        		
 	        		br.setDownloadHandler(this.browser.getDownloadHandler());
         			br.setPopupHandler(this.browser.getPopupHandler());
-        			br.addTitleListener(e -> dialog.setTitle(e.getTitle()));
+        			br.addTitleListener(e -> {
+        				Platform.runLater(() -> {
+        					dialog.setTitle(e.getTitle());
+        				});
+        			});
 	        		
 	        		dialog.show();
         		});
