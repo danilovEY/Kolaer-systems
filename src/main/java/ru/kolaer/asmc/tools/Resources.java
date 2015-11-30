@@ -52,4 +52,7 @@ public interface Resources
 	public static final String MENU_ITEM_ADD_LABEL = "Добавить ярлык";
 	public static final String MENU_ITEM_EDIT_LABEL = "Редактировать группу";
 	public static final String MENU_ITEM_DELETE_LABEL = "Удалить группу";
+	
+	public static final String MENU_ITEM_BROWSER_COPY = "Копировать";
+	public static final String MENU_ITEM_BROWSER_PLASE = "Вставить";
 }

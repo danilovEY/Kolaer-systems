@@ -55,7 +55,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#actionExitMenuItem" text="Выход" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Помощь">
+                <Menu mnemonicParsing="false" text="Помощь" visible="false">
                   <items>
                     <MenuItem mnemonicParsing="false" text="О программе" />
                   </items>
