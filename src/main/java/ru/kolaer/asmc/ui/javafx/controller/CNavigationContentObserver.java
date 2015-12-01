@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -202,8 +203,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		
 		alertDeleteMassage.close();
 		
-		if(this.threadCache.isTerminated()) {
-			
+		if(this.threadCache.isTerminated()) {			
 			CGroupLabels del = this.getCGroupLabelCache(model);
 			if(model == this.selectedGroup){
 				this.selectedGroup = null;
@@ -221,9 +221,28 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	}
 
 	@Override
-	public void updateClick(MLabel model) {		
-		final Application app = new Application(model.getPathApplication(), model.getPathOpenAppWith());
-		app.start();		
+	public void updateClick(MLabel model) {
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setContentText("Инициализация и запуск...");
+			alert.setHeaderText("\"" + model.getName() + "\"");
+			alert.show();
+			ExecutorService thread = Executors.newSingleThreadExecutor();
+			thread.submit(()->{
+				final Application app = new Application(model.getPathApplication(), model.getPathOpenAppWith());
+				app.start();
+				Platform.runLater(() -> {
+					alert.setOnCloseRequest(e -> alert.close());
+					try {
+						TimeUnit.SECONDS.sleep(2);
+					} catch (Exception e1) {
+						alert.close();
+					}
+					alert.close();
+				});
+			});
+			thread.shutdown();
+		});			
 	}
 	
 	@Override

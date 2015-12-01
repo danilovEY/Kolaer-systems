@@ -45,8 +45,7 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 					&& setting.getRootPass().equals(this.passText.getText())){
 				setting.setRoot(true);
 				this.dialog.close();
-			}
-			else {
+			} else {
 				Alert alert = new Alert(AlertType.ERROR);
         		alert.setTitle("Ошибка");
         		alert.setHeaderText("Не правельный логин или пароль!");

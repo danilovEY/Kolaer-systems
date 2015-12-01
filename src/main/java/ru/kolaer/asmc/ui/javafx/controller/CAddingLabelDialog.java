@@ -70,7 +70,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	}
 
 	/**
-	 * {@linkplain CAddingLabelDialog.java}
+	 * {@linkplain CAddingLabelDialog}
 	 * 
 	 * @param model
 	 */

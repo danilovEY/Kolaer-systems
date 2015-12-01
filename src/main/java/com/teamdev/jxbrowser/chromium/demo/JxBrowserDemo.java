@@ -68,15 +68,14 @@ public class JxBrowserDemo{
 		browser.setPrintHandler(print -> {
 			ExecutorService threadPool = Executors.newSingleThreadExecutor();
 			threadPool.submit(() -> {
-				File temp = new File("C:\\Temp\\web_page_pring.pdf");
+				File temp = new File("C:\\Temp\\web_page_print.pdf");
 				temp.delete();
 
 				browser.printToPDF(temp.getAbsolutePath(), null);
 				try {
 					TimeUnit.SECONDS.sleep(1);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					return;
 				}
 				new Application(temp.getAbsolutePath(), "").start();
 			});
