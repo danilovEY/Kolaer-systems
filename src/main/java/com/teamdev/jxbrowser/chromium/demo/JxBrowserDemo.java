@@ -9,12 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.EditorCommand;
-import com.teamdev.jxbrowser.chromium.KeyFilter;
-import com.teamdev.jxbrowser.chromium.PrintJob;
-import com.teamdev.jxbrowser.chromium.PrintSettings;
 import com.teamdev.jxbrowser.chromium.PrintStatus;
-import com.teamdev.jxbrowser.chromium.events.PrintJobEvent;
-import com.teamdev.jxbrowser.chromium.events.PrintJobListener;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
 
 import javafx.application.Platform;
@@ -38,19 +33,27 @@ import ru.kolaer.asmc.tools.Resources;
 public class JxBrowserDemo{
 	
 	private final Stage dialog = new Stage();
-    private final Scene scene;
-    private final Browser browser = new Browser();
+    private Scene scene;
+    private Browser browser;
     
-    public JxBrowserDemo() {  
+    public JxBrowserDemo() { 
+    	this.browser = new Browser();
+    	this.init();
+	}
+    
+    public JxBrowserDemo(Browser browser) {  
+    	this.browser = browser;
+    	this.init();
+	}
+    
+    private void init() {
     	final BrowserView browserView = new BrowserView(browser);
     	
     	final ContextMenu contextBrowser = new ContextMenu();
 		final MenuItem contextBrowserCopy = new MenuItem(Resources.MENU_ITEM_BROWSER_COPY);
 		final MenuItem contextBrowserPlase = new MenuItem(Resources.MENU_ITEM_BROWSER_PLASE);
 		contextBrowser.getItems().addAll(contextBrowserCopy,contextBrowserPlase);	
-		
-		//browser.getCacheStorage().clearCache();
-		
+
 		contextBrowserPlase.setOnAction(e -> {
 			final Clipboard clipboard = Clipboard.getSystemClipboard();
 			browser.executeCommand(EditorCommand.INSERT_TEXT, clipboard.getString());	 
@@ -69,7 +72,12 @@ public class JxBrowserDemo{
 				temp.delete();
 
 				browser.printToPDF(temp.getAbsolutePath(), null);
-
+				try {
+					TimeUnit.SECONDS.sleep(1);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				new Application(temp.getAbsolutePath(), "").start();
 			});
 			
@@ -104,8 +112,6 @@ public class JxBrowserDemo{
 			});
 		});
 		
-
-		
     	browser.setContextMenuHandler(context -> {	
     		Platform.runLater(() -> {
     			if(context.getSelectionText().isEmpty()) {
@@ -134,43 +140,7 @@ public class JxBrowserDemo{
         browser.setPopupHandler(pop -> {
         	return (br, r) -> {
         		Platform.runLater(() -> {
-	        		BrowserView brView = new BrowserView(br);
-	        		final StackPane pane = new StackPane();
-	                pane.getChildren().add(brView);
-	                Scene scene = new Scene(pane, 700, 500);
-	                Stage dialog = new Stage();
-	                dialog.setTitle("Загрузка...");
-	        		dialog.setScene(scene);
-	        		dialog.centerOnScreen();
-	        		
-	        		try {
-	        			dialog.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));
-	        		} catch(IllegalArgumentException e) {
-	        			final Alert alert = new Alert(AlertType.ERROR);
-	        			alert.setTitle("Ошибка!");
-	        			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
-	        			alert.showAndWait();
-	        		}
-	        		
-	        		dialog.setOnCloseRequest(e -> {
-	        			final ExecutorService thread = Executors.newSingleThreadExecutor();
-	        			thread.submit(() -> {
-	        				br.stop();
-	        				br.dispose();
-	        			});
-	        			thread.shutdown();
-	        			dialog.close();
-	        		});
-	        		br.setPrintHandler(this.browser.getPrintHandler());
-	        		br.setDownloadHandler(this.browser.getDownloadHandler());
-        			br.setPopupHandler(this.browser.getPopupHandler());
-        			br.addTitleListener(e -> {
-        				Platform.runLater(() -> {
-        					dialog.setTitle(e.getTitle());
-        				});
-        			});
-	        		
-	        		dialog.show();
+        			new JxBrowserDemo(br).show(false);
         		});
         	};
 		});
@@ -203,16 +173,16 @@ public class JxBrowserDemo{
         final StackPane pane = new StackPane();
         pane.getChildren().add(browserView);
         this.scene = new Scene(pane, 700, 500);
-	}
+    }
     
     public void load(String url) {
     	browser.loadURL(url);
     }
     
-    public void show() {
+    public void show(boolean full) {
 		this.dialog.setTitle("Загрузка...");
 		this.dialog.setScene(this.scene);
-		this.dialog.setMaximized(true);
+		this.dialog.setMaximized(full);
 		this.dialog.centerOnScreen();
 		
 		try {
@@ -229,9 +199,9 @@ public class JxBrowserDemo{
 			thread.submit(() -> {
 				this.browser.stop();
 				this.browser.dispose();
+				this.dialog.close();
 			});
 			thread.shutdown();
-			this.dialog.close();
 		});
 		
 		this.dialog.show();

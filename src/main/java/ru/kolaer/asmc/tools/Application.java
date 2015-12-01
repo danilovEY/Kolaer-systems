@@ -99,7 +99,7 @@ public class Application implements Runnable {
 						if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
 							Platform.runLater(() -> {
 								final JxBrowserDemo web = new JxBrowserDemo();
-								web.show();
+								web.show(true);
 								web.load(pathApp);
 							});
 							return;
@@ -125,7 +125,7 @@ public class Application implements Runnable {
 							alert.show();
 
 							final JxBrowserDemo web = new JxBrowserDemo();
-							web.show();
+							web.show(true);
 							web.load(pathApp);
 						});
 					}
