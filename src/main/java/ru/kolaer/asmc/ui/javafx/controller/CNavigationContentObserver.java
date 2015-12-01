@@ -231,17 +231,16 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 			thread.submit(()->{
 				final Application app = new Application(model.getPathApplication(), model.getPathOpenAppWith());
 				app.start();
-				Platform.runLater(() -> {
-					alert.setOnCloseRequest(e -> alert.close());
-					try {
-						TimeUnit.SECONDS.sleep(2);
-					} catch (Exception e1) {
-						alert.close();
-					}
-					alert.close();
-				});
 			});
 			thread.shutdown();
+			
+			alert.setOnCloseRequest(e -> alert.close());
+			try {
+				TimeUnit.SECONDS.sleep(2);
+			} catch (Exception e1) {
+				alert.close();
+			}
+			alert.close();
 		});			
 	}
 	
