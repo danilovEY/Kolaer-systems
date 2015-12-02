@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
@@ -39,6 +40,27 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
+		
+		this.okButton.setOnAction(e -> {
+			SettingSingleton setting = SettingSingleton.getInstance();
+			if(setting.getRootLoginName().equals(this.loginText.getText()) 
+					&& setting.getRootPass().equals(this.passText.getText())){
+				setting.setRoot(true);
+				this.dialog.close();
+			} else {
+				Alert alert = new Alert(AlertType.ERROR);
+        		alert.setTitle("Ошибка");
+        		alert.setHeaderText("Не правельный логин или пароль!");
+        		alert.showAndWait();
+			}
+		});
+		this.loginText.setOnKeyPressed(k -> {
+			if (k.getCode().equals(KeyCode.ENTER))
+				this.okButton.getOnAction().handle(null);
+		});
+		
+		this.passText.setOnKeyPressed(this.loginText.getOnKeyPressed());
+		
 		this.okButton.setOnMouseClicked(e -> {
 			SettingSingleton setting = SettingSingleton.getInstance();
 			if(setting.getRootLoginName().equals(this.loginText.getText()) 
@@ -57,6 +79,8 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 			this.dialog.close();
 		});
 	}
+	
+	
 	
 	public Optional<Boolean> showAndWait(){
 		this.dialog.setScene(new Scene(this));
