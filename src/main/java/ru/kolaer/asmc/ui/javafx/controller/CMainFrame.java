@@ -43,6 +43,8 @@ public class CMainFrame extends Application {
 	private MenuItem rootMenuItem;
 	@FXML
 	private MenuItem settingMenuItem;
+	@FXML
+	private MenuItem menuItemAbout;
 	/** Панель с группами ярлыков. */
 	@FXML
 	private VBox navigatePanel;
@@ -146,6 +148,10 @@ public class CMainFrame extends Application {
 			} else {
 				mainPanel.setTop(null);
 			}
+		});
+		
+		this.menuItemAbout.setOnAction(e -> {
+			new CAbout().show();
 		});
 	}
 	

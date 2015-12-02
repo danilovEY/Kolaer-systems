@@ -16,6 +16,7 @@ public interface Resources
 	public static final String V_ADDING_LABEL = "file:view/VAddingLabel.fxml";
 	public static final String V_WEB_BROWSER = "file:view/VWebBrowser.fxml";
 	public static final String V_SETTING = "file:view/VSetting.fxml";
+	public static final String V_ABOUT = "file:view/VAbout.fxml";
 	
 	
 	/**Стандарткая иконка для ярлыка.*/

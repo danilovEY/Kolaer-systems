@@ -39,8 +39,6 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-		
 		this.okButton.setOnAction(e -> {
 			SettingSingleton setting = SettingSingleton.getInstance();
 			if(setting.getRootLoginName().equals(this.loginText.getText()) 
@@ -61,26 +59,10 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 		
 		this.passText.setOnKeyPressed(this.loginText.getOnKeyPressed());
 		
-		this.okButton.setOnMouseClicked(e -> {
-			SettingSingleton setting = SettingSingleton.getInstance();
-			if(setting.getRootLoginName().equals(this.loginText.getText()) 
-					&& setting.getRootPass().equals(this.passText.getText())){
-				setting.setRoot(true);
-				this.dialog.close();
-			} else {
-				Alert alert = new Alert(AlertType.ERROR);
-        		alert.setTitle("Ошибка");
-        		alert.setHeaderText("Не правельный логин или пароль!");
-        		alert.showAndWait();
-			}
-		});
-		
 		this.cancelButton.setOnMouseClicked(e -> {
 			this.dialog.close();
 		});
-	}
-	
-	
+	}	
 	
 	public Optional<Boolean> showAndWait(){
 		this.dialog.setScene(new Scene(this));
