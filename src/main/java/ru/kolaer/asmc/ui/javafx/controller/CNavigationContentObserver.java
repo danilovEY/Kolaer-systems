@@ -222,26 +222,11 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	@Override
 	public void updateClick(MLabel model) {
-		Platform.runLater(() -> {
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setContentText("Инициализация и запуск...");
-			alert.setHeaderText("\"" + model.getName() + "\"");
-			alert.show();
-			ExecutorService thread = Executors.newSingleThreadExecutor();
-			thread.submit(()->{
-				final Application app = new Application(model.getPathApplication(), model.getPathOpenAppWith());
-				app.start();
-			});
-			thread.shutdown();
-			
-			alert.setOnCloseRequest(e -> alert.close());
-			try {
-				TimeUnit.SECONDS.sleep(2);
-			} catch (Exception e1) {
-				alert.close();
-			}
-			alert.close();
-		});			
+		ExecutorService thread = Executors.newSingleThreadExecutor();
+		thread.submit(()->{
+			final Application app = new Application(model.getPathApplication(), model.getPathOpenAppWith());
+			app.start();
+		});		
 	}
 	
 	@Override
