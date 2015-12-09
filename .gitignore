@@ -1,0 +1,7 @@
+/*
+/src/main/resources/app.properties
+!/WebContent
+!/pom.xml
+!/src
+!*.md
+!.gitignore
