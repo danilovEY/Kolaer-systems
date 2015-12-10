@@ -1,4 +1,4 @@
-package ru.kolaer.ru.kolaer.client.javajx;
+package ru.kolaer.client.javajx;
 
 import org.springframework.web.client.RestTemplate;
 
