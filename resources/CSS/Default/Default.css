@@ -19,7 +19,7 @@
     -fx-background-radius: 3,2,2,2;
     -fx-padding: 12 30 12 30;
     -fx-text-fill: white;
-    -fx-font-size: 10px;
+    -fx-font-size: 15px;
 }
 
 .rich-blue:hover {
