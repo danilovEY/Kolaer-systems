@@ -1,24 +1,16 @@
-package ru.kolaer.client.javajx.plugins.helloworld;
+package ru.kolaer.client.javafx.plugins;
 
 import javafx.scene.layout.BorderPane;
 
 import javafx.scene.layout.Pane;
-import ru.kolaer.client.javajx.plugins.Application;
-import ru.kolaer.client.javajx.plugins.DesktopLabel;
-import ru.kolaer.client.javajx.plugins.Label;
+import ru.kolaer.client.javafx.plugins.ILabel;
 
-@DesktopLabel
-public class HelloWorldLabel implements Label {
+public class HWLabel implements ILabel {
 	private final BorderPane mainPane = new BorderPane();
 	
-	public HelloWorldLabel() {
+	public HWLabel() {
 		mainPane.setPrefSize(100, 100);
 		mainPane.setStyle("-fx-background-color: red");
-	}
-
-	@Override
-	public Application getApplication() {
-		return new HelloWorldApplication();
 	}
 
 	@Override

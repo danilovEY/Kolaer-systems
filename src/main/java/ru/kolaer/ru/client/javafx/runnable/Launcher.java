@@ -1,8 +1,8 @@
-package ru.kolaer.ru.client.javajx.runnable;
+package ru.kolaer.ru.client.javafx.runnable;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import ru.kolaer.client.javajx.mvp.view.VMainFrame;
+import ru.kolaer.client.javafx.mvp.view.VMainFrame;
 
 public class Launcher extends Application {
 	

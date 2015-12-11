@@ -1,8 +1,8 @@
-package ru.kolaer.client.javajx.plugins;
+package ru.kolaer.client.javafx.plugins;
 
 import javafx.scene.layout.Pane;
 
-public interface Application {
+public interface IApplication {
 	Pane getContent();
 
 	String getName();
