@@ -44,20 +44,6 @@ public class Explorer extends BorderPane {
 
 		this.decktopWithLabels.getChildren().add(runnLabel);
 	}
-	
-	/*public void addLabel(final Label label) {
-		final Button runnLabel = new Button(label.getName(), label.getIcon());
-		runnLabel.setStyle("-fx-background-color: transparent;");
-		runnLabel.setOnAction(e -> {
-			Platform.runLater(() -> {
-				final VWindows window = new VWindows(label.getApplication());
-
-				this.decktop.getChildren().add(window.getWindow());
-			});	
-		});
-
-		this.decktopWithLabels.getChildren().add(runnLabel);
-	}*/
 
 	public void removeLabel(ILabel label) {
 

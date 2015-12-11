@@ -2,11 +2,9 @@ package ru.kolaer.client.javafx.plugins;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -20,26 +18,28 @@ public class PluginLoader {
 	}
 
 	public List<IKolaerPlugin> scanPlugins() {
-		File dirToPlugins = new File(this.pathToPlugins);
-		List<IKolaerPlugin> result = new ArrayList<>();
+		final File dirToPlugins = new File(this.pathToPlugins);
+		final List<IKolaerPlugin> result = new ArrayList<>();
 		try {
-			for (File jarFile : dirToPlugins.listFiles((File dir, String name) -> {
+			for (final File jarFile : dirToPlugins.listFiles((File dir, String name) -> {
 				return name.endsWith(".jar") ? true : false;
 			})) {
 	
-				URL jarURL = jarFile.toURI().toURL();
+				final URL jarURL = jarFile.toURI().toURL();
 	
 	
 				final URLClassLoader classLoader = new URLClassLoader(new URL[] { jarURL });
 	
-				JarFile jarFileRead = new JarFile(jarFile);
+				final JarFile jarFileRead = new JarFile(jarFile);
 				
-				Enumeration<?> e = jarFileRead.entries();
+				final Enumeration<?> e = jarFileRead.entries();
 	
 				List<String> classList = new ArrayList<>();
+				
 				String packageName = "";
+				
 				while (e.hasMoreElements()) {
-					JarEntry je = (JarEntry) e.nextElement();
+					final JarEntry je = (JarEntry) e.nextElement();
 	
 					if (je.isDirectory() || !je.getName().endsWith(".class")) {
 						if (je.getName().endsWith(".plugin"))
@@ -58,12 +58,10 @@ public class PluginLoader {
 				for (int i = 0; i < classList.size(); i++) {
 					try {
 						System.out.println(classList.get(i));
-						Class<?> cls = null;
-	
-						cls = classLoader.loadClass(classList.get(i));
+						final Class<?> cls = classLoader.loadClass(classList.get(i));
 						if (cls.getAnnotation(ApplicationPlugin.class) != null) {
 							System.out.println("AAAA");
-							IKolaerPlugin app = (IKolaerPlugin) cls.newInstance();
+							final IKolaerPlugin app = (IKolaerPlugin) cls.newInstance();
 							System.out.println(app.getLabel().getName());
 							result.add(app);
 						}
@@ -71,7 +69,6 @@ public class PluginLoader {
 						any.printStackTrace(System.out);
 						continue;
 					}
-	
 				}
 	
 			}

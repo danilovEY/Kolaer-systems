@@ -2,7 +2,6 @@ package ru.kolaer.client.javafx.mvp.view;
 
 import jfxtras.labs.scene.control.window.Window;
 import ru.kolaer.client.javafx.plugins.IApplication;
-import ru.kolaer.client.javafx.tools.IResources;
 
 public class VWindows {
 	private final Window window = new Window();

@@ -30,7 +30,7 @@ public class VMainFrame extends Application {
 		this.mainPanel.setTop(new MenuBar(fileMenu));
 		this.mainPanel.setCenter(this.explorer);
 		
-		for(IKolaerPlugin plugin : new PluginLoader("D:/").scanPlugins()) {
+		for(IKolaerPlugin plugin : new PluginLoader(IResources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins()) {
 			this.explorer.addPlugin(plugin);
 		}
 	}
