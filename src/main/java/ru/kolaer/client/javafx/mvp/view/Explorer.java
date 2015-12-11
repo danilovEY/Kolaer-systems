@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import ru.kolaer.client.javafx.mvp.view.impl.VWindowsImpl;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 import ru.kolaer.client.javafx.plugins.ILabel;
 
@@ -36,7 +37,7 @@ public class Explorer extends BorderPane {
 		runnLabel.setStyle("-fx-background-color: transparent;");
 		runnLabel.setOnAction(e -> {
 			Platform.runLater(() -> {
-				final VWindows window = new VWindows(plugin.getApplication());
+				final VWindowsImpl window = new VWindowsImpl(plugin.getApplication());
 
 				this.decktop.getChildren().add(window.getWindow());
 			});	

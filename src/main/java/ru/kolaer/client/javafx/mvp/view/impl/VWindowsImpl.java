@@ -1,17 +1,17 @@
-package ru.kolaer.client.javafx.mvp.view;
+package ru.kolaer.client.javafx.mvp.view.impl;
 
 import jfxtras.labs.scene.control.window.Window;
 import ru.kolaer.client.javafx.plugins.IApplication;
 
-public class VWindows {
+public class VWindowsImpl {
 	private final Window window = new Window();
 	private final IApplication app;
 	
-	public VWindows(IApplication app) {
+	public VWindowsImpl(IApplication app) {
 		this(app,"");
 	}
 
-	public VWindows(IApplication app, String name) {
+	public VWindowsImpl(IApplication app, String name) {
 		this.app = app;
 		this.window.setTitle(name);
 		
