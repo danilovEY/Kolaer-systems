@@ -7,10 +7,11 @@ import org.slf4j.LoggerFactory;
 
 import javafx.scene.layout.Pane;
 import jfxtras.labs.scene.control.window.Window;
+import ru.kolaer.client.javafx.mvp.view.VWindow;
 import ru.kolaer.client.javafx.plugins.IApplication;
 import ru.kolaer.client.javafx.tools.IResources;
 
-public class VWindowsImpl {
+public class VWindowsImpl implements VWindow{
 	private static final Logger LOG = LoggerFactory.getLogger(VMainFrameImpl.class);
 	
 	private final Window window = new Window();
@@ -42,5 +43,15 @@ public class VWindowsImpl {
 	
 	public Window getWindow() {
 		return window;
+	}
+
+	@Override
+	public Pane getContent() {
+		return this.window.getContentPane();
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		window.setVisible(visible);
 	}
 }

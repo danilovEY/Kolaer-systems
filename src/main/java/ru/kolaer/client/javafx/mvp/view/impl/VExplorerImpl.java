@@ -1,4 +1,4 @@
-package ru.kolaer.client.javafx.mvp.view;
+package ru.kolaer.client.javafx.mvp.view.impl;
 
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
@@ -6,16 +6,17 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import ru.kolaer.client.javafx.mvp.view.impl.VWindowsImpl;
+import javafx.scene.layout.Pane;
+import ru.kolaer.client.javafx.mvp.view.VExplorer;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
-import ru.kolaer.client.javafx.plugins.ILabel;
 
-public class Explorer extends BorderPane {
+public class VExplorerImpl extends BorderPane implements VExplorer {
 	private final AnchorPane decktop = new AnchorPane();
 	private final FlowPane decktopWithLabels = new FlowPane();
 	private final BorderPane taskBar = new BorderPane();
-
-	public Explorer() {
+	
+	
+	public VExplorerImpl() {
 		this.init();
 	}
 
@@ -32,7 +33,8 @@ public class Explorer extends BorderPane {
 		this.setBottom(this.taskBar);
 	}
 
-	public void addPlugin(IKolaerPlugin plugin) {
+	@Override
+	public void updataAddPlugin(IKolaerPlugin plugin) {
 		final Button runnLabel = new Button(plugin.getLabel().getName(), plugin.getLabel().getIcon());
 		runnLabel.setStyle("-fx-background-color: transparent;");
 		runnLabel.setOnAction(e -> {
@@ -46,7 +48,14 @@ public class Explorer extends BorderPane {
 		this.decktopWithLabels.getChildren().add(runnLabel);
 	}
 
-	public void removeLabel(ILabel label) {
+	@Override
+	public void updataRemovePlugin(IKolaerPlugin plugin) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public Pane getContent() {
+		return this;
 	}
 }

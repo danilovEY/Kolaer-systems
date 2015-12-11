@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
+import javafx.stage.Stage;
 import ru.kolaer.client.javafx.mvp.presenter.PMainFrame;
 import ru.kolaer.client.javafx.mvp.view.VMainFrame;
 import ru.kolaer.client.javafx.mvp.view.impl.VMainFrameImpl;
@@ -11,13 +12,20 @@ import ru.kolaer.client.javafx.mvp.view.impl.VMainFrameImpl;
  */
 public class PMainFrameImpl implements PMainFrame{
 
-	private VMainFrame view = new VMainFrameImpl();
+	private VMainFrame view;
 	
 	/**
 	 * {@linkplain PMainFrameImpl}
 	 */
 	public PMainFrameImpl() {
-		
+		this.view = new VMainFrameImpl();
+	}
+	
+	/**
+	 * {@linkplain PMainFrameImpl}
+	 */
+	public PMainFrameImpl(Stage stage) {
+		view = new VMainFrameImpl(stage);
 	}
 	
 	@Override

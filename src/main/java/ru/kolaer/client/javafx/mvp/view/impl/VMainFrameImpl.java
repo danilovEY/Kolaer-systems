@@ -1,5 +1,9 @@
 package ru.kolaer.client.javafx.mvp.view.impl;
 
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,8 +12,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import ru.kolaer.client.javafx.mvp.view.Explorer;
+import ru.kolaer.client.javafx.mvp.presenter.PExplorer;
+import ru.kolaer.client.javafx.mvp.presenter.impl.PExplorerImpl;
 import ru.kolaer.client.javafx.mvp.view.VMainFrame;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 import ru.kolaer.client.javafx.plugins.PluginLoader;
@@ -20,8 +26,23 @@ public class VMainFrameImpl extends Application implements VMainFrame {
 	
 	private Stage stage;
 	private final BorderPane mainPanel = new BorderPane();
-	private final Explorer explorer = new Explorer();
+	private final PExplorer explorer = new PExplorerImpl();
 	
+	/**
+	 * {@linkplain VMainFrameImpl}
+	 */
+	public VMainFrameImpl() {
+		this(new Stage());
+	}
+	
+	/**
+	 * {@linkplain VMainFrameImpl}
+	 * @param stage
+	 */
+	public VMainFrameImpl(Stage stage) {
+		this.start(Optional.ofNullable(stage).orElse(new Stage()));
+	}
+
 	@Override
 	public void start(Stage stage) {
 		this.initialization(); 
@@ -32,15 +53,23 @@ public class VMainFrameImpl extends Application implements VMainFrame {
 	}
 	
 	private void initialization() {
-		LOG.debug("Инициализация");
+		this.loadPlugins();
+		
 		final Menu fileMenu = new Menu(IResources.L_MENU_FILE);
 		
 		this.mainPanel.setTop(new MenuBar(fileMenu));
-		this.mainPanel.setCenter(this.explorer);
+		this.mainPanel.setCenter(this.explorer.getView().getContent());
 		
-		for(IKolaerPlugin plugin : new PluginLoader(IResources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins()) {
-			this.explorer.addPlugin(plugin);
-		}
+	}
+	
+	private void loadPlugins() {
+		ExecutorService readPluginsThread = Executors.newSingleThreadExecutor();
+		readPluginsThread.submit(() -> {
+			for(IKolaerPlugin plugin : new PluginLoader(IResources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins()) {
+				this.explorer.addPlugin(plugin);
+			}
+		});
+		readPluginsThread.shutdown();
 	}
 
 	@Override
@@ -52,12 +81,7 @@ public class VMainFrameImpl extends Application implements VMainFrame {
 	}
 
 	@Override
-	public Stage getStage() {
-		return this.stage;
-	}
-
-	@Override
-	public void setStage(Stage stage) {
-		this.start(stage);
+	public Pane getContent() {
+		return this.mainPanel;
 	}
 }

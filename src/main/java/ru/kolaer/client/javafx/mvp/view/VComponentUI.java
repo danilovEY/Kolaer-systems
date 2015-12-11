@@ -1,10 +1,12 @@
 package ru.kolaer.client.javafx.mvp.view;
 
+import javafx.scene.layout.Pane;
+
 /**
  *
  * @author Danilov
  * @version 0.1
  */
-public interface VWindow extends VComponentUI{
-	void setVisible(boolean visible);
+public interface VComponentUI {
+	Pane getContent();
 }
