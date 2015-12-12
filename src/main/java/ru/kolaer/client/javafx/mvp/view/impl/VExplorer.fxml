@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<fx:root prefHeight="389.0" prefWidth="465.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <AnchorPane fx:id="desktop" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <FlowPane fx:id="desktopWithLabels" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+   </center>
+   <bottom>
+      <BorderPane fx:id="taskPane" BorderPane.alignment="CENTER">
+         <left>
+            <Button fx:id="startButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" BorderPane.alignment="CENTER" />
+         </left>
+      </BorderPane>
+   </bottom>
+</fx:root>

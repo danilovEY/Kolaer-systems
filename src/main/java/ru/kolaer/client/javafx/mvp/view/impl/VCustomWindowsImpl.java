@@ -8,10 +8,11 @@ import jfxtras.labs.scene.control.window.CloseIcon;
 import jfxtras.labs.scene.control.window.MinimizeIcon;
 import jfxtras.labs.scene.control.window.Window;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
+import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMMainFrameImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VCustomWindowsImpl implements VCustomWindow{
-	private static final Logger LOG = LoggerFactory.getLogger(VMainFrameImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
 	
 	private final Window window = new Window();
 

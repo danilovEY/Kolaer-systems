@@ -1,10 +1,9 @@
-package ru.kolaer.ru.client.javafx.runnable;
+package ru.kolaer.client.javafx.runnable;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import ru.kolaer.client.javafx.mvp.presenter.PMainFrame;
-import ru.kolaer.client.javafx.mvp.presenter.impl.PMainFrameImpl;
+import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMMainFrameImpl;
 
 public class Launcher extends Application {
 	
@@ -15,8 +14,8 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Platform.runLater(() -> {
-			final PMainFrame pFrame = new PMainFrameImpl(primaryStage);
-			pFrame.show();
+			VMMainFrameImpl vFrame = new VMMainFrameImpl();
+			vFrame.start(primaryStage);
 		});
 	}
 }
