@@ -2,13 +2,14 @@ package ru.kolaer.client.javafx.mvp.view.impl;
 
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
+import ru.kolaer.client.javafx.mvp.presenter.PLabel;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PCustomWindowImpl;
+import ru.kolaer.client.javafx.mvp.presenter.impl.PLabelImpl;
 import ru.kolaer.client.javafx.mvp.view.VExplorer;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 
@@ -37,9 +38,8 @@ public class VExplorerImpl extends BorderPane implements VExplorer {
 
 	@Override
 	public void updataAddPlugin(IKolaerPlugin plugin) {
-		final Button runnLabel = new Button(plugin.getLabel().getName(), plugin.getLabel().getIcon());
-		runnLabel.setStyle("-fx-background-color: transparent;");
-		runnLabel.setOnAction(e -> {
+		final PLabel runnLabel = new PLabelImpl(plugin.getLabel());
+		runnLabel.getView().setOnAction(e -> {
 			Platform.runLater(() -> {
 				final PCustomWindow window = new PCustomWindowImpl(plugin.getApplication(), plugin.getName());
 				
@@ -48,7 +48,7 @@ public class VExplorerImpl extends BorderPane implements VExplorer {
 		});
 		
 		Platform.runLater(() -> {
-			this.decktopWithLabels.getChildren().add(runnLabel);
+			this.decktopWithLabels.getChildren().add(runnLabel.getView().getContent());
 		});	
 	}
 
