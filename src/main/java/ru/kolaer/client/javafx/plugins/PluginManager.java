@@ -20,12 +20,12 @@ import java.util.jar.JarFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PluginLoader {
-	private static final Logger LOG = LoggerFactory.getLogger(PluginLoader.class);
+public class PluginManager {
+	private static final Logger LOG = LoggerFactory.getLogger(PluginManager.class);
 
 	private final String pathToPlugins;
 
-	public PluginLoader(final String pathToPlugins) {
+	public PluginManager(final String pathToPlugins) {
 		this.pathToPlugins = pathToPlugins;
 	}
 

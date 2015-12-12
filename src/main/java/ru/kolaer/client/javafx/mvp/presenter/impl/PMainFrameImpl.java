@@ -10,7 +10,7 @@ import ru.kolaer.client.javafx.mvp.presenter.PMainFrame;
 import ru.kolaer.client.javafx.mvp.view.VMainFrame;
 import ru.kolaer.client.javafx.mvp.view.impl.VMainFrameImpl;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
-import ru.kolaer.client.javafx.plugins.PluginLoader;
+import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.tools.Resources;
 
 /**
@@ -46,7 +46,7 @@ public class PMainFrameImpl implements PMainFrame{
 	private void loadPlugins() {
 		ExecutorService readPluginsThread = Executors.newSingleThreadExecutor();
 		readPluginsThread.submit(() -> {
-			List<IKolaerPlugin> pl = new PluginLoader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins();
+			List<IKolaerPlugin> pl = new PluginManager(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins();
 			for(IKolaerPlugin plugin : pl) {
 				this.explorer.addPlugin(plugin);
 			}
