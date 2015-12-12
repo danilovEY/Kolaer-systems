@@ -21,6 +21,7 @@ import ru.kolaer.client.javafx.tools.Resources;
 public class PMainFrameImpl implements PMainFrame{
 	private VMainFrame view;
 	private final PExplorer explorer = new PExplorerImpl();
+	private final PluginManager pluginManagerModel = new PluginManager(Resources.PATH_TO_DIR_WITH_PLUGINS);
 	
 	/**
 	 * {@linkplain PMainFrameImpl}
@@ -46,7 +47,7 @@ public class PMainFrameImpl implements PMainFrame{
 	private void loadPlugins() {
 		ExecutorService readPluginsThread = Executors.newSingleThreadExecutor();
 		readPluginsThread.submit(() -> {
-			List<IKolaerPlugin> pl = new PluginManager(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins();
+			List<IKolaerPlugin> pl = pluginManagerModel.scanPlugins();
 			for(IKolaerPlugin plugin : pl) {
 				this.explorer.addPlugin(plugin);
 			}
