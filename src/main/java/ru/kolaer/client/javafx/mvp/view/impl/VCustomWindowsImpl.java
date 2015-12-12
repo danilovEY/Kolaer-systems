@@ -8,12 +8,12 @@ import jfxtras.labs.scene.control.window.Window;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
 import ru.kolaer.client.javafx.tools.Resources;
 
-public class VWindowsImpl implements VCustomWindow{
+public class VCustomWindowsImpl implements VCustomWindow{
 	private static final Logger LOG = LoggerFactory.getLogger(VMainFrameImpl.class);
 	
 	private final Window window = new Window();
 
-	public VWindowsImpl() {
+	public VCustomWindowsImpl() {
 		this.initialization();
 	}
 

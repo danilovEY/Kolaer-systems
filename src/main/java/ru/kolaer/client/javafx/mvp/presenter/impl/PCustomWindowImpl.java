@@ -2,9 +2,9 @@ package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import java.util.Optional;
 
-import ru.kolaer.client.javafx.mvp.presenter.PWindow;
-import ru.kolaer.client.javafx.mvp.view.VWindow;
-import ru.kolaer.client.javafx.mvp.view.impl.VWindowsImpl;
+import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
+import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
+import ru.kolaer.client.javafx.mvp.view.impl.VCustomWindowsImpl;
 import ru.kolaer.client.javafx.plugins.IApplication;
 
 /**
@@ -12,20 +12,20 @@ import ru.kolaer.client.javafx.plugins.IApplication;
  * @author Danilov
  * @version 0.1
  */
-public class PWindowImpl implements PWindow {
+public class PCustomWindowImpl implements PCustomWindow {
 
-	private VWindow view = new VWindowsImpl();
+	private VCustomWindow view = new VCustomWindowsImpl();
 	private IApplication application;
 	
-	public PWindowImpl() {
+	public PCustomWindowImpl() {
 		this(null);
 	}
 	
-	public PWindowImpl(IApplication app) {
+	public PCustomWindowImpl(IApplication app) {
 		this(app,app.getName());
 	}
 
-	public PWindowImpl(IApplication app, String name) {
+	public PCustomWindowImpl(IApplication app, String name) {
 		this.application = app;
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
 
@@ -42,12 +42,12 @@ public class PWindowImpl implements PWindow {
 	}
 
 	@Override
-	public VWindow getView() {
+	public VCustomWindow getView() {
 		return this.view;
 	}
 
 	@Override
-	public void setVWindow(VWindow view) {
+	public void setView(VCustomWindow view) {
 		this.view = view;
 	}
 

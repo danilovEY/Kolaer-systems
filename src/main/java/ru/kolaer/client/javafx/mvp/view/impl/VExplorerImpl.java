@@ -7,8 +7,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import ru.kolaer.client.javafx.mvp.presenter.PWindow;
-import ru.kolaer.client.javafx.mvp.presenter.impl.PWindowImpl;
+import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
+import ru.kolaer.client.javafx.mvp.presenter.impl.PCustomWindowImpl;
 import ru.kolaer.client.javafx.mvp.view.VExplorer;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 
@@ -41,9 +41,9 @@ public class VExplorerImpl extends BorderPane implements VExplorer {
 		runnLabel.setStyle("-fx-background-color: transparent;");
 		runnLabel.setOnAction(e -> {
 			Platform.runLater(() -> {
-				final PWindow window = new PWindowImpl(plugin.getApplication(), plugin.getName());
+				final PCustomWindow window = new PCustomWindowImpl(plugin.getApplication(), plugin.getName());
 				
-				this.decktop.getChildren().add(window.getView().getContent());
+				this.decktop.getChildren().add(window.getView().getWindow());
 			});	
 		});
 		
