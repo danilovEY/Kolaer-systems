@@ -51,6 +51,7 @@ public class PluginManager {
 		for(final File jarFile : jarFiles){
 			Future<IKolaerPlugin> resultThread = threadPoolForPlugins.submit(() -> {
 				Thread.currentThread().setName("Поток для файла: " + jarFile.getName());
+				
 				URL jarURL = null;
 				try{
 					jarURL = jarFile.toURI().toURL();
@@ -58,8 +59,11 @@ public class PluginManager {
 				catch(MalformedURLException e1){
 					LOG.error("Невозможно преобразовать в URL файл " + jarFile.getAbsolutePath() + "!", e1);
 				}
+				
 				final URLClassLoader classLoader = new URLClassLoader(new URL[] {jarURL }, Thread.currentThread().getContextClassLoader());
+				
 				Thread.currentThread().setContextClassLoader(classLoader);
+				
 				try( final JarFile jarFileRead = new JarFile(jarFile);){
 
 					final Enumeration<?> e = jarFileRead.entries();
@@ -114,6 +118,7 @@ public class PluginManager {
 			LOG.warn("Потоки прерваны!", e);
 		}
 		finally{
+			Thread.currentThread().setName("Добавление плагинов");
 			for(Future<IKolaerPlugin> future : resultInThreads){
 				try{
 					IKolaerPlugin app = future.get();

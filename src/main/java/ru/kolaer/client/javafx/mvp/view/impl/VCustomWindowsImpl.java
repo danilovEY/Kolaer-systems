@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.scene.layout.Pane;
+import jfxtras.labs.scene.control.window.CloseIcon;
+import jfxtras.labs.scene.control.window.MinimizeIcon;
 import jfxtras.labs.scene.control.window.Window;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
 import ru.kolaer.client.javafx.tools.Resources;
@@ -23,6 +25,10 @@ public class VCustomWindowsImpl implements VCustomWindow{
 		} catch (NullPointerException ex) {
 			LOG.error("CSS " + Resources.WINDOW_CSS + " не найден");
 		}
+
+		 this.window.getRightIcons().add(new MinimizeIcon(this.window));
+		 this.window.getRightIcons().add(new CloseIcon(this.window));
+		
 		this.window.setLayoutX(100);
 		this.window.setLayoutY(100);
 	}
