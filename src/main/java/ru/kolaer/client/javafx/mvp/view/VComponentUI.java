@@ -8,5 +8,6 @@ import javafx.scene.layout.Pane;
  * @version 0.1
  */
 public interface VComponentUI {
+	void setContent(Pane content);
 	Pane getContent();
 }

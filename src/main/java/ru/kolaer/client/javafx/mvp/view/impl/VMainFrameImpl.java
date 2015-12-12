@@ -86,4 +86,14 @@ public class VMainFrameImpl extends Application implements VMainFrame {
 	public Pane getContent() {
 		return this.mainPanel;
 	}
+
+	@Override
+	public void setTitle(String title) {
+		this.stage.setTitle(title);
+	}
+
+	@Override
+	public void setContent(Pane content) {
+		this.mainPanel.setCenter(content);
+	}
 }

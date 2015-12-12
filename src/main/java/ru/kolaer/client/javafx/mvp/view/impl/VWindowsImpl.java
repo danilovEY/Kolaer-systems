@@ -1,30 +1,19 @@
 package ru.kolaer.client.javafx.mvp.view.impl;
 
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.scene.layout.Pane;
 import jfxtras.labs.scene.control.window.Window;
-import ru.kolaer.client.javafx.mvp.view.VWindow;
-import ru.kolaer.client.javafx.plugins.IApplication;
+import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
 import ru.kolaer.client.javafx.tools.Resources;
 
-public class VWindowsImpl implements VWindow{
+public class VWindowsImpl implements VCustomWindow{
 	private static final Logger LOG = LoggerFactory.getLogger(VMainFrameImpl.class);
 	
 	private final Window window = new Window();
-	private final IApplication app;
-	
-	public VWindowsImpl(IApplication app) {
-		this(app,app.getName());
-	}
 
-	public VWindowsImpl(IApplication app, String name) {
-		this.app = app;
-		this.window.setTitle(Optional.ofNullable(name).orElse(""));
-		
+	public VWindowsImpl() {
 		this.initialization();
 	}
 
@@ -34,15 +23,13 @@ public class VWindowsImpl implements VWindow{
 		} catch (NullPointerException ex) {
 			LOG.error("CSS " + Resources.WINDOW_CSS + " не найден");
 		}
-		final Pane contentApp = app.getContent();
-		this.window.setPrefSize(contentApp.getPrefWidth(), contentApp.getPrefHeight());
-		this.window.setContentPane(contentApp);
 		this.window.setLayoutX(100);
 		this.window.setLayoutY(100);
 	}
 	
+	@Override
 	public Window getWindow() {
-		return window;
+		return this.window;
 	}
 
 	@Override
@@ -53,5 +40,16 @@ public class VWindowsImpl implements VWindow{
 	@Override
 	public void setVisible(boolean visible) {
 		window.setVisible(visible);
+	}
+
+	@Override
+	public void setTitle(String title) {
+		this.window.setTitle(title);
+	}
+
+	@Override
+	public void setContent(Pane content) {
+		this.window.setPrefSize(content.getPrefWidth(), content.getPrefHeight());
+		this.window.setContentPane(content);
 	}
 }
