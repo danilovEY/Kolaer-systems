@@ -64,6 +64,8 @@ public class VMMainFrameImpl extends Application {
 		}
 		this.stage = stage;
 		this.stage.setScene(new Scene(root));
+		this.stage.setMinHeight(650);
+		this.stage.setMinWidth(850);
 		this.stage.centerOnScreen();
 		this.stage.setMaximized(true);
 		this.stage.show();
