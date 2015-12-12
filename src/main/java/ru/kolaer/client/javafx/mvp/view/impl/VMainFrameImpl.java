@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.mvp.view.impl;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +20,7 @@ import ru.kolaer.client.javafx.mvp.presenter.impl.PExplorerImpl;
 import ru.kolaer.client.javafx.mvp.view.VMainFrame;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 import ru.kolaer.client.javafx.plugins.PluginLoader;
-import ru.kolaer.client.javafx.tools.IResources;
+import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMainFrameImpl extends Application implements VMainFrame {
 	private static final Logger LOG = LoggerFactory.getLogger(VMainFrameImpl.class);
@@ -55,7 +56,7 @@ public class VMainFrameImpl extends Application implements VMainFrame {
 	private void initialization() {
 		this.loadPlugins();
 		
-		final Menu fileMenu = new Menu(IResources.L_MENU_FILE);
+		final Menu fileMenu = new Menu(Resources.L_MENU_FILE);
 		
 		this.mainPanel.setTop(new MenuBar(fileMenu));
 		this.mainPanel.setCenter(this.explorer.getView().getContent());
@@ -65,7 +66,8 @@ public class VMainFrameImpl extends Application implements VMainFrame {
 	private void loadPlugins() {
 		ExecutorService readPluginsThread = Executors.newSingleThreadExecutor();
 		readPluginsThread.submit(() -> {
-			for(IKolaerPlugin plugin : new PluginLoader(IResources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins()) {
+			List<IKolaerPlugin> pl = new PluginLoader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins();
+			for(IKolaerPlugin plugin : pl) {
 				this.explorer.addPlugin(plugin);
 			}
 		});

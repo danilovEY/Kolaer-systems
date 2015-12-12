@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 import jfxtras.labs.scene.control.window.Window;
 import ru.kolaer.client.javafx.mvp.view.VWindow;
 import ru.kolaer.client.javafx.plugins.IApplication;
-import ru.kolaer.client.javafx.tools.IResources;
+import ru.kolaer.client.javafx.tools.Resources;
 
 public class VWindowsImpl implements VWindow{
 	private static final Logger LOG = LoggerFactory.getLogger(VMainFrameImpl.class);
@@ -30,9 +30,9 @@ public class VWindowsImpl implements VWindow{
 
 	private void initialization() {
 		try {
-			this.window.getStylesheets().setAll(IResources.WINDOW_CSS);
+			this.window.getStylesheets().setAll(Resources.WINDOW_CSS);
 		} catch (NullPointerException ex) {
-			LOG.error("CSS " + IResources.WINDOW_CSS + " не найден");
+			LOG.error("CSS " + Resources.WINDOW_CSS + " не найден");
 		}
 		final Pane contentApp = app.getContent();
 		this.window.setPrefSize(contentApp.getPrefWidth(), contentApp.getPrefHeight());

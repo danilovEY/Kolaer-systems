@@ -44,8 +44,10 @@ public class VExplorerImpl extends BorderPane implements VExplorer {
 				this.decktop.getChildren().add(window.getWindow());
 			});	
 		});
-
-		this.decktopWithLabels.getChildren().add(runnLabel);
+		
+		Platform.runLater(() -> {
+			this.decktopWithLabels.getChildren().add(runnLabel);
+		});	
 	}
 
 	@Override

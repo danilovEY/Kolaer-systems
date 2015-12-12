@@ -98,14 +98,12 @@ public class PluginLoader {
 				}
 				return null;
 			});
-
 			resultInThreads.add(resultThread);
 		}
-
 		threadPoolForPlugins.shutdown();
 
 		try{
-			if(!threadPoolForPlugins.awaitTermination(1, TimeUnit.MINUTES)){
+			if(!threadPoolForPlugins.awaitTermination(5, TimeUnit.SECONDS)){
 				LOG.error("Потоки прерваны. Истекло время ожидания!");
 				int countThreads = threadPoolForPlugins.shutdownNow().size();
 				if(countThreads > 0)
@@ -120,6 +118,7 @@ public class PluginLoader {
 				try{
 					IKolaerPlugin app = future.get();
 					result.add(app);
+					LOG.info(app.getName());
 				}
 				catch(InterruptedException | ExecutionException e){
 					LOG.error("Ошибка при получении результата!", e);
