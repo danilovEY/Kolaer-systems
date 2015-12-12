@@ -58,9 +58,9 @@ public class PluginManager {
 				catch(MalformedURLException e1){
 					LOG.error("Невозможно преобразовать в URL файл " + jarFile.getAbsolutePath() + "!", e1);
 				}
-
-				try(final URLClassLoader classLoader = new URLClassLoader(new URL[] {
-			            jarURL }); final JarFile jarFileRead = new JarFile(jarFile);){
+				final URLClassLoader classLoader = new URLClassLoader(new URL[] {jarURL }, Thread.currentThread().getContextClassLoader());
+				Thread.currentThread().setContextClassLoader(classLoader);
+				try( final JarFile jarFileRead = new JarFile(jarFile);){
 
 					final Enumeration<?> e = jarFileRead.entries();
 

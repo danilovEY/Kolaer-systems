@@ -28,6 +28,10 @@ public class PCustomWindowImpl implements PCustomWindow {
 	public PCustomWindowImpl(IApplication app, String name) {
 		this.application = app;
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
+		
+		if(this.application != null) {
+			this.view.setContent(this.application.getContent());
+		}
 
 	}
 	
