@@ -7,9 +7,9 @@ public interface Resources {
 	
 	public static final String PATH_TO_DIR_WITH_PLUGINS = "plugins";
 	
-	public static final URL V_LABEL = Resources.class.getResource("/ru/kolaer/client/javafx/mvp/view/impl/VLabel.fxml");
-	public static final URL V_MAIN_FRAME = Resources.class.getResource("/ru/kolaer/client/javafx/mvp/view/impl/VMainFrame.fxml");
-	public static final URL V_EXPLORER = Resources.class.getResource("/ru/kolaer/client/javafx/mvp/view/impl/VExplorer.fxml");
+	public static final URL V_LABEL = Resources.class.getResource("/view/VLabel.fxml");
+	public static final URL V_MAIN_FRAME = Resources.class.getResource("/view/VMainFrame.fxml");
+	public static final URL V_EXPLORER = Resources.class.getResource("/view/VExplorer.fxml");
 	
 	public static final String WINDOW_CSS = Resources.class.getResource("/css/window.css").toExternalForm();
 	
