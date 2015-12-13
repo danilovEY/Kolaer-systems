@@ -57,11 +57,6 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 		ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			final VMLabel runnLabel = new VMLabelImpl(plugin.getLabel());
-			final VMLabel runnLabel2 = new VMLabelImpl(plugin.getLabel());
-			final VMLabel runnLabel3 = new VMLabelImpl(plugin.getLabel());
-			final VMLabel runnLabel4 = new VMLabelImpl(plugin.getLabel());
-			final VMLabel runnLabel5 = new VMLabelImpl(plugin.getLabel());
-			final VMLabel runnLabel6 = new VMLabelImpl(plugin.getLabel());
 			runnLabel.setOnAction(e -> {
 				Platform.runLater(() -> {
 					final PCustomWindow window = new PCustomWindowImpl(this.desktop, plugin.getApplication(), plugin.getName());
@@ -71,12 +66,6 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 			
 			Platform.runLater(() -> {
 				this.desktopWithLabels.getChildren().add(runnLabel.getContent());
-				this.desktopWithLabels.getChildren().add(runnLabel2.getContent());
-				this.desktopWithLabels.getChildren().add(runnLabel3.getContent());
-				this.desktopWithLabels.getChildren().add(runnLabel4.getContent());
-				this.desktopWithLabels.getChildren().add(runnLabel5.getContent());
-				this.desktopWithLabels.getChildren().add(runnLabel6.getContent());
-				
 			});	
 			
 			mapPlugin.put(plugin, runnLabel);
