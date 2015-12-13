@@ -8,8 +8,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -45,18 +43,12 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		desktop.heightProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				desktopWithLabels.setPrefHeight(desktop.getHeight());
-			}
+		desktop.heightProperty().addListener((observable, oldValue, newValue) -> {
+			desktopWithLabels.setPrefHeight(desktop.getHeight());
 		});
 		
-		desktop.widthProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		desktop.widthProperty().addListener((observable, oldValue, newValue) -> {
 				desktopWithLabels.setPrefWidth(desktop.getWidth());
-			}
 		});
 	}
 
