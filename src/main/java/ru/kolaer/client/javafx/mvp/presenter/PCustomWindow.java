@@ -10,7 +10,6 @@ import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
  */
 public interface PCustomWindow {
 	VCustomWindow getView();
-	void setView(VCustomWindow view);
 	
 	Pane getParent();
 	void setParent(Pane parent);

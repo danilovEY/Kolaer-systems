@@ -19,7 +19,7 @@ import ru.kolaer.client.javafx.plugins.IApplication;
 public class PCustomWindowImpl implements PCustomWindow {
 	private static final Logger LOG = LoggerFactory.getLogger(PCustomWindowImpl.class);
 	
-	private VCustomWindow view = new VCustomWindowsImpl();
+	private final VCustomWindow view = new VCustomWindowsImpl();
 	private IApplication application;
 	private Pane parent;
 	
@@ -35,6 +35,8 @@ public class PCustomWindowImpl implements PCustomWindow {
 		this.parent = parent;
 		this.application = app;
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
+		this.view.addRightWindowIcon(new PCustomWindowIconClose(this));		
+		
 	}
 	
 	@Override
@@ -61,11 +63,6 @@ public class PCustomWindowImpl implements PCustomWindow {
 	@Override
 	public VCustomWindow getView() {
 		return this.view;
-	}
-
-	@Override
-	public void setView(VCustomWindow view) {
-		this.view = view;
 	}
 
 	@Override

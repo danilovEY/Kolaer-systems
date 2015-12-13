@@ -3,7 +3,12 @@ package ru.kolaer.client.javafx.mvp.view.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javafx.animation.ScaleTransition;
+import javafx.animation.Transition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.scene.control.window.WindowIcon;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
@@ -43,10 +48,21 @@ public class VCustomWindowsImpl implements VCustomWindow{
 	@Override
 	public void setVisible(boolean visible) {
 		if(visible) {
-			this.window.setVisible(true);
+	        ScaleTransition st = new ScaleTransition();
+	        st.setNode(this.window);
+	        st.setFromX(0);
+	        st.setFromY(0);
+	        st.setToX(1);
+	        st.setToY(1);
+	        st.setDuration(Duration.seconds(0.2));
+	        ObjectProperty<Transition> closeTransitionProperty =
+	                new SimpleObjectProperty<>();
+	        closeTransitionProperty.set(st);
+	        closeTransitionProperty.get().play();
+	        
 		} else {
 			this.window.close();
-			this.window.setVisible(false);
+			//this.window.setVisible(false);
 		}
 	}
 
