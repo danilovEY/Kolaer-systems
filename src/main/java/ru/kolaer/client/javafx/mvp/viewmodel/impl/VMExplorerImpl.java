@@ -1,7 +1,11 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -32,6 +36,8 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
     @FXML
     private FlowPane desktopWithLabels;
 	
+    private final Map<IKolaerPlugin, VMLabel> mapPlugin = new HashMap<>();
+    
 	public VMExplorerImpl() {
 		super(Resources.V_EXPLORER);
 	}
@@ -41,23 +47,26 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 		
 	}
 
-	
 	@Override
 	public void addPlugin(IKolaerPlugin plugin) {
-		final VMLabel runnLabel2 = new VMLabelImpl(plugin.getLabel());
-		final VMLabel runnLabel = new VMLabelImpl(plugin.getLabel());
-		runnLabel.setOnAction(e -> {
+		ExecutorService thread = Executors.newSingleThreadExecutor();
+		thread.submit(() -> {
+			final VMLabel runnLabel = new VMLabelImpl(plugin.getLabel());
+			runnLabel.setOnAction(e -> {
+				Platform.runLater(() -> {
+					final PCustomWindow window = new PCustomWindowImpl(plugin.getApplication(), plugin.getName());
+					
+					this.desktop.getChildren().add(window.getView().getWindow());
+				});	
+			});
+			
 			Platform.runLater(() -> {
-				final PCustomWindow window = new PCustomWindowImpl(plugin.getApplication(), plugin.getName());
-				
-				this.desktop.getChildren().add(window.getView().getWindow());
+				this.desktopWithLabels.getChildren().add(runnLabel.getContent());
 			});	
+			
+			mapPlugin.put(plugin, runnLabel);
 		});
-		
-		Platform.runLater(() -> {
-			this.desktopWithLabels.getChildren().add(runnLabel.getContent());
-			this.desktopWithLabels.getChildren().add(runnLabel2.getContent());
-		});	
+		thread.shutdown();
 	}
 
 	@Override
