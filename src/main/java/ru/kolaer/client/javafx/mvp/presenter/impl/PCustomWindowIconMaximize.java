@@ -8,16 +8,16 @@ import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
  * @author Danilov
  * @version 0.1
  */
-public class PCustomWindowIconClose extends WindowIcon {
-    public static final String DEFAULT_STYLE_CLASS = "window-custom-close-icon";
+public class PCustomWindowIconMaximize extends WindowIcon {
+	public static final String DEFAULT_STYLE_CLASS = "window-custom-maximize-icon";
+	
 	/**
-	 * {@linkplain PCustomWindowIconClose}
+	 * {@linkplain PCustomWindowIconMaximize}
 	 */
-	public PCustomWindowIconClose(final PCustomWindow window) {
+	public PCustomWindowIconMaximize(PCustomWindow window) {
 		this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
-		
 		this.setOnAction(e -> {
-			window.close();
+			System.out.println("AA");
 		});
 	}
 }
