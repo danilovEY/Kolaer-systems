@@ -19,7 +19,14 @@ public class VCustomWindowsImpl implements VCustomWindow{
 	private static final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
 	
 	private final Window window = new Window();
-
+	private double oldLayoutX = 0;
+	private double oldLayoutY = 0;
+	private double oldPrefWidth = 0;
+	private double oldPrefHeight = 0;
+	private boolean maximize = false;
+	private boolean minimize = false;
+	
+	
 	public VCustomWindowsImpl() {
 		this.initialization();
 	}
@@ -62,7 +69,6 @@ public class VCustomWindowsImpl implements VCustomWindow{
 	        
 		} else {
 			this.window.close();
-			//this.window.setVisible(false);
 		}
 	}
 
@@ -85,5 +91,43 @@ public class VCustomWindowsImpl implements VCustomWindow{
 	@Override
 	public void addLeftWindowIcon(WindowIcon icon) {
 		this.window.getLeftIcons().add(icon);
+	}
+
+	@Override
+	public void setMaximize(boolean max) {
+		this.maximize = max;
+		System.out.println("AA");
+		if(this.maximize) {
+			this.oldLayoutX = this.window.getLayoutX();
+			this.oldLayoutY = this.window.getLayoutY();
+			this.oldPrefWidth = this.window.getPrefWidth();
+			this.oldPrefHeight = this.window.getPrefHeight();
+			
+			Pane parent = (Pane)this.window.getParent();
+			this.window.setLayoutX(parent.getLayoutX());
+			this.window.setLayoutY(parent.getLayoutY());
+			this.window.setPrefSize(parent.getWidth(), parent.getHeight());
+		} else {
+			this.window.setLayoutX(this.oldLayoutX);
+			this.window.setLayoutY(this.oldLayoutY);
+			this.window.setPrefSize(this.oldPrefWidth, this.oldPrefHeight);
+		}
+		
+		
+	}
+
+	@Override
+	public void setMinimize(boolean min) {
+		this.minimize = min;
+	}
+
+	@Override
+	public boolean isMaximize() {
+		return this.maximize;
+	}
+
+	@Override
+	public boolean isMinimize() {
+		return this.minimize;
 	}
 }

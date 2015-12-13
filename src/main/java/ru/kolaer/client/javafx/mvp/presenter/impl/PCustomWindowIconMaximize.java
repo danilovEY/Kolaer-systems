@@ -17,7 +17,7 @@ public class PCustomWindowIconMaximize extends WindowIcon {
 	public PCustomWindowIconMaximize(PCustomWindow window) {
 		this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 		this.setOnAction(e -> {
-			System.out.println("AA");
+			window.maximize();
 		});
 	}
 }

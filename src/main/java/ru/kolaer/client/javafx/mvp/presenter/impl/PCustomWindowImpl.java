@@ -75,4 +75,14 @@ public class PCustomWindowImpl implements PCustomWindow {
 	public void setParent(Pane parent) {
 		this.parent = parent;
 	}
+
+	@Override
+	public void maximize() {
+		this.view.setMaximize(!this.view.isMaximize());
+	}
+
+	@Override
+	public void minimize() {
+		this.view.setMinimize(!this.view.isMinimize());
+	}
 }

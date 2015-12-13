@@ -14,4 +14,9 @@ public interface VCustomWindow extends VWindow {
 	void addRightWindowIcon(WindowIcon icon);
 	void addLeftWindowIcon(WindowIcon icon);
 	
+	void setMaximize(boolean max);
+	void setMinimize(boolean min);
+	
+	boolean isMaximize();
+	boolean isMinimize();
 }

@@ -16,4 +16,7 @@ public interface PCustomWindow {
 	
 	void show();
 	void close();
+	
+	void maximize();
+	void minimize();
 }
