@@ -2,6 +2,10 @@ package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
 import ru.kolaer.client.javafx.mvp.view.impl.VCustomWindowsImpl;
@@ -13,36 +17,45 @@ import ru.kolaer.client.javafx.plugins.IApplication;
  * @version 0.1
  */
 public class PCustomWindowImpl implements PCustomWindow {
-
+	private static final Logger LOG = LoggerFactory.getLogger(PCustomWindowImpl.class);
+	
 	private VCustomWindow view = new VCustomWindowsImpl();
 	private IApplication application;
+	private Pane parent;
 	
 	public PCustomWindowImpl() {
 		this(null);
 	}
 	
 	public PCustomWindowImpl(IApplication app) {
-		this(app,app.getName());
+		this(null, app, app.getName());
 	}
 
-	public PCustomWindowImpl(IApplication app, String name) {
+	public PCustomWindowImpl(Pane parent,IApplication app, String name) {
+		this.parent = parent;
 		this.application = app;
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
-		
-		if(this.application != null) {
-			this.view.setContent(this.application.getContent());
-		}
-
 	}
 	
 	@Override
 	public void show() {
+		if(this.parent == null) {
+			LOG.error("Parent == null!");
+			return;
+		}
+		
+		if(this.application != null) {
+			this.application.run();
+			this.view.setContent(this.application.getContent());
+		}
 		this.view.setVisible(true);
+		this.parent.getChildren().add(this.view.getWindow());
 	}
 
 	@Override
 	public void close() {
 		this.view.setVisible(false);
+		this.application.stop();
 	}
 
 	@Override
@@ -55,4 +68,13 @@ public class PCustomWindowImpl implements PCustomWindow {
 		this.view = view;
 	}
 
+	@Override
+	public Pane getParent() {
+		return this.parent;
+	}
+
+	@Override
+	public void setParent(Pane parent) {
+		this.parent = parent;
+	}
 }

@@ -6,16 +6,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<fx:root prefHeight="389.0" prefWidth="465.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="389.0" prefWidth="465.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <AnchorPane fx:id="desktop" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <Pane fx:id="desktop">
          <children>
-            <FlowPane fx:id="desktopWithLabels" hgap="15.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0" vgap="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <FlowPane fx:id="desktopWithLabels" hgap="15.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0" vgap="15.0">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding></FlowPane>
+               </padding>
+            </FlowPane>
          </children>
-      </AnchorPane>
+      </Pane>
    </center>
    <bottom>
       <BorderPane fx:id="taskPane" BorderPane.alignment="CENTER">

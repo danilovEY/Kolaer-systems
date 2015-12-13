@@ -1,6 +1,7 @@
 package ru.kolaer.client.javafx.mvp.view;
 
 import javafx.scene.control.Control;
+import jfxtras.labs.scene.control.window.WindowIcon;
 
 /**
  *
@@ -9,4 +10,8 @@ import javafx.scene.control.Control;
  */
 public interface VCustomWindow extends VWindow {
 	Control getWindow();
+	
+	void addRightWindowIcon(WindowIcon icon);
+	void addLeftWindowIcon(WindowIcon icon);
+	
 }

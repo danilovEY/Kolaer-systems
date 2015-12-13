@@ -8,9 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
@@ -25,7 +26,7 @@ import ru.kolaer.client.javafx.tools.Resources;
 public class VMExplorerImpl extends ImportFXML implements VMExplorer {	
 	
     @FXML
-    private AnchorPane desktop;
+    private Pane desktop;
 
     @FXML
     private Button startButton;
@@ -44,7 +45,19 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		desktop.heightProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				desktopWithLabels.setPrefHeight(desktop.getHeight());
+			}
+		});
 		
+		desktop.widthProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				desktopWithLabels.setPrefWidth(desktop.getWidth());
+			}
+		});
 	}
 
 	@Override
@@ -52,16 +65,26 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 		ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			final VMLabel runnLabel = new VMLabelImpl(plugin.getLabel());
+			final VMLabel runnLabel2 = new VMLabelImpl(plugin.getLabel());
+			final VMLabel runnLabel3 = new VMLabelImpl(plugin.getLabel());
+			final VMLabel runnLabel4 = new VMLabelImpl(plugin.getLabel());
+			final VMLabel runnLabel5 = new VMLabelImpl(plugin.getLabel());
+			final VMLabel runnLabel6 = new VMLabelImpl(plugin.getLabel());
 			runnLabel.setOnAction(e -> {
 				Platform.runLater(() -> {
-					final PCustomWindow window = new PCustomWindowImpl(plugin.getApplication(), plugin.getName());
-					
-					this.desktop.getChildren().add(window.getView().getWindow());
+					final PCustomWindow window = new PCustomWindowImpl(this.desktop, plugin.getApplication(), plugin.getName());
+					window.show();
 				});	
 			});
 			
 			Platform.runLater(() -> {
 				this.desktopWithLabels.getChildren().add(runnLabel.getContent());
+				this.desktopWithLabels.getChildren().add(runnLabel2.getContent());
+				this.desktopWithLabels.getChildren().add(runnLabel3.getContent());
+				this.desktopWithLabels.getChildren().add(runnLabel4.getContent());
+				this.desktopWithLabels.getChildren().add(runnLabel5.getContent());
+				this.desktopWithLabels.getChildren().add(runnLabel6.getContent());
+				
 			});	
 			
 			mapPlugin.put(plugin, runnLabel);
