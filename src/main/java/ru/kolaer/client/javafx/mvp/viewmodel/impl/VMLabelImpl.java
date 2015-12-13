@@ -76,8 +76,6 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 		this.model = model;
 		labelName.setText(this.model.getName());
 		this.labelIcon.setImage(new Image(Optional.ofNullable(model.getIcon()).orElse("")));
-		//this.labelIcon.setImage(new Image(this.getClass().getClassLoader().getResource("x-mark-24.png").toString()));
-	
 	}
 
 }

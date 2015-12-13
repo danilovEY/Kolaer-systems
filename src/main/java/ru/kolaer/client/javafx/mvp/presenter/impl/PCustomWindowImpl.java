@@ -37,6 +37,7 @@ public class PCustomWindowImpl implements PCustomWindow {
 		this.parent = parent;
 		this.application = app;
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
+		this.view.addLeftWindowIcon(new PCustomWindowIconImage(this));
 		this.view.addRightWindowIcon(new PCustomWindowIconMinimize(this));
 		this.view.addRightWindowIcon(new PCustomWindowIconMaximize(this));
 		this.view.addRightWindowIcon(new PCustomWindowIconClose(this));	

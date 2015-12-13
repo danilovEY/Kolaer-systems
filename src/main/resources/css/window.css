@@ -26,6 +26,11 @@
     -fx-background-image: url('close-window-24.png');
 }
 
+.window-custom-image-icon {
+    -fx-skin: "jfxtras.labs.internal.scene.control.skin.window.DefaultWindowIconSkin";
+    -fx-background-color: transparent;
+}
+
 .window-custom-close-icon:hover {
     -fx-skin: "jfxtras.labs.internal.scene.control.skin.window.DefaultWindowIconSkin";
     -fx-background-color: transparent;
