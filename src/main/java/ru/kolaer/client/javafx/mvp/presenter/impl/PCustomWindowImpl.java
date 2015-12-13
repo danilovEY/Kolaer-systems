@@ -9,6 +9,8 @@ import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
 import ru.kolaer.client.javafx.mvp.view.impl.VCustomWindowsImpl;
+import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
+import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMApplicationOnTaskPaneImpl;
 import ru.kolaer.client.javafx.plugins.IApplication;
 
 /**
@@ -41,10 +43,13 @@ public class PCustomWindowImpl implements PCustomWindow {
 	}
 	
 	@Override
-	public void show() {
+	public VMApplicationOnTaskPane show() {
+		
+		final VMApplicationOnTaskPane taskPaneApp = new VMApplicationOnTaskPaneImpl(this);
+		
 		if(this.parent == null) {
 			LOG.error("Parent == null!");
-			return;
+			return taskPaneApp;
 		}
 		
 		if(this.application != null) {
@@ -53,6 +58,8 @@ public class PCustomWindowImpl implements PCustomWindow {
 		}
 		this.view.setVisible(true);
 		this.parent.getChildren().add(this.view.getWindow());
+		
+		return taskPaneApp;
 	}
 
 	@Override
@@ -84,5 +91,15 @@ public class PCustomWindowImpl implements PCustomWindow {
 	@Override
 	public void minimize() {
 		this.view.setMinimize(!this.view.isMinimize());
+	}
+
+	@Override
+	public IApplication getApplicationModel() {
+		return this.application;
+	}
+
+	@Override
+	public void setApplicationModel(IApplication application) {
+		this.application = application;
 	}
 }

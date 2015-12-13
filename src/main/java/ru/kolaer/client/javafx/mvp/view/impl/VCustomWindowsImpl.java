@@ -96,7 +96,6 @@ public class VCustomWindowsImpl implements VCustomWindow{
 	@Override
 	public void setMaximize(boolean max) {
 		this.maximize = max;
-		System.out.println("AA");
 		if(this.maximize) {
 			this.oldLayoutX = this.window.getLayoutX();
 			this.oldLayoutY = this.window.getLayoutY();
@@ -112,8 +111,6 @@ public class VCustomWindowsImpl implements VCustomWindow{
 			this.window.setLayoutY(this.oldLayoutY);
 			this.window.setPrefSize(this.oldPrefWidth, this.oldPrefHeight);
 		}
-		
-		
 	}
 
 	@Override

@@ -10,6 +10,7 @@ public interface Resources {
 	public static final URL V_LABEL = Resources.class.getResource("/view/VLabel.fxml");
 	public static final URL V_MAIN_FRAME = Resources.class.getResource("/view/VMainFrame.fxml");
 	public static final URL V_EXPLORER = Resources.class.getResource("/view/VExplorer.fxml");
+	public static final URL V_APPLICATION_ON_TASK_PANE = Resources.class.getResource("/view/VApplicationOnTaskPane.fxml");
 	
 	public static final String WINDOW_CSS = Resources.class.getResource("/css/window.css").toExternalForm();
 	

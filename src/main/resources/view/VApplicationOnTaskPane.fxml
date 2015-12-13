@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<fx:root maxHeight="-Infinity" maxWidth="300.0" minHeight="-Infinity" minWidth="50.0" prefHeight="50.0" prefWidth="292.0" type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <left>
+      <ImageView fx:id="icon" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+   </left>
+   <center>
+      <Label fx:id="nameApp" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="38.0" prefWidth="165.0" text="Label" BorderPane.alignment="CENTER">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <BorderPane.margin>
+            <Insets left="10.0" />
+         </BorderPane.margin>
+      </Label>
+   </center>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</fx:root>

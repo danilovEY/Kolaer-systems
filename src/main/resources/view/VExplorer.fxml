@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -19,10 +21,13 @@
       </Pane>
    </center>
    <bottom>
-      <BorderPane fx:id="taskPane" BorderPane.alignment="CENTER">
+      <BorderPane maxHeight="50.0" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="600.0" prefHeight="50.0" BorderPane.alignment="CENTER">
          <left>
             <Button fx:id="startButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" BorderPane.alignment="CENTER" />
          </left>
+         <center>
+            <HBox fx:id="taskPaneWithApp" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </center>
       </BorderPane>
    </bottom>
 </fx:root>

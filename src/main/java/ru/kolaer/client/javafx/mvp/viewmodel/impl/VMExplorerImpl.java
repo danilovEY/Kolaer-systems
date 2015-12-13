@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PCustomWindowImpl;
@@ -25,15 +26,14 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 	
     @FXML
     private Pane desktop;
-
     @FXML
     private Button startButton;
-
     @FXML
     private BorderPane taskPane;
-
     @FXML
     private FlowPane desktopWithLabels;
+    @FXML
+    private HBox taskPaneWithApp;
 	
     private final Map<IKolaerPlugin, VMLabel> mapPlugin = new HashMap<>();
     
@@ -60,7 +60,7 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 			runnLabel.setOnAction(e -> {
 				Platform.runLater(() -> {
 					final PCustomWindow window = new PCustomWindowImpl(this.desktop, plugin.getApplication(), plugin.getName());
-					window.show();
+					taskPaneWithApp.getChildren().add(window.show().getContent());
 				});	
 			});
 			
