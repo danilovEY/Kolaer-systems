@@ -6,6 +6,6 @@ public interface ILabel {
 	String getName();
 	void setName(String name);
 	
-	Pane getIcon();
+	String getIcon();
 	void setIcon(Pane pane);
 }

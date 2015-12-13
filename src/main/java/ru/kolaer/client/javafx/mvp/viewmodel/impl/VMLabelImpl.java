@@ -1,6 +1,7 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -8,7 +9,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMLabel;
@@ -26,7 +28,7 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	@FXML
 	private Label labelName;
 	@FXML
-	private AnchorPane labelIcon;
+	private ImageView labelIcon;
 	
 	private ILabel model;
 	
@@ -44,11 +46,7 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	
 	@Override
 	public void setContent(Pane content) {
-		this.labelIcon.getChildren().setAll(content);
-		AnchorPane.setBottomAnchor(content, 0d);
-		AnchorPane.setTopAnchor(content, 0d);
-		AnchorPane.setLeftAnchor(content, 0d);
-		AnchorPane.setRightAnchor(content, 0d);
+
 	}
 
 	@Override
@@ -77,7 +75,9 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 			return;
 		this.model = model;
 		labelName.setText(this.model.getName());
-		this.setContent(this.model.getIcon());
+		this.labelIcon.setImage(new Image(Optional.ofNullable(model.getIcon()).orElse("")));
+		//this.labelIcon.setImage(new Image(this.getClass().getClassLoader().getResource("x-mark-24.png").toString()));
+	
 	}
 
 }

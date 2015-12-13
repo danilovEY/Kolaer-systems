@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
@@ -34,6 +35,7 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 		super(Resources.V_APPLICATION_ON_TASK_PANE);
 		this.window = window;
 		this.nameApp.setText(this.window.getApplicationModel().getName());
+		this.icon.setImage(new Image(window.getApplicationModel().getIcon()));
 	}
 
 	@Override

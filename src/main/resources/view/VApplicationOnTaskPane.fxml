@@ -8,13 +8,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<fx:root maxHeight="-Infinity" maxWidth="300.0" minHeight="-Infinity" minWidth="50.0" prefHeight="50.0" prefWidth="292.0" type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<fx:root maxHeight="45.0" maxWidth="300.0" minHeight="45.0" minWidth="-Infinity" prefHeight="45.0" prefWidth="292.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <left>
-      <ImageView fx:id="icon" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+      <ImageView fx:id="icon" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" BorderPane.alignment="CENTER" />
    </left>
    <center>
-      <Label fx:id="nameApp" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="38.0" prefWidth="165.0" text="Label" BorderPane.alignment="CENTER">
+      <Label fx:id="nameApp" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="197.0" text="Label" BorderPane.alignment="CENTER_LEFT">
          <font>
             <Font size="22.0" />
          </font>
@@ -26,4 +25,7 @@
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
+   <padding>
+      <Insets left="10.0" />
+   </padding>
 </fx:root>

@@ -2,6 +2,7 @@ package ru.kolaer.client.javafx.plugins;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -60,10 +61,10 @@ public class PluginManager {
 					LOG.error("Невозможно преобразовать в URL файл " + jarFile.getAbsolutePath() + "!", e1);
 				}
 				
-				final URLClassLoader classLoader = new URLClassLoader(new URL[] {jarURL }, Thread.currentThread().getContextClassLoader());
-				
-				Thread.currentThread().setContextClassLoader(classLoader);
-				
+				Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
+			    method.setAccessible(true);
+			    method.invoke(ClassLoader.getSystemClassLoader(), new Object[]{jarURL});
+
 				try( final JarFile jarFileRead = new JarFile(jarFile);){
 
 					final Enumeration<?> e = jarFileRead.entries();
@@ -72,7 +73,7 @@ public class PluginManager {
 
 					while(e.hasMoreElements()){
 						final JarEntry je = (JarEntry) e.nextElement();
-
+						
 						if(je.isDirectory() || !je.getName().endsWith(".class")){
 							continue;
 						}
@@ -81,7 +82,7 @@ public class PluginManager {
 						className = className.replace('/', '.');
 						if(className.startsWith(packageName)){
 							try{
-								final Class<?> cls = classLoader.loadClass(className);
+								final Class<?> cls = this.getClass().getClassLoader().loadClass(className);
 								if(cls.getAnnotation(ApplicationPlugin.class) != null){
 									final IKolaerPlugin app = (IKolaerPlugin) cls.newInstance();
 									return app;
@@ -130,6 +131,7 @@ public class PluginManager {
 				}
 			}
 		}
+
 		return result;
 	}
 }
