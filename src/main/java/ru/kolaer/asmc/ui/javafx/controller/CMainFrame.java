@@ -80,7 +80,7 @@ public class CMainFrame extends Application {
 			}
 			final File img = new File(SettingSingleton.getInstance().getPathBanner());
 			if(img.exists() && img.isFile()) {
-				this.mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner()))));
+				this.mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner(),true))));
 			} else {
 				this.mainPanel.setTop(null);
 			}
