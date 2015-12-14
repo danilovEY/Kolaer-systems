@@ -18,6 +18,7 @@ public class PCustomWindowIconImage extends WindowIcon{
 	public PCustomWindowIconImage(PCustomWindow window) {
 		
 		this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+		//TODO проверить на null
 		ImageView image = new ImageView(new Image(window.getApplicationModel().getIcon(), true));
 		image.setPreserveRatio(false);
 		image.setFitHeight(24);

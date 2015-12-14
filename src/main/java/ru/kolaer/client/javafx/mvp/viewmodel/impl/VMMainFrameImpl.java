@@ -63,6 +63,9 @@ public class VMMainFrameImpl extends Application {
 			System.exit(-9);
 		}
 		this.stage = stage;
+		this.stage.setOnCloseRequest(e -> {
+			System.exit(0);
+		});
 		this.stage.setScene(new Scene(root));
 		this.stage.setMinHeight(650);
 		this.stage.setMinWidth(850);

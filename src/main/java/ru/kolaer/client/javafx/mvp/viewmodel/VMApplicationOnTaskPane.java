@@ -8,5 +8,6 @@ import ru.kolaer.client.javafx.mvp.view.VComponentUI;
  * @version 0.1
  */
 public interface VMApplicationOnTaskPane extends VComponentUI {
-
+	void close();
+	void show();
 }

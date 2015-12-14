@@ -1,11 +1,15 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.scene.layout.Pane;
+import jfxtras.labs.util.NodeUtil;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
 import ru.kolaer.client.javafx.mvp.view.impl.VCustomWindowsImpl;
@@ -24,6 +28,7 @@ public class PCustomWindowImpl implements PCustomWindow {
 	private final VCustomWindow view = new VCustomWindowsImpl();
 	private IApplication application;
 	private Pane parent;
+	private VMApplicationOnTaskPane taskPaneApp;
 	
 	public PCustomWindowImpl() {
 		this(null);
@@ -46,11 +51,11 @@ public class PCustomWindowImpl implements PCustomWindow {
 	@Override
 	public VMApplicationOnTaskPane show() {
 		
-		final VMApplicationOnTaskPane taskPaneApp = new VMApplicationOnTaskPaneImpl(this);
+		this.taskPaneApp = new VMApplicationOnTaskPaneImpl(this);
 		
 		if(this.parent == null) {
 			LOG.error("Parent == null!");
-			return taskPaneApp;
+			return this.taskPaneApp;
 		}
 		
 		if(this.application != null) {
@@ -60,13 +65,17 @@ public class PCustomWindowImpl implements PCustomWindow {
 		this.view.setVisible(true);
 		this.parent.getChildren().add(this.view.getWindow());
 		
-		return taskPaneApp;
+		return this.taskPaneApp;
 	}
 
 	@Override
 	public void close() {
 		this.view.setVisible(false);
-		this.application.stop();
+		this.application.stop();		
+		this.taskPaneApp.close();
+		this.application = null;
+		this.taskPaneApp = null;
+		this.parent = null;
 	}
 
 	@Override

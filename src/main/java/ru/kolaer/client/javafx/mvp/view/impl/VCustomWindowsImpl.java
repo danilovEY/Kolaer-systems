@@ -66,9 +66,26 @@ public class VCustomWindowsImpl implements VCustomWindow{
 	                new SimpleObjectProperty<>();
 	        closeTransitionProperty.set(st);
 	        closeTransitionProperty.get().play();
-	        
 		} else {
 			this.window.close();
+	        this.window.getRightIcons().clear();
+	        this.window.getLeftIcons().clear();
+	        this.window.getContentPane().getChildren().clear();
+	        this.window.contentPaneProperty().unbind();
+	        this.window.titleProperty().unbind();
+	        
+	        this.window.minimizedProperty().unbind();
+	        this.window.resizeableWindowProperty().unbind();
+	        this.window.movableProperty().unbind();
+	        this.window.resizableBorderWidthProperty().unbind();
+	        this.window.titleBarStyleClassProperty().unbind();
+	        this.window.onCloseActionProperty().unbind();
+	        this.window.onClosedActionProperty().unbind();
+	        this.window.closeTransitionProperty().unbind();
+	        this.window.selectableProperty().unbind();
+	        this.window.boundsListenerEnabledProperty().unbind();
+	        
+	        this.window.getStylesheets().clear();
 		}
 	}
 
@@ -79,8 +96,8 @@ public class VCustomWindowsImpl implements VCustomWindow{
 
 	@Override
 	public void setContent(Pane content) {
-		this.window.setPrefSize(content.getPrefWidth(), content.getPrefHeight());
-		this.window.setContentPane(content);
+		this.window.getContentPane().getChildren().add(content);
+		this.window.setPrefSize(content.getPrefWidth(), content.getPrefHeight());		
 	}
 
 	@Override

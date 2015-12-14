@@ -1,8 +1,6 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,7 +33,7 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
     @FXML
     private HBox taskPaneWithApp;
 	
-    private final Map<IKolaerPlugin, VMLabel> mapPlugin = new HashMap<>();
+    //private final Map<IKolaerPlugin, VMLabel> mapPlugin = new HashMap<>();
     
 	public VMExplorerImpl() {
 		super(Resources.V_EXPLORER);
@@ -59,6 +57,11 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 			final VMLabel runnLabel = new VMLabelImpl(plugin.getLabel());
 			runnLabel.setOnAction(e -> {
 				Platform.runLater(() -> {
+					/*IApplication app =  plugin.getApplication();
+					app.run();
+					final Stage stage = new Stage();
+					stage.setScene(new Scene(app.getContent()));
+					stage.show();*/
 					final PCustomWindow window = new PCustomWindowImpl(this.desktop, plugin.getApplication(), plugin.getName());
 					taskPaneWithApp.getChildren().add(window.show().getContent());
 				});	
@@ -67,8 +70,6 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 			Platform.runLater(() -> {
 				this.desktopWithLabels.getChildren().add(runnLabel.getContent());
 			});	
-			
-			mapPlugin.put(plugin, runnLabel);
 		});
 		thread.shutdown();
 	}

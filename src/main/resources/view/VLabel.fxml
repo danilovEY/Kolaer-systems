@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root style="-fx-background-color: transparent;" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <Button fx:id="labelRun" alignment="CENTER" maxHeight="150.0" maxWidth="150.0" mnemonicParsing="false" BorderPane.alignment="CENTER">
+      <Button fx:id="labelRun" alignment="CENTER" maxHeight="150.0" maxWidth="150.0" mnemonicParsing="false" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
          <graphic>
             <BorderPane maxHeight="200.0" maxWidth="200.0" minHeight="50.0" minWidth="50.0">
                <bottom>
