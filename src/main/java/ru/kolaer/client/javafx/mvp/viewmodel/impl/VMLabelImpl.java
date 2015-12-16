@@ -79,4 +79,9 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 		this.labelIcon.setImage(new Image(Optional.ofNullable(model.getIcon()).orElse("")));
 	}
 
+	@Override
+	public EventHandler<ActionEvent> getOnAction() {
+		return this.labelRun.getOnAction();
+	}
+
 }

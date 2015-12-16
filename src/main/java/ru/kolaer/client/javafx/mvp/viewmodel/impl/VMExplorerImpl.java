@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -13,13 +14,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import ru.kolaer.client.javafx.mvp.presenter.PCustomStage;
 import ru.kolaer.client.javafx.mvp.presenter.PPlugin;
-import ru.kolaer.client.javafx.mvp.presenter.impl.PCustomStageImpl;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PPluginImpl;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
-import ru.kolaer.client.javafx.mvp.viewmodel.VMLabel;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 import ru.kolaer.client.javafx.tools.Resources;
 
@@ -58,7 +56,7 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 		ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			final PPlugin plg = new PPluginImpl(plugin);
-			this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());
+			this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());			
 		});
 		thread.shutdown();
 	}

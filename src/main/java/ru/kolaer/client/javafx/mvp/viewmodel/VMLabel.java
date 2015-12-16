@@ -15,4 +15,5 @@ public interface VMLabel extends VComponentUI {
 	void setModel(ILabel model);
 	
 	void setOnAction(EventHandler<ActionEvent> value);
+	EventHandler<ActionEvent> getOnAction();
 }

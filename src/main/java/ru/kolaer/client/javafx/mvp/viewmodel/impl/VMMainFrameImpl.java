@@ -36,7 +36,6 @@ public class VMMainFrameImpl extends Application {
     @FXML
     public void initialize() {
     	this.loadPlugins();
-		
     	mainPane.setCenter(explorer.getContent());
     }
 
