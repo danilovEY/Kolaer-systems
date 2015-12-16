@@ -1,26 +1,21 @@
 package ru.kolaer.client.javafx.mvp.presenter;
 
-import javafx.scene.layout.Pane;
+import javafx.scene.Parent;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
-import ru.kolaer.client.javafx.plugins.IApplication;
 
 /**
  *
  * @author Danilov
  * @version 0.1
  */
-public interface PCustomWindow {
+public interface PCustomWindow extends PWindow {
 	VCustomWindow getView();
-
-	IApplication getApplicationModel();
-	void setApplicationModel(IApplication application);
 	
-	Pane getParent();
-	void setParent(Pane parent);
+	Parent getParent();
+	void setParent(Parent parent);
 	
-	VMApplicationOnTaskPane show();
-	void close();
+	VMApplicationOnTaskPane getTask();
 	
 	void maximize();
 	void minimize();

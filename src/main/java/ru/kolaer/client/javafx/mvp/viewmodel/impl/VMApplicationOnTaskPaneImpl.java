@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,7 +46,7 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 	}
 
 	@Override
-	public void setContent(Pane content) {
+	public void setContent(Parent content) {
 		this.setCenter(content);
 	}
 

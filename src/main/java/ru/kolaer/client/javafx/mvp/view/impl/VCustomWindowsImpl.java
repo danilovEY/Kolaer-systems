@@ -7,6 +7,7 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import jfxtras.labs.scene.control.window.Window;
@@ -16,7 +17,7 @@ import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMMainFrameImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VCustomWindowsImpl implements VCustomWindow{
-	private static final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(VCustomWindowsImpl.class);
 	
 	private final Window window = new Window();
 	private double oldLayoutX = 0;
@@ -95,9 +96,9 @@ public class VCustomWindowsImpl implements VCustomWindow{
 	}
 
 	@Override
-	public void setContent(Pane content) {
+	public void setContent(Parent content) {
 		this.window.getContentPane().getChildren().add(content);
-		this.window.setPrefSize(content.getPrefWidth(), content.getPrefHeight());		
+		this.window.setPrefSize(((Pane)content).getPrefWidth(), ((Pane)content).getPrefHeight());		
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package ru.kolaer.client.javafx.mvp.view;
 
-import javafx.scene.layout.Pane;
+import javafx.scene.Parent;
 
 /**
  *
@@ -8,6 +8,6 @@ import javafx.scene.layout.Pane;
  * @version 0.1
  */
 public interface VComponentUI {
-	void setContent(Pane content);
-	Pane getContent();
+	void setContent(Parent content);
+	Parent getContent();
 }

@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -45,7 +46,7 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	}
 	
 	@Override
-	public void setContent(Pane content) {
+	public void setContent(Parent content) {
 
 	}
 

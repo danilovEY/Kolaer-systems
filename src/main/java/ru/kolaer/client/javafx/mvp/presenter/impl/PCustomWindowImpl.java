@@ -1,15 +1,11 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
-import jfxtras.labs.util.NodeUtil;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
 import ru.kolaer.client.javafx.mvp.view.impl.VCustomWindowsImpl;
@@ -27,7 +23,7 @@ public class PCustomWindowImpl implements PCustomWindow {
 	
 	private final VCustomWindow view = new VCustomWindowsImpl();
 	private IApplication application;
-	private Pane parent;
+	private Parent parent;
 	private VMApplicationOnTaskPane taskPaneApp;
 	
 	public PCustomWindowImpl() {
@@ -49,13 +45,13 @@ public class PCustomWindowImpl implements PCustomWindow {
 	}
 	
 	@Override
-	public VMApplicationOnTaskPane show() {
+	public void show() {
 		
 		this.taskPaneApp = new VMApplicationOnTaskPaneImpl(this);
 		
 		if(this.parent == null) {
 			LOG.error("Parent == null!");
-			return this.taskPaneApp;
+			return;
 		}
 		
 		if(this.application != null) {
@@ -63,9 +59,7 @@ public class PCustomWindowImpl implements PCustomWindow {
 			this.view.setContent(this.application.getContent());
 		}
 		this.view.setVisible(true);
-		this.parent.getChildren().add(this.view.getWindow());
-		
-		return this.taskPaneApp;
+		((Pane)this.parent).getChildren().add(this.view.getWindow());
 	}
 
 	@Override
@@ -84,13 +78,8 @@ public class PCustomWindowImpl implements PCustomWindow {
 	}
 
 	@Override
-	public Pane getParent() {
+	public Parent getParent() {
 		return this.parent;
-	}
-
-	@Override
-	public void setParent(Pane parent) {
-		this.parent = parent;
 	}
 
 	@Override
@@ -111,5 +100,15 @@ public class PCustomWindowImpl implements PCustomWindow {
 	@Override
 	public void setApplicationModel(IApplication application) {
 		this.application = application;
+	}
+
+	@Override
+	public void setParent(Parent parent) {
+		this.parent = parent;
+	}
+
+	@Override
+	public VMApplicationOnTaskPane getTask() {
+		return this.taskPaneApp;
 	}
 }
