@@ -28,6 +28,7 @@ public class PCustomStageImpl implements PCustomStage{
 	public PCustomStageImpl(IApplication app, String name) {
 		this.application = app;
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
+		this.view.setIconWindow(app.getIcon());
 	}
 	
 	@Override

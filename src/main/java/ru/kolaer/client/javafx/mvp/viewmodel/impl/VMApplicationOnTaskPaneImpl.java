@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import jfxtras.labs.util.NodeUtil;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
+import ru.kolaer.client.javafx.mvp.presenter.PWindow;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 import ru.kolaer.client.javafx.tools.Resources;
@@ -27,13 +28,13 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 	@FXML
 	private Label nameApp;
 	
-	private PCustomWindow window;
+	private PWindow window;
 	
 	/**
 	 * {@linkplain VMApplicationOnTaskPaneImpl}
 	 * @param pathFXML
 	 */
-	public VMApplicationOnTaskPaneImpl(PCustomWindow window) {
+	public VMApplicationOnTaskPaneImpl(PWindow window) {
 		super(Resources.V_APPLICATION_ON_TASK_PANE);
 		this.window = window;
 		this.nameApp.setText(this.window.getApplicationModel().getName());

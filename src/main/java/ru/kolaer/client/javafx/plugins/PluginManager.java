@@ -64,7 +64,8 @@ public class PluginManager {
 				Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
 			    method.setAccessible(true);
 			    method.invoke(ClassLoader.getSystemClassLoader(), new Object[]{jarURL});
-
+			    
+			    IKolaerPlugin app = null;
 				try( final JarFile jarFileRead = new JarFile(jarFile);){
 
 					final Enumeration<?> e = jarFileRead.entries();
@@ -73,7 +74,6 @@ public class PluginManager {
 
 					while(e.hasMoreElements()){
 						final JarEntry je = (JarEntry) e.nextElement();
-						
 						if(je.isDirectory() || !je.getName().endsWith(".class")){
 							continue;
 						}
@@ -84,8 +84,7 @@ public class PluginManager {
 							try{
 								final Class<?> cls = this.getClass().getClassLoader().loadClass(className);
 								if(cls.getAnnotation(ApplicationPlugin.class) != null){
-									final IKolaerPlugin app = (IKolaerPlugin) cls.newInstance();
-									return app;
+									app = (IKolaerPlugin) cls.newInstance();
 								}
 							}
 							catch(Throwable ex){
@@ -101,7 +100,7 @@ public class PluginManager {
 				catch(IOException ioEx){
 					LOG.error("Невозможно получить доступ к файлу " + jarFile.getAbsolutePath() + "!", ioEx);
 				}
-				return null;
+				return app;
 			});
 			resultInThreads.add(resultThread);
 		}

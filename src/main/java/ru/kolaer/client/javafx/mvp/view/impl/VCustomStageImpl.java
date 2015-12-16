@@ -1,10 +1,13 @@
 package ru.kolaer.client.javafx.mvp.view.impl;
 
+import java.net.URL;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
 
@@ -47,4 +50,14 @@ public class VCustomStageImpl implements VCustomStage {
 		if(content != null)
 			window.setScene(new Scene(content));
 	}
+
+	@Override
+	public void setIconWindow(String path) {
+		URL urlIcon = ClassLoader.getSystemClassLoader().getResource("aerIcon.gif");
+		if(urlIcon != null)
+			this.window.getIcons().setAll(new Image(urlIcon.toString()));
+	}
+	
+	
+	
 }

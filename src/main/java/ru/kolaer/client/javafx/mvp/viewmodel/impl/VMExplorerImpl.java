@@ -58,14 +58,14 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 		ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			final PPlugin plg = new PPluginImpl(plugin);
-			this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());	
+			this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());
 		});
 		thread.shutdown();
 	}
 
 	@Override
 	public void removePlugin(IKolaerPlugin plugin) {
-
+		
 	}
 
 	@Override
