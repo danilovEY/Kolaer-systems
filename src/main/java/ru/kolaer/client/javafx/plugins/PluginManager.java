@@ -64,31 +64,32 @@ public class PluginManager {
 				Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
 			    method.setAccessible(true);
 			    method.invoke(ClassLoader.getSystemClassLoader(), new Object[]{jarURL});
-			    
 			    IKolaerPlugin app = null;
 				try( final JarFile jarFileRead = new JarFile(jarFile);){
 
 					final Enumeration<?> e = jarFileRead.entries();
 
 					String packageName = "";
-
+					
 					while(e.hasMoreElements()){
 						final JarEntry je = (JarEntry) e.nextElement();
+						LOG.trace("Файл({}) - {}", jarFileRead.getName(), je.getName());
 						if(je.isDirectory() || !je.getName().endsWith(".class")){
 							continue;
 						}
 
 						String className = je.getName().substring(0, je.getName().length() - 6);
 						className = className.replace('/', '.');
+						
 						if(className.startsWith(packageName)){
 							try{
 								final Class<?> cls = this.getClass().getClassLoader().loadClass(className);
 								if(cls.getAnnotation(ApplicationPlugin.class) != null){
-									app = (IKolaerPlugin) cls.newInstance();
+									return (IKolaerPlugin) cls.newInstance();
 								}
 							}
 							catch(Throwable ex){
-								LOG.error("Невозможно прочитать класс:" + className, ex);
+								LOG.error("Невозможно прочитать класс: " + className, ex);
 								continue;
 							}
 						}
@@ -109,7 +110,7 @@ public class PluginManager {
 		try{
 			if(!threadPoolForPlugins.awaitTermination(5, TimeUnit.SECONDS)){
 				LOG.error("Потоки прерваны. Истекло время ожидания!");
-				int countThreads = threadPoolForPlugins.shutdownNow().size();
+				final int countThreads = threadPoolForPlugins.shutdownNow().size();
 				if(countThreads > 0)
 					LOG.error("Не получено результатов с {} потоков.",countThreads);
 			}
@@ -122,8 +123,12 @@ public class PluginManager {
 			for(Future<IKolaerPlugin> future : resultInThreads){
 				try{
 					IKolaerPlugin app = future.get();
-					result.add(app);
-					LOG.info(app.getName());
+					if(app != null) {
+						result.add(app);
+						LOG.info("Добвленно приложение: {}",app.getName());
+					} else {
+						LOG.warn("В одном .jar файле не обнаруженно плагина!");
+					}
 				}
 				catch(InterruptedException | ExecutionException e){
 					LOG.error("Ошибка при получении результата!", e);

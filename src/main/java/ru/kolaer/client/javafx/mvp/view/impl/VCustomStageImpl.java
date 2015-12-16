@@ -5,9 +5,11 @@ import java.net.URL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
 
@@ -31,7 +33,7 @@ public class VCustomStageImpl implements VCustomStage {
 
 	@Override
 	public void setVisible(boolean visible) {
-		if (visible) {			
+		if(visible){
 			window.show();
 			window.centerOnScreen();
 		} else {
@@ -46,18 +48,19 @@ public class VCustomStageImpl implements VCustomStage {
 
 	@Override
 	public void setContent(Parent content) {
-		window.setScene(null);
-		if(content != null)
-			window.setScene(new Scene(content));
+		Platform.runLater(() -> {
+			window.setScene(null);
+			if(content != null){
+				window.setScene(new Scene(new BorderPane(content)));
+			}
+		});
 	}
 
 	@Override
 	public void setIconWindow(String path) {
-		URL urlIcon = ClassLoader.getSystemClassLoader().getResource("aerIcon.gif");
-		if(urlIcon != null)
-			this.window.getIcons().setAll(new Image(urlIcon.toString()));
+		URL urlIconWindow = ClassLoader.getSystemClassLoader().getResource("aerIcon.gif");
+		LOG.debug("urlIconWindow: {}", urlIconWindow);
+		if(urlIconWindow != null) this.window.getIcons().setAll(new Image(urlIconWindow.toString()));
 	}
-	
-	
-	
+
 }

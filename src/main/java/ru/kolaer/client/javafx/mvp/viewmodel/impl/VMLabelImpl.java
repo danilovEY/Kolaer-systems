@@ -1,8 +1,10 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,6 +26,7 @@ import ru.kolaer.client.javafx.tools.Resources;
  * @version 0.1
  */
 public class VMLabelImpl extends ImportFXML implements VMLabel {
+	private static final Logger LOG = LoggerFactory.getLogger(VMLabelImpl.class);
 	@FXML
 	private Button labelRun;
 	@FXML
@@ -72,11 +75,17 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 
 	@Override
 	public void setModel(ILabel model) {
-		if(model == null)
+		if(model == null) {
+			LOG.error("ILabel == null: {}");
+			this.setCenter(null);
 			return;
+		}
+			
 		this.model = model;
-		labelName.setText(this.model.getName());
-		this.labelIcon.setImage(new Image(Optional.ofNullable(model.getIcon()).orElse("")));
+		this.labelName.setText(this.model.getName());
+		URL urlIconLabel = ClassLoader.getSystemClassLoader().getResource(model.getIcon());
+		LOG.debug("urlIconLabel: {}", urlIconLabel);
+		this.labelIcon.setImage(new Image(urlIconLabel.toString()));
 	}
 
 	@Override

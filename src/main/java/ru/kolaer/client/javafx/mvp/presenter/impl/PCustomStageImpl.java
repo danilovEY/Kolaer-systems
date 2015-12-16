@@ -27,6 +27,7 @@ public class PCustomStageImpl implements PCustomStage{
 
 	public PCustomStageImpl(IApplication app, String name) {
 		this.application = app;
+		LOG.debug("app.name: {}, app.icon: {}, ", app.getName(), app.getIcon());
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
 		this.view.setIconWindow(app.getIcon());
 	}
@@ -36,6 +37,7 @@ public class PCustomStageImpl implements PCustomStage{
 		if(!this.isShowing){
 			if(this.application != null) {
 				this.application.run();
+				LOG.info("Приложение \"{}\" запущено!", this.application.getName());
 				this.view.setContent(this.application.getContent());
 			}
 		}
