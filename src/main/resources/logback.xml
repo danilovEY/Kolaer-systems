@@ -6,7 +6,8 @@
 			<pattern>%-25(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{36}.%method: %msg%n</pattern>
 		</encoder>
 	</appender>
-
+	
+ <!-- Аппендер для записи в файл  
 	<appender name="FILE_HTML" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>logs/log-%d{dd-MM-yyyy}.html</fileNamePattern>
@@ -23,13 +24,24 @@
 				</pattern>
 			</layout>
 		</encoder>
-	</appender>    
+	</appender>   --> 
     
+	 
+	  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	        <fileNamePattern>logs/${HOSTNAME}/logs_%d{dd-MM-yyyy}.log</fileNamePattern>
+	    </rollingPolicy>
+	
+					<encoder>
+			<pattern>%-25(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{36}.%method: %msg%n</pattern>
+		</encoder>
+	</appender>
+	
     <logger name="ru.kolaer.client.javafx" level="INFO"/>
     
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE_HTML" />
+		<appender-ref ref="FILE" />
 	</root>
 
 </configuration>
