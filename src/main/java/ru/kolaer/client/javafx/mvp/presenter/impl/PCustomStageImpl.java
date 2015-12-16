@@ -44,7 +44,10 @@ public class PCustomStageImpl implements PCustomStage{
 	@Override
 	public void close() {
 		this.view.setVisible(false);
-		this.application.stop();		
+		
+		if(this.application != null)
+			this.application.stop();	
+		this.view.setContent(null);
 	}
 
 	@Override

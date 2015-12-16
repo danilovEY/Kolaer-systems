@@ -19,7 +19,6 @@ public class VCustomStageImpl implements VCustomStage {
 
 	private void initialization() {
 
-
 	}
 
 	@Override
@@ -45,6 +44,7 @@ public class VCustomStageImpl implements VCustomStage {
 	@Override
 	public void setContent(Parent content) {
 		window.setScene(null);
-		window.setScene(new Scene(content));
+		if(content != null)
+			window.setScene(new Scene(content));
 	}
 }
