@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -80,7 +81,9 @@ public class CMainFrame extends Application {
 			}
 			final File img = new File(SettingSingleton.getInstance().getPathBanner());
 			if(img.exists() && img.isFile()) {
-				this.mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner(),true))));
+				Platform.runLater(() -> {
+					this.mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner(), true))));
+				});
 			} else {
 				this.mainPanel.setTop(null);
 			}
@@ -170,7 +173,7 @@ public class CMainFrame extends Application {
 		Parent root = null;
 		
 		try{
-			root = FXMLLoader.load(URI.create(Resources.V_MAIN_FRAME).toURL());
+			root = FXMLLoader.load(Resources.V_MAIN_FRAME);
 			if(root != null) {
 				primaryStage.setScene(new Scene(root));
 			}

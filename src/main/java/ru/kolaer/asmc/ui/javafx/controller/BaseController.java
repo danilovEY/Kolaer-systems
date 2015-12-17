@@ -1,7 +1,7 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
 import java.io.IOException;
-import java.net.URI;
+import java.net.URL;
 
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,9 +21,9 @@ public abstract class BaseController extends BorderPane implements Initializable
 	 * {@linkplain BaseController}
 	 * @param urlView Путь к .fxml.
 	 */
-	public BaseController(String pathView) {
+	public BaseController(URL pathView) {
 		try {
-			FXMLLoader loader = new FXMLLoader(URI.create(pathView).toURL());
+			FXMLLoader loader = new FXMLLoader(pathView);
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();

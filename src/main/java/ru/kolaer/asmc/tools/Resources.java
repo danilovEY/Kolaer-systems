@@ -1,5 +1,7 @@
 package ru.kolaer.asmc.tools;
 
+import java.net.URL;
+
 /**
  * Ресурсы и константы.
  * @author Danilov E.Y.
@@ -8,15 +10,15 @@ package ru.kolaer.asmc.tools;
 public interface Resources
 {
 	/*==========View Resources=============*/
-	public static final String V_MAIN_FRAME = "file:view/VMainFrame.fxml";
-	public static final String V_GROUP_LABELS = "file:view/VGroupLabels.fxml";
-	public static final String V_LABEL = "file:view/VLabel.fxml";
-	public static final String V_AUTHENTICATION = "file:view/VAuthentication.fxml";
-	public static final String V_ADDING_GROUP_LABELS = "file:view/VAddingGroupLabels.fxml";
-	public static final String V_ADDING_LABEL = "file:view/VAddingLabel.fxml";
-	public static final String V_WEB_BROWSER = "file:view/VWebBrowser.fxml";
-	public static final String V_SETTING = "file:view/VSetting.fxml";
-	public static final String V_ABOUT = "file:view/VAbout.fxml";
+	public static final URL V_MAIN_FRAME = Resources.class.getResource("/resources/view/VMainFrame.fxml");
+	public static final URL V_GROUP_LABELS =  Resources.class.getResource("/resources/view/VGroupLabels.fxml");
+	public static final URL V_LABEL =  Resources.class.getResource("/resources/view/VLabel.fxml");
+	public static final URL V_AUTHENTICATION =  Resources.class.getResource("/resources/view/VAuthentication.fxml");
+	public static final URL V_ADDING_GROUP_LABELS =  Resources.class.getResource("/resources/view/VAddingGroupLabels.fxml");
+	public static final URL V_ADDING_LABEL =  Resources.class.getResource("/resources/view/VAddingLabel.fxml");
+	public static final URL V_WEB_BROWSER =  Resources.class.getResource("/resources/view/VWebBrowser.fxml");
+	public static final URL V_SETTING =  Resources.class.getResource("/resources/view/VSetting.fxml");
+	public static final URL V_ABOUT =  Resources.class.getResource("/resources/view/VAbout.fxml");
 	
 	
 	/**Стандарткая иконка для ярлыка.*/

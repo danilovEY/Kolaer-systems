@@ -4,15 +4,18 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.client.javafx.plugins.IApplication;
 
-public class ASMCApplication implements IApplication {
+public class ASMCApplication extends Application implements IApplication {
 	private AnchorPane root;
 	@Override
 	public String getIcon() {
@@ -20,8 +23,7 @@ public class ASMCApplication implements IApplication {
 	}
 
 	@Override
-	public Pane getContent() {
-		
+	public Pane getContent() {	
 		return this.root;
 	}
 
@@ -34,7 +36,7 @@ public class ASMCApplication implements IApplication {
 	public void run() {
 		SettingSingleton.initialization();
 		try {
-			root = FXMLLoader.load(URI.create(Resources.V_MAIN_FRAME).toURL());
+			root = FXMLLoader.load(ASMCApplication.class.getResource("/resources/view/VMainFrame.fxml"));
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -46,6 +48,11 @@ public class ASMCApplication implements IApplication {
 
 	@Override
 	public void stop() {
+		
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
 		
 	}
 

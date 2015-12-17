@@ -7,7 +7,7 @@ public class ASMCLabel implements ILabel {
 
 	@Override
 	public String getName() {
-		return "АСУП-v3";
+		return "АСУП-v33";
 	}
 
 	@Override
