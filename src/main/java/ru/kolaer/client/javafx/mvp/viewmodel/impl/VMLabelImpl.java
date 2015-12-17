@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -50,7 +51,7 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	
 	@Override
 	public void setContent(Parent content) {
-
+		this.setCenter(content);
 	}
 
 	@Override
@@ -76,21 +77,23 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	@Override
 	public void setModel(ILabel model) {
 		if(model == null) {
-			LOG.error("ILabel == null: {}");
+			LOG.error("ILabel == null");
 			this.setCenter(null);
 			return;
 		}
 			
 		this.model = model;
-		this.labelName.setText(this.model.getName());
-		URL urlIconLabel = ClassLoader.getSystemClassLoader().getResource(model.getIcon());
-		LOG.debug("urlIconLabel: {}", urlIconLabel);
-		this.labelIcon.setImage(new Image(urlIconLabel.toString()));
+		
+		Platform.runLater(() -> {
+			this.labelName.setText(this.model.getName());
+			URL urlIconLabel = ClassLoader.getSystemClassLoader().getResource(model.getIcon());
+			LOG.debug("urlIconLabel: {}", urlIconLabel);
+			this.labelIcon.setImage(new Image(urlIconLabel.toString()));
+		});
 	}
 
 	@Override
 	public EventHandler<ActionEvent> getOnAction() {
 		return this.labelRun.getOnAction();
 	}
-
 }

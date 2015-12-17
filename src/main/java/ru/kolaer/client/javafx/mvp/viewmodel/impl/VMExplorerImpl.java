@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -52,13 +53,16 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 	@Override
 	public void addPlugin(IKolaerPlugin plugin) {
 		ExecutorService thread = Executors.newSingleThreadExecutor();
-		thread.submit(() -> {
-			final PPlugin plg = new PPluginImpl(plugin);
-			this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());			
+		thread.submit(() -> {			
+			Platform.runLater(() -> {
+				Thread.currentThread().setName("Инициализация плагинов");
+				final PPlugin plg = new PPluginImpl(plugin);
+				this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());			
+			});
 		});
 		thread.shutdown();
 	}
-
+	
 	@Override
 	public void removePlugin(IKolaerPlugin plugin) {
 		

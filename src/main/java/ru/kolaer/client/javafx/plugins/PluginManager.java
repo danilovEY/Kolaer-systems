@@ -68,8 +68,6 @@ public class PluginManager {
 				try( final JarFile jarFileRead = new JarFile(jarFile);){
 
 					final Enumeration<?> e = jarFileRead.entries();
-
-					String packageName = "";
 					
 					while(e.hasMoreElements()){
 						final JarEntry je = (JarEntry) e.nextElement();
@@ -80,18 +78,14 @@ public class PluginManager {
 
 						String className = je.getName().substring(0, je.getName().length() - 6);
 						className = className.replace('/', '.');
-						
-						if(className.startsWith(packageName)){
-							try{
-								final Class<?> cls = this.getClass().getClassLoader().loadClass(className);
-								if(cls.getAnnotation(ApplicationPlugin.class) != null){
-									return (IKolaerPlugin) cls.newInstance();
-								}
+						try{
+							final Class<?> cls = this.getClass().getClassLoader().loadClass(className);
+							if(cls.getAnnotation(ApplicationPlugin.class) != null){
+								return (IKolaerPlugin) cls.newInstance();
 							}
-							catch(Throwable ex){
-								LOG.error("Невозможно прочитать класс: " + className, ex);
-								continue;
-							}
+						} catch(Throwable ex){
+							LOG.error("Невозможно прочитать класс: " + className, ex);
+							continue;
 						}
 					}
 				}
