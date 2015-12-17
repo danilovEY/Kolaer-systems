@@ -1,4 +1,4 @@
-package ru.kolaer.server.dao;
+package ru.kolaer.server.daotest;
 
 import java.io.Serializable;
 import javax.persistence.*;

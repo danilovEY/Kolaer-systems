@@ -1,8 +1,7 @@
-package ru.kolaer.server.restful.config;
+package ru.kolaer.server.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
  *
@@ -10,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  * @version 0.1
  */
 @Configuration
-@EnableWebMvc
 @ComponentScan("ru.kolaer.server.restful")
 public class WithOutDBConfig {
 

@@ -1,4 +1,4 @@
-package ru.kolaer.server.restful.config;
+package ru.kolaer.server.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -6,7 +6,7 @@ public class KolaerServerRestInitializer extends AbstractAnnotationConfigDispatc
  
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] {WithOutDBConfig.class };
+        return new Class[] {KolaerServerConfig.class };
     }
   
     @Override
