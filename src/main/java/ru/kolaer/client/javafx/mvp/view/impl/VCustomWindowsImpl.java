@@ -13,7 +13,6 @@ import javafx.util.Duration;
 import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.scene.control.window.WindowIcon;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
-import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMMainFrameImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VCustomWindowsImpl implements VCustomWindow{

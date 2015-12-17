@@ -10,7 +10,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import jfxtras.labs.util.NodeUtil;
-import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
 import ru.kolaer.client.javafx.mvp.presenter.PWindow;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;

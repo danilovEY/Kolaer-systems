@@ -33,8 +33,8 @@ public class VMMainFrameImpl extends Application {
 	
     @FXML
     public void initialize() {
-    	this.loadPlugins();
     	this.mainPane.setCenter(explorer.getContent());
+    	this.loadPlugins();
     }
 
 	private void loadPlugins() {

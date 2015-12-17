@@ -31,6 +31,7 @@ public class PluginManager {
 	}
 
 	public List<IKolaerPlugin> scanPlugins() {
+		LOG.debug("Сканирование папки: \"{}\"", this.pathToPlugins);
 		final File dirToPlugins = new File(this.pathToPlugins);
 		if(!dirToPlugins.isDirectory()){
 			LOG.error("Путь: {} не является папкой или ее нет!", this.pathToPlugins);
@@ -54,18 +55,18 @@ public class PluginManager {
 				Thread.currentThread().setName("Поток для файла: " + jarFile.getName());
 				
 				URL jarURL = null;
-				try{
+				try {
 					jarURL = jarFile.toURI().toURL();
-				}
-				catch(MalformedURLException e1){
+				} catch(MalformedURLException e1) {
 					LOG.error("Невозможно преобразовать в URL файл " + jarFile.getAbsolutePath() + "!", e1);
+					return null;
 				}
 				
 				Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
 			    method.setAccessible(true);
 			    method.invoke(ClassLoader.getSystemClassLoader(), new Object[]{jarURL});
-			    IKolaerPlugin app = null;
-				try( final JarFile jarFileRead = new JarFile(jarFile);){
+
+				try(final JarFile jarFileRead = new JarFile(jarFile)){
 
 					final Enumeration<?> e = jarFileRead.entries();
 					
@@ -78,7 +79,7 @@ public class PluginManager {
 
 						String className = je.getName().substring(0, je.getName().length() - 6);
 						className = className.replace('/', '.');
-						try{
+						try {
 							final Class<?> cls = this.getClass().getClassLoader().loadClass(className);
 							if(cls.getAnnotation(ApplicationPlugin.class) != null){
 								return (IKolaerPlugin) cls.newInstance();
@@ -88,40 +89,36 @@ public class PluginManager {
 							continue;
 						}
 					}
-				}
-				catch(SecurityException secEx){
+				} catch(SecurityException secEx){
 					LOG.error("Невозможно получить доступ к файлу " + jarFile.getAbsolutePath() + "!", secEx);
-				}
-				catch(IOException ioEx){
+				} catch(IOException ioEx){
 					LOG.error("Невозможно получить доступ к файлу " + jarFile.getAbsolutePath() + "!", ioEx);
 				}
-				return app;
+				return null;
 			});
 			resultInThreads.add(resultThread);
 		}
 		threadPoolForPlugins.shutdown();
 
-		try{
-			if(!threadPoolForPlugins.awaitTermination(5, TimeUnit.SECONDS)){
+		try {
+			if(!threadPoolForPlugins.awaitTermination(10, TimeUnit.SECONDS)){
 				LOG.error("Потоки прерваны. Истекло время ожидания!");
 				final int countThreads = threadPoolForPlugins.shutdownNow().size();
 				if(countThreads > 0)
 					LOG.error("Не получено результатов с {} потоков.",countThreads);
 			}
-		}
-		catch(InterruptedException e){
+		} catch(InterruptedException e){
 			LOG.warn("Потоки прерваны!", e);
-		}
-		finally{
+		} finally{
 			Thread.currentThread().setName("Добавление плагинов");
 			for(Future<IKolaerPlugin> future : resultInThreads){
 				try{
 					IKolaerPlugin app = future.get();
 					if(app != null) {
 						result.add(app);
-						LOG.info("Добвленно приложение: {}",app.getName());
+						LOG.info("Добвленно приложение: \"{}\"",app.getName());
 					} else {
-						LOG.warn("В одном .jar файле не обнаруженно плагина!");
+						LOG.warn("В .jar файле не обнаруженно плагина!");
 					}
 				}
 				catch(InterruptedException | ExecutionException e){
@@ -129,7 +126,6 @@ public class PluginManager {
 				}
 			}
 		}
-
 		return result;
 	}
 }

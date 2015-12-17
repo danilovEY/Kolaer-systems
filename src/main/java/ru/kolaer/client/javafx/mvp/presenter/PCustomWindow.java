@@ -5,7 +5,7 @@ import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 
 /**
- *
+ * Контроллер для JFXtrace - окна.
  * @author Danilov
  * @version 0.1
  */
