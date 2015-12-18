@@ -16,9 +16,10 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  
 @Configuration
-//@EnableWebMvc
+@EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan("ru.kolaer.server")
 @PropertySource("classpath:app.properties")
@@ -48,7 +49,7 @@ public class KolaerServerConfig {
         return dataSource;
     }
  
-    @Bean
+    @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
     	LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());

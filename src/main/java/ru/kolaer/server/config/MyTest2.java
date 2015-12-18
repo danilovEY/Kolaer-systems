@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
-import ru.kolaer.server.dao.entities.DbCars;
+import ru.kolaer.server.dao.entities.DbCar;
 
 public class MyTest2 {
 	
@@ -17,8 +17,8 @@ public class MyTest2 {
 		LocalContainerEntityManagerFactoryBean sessionFactory = context.getBean(LocalContainerEntityManagerFactoryBean.class);
 		EntityManager entityManager = sessionFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
-		List<DbCars> result = entityManager.createQuery("from DbCars", DbCars.class).getResultList();
-		for(DbCars car : result)
+		List<DbCar> result = entityManager.createQuery("from DbCars", DbCar.class).getResultList();
+		for(DbCar car : result)
 		{
 			System.out.println(car.getAuto());
 		}
