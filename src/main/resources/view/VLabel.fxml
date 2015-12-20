@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<fx:root prefHeight="108.0" prefWidth="387.0" styleClass="lableMainPane" stylesheets="@../resources/CSS/Default/Default.css" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="108.0" prefWidth="387.0" styleClass="lableMainPane" stylesheets="@../CSS/Default/Default.css" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <ScrollPane fx:id="scrollBackPanel" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" hmax="0.0" prefHeight="115.0" prefWidth="395.0" styleClass="lableTherdPanel" vbarPolicy="NEVER" vmax="0.0" BorderPane.alignment="CENTER">
          <content>

@@ -2,12 +2,9 @@ package ru.kolaer.asmc.runnable;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -36,12 +33,10 @@ public class ASMCApplication extends Application implements IApplication {
 	public void run() {
 		SettingSingleton.initialization();
 		try {
-			root = FXMLLoader.load(ASMCApplication.class.getResource("/resources/view/VMainFrame.fxml"));
+			root = FXMLLoader.load(Resources.V_MAIN_FRAME);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

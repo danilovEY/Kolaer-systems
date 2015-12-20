@@ -2,7 +2,6 @@ package ru.kolaer.asmc.ui.javafx.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -66,7 +65,7 @@ public class CMainFrame extends Application {
 		observer.loadAndRegGroups();
 		
 		threadPool.submit(() -> {
-			String image = "file:"+ Resources.BACKGROUND_IMAGE.toString();
+			String image = Resources.BACKGROUND_IMAGE.toString();
 			this.contentPanel.setStyle("-fx-background-image: url('" + image + "'); ");
 		});
 		

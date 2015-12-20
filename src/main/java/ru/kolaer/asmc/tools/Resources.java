@@ -28,7 +28,7 @@ public interface Resources
 	/**Иконка для приложения.*/
 	public static final String ABOUT_INFO_IMAGE = "resources/aboutInfo.jpg";
 	/**Фон.*/
-	public static final String BACKGROUND_IMAGE = "resources/geometric-background.png";
+	public static final URL BACKGROUND_IMAGE = Resources.class.getResource("/resources/geometric-background.png");
 	/**Версия*/
 	public static final String VERSION = "3.0";	
 	
