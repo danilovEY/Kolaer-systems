@@ -1,7 +1,6 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,7 +15,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.tools.Resources;
 
@@ -41,10 +39,7 @@ public class VMMainFrameImpl extends Application {
 		final ExecutorService readPluginsThread = Executors.newSingleThreadExecutor();
 		readPluginsThread.submit(() -> {
 			Thread.currentThread().setName("Скан и добавление плагинов");
-			List<IKolaerPlugin> pl = pluginManagerModel.scanPlugins();
-			for(IKolaerPlugin plugin : pl) {
-				this.explorer.addPlugin(plugin);
-			}
+			pluginManagerModel.scanPlugins(this.explorer);
 		});
 		readPluginsThread.shutdown();
 	}

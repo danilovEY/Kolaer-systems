@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
@@ -31,7 +32,7 @@ public class VCustomStageImpl implements VCustomStage {
 	}
 
 	@Override
-	public void setVisible(boolean visible) {
+	public void setVisible(boolean visible) {		
 		Platform.runLater(() -> {
 			if(visible){
 				this.getWindow().show();
@@ -54,7 +55,13 @@ public class VCustomStageImpl implements VCustomStage {
 		Platform.runLater(() -> {
 			this.getWindow().setScene(null);
 			if(content != null){
-				this.getWindow().setScene(new Scene(content));
+				try {
+					this.getWindow().setScene(new Scene(content));
+				} catch(IllegalArgumentException ex) {
+					this.getWindow().setScene(new Scene(new Label(ex.getMessage())));
+					LOG.error("Сцену невозможно добавить! Плагин: \"" + this.window.getTitle() + "\"", ex);
+				}
+				
 				this.getWindow().sizeToScene();
 			}
 		});
