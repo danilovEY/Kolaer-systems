@@ -39,7 +39,7 @@ public class CAbout extends BaseController implements Initializable{
 			this.dialog.close();
 		});
 		try {
-			this.dialog.getIcons().add(new Image("file:" + Resources.AER_LOGO.toString()));
+			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		} catch (IllegalArgumentException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");

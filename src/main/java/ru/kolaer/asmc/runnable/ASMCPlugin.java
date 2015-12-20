@@ -15,7 +15,6 @@ public class ASMCPlugin implements IKolaerPlugin{
 
 	@Override
 	public ILabel getLabel() {
-		// TODO Auto-generated method stub
 		return new ASMCLabel();
 	}
 

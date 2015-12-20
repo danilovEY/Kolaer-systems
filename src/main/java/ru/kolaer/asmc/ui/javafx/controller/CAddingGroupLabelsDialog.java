@@ -7,9 +7,9 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
@@ -90,7 +90,7 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 		this.dialog.centerOnScreen();
 		
 		try {
-			this.dialog.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));
+			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		} catch(IllegalArgumentException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");

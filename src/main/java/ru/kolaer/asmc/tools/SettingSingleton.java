@@ -3,7 +3,6 @@ package ru.kolaer.asmc.tools;
 import java.io.Serializable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import ru.kolaer.asmc.tools.serializations.SerializationObjects;
 
@@ -18,7 +17,8 @@ public class SettingSingleton implements Serializable {
 
 	private transient static SettingSingleton inctance;
 	private static final transient ExecutorService executor = Executors.newFixedThreadPool(2);
-	private static transient Future<Boolean> futureInitSetting ;
+	private static boolean init = false;
+	
 	
 	private transient boolean isRoot = false;
 	private final String ROOT_LOGIN_NAME = "root";
@@ -44,30 +44,26 @@ public class SettingSingleton implements Serializable {
 	}
 	
 	public static synchronized void initialization() {
-		final SerializationObjects serializationObjects = new SerializationObjects();
-		if(futureInitSetting != null && isInitialized())
+		if(init)
 			return;
-		futureInitSetting = executor.submit(() -> {	
-			SettingSingleton.inctance = serializationObjects.getSerializeSetting();
-			if(SettingSingleton.inctance == null) {
-				SettingSingleton.inctance = new SettingSingleton();
-				serializationObjects.setSerializeSetting(SettingSingleton.inctance);			
-			}
-			SettingSingleton.inctance.setSerializationObjects(serializationObjects);
-			
-			return true;
-		});
+		final SerializationObjects serializationObjects = new SerializationObjects();
 		
+		SettingSingleton.inctance = serializationObjects.getSerializeSetting();
+		if(SettingSingleton.inctance == null) {
+			SettingSingleton.inctance = new SettingSingleton();
+			serializationObjects.setSerializeSetting(SettingSingleton.inctance);			
+		}
+		SettingSingleton.inctance.setSerializationObjects(serializationObjects);
+
 		executor.submit(() -> {
 			serializationObjects.getSerializeGroups();
 			return;
 		});
-		
-		executor.shutdown();
+		executor.shutdown();		
 	}
 	
 	public static synchronized boolean isInitialized() {
-		return futureInitSetting.isDone();
+		return init;
 	}
 	
 	public String getRootPass() {

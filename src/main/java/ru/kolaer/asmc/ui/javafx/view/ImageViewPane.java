@@ -41,6 +41,7 @@ public class ImageViewPane extends Region {
     }
 
     public ImageViewPane(ImageView imageView) {
+    	this.maxHeight(200);
         imageViewProperty.addListener(new ChangeListener<ImageView>() {
 
             @Override

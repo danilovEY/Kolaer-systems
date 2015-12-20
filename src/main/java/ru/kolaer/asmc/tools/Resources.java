@@ -22,11 +22,11 @@ public interface Resources
 	
 	
 	/**Стандарткая иконка для ярлыка.*/
-	public static final String AER_ICON = "resources/aerIcon.png";
+	public static final URL AER_ICON = Resources.class.getResource("/resources/aerIcon.png");
 	/**Иконка для приложения.*/
-	public static final String AER_LOGO = "resources/aerLogo.png";
+	public static final URL AER_LOGO = Resources.class.getResource("/resources/aerLogo.png");
 	/**Иконка для приложения.*/
-	public static final String ABOUT_INFO_IMAGE = "resources/aboutInfo.jpg";
+	public static final URL ABOUT_INFO_IMAGE = Resources.class.getResource("/resources/aboutInfo.jpg");
 	/**Фон.*/
 	public static final URL BACKGROUND_IMAGE = Resources.class.getResource("/resources/geometric-background.png");
 	/**Версия*/

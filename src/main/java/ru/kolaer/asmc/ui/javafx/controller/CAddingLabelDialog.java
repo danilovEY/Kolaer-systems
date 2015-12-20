@@ -204,8 +204,8 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 
 	@FXML
 	public void actionRBDefaultIcon(ActionEvent event) {
-		this.image.setImage(new Image("file:" + Resources.AER_ICON));
-		this.pathIconText.setText(Resources.AER_ICON);
+		this.image.setImage(new Image(Resources.AER_ICON.toString() ));
+		this.pathIconText.setText(Resources.AER_ICON.toString());
 	}
 
 	@FXML
@@ -251,8 +251,8 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 				this.image.setImage(null);
 				this.pathIconText.setText("");
 			} else if (this.result.getPathImage().equals(Resources.AER_ICON)) {
-				this.image.setImage(new Image("file:" + Resources.AER_ICON));
-				this.pathIconText.setText(Resources.AER_ICON);
+				this.image.setImage(new Image(Resources.AER_ICON.toString()));
+				this.pathIconText.setText(Resources.AER_ICON.toString());
 				this.rbDefaultIcon.setSelected(true);
 				this.rbNoneIcon.setSelected(false);
 			} else {

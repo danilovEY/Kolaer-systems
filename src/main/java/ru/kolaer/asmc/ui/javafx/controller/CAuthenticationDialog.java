@@ -70,7 +70,7 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 		this.dialog.centerOnScreen();
 
 		try {
-			this.dialog.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));
+			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		} catch(IllegalArgumentException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");

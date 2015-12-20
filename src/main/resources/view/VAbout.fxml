@@ -16,7 +16,7 @@
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="122.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../resources/aerIcon.png" />
+                  <Image url="@../aerIcon.png" />
                </image>
             </ImageView>
          </children>

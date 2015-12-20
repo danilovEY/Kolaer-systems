@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -62,26 +61,24 @@ public class CMainFrame extends Application {
 		ExecutorService threadPool = Executors.newFixedThreadPool(2);
 		
 		final CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
-		observer.loadAndRegGroups();
+		
+		Platform.runLater(() -> {			
+			observer.loadAndRegGroups();
+		});
 		
 		threadPool.submit(() -> {
-			String image = Resources.BACKGROUND_IMAGE.toString();
+			final String image = Resources.BACKGROUND_IMAGE.toString();
 			this.contentPanel.setStyle("-fx-background-image: url('" + image + "'); ");
 		});
 		
 		threadPool.submit(() -> {
-			while(!SettingSingleton.isInitialized()){
-				try{
-					TimeUnit.MICROSECONDS.sleep(500);
-				}
-				catch(Exception e1){
-					e1.printStackTrace();
-				}	
-			}
 			final File img = new File(SettingSingleton.getInstance().getPathBanner());
 			if(img.exists() && img.isFile()) {
 				Platform.runLater(() -> {
-					this.mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner(), true))));
+					ImageViewPane imagePane = new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner(), true)));
+					imagePane.setMaxHeight(300);
+					
+					this.mainPanel.setTop(imagePane);
 				});
 			} else {
 				this.mainPanel.setTop(null);
@@ -191,34 +188,20 @@ public class CMainFrame extends Application {
 		});
 		
 		try {
-			primaryStage.getIcons().add(new Image("file:"+Resources.AER_LOGO.toString()));
+			primaryStage.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		} catch(IllegalArgumentException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");
 			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
 			alert.showAndWait();
 		}
-
-		ExecutorService thread = Executors.newSingleThreadExecutor();
-		thread.submit(() -> {
-			while(!SettingSingleton.isInitialized()){
-				try{
-					TimeUnit.MICROSECONDS.sleep(500);
-				}
-				catch(Exception e1){
-					e1.printStackTrace();
-				}	
-			}
-			
-			if(!this.getParameters().getNamed().isEmpty()) {
-				String passRoot = this.getParameters().getNamed().get("root_set");
-				if(SettingSingleton.getInstance().getRootPass().equals(passRoot)){
-					SettingSingleton.getInstance().setRoot(true);
-				}
-			}
-		});
 		
-		thread.shutdown();
+		if(!this.getParameters().getNamed().isEmpty()) {
+			String passRoot = this.getParameters().getNamed().get("root_set");
+			if(SettingSingleton.getInstance().getRootPass().equals(passRoot)){
+				SettingSingleton.getInstance().setRoot(true);
+			}
+		}
 		
 		primaryStage.centerOnScreen();
 		primaryStage.show();
