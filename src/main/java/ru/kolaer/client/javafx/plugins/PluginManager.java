@@ -48,7 +48,7 @@ public class PluginManager {
 		});
 
 		CompletableFuture<List<IKolaerPlugin>> thread = CompletableFuture.supplyAsync(() -> {
-
+			Thread.currentThread().setName("Интеграция class loader'ов в системный class loader");
 			final List<File> readableFiles = new ArrayList<>();
 			for(final File jarFile : jarFiles){
 				URL jarURL = null;
@@ -66,7 +66,7 @@ public class PluginManager {
 					method.invoke(ClassLoader.getSystemClassLoader(), new Object[] {
 		                    jarURL });
 					readableFiles.add(jarFile);
-				}catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1){
+				} catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1){
 					LOG.error("Невозможно добавить class loader jar файла в системный class loader!", e1);
 					continue;
 				}

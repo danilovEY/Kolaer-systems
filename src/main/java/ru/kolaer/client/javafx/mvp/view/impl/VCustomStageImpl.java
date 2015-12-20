@@ -82,4 +82,11 @@ public class VCustomStageImpl implements VCustomStage {
 		}
 		return this.window;
 	}
+
+	@Override
+	public void centerOnScreen() {
+		Platform.runLater(() -> {
+			this.window.centerOnScreen();
+		});
+	}
 }

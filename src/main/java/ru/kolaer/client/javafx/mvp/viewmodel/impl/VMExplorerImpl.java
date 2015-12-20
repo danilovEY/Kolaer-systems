@@ -57,7 +57,7 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 			Platform.runLater(() -> {
 				Thread.currentThread().setName("Инициализация плагинов");
 				final PPlugin plg = new PPluginImpl(plugin);
-				this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());			
+				this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());
 			});
 		});
 		thread.shutdown();

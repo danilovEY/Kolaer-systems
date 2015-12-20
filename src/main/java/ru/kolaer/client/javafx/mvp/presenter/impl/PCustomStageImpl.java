@@ -1,6 +1,8 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +38,14 @@ public class PCustomStageImpl implements PCustomStage{
 	public void show() {
 		if(!this.isShowing){
 			if(this.application != null) {
-				this.application.run();
-				LOG.info("Приложение \"{}\" запущено!", this.application.getName());
-				this.view.setContent(this.application.getContent());
+				ExecutorService thread = Executors.newSingleThreadExecutor();
+				thread.submit(() -> {
+					this.application.run();
+					LOG.info("Приложение \"{}\" запущено!", this.application.getName());
+					this.view.setContent(this.application.getContent());
+					this.view.setVisible(true);
+				});
+				thread.shutdown();
 			}
 		}
 		this.view.setVisible(true);

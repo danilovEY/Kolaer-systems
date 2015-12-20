@@ -144,4 +144,9 @@ public class VCustomWindowsImpl implements VCustomWindow{
 	public boolean isMinimize() {
 		return this.minimize;
 	}
+
+	@Override
+	public void centerOnScreen() {
+		
+	}
 }
