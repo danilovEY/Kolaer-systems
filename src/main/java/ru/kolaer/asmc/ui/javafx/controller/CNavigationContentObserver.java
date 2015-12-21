@@ -102,12 +102,11 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 				this.addCache(cGroup, labelList);
 			});
 			cGroup.registerOberver(this);
-			this.panelWithGroups.getChildren().add(cGroup);
 		});
 		
 		this.threadCache.shutdown();
 	}
-
+	
 	/**
 	 * Получить группу из кэша.
 	 * @param group
@@ -127,6 +126,9 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	}
 	/**Добавить группу и ярлыки в кэш.*/
 	private synchronized void addCache(CGroupLabels group, List<CLabel> labels) {
+		Platform.runLater(() -> {
+			this.panelWithGroups.getChildren().add(group);
+		});
 		this.cache.put(group, labels);
 	}
 	

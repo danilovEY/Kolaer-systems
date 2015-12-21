@@ -46,6 +46,8 @@ public class SettingSingleton implements Serializable {
 	public static synchronized void initialization() {
 		if(init)
 			return;
+		else
+			init = true;
 		final SerializationObjects serializationObjects = new SerializationObjects();
 		
 		SettingSingleton.inctance = serializationObjects.getSerializeSetting();
