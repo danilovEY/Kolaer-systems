@@ -3,6 +3,7 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -27,7 +28,7 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 	@FXML
 	private Label nameApp;
 	
-	private PWindow window;
+	private final PWindow window;
 	
 	/**
 	 * {@linkplain VMApplicationOnTaskPaneImpl}
@@ -36,8 +37,7 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 	public VMApplicationOnTaskPaneImpl(PWindow window) {
 		super(Resources.V_APPLICATION_ON_TASK_PANE);
 		this.window = window;
-		this.nameApp.setText(this.window.getApplicationModel().getName());
-		this.icon.setImage(new Image(window.getApplicationModel().getIcon()));
+		
 	}
 
 	@Override
@@ -57,17 +57,17 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 
 	@Override
 	public void close() {
-		NodeUtil.removeFromParent(this);
+		Platform.runLater(() -> {
+			NodeUtil.removeFromParent(this);
+		});
 		this.icon.setImage(null);
-		this.icon = null;
-		this.nameApp = null;
-		this.window = null;
 	}
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-		
+		Platform.runLater(() -> {
+			this.nameApp.setText(this.window.getApplicationModel().getName());
+			this.icon.setImage(new Image(window.getApplicationModel().getIcon()));
+		});
 	}
-
 }

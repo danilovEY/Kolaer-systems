@@ -6,39 +6,42 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
 
 public class VCustomStageImpl implements VCustomStage {
 	private static final Logger LOG = LoggerFactory.getLogger(VCustomStageImpl.class);
 
-	private Stage window;
+	private final Stage window = new Stage();
 
 	public VCustomStageImpl() {
 		this.initialization();
 	}
 
 	private void initialization() {
-
+		this.window.setScene(new Scene(new Region()));
 	}
 
 	@Override
 	public Parent getContent() {
-		return this.getWindow().getScene().getRoot();
+		return this.window.getScene().getRoot();
 	}
 
 	@Override
 	public void setVisible(boolean visible) {		
 		Platform.runLater(() -> {
 			if(visible){
-				this.getWindow().show();
-				this.getWindow().centerOnScreen();
+				this.window.show();
+				this.window.centerOnScreen();
 			} else {
-				this.getWindow().close();
+				this.window.close();
 			}
 		});
 	}
@@ -46,23 +49,23 @@ public class VCustomStageImpl implements VCustomStage {
 	@Override
 	public void setTitle(String title) {
 		Platform.runLater(() -> {
-			this.getWindow().setTitle(title);
+			this.window.setTitle(title);
 		});
 	}
 
 	@Override
 	public void setContent(Parent content) {
 		Platform.runLater(() -> {
-			this.getWindow().setScene(null);
 			if(content != null){
 				try {
-					this.getWindow().setScene(new Scene(content));
+					this.window.getScene().setRoot(content);
 				} catch(IllegalArgumentException ex) {
-					this.getWindow().setScene(new Scene(new Label(ex.getMessage())));
+					this.window.setScene(new Scene(new Label(ex.getMessage())));
 					LOG.error("Сцену невозможно добавить! Плагин: \"" + this.window.getTitle() + "\"", ex);
 				}
-				
-				this.getWindow().sizeToScene();
+				this.window.sizeToScene();
+			} else {
+				LOG.warn("Content == null.");
 			}
 		});
 	}
@@ -72,15 +75,8 @@ public class VCustomStageImpl implements VCustomStage {
 		Platform.runLater(() -> {
 			URL urlIconWindow = ClassLoader.getSystemClassLoader().getResource(path);
 			LOG.debug("urlIconWindow: {}", urlIconWindow);
-			if(urlIconWindow != null) this.getWindow().getIcons().setAll(new Image(urlIconWindow.toString()));
+			if(urlIconWindow != null) this.window.getIcons().setAll(new Image(urlIconWindow.toString()));
 		});
-	}
-	
-	private Stage getWindow() {
-		if(this.window == null) {
-			this.window = new Stage();
-		}
-		return this.window;
 	}
 
 	@Override
@@ -88,5 +84,10 @@ public class VCustomStageImpl implements VCustomStage {
 		Platform.runLater(() -> {
 			this.window.centerOnScreen();
 		});
+	}
+
+	@Override
+	public void setOnCloseAction(EventHandler<WindowEvent> event) {
+		this.window.setOnCloseRequest(event);
 	}
 }

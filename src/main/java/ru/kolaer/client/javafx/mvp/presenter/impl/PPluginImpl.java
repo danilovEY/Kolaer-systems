@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
+import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PPlugin;
 import ru.kolaer.client.javafx.mvp.presenter.PWindow;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMLabel;
@@ -10,10 +11,16 @@ public class PPluginImpl implements PPlugin{
 
 	private final IKolaerPlugin plugin;
 	private final VMLabel label;
+	private final Pane taskPane;
 	private PWindow window;
 	
 	public PPluginImpl(final IKolaerPlugin plugin) {
+		this(plugin, null);
+	}
+	
+	public PPluginImpl(final IKolaerPlugin plugin, final Pane taskPane) {
 		this.plugin = plugin;
+		this.taskPane = taskPane;
 		this.label = new VMLabelImpl(plugin.getLabel());
 		this.init();
 	}
@@ -23,6 +30,9 @@ public class PPluginImpl implements PPlugin{
 			if(this.window == null)
 				this.window = new PCustomStageImpl(this.plugin.getApplication());
 			this.window.show();
+			
+			if(this.taskPane!=null)
+				this.taskPane.getChildren().add(this.window.getTaskPane().getContent());
 		});
 	}
 	
