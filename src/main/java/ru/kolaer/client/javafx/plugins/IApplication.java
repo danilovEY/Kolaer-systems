@@ -1,10 +1,8 @@
 package ru.kolaer.client.javafx.plugins;
 
-import java.util.concurrent.Callable;
-
 import javafx.scene.layout.Pane;
 
-public interface IApplication<V> extends Callable<V> {
+public interface IApplication extends Runnable {
 	String getIcon();
 	Pane getContent();
 	String getName();

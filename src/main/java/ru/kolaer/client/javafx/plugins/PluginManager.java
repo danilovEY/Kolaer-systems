@@ -34,7 +34,7 @@ public class PluginManager {
 		this.pathToPlugins = pathToPlugins;
 	}
 
-	public List<IKolaerPlugin> scanPlugins(VMExplorer explorer) {
+	public List<IKolaerPlugin> scanPlugins(final VMExplorer explorer) {
 
 		LOG.debug("Сканирование папки: \"{}\"", this.pathToPlugins);
 		final File dirToPlugins = new File(this.pathToPlugins);
@@ -43,7 +43,7 @@ public class PluginManager {
 			return Collections.emptyList();
 		}
 
-		File[] jarFiles = dirToPlugins.listFiles((File dir, String name) -> {
+		final File[] jarFiles = dirToPlugins.listFiles((final File dir, final String name) -> {
 			return name.endsWith(".jar") ? true : false;
 		});
 
@@ -60,7 +60,7 @@ public class PluginManager {
 				}
 
 				try{
-					Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] {
+					final Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] {
 		                    URL.class });
 					method.setAccessible(true);
 					method.invoke(ClassLoader.getSystemClassLoader(), new Object[] {
@@ -79,7 +79,7 @@ public class PluginManager {
 			final List<Future<IKolaerPlugin>> futureList = new ArrayList<>();
 
 			for(final File jarFile : readableFiles){
-				Future<IKolaerPlugin> resultFuture = Executors.newSingleThreadExecutor().submit(() -> {
+				final Future<IKolaerPlugin> resultFuture = Executors.newSingleThreadExecutor().submit(() -> {
 					Thread.currentThread().setName("Поток для файла: " + jarFile.getName());
 
 					try(final JarFile jarFileRead = new JarFile(jarFile)){
@@ -100,10 +100,10 @@ public class PluginManager {
 								if(cls.getAnnotation(ApplicationPlugin.class) != null){
 									final IKolaerPlugin plugin = (IKolaerPlugin) cls.newInstance();
 									explorer.addPlugin(plugin);
-									LOG.info("Добвленно приложение: \"{}\"", plugin.getName());
+									LOG.info("Добавлено приложение: \"{}\"", plugin.getName());
 									return plugin;
 								}
-							}catch(Throwable ex){
+							} catch(Throwable ex){
 								LOG.error("Невозможно прочитать класс: " + className, ex);
 								continue;
 							}
@@ -119,12 +119,12 @@ public class PluginManager {
 			}
 
 			final List<IKolaerPlugin> result = new ArrayList<>();
-			for(Future<IKolaerPlugin> future : futureList){
+			for(final Future<IKolaerPlugin> future : futureList){
 				try{
 					final IKolaerPlugin plg = future.get(10, TimeUnit.SECONDS);
 					if(plg != null)
 						result.add(plg);
-				}catch(Exception e){
+				} catch(Exception e){
 					LOG.error("Истекло время ожидания!");
 					continue;
 				}

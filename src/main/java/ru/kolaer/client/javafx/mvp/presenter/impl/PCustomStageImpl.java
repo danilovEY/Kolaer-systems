@@ -1,9 +1,9 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,23 +15,18 @@ import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMApplicationOnTaskPaneImpl;
 import ru.kolaer.client.javafx.plugins.IApplication;
 
-public class PCustomStageImpl implements PCustomStage{
-	private static final Logger LOG = LoggerFactory.getLogger(PCustomStageImpl.class);	
-	
+public class PCustomStageImpl implements PCustomStage {
+	private static final Logger LOG = LoggerFactory.getLogger(PCustomStageImpl.class);
+
 	private final VCustomStage view = new VCustomStageImpl();
-	private final IApplication<Object> application;
+	private final IApplication application;
 	private final VMApplicationOnTaskPane taskPane;
-	private final ExecutorService appThread = Executors.newSingleThreadExecutor();
-	
-	public PCustomStageImpl() {
-		this(null);
-	}
-	
-	public PCustomStageImpl(IApplication<Object> app) {
+
+	public PCustomStageImpl(final IApplication app) {
 		this(app, app.getName());
 	}
 
-	public PCustomStageImpl(IApplication<Object> app, String name) {
+	public PCustomStageImpl(final IApplication app, final String name) {
 		this.application = app;
 		LOG.debug("app.name: {}, app.icon: {}", app.getName(), app.getIcon());
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
@@ -41,20 +36,17 @@ public class PCustomStageImpl implements PCustomStage{
 		});
 		this.taskPane = new VMApplicationOnTaskPaneImpl(this);
 	}
-	
+
 	@Override
 	public void show() {
 		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			Thread.currentThread().setName("Запуск приложения");
-			try {
-				appThread.submit(this.application);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			appThread.shutdown();
+			CompletableFuture.runAsync(this.application).thenAccept((e) -> {
+				this.view.setContent(this.application.getContent());
+				this.view.centerOnScreen();
+			});
 			LOG.info("Приложение \"{}\" запущено!", this.application.getName());
-			this.view.setContent(this.application.getContent());
 			this.taskPane.show();
 			this.view.setVisible(true);
 		});
@@ -66,12 +58,9 @@ public class PCustomStageImpl implements PCustomStage{
 		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			Thread.currentThread().setName("Завершение приложения");
-			this.view.setVisible(false);
-			this.application.stop();
-			appThread.shutdownNow();
-			
-			this.view.setContent(null);
+			this.view.setVisible(false);		
 			this.taskPane.close();
+			this.application.stop();
 		});
 		thread.shutdown();
 	}
@@ -84,11 +73,6 @@ public class PCustomStageImpl implements PCustomStage{
 	@Override
 	public IApplication getApplicationModel() {
 		return this.application;
-	}
-
-	@Override
-	public void setApplicationModel(IApplication application) {
-		
 	}
 
 	@Override

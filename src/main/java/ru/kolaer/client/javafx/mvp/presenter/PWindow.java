@@ -4,9 +4,7 @@ import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 import ru.kolaer.client.javafx.plugins.IApplication;
 
 public interface PWindow {
-	IApplication getApplicationModel();
-	void setApplicationModel(IApplication application);
-	
+	IApplication getApplicationModel();	
 	VMApplicationOnTaskPane getTaskPane();
 	
 	void show();

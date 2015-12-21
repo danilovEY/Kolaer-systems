@@ -2,8 +2,6 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -23,8 +21,6 @@ import ru.kolaer.client.javafx.tools.Resources;
 public class VMExplorerImpl extends ImportFXML implements VMExplorer {	
 	
     @FXML
-    private Pane desktop;
-    @FXML
     private Button startButton;
     @FXML
     private BorderPane taskPane;
@@ -40,31 +36,21 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		desktop.heightProperty().addListener((observable, oldValue, newValue) -> {
-			desktopWithLabels.setPrefHeight(desktop.getHeight());
-		});
-		
-		desktop.widthProperty().addListener((observable, oldValue, newValue) -> {
-				desktopWithLabels.setPrefWidth(desktop.getWidth());
-		});
+	public void initialize(final URL location, final ResourceBundle resources) {
+
 	}
 
 	@Override
-	public void addPlugin(IKolaerPlugin plugin) {
-		ExecutorService thread = Executors.newSingleThreadExecutor();
-		thread.submit(() -> {			
-			Platform.runLater(() -> {
-				Thread.currentThread().setName("Инициализация плагинов");
-				final PPlugin plg = new PPluginImpl(plugin, this.taskPaneWithApp);
-				this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());
-			});
+	public void addPlugin(final IKolaerPlugin plugin) {
+		Platform.runLater(() -> {		
+			Thread.currentThread().setName("Инициализация плагинов");
+			final PPlugin plg = new PPluginImpl(plugin, this.taskPaneWithApp);
+			this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());
 		});
-		thread.shutdown();
 	}
 	
 	@Override
-	public void removePlugin(IKolaerPlugin plugin) {
+	public void removePlugin(final IKolaerPlugin plugin) {
 		
 	}
 
@@ -74,7 +60,7 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 	}
 
 	@Override
-	public void setContent(Parent content) {
+	public void setContent(final Parent content) {
 		this.setCenter(content);
 	}
 }

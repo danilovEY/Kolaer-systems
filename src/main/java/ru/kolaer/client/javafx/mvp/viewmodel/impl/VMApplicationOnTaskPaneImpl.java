@@ -34,19 +34,19 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 	 * {@linkplain VMApplicationOnTaskPaneImpl}
 	 * @param pathFXML
 	 */
-	public VMApplicationOnTaskPaneImpl(PWindow window) {
+	public VMApplicationOnTaskPaneImpl(final PWindow window) {
 		super(Resources.V_APPLICATION_ON_TASK_PANE);
 		this.window = window;
 		
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void initialize(final URL location, final ResourceBundle resources) {
 		
 	}
 
 	@Override
-	public void setContent(Parent content) {
+	public void setContent(final Parent content) {
 		this.setCenter(content);
 	}
 
@@ -59,8 +59,8 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 	public void close() {
 		Platform.runLater(() -> {
 			NodeUtil.removeFromParent(this);
-		});
-		this.icon.setImage(null);
+			this.icon.setImage(null);
+		});	
 	}
 
 	@Override

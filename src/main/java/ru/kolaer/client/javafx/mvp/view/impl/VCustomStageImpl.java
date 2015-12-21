@@ -47,14 +47,14 @@ public class VCustomStageImpl implements VCustomStage {
 	}
 
 	@Override
-	public void setTitle(String title) {
+	public void setTitle(final String title) {
 		Platform.runLater(() -> {
 			this.window.setTitle(title);
 		});
 	}
 
 	@Override
-	public void setContent(Parent content) {
+	public void setContent(final Parent content) {
 		Platform.runLater(() -> {
 			if(content != null){
 				try {
@@ -71,9 +71,9 @@ public class VCustomStageImpl implements VCustomStage {
 	}
 
 	@Override
-	public void setIconWindow(String path) {
+	public void setIconWindow(final String path) {
 		Platform.runLater(() -> {
-			URL urlIconWindow = ClassLoader.getSystemClassLoader().getResource(path);
+			final URL urlIconWindow = ClassLoader.getSystemClassLoader().getResource(path);
 			LOG.debug("urlIconWindow: {}", urlIconWindow);
 			if(urlIconWindow != null) this.window.getIcons().setAll(new Image(urlIconWindow.toString()));
 		});
@@ -87,7 +87,7 @@ public class VCustomStageImpl implements VCustomStage {
 	}
 
 	@Override
-	public void setOnCloseAction(EventHandler<WindowEvent> event) {
+	public void setOnCloseAction(final EventHandler<WindowEvent> event) {
 		this.window.setOnCloseRequest(event);
 	}
 }

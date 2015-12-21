@@ -28,6 +28,7 @@ import ru.kolaer.client.javafx.tools.Resources;
  */
 public class VMLabelImpl extends ImportFXML implements VMLabel {
 	private static final Logger LOG = LoggerFactory.getLogger(VMLabelImpl.class);
+	
 	@FXML
 	private Button labelRun;
 	@FXML
@@ -35,22 +36,19 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	@FXML
 	private ImageView labelIcon;
 	
-	private ILabel model;
+	private final ILabel model;
 	
-	/**
-	 * {@linkplain VMLabelImpl}
-	 */
-	public VMLabelImpl() {
-		this(null);
-	}
-	
-	public VMLabelImpl(ILabel model) {
+	public VMLabelImpl(final ILabel model) {
 		super(Resources.V_LABEL);
-		this.setModel(model);
+		if(model == null) {
+			LOG.error("ILabel == null");
+			throw new RuntimeException("Label не может быть null!");
+		}
+		this.model = model;
 	}
 	
 	@Override
-	public void setContent(Parent content) {
+	public void setContent(final Parent content) {
 		this.setCenter(content);
 	}
 
@@ -60,36 +58,23 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	}
 
 	@Override
-	public void setOnAction(EventHandler<ActionEvent> value) {
+	public void setOnAction(final EventHandler<ActionEvent> value) {
 		this.labelRun.setOnAction(value);
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		
+	public void initialize(final URL location, final ResourceBundle resources) {
+		Platform.runLater(() -> {
+			this.labelName.setText(this.model.getName());
+			final URL urlIconLabel = ClassLoader.getSystemClassLoader().getResource(model.getIcon());
+			LOG.debug("urlIconLabel: {}", urlIconLabel);
+			this.labelIcon.setImage(new Image(urlIconLabel.toString()));
+		});
 	}
 
 	@Override
 	public ILabel getModel() {
 		return this.model;
-	}
-
-	@Override
-	public void setModel(ILabel model) {
-		if(model == null) {
-			LOG.error("ILabel == null");
-			this.setCenter(null);
-			return;
-		}
-			
-		this.model = model;
-		
-		Platform.runLater(() -> {
-			this.labelName.setText(this.model.getName());
-			URL urlIconLabel = ClassLoader.getSystemClassLoader().getResource(model.getIcon());
-			LOG.debug("urlIconLabel: {}", urlIconLabel);
-			this.labelIcon.setImage(new Image(urlIconLabel.toString()));
-		});
 	}
 
 	@Override

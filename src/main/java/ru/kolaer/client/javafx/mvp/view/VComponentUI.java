@@ -8,6 +8,6 @@ import javafx.scene.Parent;
  * @version 0.1
  */
 public interface VComponentUI {
-	void setContent(Parent content);
+	void setContent(final Parent content);
 	Parent getContent();
 }

@@ -12,8 +12,7 @@ import ru.kolaer.client.javafx.plugins.ILabel;
  */
 public interface VMLabel extends VComponentUI {
 	ILabel getModel();
-	void setModel(ILabel model);
 	
-	void setOnAction(EventHandler<ActionEvent> value);
+	void setOnAction(final EventHandler<ActionEvent> value);
 	EventHandler<ActionEvent> getOnAction();
 }

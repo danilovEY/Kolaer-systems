@@ -31,7 +31,7 @@ public class PPluginImpl implements PPlugin{
 				this.window = new PCustomStageImpl(this.plugin.getApplication());
 			this.window.show();
 			
-			if(this.taskPane!=null)
+			if(this.taskPane!=null && this.window.getTaskPane() != null)
 				this.taskPane.getChildren().add(this.window.getTaskPane().getContent());
 		});
 	}
@@ -50,5 +50,4 @@ public class PPluginImpl implements PPlugin{
 	public IKolaerPlugin getPlugin() {
 		return this.plugin;
 	}
-
 }

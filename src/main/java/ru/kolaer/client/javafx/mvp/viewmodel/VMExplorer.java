@@ -9,6 +9,6 @@ import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
  * @version 0.1
  */
 public interface VMExplorer extends VComponentUI{
-	void addPlugin(IKolaerPlugin plugin);
-	void removePlugin(IKolaerPlugin plugin);
+	void addPlugin(final IKolaerPlugin plugin);
+	void removePlugin(final IKolaerPlugin plugin);
 }

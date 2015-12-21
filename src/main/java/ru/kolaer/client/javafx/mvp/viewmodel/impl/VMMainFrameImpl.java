@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
@@ -26,26 +28,22 @@ public class VMMainFrameImpl extends Application {
     private BorderPane mainPane;
 	
 	private Stage stage;
-	private final VMExplorer explorer = new VMExplorerImpl();
-	private final PluginManager pluginManagerModel = new PluginManager(Resources.PATH_TO_DIR_WITH_PLUGINS);
+	
 	
     @FXML
     public void initialize() {
-    	this.mainPane.setCenter(explorer.getContent());
-    	this.loadPlugins();
-    }
-
-	private void loadPlugins() {
-		final ExecutorService readPluginsThread = Executors.newSingleThreadExecutor();
+    	final VMExplorer explorer = new VMExplorerImpl();
+    	final ExecutorService readPluginsThread = Executors.newSingleThreadExecutor();
 		readPluginsThread.submit(() -> {
 			Thread.currentThread().setName("Скан и добавление плагинов");
-			pluginManagerModel.scanPlugins(this.explorer);
+			new PluginManager(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
 		});
 		readPluginsThread.shutdown();
-	}
+    	this.mainPane.setCenter(explorer.getContent());
+    }
     
 	@Override
-	public void start(Stage stage) {	
+	public void start(final Stage stage) {	
 		this.stage = stage;
 		try {
 			this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
@@ -56,7 +54,13 @@ public class VMMainFrameImpl extends Application {
 		
 		this.stage.setOnCloseRequest(e -> {
 			System.exit(0);
-		});		
+		});	
+		
+		this.stage.setFullScreen(false);
+		this.stage.addEventHandler(KeyEvent.KEY_PRESSED, (e) -> {
+			if(e.getCode() == KeyCode.F11)
+				this.stage.setFullScreen(true);
+		});
 		this.stage.setMinHeight(650);
 		this.stage.setMinWidth(850);
 		this.stage.centerOnScreen();

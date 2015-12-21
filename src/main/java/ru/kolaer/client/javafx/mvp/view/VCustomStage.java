@@ -4,6 +4,6 @@ import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
 
 public interface VCustomStage extends VWindow {
-	void setIconWindow(String path);
-	void setOnCloseAction(EventHandler<WindowEvent> event);
+	void setIconWindow(final String path);
+	void setOnCloseAction(final EventHandler<WindowEvent> event);
 }
