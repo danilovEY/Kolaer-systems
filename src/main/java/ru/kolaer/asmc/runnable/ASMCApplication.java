@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -13,15 +14,16 @@ import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.client.javafx.plugins.IApplication;
 
-public class ASMCApplication extends Application implements IApplication<Object> {
+public class ASMCApplication extends Application implements IApplication {
 	private final BorderPane root = new BorderPane();
+	private AnchorPane pane;
 	@Override
 	public String getIcon() {
 		return "resources/aerIcon.png";
 	}
 
 	@Override
-	public Pane getContent() {	
+	public Pane getContent() {
 		return this.root;
 	}
 
@@ -32,31 +34,29 @@ public class ASMCApplication extends Application implements IApplication<Object>
 
 	@Override
 	public void stop() {
-		//this.root = null;
+		// this.root = null;
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
+
 	}
 
 	@Override
-	public Object call() throws Exception {
+	public void run() {
 		SettingSingleton.initialization();
 		Platform.runLater(() -> {
-			try {
-				//if(root.getCenter()==null)
-				
-					root.setCenter(FXMLLoader.load(Resources.V_MAIN_FRAME));
-					root.getParent().autosize();
-	
-			} catch (MalformedURLException e) {
+			try{
+				if(pane == null) {
+					pane = FXMLLoader.load(Resources.V_MAIN_FRAME);
+					root.setCenter(pane);
+				}
+			}catch(MalformedURLException e){
 				e.printStackTrace();
-			} catch (IOException e) {
+			}catch(IOException e){
 				e.printStackTrace();
 			}
 		});
-		return null;
 	}
 
 }
