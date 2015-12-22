@@ -12,6 +12,7 @@ public class PPluginImpl implements PPlugin{
 	private final IKolaerPlugin plugin;
 	private final VMLabel label;
 	private final Pane taskPane;
+	private final Pane desktop;
 	private PWindow window;
 	
 	public PPluginImpl(final IKolaerPlugin plugin) {
@@ -19,7 +20,12 @@ public class PPluginImpl implements PPlugin{
 	}
 	
 	public PPluginImpl(final IKolaerPlugin plugin, final Pane taskPane) {
+		this(plugin, taskPane, null);
+	}
+	
+	public PPluginImpl(final IKolaerPlugin plugin, final Pane taskPane, final Pane desktop) {
 		this.plugin = plugin;
+		this.desktop = desktop;
 		this.taskPane = taskPane;
 		this.label = new VMLabelImpl(plugin.getLabel());
 		this.init();
@@ -27,11 +33,12 @@ public class PPluginImpl implements PPlugin{
 	
 	private void init() {
 		this.label.setOnAction(e -> {
-			if(this.window == null)
-				this.window = new PCustomStageImpl(this.plugin.getApplication());
+			if(this.window == null) {
+				this.window = new PCustomStageImpl(this.plugin.getApplication(), this.plugin.getApplication().getName());
+			}
 			this.window.show();
 			
-			if(this.taskPane!=null && this.window.getTaskPane() != null)
+			if(this.taskPane!=null && this.window.getTaskPane() != null && !this.window.getView().isShowing())
 				this.taskPane.getChildren().add(this.window.getTaskPane().getContent());
 		});
 	}

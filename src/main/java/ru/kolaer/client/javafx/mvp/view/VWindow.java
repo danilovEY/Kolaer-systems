@@ -10,4 +10,5 @@ public interface VWindow extends VComponentUI{
 	void setVisible(boolean visible);
 	void setTitle(final String title);
 	void centerOnScreen();
+	boolean isShowing();
 }

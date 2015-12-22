@@ -28,6 +28,10 @@ public class PCustomStageImpl implements PCustomStage {
 
 	public PCustomStageImpl(final IApplication app, final String name) {
 		this.application = app;
+		if(this.application == null){
+			LOG.error("Application == null!");
+			throw new RuntimeException("Application == null!");
+		}
 		LOG.debug("app.name: {}, app.icon: {}", app.getName(), app.getIcon());
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
 		this.view.setIconWindow(app.getIcon());
@@ -46,9 +50,9 @@ public class PCustomStageImpl implements PCustomStage {
 				this.view.setContent(this.application.getContent());
 				this.view.centerOnScreen();
 			});
-			LOG.info("Приложение \"{}\" запущено!", this.application.getName());
 			this.taskPane.show();
 			this.view.setVisible(true);
+			LOG.info("Приложение \"{}\" запущено!", this.application.getName());
 		});
 		thread.shutdown();
 	}
@@ -61,6 +65,7 @@ public class PCustomStageImpl implements PCustomStage {
 			this.view.setVisible(false);		
 			this.taskPane.close();
 			this.application.stop();
+			LOG.info("Приложение \"{}\" остановлено!", this.application.getName());
 		});
 		thread.shutdown();
 	}

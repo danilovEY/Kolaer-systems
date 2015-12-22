@@ -45,6 +45,7 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 			throw new RuntimeException("Label не может быть null!");
 		}
 		this.model = model;
+		this.setUserData(this.model.getName());
 	}
 	
 	@Override

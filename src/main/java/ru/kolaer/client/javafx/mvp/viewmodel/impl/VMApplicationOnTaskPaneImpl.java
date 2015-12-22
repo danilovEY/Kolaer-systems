@@ -3,6 +3,8 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.sun.glass.events.MouseEvent;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -42,7 +44,13 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources) {
-		
+		Platform.runLater(() -> {
+			this.setOnMouseClicked(e -> {
+				this.window.show();
+			});
+			this.nameApp.setText(this.window.getApplicationModel().getName());
+			this.icon.setImage(new Image(window.getApplicationModel().getIcon()));
+		});
 	}
 
 	@Override
@@ -59,15 +67,11 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 	public void close() {
 		Platform.runLater(() -> {
 			NodeUtil.removeFromParent(this);
-			this.icon.setImage(null);
 		});	
 	}
 
 	@Override
 	public void show() {
-		Platform.runLater(() -> {
-			this.nameApp.setText(this.window.getApplicationModel().getName());
-			this.icon.setImage(new Image(window.getApplicationModel().getIcon()));
-		});
+
 	}
 }

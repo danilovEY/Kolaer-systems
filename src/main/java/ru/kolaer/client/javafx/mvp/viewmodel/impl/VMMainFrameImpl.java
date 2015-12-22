@@ -22,8 +22,7 @@ import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMMainFrameImpl extends Application {
 	private static final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);	
-    @FXML
-    private Menu menuFile;
+	
     @FXML
     private BorderPane mainPane;
 	

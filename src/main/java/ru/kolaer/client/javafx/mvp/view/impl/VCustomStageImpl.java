@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
@@ -26,7 +25,7 @@ public class VCustomStageImpl implements VCustomStage {
 	}
 
 	private void initialization() {
-		this.window.setScene(new Scene(new Region()));
+		this.window.setScene(new Scene(new Parent(){}));
 	}
 
 	@Override
@@ -38,8 +37,13 @@ public class VCustomStageImpl implements VCustomStage {
 	public void setVisible(boolean visible) {		
 		Platform.runLater(() -> {
 			if(visible){
-				this.window.show();
-				this.window.centerOnScreen();
+				if(!this.window.isShowing()) {
+					this.window.show();
+					this.window.centerOnScreen();
+					this.window.toFront();
+				} else {
+					this.window.toFront();
+				}
 			} else {
 				this.window.close();
 			}
@@ -89,5 +93,10 @@ public class VCustomStageImpl implements VCustomStage {
 	@Override
 	public void setOnCloseAction(final EventHandler<WindowEvent> event) {
 		this.window.setOnCloseRequest(event);
+	}
+
+	@Override
+	public boolean isShowing() {
+		return this.window.isShowing();
 	}
 }
