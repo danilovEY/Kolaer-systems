@@ -8,6 +8,8 @@ import java.util.concurrent.Executors;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,8 +69,10 @@ public class CMainFrame extends Application {
 		});
 		
 		threadPool.submit(() -> {
-			final String image = Resources.BACKGROUND_IMAGE.toString();
-			this.contentPanel.setStyle("-fx-background-image: url('" + image + "'); ");
+			Platform.runLater(() -> {
+				final String image = Resources.BACKGROUND_IMAGE.toString();
+				this.contentPanel.setStyle("-fx-background-image: url('" + image + "'); ");
+			});
 		});
 		
 		threadPool.submit(() -> {
@@ -87,70 +91,73 @@ public class CMainFrame extends Application {
 		
 		threadPool.shutdown();	
 		
-		final ContextMenu contextNavigationPanel = new ContextMenu();
-		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);	
-
-		final ContextMenu contextContentPanel = new ContextMenu();
-		final MenuItem addLabel = new MenuItem(Resources.MENU_ITEM_ADD_LABEL);
-
-		contextContentPanel.getItems().add(addLabel);
-		contextNavigationPanel.getItems().add(addGroupLabels);
+		Platform.runLater(() -> {
 		
-		this.navigateScrollPanel.setContextMenu(contextNavigationPanel);
-		this.contentScrollPanel.setContextMenu(contextContentPanel);
-
-		// =====Events======
-		this.settingMenuItem.getParentMenu().setOnShowing(e -> {
-			if(SettingSingleton.getInstance().isRoot()) {
-				this.settingMenuItem.setDisable(false);
-			} else {
-				this.settingMenuItem.setDisable(true);
-			}
-		});
-		
-		this.navigateScrollPanel.setOnContextMenuRequested((event) -> {
-			if(!SettingSingleton.getInstance().isRoot()) {
-				this.navigateScrollPanel.getContextMenu().hide();
-			}
-		});
-
-		this.contentScrollPanel.setOnContextMenuRequested((event) -> {
-			if(observer.getSelectedItem() == null 
-					|| !SettingSingleton.getInstance().isRoot()) {
-				this.contentScrollPanel.getContextMenu().hide();
-			}
-		});
-		
-		addGroupLabels.setOnAction(e -> {
-			final CAddingGroupLabelsDialog addingGroup = new CAddingGroupLabelsDialog();
-			final Optional<MGroupLabels> result = addingGroup.showAndWait();
-			if(result.isPresent()){
-				final MGroupLabels res = result.get();
-				observer.addGroupLabels(res);
-			}
-		});
-		
-		addLabel.setOnAction(e -> {
-			final CAddingLabelDialog addingLabel = new CAddingLabelDialog();
-			final Optional<MLabel> result = addingLabel.showAndWait();
-			if(result.isPresent()){
-				observer.addLabel(result.get());
-			}
-		});
-		
-		this.settingMenuItem.setOnAction(e -> {
-			final CSetting setting = new CSetting();
-			setting.showAndWait();
-			final File imgage = new File(SettingSingleton.getInstance().getPathBanner());
-			if(imgage.exists() && imgage.isFile()) {
-				mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner()))));
-			} else {
-				mainPanel.setTop(null);
-			}
-		});
-		
-		this.menuItemAbout.setOnAction(e -> {
-			new CAbout().show();
+			final ContextMenu contextNavigationPanel = new ContextMenu();
+			final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);	
+	
+			final ContextMenu contextContentPanel = new ContextMenu();
+			final MenuItem addLabel = new MenuItem(Resources.MENU_ITEM_ADD_LABEL);
+	
+			contextContentPanel.getItems().add(addLabel);
+			contextNavigationPanel.getItems().add(addGroupLabels);
+			
+			this.navigateScrollPanel.setContextMenu(contextNavigationPanel);
+			this.contentScrollPanel.setContextMenu(contextContentPanel);
+	
+			// =====Events======
+			this.settingMenuItem.getParentMenu().setOnShowing(e -> {
+				if(SettingSingleton.getInstance().isRoot()) {
+					this.settingMenuItem.setDisable(false);
+				} else {
+					this.settingMenuItem.setDisable(true);
+				}
+			});
+			
+			this.navigateScrollPanel.setOnContextMenuRequested((event) -> {
+				if(!SettingSingleton.getInstance().isRoot()) {
+					this.navigateScrollPanel.getContextMenu().hide();
+				}
+			});
+	
+			this.contentScrollPanel.setOnContextMenuRequested((event) -> {
+				if(observer.getSelectedItem() == null 
+						|| !SettingSingleton.getInstance().isRoot()) {
+					this.contentScrollPanel.getContextMenu().hide();
+				}
+			});
+			
+			addGroupLabels.setOnAction(e -> {
+				final CAddingGroupLabelsDialog addingGroup = new CAddingGroupLabelsDialog();
+				final Optional<MGroupLabels> result = addingGroup.showAndWait();
+				if(result.isPresent()){
+					final MGroupLabels res = result.get();
+					observer.addGroupLabels(res);
+				}
+			});
+			
+			addLabel.setOnAction(e -> {
+				final CAddingLabelDialog addingLabel = new CAddingLabelDialog();
+				final Optional<MLabel> result = addingLabel.showAndWait();
+				if(result.isPresent()){
+					observer.addLabel(result.get());
+				}
+			});
+			
+			this.settingMenuItem.setOnAction(e -> {
+				final CSetting setting = new CSetting();
+				setting.showAndWait();
+				final File imgage = new File(SettingSingleton.getInstance().getPathBanner());
+				if(imgage.exists() && imgage.isFile()) {
+					mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner()))));
+				} else {
+					mainPanel.setTop(null);
+				}
+			});
+			
+			this.menuItemAbout.setOnAction(e -> {
+				new CAbout().show();
+			});
 		});
 	}
 	
@@ -166,21 +173,23 @@ public class CMainFrame extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		Parent root = null;
-		
-		try{
-			root = FXMLLoader.load(Resources.V_MAIN_FRAME);
-			if(root != null) {
-				primaryStage.setScene(new Scene(root));
+		Platform.runLater(() -> {
+			try{
+				final Parent root = FXMLLoader.load(Resources.V_MAIN_FRAME);
+				if(root != null) {
+						primaryStage.setScene(new Scene(root));	
+						primaryStage.centerOnScreen();
+						primaryStage.show();
+				}
 			}
-		}
-		catch(IOException e){
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Ошибка!");
-			alert.setHeaderText("Ошибка при инициализации view: \""+Resources.V_MAIN_FRAME+"\"");
-			
-			alert.showAndWait();
-		}
+			catch(IOException e){
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка!");
+				alert.setHeaderText("Ошибка при инициализации view: \""+Resources.V_MAIN_FRAME+"\"");
+				
+				alert.showAndWait();
+			}
+		});
 		
 		primaryStage.setTitle(Resources.MAIN_FRAME_TITLE);
 		primaryStage.setOnCloseRequest(e -> {
@@ -195,15 +204,15 @@ public class CMainFrame extends Application {
 			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
 			alert.showAndWait();
 		}
-		
-		if(!this.getParameters().getNamed().isEmpty()) {
-			String passRoot = this.getParameters().getNamed().get("root_set");
-			if(SettingSingleton.getInstance().getRootPass().equals(passRoot)){
-				SettingSingleton.getInstance().setRoot(true);
+		final ExecutorService thread = Executors.newSingleThreadExecutor();
+		thread.submit(() -> {
+			if(!this.getParameters().getNamed().isEmpty()) {
+				String passRoot = this.getParameters().getNamed().get("root_set");
+				if(SettingSingleton.getInstance().getRootPass().equals(passRoot)){
+					SettingSingleton.getInstance().setRoot(true);
+				}
 			}
-		}
-		
-		primaryStage.centerOnScreen();
-		primaryStage.show();
+		});
+		thread.shutdown();
 	}
 }

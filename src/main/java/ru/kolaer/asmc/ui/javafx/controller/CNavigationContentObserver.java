@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -72,6 +75,8 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	/** Загрузить и добавить группы. */
 	public void loadAndRegGroups() {
+		final ExecutorService thread = Executors.newSingleThreadExecutor();
+		
 		this.selectedGroup = null;
 
 		if(this.threadCache!=null) {
@@ -87,24 +92,39 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		
 		this.panelWithGroups.getChildren().clear();
 		this.panelWithLabels.getChildren().clear();
-		
-		List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups();
-		this.threadCache = Executors.newFixedThreadPool(groupsList.size() + 1);
-		groupsList.stream()
-		.sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority()))
-		.forEach((group) -> {
-			final CGroupLabels cGroup = new CGroupLabels(group);
-			this.threadCache.submit(() -> {
-				List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
-					return new CLabel(label);
-				}).collect(Collectors.toList());
-
-				this.addCache(cGroup, labelList);
+		final List<Node> nodes = new ArrayList<>();
+		thread.submit(() -> {
+			List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups();
+			this.threadCache = Executors.newFixedThreadPool(groupsList.size() + 1);
+			groupsList.stream()
+			.forEach((group) -> {
+				this.threadCache.submit(() -> {
+					final CGroupLabels cGroup = new CGroupLabels(group);
+					nodes.add(cGroup);
+					List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
+						return new CLabel(label);
+					}).collect(Collectors.toList());
+					
+					this.addCache(cGroup, labelList);
+					cGroup.registerOberver(this);
+				});	
 			});
-			cGroup.registerOberver(this);
+			
+			this.threadCache.shutdown();
+			
+			Platform.runLater(() -> {
+				try {
+					this.threadCache.awaitTermination(2, TimeUnit.MINUTES);
+					this.panelWithGroups.getChildren().setAll(
+							nodes.stream().sorted((a, b) -> Integer.compare(Integer.valueOf(a.getUserData().toString()), Integer.valueOf(b.getUserData().toString())))
+							.collect(Collectors.toList()));	
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
 		});
-		
-		this.threadCache.shutdown();
+		thread.shutdown();
 	}
 	
 	/**
@@ -125,10 +145,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		return cGroup;
 	}
 	/**Добавить группу и ярлыки в кэш.*/
-	private synchronized void addCache(CGroupLabels group, List<CLabel> labels) {
-		Platform.runLater(() -> {
-			this.panelWithGroups.getChildren().add(group);
-		});
+	private void addCache(CGroupLabels group, List<CLabel> labels) {
 		this.cache.put(group, labels);
 	}
 	

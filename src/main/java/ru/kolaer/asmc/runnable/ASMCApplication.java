@@ -50,6 +50,7 @@ public class ASMCApplication extends Application implements IApplication {
 				if(pane == null) {
 					pane = FXMLLoader.load(Resources.V_MAIN_FRAME);
 					root.setCenter(pane);
+					//root.setPrefSize(800, 600);
 				}
 			}catch(MalformedURLException e){
 				e.printStackTrace();
