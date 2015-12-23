@@ -1,6 +1,9 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
@@ -67,9 +70,13 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	public void initialize(final URL location, final ResourceBundle resources) {
 		Platform.runLater(() -> {
 			this.labelName.setText(this.model.getName());
-			final URL urlIconLabel = ClassLoader.getSystemClassLoader().getResource(model.getIcon());
-			LOG.debug("urlIconLabel: {}", urlIconLabel);
-			this.labelIcon.setImage(new Image(urlIconLabel.toString()));
+			try(final InputStream urlIconLabel = Thread.currentThread().getContextClassLoader().getResourceAsStream(model.getIcon()))
+			{
+				LOG.debug("urlIconLabel: {}", urlIconLabel);
+				this.labelIcon.setImage(new Image(urlIconLabel));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		});
 	}
 

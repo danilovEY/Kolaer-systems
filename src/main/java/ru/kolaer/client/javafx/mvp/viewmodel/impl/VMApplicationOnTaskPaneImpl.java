@@ -1,6 +1,8 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
+import java.io.IOException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ResourceBundle;
 
 import com.sun.glass.events.MouseEvent;
@@ -38,8 +40,7 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 	 */
 	public VMApplicationOnTaskPaneImpl(final PWindow window) {
 		super(Resources.V_APPLICATION_ON_TASK_PANE);
-		this.window = window;
-		
+		this.window = window;		
 	}
 
 	@Override

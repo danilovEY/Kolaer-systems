@@ -49,41 +49,15 @@ public class PluginManager {
 
 		CompletableFuture<List<IKolaerPlugin>> thread = CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setName("Интеграция class loader'ов в системный class loader");
-			final List<File> readableFiles = new ArrayList<>();
-			for(final File jarFile : jarFiles){
-				URL jarURL = null;
-				try{
-					jarURL = jarFile.toURI().toURL();
-				}catch(MalformedURLException e1){
-					LOG.error("Невозможно преобразовать в URL файл " + jarFile.getAbsolutePath() + "!", e1);
-					continue;
-				}
-
-				try{
-					final Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] {
-		                    URL.class });
-					method.setAccessible(true);
-					method.invoke(ClassLoader.getSystemClassLoader(), new Object[] {
-		                    jarURL });
-					readableFiles.add(jarFile);
-				} catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1){
-					LOG.error("Невозможно добавить class loader jar файла в системный class loader!", e1);
-					continue;
-				}
-			}
-
-			return readableFiles;
-
-		}).thenApplyAsync(readableFiles -> {
-
 			final List<Future<IKolaerPlugin>> futureList = new ArrayList<>();
 
-			for(final File jarFile : readableFiles){
+			for(final File jarFile : jarFiles){
 				final Future<IKolaerPlugin> resultFuture = Executors.newSingleThreadExecutor().submit(() -> {
 					Thread.currentThread().setName("Поток для файла: " + jarFile.getName());
-
-					try(final JarFile jarFileRead = new JarFile(jarFile)){
-
+					IKolaerPlugin plugin = null;
+					try(final JarFile jarFileRead = new JarFile(jarFile); 
+							){
+						final URLClassLoader jarClassLoader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()}, ClassLoader.getSystemClassLoader());
 						final Enumeration<?> e = jarFileRead.entries();
 
 						while(e.hasMoreElements()){
@@ -96,10 +70,10 @@ public class PluginManager {
 							String className = je.getName().substring(0, je.getName().length() - 6);
 							className = className.replace('/', '.');
 							try{
-								final Class<?> cls = this.getClass().getClassLoader().loadClass(className);
+								final Class<?> cls = Class.forName(className, false, jarClassLoader);
 								if(cls.getAnnotation(ApplicationPlugin.class) != null){
-									final IKolaerPlugin plugin = (IKolaerPlugin) cls.newInstance();
-									explorer.addPlugin(plugin);
+									plugin = (IKolaerPlugin) cls.newInstance();
+									explorer.addPlugin(plugin,jarClassLoader);
 									LOG.info("Добавлено приложение: \"{}\"", plugin.getName());
 									return plugin;
 								}
@@ -109,11 +83,11 @@ public class PluginManager {
 							}
 						}
 					}catch(SecurityException secEx){
-						LOG.error("Невозможно получить доступ к файлу " + jarFile.getAbsolutePath() + "!", secEx);
+						LOG.error("Невозможно получить доступ к файлу \"" + jarFile.getAbsolutePath() + "\"!", secEx);
 					}catch(IOException ioEx){
-						LOG.error("Невозможно получить доступ к файлу " + jarFile.getAbsolutePath() + "!", ioEx);
+						LOG.error("Невозможно прочитать файл \"" + jarFile.getAbsolutePath() + "\"!", ioEx);
 					}
-					return null;
+					return plugin;
 				});
 				futureList.add(resultFuture);
 			}

@@ -31,6 +31,14 @@ public class PPluginImpl implements PPlugin{
 		this.init();
 	}
 	
+	public PPluginImpl(final ClassLoader loader, final IKolaerPlugin plugin, final Pane taskPane, final Pane desktop) {
+		this.plugin = plugin;
+		this.desktop = desktop;
+		this.taskPane = taskPane;
+		this.label = new VMLabelImpl(plugin.getLabel());
+		this.init();
+	}
+	
 	private void init() {
 		this.label.setOnAction(e -> {
 			if(this.window == null) {

@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
+import java.net.URLClassLoader;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -22,19 +23,22 @@ public class PCustomStageImpl implements PCustomStage {
 	private final IApplication application;
 	private final VMApplicationOnTaskPane taskPane;
 
+	private final URLClassLoader loader;
+	
 	public PCustomStageImpl(final IApplication app) {
 		this(app, app.getName());
 	}
 
 	public PCustomStageImpl(final IApplication app, final String name) {
 		this.application = app;
+		this.loader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 		if(this.application == null){
 			LOG.error("Application == null!");
 			throw new RuntimeException("Application == null!");
 		}
 		LOG.debug("app.name: {}, app.icon: {}", app.getName(), app.getIcon());
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
-		this.view.setIconWindow(app.getIcon());
+		//this.view.setIconWindow(app.getIcon());
 		this.view.setOnCloseAction(e -> {
 			this.close();
 		});
@@ -65,6 +69,12 @@ public class PCustomStageImpl implements PCustomStage {
 			this.view.setVisible(false);		
 			this.taskPane.close();
 			this.application.stop();
+			try {
+				this.loader.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			LOG.info("Приложение \"{}\" остановлено!", this.application.getName());
 		});
 		thread.shutdown();

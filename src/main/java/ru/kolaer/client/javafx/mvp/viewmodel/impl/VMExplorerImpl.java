@@ -1,8 +1,11 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
+import java.io.IOException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -20,6 +23,7 @@ import ru.kolaer.client.javafx.mvp.presenter.impl.PPluginImpl;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
+import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMExplorerImpl extends ImportFXML implements VMExplorer {	
@@ -43,6 +47,17 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources) {
+		
+		Button but = new Button("UPDATE!");
+		but.setUserData("0");
+		but.setOnAction(e -> {
+			this.removeAll();
+			this.desktopWithLabels.getChildren().add(but);
+			new PluginManager(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(this);
+		});
+		
+		this.desktopWithLabels.getChildren().add(but);
+		
 		desktop.heightProperty().addListener((observable, oldValue, newValue) -> {
 			desktopWithLabels.setPrefHeight(desktop.getHeight());
 		});
@@ -70,11 +85,34 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 		});
 	}
 	
+
+	@Override
+	public void addPlugin(final IKolaerPlugin plugin, final URLClassLoader jarClassLoaser) {
+		Platform.runLater(() -> {		
+			Thread.currentThread().setName("Инициализация плагинов");
+			Thread.currentThread().setContextClassLoader(jarClassLoaser);
+			
+			final PPlugin plg = new PPluginImpl(plugin, this.taskPaneWithApp, desktop);
+			this.desktopWithLabels.getChildren().add(plg.getVMLabel().getContent());
+			
+			if(this.desktopWithLabels.getChildren().size() > 1) {
+				ObservableList<Node> workingCollection = FXCollections.observableArrayList(this.desktopWithLabels.getChildren());
+
+				Collections.sort(workingCollection, (node1, node2) -> {
+					return String.CASE_INSENSITIVE_ORDER.compare(node1.getUserData().toString(), node2.getUserData().toString());
+				});
+				this.desktopWithLabels.getChildren().setAll(workingCollection);
+			}
+			
+		});
+	}
+	
 	@Override
 	public void removePlugin(final IKolaerPlugin plugin) {
 		
 	}
 
+	
 	@Override
 	public Pane getContent() {
 		return this;
@@ -83,5 +121,11 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 	@Override
 	public void setContent(final Parent content) {
 		this.setCenter(content);
+	}
+
+	@Override
+	public void removeAll() {
+		this.desktopWithLabels.getChildren().clear();
+		this.taskPaneWithApp.getChildren().clear();
 	}
 }
