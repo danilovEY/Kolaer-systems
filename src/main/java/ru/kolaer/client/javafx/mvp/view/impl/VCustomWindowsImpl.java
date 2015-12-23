@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
@@ -137,5 +136,10 @@ public class VCustomWindowsImpl implements VCustomWindow{
 	@Override
 	public boolean isShowing() {
 		return this.window.getParent() != null;
+	}
+
+	@Override
+	public String getTitle() {
+		return this.window.getTitle();
 	}
 }

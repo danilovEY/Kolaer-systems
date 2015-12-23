@@ -9,4 +9,5 @@ import ru.kolaer.client.javafx.mvp.view.VCustomStage;
  */
 public interface PCustomStage extends PWindow{
 	VCustomStage getView();
+	void setView(final VCustomStage view);
 }

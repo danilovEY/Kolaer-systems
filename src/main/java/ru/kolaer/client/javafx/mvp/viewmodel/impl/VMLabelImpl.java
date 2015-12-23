@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
@@ -41,11 +42,19 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	
 	private final ILabel model;
 	
+	private final URLClassLoader classLoader;
+	
 	public VMLabelImpl(final ILabel model) {
+		this((URLClassLoader) VMLabelImpl.class.getClassLoader(), model);
+	}
+	
+	public VMLabelImpl(final URLClassLoader classLoader, final ILabel model) {
 		super(Resources.V_LABEL);
+		this.classLoader = classLoader;
 		if(model == null) {
-			LOG.error("ILabel == null");
-			throw new RuntimeException("Label не может быть null!");
+			final NullPointerException ex = new NullPointerException("Label не может быть null!");
+			LOG.error("ILabel == null", ex);
+			throw ex;
 		}
 		this.model = model;
 		this.setUserData(this.model.getName());
@@ -69,13 +78,20 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources) {
 		Platform.runLater(() -> {
-			this.labelName.setText(this.model.getName());
-			try(final InputStream urlIconLabel = Thread.currentThread().getContextClassLoader().getResourceAsStream(model.getIcon()))
-			{
-				LOG.debug("urlIconLabel: {}", urlIconLabel);
-				this.labelIcon.setImage(new Image(urlIconLabel));
-			} catch (IOException e) {
-				e.printStackTrace();
+			Thread.currentThread().setContextClassLoader(this.classLoader);
+			Thread.currentThread().setName("Загрузка изображения ярлыка");
+			this.labelName.setText(Optional.ofNullable(this.model.getName()).orElse("Ярлык"));
+			final String icon = model.getIcon();
+			if(icon != null && !icon.isEmpty()) {
+				try(final InputStream iconInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(model.getIcon()))
+				{
+					LOG.debug("iconInputStream is null? = {}", iconInputStream == null ? true : false);
+					if(iconInputStream!=null) {
+						this.labelIcon.setImage(new Image(iconInputStream));
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}

@@ -1,6 +1,7 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomWindow;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
+import ru.kolaer.client.javafx.mvp.view.VWindow;
 import ru.kolaer.client.javafx.mvp.view.impl.VCustomWindowsImpl;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMApplicationOnTaskPaneImpl;
@@ -104,5 +106,17 @@ public class PCustomWindowImpl implements PCustomWindow {
 	@Override
 	public VMApplicationOnTaskPane getTaskPane() {
 		return this.taskPaneApp;
+	}
+
+	@Override
+	public void setTaskPane(VMApplicationOnTaskPane taskPane) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setView(VWindow view) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,11 +1,8 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ResourceBundle;
-
-import com.sun.glass.events.MouseEvent;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -26,7 +23,8 @@ import ru.kolaer.client.javafx.tools.Resources;
  * @version 0.1
  */
 public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplicationOnTaskPane{
-
+	private final URLClassLoader classLoader;
+	
 	@FXML
 	private ImageView icon;
 	@FXML
@@ -34,18 +32,27 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 	
 	private final PWindow window;
 	
+	
 	/**
 	 * {@linkplain VMApplicationOnTaskPaneImpl}
 	 * @param pathFXML
 	 */
 	public VMApplicationOnTaskPaneImpl(final PWindow window) {
+		this((URLClassLoader) VMApplicationOnTaskPaneImpl.class.getClassLoader(), window);
+	}
+	
+	public VMApplicationOnTaskPaneImpl(final URLClassLoader classLoader, final PWindow window) {
 		super(Resources.V_APPLICATION_ON_TASK_PANE);
+		this.classLoader = classLoader;
 		this.window = window;		
 	}
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources) {
 		Platform.runLater(() -> {
+			Thread.currentThread().setName("Инициализация формы для панели задач");
+			Thread.currentThread().setContextClassLoader(this.classLoader);
+			
 			this.setOnMouseClicked(e -> {
 				this.window.show();
 			});
@@ -67,6 +74,9 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 	@Override
 	public void close() {
 		Platform.runLater(() -> {
+			Thread.currentThread().setName("Удаление формы из панели задач");
+			Thread.currentThread().setContextClassLoader(this.classLoader);
+			
 			NodeUtil.removeFromParent(this);
 		});	
 	}

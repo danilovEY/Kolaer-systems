@@ -11,54 +11,54 @@ import org.slf4j.LoggerFactory;
 
 import ru.kolaer.client.javafx.mvp.presenter.PCustomStage;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
+import ru.kolaer.client.javafx.mvp.view.VWindow;
 import ru.kolaer.client.javafx.mvp.view.impl.VCustomStageImpl;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
-import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMApplicationOnTaskPaneImpl;
 import ru.kolaer.client.javafx.plugins.IApplication;
 
 public class PCustomStageImpl implements PCustomStage {
 	private static final Logger LOG = LoggerFactory.getLogger(PCustomStageImpl.class);
-
-	private final VCustomStage view = new VCustomStageImpl();
+	private final URLClassLoader classLoader;
 	private final IApplication application;
-	private final VMApplicationOnTaskPane taskPane;
-
-	private final URLClassLoader loader;
+	
+	private VCustomStage view;
+	private VMApplicationOnTaskPane taskPane;
 	
 	public PCustomStageImpl(final IApplication app) {
-		this(app, app.getName());
+		this(app, Optional.ofNullable(app.getName()).orElse("Приложение"));
 	}
-
 	public PCustomStageImpl(final IApplication app, final String name) {
+		this((URLClassLoader) PCustomStageImpl.class.getClassLoader(), app, name);
+	}
+	
+	public PCustomStageImpl(final URLClassLoader classLoader, final IApplication app, final String name) {
 		this.application = app;
-		this.loader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+		this.classLoader = classLoader;
 		if(this.application == null){
-			LOG.error("Application == null!");
-			throw new RuntimeException("Application == null!");
+			final NullPointerException ex = new NullPointerException("Application == null!");
+			LOG.error("Application == null!", ex);
+			throw ex;
 		}
-		LOG.debug("app.name: {}, app.icon: {}", app.getName(), app.getIcon());
-		this.view.setTitle(Optional.ofNullable(name).orElse(""));
-		//this.view.setIconWindow(app.getIcon());
-		this.view.setOnCloseAction(e -> {
-			this.close();
-		});
-		this.taskPane = new VMApplicationOnTaskPaneImpl(this);
 	}
 
 	@Override
 	public void show() {
-		final ExecutorService thread = Executors.newSingleThreadExecutor();
-		thread.submit(() -> {
+		System.out.println("000");
+		CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setName("Запуск приложения");
-			CompletableFuture.runAsync(this.application).thenAccept((e) -> {
-				this.view.setContent(this.application.getContent());
-				this.view.centerOnScreen();
-			});
-			this.taskPane.show();
+			Thread.currentThread().setContextClassLoader(this.classLoader);
+			System.out.println("AAA");
+			this.application.run();
+			return this.application;
+		}).thenAccept((app) -> {
+			System.out.println("BBB");
+			this.view.setContent(app.getContent());
+			this.view.centerOnScreen();
 			this.view.setVisible(true);
+		}).thenRunAsync(() -> {
+			this.taskPane.show();
 			LOG.info("Приложение \"{}\" запущено!", this.application.getName());
-		});
-		thread.shutdown();
+		});		
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class PCustomStageImpl implements PCustomStage {
 			this.taskPane.close();
 			this.application.stop();
 			try {
-				this.loader.close();
+				this.classLoader.close();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -93,5 +93,27 @@ public class PCustomStageImpl implements PCustomStage {
 	@Override
 	public VMApplicationOnTaskPane getTaskPane() {
 		return this.taskPane;
+	}
+	@Override
+	public void setView(final VWindow view) {
+		final VCustomStage stage = new VCustomStageImpl();
+		stage.setContent(view.getContent());
+		stage.setTitle(view.getTitle());
+		stage.setVisible(view.isShowing());
+		stage.setIconWindow(this.application.getIcon());
+		stage.setOnCloseAction(e -> {
+			this.close();
+		});
+		
+		this.setView(stage);
+	}
+	
+	@Override
+	public void setTaskPane(final VMApplicationOnTaskPane taskPane) {
+		this.taskPane = taskPane;
+	}
+	@Override
+	public void setView(final VCustomStage view) {
+		this.view = view;
 	}
 }

@@ -99,4 +99,9 @@ public class VCustomStageImpl implements VCustomStage {
 	public boolean isShowing() {
 		return this.window.isShowing();
 	}
+
+	@Override
+	public String getTitle() {
+		return this.window.getTitle();
+	}
 }

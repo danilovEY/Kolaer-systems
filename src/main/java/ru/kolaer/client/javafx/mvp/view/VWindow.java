@@ -8,7 +8,9 @@ package ru.kolaer.client.javafx.mvp.view;
 public interface VWindow extends VComponentUI{
 	
 	void setVisible(boolean visible);
+	
 	void setTitle(final String title);
+	String getTitle();
 	void centerOnScreen();
 	boolean isShowing();
 }
