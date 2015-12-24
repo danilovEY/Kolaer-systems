@@ -18,10 +18,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.plugins.PluginManager;
+import ru.kolaer.client.javafx.services.ServiceClosableWindow;
+import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMMainFrameImpl extends Application {
 	private static final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);	
+	private ServiceControlManager managerTool = new ServiceControlManager();
 	
     @FXML
     private BorderPane mainPane;
@@ -32,6 +35,7 @@ public class VMMainFrameImpl extends Application {
     @FXML
     public void initialize() {
     	final VMExplorer explorer = new VMExplorerImpl();
+    	managerTool.addService(new ServiceClosableWindow(explorer), true);
     	final ExecutorService readPluginsThread = Executors.newSingleThreadExecutor();
 		readPluginsThread.submit(() -> {
 			Thread.currentThread().setName("Скан и добавление плагинов");
