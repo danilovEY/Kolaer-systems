@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javafx.application.Platform;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomStage;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
 import ru.kolaer.client.javafx.mvp.view.VWindow;
@@ -43,41 +44,50 @@ public class PCustomStageImpl implements PCustomStage {
 
 	@Override
 	public void show() {
-		System.out.println("000");
 		CompletableFuture.supplyAsync(() -> {
-			Thread.currentThread().setName("Запуск приложения");
+			Thread.currentThread().setName("Запуск плагина");
 			Thread.currentThread().setContextClassLoader(this.classLoader);
-			System.out.println("AAA");
+			
 			this.application.run();
 			return this.application;
+		}).exceptionally(t -> {
+			LOG.error("Ошибка при запуске плагина!", t);
+			return null;
 		}).thenAccept((app) -> {
-			System.out.println("BBB");
 			this.view.setContent(app.getContent());
 			this.view.centerOnScreen();
 			this.view.setVisible(true);
+		}).exceptionally(t -> {
+			LOG.error("Ошибка при добавлении контента в окно плагина!", t);
+			return null;
 		}).thenRunAsync(() -> {
 			this.taskPane.show();
 			LOG.info("Приложение \"{}\" запущено!", this.application.getName());
+		}).exceptionally(t -> {
+			LOG.error("Ошибка при запуске формы для панели задач!", t);
+			return null;
 		});		
 	}
 
 	@Override
 	public void close() {
-		final ExecutorService thread = Executors.newSingleThreadExecutor();
-		thread.submit(() -> {
-			Thread.currentThread().setName("Завершение приложения");
+		CompletableFuture.runAsync(() -> {
+			Thread.currentThread().setName("Завершение плагина");
+			Thread.currentThread().setContextClassLoader(this.classLoader);
+			
 			this.view.setVisible(false);		
-			this.taskPane.close();
 			this.application.stop();
 			try {
 				this.classLoader.close();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.info("Ошибка при закрытии class loader'а", e);
 			}
+			this.taskPane.close();
 			LOG.info("Приложение \"{}\" остановлено!", this.application.getName());
+		}).exceptionally(t -> {
+			LOG.info("Ошибка при закрытии плагина", t);
+			return null;
 		});
-		thread.shutdown();
 	}
 
 	@Override
@@ -96,16 +106,20 @@ public class PCustomStageImpl implements PCustomStage {
 	}
 	@Override
 	public void setView(final VWindow view) {
-		final VCustomStage stage = new VCustomStageImpl();
-		stage.setContent(view.getContent());
-		stage.setTitle(view.getTitle());
-		stage.setVisible(view.isShowing());
-		stage.setIconWindow(this.application.getIcon());
-		stage.setOnCloseAction(e -> {
-			this.close();
+		Platform.runLater(() -> {
+			Thread.currentThread().setName("Конвертация окна");
+			Thread.currentThread().setContextClassLoader(this.classLoader);
+			final VCustomStage stage = new VCustomStageImpl();
+			stage.setContent(view.getContent());
+			stage.setTitle(view.getTitle());
+			stage.setVisible(view.isShowing());
+			stage.setIconWindow(this.application.getIcon());
+			stage.setOnCloseAction(e -> {
+				this.close();
+			});
+			
+			this.setView(stage);
 		});
-		
-		this.setView(stage);
 	}
 	
 	@Override

@@ -19,6 +19,8 @@ import ru.kolaer.client.javafx.plugins.IApplication;
  *
  * @author Danilov
  * @version 0.1
+ * 
+ * @deprecated Использовать {@link PCustomStageImpl}.
  */
 public class PCustomWindowImpl implements PCustomWindow {
 	private static final Logger LOG = LoggerFactory.getLogger(PCustomWindowImpl.class);
@@ -44,7 +46,7 @@ public class PCustomWindowImpl implements PCustomWindow {
 		this.view.addRightWindowIcon(new PCustomWindowIconMinimize(this));
 		this.view.addRightWindowIcon(new PCustomWindowIconMaximize(this));
 		this.view.addRightWindowIcon(new PCustomWindowIconClose(this));	
-		this.taskPaneApp = new VMApplicationOnTaskPaneImpl(this);
+		this.taskPaneApp = new VMApplicationOnTaskPaneImpl(this, parent);
 	}
 	
 	@Override
@@ -66,7 +68,12 @@ public class PCustomWindowImpl implements PCustomWindow {
 	@Override
 	public void close() {
 		this.view.setVisible(false);
-		this.application.stop();		
+		try {
+			this.application.stop();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		this.taskPaneApp.close();
 		this.application = null;
 		this.taskPaneApp = null;

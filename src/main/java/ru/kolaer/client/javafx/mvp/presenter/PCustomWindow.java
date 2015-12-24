@@ -2,12 +2,12 @@ package ru.kolaer.client.javafx.mvp.presenter;
 
 import javafx.scene.Parent;
 import ru.kolaer.client.javafx.mvp.view.VCustomWindow;
-import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 
 /**
  *
  * @author Danilov
  * @version 0.1
+ *  * @deprecated Использовать {@link PCustomStage}.
  */
 public interface PCustomWindow extends PWindow {
 	VCustomWindow getView();

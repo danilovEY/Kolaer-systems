@@ -5,6 +5,7 @@ import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +86,9 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 			final PPlugin plg = new PDefaultPlugin((URLClassLoader) jarClassLoaser, plugin, this.taskPaneWithApp);
 			
 			return plg;
+		}).exceptionally((t) -> {
+			LOG.error("Ошибка при инициализации плагина!", t);
+			return null;
 		}).thenAccept(plg -> {
 			Platform.runLater(() -> {
 				Thread.currentThread().setName("Добавления ярлыка на explorer плагина: " + plugin.getName());
@@ -101,6 +105,9 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 					this.desktopWithLabels.getChildren().setAll(workingCollection);
 				}
 			});
+		}).exceptionally((t) -> {
+			LOG.error("Ошибка при добавлении ярлыка!", t);
+			return null;
 		});
 	}
 	
