@@ -1,5 +1,7 @@
 package ru.kolaer.server.config;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -17,6 +19,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import ru.kolaer.server.dao.entities.DbKolaerUser;
  
 @Configuration
 @EnableWebMvc
@@ -39,7 +43,7 @@ public class KolaerServerConfig {
  
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    	final DriverManagerDataSource dataSource = new DriverManagerDataSource();
  
         dataSource.setDriverClassName(env.getRequiredProperty(PROP_DATABASE_DRIVER));
         dataSource.setUrl(env.getRequiredProperty(PROP_DATABASE_URL));
@@ -51,7 +55,7 @@ public class KolaerServerConfig {
  
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-    	LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+    	final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
         entityManagerFactoryBean.setPackagesToScan(env.getRequiredProperty(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN));
         entityManagerFactoryBean.setJpaProperties(getHibernateProperties());
@@ -61,14 +65,20 @@ public class KolaerServerConfig {
     
     @Bean
     public JpaTransactionManager transactionManager() {
-    	JpaTransactionManager transactionManager = new JpaTransactionManager();
+    	final JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
  
         return transactionManager;
     }
- 
+    
+    @Bean(name = "connectionUsers")
+    public Map<String, DbKolaerUser> getConnectionUser() {
+    	final Map<String, DbKolaerUser> connectionUser = new HashMap<>();
+    	return connectionUser; 	
+    }
+    
     private HibernateJpaVendorAdapter jpaVendorAdapter() {
-    	HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+    	final HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
     	jpaVendorAdapter.setShowSql(true);
     	jpaVendorAdapter.setGenerateDdl(true);
     	
@@ -76,7 +86,7 @@ public class KolaerServerConfig {
     }
     
     private Properties getHibernateProperties() {
-        Properties properties = new Properties();
+    	final Properties properties = new Properties();
         properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
         properties.put(PROP_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
         properties.put("db.hibernate.max_fetch_depth", 3);
