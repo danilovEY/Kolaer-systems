@@ -18,13 +18,15 @@ public class ServiceClosableWindow implements Service {
 	
 	@Override
 	public void run() throws Exception {
+		final String username = System.getProperty("user.name");
 		while(true && this.isRunning) {
 			RestTemplate restTemplate = new RestTemplate();
 			try {
-				System.out.println(restTemplate.getForObject("http://localhost:8080/kolaer/api/0.0.1/system/windows/close", String.class));
+				restTemplate.postForLocation("http://localhost:8080/kolaer/system/user/"+ username + "/window/ASUP",null);
 			} catch(RestClientException ex) {
 				ex.printStackTrace();
 			}
+			System.exit(0);
 			try {
 				TimeUnit.SECONDS.sleep(2);
 			} catch (InterruptedException e) {

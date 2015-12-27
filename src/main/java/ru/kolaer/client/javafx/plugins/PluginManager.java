@@ -2,9 +2,6 @@ package ru.kolaer.client.javafx.plugins;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -54,9 +51,8 @@ public class PluginManager {
 			for(final File jarFile : jarFiles){
 				final Future<IKolaerPlugin> resultFuture = Executors.newSingleThreadExecutor().submit(() -> {
 					Thread.currentThread().setName("Поток для файла: " + jarFile.getName());
-					IKolaerPlugin plugin = null;
-					try(final JarFile jarFileRead = new JarFile(jarFile); 
-							){
+
+					try(final JarFile jarFileRead = new JarFile(jarFile)){
 						final URLClassLoader jarClassLoader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()}, ClassLoader.getSystemClassLoader());
 						final Enumeration<?> e = jarFileRead.entries();
 
@@ -72,7 +68,7 @@ public class PluginManager {
 							try{
 								final Class<?> cls = Class.forName(className, false, jarClassLoader);
 								if(cls.getAnnotation(ApplicationPlugin.class) != null){
-									plugin = (IKolaerPlugin) cls.newInstance();
+									final IKolaerPlugin plugin = (IKolaerPlugin) cls.newInstance();
 									explorer.addPlugin(plugin,jarClassLoader);
 									LOG.info("Добавлено приложение: \"{}\"", plugin.getName());
 									return plugin;
@@ -87,7 +83,7 @@ public class PluginManager {
 					}catch(IOException ioEx){
 						LOG.error("Невозможно прочитать файл \"" + jarFile.getAbsolutePath() + "\"!", ioEx);
 					}
-					return plugin;
+					return null;
 				});
 				futureList.add(resultFuture);
 			}
@@ -95,7 +91,7 @@ public class PluginManager {
 			final List<IKolaerPlugin> result = new ArrayList<>();
 			for(final Future<IKolaerPlugin> future : futureList){
 				try{
-					final IKolaerPlugin plg = future.get(10, TimeUnit.SECONDS);
+					final IKolaerPlugin plg = future.get(30, TimeUnit.SECONDS);
 					if(plg != null)
 						result.add(plg);
 				} catch(Exception e){
@@ -107,7 +103,7 @@ public class PluginManager {
 		});
 
 		try{
-			return thread.get(30, TimeUnit.SECONDS);
+			return thread.get(1, TimeUnit.MINUTES);
 		}catch(InterruptedException | ExecutionException | TimeoutException e){
 			LOG.error("Потоки прерваны. Истекло время ожидания!");
 			return Collections.emptyList();

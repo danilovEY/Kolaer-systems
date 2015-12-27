@@ -2,6 +2,7 @@ package ru.kolaer.client.javafx.services;
 
 public class UserLocaleService implements LocaleService {
 	private boolean isRunning = false;
+	
 	@Override
 	public void setRunningStatus(boolean isRun) {
 		this.isRunning = isRun;
