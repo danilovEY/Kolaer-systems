@@ -15,7 +15,7 @@ public class DbKolaerUser {
 	public DbKolaerUser(final String user) {
 		this.log = new UserLog(user);
 		this.name = user;
-		this.log.addSystemMessage("Добавлен пользователь: " + user);
+		this.log.addSystemMessage("Р”РѕР±Р°РІР»РµРЅ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ: " + user);
 	}
 	public String getName() {
 		return name;
@@ -31,7 +31,7 @@ public class DbKolaerUser {
 
 	public void addIp(final String ip) {
 		this.ipSet.add(ip);
-		this.log.addSystemMessage("Добавлен IP: " + ip);
+		this.log.addSystemMessage("Р”РѕР±Р°РІР»РµРЅ IP: " + ip);
 	}
 	
 	public void addOpeningWindow(final String name) {

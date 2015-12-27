@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.dao.entities.DbKolaerUser;
 
 @RestController
-@RequestMapping(value="/system/{user}")
+@RequestMapping(value="/system/user/{user}")
 public class UserSystemController {
 	@Resource
 	@Qualifier("map")
