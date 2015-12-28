@@ -1,13 +1,20 @@
 package ru.kolaer.server.dao.entities;
 
+import java.io.Serializable;
+
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import ru.kolaer.server.restful.tools.UserLog;
 
-public class DbKolaerUser {
+@JsonIgnoreProperties("log")
+public class DbKolaerUser implements Serializable {
+	private static final long serialVersionUID = -4533583948766410710L;
+	
 	private final String name;
-	private final UserLog log;
+	private final transient UserLog log;
 	
 	private Set<String> ipSet = new HashSet<>();
 	private Set<String> openingWindows = new HashSet<>();
@@ -35,7 +42,15 @@ public class DbKolaerUser {
 	}
 	
 	public void addOpeningWindow(final String name) {
-		this.openingWindows.add(name);
+		if(this.openingWindows.add(name)){
+			this.log.getUserSystemLogger().info("Окно \"{}\" открыто!", name);
+		}
+	}
+	
+	public void removeOpeningWindow(final String name) {
+		if(this.openingWindows.remove(name)){
+			this.log.getUserSystemLogger().info("Окно \"{}\" закрыто!", name);
+		}
 	}
 	
 	public void addKey(final String key) {
