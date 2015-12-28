@@ -1,39 +1,30 @@
 package ru.kolaer.client.javafx.services;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
 
-import org.springframework.web.client.RestClientException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 
+import ru.kolaer.client.javafx.mvp.presenter.PWindow;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 
-public class ServiceClosableWindow implements Service {
-
+public class ServiceClosableWindow implements Service, ExplorerObserver {
+	private static final Logger LOG = LoggerFactory.getLogger(ServiceClosableWindow.class);
+	private final RestTemplate restTemplate = new RestTemplate();	
+	private final String username = System.getProperty("user.name");
 	private final VMExplorer explorer;
 	private boolean isRunning = false;
 	
 	public ServiceClosableWindow(final VMExplorer explorer) {
 		this.explorer = explorer;
+		this.explorer.registerObserver(this);
 	}
 	
 	@Override
 	public void run() throws Exception {
-		final String username = System.getProperty("user.name");
-		while(true && this.isRunning) {
-			RestTemplate restTemplate = new RestTemplate();
-			try {
-				restTemplate.postForLocation("http://localhost:8080/kolaer/system/user/"+ username + "/window/ASUP",null);
-			} catch(RestClientException ex) {
-				ex.printStackTrace();
-			}
-			System.exit(0);
-			try {
-				TimeUnit.SECONDS.sleep(2);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		
 	}
 
 	@Override
@@ -49,5 +40,41 @@ public class ServiceClosableWindow implements Service {
 	@Override
 	public void stop() throws Exception {
 		this.isRunning = false;
+		this.explorer.removeObserver(this);
+	}
+
+	@Override
+	public void updateOpenWindow(PWindow window) {
+		CompletableFuture.runAsync(() -> {
+			Thread.currentThread().setName(this.getName() + ": отправка данных - открытие окна");
+			
+			if(!this.isRunning)
+				return;
+			
+			restTemplate.postForLocation(new StringBuilder("http://localhost:8080/kolaer/system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"true", String.class);
+		}).exceptionally(t -> {
+			LOG.error("Не удается отправить данные!", t);
+			return null;
+		});
+	}
+
+	@Override
+	public void updateCloseWindow(PWindow window) {
+		CompletableFuture.runAsync(() -> {
+			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");
+			
+			if(!this.isRunning)
+				return;
+			
+			restTemplate.postForLocation(new StringBuilder("http://localhost:8080/kolaer/system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"false", String.class);
+		}).exceptionally(t -> {
+			LOG.error("Не удается отправить данные!", t);
+			return null;
+		});
+	}
+
+	@Override
+	public String getName() {
+		return "Слушатель проводника";
 	}
 }

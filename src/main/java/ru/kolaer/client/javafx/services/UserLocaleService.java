@@ -24,4 +24,10 @@ public class UserLocaleService implements LocaleService {
 		
 	}
 
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

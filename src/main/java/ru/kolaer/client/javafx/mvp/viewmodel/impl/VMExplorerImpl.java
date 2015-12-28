@@ -3,9 +3,10 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +23,11 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PPlugin;
+import ru.kolaer.client.javafx.mvp.presenter.PWindow;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PDefaultPlugin;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 import ru.kolaer.client.javafx.plugins.PluginManager;
@@ -43,6 +47,9 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
     @FXML
     private HBox taskPaneWithApp;
 	
+    private final Set<ExplorerObserver> observerSet = new HashSet<>();
+    private final Set<ExplorerObresvable> pluginsSet = new HashSet<>();
+    
     //private final Map<IKolaerPlugin, VMLabel> mapPlugin = new HashMap<>();
     
 	public VMExplorerImpl() {
@@ -50,18 +57,7 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 	}
 
 	@Override
-	public void initialize(final URL location, final ResourceBundle resources) {
-		
-		Button but = new Button("UPDATE!");
-		but.setUserData("0");
-		but.setOnAction(e -> {
-			this.removeAll();
-			this.desktopWithLabels.getChildren().add(but);
-			new PluginManager(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(this);
-		});
-		
-		this.desktopWithLabels.getChildren().add(but);
-		
+	public void initialize(final URL location, final ResourceBundle resources) {		
 		desktop.heightProperty().addListener((observable, oldValue, newValue) -> {
 			desktopWithLabels.setPrefHeight(desktop.getHeight());
 		});
@@ -84,6 +80,9 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 			Thread.currentThread().setContextClassLoader(jarClassLoaser);
 			
 			final PPlugin plg = new PDefaultPlugin((URLClassLoader) jarClassLoaser, plugin, this.taskPaneWithApp);
+			plg.registerObserver(this);
+			
+			this.pluginsSet.add(plg);
 			
 			return plg;
 		}).exceptionally((t) -> {
@@ -131,5 +130,35 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 	public void removeAll() {
 		this.desktopWithLabels.getChildren().clear();
 		this.taskPaneWithApp.getChildren().clear();
+	}
+
+	@Override
+	public void notifyOpenWindow(final PWindow window) {
+		this.observerSet.parallelStream().forEach(obs -> obs.updateOpenWindow(window));
+	}
+
+	@Override
+	public void notifyCloseWindow(final PWindow window) {
+		this.observerSet.parallelStream().forEach(obs -> obs.updateCloseWindow(window));
+	}
+
+	@Override
+	public void registerObserver(final ExplorerObserver observer) {
+		this.observerSet.add(observer);
+	}
+
+	@Override
+	public void removeObserver(final ExplorerObserver observer) {
+		this.observerSet.remove(observer);
+	}
+
+	@Override
+	public void updateOpenWindow(PWindow window) {
+		this.notifyOpenWindow(window);
+	}
+
+	@Override
+	public void updateCloseWindow(PWindow window) {
+		this.notifyCloseWindow(window);
 	}
 }

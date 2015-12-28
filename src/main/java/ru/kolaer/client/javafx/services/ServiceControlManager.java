@@ -3,8 +3,6 @@ package ru.kolaer.client.javafx.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,6 @@ public class ServiceControlManager {
 	private static final Logger LOG = LoggerFactory.getLogger(ServiceControlManager.class);
 	
 	private final List<Service> servicesList = new ArrayList<>();
-	private final ExecutorService poolThreadServices = Executors.newScheduledThreadPool(2);
 	
 	public ServiceControlManager() {
 		
@@ -25,6 +22,7 @@ public class ServiceControlManager {
 	
 	public void runService(final Service service) {
 		if(!service.isRunning()) {
+			LOG.info("Запуск службы: \"{}\"", service.getName());
 			service.setRunningStatus(true);
 			CompletableFuture.runAsync(() -> {
 				try {

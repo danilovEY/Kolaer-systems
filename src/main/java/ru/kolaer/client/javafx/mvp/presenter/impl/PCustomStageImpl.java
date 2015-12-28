@@ -60,6 +60,11 @@ public class PCustomStageImpl implements PCustomStage {
 		}).exceptionally(t -> {
 			LOG.error("Ошибка при добавлении контента в окно плагина!", t);
 			return null;
+		}).thenRunAsync(() -> {
+			this.taskPane.show();
+		}).exceptionally(t -> {
+			LOG.error("Ошибка при запуске формы для панели задач!", t);
+			return null;
 		});	
 	}
 
@@ -71,11 +76,6 @@ public class PCustomStageImpl implements PCustomStage {
 			
 			this.view.setVisible(false);		
 			this.application.stop();
-			try {
-				this.classLoader.close();
-			} catch (Exception e) {
-				LOG.info("Ошибка при закрытии class loader'а", e);
-			}
 			this.taskPane.close();
 			LOG.info("Приложение \"{}\" остановлено!", this.application.getName());
 		}).exceptionally(t -> {

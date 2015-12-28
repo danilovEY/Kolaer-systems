@@ -14,6 +14,7 @@ import ru.kolaer.client.javafx.mvp.presenter.PPlugin;
 import ru.kolaer.client.javafx.mvp.presenter.PWindow;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
 import ru.kolaer.client.javafx.mvp.view.impl.VCustomStageImpl;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMLabel;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMApplicationOnTaskPaneImpl;
@@ -22,7 +23,7 @@ import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 
 public class PDefaultPlugin implements PPlugin{
 	private static final Logger LOG = LoggerFactory.getLogger(PDefaultPlugin.class);
-	
+	private ExplorerObserver explorer;
 	private final IKolaerPlugin plugin;
 	private final VMLabel label;
 	private final Pane taskPane;
@@ -63,7 +64,11 @@ public class PDefaultPlugin implements PPlugin{
 						stage.setTitle(this.plugin.getApplication().getName());
 						stage.setIconWindow(this.plugin.getApplication().getIcon());
 						stage.setOnCloseAction(event -> {
-							this.window.close();
+							CompletableFuture.runAsync(() -> {
+								this.window.close();
+							}).thenRunAsync(() -> {
+								this.notifyCloseWindow(this.window);
+							});
 						});
 						window.setView(stage);
 					});
@@ -78,21 +83,25 @@ public class PDefaultPlugin implements PPlugin{
 				}).exceptionally((t) -> {
 					LOG.error("Ошибка при инициализация формы!", t);
 					return null;
-				}).thenRun(() -> {
+				}).thenRunAsync(() -> {
 					Thread.currentThread().setName("Запуск окна плагина: " + this.plugin.getName());				
-					this.window.show();			
+					this.window.show();					
 				}).exceptionally((t) -> {
 					LOG.error("Ошибка открытии окна плагина!", t);
 					return null;
 				}).thenRunAsync(() -> {
-					this.window.getTaskPane().show();
-				}).exceptionally(t -> {
-					LOG.error("Ошибка при запуске формы для панели задач!", t);
-					return null;
-				});				
+					this.notifyOpenWindow(this.window);
+				});
 			} else {
-				this.window.show();
-				
+				CompletableFuture.runAsync(() -> {
+					Thread.currentThread().setName("Запуск окна плагина: " + this.plugin.getName());				
+					this.window.show();					
+				}).exceptionally((t) -> {
+					LOG.error("Ошибка открытии окна плагина!", t);
+					return null;
+				}).thenRunAsync(() -> {
+					this.notifyOpenWindow(this.window);
+				});
 			}			
 		});
 	}
@@ -110,4 +119,26 @@ public class PDefaultPlugin implements PPlugin{
 	@Override
 	public IKolaerPlugin getPlugin() {
 		return this.plugin;
+	}
+
+	@Override
+	public void notifyOpenWindow(final PWindow window) {
+		if(this.explorer != null)
+			this.explorer.updateOpenWindow(window);
+	}
+
+	@Override
+	public void notifyCloseWindow(PWindow window) {
+		if(this.explorer != null)
+			this.explorer.updateCloseWindow(window);
+	}
+
+	@Override
+	public void registerObserver(ExplorerObserver observer) {
+		this.explorer = observer;
+	}
+
+	@Override
+	public void removeObserver(ExplorerObserver observer) {
+		this.explorer = null;
 	}}
