@@ -53,8 +53,8 @@ public class UserSystemController {
 		return true;
 	}
 
-	@RequestMapping(path = "/key/{key}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addKey(final @PathVariable String user, final @PathVariable String key) {
+	@RequestMapping(path = "/key", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addKey(final @PathVariable String user, final @RequestBody String key) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
 		userData.addKey(key);
 	}
