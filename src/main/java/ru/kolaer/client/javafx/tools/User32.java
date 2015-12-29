@@ -50,6 +50,9 @@ public class User32 {
 
     public static native boolean PeekMessage(MSG lpMsg, Pointer hWnd, int wMsgFilterMin, int wMsgFilterMax, int wRemoveMsg);
 
+    public static native boolean GetAsyncKeyState(int key);
+    public static native byte GetKeyState(int key);
+    
     @SuppressWarnings({"UnusedDeclaration"})
     public static class MSG extends Structure {
         public Pointer hWnd;
