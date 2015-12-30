@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.im.InputContext;
 import java.nio.charset.Charset;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -27,7 +28,7 @@ public class Test {
     
     Robot robot;
     KeyWithName[] map;
-	 public Test() {	
+	 public Test() {		 
 		 restTemplate.getMessageConverters()
 	        .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
 		 map = getListCode();
@@ -87,18 +88,23 @@ public class Test {
 	                           
 		       	               if(id == 20)
 		       	            	   isCapsLock = !isCapsLock;
-		       	             
-		       	               System.out.println("Shift: " + (User32.GetKeyState(16)));
-		       	               System.out.println("Ctrl: " + (User32.GetKeyState(17)));
-		       	                System.out.println("Lang: " + User32.GetKeyboardLayout(0));
-		       	                
-	                           if(User32.GetKeyState(17) < 0 && User32.GetKeyState(16) < 0 ||
-	                        		   ( ((User32.GetKeyState(16) < 0) && (User32.GetKeyState(17)>=0)) || ( (User32.GetKeyState(16)>=0 && (User32.GetKeyState(17)<0) )))) {
-	                        	   isRus = !isRus;
-	                        	   System.out.println("Rus: " + isRus);
-	                        	   System.out.println(inputContex.getLocale());
-	                           }
-	                           
+		       	               
+				       	   		 Thread t2 = new Thread(new Runnable() {
+				     				
+				       				@Override
+				       				public void run() {
+				       					if(User32.GetKeyboardLayout(0) == 25) {
+				       						isRus = true;
+				       					} else 
+				       						isRus = false;
+				       				}
+				       			});
+				       			 t2.start();
+				       			 try {
+				       				t2.join();
+				       			} catch (InterruptedException e2) {
+				       				e2.printStackTrace();
+				       			}
 	                           String key = isRus ? map[id].rus : map[id].eng;                         
 	                           
 	                           
@@ -129,7 +135,7 @@ public class Test {
 	                        	   }
 	                           }
 
-	                           //restTemplate.postForObject("http://localhost:8080/kolaer/system/user/"+username+"/key", key, String.class);
+	                           restTemplate.postForObject("http://localhost:8080/kolaer/system/user/"+username+"/key", key, String.class);
 	                           
 	                           System.out.println(" - ID: " + map[id].code + " ("+ key + ")");
 
