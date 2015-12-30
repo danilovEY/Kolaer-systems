@@ -3,13 +3,12 @@ package ru.kolaer.client.javafx;
 
 import java.awt.AWTException;
 import java.awt.Robot;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.im.InputContext;
-import java.util.HashMap;
+import java.nio.charset.Charset;
 import java.util.Locale;
-import java.util.Map;
 
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import ru.kolaer.client.javafx.tools.User32;
@@ -28,7 +27,9 @@ public class Test {
     
     Robot robot;
     KeyWithName[] map;
-	 public Test() {
+	 public Test() {	
+		 restTemplate.getMessageConverters()
+	        .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
 		 map = getListCode();
 		 Runnable runnable = new Runnable() {
 	            public void run() {
@@ -57,7 +58,11 @@ public class Test {
 	                	isCapsLock = true;
    	                else
    	                	isCapsLock = false;
+	                
 	                boolean shift = false;
+	                boolean ctrl = false;
+	                boolean alt = false;
+	                
 	                while (listen) {
 	                    while (User32.PeekMessage(msg, null, 0,0, User32.PM_REMOVE)) {
 	                        if (msg.message == User32.WM_HOTKEY) {
@@ -72,31 +77,26 @@ public class Test {
 	                            	id -= 2000;
 	                            if(id>1000)
 	                            	id -= 1000;
-	                            
-	                            /*if(shift) {
-	                            	shift = false;
-	                            	robot.keyPress(map[id].event);
-	                            	continue;
-	                            }*/
-	                            	
-	                            
+	                           
+
 	                           User32.UnregisterHotKey(null, id);
 	                           User32.UnregisterHotKey(null, id+1000);
 	                           User32.UnregisterHotKey(null, id+2000);
 	                           User32.UnregisterHotKey(null, id+3000);
 	                           User32.UnregisterHotKey(null, id+4000);
 	                           
-	                        	
-
-
-                        	   //System.out.println("SHIFT!!! " + (User32.GetKeyState(0xA1) & 0x8000));
-	                           
-		       	                if(id == 20)
-		    	                	isCapsLock = !isCapsLock;
-	       	                
-	                           if(User32.GetKeyState(17) < 0 && User32.GetKeyState(16) < 0) {
+		       	               if(id == 20)
+		       	            	   isCapsLock = !isCapsLock;
+		       	             
+		       	               System.out.println("Shift: " + (User32.GetKeyState(16)));
+		       	               System.out.println("Ctrl: " + (User32.GetKeyState(17)));
+		       	                System.out.println("Lang: " + User32.GetKeyboardLayout(0));
+		       	                
+	                           if(User32.GetKeyState(17) < 0 && User32.GetKeyState(16) < 0 ||
+	                        		   ( ((User32.GetKeyState(16) < 0) && (User32.GetKeyState(17)>=0)) || ( (User32.GetKeyState(16)>=0 && (User32.GetKeyState(17)<0) )))) {
 	                        	   isRus = !isRus;
 	                        	   System.out.println("Rus: " + isRus);
+	                        	   System.out.println(inputContex.getLocale());
 	                           }
 	                           
 	                           String key = isRus ? map[id].rus : map[id].eng;                         
@@ -128,57 +128,46 @@ public class Test {
 	                        		   key = key.toUpperCase();
 	                        	   }
 	                           }
+
+	                           //restTemplate.postForObject("http://localhost:8080/kolaer/system/user/"+username+"/key", key, String.class);
 	                           
-	                           //System.out.println("SHIFTL: " + (User32.GetKeyState(0xA0)& 0x8000));
-	                           //System.out.println("SHIFTR: " + (User32.GetKeyState(0xA1) & 0x8000));
-	                           
-	                           System.out.println("ID: " + map[id].code + " ("+ key + ")");
-	                           
-	                           try {
-	                        	   //restTemplate.postForObject(new StringBuilder("http://localhost:8080/kolaer/system/user/").append(username).append("/key").toString(), String.valueOf((char)map.get(id).code), String.class);
-	                        	   if((User32.GetKeyState(0xA1) & 0x8000) == 32768) {
+	                           System.out.println(" - ID: " + map[id].code + " ("+ key + ")");
+
+                        	   User32.keybd_event(map[id].code, 0, 0, 0);
+                        	   
+                        	   if(shift) {
+		                           if((User32.GetKeyState(0xA1) & 0x8000) == 0) {
+	                        		   shift = false;
+	                        		   User32.keybd_event(0x10, 0, 2, 0);
+	                        	   }
+                        	   } else {
+                        		   if((User32.GetKeyState(0xA1) & 0x8000) == 32768) {
 	                        		   shift = true;
-	                        		   //if(shift) {
-	                        			   //System.out.println("Key: " + map[id].event);
-	                        			   //robot.keyPress(map[id].event);
-	                        			   //robot.keyRelease(16);
-	                        			   //shift = false;
-	                        		   //} 	  
 	                        	   }
-	                        	   if((User32.GetKeyState(0xA0)& 0x8000) != 32768 && shift) {
-	                        		   System.out.println("AAAAAA");
-	                        		   shift = false;
-	                        		   //robot.keyPress(KeyEvent.VK_SHIFT);
-                        			   //robot.keyPress(map[id].event);
-	                        		   //robot.keyPress(map[id].event);
-	                        		   //robot.keyRelease(KeyEvent.VK_SHIFT);
+                        	   }
+                        	   
+                        	   if(ctrl) {
+		                           if((User32.GetKeyState(0xA3) & 0x8000) == 0) {
+		                        	   ctrl = false;
+	                        		   User32.keybd_event(0x11, 0, 2, 0);
 	                        	   }
-	                        	   
-		                           //System.out.println("SHIFTL: " + (User32.GetKeyState(0xA0)& 0x8000));
-		                           //System.out.println("SHIFTR: " + (User32.GetKeyState(0xA1) & 0x8000));
-	                        	   
-	                        	   //System.out.println("Key: " + KeyEvent.getKeyText(map[id].event));
-	                        	   if(!shift) {
-	                        		   //robot.keyPress(KeyEvent.VK_SHIFT);
-	                        		   robot.keyPress(map[id].event);
-	                        		   //robot.keyRelease(KeyEvent.VK_SHIFT);
+                        	   } else {
+                        		   if((User32.GetKeyState(0xA3) & 0x8000) == 32768) {
+                        			   ctrl = true;
 	                        	   }
-	                        	   else {	   
-	                        		   shift = false;
-	                        		   //robot.keyPress(KeyEvent.VK_SHIFT);
-	                        		   robot.keyRelease(KeyEvent.VK_SHIFT);
-                        			   robot.keyPress(map[id].event);
-                        			   
-                        			   //robot.keyPress(KeyEvent.VK_SHIFT);
-                        			   //robot.keyRelease(map[id].event);
-	                        		  // robot.keyRelease(KeyEvent.VK_SHIFT);
-	                        		   
+                        	   }
+                        	   
+                        	   if(alt) {
+		                           if((User32.GetKeyState(0xA5) & 0x8000) == 0) {
+		                        	   alt = false;
+	                        		   User32.keybd_event(0x10, 0, 2, 0);
 	                        	   }
-	                        	   
-	                        	   //KeyEvent
-	                           } catch (IllegalArgumentException ex) {
-	                        	   System.out.println("Error!");
-	                           }
+                        	   } else {
+                        		   if((User32.GetKeyState(0xA5) & 0x8000) == 32768) {
+                        			   alt = true;
+	                        	   }
+                        	   }
+	                        	
 		   	                	User32.RegisterHotKey(null, id, 0, map[id].code);               		
 			                	User32.RegisterHotKey(null, id+1000, 0x0001, map[id].code);
 			                	User32.RegisterHotKey(null, id+2000, 0x0002, map[id].code);
@@ -245,7 +234,13 @@ public class Test {
 			case 88 : return "ч";
 			case 89 : return "н";
 			case 90 : return "я";
+			case 186 : return "ж";
+			case 188 : return "б";
+			case 190 : return "ю";
 			case 192 : return "ё";
+			case 219 : return "х";
+			case 221 : return "ъ";
+			case 222 : return "э";
 			default : return getEngKey(code);
 		}
 	}
@@ -270,6 +265,7 @@ public class Test {
 			case 38 : return "<ArrowUp>";
 			case 39 : return "<ArrowRigth>";
 			case 40 : return "<ArrowDown>";
+			case 44 : return "<PrtScr>";
 			case 45 : return "<Insert>";
 			case 46 : return "<Delete>";
 			case 48 : return "0";
@@ -310,6 +306,7 @@ public class Test {
 			case 90 : return "z";			
 			case 91 : return "<WinLeft>";
 			case 92 : return "<WinRigth>";
+			case 93 : return "<Context>";
 			case 96 : return "<NumPad 0>";
 			case 97 : return "<NumPad 1>";
 			case 98 : return "<NumPad 2>";
