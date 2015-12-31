@@ -6,6 +6,7 @@ public interface Resources {
 	public static final String VERSION = "0.0.1";
 	
 	public static final String PATH_TO_DIR_WITH_PLUGINS = "plugins";
+	public static final StringBuilder URL_TO_KOLAER_RESTFUL = new StringBuilder("http://localhost:8080/kolaer/");
 	
 	public static final URL V_LABEL = Resources.class.getResource("/viewFX/VLabel.fxml");
 	public static final URL V_MAIN_FRAME = Resources.class.getResource("/viewFX/VMainFrame.fxml");

@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.javafx.mvp.presenter.PWindow;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
+import ru.kolaer.client.javafx.tools.Resources;
 
 public class ServiceClosableWindow implements Service, ExplorerObserver {
 	private static final Logger LOG = LoggerFactory.getLogger(ServiceClosableWindow.class);
@@ -51,7 +52,7 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 			if(!this.isRunning)
 				return;
 			
-			restTemplate.postForLocation(new StringBuilder("http://localhost:8080/kolaer/system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"true", String.class);
+			restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"true", String.class);
 		}).exceptionally(t -> {
 			LOG.error("Не удается отправить данные!", t);
 			return null;
@@ -66,7 +67,7 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 			if(!this.isRunning)
 				return;
 			
-			restTemplate.postForLocation(new StringBuilder("http://localhost:8080/kolaer/system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"false", String.class);
+			restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"false", String.class);
 		}).exceptionally(t -> {
 			LOG.error("Не удается отправить данные!", t);
 			return null;

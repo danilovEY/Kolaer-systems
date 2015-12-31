@@ -1,14 +1,10 @@
 package ru.kolaer.client.javafx;
 
 
-import java.awt.AWTException;
-import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.awt.im.InputContext;
 import java.nio.charset.Charset;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,8 +21,7 @@ public class Test {
     private boolean isCapsLock = false;
     
     private boolean isRus = false;
-    
-    Robot robot;
+
     KeyWithName[] map;
 	 public Test() {		 
 		 restTemplate.getMessageConverters()
@@ -35,12 +30,6 @@ public class Test {
 		 Runnable runnable = new Runnable() {
 	            public void run() {
 
-	            	try {
-	            		robot = new Robot();
-					} catch (AWTException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
 	                MSG msg = new MSG();
 	                InputContext inputContex = InputContext.getInstance();
 	                if(inputContex.getLocale().getLanguage().equals(new Locale("ru").getLanguage()))
@@ -136,7 +125,7 @@ public class Test {
 	                           }
 
 	                           restTemplate.postForObject("http://localhost:8080/kolaer/system/user/"+username+"/key", key, String.class);
-	                           
+
 	                           System.out.println(" - ID: " + map[id].code + " ("+ key + ")");
 
                         	   User32.keybd_event(map[id].code, 0, 0, 0);
