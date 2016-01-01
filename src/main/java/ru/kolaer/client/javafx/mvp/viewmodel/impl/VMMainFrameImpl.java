@@ -19,7 +19,7 @@ import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.services.ServiceClosableWindow;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
-import ru.kolaer.client.javafx.services.UserKeyboardLictenerService;
+import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMMainFrameImpl extends Application {
@@ -35,7 +35,7 @@ public class VMMainFrameImpl extends Application {
     @FXML
     public void initialize() {
     	final VMExplorer explorer = new VMExplorerImpl();
-    	managerTool.addService(new UserKeyboardLictenerService(), true);
+    	managerTool.addService(new UserWindowsKeyListenerService(), true);
     	managerTool.addService(new ServiceClosableWindow(explorer), true);
     	final ExecutorService readPluginsThread = Executors.newSingleThreadExecutor();
 		readPluginsThread.submit(() -> {

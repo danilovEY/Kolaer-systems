@@ -55,6 +55,12 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>4.2.3.RELEASE</version>
+			<exclusions>
+				<exclusion>
+		            <groupId>commons-logging</groupId>
+		            <artifactId>commons-logging</artifactId>
+	            </exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

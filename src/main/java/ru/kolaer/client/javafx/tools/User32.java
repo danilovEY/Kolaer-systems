@@ -17,11 +17,15 @@
 
 package ru.kolaer.client.javafx.tools;
 
-import com.sun.jna.*;
-import com.sun.jna.win32.W32APIOptions;
-
 import java.util.Arrays;
 import java.util.List;
+
+import com.sun.jna.IntegerType;
+import com.sun.jna.Native;
+import com.sun.jna.NativeLibrary;
+import com.sun.jna.Pointer;
+import com.sun.jna.Structure;
+import com.sun.jna.win32.W32APIOptions;
 
 /**
  * Author: Denis Tulskiy
@@ -48,7 +52,7 @@ public class User32 {
 
     public static native boolean UnregisterHotKey(Pointer hWnd, int id);
 
-    public static native boolean PeekMessage(MSG lpMsg, Pointer hWnd, int wMsgFilterMin, int wMsgFilterMax, int wRemoveMsg);
+    public static native boolean GetMessage(MSG lpMsg, Pointer hWnd, int wMsgFilterMin, int wMsgFilterMax, int wRemoveMsg);
 
     public static native boolean GetAsyncKeyState(int key);
     public static native byte GetKeyState(int key);

@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.im.InputContext;
 import java.nio.charset.Charset;
 import java.util.Locale;
+
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -54,7 +55,7 @@ public class Test {
 	                boolean alt = false;
 	                
 	                while (listen) {
-	                    while (User32.PeekMessage(msg, null, 0,0, User32.PM_REMOVE)) {
+	                    while (User32.GetMessage(msg, null, 0,0, User32.PM_REMOVE)) {
 	                        if (msg.message == User32.WM_HOTKEY) {
 	                        	
 	                            int id = msg.wParam.intValue();
