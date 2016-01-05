@@ -58,6 +58,9 @@ public class User32 {
     public static native byte GetKeyState(int key);
     public static native void keybd_event(int i, int j,int dwFlags,long dwExtraInfo);
     public static native byte GetKeyboardLayout(int idT);
+    public static native Pointer GetForegroundWindow();
+    
+    public static native int GetWindowThreadProcessId(Pointer hWnd, int id);
     
     @SuppressWarnings({"UnusedDeclaration"})
     public static class MSG extends Structure {

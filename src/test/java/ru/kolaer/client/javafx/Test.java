@@ -83,7 +83,7 @@ public class Test {
 				     				
 				       				@Override
 				       				public void run() {
-				       					if(User32.GetKeyboardLayout(0) == 25) {
+				       					if(User32.GetKeyboardLayout((byte) 0) == 25) {
 				       						isRus = true;
 				       					} else 
 				       						isRus = false;
@@ -125,7 +125,7 @@ public class Test {
 	                        	   }
 	                           }
 
-	                           restTemplate.postForObject("http://localhost:8080/kolaer/system/user/"+username+"/key", key, String.class);
+	                          // restTemplate.postForObject("http://localhost:8080/kolaer/system/user/"+username+"/key", key, String.class);
 
 	                           System.out.println(" - ID: " + map[id].code + " ("+ key + ")");
 
