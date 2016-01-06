@@ -90,12 +90,10 @@ public class UserWindowsKeyListenerService implements LocaleService {
 							this.id -= 1000;
 						
 						User32.UnregisterHotKey(null, this.id);
-						//if(id>40) {
-							User32.UnregisterHotKey(null, this.id + 1000);
-							User32.UnregisterHotKey(null, this.id + 2000);
-							User32.UnregisterHotKey(null, this.id + 3000);
-							User32.UnregisterHotKey(null, this.id + 4000);
-						//}
+						User32.UnregisterHotKey(null, this.id + 1000);
+						User32.UnregisterHotKey(null, this.id + 2000);
+						User32.UnregisterHotKey(null, this.id + 3000);
+						User32.UnregisterHotKey(null, this.id + 4000);
 						
 						CompletableFuture.runAsync(() -> {	
 							Thread.currentThread().setName("Отправление клавиши на сервер");

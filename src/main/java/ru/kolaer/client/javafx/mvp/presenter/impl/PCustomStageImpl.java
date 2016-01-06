@@ -3,8 +3,6 @@ package ru.kolaer.client.javafx.mvp.presenter.impl;
 import java.net.URLClassLoader;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,13 +72,14 @@ public class PCustomStageImpl implements PCustomStage {
 			Thread.currentThread().setName("Завершение плагина");
 			Thread.currentThread().setContextClassLoader(this.classLoader);
 			
-			this.view.setVisible(false);		
+			this.view.setVisible(false);
 			this.application.stop();
-			this.taskPane.close();
 			LOG.info("Приложение \"{}\" остановлено!", this.application.getName());
 		}).exceptionally(t -> {
 			LOG.info("Ошибка при закрытии плагина", t);
 			return null;
+		}).thenRunAsync(() -> {
+			this.taskPane.close();
 		});
 	}
 
