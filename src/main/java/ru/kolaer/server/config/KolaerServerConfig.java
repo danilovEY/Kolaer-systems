@@ -1,7 +1,5 @@
 package ru.kolaer.server.config;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -20,7 +18,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import ru.kolaer.server.dao.entities.DbKolaerUser;
+import ru.kolaer.server.restful.tools.UsersManager;
  
 @Configuration
 @EnableWebMvc
@@ -71,10 +69,10 @@ public class KolaerServerConfig {
         return transactionManager;
     }
     
-    @Bean(name = "connectionUsers")
-    public Map<String, DbKolaerUser> getConnectionUser() {
-    	final Map<String, DbKolaerUser> connectionUser = new HashMap<>();
-    	return connectionUser; 	
+    @Bean(name = "usersManager")
+    public UsersManager usersManager() {
+    	final UsersManager usersManager = new UsersManager();
+    	return usersManager; 	
     }
     
     private HibernateJpaVendorAdapter jpaVendorAdapter() {
