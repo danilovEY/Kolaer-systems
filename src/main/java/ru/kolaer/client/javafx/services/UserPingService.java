@@ -2,6 +2,9 @@ package ru.kolaer.client.javafx.services;
 
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import ru.kolaer.client.javafx.tools.Resources;
@@ -12,7 +15,7 @@ import ru.kolaer.client.javafx.tools.Resources;
  * @version 0.1
  */
 public class UserPingService implements Service {
-	
+	private final Logger LOG = LoggerFactory.getLogger(UserPingService.class);
 	private final RestTemplate restTemplate = new RestTemplate();
 	private final String username = System.getProperty("user.name");
 	private boolean isRun = false;
@@ -29,7 +32,7 @@ public class UserPingService implements Service {
 
 	@Override
 	public String getName() {
-		return "Ping";
+		return "Ping Service";
 	}
 
 	@Override
@@ -37,9 +40,16 @@ public class UserPingService implements Service {
 		this.isRun = true;
 		
 		while(this.isRun){
-			TimeUnit.SECONDS.sleep(5);
-			String bool = restTemplate.getForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/ping", String.class);
-			System.out.println(bool);
+			TimeUnit.SECONDS.sleep(3);
+			try {
+				String bool = restTemplate.getForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/ping", String.class);
+				
+				if(bool.equals("false")){
+					restTemplate.postForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/ping", "true", String.class);
+				}
+			} catch(RestClientException ex) {
+				LOG.error("Сервер \"{}\" не доступен!", Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/ping");
+			}
 		}
 	}
 
@@ -47,5 +57,4 @@ public class UserPingService implements Service {
 	public void stop() throws Exception {
 		this.isRun = false;
 	}
-
 }

@@ -58,11 +58,6 @@ public class PCustomStageImpl implements PCustomStage {
 		}).exceptionally(t -> {
 			LOG.error("Ошибка при добавлении контента в окно плагина!", t);
 			return null;
-		}).thenRunAsync(() -> {
-			this.taskPane.show();
-		}).exceptionally(t -> {
-			LOG.error("Ошибка при запуске формы для панели задач!", t);
-			return null;
 		});	
 	}
 

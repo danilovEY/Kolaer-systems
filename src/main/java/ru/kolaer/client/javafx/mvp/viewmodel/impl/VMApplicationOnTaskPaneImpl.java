@@ -101,8 +101,11 @@ public class VMApplicationOnTaskPaneImpl extends ImportFXML implements VMApplica
 		Platform.runLater(() -> {
 			Thread.currentThread().setName("Добавление формы на панель задач");
 			Thread.currentThread().setContextClassLoader(this.classLoader);
-
-			this.taskPane.getChildren().add(this);
+			try {
+				this.taskPane.getChildren().add(this);
+			} catch(Exception ex) {
+				LOG.error("Ошибка при добавлении элемента на панель задач!", ex);
+			}
 		});	
 	}
 }

@@ -1,6 +1,5 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
-import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.concurrent.CompletableFuture;
 
@@ -88,6 +87,11 @@ public class PDefaultPlugin implements PPlugin{
 					this.window.show();					
 				}).exceptionally((t) -> {
 					LOG.error("Ошибка открытии окна плагина!", t);
+					return null;
+				}).thenRunAsync(() -> {
+					this.window.getTaskPane().show();
+				}).exceptionally(t -> {
+					LOG.error("Ошибка при запуске формы для панели задач!", t);
 					return null;
 				}).thenRunAsync(() -> {
 					this.notifyOpenWindow(this.window);
