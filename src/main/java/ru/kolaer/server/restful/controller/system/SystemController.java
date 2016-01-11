@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,6 +42,15 @@ public class SystemController {
 	@RequestMapping(path = "/users/exit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void exitUsers() {
 		this.usersManager.disconnectAllUser();
+	}
+	
+	@RequestMapping(path = "/user/{user}/{window}/{status}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void closeWindow(@PathVariable final String user, @PathVariable final String window, @PathVariable final String status) {
+		if(status.equals("close")) {
+			this.usersManager.getUserByName(user).addCloseWindow(window);
+		} else {
+			
+		}
 	}
 	
 }

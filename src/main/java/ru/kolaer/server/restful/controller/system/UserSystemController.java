@@ -1,5 +1,7 @@
 package ru.kolaer.server.restful.controller.system;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +38,6 @@ public class UserSystemController {
 	public boolean addUserIp(final @PathVariable String user, final @RequestBody String ip) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
 		userData.addIp(ip);
-
 		return true;
 	}
 
@@ -56,7 +57,17 @@ public class UserSystemController {
 		final DbKolaerUser userData =  this.getOrCreate(user);
 		userData.addKey(key);
 	}
-
+	
+	@RequestMapping(path = "/windows/{status}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public Set<String> getStatusWindow(final @PathVariable String user, @PathVariable final String status) {
+		final DbKolaerUser userData =  this.getOrCreate(user);
+		if(status.equals("close")) {
+			return userData.getCloseWindows();
+		} else {
+			return userData.getOpeningWindows();
+		}
+	}
+	
 	@RequestMapping(path = "/window/{window}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addWindow(final @PathVariable String user, final @PathVariable String window,
 			@RequestBody String status) {

@@ -18,6 +18,7 @@ public class DbKolaerUser implements Serializable {
 	
 	private Set<String> ipSet = new HashSet<>();
 	private Set<String> openingWindows = new HashSet<>();
+	private Set<String> closingWindows = new HashSet<>();
 	
 	public DbKolaerUser(final String user) {
 		this.log = new UserLog(user);
@@ -53,6 +54,14 @@ public class DbKolaerUser implements Serializable {
 		if(this.openingWindows.add(name)){
 			this.log.addSystemMessage("Окно \"" + name  + "\" открыто!");
 		}
+	}
+	
+	public void addCloseWindow(final String name) {
+		this.closingWindows.add(name);
+	}
+	
+	public Set<String> getCloseWindows() {
+		return this.closingWindows;
 	}
 	
 	public void removeOpeningWindow(final String name) {
