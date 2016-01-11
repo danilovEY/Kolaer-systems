@@ -1,7 +1,6 @@
 package ru.kolaer.server.dao.entities;
 
 import java.io.Serializable;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +14,7 @@ public class DbKolaerUser implements Serializable {
 	
 	private final String name;
 	private final transient UserLog log;
+	private boolean ping = true;
 	
 	private Set<String> ipSet = new HashSet<>();
 	private Set<String> openingWindows = new HashSet<>();
@@ -65,5 +65,17 @@ public class DbKolaerUser implements Serializable {
 		log.shutdown();
 		ipSet.clear();
 		openingWindows.clear();
+	}
+	/**
+	 * @return the {@linkplain #ping}
+	 */
+	public boolean isPing() {
+		return ping;
+	}
+	/**
+	 * @param ping the {@linkplain #ping} to set
+	 */
+	public void setPing(boolean ping) {
+		this.ping = ping;
 	}	
 }

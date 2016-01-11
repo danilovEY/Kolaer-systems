@@ -40,6 +40,17 @@ public class UserSystemController {
 		return true;
 	}
 
+	@RequestMapping(path = "/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public String ping(final @PathVariable String user) {
+		return String.valueOf(this.getOrCreate(user).isPing());
+	}
+	
+	@RequestMapping(path = "/ping", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void ping(final @PathVariable String user, final @RequestBody String ping) {
+		final DbKolaerUser userData =  this.getOrCreate(user);
+		userData.setPing(true);
+	}
+	
 	@RequestMapping(path = "/key", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addKey(final @PathVariable String user, final @RequestBody String key) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
