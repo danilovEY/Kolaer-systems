@@ -1,9 +1,16 @@
 package ru.kolaer.client.javafx.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import ru.kolaer.client.javafx.mvp.presenter.PWindow;
@@ -17,7 +24,7 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	private final String username = System.getProperty("user.name");
 	private final VMExplorer explorer;
 	private boolean isRunning = false;
-	
+	private final List<PWindow> windows = new ArrayList<>();
 	public ServiceClosableWindow(final VMExplorer explorer) {
 		this.explorer = explorer;
 		this.explorer.registerObserver(this);
@@ -25,7 +32,22 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	
 	@Override
 	public void run() throws Exception {
-		
+		//this.isRunning = true;
+		new Thread(() -> {
+			while(this.isRunning) {
+				try {
+					TimeUnit.SECONDS.sleep(5);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if(windows.size() > 0) {
+					ResponseEntity<Set<String>> window = restTemplate.exchange(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), HttpMethod.GET, null, new ParameterizedTypeReference<Set<String>>(){} );
+					//Set<String> set = new HashSet<>();
+					//set.addAll(Arrays.asList(window));
+					System.out.println("WIN: " + window.getBody().size());
+				}
+			}
+		}).start();
 	}
 
 	@Override
@@ -45,7 +67,8 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	}
 
 	@Override
-	public void updateOpenWindow(PWindow window) {
+	public void updateOpenWindow(final PWindow window) {
+		this.windows.add(window);
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - открытие окна");
 			
@@ -60,7 +83,8 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	}
 
 	@Override
-	public void updateCloseWindow(PWindow window) {
+	public void updateCloseWindow(final PWindow window) {
+		this.windows.remove(window);
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");
 			

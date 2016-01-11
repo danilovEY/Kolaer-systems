@@ -33,6 +33,9 @@ public class ServiceControlManager {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}).exceptionally(t -> {
+				LOG.error("Ошибка", t);
+				return null;
 			});
 		}
 	}
