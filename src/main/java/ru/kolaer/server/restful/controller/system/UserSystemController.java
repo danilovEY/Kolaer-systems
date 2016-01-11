@@ -41,8 +41,8 @@ public class UserSystemController {
 	}
 
 	@RequestMapping(path = "/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String ping(final @PathVariable String user) {
-		return String.valueOf(this.getOrCreate(user).isPing());
+	public Boolean ping(final @PathVariable String user) {
+		return Boolean.valueOf(this.getOrCreate(user).isPing());
 	}
 	
 	@RequestMapping(path = "/ping", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,8 +57,8 @@ public class UserSystemController {
 		userData.addKey(key);
 	}
 
-	@RequestMapping(path = "/window", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addWindow(final @PathVariable String user, final @RequestBody String window,
+	@RequestMapping(path = "/window/{window}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addWindow(final @PathVariable String user, final @PathVariable String window,
 			@RequestBody String status) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
 		if (status.equals("true"))

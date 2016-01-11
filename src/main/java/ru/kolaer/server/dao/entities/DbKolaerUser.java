@@ -22,47 +22,56 @@ public class DbKolaerUser implements Serializable {
 	public DbKolaerUser(final String user) {
 		this.log = new UserLog(user);
 		this.name = user;
-		this.log.addSystemMessage("Добавлен пользователь: " + user);
+		this.log.addSystemMessage("Пользователь \"" + this.name + "\" добавлен!");
 	}
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
 	public Set<String> getIpSet() {
-		return ipSet;
+		return this.ipSet;
 	}
 
 	public Set<String> getOpeningWindows() {
-		return openingWindows;
+		return this.openingWindows;
 	}
 
 	public void addIp(final String ip) {
-		this.ipSet.add(ip);
-		this.log.addSystemMessage("Добавлен IP: " + ip);
+		if(this.ipSet.add(ip))
+			this.log.addSystemMessage("Добавлен IP: " + ip);
+	}
+	
+	public void addIps(final String... ipArray) {
+		this.log.addSystemMessage("Новые IP:");
+		this.ipSet.clear();
+		for(final String ip : ipArray) {
+			this.addIp(ip);
+		}
 	}
 	
 	public void addOpeningWindow(final String name) {
 		if(this.openingWindows.add(name)){
-			this.log.getUserSystemLogger().info("Окно \"{}\" открыто!", name);
+			this.log.addSystemMessage("Окно \"" + name  + "\" открыто!");
 		}
 	}
 	
 	public void removeOpeningWindow(final String name) {
 		if(this.openingWindows.remove(name)){
-			this.log.getUserSystemLogger().info("Окно \"{}\" закрыто!", name);
+			this.log.addSystemMessage("Окно \"" + name  + "\" закрыто!");
 		}
 	}
 	
 	public void addKey(final String key) {
-		this.log.getUserTelemetryLogger().info(key);
+		this.log.addTelemetryMessage(key);
 	}
 	
 	public UserLog getLog() {
-		return log;
+		return this.log;
 	}
 	
 	public void disconect() {
-		log.shutdown();
+		this.log.addSystemMessage("Пользователь \"" + this.name + "\" удален!");
+		this.log.shutdown();
 		ipSet.clear();
 		openingWindows.clear();
 	}
@@ -70,7 +79,7 @@ public class DbKolaerUser implements Serializable {
 	 * @return the {@linkplain #ping}
 	 */
 	public boolean isPing() {
-		return ping;
+		return this.ping;
 	}
 	/**
 	 * @param ping the {@linkplain #ping} to set

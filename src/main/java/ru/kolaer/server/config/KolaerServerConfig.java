@@ -72,6 +72,7 @@ public class KolaerServerConfig {
     @Bean(name = "usersManager")
     public UsersManager usersManager() {
     	final UsersManager usersManager = new UsersManager();
+    	usersManager.startPing();
     	return usersManager; 	
     }
     

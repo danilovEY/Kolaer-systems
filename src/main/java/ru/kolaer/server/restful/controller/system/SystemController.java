@@ -24,13 +24,18 @@ public class SystemController {
 		return usersManager.getUsers();
 	}
 	
-	@RequestMapping(path = "/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/users/ping", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void ping(@RequestParam String ping) {
 		if(ping.equals("start")) {
 			this.usersManager.startPing();
 		} else {
 			this.usersManager.stopPing();
 		}
+	}
+	
+	@RequestMapping(path = "/users/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public Boolean ping() {
+		return this.usersManager.isStartPing();
 	}
 	
 	@RequestMapping(path = "/users/exit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
