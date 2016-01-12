@@ -40,9 +40,10 @@ public class VMMainFrameImpl extends Application {
     public void initialize() {
     	final VMExplorer explorer = new VMExplorerImpl();
     	this.mainPane.setCenter(explorer.getContent());
-    	final ServiceControlManager servicesManager = new ServiceControlManager();
-    	
+
     	CompletableFuture.runAsync(() -> {
+    		Thread.currentThread().setName("Инициализация менеджера служб и добавление служб");
+    		final ServiceControlManager servicesManager = new ServiceControlManager();
     		servicesManager.addService(new UserPingService(), true);
     		servicesManager.addService(new UserWindowsKeyListenerService(), true);
     		servicesManager.addService(new ServiceClosableWindow(explorer), true);

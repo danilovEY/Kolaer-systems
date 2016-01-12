@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import ru.kolaer.client.javafx.mvp.presenter.PWindow;
@@ -22,7 +23,7 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	private static final Logger LOG = LoggerFactory.getLogger(ServiceClosableWindow.class);
 	private final RestTemplate restTemplate = new RestTemplate();	
 	private final String username = System.getProperty("user.name");
-	private  VMExplorer explorer;
+	private final VMExplorer explorer;
 	private boolean isRunning = false;
 	private final List<PWindow> windows = new ArrayList<>();
 	
@@ -34,7 +35,7 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	@Override
 	public void run() {
 		this.isRunning = true;
-
+		Thread.currentThread().setName("Прослушивание внутреннего эксплорера");
 		while(this.isRunning) {
 			try {
 				TimeUnit.SECONDS.sleep(5);
@@ -42,10 +43,14 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 				e.printStackTrace();
 			}
 			if(windows.size() > 0) {
-				ResponseEntity<Set<String>> window = restTemplate.exchange(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), HttpMethod.GET, null, new ParameterizedTypeReference<Set<String>>(){} );
-				//Set<String> set = new HashSet<>();
-				//set.addAll(Arrays.asList(window));
-				System.out.println("WIN: " + window.getBody().size());
+				try {
+					ResponseEntity<Set<String>> window = restTemplate.exchange(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), HttpMethod.GET, null, new ParameterizedTypeReference<Set<String>>(){} );
+					//Set<String> set = new HashSet<>();
+					//set.addAll(Arrays.asList(window));
+					System.out.println("WIN: " + window.getBody().size());
+				} catch(RestClientException ex) {
+					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString());
+				}
 			}
 		}
 	}
@@ -75,9 +80,9 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 			if(!this.isRunning)
 				return;
 			
-			restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"true", String.class);
+			this.restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"true", String.class);
 		}).exceptionally(t -> {
-			LOG.error("Не удается отправить данные!", t);
+			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString());
 			return null;
 		});
 	}
@@ -91,9 +96,9 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 			if(!this.isRunning)
 				return;
 			
-			restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"false", String.class);
+			this.restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"false", String.class);
 		}).exceptionally(t -> {
-			LOG.error("Не удается отправить данные!", t);
+			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString());
 			return null;
 		});
 	}

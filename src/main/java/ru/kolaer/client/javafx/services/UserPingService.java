@@ -39,6 +39,7 @@ public class UserPingService implements Service {
 	@Override
 	public void run() {
 		this.isRun = true;
+		Thread.currentThread().setName("Прием и передача пинга");
 		while(this.isRun){
 			try {
 				TimeUnit.SECONDS.sleep(3);
