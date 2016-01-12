@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.services;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -36,11 +37,15 @@ public class UserPingService implements Service {
 	}
 
 	@Override
-	public void run() throws Exception {
+	public void run() {
 		this.isRun = true;
-		
 		while(this.isRun){
-			TimeUnit.SECONDS.sleep(3);
+			try {
+				TimeUnit.SECONDS.sleep(3);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			try {
 				String bool = restTemplate.getForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/ping", String.class);
 				
@@ -54,7 +59,7 @@ public class UserPingService implements Service {
 	}
 
 	@Override
-	public void stop() throws Exception {
+	public void stop() {
 		this.isRun = false;
 	}
 }

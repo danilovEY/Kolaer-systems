@@ -1,11 +1,10 @@
 package ru.kolaer.client.javafx.services;
 
-public interface Service {
+public interface Service extends Runnable {
 	void setRunningStatus(boolean isRun);
 	boolean isRunning();
 	
 	String getName();
 	
-	void run() throws Exception;
-	void stop()throws Exception;
+	void stop();
 }

@@ -58,25 +58,11 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 		}
 		this.model = model;
 		this.setUserData(this.model.getName());
+		
+		this.init();
 	}
 	
-	@Override
-	public void setContent(final Parent content) {
-		this.setCenter(content);
-	}
-
-	@Override
-	public Pane getContent() {
-		return this;
-	}
-
-	@Override
-	public void setOnAction(final EventHandler<ActionEvent> value) {
-		this.labelRun.setOnAction(value);
-	}
-
-	@Override
-	public void initialize(final URL location, final ResourceBundle resources) {
+	private void init() {
 		Platform.runLater(() -> {
 			Thread.currentThread().setContextClassLoader(this.classLoader);
 			Thread.currentThread().setName("Загрузка изображения ярлыка");
@@ -94,6 +80,26 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 				}
 			}
 		});
+	}
+
+	@Override
+	public void setContent(final Parent content) {
+		this.setCenter(content);
+	}
+
+	@Override
+	public Pane getContent() {
+		return this;
+	}
+
+	@Override
+	public void setOnAction(final EventHandler<ActionEvent> value) {
+		this.labelRun.setOnAction(value);
+	}
+
+	@Override
+	public void initialize(final URL location, final ResourceBundle resources) {
+		
 	}
 
 	@Override

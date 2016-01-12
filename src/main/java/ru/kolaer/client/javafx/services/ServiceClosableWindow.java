@@ -22,32 +22,32 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	private static final Logger LOG = LoggerFactory.getLogger(ServiceClosableWindow.class);
 	private final RestTemplate restTemplate = new RestTemplate();	
 	private final String username = System.getProperty("user.name");
-	private final VMExplorer explorer;
+	private  VMExplorer explorer;
 	private boolean isRunning = false;
 	private final List<PWindow> windows = new ArrayList<>();
+	
 	public ServiceClosableWindow(final VMExplorer explorer) {
 		this.explorer = explorer;
 		this.explorer.registerObserver(this);
 	}
 	
 	@Override
-	public void run() throws Exception {
-		//this.isRunning = true;
-		new Thread(() -> {
-			while(this.isRunning) {
-				try {
-					TimeUnit.SECONDS.sleep(5);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				if(windows.size() > 0) {
-					ResponseEntity<Set<String>> window = restTemplate.exchange(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), HttpMethod.GET, null, new ParameterizedTypeReference<Set<String>>(){} );
-					//Set<String> set = new HashSet<>();
-					//set.addAll(Arrays.asList(window));
-					System.out.println("WIN: " + window.getBody().size());
-				}
+	public void run() {
+		this.isRunning = true;
+
+		while(this.isRunning) {
+			try {
+				TimeUnit.SECONDS.sleep(5);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		}).start();
+			if(windows.size() > 0) {
+				ResponseEntity<Set<String>> window = restTemplate.exchange(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), HttpMethod.GET, null, new ParameterizedTypeReference<Set<String>>(){} );
+				//Set<String> set = new HashSet<>();
+				//set.addAll(Arrays.asList(window));
+				System.out.println("WIN: " + window.getBody().size());
+			}
+		}
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	}
 
 	@Override
-	public void stop() throws Exception {
+	public void stop() {
 		this.isRunning = false;
 		this.explorer.removeObserver(this);
 	}
