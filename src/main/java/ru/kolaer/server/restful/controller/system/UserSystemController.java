@@ -68,13 +68,16 @@ public class UserSystemController {
 		}
 	}
 	
-	@RequestMapping(path = "/window/{window}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/window/{window}/{status}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addWindow(final @PathVariable String user, final @PathVariable String window,
-			@RequestBody String status) {
+			@PathVariable String status) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
-		if (status.equals("true"))
+		if (status.equals("open")){
 			userData.addOpeningWindow(window);
-		else
+			userData.getCloseWindows().remove(window);
+		} else if (status.equals("close")) {
 			userData.removeOpeningWindow(window);
+			userData.addCloseWindow(window);
+		}
 	}
 }
