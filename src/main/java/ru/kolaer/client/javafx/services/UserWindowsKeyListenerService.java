@@ -1,6 +1,5 @@
 package ru.kolaer.client.javafx.services;
 
-import java.awt.event.KeyEvent;
 import java.nio.charset.Charset;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -368,31 +367,4 @@ public class UserWindowsKeyListenerService implements LocaleService {
 			default: return String.valueOf("Unknow: " + code);
 		}
 	}
-
-	/**
-	 * @param code
-	 * @return
-	 * @deprecated
-	 */
-	private int getKeyEvent(int code) {
-		switch(code) {
-			case 13: return KeyEvent.VK_ENTER;
-			case 91:
-			case 92: return KeyEvent.VK_WINDOWS;
-			case 93: return KeyEvent.VK_NONCONVERT;
-			case 157: return KeyEvent.VK_NONCONVERT;
-			case 186: return KeyEvent.VK_SEMICOLON;
-			case 187: return KeyEvent.VK_EQUALS;
-			case 188: return KeyEvent.VK_COMMA;
-			case 189: return KeyEvent.VK_MINUS;
-			case 190: return KeyEvent.VK_PERIOD;
-			case 191: return KeyEvent.VK_SLASH;
-			case 192: return KeyEvent.VK_BACK_QUOTE;
-			case 219: return KeyEvent.VK_OPEN_BRACKET;
-			case 220: return KeyEvent.VK_BACK_SLASH;
-			case 221: return KeyEvent.VK_CLOSE_BRACKET;
-			default: return code;
-		}
-	}
-
 }

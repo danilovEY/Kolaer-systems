@@ -1,6 +1,5 @@
 package ru.kolaer.client.javafx.services;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;

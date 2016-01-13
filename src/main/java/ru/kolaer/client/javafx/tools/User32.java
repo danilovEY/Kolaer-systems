@@ -62,7 +62,6 @@ public class User32 {
     
     public static native int GetWindowThreadProcessId(Pointer hWnd, int id);
     
-    @SuppressWarnings({"UnusedDeclaration"})
     public static class MSG extends Structure {
         public Pointer hWnd;
         public int message;
@@ -73,14 +72,15 @@ public class User32 {
         public int y;
 
         @Override
-        protected List getFieldOrder() {
+        protected List<String> getFieldOrder() {
             return Arrays.asList("hWnd", "message", "wParam", "lParam", "time", "x", "y");
         }
     }
 
     public static class Parameter extends IntegerType {
-        @SuppressWarnings("UnusedDeclaration")
-        public Parameter() {
+		private static final long serialVersionUID = 1927890759835439976L;
+
+		public Parameter() {
             this(0);
         }
 

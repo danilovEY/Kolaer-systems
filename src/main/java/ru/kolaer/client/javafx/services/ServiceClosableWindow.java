@@ -1,6 +1,7 @@
 package ru.kolaer.client.javafx.services;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -10,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,12 +44,17 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 			}
 			if(windows.size() > 0) {
 				try {
-					ResponseEntity<Set<String>> window = restTemplate.exchange(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), HttpMethod.GET, null, new ParameterizedTypeReference<Set<String>>(){} );
-					//Set<String> set = new HashSet<>();
-					//set.addAll(Arrays.asList(window));
-					System.out.println("WIN: " + window.getBody().size());
+					Set<String> windowsClose = restTemplate.getForObject(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), Set.class);
+					windowsClose.forEach(windowName -> {
+						System.out.println("WIN: " + windowName);
+						windows.forEach(window -> {
+							if(windowName.equals(window.getApplicationModel().getName())) {
+								window.close();
+							}
+						});
+					});
 				} catch(RestClientException ex) {
-					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString());
+					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), ex);
 				}
 			}
 		}
@@ -74,15 +79,15 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	@Override
 	public void updateOpenWindow(final PWindow window) {
 		this.windows.add(window);
+		
+		if(!this.isRunning)
+			return;
+			
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - открытие окна");
-			
-			if(!this.isRunning)
-				return;
-			
-			this.restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"true", String.class);
+			this.restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/open").toString(), null);
 		}).exceptionally(t -> {
-			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString());
+			LOG.error("Сервер \"{}\" не доступен!",new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/open").toString());
 			return null;
 		});
 	}
@@ -90,15 +95,15 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	@Override
 	public void updateCloseWindow(final PWindow window) {
 		this.windows.remove(window);
+		
+		if(!this.isRunning)
+			return;
+		
 		CompletableFuture.runAsync(() -> {
-			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");
-			
-			if(!this.isRunning)
-				return;
-			
-			this.restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString(),"false", String.class);
+			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");	
+			this.restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/close").toString(), null);
 		}).exceptionally(t -> {
-			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).toString());
+			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/close").toString());
 			return null;
 		});
 	}

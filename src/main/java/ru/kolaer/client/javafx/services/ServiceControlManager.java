@@ -5,10 +5,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +27,10 @@ public class ServiceControlManager {
 		if(!service.isRunning()) {
 			LOG.info("Запуск службы: \"{}\"", service.getName());
 			service.setRunningStatus(true);
-			this.readPluginsThread.submit(service);			
+			CompletableFuture.runAsync(service, readPluginsThread).exceptionally(t -> {
+				LOG.error("Ошибка в запуске службы!", t);
+				return null;
+			});	
 		}
 	}
 	
