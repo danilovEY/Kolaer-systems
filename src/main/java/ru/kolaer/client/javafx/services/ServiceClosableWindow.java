@@ -1,16 +1,16 @@
 package ru.kolaer.client.javafx.services;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,7 +25,7 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 	private final String username = System.getProperty("user.name");
 	private final VMExplorer explorer;
 	private boolean isRunning = false;
-	private final List<PWindow> windows = new ArrayList<>();
+	private final List<PWindow> windows = new LinkedList<>();
 	
 	public ServiceClosableWindow(final VMExplorer explorer) {
 		this.explorer = explorer;
@@ -44,17 +44,21 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 			}
 			if(windows.size() > 0) {
 				try {
+					@SuppressWarnings("unchecked")
 					Set<String> windowsClose = restTemplate.getForObject(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), Set.class);
 					windowsClose.forEach(windowName -> {
-						System.out.println("WIN: " + windowName);
-						windows.forEach(window -> {
+						Iterator<PWindow> iter = windows.iterator();
+						while(iter.hasNext()) {
+							final PWindow window = iter.next();
 							if(windowName.equals(window.getApplicationModel().getName())) {
 								window.close();
+								iter.remove();
 							}
-						});
+						}	
 					});
+					windowsClose.clear();
 				} catch(RestClientException ex) {
-					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), ex);
+					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString());
 				}
 			}
 		}
@@ -82,14 +86,18 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 		
 		if(!this.isRunning)
 			return;
-			
+		
+		final ExecutorService singleThread = Executors.newSingleThreadExecutor();
+		
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - открытие окна");
 			this.restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/open").toString(), null);
-		}).exceptionally(t -> {
+		}, singleThread).exceptionally(t -> {
 			LOG.error("Сервер \"{}\" не доступен!",new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/open").toString());
 			return null;
 		});
+		
+		singleThread.shutdown();
 	}
 
 	@Override
@@ -99,13 +107,17 @@ public class ServiceClosableWindow implements Service, ExplorerObserver {
 		if(!this.isRunning)
 			return;
 		
+		final ExecutorService singleThread = Executors.newSingleThreadExecutor();
+		
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");	
 			this.restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/close").toString(), null);
-		}).exceptionally(t -> {
+		}, singleThread).exceptionally(t -> {
 			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/close").toString());
 			return null;
 		});
+		
+		singleThread.shutdown();
 	}
 
 	@Override
