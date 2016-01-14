@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +31,9 @@ import ru.kolaer.client.javafx.mvp.view.ImportFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
+import ru.kolaer.client.javafx.mvp.viewmodel.VMStartButton;
+import ru.kolaer.client.javafx.mvp.viewmodel.VMStartPane;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
-import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMExplorerImpl extends ImportFXML implements VMExplorer {	
@@ -38,8 +41,6 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 	
 	@FXML
     private Pane desktop;
-    @FXML
-    private Button startButton;
     @FXML
     private BorderPane taskPane;
     @FXML
@@ -50,20 +51,25 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
     private final Set<ExplorerObserver> observerSet = new HashSet<>();
     private final Set<ExplorerObresvable> pluginsSet = new HashSet<>();
     
-    //private final Map<IKolaerPlugin, VMLabel> mapPlugin = new HashMap<>();
+    
     
 	public VMExplorerImpl() {
 		super(Resources.V_EXPLORER);
 	}
 
 	@Override
-	public void initialize(final URL location, final ResourceBundle resources) {		
-		desktop.heightProperty().addListener((observable, oldValue, newValue) -> {
-			desktopWithLabels.setPrefHeight(desktop.getHeight());
+	public void initialize(final URL location, final ResourceBundle resources) {
+		Platform.runLater(() -> {
+			final VMStartButton startButton = new VMStartButtonImpl(this.desktop);	
+			this.taskPane.setLeft(startButton.getContent());
 		});
 		
-		desktop.widthProperty().addListener((observable, oldValue, newValue) -> {
-				desktopWithLabels.setPrefWidth(desktop.getWidth());
+		this.desktop.heightProperty().addListener((observable, oldValue, newValue) -> {
+			this.desktopWithLabels.setPrefHeight(desktop.getHeight());
+		});
+		
+		this.desktop.widthProperty().addListener((observable, oldValue, newValue) -> {
+			this.desktopWithLabels.setPrefWidth(desktop.getWidth());
 		});
 	}
 
@@ -75,6 +81,8 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 
 	@Override
 	public void addPlugin(final IKolaerPlugin plugin, final URLClassLoader jarClassLoaser) {
+		final ExecutorService threadFroLoadPlug = Executors.newSingleThreadExecutor();
+		
 		CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setName("Инициализация плагина: " + plugin.getName());
 			Thread.currentThread().setContextClassLoader(jarClassLoaser);
@@ -85,10 +93,10 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 			this.pluginsSet.add(plg);
 			
 			return plg;
-		}).exceptionally((t) -> {
+		}, threadFroLoadPlug).exceptionally((t) -> {
 			LOG.error("Ошибка при инициализации плагина!", t);
 			return null;
-		}).thenAccept(plg -> {
+		}).thenAcceptAsync(plg -> {
 			Platform.runLater(() -> {
 				Thread.currentThread().setName("Добавления ярлыка на explorer плагина: " + plugin.getName());
 				Thread.currentThread().setContextClassLoader(jarClassLoaser);
@@ -103,11 +111,13 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 					});
 					this.desktopWithLabels.getChildren().setAll(workingCollection);
 				}
+				threadFroLoadPlug.shutdown();
 			});
-		}).exceptionally((t) -> {
+		}, threadFroLoadPlug).exceptionally((t) -> {
 			LOG.error("Ошибка при добавлении ярлыка!", t);
 			return null;
 		});
+		
 	}
 	
 	@Override

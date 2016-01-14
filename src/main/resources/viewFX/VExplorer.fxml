@@ -8,12 +8,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="389.0" prefWidth="465.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="389.0" prefWidth="465.0" stylesheets="@../css/explorer.css" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <bottom>
-      <BorderPane maxHeight="50.0" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="600.0" prefHeight="50.0" BorderPane.alignment="CENTER">
-         <left>
-            <Button fx:id="startButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" BorderPane.alignment="CENTER" />
-         </left>
+      <BorderPane fx:id="taskPane" maxHeight="50.0" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="600.0" prefHeight="50.0" styleClass="taskPane" BorderPane.alignment="CENTER">
          <center>
             <HBox fx:id="taskPaneWithApp" alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" prefWidth="200.0" spacing="5.0" BorderPane.alignment="CENTER">
                <BorderPane.margin>

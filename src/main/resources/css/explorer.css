@@ -1,0 +1,8 @@
+.start-button {
+	-fx-background-color: transparent;
+	-fx-graphic: url('x-mark-24.png');
+}
+
+.taskPane {
+	-fx-background-color: rgb(94, 133, 173);
+}
