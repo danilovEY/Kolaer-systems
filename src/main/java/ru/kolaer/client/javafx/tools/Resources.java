@@ -14,6 +14,8 @@ public interface Resources {
 	public static final URL V_APPLICATION_ON_TASK_PANE = Resources.class.getResource("/viewFX/VApplicationOnTaskPane.fxml");
 	public static final URL V_START_PANE = Resources.class.getResource("/viewFX/VStartPane.fxml");
 	public static final URL V_START_BUTTON = Resources.class.getResource("/viewFX/VStartButton.fxml");
+	public static final URL V_FOLDER_MENU = Resources.class.getResource("/viewFX/VFolderMenu.fxml");
+	public static final URL V_APPLICATION_MENU = Resources.class.getResource("/viewFX/VApplicationMenu.fxml");
 	
 	public static final String WINDOW_CSS = Resources.class.getResource("/css/window.css").toExternalForm();
 	public static final URL ICON_START_BUTTON = Resources.class.getResource("/css/aerIcon.png");
