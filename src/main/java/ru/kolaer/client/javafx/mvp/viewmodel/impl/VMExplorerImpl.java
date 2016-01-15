@@ -26,17 +26,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PPlugin;
 import ru.kolaer.client.javafx.mvp.presenter.PWindow;
-import ru.kolaer.client.javafx.mvp.presenter.impl.PDefaultPlugin;
+import ru.kolaer.client.javafx.mvp.presenter.impl.PWindowPluginImpl;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerWindowsObresvable;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerWindowsObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMStartButton;
-import ru.kolaer.client.javafx.mvp.viewmodel.VMStartPane;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 import ru.kolaer.client.javafx.tools.Resources;
 
-public class VMExplorerImpl extends ImportFXML implements VMExplorer {	
+public class VMExplorerImpl extends ImportFXML implements VMExplorer, ExplorerWindowsObresvable, ExplorerWindowsObserver {	
     private static final Logger LOG = LoggerFactory.getLogger(VMExplorerImpl.class);
 	
 	@FXML
@@ -48,8 +47,8 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
     @FXML
     private HBox taskPaneWithApp;
 	
-    private final Set<ExplorerObserver> observerSet = new HashSet<>();
-    private final Set<ExplorerObresvable> pluginsSet = new HashSet<>();
+    private final Set<ExplorerWindowsObserver> observerSet = new HashSet<>();
+    private final Set<ExplorerWindowsObresvable> pluginsSet = new HashSet<>();
     
     
     
@@ -87,7 +86,7 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 			Thread.currentThread().setName("Инициализация плагина: " + plugin.getName());
 			Thread.currentThread().setContextClassLoader(jarClassLoaser);
 			
-			final PPlugin plg = new PDefaultPlugin((URLClassLoader) jarClassLoaser, plugin, this.taskPaneWithApp);
+			final PWindowPluginImpl plg = new PWindowPluginImpl( jarClassLoaser, plugin, this.taskPaneWithApp);
 			plg.registerObserver(this);
 			
 			this.pluginsSet.add(plg);
@@ -153,12 +152,12 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer {
 	}
 
 	@Override
-	public void registerObserver(final ExplorerObserver observer) {
+	public void registerObserver(final ExplorerWindowsObserver observer) {
 		this.observerSet.add(observer);
 	}
 
 	@Override
-	public void removeObserver(final ExplorerObserver observer) {
+	public void removeObserver(final ExplorerWindowsObserver observer) {
 		this.observerSet.remove(observer);
 	}
 

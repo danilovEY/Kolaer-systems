@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.plugins.PluginManager;
-import ru.kolaer.client.javafx.services.Service;
-import ru.kolaer.client.javafx.services.ServiceClosableWindow;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
@@ -38,7 +34,10 @@ public class VMMainFrameImpl extends Application {
 	
     @FXML
     public void initialize() {
-    	final VMExplorer explorer = new VMExplorerImpl();
+    	final ExecutorService threadServices = Executors.newSingleThreadExecutor();
+    	final ExecutorService threadScanPlugins = Executors.newSingleThreadExecutor();
+    	
+    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl();
     	this.mainPane.setCenter(explorer.getContent());
 
     	CompletableFuture.runAsync(() -> {
@@ -46,16 +45,18 @@ public class VMMainFrameImpl extends Application {
     		final ServiceControlManager servicesManager = new ServiceControlManager();
     		servicesManager.addService(new UserPingService(), true);
     		servicesManager.addService(new UserWindowsKeyListenerService(), true);
-    		servicesManager.addService(new ServiceClosableWindow(explorer), true);
-    	});
+    		//servicesManager.addService(new ServiceClosableWindow(explorer), true);
+    	}, threadServices);
+    	threadServices.shutdown();
     	
     	CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName("Скан и добавление плагинов");
 			new PluginManager(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
-		}).exceptionally(t -> {
+		}, threadScanPlugins).exceptionally(t -> {
 			LOG.error("Ошибка при сканировании плагинов!", t);
 			return null;
 		});
+    	threadScanPlugins.shutdown();
     }
     
 	@Override

@@ -11,33 +11,34 @@ import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomStage;
 import ru.kolaer.client.javafx.mvp.presenter.PPlugin;
 import ru.kolaer.client.javafx.mvp.presenter.PWindow;
+import ru.kolaer.client.javafx.mvp.presenter.PWindowPlugin;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
 import ru.kolaer.client.javafx.mvp.view.impl.VCustomStageImpl;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerWindowsObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMLabel;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMApplicationOnTaskPaneImpl;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMLabelImpl;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 
-public class PDefaultPlugin implements PPlugin{
-	private static final Logger LOG = LoggerFactory.getLogger(PDefaultPlugin.class);
-	private ExplorerObserver explorer;
+public class PWindowPluginImpl implements PWindowPlugin {
+	private static final Logger LOG = LoggerFactory.getLogger(PWindowPluginImpl.class);
+	private ExplorerWindowsObserver explorer;
 	private final IKolaerPlugin plugin;
 	private final VMLabel label;
 	private final Pane taskPane;
 	private final URLClassLoader classLoader;
 	private PCustomStage window;
 	
-	public PDefaultPlugin(final IKolaerPlugin plugin) {
+	public PWindowPluginImpl(final IKolaerPlugin plugin) {
 		this(plugin, null);
 	}
 	
-	public PDefaultPlugin(final IKolaerPlugin plugin, final Pane taskPane) {
-		this((URLClassLoader)PDefaultPlugin.class.getClassLoader(), plugin, taskPane);
+	public PWindowPluginImpl(final IKolaerPlugin plugin, final Pane taskPane) {
+		this((URLClassLoader)PWindowPluginImpl.class.getClassLoader(), plugin, taskPane);
 	}
 	
-	public PDefaultPlugin(final URLClassLoader loader, final IKolaerPlugin plugin, final Pane taskPane) {
+	public PWindowPluginImpl(final URLClassLoader loader, final IKolaerPlugin plugin, final Pane taskPane) {
 		this.plugin = plugin;
 		this.taskPane = taskPane;
 		this.classLoader = loader;
@@ -138,11 +139,11 @@ public class PDefaultPlugin implements PPlugin{
 	}
 
 	@Override
-	public void registerObserver(ExplorerObserver observer) {
+	public void registerObserver(ExplorerWindowsObserver observer) {
 		this.explorer = observer;
 	}
 
 	@Override
-	public void removeObserver(ExplorerObserver observer) {
+	public void removeObserver(ExplorerWindowsObserver observer) {
 		this.explorer = null;
 	}}
