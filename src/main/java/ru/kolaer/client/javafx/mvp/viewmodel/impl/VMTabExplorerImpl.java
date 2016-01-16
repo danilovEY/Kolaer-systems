@@ -15,12 +15,9 @@ import org.slf4j.LoggerFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.FlowPane;
-import javafx.stage.Stage;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
@@ -46,14 +43,25 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.pluginsTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldTab, newTab)  -> {
-			//CompletableFuture.runAsync(() -> {
-				//this.pluginMap.get(oldTab.getText()).desActiveTab();
-					
-					Platform.runLater(() -> {
-						this.pluginMap.get(newTab.getText()).activeTab();
-						
-					});
-			//});
+			if(oldTab != null) {
+				final ExecutorService treadDesActTab = Executors.newSingleThreadExecutor();
+				
+				CompletableFuture.runAsync(() -> {	
+					this.pluginMap.get(oldTab.getText()).desActiveTab();
+				}, treadDesActTab);
+				
+				treadDesActTab.shutdown();
+			}
+			
+			if(newTab != null) {
+				final ExecutorService treadActTab = Executors.newSingleThreadExecutor();
+				
+				CompletableFuture.runAsync(() -> {
+					this.pluginMap.get(newTab.getText()).activeTab();
+				}, treadActTab);
+				
+				treadActTab.shutdown();
+			}
 		});
 	}
 
