@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +15,12 @@ import org.slf4j.LoggerFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.FlowPane;
+import javafx.stage.Stage;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
@@ -44,10 +46,14 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.pluginsTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldTab, newTab)  -> {
-			System.out.println(newTab.getText());
-			CompletableFuture.runAsync(() -> {
-				this.pluginMap.get(newTab.getText()).activeTab();
-			});
+			//CompletableFuture.runAsync(() -> {
+				//this.pluginMap.get(oldTab.getText()).desActiveTab();
+					
+					Platform.runLater(() -> {
+						this.pluginMap.get(newTab.getText()).activeTab();
+						
+					});
+			//});
 		});
 	}
 
@@ -71,7 +77,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer {
 			return null;
 		}).thenAcceptAsync((tab) -> {
 			Platform.runLater(() -> {
-				this.pluginsTabPane.getTabs().add(tab.getView().getTab());
+				this.pluginsTabPane.getTabs().add(tab.getView().getContent());
 				threadFroLoadPlug.shutdown();
 			});
 		}, threadFroLoadPlug).exceptionally(t -> {

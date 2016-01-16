@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import javafx.application.Platform;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import ru.kolaer.client.javafx.mvp.view.VTab;
@@ -31,8 +32,15 @@ public class VTabImpl implements VTab {
 	}
 
 	@Override
-	public Tab getTab() {
+	public Tab getContent() {
 		return this.tab;
+	}
+
+	@Override
+	public void setContent(Parent parent) {
+		Platform.runLater(() -> {
+			this.tab.setContent(parent);
+		});
 	}
 	
 }

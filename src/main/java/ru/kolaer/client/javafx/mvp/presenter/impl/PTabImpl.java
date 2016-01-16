@@ -8,10 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.Stage;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.mvp.view.impl.VTabImpl;
+import ru.kolaer.client.javafx.plugins.IApplication;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 
 public class PTabImpl implements PTab {
@@ -46,22 +49,16 @@ public class PTabImpl implements PTab {
 	public void activeTab() {
 		if(!this.isActive) {
 			Thread.currentThread().setContextClassLoader(this.loader);
-			Platform.runLater(() -> {
-				CompletableFuture.runAsync(this.plugin.getApplication()).exceptionally(t -> {
-					LOG.error("Ошибка!", t);
-					return null;
-				}).thenRun(() -> {
-					Platform.runLater(() -> {
-						Thread.currentThread().setContextClassLoader(this.loader);
-						try {
-							TimeUnit.SECONDS.sleep(5);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						this.view.getTab().setContent(new FlowPane(this.plugin.getApplication().getContent()));
-					});
-				});
+			CompletableFuture.supplyAsync(() -> {
+				IApplication app = this.plugin.getApplication();
+				app.run();
+				return app;
+			}).thenApply((app) -> {
+				this.view.setContent(app.getContent());
+				return app;
+			}).exceptionally(t -> {
+				t.printStackTrace(); 
+				return null;	
 			});
 		}
 	}
