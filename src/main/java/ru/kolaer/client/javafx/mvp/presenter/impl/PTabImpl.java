@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javafx.scene.layout.Region;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.mvp.view.impl.VTabImpl;
@@ -50,7 +49,7 @@ public class PTabImpl implements PTab {
 		if(!this.isActive) {
 			final ExecutorService treadActTab = Executors.newSingleThreadExecutor();
 			CompletableFuture.supplyAsync(() -> {
-				Thread.currentThread().setName("Запуск плигина: " + this.plugin.getName());
+				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getName());
 				Thread.currentThread().setContextClassLoader(this.loader);
 				this.app.run();
 				return app;
@@ -58,7 +57,7 @@ public class PTabImpl implements PTab {
 				LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
 			}).thenApplyAsync((app) -> {
-				Thread.currentThread().setName("Отображение плигина: " + this.plugin.getName());
+				Thread.currentThread().setName("Отображение плагина: " + this.plugin.getName());
 				this.view.setContent(app.getContent());
 				this.isActive = true;
 				treadActTab.shutdown();
@@ -75,7 +74,7 @@ public class PTabImpl implements PTab {
 		if(this.isActive) {
 			final ExecutorService treadDesActTab = Executors.newSingleThreadExecutor();
 			CompletableFuture.supplyAsync(() -> {
-				Thread.currentThread().setName("Остановка плигина: " + this.plugin.getName());
+				Thread.currentThread().setName("Остановка плагина: " + this.plugin.getName());
 				Thread.currentThread().setContextClassLoader(this.loader);
 				this.app.stop();
 				return app;
@@ -83,16 +82,14 @@ public class PTabImpl implements PTab {
 				LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
 			}).thenApplyAsync((app) -> {
-				this.view.setContent(new Region());
+				this.view.setContent(null);
 				this.isActive = false;
 				treadDesActTab.shutdown();
 				return app;
 			}).exceptionally(t -> {
 				LOG.error("Ошибка при отображении плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
-			});
-			
-			
+			});	
 		}
 	}
 	
