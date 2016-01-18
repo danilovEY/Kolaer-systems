@@ -15,8 +15,12 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
+import ru.kolaer.client.javafx.mvp.presenter.impl.PMainApplication;
+import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObserver;
+import ru.kolaer.client.javafx.plugins.IApplication;
+import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class ServiceClosableTab implements Service, ExplorerTabsObserver {
@@ -36,6 +40,46 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 	@Override
 	public void run() {
 		this.isRunning = true;
+		
+		final PTab mainTab = new PTab() {
+			final IApplication app = new PMainApplication();
+			@Override
+			public void setView(VTab tab) {
+
+			}
+			
+			@Override
+			public VTab getView() {
+				return null;
+			}
+			
+			@Override
+			public IKolaerPlugin getPlugin() {
+				return null;
+			}
+			
+			@Override
+			public IApplication getModel() {
+				return app;
+			}
+			
+			@Override
+			public void deActiveTab() {
+
+			}
+			
+			@Override
+			public void closeTab() {
+				app.stop();
+			}
+			
+			@Override
+			public void activeTab() {
+				
+			}
+		};
+		this.updateOpenTab(mainTab);
+		
 		Thread.currentThread().setName("Прослушивание внутреннего эксплорера");
 		while(this.isRunning) {
 			try {

@@ -4,7 +4,6 @@ import java.net.URLClassLoader;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,13 +52,13 @@ public class PTabImpl implements PTab {
 			CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getName());
 				Thread.currentThread().setContextClassLoader(this.loader);
-				this.app.run();
+				this.app.run();			
 				treadActTab.shutdown();
 			}, treadActTab).exceptionally(t -> {
 				LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
 			});
-			
+					
 			CompletableFuture.runAsync(() -> {
 				this.view.setContent(app.getContent());
 				this.isActive = true;
@@ -101,7 +100,17 @@ public class PTabImpl implements PTab {
 		CompletableFuture.runAsync(() -> {
 			this.deActiveTab();
 			this.view.closeTab();
-		}, treadCloseTab);
+			try {
+				this.loader.clearAssertionStatus();
+				this.loader.close();
+			} catch (Exception e) {
+				LOG.error("Ошибка при закрытии clssloader'а.", e);
+			}
+		}, treadCloseTab).exceptionally(t -> {
+			LOG.error("Ошибка при закрытии приложения: {}", this.app.getName(), t);
+			return null;
+		});
+		treadCloseTab.shutdown();
 	}
 
 	@Override
