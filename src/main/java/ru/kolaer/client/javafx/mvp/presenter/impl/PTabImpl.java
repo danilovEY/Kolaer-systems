@@ -22,6 +22,7 @@ public class PTabImpl implements PTab {
 	private final VTab view;
 	private boolean isActive = false;
 	private final URLClassLoader loader;
+	
 	public PTabImpl(final URLClassLoader loader, final IKolaerPlugin plugin) {
 		this.plugin = plugin;
 		this.loader = loader;
@@ -47,21 +48,23 @@ public class PTabImpl implements PTab {
 	@Override
 	public void activeTab() {
 		if(!this.isActive) {
+			final ExecutorService treadRunApp = Executors.newSingleThreadExecutor();
 			final ExecutorService treadActTab = Executors.newSingleThreadExecutor();
-			CompletableFuture.supplyAsync(() -> {
+			CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getName());
 				Thread.currentThread().setContextClassLoader(this.loader);
 				this.app.run();
-				return app;
+				treadActTab.shutdown();
 			}, treadActTab).exceptionally(t -> {
 				LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
-			}).thenApplyAsync((app) -> {
+			});
+			
+			CompletableFuture.runAsync(() -> {
 				this.view.setContent(app.getContent());
 				this.isActive = true;
-				treadActTab.shutdown();
-				return app;
-			}).exceptionally(t -> {
+				treadRunApp.shutdown();
+			}, treadRunApp).exceptionally(t -> {
 				LOG.error("Ошибка при отображении плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
 			});
@@ -71,25 +74,39 @@ public class PTabImpl implements PTab {
 	@Override
 	public void deActiveTab() {
 		if(this.isActive) {
-			final ExecutorService treadDesActTab = Executors.newSingleThreadExecutor();
+			final ExecutorService treadDeActTab = Executors.newSingleThreadExecutor();
 			CompletableFuture.supplyAsync(() -> {
 				Thread.currentThread().setName("Остановка плагина: " + this.plugin.getName());
 				Thread.currentThread().setContextClassLoader(this.loader);
 				this.app.stop();
 				return app;
-			}, treadDesActTab).exceptionally(t -> {
+			}, treadDeActTab).exceptionally(t -> {
 				LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
 			}).thenApplyAsync((app) -> {
 				this.view.setContent(null);
 				this.isActive = false;
-				treadDesActTab.shutdown();
+				treadDeActTab.shutdown();
 				return app;
 			}).exceptionally(t -> {
 				LOG.error("Ошибка при отображении плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
 			});	
 		}
+	}
+
+	@Override
+	public void closeTab() {
+		final ExecutorService treadCloseTab = Executors.newSingleThreadExecutor();
+		CompletableFuture.runAsync(() -> {
+			this.deActiveTab();
+			this.view.closeTab();
+		}, treadCloseTab);
+	}
+
+	@Override
+	public IApplication getModel() {
+		return this.app;
 	}
 	
 	

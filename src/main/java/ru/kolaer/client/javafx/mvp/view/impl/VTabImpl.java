@@ -41,5 +41,13 @@ public class VTabImpl implements VTab {
 			this.tab.setContent(parent);
 		});
 	}
+
+	@Override
+	public void closeTab() {
+		Platform.runLater(() -> {
+			this.setContent(null);
+			this.tab.getTabPane().getTabs().remove(this.tab);
+		});
+	}
 	
 }

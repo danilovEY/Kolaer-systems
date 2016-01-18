@@ -3,6 +3,8 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
@@ -21,11 +23,13 @@ import javafx.scene.control.TabPane;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObresvable;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
 import ru.kolaer.client.javafx.tools.Resources;
 
-public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer {
+public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, ExplorerTabsObresvable {
 	private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerImpl.class);
 	@FXML
 	private TabPane pluginsTabPane;
@@ -35,6 +39,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer {
 	private MenuItem exitMenuItem;
 	
 	private Map<String, PTab> pluginMap = new HashMap<>();
+	private List<ExplorerTabsObserver> observers = new LinkedList<>();
 	
 	public VMTabExplorerImpl() {
 		super(Resources.V_TAB_EXPLORER);
@@ -44,22 +49,22 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer {
 	public void initialize(URL location, ResourceBundle resources) {
 		this.pluginsTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldTab, newTab)  -> {
 			if(oldTab != null) {
-				final ExecutorService treadDesActTab = Executors.newSingleThreadExecutor();
-				
+				final ExecutorService treadDesActTab = Executors.newSingleThreadExecutor();				
 				CompletableFuture.runAsync(() -> {	
-					this.pluginMap.get(oldTab.getText()).deActiveTab();
-				}, treadDesActTab);
-				
+					final PTab tab = this.pluginMap.get(oldTab.getText());
+					tab.deActiveTab();
+					this.notifyCloseTab(tab);
+				}, treadDesActTab);			
 				treadDesActTab.shutdown();
 			}
 			
 			if(newTab != null) {
-				final ExecutorService treadActTab = Executors.newSingleThreadExecutor();
-				
+				final ExecutorService treadActTab = Executors.newSingleThreadExecutor();			
 				CompletableFuture.runAsync(() -> {
-					this.pluginMap.get(newTab.getText()).activeTab();
-				}, treadActTab);
-				
+					final PTab tab = this.pluginMap.get(newTab.getText());
+					tab.activeTab();
+					this.notifyOpenTab(tab);
+				}, treadActTab);			
 				treadActTab.shutdown();
 			}
 		});
@@ -90,8 +95,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer {
 		}, threadFroLoadPlug).exceptionally(t -> {
 			LOG.error("Ошибка при добавлении плагина");
 			return null;
-		});
-		
+		});	
 	}
 	
 	
@@ -115,6 +119,26 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer {
 	@Override
 	public Parent getContent() {
 		return this;
+	}
+
+	@Override
+	public void notifyOpenTab(final PTab tab) {
+		this.observers.parallelStream().forEach(obs -> obs.updateOpenTab(tab));
+	}
+
+	@Override
+	public void notifyCloseTab(final PTab tab) {
+		this.observers.parallelStream().forEach(obs -> obs.updateCloseTab(tab));
+	}
+
+	@Override
+	public void registerObserver(final ExplorerTabsObserver observer) {
+		this.observers.add(observer);
+	}
+
+	@Override
+	public void removeObserver(final ExplorerTabsObserver observer) {
+		this.observers.remove(observer);
 	}
 
 }

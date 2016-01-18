@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ru.kolaer.client.javafx.plugins.PluginManager;
+import ru.kolaer.client.javafx.services.ServiceClosableTab;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
@@ -45,7 +46,7 @@ public class VMMainFrameImpl extends Application {
     		final ServiceControlManager servicesManager = new ServiceControlManager();
     		servicesManager.addService(new UserPingService(), true);
     		servicesManager.addService(new UserWindowsKeyListenerService(), true);
-    		//servicesManager.addService(new ServiceClosableWindow(explorer), true);
+    		servicesManager.addService(new ServiceClosableTab(explorer), true);
     	}, threadServices);
     	threadServices.shutdown();
     	
