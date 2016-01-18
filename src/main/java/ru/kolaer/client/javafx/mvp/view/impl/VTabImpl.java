@@ -2,11 +2,9 @@ package ru.kolaer.client.javafx.mvp.view.impl;
 
 import java.net.URLClassLoader;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 import javafx.application.Platform;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
+import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.plugins.IApplication;
@@ -21,6 +19,7 @@ public class VTabImpl implements VTab {
 		this.app = app;
 		
 		Platform.runLater(() -> {
+			Thread.currentThread().setName("Инициализация вкладки: " + app.getName());
 			Thread.currentThread().setContextClassLoader(loader);		
 			this.init();
 		});
@@ -28,7 +27,7 @@ public class VTabImpl implements VTab {
 	
 	private void init() {
 		this.tab.setText(Optional.ofNullable(this.app.getName()).orElse("Плагин"));
-		//this.tab.setContent(this.app.getContent());
+		this.tab.setContent(this.app.getContent());
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public class VTabImpl implements VTab {
 	}
 
 	@Override
-	public void setContent(Parent parent) {
+	public void setContent(Node parent) {
 		Platform.runLater(() -> {
 			this.tab.setContent(parent);
 		});

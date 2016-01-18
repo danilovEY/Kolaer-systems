@@ -8,7 +8,7 @@ public interface PTab {
 	void setView(VTab tab);
 	
 	void activeTab();
-	void desActiveTab();
+	void deActiveTab();
 	
 	IKolaerPlugin getPlugin();
 }

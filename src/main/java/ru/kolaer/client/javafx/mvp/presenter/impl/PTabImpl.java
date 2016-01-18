@@ -19,7 +19,7 @@ public class PTabImpl implements PTab {
 	
 	private final IKolaerPlugin plugin;
 	private final IApplication app;
-	private VTab view;
+	private final VTab view;
 	private boolean isActive = false;
 	private final URLClassLoader loader;
 	public PTabImpl(final URLClassLoader loader, final IKolaerPlugin plugin) {
@@ -36,7 +36,7 @@ public class PTabImpl implements PTab {
 
 	@Override
 	public void setView(final VTab tab) {
-		this.view = tab;
+		this.view.setContent(tab.getContent().getContent());
 	}
 
 	@Override
@@ -57,7 +57,6 @@ public class PTabImpl implements PTab {
 				LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
 			}).thenApplyAsync((app) -> {
-				Thread.currentThread().setName("Отображение плагина: " + this.plugin.getName());
 				this.view.setContent(app.getContent());
 				this.isActive = true;
 				treadActTab.shutdown();
@@ -70,7 +69,7 @@ public class PTabImpl implements PTab {
 	}
 
 	@Override
-	public void desActiveTab() {
+	public void deActiveTab() {
 		if(this.isActive) {
 			final ExecutorService treadDesActTab = Executors.newSingleThreadExecutor();
 			CompletableFuture.supplyAsync(() -> {

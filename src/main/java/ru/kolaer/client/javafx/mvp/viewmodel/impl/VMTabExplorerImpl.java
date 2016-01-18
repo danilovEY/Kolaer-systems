@@ -47,7 +47,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer {
 				final ExecutorService treadDesActTab = Executors.newSingleThreadExecutor();
 				
 				CompletableFuture.runAsync(() -> {	
-					this.pluginMap.get(oldTab.getText()).desActiveTab();
+					this.pluginMap.get(oldTab.getText()).deActiveTab();
 				}, treadDesActTab);
 				
 				treadDesActTab.shutdown();
@@ -66,9 +66,8 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer {
 	}
 
 	@Override
-	public void addPlugin(IKolaerPlugin plugin) {
-		// TODO Auto-generated method stub
-		
+	public void addPlugin(final IKolaerPlugin plugin) {
+		this.addPlugin(plugin, (URLClassLoader) this.getClass().getClassLoader());
 	}
 
 	@Override
