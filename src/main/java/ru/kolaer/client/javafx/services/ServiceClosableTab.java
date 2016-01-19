@@ -132,8 +132,6 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 
 	@Override
 	public void updateOpenTab(PTab tab) {
-		this.tabs.add(tab);
-		
 		if(!this.isRunning)
 			return;
 		
@@ -152,8 +150,6 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 
 	@Override
 	public void updateCloseTab(PTab tab) {
-		this.tabs.remove(tab);
-		
 		if(!this.isRunning)
 			return;
 		
@@ -168,5 +164,10 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 		});
 		
 		singleThread.shutdown();
+	}
+
+	@Override
+	public void updateAddTab(PTab tab) {
+		this.tabs.add(tab);
 	}
 }

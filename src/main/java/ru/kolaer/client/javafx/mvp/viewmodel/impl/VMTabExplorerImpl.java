@@ -90,6 +90,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 		}).thenAcceptAsync((tab) -> {
 			Platform.runLater(() -> {
 				this.pluginsTabPane.getTabs().add(tab.getView().getContent());
+				this.notifyAddTab(tab);
 				threadFroLoadPlug.shutdown();
 			});
 		}, threadFroLoadPlug).exceptionally(t -> {
@@ -139,6 +140,11 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 	@Override
 	public void removeObserver(final ExplorerTabsObserver observer) {
 		this.observers.remove(observer);
+	}
+
+	@Override
+	public void notifyAddTab(final PTab tab) {
+		this.observers.parallelStream().forEach(obs -> obs.updateAddTab(tab));
 	}
 
 }
