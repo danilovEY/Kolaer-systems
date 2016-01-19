@@ -1,6 +1,8 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,32 +26,32 @@ import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMMainFrameImpl extends Application {
-	private static final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);	
-	
-	
-    @FXML
+	private static final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
+	private static final Map<String, String> PARAM = new HashMap<>();
+	@FXML
     private BorderPane mainPane;
-	
+	private ServiceControlManager servicesManager;
 	private Stage stage;
-	
-	
+
     @FXML
-    public void initialize() {
-    	final ExecutorService threadServices = Executors.newSingleThreadExecutor();
-    	final ExecutorService threadScanPlugins = Executors.newSingleThreadExecutor();
-    	
+    public void initialize() {  	
     	final VMTabExplorerImpl explorer = new VMTabExplorerImpl();
     	this.mainPane.setCenter(explorer.getContent());
-
+    	
+    	this.servicesManager = new ServiceControlManager();
+    	
+    	this.initApplicationParams();
+    	
+    	final ExecutorService threadServices = Executors.newSingleThreadExecutor();
     	CompletableFuture.runAsync(() -> {
-    		Thread.currentThread().setName("Инициализация менеджера служб и добавление служб");
-    		final ServiceControlManager servicesManager = new ServiceControlManager();
-    		servicesManager.addService(new UserPingService(), true);
-    		servicesManager.addService(new UserWindowsKeyListenerService(), true);
-    		servicesManager.addService(new ServiceClosableTab(explorer), true);
+    		Thread.currentThread().setName("Инициализация менеджера служб и добавление служб");	
+    		this.servicesManager.addService(new UserPingService());
+    		this.servicesManager.addService(new UserWindowsKeyListenerService());
+    		this.servicesManager.addService(new ServiceClosableTab(explorer));
     	}, threadServices);
     	threadServices.shutdown();
     	
+    	final ExecutorService threadScanPlugins = Executors.newSingleThreadExecutor();  
     	CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName("Скан и добавление плагинов");
 			new PluginManager(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
@@ -60,16 +62,32 @@ public class VMMainFrameImpl extends Application {
     	threadScanPlugins.shutdown();
     }
     
+    private void initApplicationParams() {
+    	final String pathServer = PARAM.get("server");
+		if(pathServer != null) {
+			Resources.URL_TO_KOLAER_RESTFUL.delete(0, Resources.URL_TO_KOLAER_RESTFUL.length()).append(pathServer);
+		}
+		
+		final String service = PARAM.get("service");
+		if(service == null || !service.equals("false")) {		
+			this.servicesManager.setAutoRun(true);
+			this.servicesManager.runAllServices();
+		}
+    }
+    
 	@Override
 	public void start(final Stage stage) {	
 		this.stage = stage;
+		
+		PARAM.putAll(this.getParameters().getNamed());
+		
 		try {
 			this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
 		} catch(IOException e) {
 			LOG.error("Не удалось загрузить: "+ Resources.V_MAIN_FRAME, e);
 			System.exit(-9);
 		}
-		
+
 		this.stage.setOnCloseRequest(e -> {
 			System.exit(0);
 		});	

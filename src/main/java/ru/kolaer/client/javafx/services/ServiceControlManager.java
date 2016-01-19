@@ -1,6 +1,6 @@
 package ru.kolaer.client.javafx.services;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -12,8 +12,9 @@ import ch.qos.logback.classic.Level;
 
 public class ServiceControlManager {
 	private static final Logger LOG = LoggerFactory.getLogger(ServiceControlManager.class);
-	private final List<Service> servicesList = new ArrayList<>();
-	private final ExecutorService readPluginsThread = Executors.newFixedThreadPool(3);
+	private final List<Service> servicesList = new LinkedList<>();
+	private final ExecutorService readPluginsThread = Executors.newCachedThreadPool();
+	private boolean autoRun = false;
 	
 	public ServiceControlManager() {
 		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.springframework.web.client.RestTemplate")).setLevel(Level.INFO);
@@ -24,24 +25,25 @@ public class ServiceControlManager {
 	}
 	
 	public void runService(final Service service) {
-		if(!service.isRunning()) {
-			LOG.info("Запуск службы: \"{}\"", service.getName());
-			service.setRunningStatus(true);
-			CompletableFuture.runAsync(service, readPluginsThread).exceptionally(t -> {
-				LOG.error("Ошибка в запуске службы!", t);
-				return null;
-			});	
-		}
+		LOG.info("Запуск службы: \"{}\"", service.getName());
+		service.setRunningStatus(true);
+		CompletableFuture.runAsync(service, readPluginsThread).exceptionally(t -> {
+			LOG.error("Ошибка в запуске службы!", t);
+			return null;
+		});	
 	}
 	
 	public void addService(final Service service) {
 		this.servicesList.add(service);
+		
+		if(this.autoRun && !service.isRunning())
+			this.runService(service);
 	}
 	
-	public void addService(final Service service, boolean run) {
-		this.addService(service);
+	public void addService(final Service service, final boolean run) {
+		this.servicesList.add(service);
 		
-		if(run) {
+		if((run || this.autoRun) && !service.isRunning()) {
 			this.runService(service);
 		}			
 	}
@@ -58,5 +60,17 @@ public class ServiceControlManager {
 			service.stop();
 		});
 		this.servicesList.clear();
+	}
+	
+	public void setAutoRun(final boolean autoRun) {
+		this.autoRun = autoRun;
+	}
+	
+	public boolean isAutoRun() {
+		return this.autoRun;
+	}
+	
+	public List<Service> getServices() {
+		return this.servicesList;
 	}
 }
