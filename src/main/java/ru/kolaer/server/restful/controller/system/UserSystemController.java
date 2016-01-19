@@ -58,26 +58,26 @@ public class UserSystemController {
 		userData.addKey(key);
 	}
 	
-	@RequestMapping(path = "/windows/{status}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Set<String> getStatusWindow(final @PathVariable String user, @PathVariable final String status) {
+	@RequestMapping(path = "/app/{status}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public Set<String> getStatusApplication(final @PathVariable String user, @PathVariable final String status) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
 		if(status.equals("close")) {
-			return userData.getCloseWindows();
+			return userData.getCloseApplications();
 		} else {
 			return userData.getOpeningWindows();
 		}
 	}
 	
-	@RequestMapping(path = "/window/{window}/{status}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addWindow(final @PathVariable String user, final @PathVariable String window,
+	@RequestMapping(path = "/app/{app}/{status}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addApplication(final @PathVariable String user, final @PathVariable String app,
 			@PathVariable String status) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
 		if (status.equals("open")){
-			userData.addOpeningWindow(window);
-			userData.getCloseWindows().remove(window);
+			userData.addOpeningApplication(app);
+			userData.getCloseApplications().remove(app);
 		} else if (status.equals("close")) {
-			userData.removeOpeningWindow(window);
-			userData.addCloseWindow(window);
+			userData.removeOpeningApplication(app);
+			userData.addCloseWindow(app);
 		}
 	}
 }

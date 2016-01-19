@@ -50,7 +50,7 @@ public class DbKolaerUser implements Serializable {
 		}
 	}
 	
-	public void addOpeningWindow(final String name) {
+	public void addOpeningApplication(final String name) {
 		if(this.openingWindows.add(name)){
 			this.log.addSystemMessage("Окно \"" + name  + "\" открыто!");
 		}
@@ -60,11 +60,11 @@ public class DbKolaerUser implements Serializable {
 		this.closingWindows.add(name);
 	}
 	
-	public Set<String> getCloseWindows() {
+	public Set<String> getCloseApplications() {
 		return this.closingWindows;
 	}
 	
-	public void removeOpeningWindow(final String name) {
+	public void removeOpeningApplication(final String name) {
 		if(this.openingWindows.remove(name)){
 			this.log.addSystemMessage("Окно \"" + name  + "\" закрыто!");
 		}

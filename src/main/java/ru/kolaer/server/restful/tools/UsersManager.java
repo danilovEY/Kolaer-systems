@@ -1,13 +1,11 @@
 package ru.kolaer.server.restful.tools;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 import ru.kolaer.server.dao.entities.DbKolaerUser;
 
@@ -18,7 +16,6 @@ import ru.kolaer.server.dao.entities.DbKolaerUser;
  */
 public class UsersManager {
 	private final Map<String, DbKolaerUser> connectionUsers = new HashMap<>();
-	private final ReentrantLock lock = new ReentrantLock();
 	private boolean ping = false;
 	/**
 	 * {@linkplain UsersManager}
@@ -39,17 +36,16 @@ public class UsersManager {
 						this.connectionUsers.values().forEach(user -> user.setPing(false));
 						
 						TimeUnit.SECONDS.sleep(5);
-						
-						List<String> list = new ArrayList<>();
-						
-						this.connectionUsers.values().forEach(user -> {
+
+						final Iterator<DbKolaerUser> users = this.connectionUsers.values().iterator();
+						while(users.hasNext()){
+							final DbKolaerUser user = users.next();
 							if(!user.isPing()) {
 								user.disconect();
-								list.add(user.getName());
+								users.remove();
 							}
-						});
+						}
 
-						list.parallelStream().forEach(this.connectionUsers::remove);
 					}
 					
 				}catch(Exception e){
