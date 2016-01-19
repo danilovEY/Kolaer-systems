@@ -7,7 +7,9 @@ import ru.kolaer.client.javafx.plugins.ILabel;
 
 @ApplicationPlugin
 public class ASMCPlugin implements IKolaerPlugin{
-
+	private final ILabel label = new ASMCLabel();
+	private final IApplication app = new ASMCApplication();
+	
 	@Override
 	public String getName() {
 		return "АСУП";
@@ -15,12 +17,12 @@ public class ASMCPlugin implements IKolaerPlugin{
 
 	@Override
 	public ILabel getLabel() {
-		return new ASMCLabel();
+		return label;
 	}
 
 	@Override
 	public IApplication getApplication() {
-		return new ASMCApplication();
+		return app;
 	}
 
 }
