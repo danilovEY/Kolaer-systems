@@ -74,10 +74,8 @@ public class UserSystemController {
 		final DbKolaerUser userData =  this.getOrCreate(user);
 		if (status.equals("open")){
 			userData.addOpeningApplication(app);
-			userData.getCloseApplications().remove(app);
 		} else if (status.equals("close")) {
 			userData.removeOpeningApplication(app);
-			userData.addCloseWindow(app);
 		}
 	}
 }

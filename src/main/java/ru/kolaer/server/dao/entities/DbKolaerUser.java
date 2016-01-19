@@ -56,7 +56,7 @@ public class DbKolaerUser implements Serializable {
 		}
 	}
 	
-	public void addCloseWindow(final String name) {
+	public void addCloseApplication(final String name) {
 		this.closingWindows.add(name);
 	}
 	
