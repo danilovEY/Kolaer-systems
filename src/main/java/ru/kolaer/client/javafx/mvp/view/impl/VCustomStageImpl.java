@@ -2,7 +2,6 @@ package ru.kolaer.client.javafx.mvp.view.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.net.URLClassLoader;
 
 import org.slf4j.Logger;

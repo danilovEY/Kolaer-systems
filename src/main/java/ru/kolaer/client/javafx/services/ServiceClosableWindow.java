@@ -17,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.javafx.mvp.presenter.PWindow;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerWindowsObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerWindowsObserver;
-import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class ServiceClosableWindow implements Service, ExplorerWindowsObserver {
