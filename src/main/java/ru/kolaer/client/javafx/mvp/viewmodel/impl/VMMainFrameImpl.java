@@ -18,7 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ru.kolaer.client.javafx.plugins.PluginManager;
+import ru.kolaer.client.javafx.plugins.PluginReader;
 import ru.kolaer.client.javafx.services.ServiceClosableTab;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.UserPingService;
@@ -54,7 +54,7 @@ public class VMMainFrameImpl extends Application {
     	final ExecutorService threadScanPlugins = Executors.newSingleThreadExecutor();  
     	CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName("Скан и добавление плагинов");
-			new PluginManager(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
+			new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
 		}, threadScanPlugins).exceptionally(t -> {
 			LOG.error("Ошибка при сканировании плагинов!", t);
 			return null;

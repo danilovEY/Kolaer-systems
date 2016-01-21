@@ -22,12 +22,12 @@ import org.slf4j.LoggerFactory;
 
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 
-public class PluginManager {
-	private static final Logger LOG = LoggerFactory.getLogger(PluginManager.class);
+public class PluginReader {
+	private static final Logger LOG = LoggerFactory.getLogger(PluginReader.class);
 
 	private final String pathToPlugins;
 
-	public PluginManager(final String pathToPlugins) {
+	public PluginReader(final String pathToPlugins) {
 		this.pathToPlugins = pathToPlugins;
 	}
 
