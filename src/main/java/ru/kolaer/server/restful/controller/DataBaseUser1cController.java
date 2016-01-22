@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import ru.kolaer.server.dao.entities.DbUsers1c;
 @RestController
 @RequestMapping(value="/database/user1c")
 public class DataBaseUser1cController {
+	private final Logger LOG = LoggerFactory.getLogger(DataBaseUser1cController.class);
 	
 	@Inject
 	protected DbUser1сDAO dbUser1cDAO;
@@ -30,7 +33,7 @@ public class DataBaseUser1cController {
 	}
 	
 	@RequestMapping(value = "/get/users/max/{max}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<DbUsers1c> getUsers(@PathVariable int max) {
+	public List<DbUsers1c> getUsers(final @PathVariable int max) {
 		return dbUser1cDAO.getAllMaxCount(max);
 	}
 
@@ -40,19 +43,16 @@ public class DataBaseUser1cController {
 	}
 	
 	@RequestMapping(value = "/get/users/birthday/{startDate}/{endDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<DbUsers1c> getUsersRangeBirsday(@PathVariable String startDate, @PathVariable String endDate) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	public List<DbUsers1c> getUsersRangeBirsday(final @PathVariable String startDate, final @PathVariable String endDate) {
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    
 		try {
-			Date startDatePasre = sdf.parse(startDate);
-			Date endDatePasre = sdf.parse(endDate);
+			final Date startDatePasre = sdf.parse(startDate);
+			final Date endDatePasre = sdf.parse(endDate);
 			return dbUser1cDAO.getUserRangeBirthday(startDatePasre, endDatePasre);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			LOG.error("Ошибка! Не коректные данные: ({}, {})", startDate, endDate);
 			return Collections.emptyList();
 		}
-	    
-		
-	}
-	
+	}	
 }
