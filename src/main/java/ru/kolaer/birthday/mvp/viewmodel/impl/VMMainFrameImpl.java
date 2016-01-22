@@ -2,10 +2,13 @@ package ru.kolaer.birthday.mvp.viewmodel.impl;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;import java.util.PropertyPermission;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.PropertyPermission;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestTemplate;
 
 import com.sun.javafx.scene.control.skin.DatePickerSkin;
 
@@ -24,11 +27,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
+import ru.kolaer.server.dao.entities.DbUsers1c;
 
 @SuppressWarnings("restriction")
-public class VMMainFrame extends Application {
-	private final URL FXML_VIEW = VMMainFrame.class.getResource("/birthdayView/VMainFrame.fxml");
-	private final Logger LOG = LoggerFactory.getLogger(VMMainFrame.class);
+public class VMMainFrameImpl extends Application implements VMMainFrame {
+	private final URL FXML_VIEW = VMMainFrameImpl.class.getResource("/birthdayView/VMainFrame.fxml");
+	private final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
 	
 	@FXML
 	private TableView<String> userBirthdayTable;
@@ -44,6 +49,11 @@ public class VMMainFrame extends Application {
 		this.scrollTablePane.widthProperty().addListener((observable, oldValue, newValue) -> {
 			this.userBirthdayTable.setPrefWidth(scrollTablePane.getWidth());
 		});
+		
+		RestTemplate temp = new RestTemplate();
+		DbUsers1c[] users = temp.getForObject("http://localhost:8080/kolaer/database/user1c/get/users/max/5", DbUsers1c[].class);
+		for(DbUsers1c u : users)
+			System.out.println(u);
 	}
 	
 	@Override
@@ -51,13 +61,13 @@ public class VMMainFrame extends Application {
 		
 		try {
 			final Parent root = FXMLLoader.load(FXML_VIEW);
-			primaryStage.setScene(new Scene(root, 800, 600));
+			//primaryStage.setScene(new Scene(root, 800, 600));
 		} catch(IOException ex) {
 			LOG.error("Ошибка при чтении {}", FXML_VIEW, ex);
 		}
 		
 		
-		/*BorderPane pane = new BorderPane();
+		BorderPane pane = new BorderPane();
 		DatePicker pick = new DatePicker();
 		pick.setShowWeekNumbers(true);
 	    final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
@@ -77,7 +87,7 @@ public class VMMainFrame extends Application {
 		DatePickerSkin skin = new DatePickerSkin(pick);
 		skin.dispose();
 		Node calendarControl = skin.getPopupContent();
-		pane.setCenter(calendarControl);*/
+		pane.setCenter(calendarControl);
 		primaryStage.show();
 			
 	}
