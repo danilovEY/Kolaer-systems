@@ -18,6 +18,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import ru.kolaer.server.dao.DbUser1сDAO;
+import ru.kolaer.server.dao.impl.DbUser1cDAOImpl;
 import ru.kolaer.server.restful.tools.UsersManager;
  
 @Configuration
@@ -74,6 +76,12 @@ public class KolaerServerConfig {
     	final UsersManager usersManager = new UsersManager();
     	usersManager.startPing();
     	return usersManager; 	
+    }
+    
+    @Bean(name = "dbUser1cDAO")
+    public DbUser1сDAO dbUser1cDAO() {
+    	final DbUser1сDAO dbUser1сDAO = new DbUser1cDAOImpl();
+    	return dbUser1сDAO;
     }
     
     private HibernateJpaVendorAdapter jpaVendorAdapter() {

@@ -46,4 +46,16 @@ public class DbCarDAOImpl implements DbCarDAO{
 		return null;
 	}
 
+	@Override
+	public List<DbCar> getAllMaxCount(int count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getRowCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
