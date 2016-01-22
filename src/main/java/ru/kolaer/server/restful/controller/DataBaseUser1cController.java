@@ -55,4 +55,17 @@ public class DataBaseUser1cController {
 			return Collections.emptyList();
 		}
 	}	
+	
+	@RequestMapping(value = "/get/users/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<DbUsers1c> getUsersRangeBirsday(final @PathVariable String date) {
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    
+		try {
+			final Date datePasre = sdf.parse(date);
+			return dbUser1cDAO.getUsersByBirthday(datePasre);
+		} catch (ParseException e) {
+			LOG.error("Ошибка! Не коректные данные: ({})", date);
+			return Collections.emptyList();
+		}
+	}	
 }
