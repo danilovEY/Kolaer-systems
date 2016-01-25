@@ -1,8 +1,11 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
+import java.util.List;
+
 import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
+import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.plugins.UniformSystemLabel;
 
@@ -59,6 +62,12 @@ public class PMainApplication implements UniformSystemPlugin {
 	public void initialization(UniformSystemEditorKit editorKid) throws Exception {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<Service> getServices() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
