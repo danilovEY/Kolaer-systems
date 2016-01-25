@@ -105,6 +105,11 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 		}).thenAcceptAsync((tab) -> {
 			Platform.runLater(() -> {
 				this.pluginsTabPane.getTabs().add(tab.getView().getContent());
+				this.pluginsTabPane.getTabs().sort((tab1, tab2) -> {
+					return String.CASE_INSENSITIVE_ORDER.compare(this.pluginMap.get(tab1.getText()).getPlugin().getName(), 
+							this.pluginMap.get(tab2.getText()).getPlugin().getName());
+				});
+				
 				this.notifyAddTab(tab);
 				threadFroLoadPlug.shutdown();
 			});
