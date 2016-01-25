@@ -52,7 +52,11 @@ public class PTabImpl implements PTab {
 			CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getName());
 				Thread.currentThread().setContextClassLoader(this.loader);
-				this.app.run();			
+				try {
+					this.app.run();
+				} catch (Exception e) {
+					LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(), e);
+				}			
 				treadActTab.shutdown();
 			}, treadActTab).exceptionally(t -> {
 				LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(),t);
@@ -77,10 +81,14 @@ public class PTabImpl implements PTab {
 			CompletableFuture.supplyAsync(() -> {
 				Thread.currentThread().setName("Остановка плагина: " + this.plugin.getName());
 				Thread.currentThread().setContextClassLoader(this.loader);
-				this.app.stop();
+				try {
+					this.app.stop();
+				} catch (Exception e) {
+					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getName(),e);
+				}
 				return app;
 			}, treadDeActTab).exceptionally(t -> {
-				LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(),t);
+				LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
 			}).thenApplyAsync((app) -> {
 				this.view.setContent(null);

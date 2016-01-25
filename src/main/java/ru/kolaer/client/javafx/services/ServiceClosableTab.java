@@ -70,7 +70,11 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 			
 			@Override
 			public void closeTab() {
-				app.getApplication().stop();
+				try {
+					app.getApplication().stop();
+				} catch (Exception e) {
+					LOG.error("Ошибка при остановке приложения: {}", app.getName(), e);
+				}
 			}
 			
 			@Override

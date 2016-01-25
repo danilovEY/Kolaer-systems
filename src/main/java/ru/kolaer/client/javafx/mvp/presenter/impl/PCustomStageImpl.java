@@ -46,7 +46,11 @@ public class PCustomStageImpl implements PCustomStage {
 			Thread.currentThread().setName("Запуск плагина");
 			Thread.currentThread().setContextClassLoader(this.classLoader);
 			
-			this.application.run();
+			try {
+				this.application.run();
+			} catch (Exception e) {
+				LOG.error("Ошибка при запуске плагина!", e);
+			}
 			return this.application;
 		}).exceptionally(t -> {
 			LOG.error("Ошибка при запуске плагина!", t);
@@ -68,7 +72,11 @@ public class PCustomStageImpl implements PCustomStage {
 			Thread.currentThread().setContextClassLoader(this.classLoader);
 			
 			this.view.setVisible(false);
-			this.application.stop();
+			try {
+				this.application.stop();
+			} catch (Exception e) {
+				LOG.info("Ошибка при закрытии плагина", e);
+			}
 			LOG.info("Приложение \"{}\" остановлено!", this.application.getName());
 		}).exceptionally(t -> {
 			LOG.info("Ошибка при закрытии плагина", t);

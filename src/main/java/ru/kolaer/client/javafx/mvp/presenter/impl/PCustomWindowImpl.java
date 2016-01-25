@@ -58,7 +58,12 @@ public class PCustomWindowImpl implements PCustomWindow {
 		}
 		
 		if(this.application != null) {
-			this.application.run();
+			try {
+				this.application.run();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.view.setContent(this.application.getContent());
 		}
 		this.view.setVisible(true);
@@ -71,7 +76,6 @@ public class PCustomWindowImpl implements PCustomWindow {
 		try {
 			this.application.stop();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 		this.taskPaneApp.close();
