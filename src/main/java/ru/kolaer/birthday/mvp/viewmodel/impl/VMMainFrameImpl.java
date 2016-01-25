@@ -4,25 +4,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.javafx.scene.control.skin.DatePickerSkin;
-
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -33,9 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import ru.kolaer.birthday.mvp.model.UserModel;
-import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
 
 @SuppressWarnings("unchecked")
@@ -126,6 +114,7 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 				userDepartamentColumn,
 				userBithdayColumn);
 		
+		this.calendarPane.getChildren().add(new VMCalendarImpl().getView().getViewPane());
 	    /*final ObservableList<UserModel> data =
 	            FXCollections.observableArrayList(new UserModelImpl(new Integer(333), "AAAAAAA", "B", "C", "D", new Date(), null));
 	    userBithdayTable.setItems(data);*/
