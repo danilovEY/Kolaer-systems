@@ -2,6 +2,7 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -59,13 +60,21 @@ public class VMMainFrameImpl extends Application {
     	threadServices.shutdown();
     	
     	final ExecutorService threadScanPlugins = Executors.newSingleThreadExecutor();  
-    	CompletableFuture.runAsync(() -> {
+    	CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setName("Скан и добавление плагинов");
-			new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
+			return new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
 		}, threadScanPlugins).exceptionally(t -> {
 			LOG.error("Ошибка при сканировании плагинов!", t);
 			return null;
-		});
+		}).thenAcceptAsync(pluginList -> {
+			
+			pluginList.parallelStream().forEach(plugin -> {
+				if(plugin.getServices() != null) {
+					Thread.currentThread().setName("Запуск служб из плагина: " + plugin.getName());
+					plugin.getServices().parallelStream().forEach(this.servicesManager::addService);
+				}
+			});
+    	});
     	threadScanPlugins.shutdown();
     }
     
