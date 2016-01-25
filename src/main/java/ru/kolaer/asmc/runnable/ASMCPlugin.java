@@ -1,28 +1,32 @@
 package ru.kolaer.asmc.runnable;
 
-import ru.kolaer.client.javafx.plugins.ApplicationPlugin;
-import ru.kolaer.client.javafx.plugins.IApplication;
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
-import ru.kolaer.client.javafx.plugins.ILabel;
+import ru.kolaer.client.javafx.plugins.UniformSystem;
+import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
+import ru.kolaer.client.javafx.plugins.UniformSystemLabel;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
-@ApplicationPlugin
-public class ASMCPlugin implements IKolaerPlugin{
-	private final ILabel label = new ASMCLabel();
-	private final IApplication app = new ASMCApplication();
+@UniformSystem
+public class ASMCPlugin implements UniformSystemPlugin{
+	private ASMCApplication app;
 	
 	@Override
+	public void initialization(UniformSystemEditorKit editorKid) throws Exception {
+		this.app = new ASMCApplication();
+	}
+
+	@Override
 	public String getName() {
-		return "АСУП";
+		return "ASUP";
 	}
 
 	@Override
-	public ILabel getLabel() {
-		return label;
+	public UniformSystemLabel getLabel() {
+		return null;
 	}
 
 	@Override
-	public IApplication getApplication() {
-		return app;
+	public UniformSystemApplication getApplication() {
+		return this.app;
 	}
-
 }

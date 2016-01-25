@@ -12,9 +12,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
-import ru.kolaer.client.javafx.plugins.IApplication;
+import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 
-public class ASMCApplication implements IApplication {
+public class ASMCApplication implements UniformSystemApplication {
 	private final BorderPane root = new BorderPane();
 	private AnchorPane pane;
 	@Override
@@ -34,18 +34,15 @@ public class ASMCApplication implements IApplication {
 
 	@Override
 	public void stop() {
-		Platform.runLater(() -> {
-			this.pane.getStylesheets().clear();
-		});
+
 	}
 
 
 	@Override
-	public void run() {
-		SettingSingleton.initialization();
-		
-		Platform.runLater(() -> {
-			if(this.pane == null) {
+	public void run() throws Exception {
+		if(this.pane == null) {
+			SettingSingleton.initialization();
+			Platform.runLater(() -> {
 				try(final InputStream stream = Resources.V_MAIN_FRAME.openStream()){
 					FXMLLoader loader = new FXMLLoader();
 					this.pane = loader.load(stream);
@@ -56,12 +53,11 @@ public class ASMCApplication implements IApplication {
 					root.setCenter(pane);
 					root.setPrefSize(800, 600);
 				}catch(MalformedURLException e){
-					e.printStackTrace();
+					throw new RuntimeException(e);
 				}catch(IOException e){
-					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
-			}
-		});
+			});
+		}
 	}
-
 }
