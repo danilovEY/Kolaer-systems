@@ -31,7 +31,7 @@ import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
 
 @SuppressWarnings("unchecked")
 public class VMMainFrameImpl extends Application implements VMMainFrame {
-	private final URL FXML_VIEW = VMMainFrameImpl.class.getResource("/birthdayView/VMainFrame.fxml");
+	public static final URL FXML_VIEW = VMMainFrameImpl.class.getResource("/resources/birthdayView/VMainFrame.fxml");
 	private final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
 	
 	@FXML
@@ -119,15 +119,6 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 				userBithdayColumn);
 		
 		this.calendarPane.getChildren().add(new VMCalendarImpl().getView().getViewPane());
-		
-	    /*final ObservableList<UserModel> data =
-	            FXCollections.observableArrayList(new UserModelImpl(new Integer(333), "AAAAAAA", "B", "C", "D", new Date(), null));
-	    userBithdayTable.setItems(data);*/
-		
-		/*RestTemplate temp = new RestTemplate();
-		DbUsers1c[] users = temp.getForObject("http://localhost:8080/kolaer/database/user1c/get/users/max/5", DbUsers1c[].class);
-		for(DbUsers1c u : users)
-			System.out.println(u);*/
 	}
 	
 	@Override
