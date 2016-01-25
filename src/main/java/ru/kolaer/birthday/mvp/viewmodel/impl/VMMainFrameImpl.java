@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,8 +41,12 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	
 	@FXML
 	public void initialize() {
+		final ObservableList<UserModel> data = FXCollections.observableArrayList();
+		
 		final TableView<UserModel> userBithdayTable = new TableView<UserModel>();
 		userBithdayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		userBithdayTable.setItems(data);
+		
 		this.scrollTablePane.setContent(userBithdayTable);
 		
 		this.scrollTablePane.heightProperty().addListener((observable, oldValue, newValue) -> {
@@ -74,8 +81,6 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 		        return cell;	       
 	    });
 	    
-	   
-	    
 	    final TableColumn<UserModel, Integer> userPersonNumberColumn = new TableColumn<>("Таб. номер");
 	    userPersonNumberColumn.setCellValueFactory(new PropertyValueFactory<>("personNumber"));
 	    
@@ -90,13 +95,12 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	    
 	    final TableColumn<UserModel, String> userBithdayColumn = new TableColumn<>("Дата рождения");
 	    userBithdayColumn.setCellValueFactory(new PropertyValueFactory<>("bithday"));
-	    userBithdayColumn.setCellValueFactory(
-	    		   film -> {
-	    			      SimpleStringProperty property = new SimpleStringProperty();
-	    			      DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-	    			      property.setValue(dateFormat.format(film.getValue().getBithday()));
-	    			      return property;
-	    			   });
+	    userBithdayColumn.setCellValueFactory(film -> {
+	    	final SimpleStringProperty property = new SimpleStringProperty();
+	    	final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+	    	property.setValue(dateFormat.format(film.getValue().getBithday()));
+	    	return property;
+    	});
 	    
 	    final TableColumn<UserModel, String> userDepartamentColumn = new TableColumn<>("Цех/Отдел");
 	    userDepartamentColumn.setCellValueFactory(new PropertyValueFactory<>("departament"));
@@ -115,6 +119,7 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 				userBithdayColumn);
 		
 		this.calendarPane.getChildren().add(new VMCalendarImpl().getView().getViewPane());
+		
 	    /*final ObservableList<UserModel> data =
 	            FXCollections.observableArrayList(new UserModelImpl(new Integer(333), "AAAAAAA", "B", "C", "D", new Date(), null));
 	    userBithdayTable.setItems(data);*/
