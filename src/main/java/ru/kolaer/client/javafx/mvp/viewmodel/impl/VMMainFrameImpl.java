@@ -104,6 +104,7 @@ public class VMMainFrameImpl extends Application {
 			if(e.getCode() == KeyCode.F11)
 				this.stage.setFullScreen(true);
 		});
+		this.stage.setTitle("Единая система КолАЭР");
 		this.stage.setMinHeight(650);
 		this.stage.setMinWidth(850);
 		this.stage.centerOnScreen();
