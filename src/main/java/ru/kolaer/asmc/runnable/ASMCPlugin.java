@@ -1,9 +1,12 @@
 package ru.kolaer.asmc.runnable;
 
+import java.util.List;
+
 import ru.kolaer.client.javafx.plugins.UniformSystem;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.plugins.UniformSystemLabel;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
+import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
 @UniformSystem
@@ -28,5 +31,10 @@ public class ASMCPlugin implements UniformSystemPlugin{
 	@Override
 	public UniformSystemApplication getApplication() {
 		return this.app;
+	}
+
+	@Override
+	public List<Service> getServices() {
+		return null;
 	}
 }
