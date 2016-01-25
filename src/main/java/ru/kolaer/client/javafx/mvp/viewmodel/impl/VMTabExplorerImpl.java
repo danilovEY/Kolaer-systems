@@ -109,7 +109,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 					return String.CASE_INSENSITIVE_ORDER.compare(this.pluginMap.get(tab1.getText()).getPlugin().getName(), 
 							this.pluginMap.get(tab2.getText()).getPlugin().getName());
 				});
-				
+				this.pluginsTabPane.getSelectionModel().selectFirst();
 				this.notifyAddTab(tab);
 				threadFroLoadPlug.shutdown();
 			});
