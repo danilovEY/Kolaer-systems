@@ -23,19 +23,26 @@ import ru.kolaer.client.javafx.services.ServiceClosableTab;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKitImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMMainFrameImpl extends Application {
 	private static final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
 	private static final Map<String, String> PARAM = new HashMap<>();
+	
 	@FXML
     private BorderPane mainPane;
+	
 	private ServiceControlManager servicesManager;
 	private Stage stage;
-
+	private UniformSystemEditorKit editorKid;
+	
     @FXML
-    public void initialize() {  	
-    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl();
+    public void initialize() { 
+    	this.editorKid = new UniformSystemEditorKitImpl();
+    	
+    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.editorKid);
     	this.mainPane.setCenter(explorer.getContent());
     	
     	this.servicesManager = new ServiceControlManager();

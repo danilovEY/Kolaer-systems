@@ -27,6 +27,7 @@ import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, ExplorerTabsObresvable {
@@ -37,12 +38,13 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 	private Menu fileMenu;
 	@FXML
 	private MenuItem exitMenuItem;
-	
+	private final UniformSystemEditorKit editorKid;
 	private Map<String, PTab> pluginMap = new HashMap<>();
 	private List<ExplorerTabsObserver> observers = new LinkedList<>();
 	
-	public VMTabExplorerImpl() {
+	public VMTabExplorerImpl(UniformSystemEditorKit editorKid) {
 		super(Resources.V_TAB_EXPLORER);
+		this.editorKid = editorKid;
 	}
 
 	@Override
@@ -81,11 +83,24 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 		CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setContextClassLoader(jarClassLoaser);
 			Thread.currentThread().setName("Инициализация плангина "+plugin.getName()+" в виде вкладки");
-			final PTab tabPlugin = new PTabImpl(jarClassLoaser, plugin);
-			pluginMap.put(plugin.getApplication().getName(), tabPlugin);
-			return tabPlugin;
-		}, threadFroLoadPlug).exceptionally(t -> {
+			try {
+				plugin.initialization(this.editorKid);
+			} catch (Exception e) {
+				LOG.error("Ошибка при инициализации плагина: {}", plugin.getName(), e);
+			}
+			return plugin;
+		}, threadFroLoadPlug)
+		.exceptionally(t -> {
 			LOG.error("Ошибка при инициализации плагина");
+			return null;
+		})
+		.thenApplyAsync((plg) -> {
+			final PTab tabPlugin = new PTabImpl(jarClassLoaser, plg);
+			this.pluginMap.put(plg.getApplication().getName(), tabPlugin);
+			return tabPlugin;
+		}, threadFroLoadPlug)
+		.exceptionally(t -> {
+			LOG.error("Ошибка при создании вкладки плагина");
 			return null;
 		}).thenAcceptAsync((tab) -> {
 			Platform.runLater(() -> {
