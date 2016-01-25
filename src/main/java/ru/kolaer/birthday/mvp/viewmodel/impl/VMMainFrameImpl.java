@@ -139,6 +139,6 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 			LOG.error("Ошибка при чтении {}", FXML_VIEW, ex);
 		}
 		
-		primaryStage.show();		
+		primaryStage.show();
 	}
 }
