@@ -13,7 +13,7 @@ import ru.kolaer.client.javafx.mvp.view.VWindow;
 import ru.kolaer.client.javafx.mvp.view.impl.VCustomWindowsImpl;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMApplicationOnTaskPaneImpl;
-import ru.kolaer.client.javafx.plugins.IApplication;
+import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 
 /**
  *
@@ -26,7 +26,7 @@ public class PCustomWindowImpl implements PCustomWindow {
 	private static final Logger LOG = LoggerFactory.getLogger(PCustomWindowImpl.class);
 	
 	private final VCustomWindow view = new VCustomWindowsImpl();
-	private IApplication application;
+	private UniformSystemApplication application;
 	private Parent parent;
 	private VMApplicationOnTaskPane taskPaneApp;
 	
@@ -34,11 +34,11 @@ public class PCustomWindowImpl implements PCustomWindow {
 		this(null);
 	}
 	
-	public PCustomWindowImpl(IApplication app) {
+	public PCustomWindowImpl(UniformSystemApplication app) {
 		this(null, app, app.getName());
 	}
 
-	public PCustomWindowImpl(Pane parent,IApplication app, String name) {
+	public PCustomWindowImpl(Pane parent,UniformSystemApplication app, String name) {
 		this.parent = parent;
 		this.application = app;
 		this.view.setTitle(Optional.ofNullable(name).orElse(""));
@@ -101,7 +101,7 @@ public class PCustomWindowImpl implements PCustomWindow {
 	}
 
 	@Override
-	public IApplication getApplicationModel() {
+	public UniformSystemApplication getApplicationModel() {
 		return this.application;
 	}
 	

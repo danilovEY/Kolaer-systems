@@ -19,26 +19,26 @@ import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMLabel;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMApplicationOnTaskPaneImpl;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMLabelImpl;
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 
 public class PWindowPluginImpl implements PWindowPlugin {
 	private static final Logger LOG = LoggerFactory.getLogger(PWindowPluginImpl.class);
 	private ExplorerWindowsObserver explorer;
-	private final IKolaerPlugin plugin;
+	private final UniformSystemPlugin plugin;
 	private final VMLabel label;
 	private final Pane taskPane;
 	private final URLClassLoader classLoader;
 	private PCustomStage window;
 	
-	public PWindowPluginImpl(final IKolaerPlugin plugin) {
+	public PWindowPluginImpl(final UniformSystemPlugin plugin) {
 		this(plugin, null);
 	}
 	
-	public PWindowPluginImpl(final IKolaerPlugin plugin, final Pane taskPane) {
+	public PWindowPluginImpl(final UniformSystemPlugin plugin, final Pane taskPane) {
 		this((URLClassLoader)PWindowPluginImpl.class.getClassLoader(), plugin, taskPane);
 	}
 	
-	public PWindowPluginImpl(final URLClassLoader loader, final IKolaerPlugin plugin, final Pane taskPane) {
+	public PWindowPluginImpl(final URLClassLoader loader, final UniformSystemPlugin plugin, final Pane taskPane) {
 		this.plugin = plugin;
 		this.taskPane = taskPane;
 		this.classLoader = loader;
@@ -122,7 +122,7 @@ public class PWindowPluginImpl implements PWindowPlugin {
 	}
 
 	@Override
-	public IKolaerPlugin getPlugin() {
+	public UniformSystemPlugin getPlugin() {
 		return this.plugin;
 	}
 

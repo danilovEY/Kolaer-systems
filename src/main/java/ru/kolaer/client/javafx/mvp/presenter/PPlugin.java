@@ -1,8 +1,8 @@
 package ru.kolaer.client.javafx.mvp.presenter;
 
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 
 public interface PPlugin {
 	
-	IKolaerPlugin getPlugin();
+	UniformSystemPlugin getPlugin();
 }

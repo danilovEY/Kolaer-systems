@@ -31,7 +31,7 @@ public class PluginReader {
 		this.pathToPlugins = pathToPlugins;
 	}
 
-	public List<IKolaerPlugin> scanPlugins(final VMExplorer explorer) {
+	public List<UniformSystemPlugin> scanPlugins(final VMExplorer explorer) {
 
 		LOG.debug("Сканирование папки: \"{}\"", this.pathToPlugins);
 		final File dirToPlugins = new File(this.pathToPlugins);
@@ -44,12 +44,12 @@ public class PluginReader {
 			return name.endsWith(".jar") ? true : false;
 		});
 
-		CompletableFuture<List<IKolaerPlugin>> thread = CompletableFuture.supplyAsync(() -> {
+		CompletableFuture<List<UniformSystemPlugin>> thread = CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setName("Интеграция class loader'ов в системный class loader");
-			final List<Future<IKolaerPlugin>> futureList = new ArrayList<>();
+			final List<Future<UniformSystemPlugin>> futureList = new ArrayList<>();
 
 			for(final File jarFile : jarFiles){
-				final Future<IKolaerPlugin> resultFuture = Executors.newSingleThreadExecutor().submit(() -> {
+				final Future<UniformSystemPlugin> resultFuture = Executors.newSingleThreadExecutor().submit(() -> {
 					Thread.currentThread().setName("Поток для файла: " + jarFile.getName());
 
 					try(final JarFile jarFileRead = new JarFile(jarFile)){
@@ -67,8 +67,8 @@ public class PluginReader {
 							className = className.replace('/', '.');
 							try{
 								final Class<?> cls = Class.forName(className, false, jarClassLoader);
-								if(cls.getAnnotation(ApplicationPlugin.class) != null){
-									final IKolaerPlugin plugin = (IKolaerPlugin) cls.newInstance();
+								if(cls.getAnnotation(UniformSystem.class) != null){
+									final UniformSystemPlugin plugin = (UniformSystemPlugin) cls.newInstance();
 									explorer.addPlugin(plugin,jarClassLoader);
 									LOG.info("Добавлено приложение: \"{}\"", plugin.getName());
 									return plugin;
@@ -88,10 +88,10 @@ public class PluginReader {
 				futureList.add(resultFuture);
 			}
 
-			final List<IKolaerPlugin> result = new ArrayList<>();
-			for(final Future<IKolaerPlugin> future : futureList){
+			final List<UniformSystemPlugin> result = new ArrayList<>();
+			for(final Future<UniformSystemPlugin> future : futureList){
 				try{
-					final IKolaerPlugin plg = future.get(30, TimeUnit.SECONDS);
+					final UniformSystemPlugin plg = future.get(30, TimeUnit.SECONDS);
 					if(plg != null)
 						result.add(plg);
 				} catch(Exception e){

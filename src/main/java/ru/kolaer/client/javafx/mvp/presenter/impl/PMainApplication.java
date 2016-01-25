@@ -1,11 +1,11 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import javafx.scene.layout.Pane;
-import ru.kolaer.client.javafx.plugins.IApplication;
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
-import ru.kolaer.client.javafx.plugins.ILabel;
+import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
+import ru.kolaer.client.javafx.plugins.UniformSystemLabel;
 
-public class PMainApplication implements IKolaerPlugin {
+public class PMainApplication implements UniformSystemPlugin {
 
 	@Override
 	public String getName() {
@@ -13,15 +13,15 @@ public class PMainApplication implements IKolaerPlugin {
 	}
 
 	@Override
-	public ILabel getLabel() {
+	public UniformSystemLabel getLabel() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IApplication getApplication() {
+	public UniformSystemApplication getApplication() {
 		// TODO Auto-generated method stub
-		return new IApplication() {
+		return new UniformSystemApplication() {
 			
 			@Override
 			public void run() {

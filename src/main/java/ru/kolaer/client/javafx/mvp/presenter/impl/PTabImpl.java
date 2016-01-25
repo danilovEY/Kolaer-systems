@@ -10,19 +10,19 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.mvp.view.impl.VTabImpl;
-import ru.kolaer.client.javafx.plugins.IApplication;
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
+import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 
 public class PTabImpl implements PTab {
 	private final Logger LOG = LoggerFactory.getLogger(PTabImpl.class);
 	
-	private final IKolaerPlugin plugin;
-	private final IApplication app;
+	private final UniformSystemPlugin plugin;
+	private final UniformSystemApplication app;
 	private final VTab view;
 	private boolean isActive = false;
 	private final URLClassLoader loader;
 	
-	public PTabImpl(final URLClassLoader loader, final IKolaerPlugin plugin) {
+	public PTabImpl(final URLClassLoader loader, final UniformSystemPlugin plugin) {
 		this.plugin = plugin;
 		this.loader = loader;
 		this.app = this.plugin.getApplication();
@@ -40,7 +40,7 @@ public class PTabImpl implements PTab {
 	}
 
 	@Override
-	public IKolaerPlugin getPlugin() {
+	public UniformSystemPlugin getPlugin() {
 		return this.plugin;
 	}
 
@@ -114,7 +114,7 @@ public class PTabImpl implements PTab {
 	}
 
 	@Override
-	public IApplication getModel() {
+	public UniformSystemApplication getModel() {
 		return this.app;
 	}
 	

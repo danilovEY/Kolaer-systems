@@ -1,6 +1,6 @@
 package ru.kolaer.client.javafx.plugins;
 
-public interface ILabel {
+public interface UniformSystemLabel {
 	String getName();	
 	String getIcon();
 }

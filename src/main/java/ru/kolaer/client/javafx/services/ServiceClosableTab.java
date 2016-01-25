@@ -19,8 +19,8 @@ import ru.kolaer.client.javafx.mvp.presenter.impl.PMainApplication;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObserver;
-import ru.kolaer.client.javafx.plugins.IApplication;
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
+import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class ServiceClosableTab implements Service, ExplorerTabsObserver {
@@ -42,7 +42,7 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 		this.isRunning = true;
 		
 		final PTab mainTab = new PTab() {
-			final IKolaerPlugin app = new PMainApplication();
+			final UniformSystemPlugin app = new PMainApplication();
 			@Override
 			public void setView(VTab tab) {
 
@@ -54,12 +54,12 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 			}
 			
 			@Override
-			public IKolaerPlugin getPlugin() {
+			public UniformSystemPlugin getPlugin() {
 				return app;
 			}
 			
 			@Override
-			public IApplication getModel() {
+			public UniformSystemApplication getModel() {
 				return null;
 			}
 			

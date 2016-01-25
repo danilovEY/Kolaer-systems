@@ -3,7 +3,7 @@ package ru.kolaer.client.javafx.mvp.viewmodel;
 import java.net.URLClassLoader;
 
 import ru.kolaer.client.javafx.mvp.view.VComponentUI;
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 
 /**
  *
@@ -11,8 +11,8 @@ import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
  * @version 0.1
  */
 public interface VMExplorer extends VComponentUI {
-	void addPlugin(final IKolaerPlugin plugin);
-	void addPlugin(final IKolaerPlugin plugin, final URLClassLoader jarClassLoaser);
-	void removePlugin(final IKolaerPlugin plugin);
+	void addPlugin(final UniformSystemPlugin plugin);
+	void addPlugin(final UniformSystemPlugin plugin, final URLClassLoader jarClassLoaser);
+	void removePlugin(final UniformSystemPlugin plugin);
 	void removeAll();
 }

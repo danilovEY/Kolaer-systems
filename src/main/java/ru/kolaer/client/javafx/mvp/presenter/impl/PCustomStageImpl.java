@@ -13,24 +13,24 @@ import ru.kolaer.client.javafx.mvp.view.VCustomStage;
 import ru.kolaer.client.javafx.mvp.view.VWindow;
 import ru.kolaer.client.javafx.mvp.view.impl.VCustomStageImpl;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
-import ru.kolaer.client.javafx.plugins.IApplication;
+import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 
 public class PCustomStageImpl implements PCustomStage {
 	private static final Logger LOG = LoggerFactory.getLogger(PCustomStageImpl.class);
 	private final URLClassLoader classLoader;
-	private final IApplication application;
+	private final UniformSystemApplication application;
 	
 	private VCustomStage view;
 	private VMApplicationOnTaskPane taskPane;
 	
-	public PCustomStageImpl(final IApplication app) {
+	public PCustomStageImpl(final UniformSystemApplication app) {
 		this(app, Optional.ofNullable(app.getName()).orElse("Приложение"));
 	}
-	public PCustomStageImpl(final IApplication app, final String name) {
+	public PCustomStageImpl(final UniformSystemApplication app, final String name) {
 		this((URLClassLoader) PCustomStageImpl.class.getClassLoader(), app, name);
 	}
 	
-	public PCustomStageImpl(final URLClassLoader classLoader, final IApplication app, final String name) {
+	public PCustomStageImpl(final URLClassLoader classLoader, final UniformSystemApplication app, final String name) {
 		this.application = app;
 		this.classLoader = classLoader;
 		if(this.application == null){
@@ -84,7 +84,7 @@ public class PCustomStageImpl implements PCustomStage {
 	}
 
 	@Override
-	public IApplication getApplicationModel() {
+	public UniformSystemApplication getApplicationModel() {
 		return this.application;
 	}
 

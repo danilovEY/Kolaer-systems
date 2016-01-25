@@ -1,11 +1,11 @@
 package ru.kolaer.client.javafx.mvp.presenter;
 
 import ru.kolaer.client.javafx.mvp.view.VTab;
-import ru.kolaer.client.javafx.plugins.IApplication;
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
+import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 
 public interface PTab {
-	IApplication getModel();
+	UniformSystemApplication getModel();
 	
 	VTab getView();
 	void setView(VTab tab);
@@ -14,5 +14,5 @@ public interface PTab {
 	void deActiveTab();
 	void closeTab();
 	
-	IKolaerPlugin getPlugin();
+	UniformSystemPlugin getPlugin();
 }

@@ -2,10 +2,10 @@ package ru.kolaer.client.javafx.mvp.presenter;
 
 import ru.kolaer.client.javafx.mvp.view.VWindow;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
-import ru.kolaer.client.javafx.plugins.IApplication;
+import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 
 public interface PWindow {
-	IApplication getApplicationModel();
+	UniformSystemApplication getApplicationModel();
 		
 	VMApplicationOnTaskPane getTaskPane();
 	void setTaskPane(final VMApplicationOnTaskPane taskPane);

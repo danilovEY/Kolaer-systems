@@ -14,15 +14,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.kolaer.client.javafx.mvp.view.VTab;
-import ru.kolaer.client.javafx.plugins.IApplication;
+import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 
 public class VTabImpl implements VTab {
 	
 	private final Tab tab;
-	private final IApplication app;
+	private final UniformSystemApplication app;
 	private Stage stage;
 	
-	public VTabImpl(final URLClassLoader loader, final IApplication app) {
+	public VTabImpl(final URLClassLoader loader, final UniformSystemApplication app) {
 		this.tab = new Tab();
 		this.app = app;
 		

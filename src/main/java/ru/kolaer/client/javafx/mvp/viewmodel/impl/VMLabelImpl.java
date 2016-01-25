@@ -22,7 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMLabel;
-import ru.kolaer.client.javafx.plugins.ILabel;
+import ru.kolaer.client.javafx.plugins.UniformSystemLabel;
 import ru.kolaer.client.javafx.tools.Resources;
 
 /**
@@ -40,15 +40,15 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	@FXML
 	private ImageView labelIcon;
 	
-	private final ILabel model;
+	private final UniformSystemLabel model;
 	
 	private final URLClassLoader classLoader;
 	
-	public VMLabelImpl(final ILabel model) {
+	public VMLabelImpl(final UniformSystemLabel model) {
 		this((URLClassLoader) VMLabelImpl.class.getClassLoader(), model);
 	}
 	
-	public VMLabelImpl(final URLClassLoader classLoader, final ILabel model) {
+	public VMLabelImpl(final URLClassLoader classLoader, final UniformSystemLabel model) {
 		super(Resources.V_LABEL);
 		this.classLoader = classLoader;
 		if(model == null) {
@@ -103,7 +103,7 @@ public class VMLabelImpl extends ImportFXML implements VMLabel {
 	}
 
 	@Override
-	public ILabel getModel() {
+	public UniformSystemLabel getModel() {
 		return this.model;
 	}
 

@@ -30,7 +30,7 @@ import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerWindowsObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerWindowsObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMStartButton;
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMExplorerImpl extends ImportFXML implements VMExplorer, ExplorerWindowsObresvable, ExplorerWindowsObserver {	
@@ -71,13 +71,13 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer, ExplorerWi
 	}
 
 	@Override
-	public void addPlugin(final IKolaerPlugin plugin) {
+	public void addPlugin(final UniformSystemPlugin plugin) {
 		this.addPlugin(plugin, (URLClassLoader) this.getClass().getClassLoader());
 	}
 	
 
 	@Override
-	public void addPlugin(final IKolaerPlugin plugin, final URLClassLoader jarClassLoaser) {
+	public void addPlugin(final UniformSystemPlugin plugin, final URLClassLoader jarClassLoaser) {
 		final ExecutorService threadFroLoadPlug = Executors.newSingleThreadExecutor();
 		
 		CompletableFuture.supplyAsync(() -> {
@@ -118,7 +118,7 @@ public class VMExplorerImpl extends ImportFXML implements VMExplorer, ExplorerWi
 	}
 	
 	@Override
-	public void removePlugin(final IKolaerPlugin plugin) {
+	public void removePlugin(final UniformSystemPlugin plugin) {
 		
 	}
 

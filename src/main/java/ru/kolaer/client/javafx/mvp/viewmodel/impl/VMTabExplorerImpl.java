@@ -26,7 +26,7 @@ import ru.kolaer.client.javafx.mvp.view.ImportFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
-import ru.kolaer.client.javafx.plugins.IKolaerPlugin;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.tools.Resources;
 
 public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, ExplorerTabsObresvable {
@@ -71,12 +71,12 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 	}
 
 	@Override
-	public void addPlugin(final IKolaerPlugin plugin) {
+	public void addPlugin(final UniformSystemPlugin plugin) {
 		this.addPlugin(plugin, (URLClassLoader) this.getClass().getClassLoader());
 	}
 
 	@Override
-	public void addPlugin(final IKolaerPlugin plugin, final URLClassLoader jarClassLoaser) {
+	public void addPlugin(final UniformSystemPlugin plugin, final URLClassLoader jarClassLoaser) {
 		final ExecutorService threadFroLoadPlug = Executors.newSingleThreadExecutor();
 		CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setContextClassLoader(jarClassLoaser);
@@ -101,7 +101,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 	
 	
 	@Override
-	public void removePlugin(IKolaerPlugin plugin) {
+	public void removePlugin(UniformSystemPlugin plugin) {
 		// TODO Auto-generated method stub
 		
 	}
