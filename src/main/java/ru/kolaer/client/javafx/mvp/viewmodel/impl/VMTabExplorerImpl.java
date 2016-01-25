@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,11 +106,6 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 		}).thenAcceptAsync((tab) -> {
 			Platform.runLater(() -> {
 				this.pluginsTabPane.getTabs().add(tab.getView().getContent());
-				this.pluginsTabPane.getTabs().sort((tab1, tab2) -> {
-					return String.CASE_INSENSITIVE_ORDER.compare(this.pluginMap.get(tab1.getText()).getPlugin().getName(), 
-							this.pluginMap.get(tab2.getText()).getPlugin().getName());
-				});
-				this.pluginsTabPane.getSelectionModel().selectFirst();
 				this.notifyAddTab(tab);
 				threadFroLoadPlug.shutdown();
 			});
@@ -165,6 +161,11 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 	@Override
 	public void notifyAddTab(final PTab tab) {
 		this.observers.parallelStream().forEach(obs -> obs.updateAddTab(tab));
+	}
+
+	@Override
+	public void sortTabs() {
+
 	}
 
 }
