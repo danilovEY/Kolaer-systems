@@ -3,7 +3,7 @@ package ru.kolaer.birthday.mvp.model;
 import java.net.URL;
 import java.util.Date;
 
-public interface UserManager {
+public interface UserModel {
 	public String getFirstName();
 	public void setFirstName(String firstName);
 	public String getSecondName();

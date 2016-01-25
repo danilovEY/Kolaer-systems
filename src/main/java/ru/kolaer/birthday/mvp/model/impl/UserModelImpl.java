@@ -3,17 +3,19 @@ package ru.kolaer.birthday.mvp.model.impl;
 import java.net.URL;
 import java.util.Date;
 
-import ru.kolaer.birthday.mvp.model.UserManager;
+import ru.kolaer.birthday.mvp.model.UserModel;
 
-public class UserManagerImpl implements UserManager {
+public class UserModelImpl implements UserModel {
 	private String firstName;
 	private String secondName;
 	private String thirdName;
 	private String departament;
+	private Integer personNumber;
 	private Date bithday;
 	private URL icon;
 	
-	public UserManagerImpl(String firstName, String secondName, String thirdName, String departament, Date bithday, URL icon){
+	public UserModelImpl(Integer personNumber, String firstName, String secondName, String thirdName, String departament, Date bithday, URL icon){
+		this.personNumber = personNumber;
 		this.firstName = firstName;
 		this.secondName = secondName;
 		this.thirdName = thirdName;
@@ -22,7 +24,7 @@ public class UserManagerImpl implements UserManager {
 		this.icon = icon;
 	}
 	
-	public UserManagerImpl() {
+	public UserModelImpl() {
 		
 	}
 	
@@ -61,6 +63,14 @@ public class UserManagerImpl implements UserManager {
 	}
 	public void setIcon(URL icon) {
 		this.icon = icon;
+	}
+
+	public Integer getPersonNumber() {
+		return personNumber;
+	}
+
+	public void setPersonNumber(Integer personNumber) {
+		this.personNumber = personNumber;
 	}
 	
 	

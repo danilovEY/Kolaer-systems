@@ -3,11 +3,11 @@ package ru.kolaer.birthday.mvp.model.impl;
 import java.util.LinkedList;
 import java.util.List;
 
-import ru.kolaer.birthday.mvp.model.UserManager;
+import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.UserManagerModel;
 
 public class UserManagerModelImpl implements UserManagerModel {
-	final List<UserManager> usersTodayBithday = new LinkedList<>();
+	final List<UserModel> usersTodayBithday = new LinkedList<>();
 	
 	
 	public UserManagerModelImpl() {
@@ -15,7 +15,7 @@ public class UserManagerModelImpl implements UserManagerModel {
 	}
 
 	@Override
-	public List<UserManager> getUsersTodayBithday() {
+	public List<UserModel> getUsersTodayBithday() {
 		return null;
 	}
 	

@@ -21,28 +21,12 @@
                   </Label>
                </top>
                <center>
-                  <ScrollPane fx:id="scrollTablePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
-                     <content>
-                        <TableView fx:id="userBirthdayTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="322.0" prefWidth="1075.0">
-                           <columns>
-                              <TableColumn editable="false" prefWidth="81.0" text="Таб. номер" />
-                              <TableColumn editable="false" prefWidth="175.0" text="Фамилия" />
-                              <TableColumn prefWidth="182.0" text="Имя" />
-                              <TableColumn prefWidth="192.0" text="Отчество" />
-                              <TableColumn minWidth="0.0" prefWidth="98.0" text="Цех/Отдел" />
-                              <TableColumn prefWidth="238.0" text="Должность" />
-                           </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                     </content>
-                  </ScrollPane>
+                  <ScrollPane fx:id="scrollTablePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
          </top>
          <center>
-            <FlowPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <FlowPane fx:id="calendarPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
    </children>
