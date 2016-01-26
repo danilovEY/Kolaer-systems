@@ -71,4 +71,15 @@ public class DbUser1cDAOImpl implements DbUser1сDAO {
 		return result;
 	}
 
+	@Override
+	public List<DbUsers1c> getUserBirthdayToday() {
+		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
+		entityManager.getTransaction().begin();
+		final List<DbUsers1c> result = entityManager.createQuery("FROM DbUsers1c t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) ", DbUsers1c.class)
+	            .getResultList();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return result;
+	}
+
 }

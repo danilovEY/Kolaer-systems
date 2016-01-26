@@ -56,6 +56,11 @@ public class DataBaseUser1cController {
 		}
 	}	
 	
+	@RequestMapping(value = "/get/users/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<DbUsers1c> getUsersRangeBirsday() {
+		return dbUser1cDAO.getUserBirthdayToday();
+	}
+	
 	@RequestMapping(value = "/get/users/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<DbUsers1c> getUsersRangeBirsday(final @PathVariable String date) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
