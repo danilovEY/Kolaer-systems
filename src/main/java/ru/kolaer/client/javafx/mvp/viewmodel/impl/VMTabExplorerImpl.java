@@ -105,7 +105,12 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 			return null;
 		}).thenAcceptAsync((tab) -> {
 			Platform.runLater(() -> {
-				this.pluginsTabPane.getTabs().add(tab.getView().getContent());
+				if(tab.getPlugin().getName().equals("ASUP")) {
+					this.pluginsTabPane.getTabs().add(0, tab.getView().getContent());
+					this.pluginsTabPane.getSelectionModel().selectFirst();
+				} else {
+					this.pluginsTabPane.getTabs().add(tab.getView().getContent());
+				}
 				this.notifyAddTab(tab);
 				threadFroLoadPlug.shutdown();
 			});
@@ -162,10 +167,4 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 	public void notifyAddTab(final PTab tab) {
 		this.observers.parallelStream().forEach(obs -> obs.updateAddTab(tab));
 	}
-
-	@Override
-	public void sortTabs() {
-
-	}
-
 }

@@ -67,8 +67,6 @@ public class VMMainFrameImpl extends Application {
 			LOG.error("Ошибка при сканировании плагинов!", t);
 			return null;
 		}).thenAcceptAsync(pluginList -> {
-			explorer.sortTabs();
-			
 			pluginList.parallelStream().forEach(plugin -> {
 				if(plugin.getServices() != null) {
 					Thread.currentThread().setName("Запуск служб из плагина: " + plugin.getName());
