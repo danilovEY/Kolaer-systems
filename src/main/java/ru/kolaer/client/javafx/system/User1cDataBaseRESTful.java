@@ -9,7 +9,13 @@ public class User1cDataBaseRESTful implements User1cDataBase {
 	
 	@Override
 	public DbUsers1c[] getAllUser() {
-		final DbUsers1c[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/user1c/get/users/max/5", DbUsers1c[].class);
+		final DbUsers1c[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/user1c/get/users/max", DbUsers1c[].class);
+		return users;
+	}
+
+	@Override
+	public DbUsers1c[] getUsersMax(int maxCount) {
+		final DbUsers1c[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/user1c/get/users/max/" + maxCount, DbUsers1c[].class);
 		return users;
 	}
 	
