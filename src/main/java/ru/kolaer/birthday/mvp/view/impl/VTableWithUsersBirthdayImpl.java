@@ -16,19 +16,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import ru.kolaer.birthday.mvp.model.UserModel;
-import ru.kolaer.birthday.mvp.view.VTableWithUsersBithday;
+import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 
-public class VTableWithUsersBithdayImpl implements VTableWithUsersBithday {
+public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	private final BorderPane tablePane = new BorderPane();
-	private final TableView<UserModel> userBithdayTable = new TableView<UserModel>();
+	private final TableView<UserModel> userBirthdayTable = new TableView<UserModel>();
 	
-	public VTableWithUsersBithdayImpl() {
+	public VTableWithUsersBirthdayImpl() {
 		this.init();
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void init() {		
-		this.userBithdayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		this.userBirthdayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		
 		final TableColumn<UserModel, URL> userIconColumn = new TableColumn<>("Фотография");
 	    userIconColumn.setCellValueFactory(new PropertyValueFactory<>("icon"));
@@ -65,9 +65,9 @@ public class VTableWithUsersBithdayImpl implements VTableWithUsersBithday {
 	    final TableColumn<UserModel, String> userThirdNameColumn = new TableColumn<>("Отчество");
 	    userThirdNameColumn.setCellValueFactory(new PropertyValueFactory<>("thirdName"));
 	    
-	    final TableColumn<UserModel, Date> userBithdayColumn = new TableColumn<>("Дата рождения");
-	    userBithdayColumn.setCellValueFactory(new PropertyValueFactory<>("bithday"));
-	    userBithdayColumn.setCellFactory(film -> {
+	    final TableColumn<UserModel, Date> userBirthdayColumn = new TableColumn<>("Дата рождения");
+	    userBirthdayColumn.setCellValueFactory(new PropertyValueFactory<>("birthday"));
+	    userBirthdayColumn.setCellFactory(film -> {
 	    	 return new TableCell<UserModel, Date>() {
 	    	        @Override
 	    	        protected void updateItem(Date item, boolean empty) {
@@ -93,16 +93,16 @@ public class VTableWithUsersBithdayImpl implements VTableWithUsersBithday {
 	    userFirstNameColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
 	    userSecondNameColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
 	    userThirdNameColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
-	    userBithdayColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
+	    userBirthdayColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
 	    userDepartamentColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
 	    userPersonNumberColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
 	    
-		this.userBithdayTable.getColumns().addAll(userIconColumn, userPersonNumberColumn, userSecondNameColumn, userFirstNameColumn,
+		this.userBirthdayTable.getColumns().addAll(userIconColumn, userPersonNumberColumn, userSecondNameColumn, userFirstNameColumn,
 				userThirdNameColumn,
 				userDepartamentColumn,
-				userBithdayColumn);
+				userBirthdayColumn);
 		
-		this.tablePane.setCenter(this.userBithdayTable);
+		this.tablePane.setCenter(this.userBirthdayTable);
 	}
 
 	@Override
@@ -112,6 +112,6 @@ public class VTableWithUsersBithdayImpl implements VTableWithUsersBithday {
 
 	@Override
 	public void setData(final ObservableList<UserModel> userList) {
-		this.userBithdayTable.setItems(userList);
+		this.userBirthdayTable.setItems(userList);
 	}
 }

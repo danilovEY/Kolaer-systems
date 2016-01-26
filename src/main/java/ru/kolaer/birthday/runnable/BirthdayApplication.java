@@ -10,20 +10,20 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
-import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBithday;
+import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthday;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMMainFrameImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMTableWithUsersBithdayImpl;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.system.ServerStatus;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
-public class BithdayApplication implements UniformSystemApplication {
+public class BirthdayApplication implements UniformSystemApplication {
 	private final UniformSystemEditorKit editorKid;
 	private final BorderPane root = new BorderPane();
 	private AnchorPane mainPane;
-	private VMTableWithUsersBithday vmTable;
+	private VMTableWithUsersBirthday vmTable;
 	
-	public BithdayApplication(UniformSystemEditorKit editorKid) {
+	public BirthdayApplication(UniformSystemEditorKit editorKid) {
 		this.editorKid = editorKid;
 	}
 
@@ -75,7 +75,7 @@ public class BithdayApplication implements UniformSystemApplication {
 	
 	private void initTable(VMMainFrame frameContent) {
 		this.vmTable = new VMTableWithUsersBithdayImpl(this.editorKid);		
-		frameContent.setVMTableWithUsersBithday(this.vmTable);
+		frameContent.setVMTableWithUsersBirthday(this.vmTable);
 		
 		
 	}

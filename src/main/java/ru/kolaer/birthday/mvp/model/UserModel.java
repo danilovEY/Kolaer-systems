@@ -12,8 +12,8 @@ public interface UserModel {
 	public void setThirdName(String thirdName);
 	public String getDepartament();
 	public void setDepartament(String departament);
-	public Date getBithday();
-	public void setBithday(Date bithday);
+	public Date getBirthday();
+	public void setBirthday(Date birthday);
 	public URL getIcon();
 	public void setIcon(URL icon);
 	public Integer getPersonNumber();

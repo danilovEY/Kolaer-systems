@@ -15,7 +15,7 @@ public class UserManagerModelImpl implements UserManagerModel {
 	}
 
 	@Override
-	public List<UserModel> getUsersTodayBithday() {
+	public List<UserModel> getUsersTodayBirthday() {
 		return null;
 	}
 	

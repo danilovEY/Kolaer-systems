@@ -11,16 +11,16 @@ public class UserModelImpl implements UserModel {
 	private String thirdName;
 	private String departament;
 	private Integer personNumber;
-	private Date bithday;
+	private Date birthday;
 	private URL icon;
 	
-	public UserModelImpl(Integer personNumber, String firstName, String secondName, String thirdName, String departament, Date bithday, URL icon){
+	public UserModelImpl(Integer personNumber, String firstName, String secondName, String thirdName, String departament, Date birthday, URL icon){
 		this.personNumber = personNumber;
 		this.firstName = firstName;
 		this.secondName = secondName;
 		this.thirdName = thirdName;
 		this.departament = departament;
-		this.bithday = bithday;
+		this.birthday = birthday;
 		this.icon = icon;
 	}
 	
@@ -52,11 +52,11 @@ public class UserModelImpl implements UserModel {
 	public void setDepartament(String departament) {
 		this.departament = departament;
 	}
-	public Date getBithday() {
-		return bithday;
+	public Date getBirthday() {
+		return birthday;
 	}
-	public void setBithday(Date bithday) {
-		this.bithday = bithday;
+	public void setBirthday(Date bithday) {
+		this.birthday = bithday;
 	}
 	public URL getIcon() {
 		return icon;

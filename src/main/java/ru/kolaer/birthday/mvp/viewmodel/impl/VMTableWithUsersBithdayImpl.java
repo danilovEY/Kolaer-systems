@@ -4,14 +4,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
-import ru.kolaer.birthday.mvp.view.VTableWithUsersBithday;
-import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBithdayImpl;
-import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBithday;
+import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
+import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBirthdayImpl;
+import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthday;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
-public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBithday{
-	private final VTableWithUsersBithday table = new VTableWithUsersBithdayImpl();
+public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBirthday{
+	private final VTableWithUsersBirthday table = new VTableWithUsersBirthdayImpl();
 	private final UniformSystemEditorKit editorKid;
 	
 	public VMTableWithUsersBithdayImpl() {
@@ -26,7 +26,7 @@ public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBithday{
 
 	private void initWithEditorKid()  {
 		final ObservableList<UserModel> userModelList = FXCollections.observableArrayList();
-		DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBithdayToday();
+		DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
 		
 		for(DbDataAll user : users) {
 			if(this.checkUser(user)) {
@@ -35,7 +35,7 @@ public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBithday{
 				userModel.setFirstName(user.getName());
 				userModel.setSecondName(user.getSurname());
 				userModel.setThirdName(user.getPatronymic());
-				userModel.setBithday(user.getBirthday());
+				userModel.setBirthday(user.getBirthday());
 				userModel.setDepartament(user.getDepartament());
 				userModelList.add(userModel);
 			}
@@ -45,7 +45,7 @@ public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBithday{
 	}
 
 	@Override
-	public VTableWithUsersBithday getView() {
+	public VTableWithUsersBirthday getView() {
 		return this.table;
 	}
 

@@ -1,6 +1,6 @@
 package ru.kolaer.birthday.mvp.viewmodel;
 
 public interface VMMainFrame {
-	VMTableWithUsersBithday getVMTableWithUsersBithday();
-	void setVMTableWithUsersBithday(VMTableWithUsersBithday vmTable);
+	VMTableWithUsersBirthday getVMTableWithUsersBirthday();
+	void setVMTableWithUsersBirthday(VMTableWithUsersBirthday vmTable);
 }

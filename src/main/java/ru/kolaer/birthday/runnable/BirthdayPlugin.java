@@ -10,17 +10,17 @@ import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
 @UniformSystem
-public class BithdayPlugin implements UniformSystemPlugin {
+public class BirthdayPlugin implements UniformSystemPlugin {
 	private UniformSystemApplication application;
 	
 	@Override
 	public void initialization(final UniformSystemEditorKit editorKid) throws Exception {
-		this.application = new BithdayApplication(editorKid);
+		this.application = new BirthdayApplication(editorKid);
 	}
 
 	@Override
 	public String getName() {
-		return "Bithday";
+		return "Birthday";
 	}
 
 	@Override
