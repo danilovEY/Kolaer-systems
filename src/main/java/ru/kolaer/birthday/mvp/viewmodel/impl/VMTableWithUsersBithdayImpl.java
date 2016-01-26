@@ -36,7 +36,8 @@ public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBirthday{
 				userModel.setSecondName(user.getSurname());
 				userModel.setThirdName(user.getPatronymic());
 				userModel.setBirthday(user.getBirthday());
-				userModel.setDepartament(user.getDepartament());
+				userModel.setDepartament(user.getDepartamentAbbreviated());
+				userModel.setIcon(user.getVCard());
 				userModelList.add(userModel);
 			}
 		}

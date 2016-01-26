@@ -12,9 +12,9 @@ public class UserModelImpl implements UserModel {
 	private String departament;
 	private Integer personNumber;
 	private Date birthday;
-	private URL icon;
+	private String icon;
 	
-	public UserModelImpl(Integer personNumber, String firstName, String secondName, String thirdName, String departament, Date birthday, URL icon){
+	public UserModelImpl(Integer personNumber, String firstName, String secondName, String thirdName, String departament, Date birthday, String icon){
 		this.personNumber = personNumber;
 		this.firstName = firstName;
 		this.secondName = secondName;
@@ -58,10 +58,10 @@ public class UserModelImpl implements UserModel {
 	public void setBirthday(Date bithday) {
 		this.birthday = bithday;
 	}
-	public URL getIcon() {
+	public String getIcon() {
 		return icon;
 	}
-	public void setIcon(URL icon) {
+	public void setIcon(String icon) {
 		this.icon = icon;
 	}
 

@@ -1,9 +1,15 @@
 package ru.kolaer.birthday.mvp.view.impl;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -19,6 +25,8 @@ import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 
 public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
+	private final Logger LOG = LoggerFactory.getLogger(VTableWithUsersBirthdayImpl.class);
+	
 	private final BorderPane tablePane = new BorderPane();
 	private final TableView<UserModel> userBirthdayTable = new TableView<UserModel>();
 	
@@ -30,22 +38,30 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	private void init() {		
 		this.userBirthdayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		
-		final TableColumn<UserModel, URL> userIconColumn = new TableColumn<>("Фотография");
+		final TableColumn<UserModel, String> userIconColumn = new TableColumn<>("Фотография");
 	    userIconColumn.setCellValueFactory(new PropertyValueFactory<>("icon"));
-	    userIconColumn.setCellFactory((TableColumn<UserModel, URL> param) -> {
-	    	return new TableCell<UserModel, URL>(){
+	    userIconColumn.setCellFactory((TableColumn<UserModel, String> param) -> {
+	    	return new TableCell<UserModel, String>(){
 		            @Override
-		            public void updateItem(final URL item, final boolean empty) { 
+		            public void updateItem(final String item, final boolean empty) { 
 		            	if(!empty) {
-			                URL tempIconUrl = item;
+		            		URL url = null;
 			            	if(item == null){   
-			            		tempIconUrl = this.getClass().getResource("/resources/nonePicture.jpg");
+			            		url = this.getClass().getResource( "/resources/nonePicture.jpg");
+			                } else {
+			                	
+			                	try {
+			                		final StringBuilder pathToIcon = new StringBuilder("\\\\mailkolaer\\e$\\HTTP\\WWW\\asupkolaer\\app_ie8\\assets\\images\\vCard\\o_").append(item);
+									url = new File(pathToIcon.toString()).toURI().toURL();
+								} catch (MalformedURLException e) {
+									LOG.error("Невозможно преобразовать в URL.");
+								}
 			                }
 			                
 		                    final ImageView imageview = new ImageView();
 		                    imageview.setFitHeight(100);
-		                    imageview.setFitWidth(100);
-		                    imageview.setImage(new Image(tempIconUrl.toString(), true));
+		                    imageview.setFitWidth(116);
+		                    imageview.setImage(new Image(url.toString(), true));
 		                    
 		                    this.setGraphic(new BorderPane(imageview));
 		            	}
@@ -89,13 +105,13 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    final TableColumn<UserModel, String> userDepartamentColumn = new TableColumn<>("Цех/Отдел");
 	    userDepartamentColumn.setCellValueFactory(new PropertyValueFactory<>("departament"));
 	    
-	    userIconColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
-	    userFirstNameColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
-	    userSecondNameColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
-	    userThirdNameColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
-	    userBirthdayColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
-	    userDepartamentColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
-	    userPersonNumberColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
+	    userIconColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
+	    userFirstNameColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
+	    userSecondNameColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
+	    userThirdNameColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
+	    userBirthdayColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
+	    userDepartamentColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
+	    userPersonNumberColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
 	    
 		this.userBirthdayTable.getColumns().addAll(userIconColumn, userPersonNumberColumn, userSecondNameColumn, userFirstNameColumn,
 				userThirdNameColumn,

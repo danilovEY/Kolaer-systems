@@ -1,6 +1,5 @@
 package ru.kolaer.birthday.mvp.model;
 
-import java.net.URL;
 import java.util.Date;
 
 public interface UserModel {
@@ -14,8 +13,8 @@ public interface UserModel {
 	public void setDepartament(String departament);
 	public Date getBirthday();
 	public void setBirthday(Date birthday);
-	public URL getIcon();
-	public void setIcon(URL icon);
+	public String getIcon();
+	public void setIcon(String icon);
 	public Integer getPersonNumber();
 	public void setPersonNumber(Integer personNumber);
 }
