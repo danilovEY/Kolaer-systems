@@ -16,13 +16,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
+import ru.kolaer.birthday.mvp.viewmodel.VMCalendar;
 import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
-import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthday;
+import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthdayObserver;
 
 public class VMMainFrameImpl extends Application implements VMMainFrame {
 	public static final URL FXML_VIEW = VMMainFrameImpl.class.getResource("/resources/birthdayView/VMainFrame.fxml");
 	private final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
-	private VMTableWithUsersBirthday vmTable;
+	private VMTableWithUsersBirthdayObserver vmTable;
 	
 	@FXML
 	private BorderPane tablePane;
@@ -32,8 +33,6 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	@FXML
 	public void initialize() {
 		
-		
-		this.calendarPane.getChildren().add(new VMCalendarImpl().getView().getViewPane());
 	}
 	
 	@Override
@@ -50,16 +49,23 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	}
 
 	@Override
-	public VMTableWithUsersBirthday getVMTableWithUsersBirthday() {
+	public VMTableWithUsersBirthdayObserver getVMTableWithUsersBirthday() {
 		return this.vmTable;
 	}
 
 	@Override
-	public void setVMTableWithUsersBirthday(VMTableWithUsersBirthday vmTable) {
+	public void setVMTableWithUsersBirthday(VMTableWithUsersBirthdayObserver vmTable) {
 		this.vmTable = vmTable;
 		final VTableWithUsersBirthday vTable = vmTable.getView();
 		Platform.runLater(() -> {
 			this.tablePane.setCenter(vTable.getViewPane());
+		});
+	}
+
+	@Override
+	public void addVMCalendar(final VMCalendar calendar) {
+		Platform.runLater(() -> {
+			this.calendarPane.getChildren().add(calendar.getView().getViewPane());
 		});
 	}
 }

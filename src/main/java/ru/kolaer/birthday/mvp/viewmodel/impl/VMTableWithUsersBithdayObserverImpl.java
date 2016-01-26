@@ -1,31 +1,33 @@
 package ru.kolaer.birthday.mvp.viewmodel.impl;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBirthdayImpl;
-import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthday;
+import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthdayObserver;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
-public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBirthday{
+public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirthdayObserver{
 	private final VTableWithUsersBirthday table = new VTableWithUsersBirthdayImpl();
 	private final UniformSystemEditorKit editorKid;
 	
-	public VMTableWithUsersBithdayImpl() {
+	public VMTableWithUsersBithdayObserverImpl() {
 		this(null);
 	}
 	
 	
-	public VMTableWithUsersBithdayImpl(final UniformSystemEditorKit editorKid) {
+	public VMTableWithUsersBithdayObserverImpl(final UniformSystemEditorKit editorKid) {
 		this.editorKid = editorKid;
 		this.initWithEditorKid();
 	}
 
 	private void initWithEditorKid()  {
-		final ObservableList<UserModel> userModelList = FXCollections.observableArrayList();
+		final List<UserModel> userModelList = new ArrayList<>();
 		DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
 		
 		for(DbDataAll user : users) {
@@ -56,6 +58,13 @@ public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBirthday{
 		
 		return true;
 		
+	}
+
+
+	@Override
+	public void updateSelectedDate(LocalDate date, List<UserModel> users) {
+		this.table.setData(users);
+		System.out.println("Selected : " + date);
 	}
 	
 }

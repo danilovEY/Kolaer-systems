@@ -9,10 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import ru.kolaer.birthday.mvp.viewmodel.VMCalendar;
 import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
-import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthday;
+import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthdayObserver;
+import ru.kolaer.birthday.mvp.viewmodel.impl.VMCalendarImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMMainFrameImpl;
-import ru.kolaer.birthday.mvp.viewmodel.impl.VMTableWithUsersBithdayImpl;
+import ru.kolaer.birthday.mvp.viewmodel.impl.VMTableWithUsersBithdayObserverImpl;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.system.ServerStatus;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
@@ -21,7 +23,7 @@ public class BirthdayApplication implements UniformSystemApplication {
 	private final UniformSystemEditorKit editorKid;
 	private final BorderPane root = new BorderPane();
 	private AnchorPane mainPane;
-	private VMTableWithUsersBirthday vmTable;
+	private VMTableWithUsersBirthdayObserver vmTable;
 	
 	public BirthdayApplication(UniformSystemEditorKit editorKid) {
 		this.editorKid = editorKid;
@@ -43,7 +45,12 @@ public class BirthdayApplication implements UniformSystemApplication {
 	}
 
 	@Override
-	public void run() throws Exception {	
+	public void run() throws Exception {
+		if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.NOT_AVAILABLE) {
+			this.editorKid.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.");
+			return;
+		}
+		
 		if(this.mainPane == null) {
 			try(final InputStream stream = VMMainFrameImpl.FXML_VIEW.openStream()){
 				final FXMLLoader loader = new FXMLLoader();
@@ -53,11 +60,6 @@ public class BirthdayApplication implements UniformSystemApplication {
 					root.setCenter(this.mainPane);
 					root.setPrefSize(800, 600);
 				});
-				
-				if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.NOT_AVAILABLE) {
-					this.editorKid.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.");
-					return;
-				}
 				
 				this.initTable(frame);
 			}catch(MalformedURLException e){
@@ -74,9 +76,13 @@ public class BirthdayApplication implements UniformSystemApplication {
 	}
 	
 	private void initTable(VMMainFrame frameContent) {
-		this.vmTable = new VMTableWithUsersBithdayImpl(this.editorKid);		
+		this.vmTable = new VMTableWithUsersBithdayObserverImpl(this.editorKid);		
 		frameContent.setVMTableWithUsersBirthday(this.vmTable);
 		
+		final VMCalendar calendar = new VMCalendarImpl(this.editorKid);
+		calendar.registerObserver(vmTable);
+		
+		frameContent.addVMCalendar(calendar);
 		
 	}
 

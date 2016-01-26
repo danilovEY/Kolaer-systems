@@ -2,16 +2,18 @@ package ru.kolaer.birthday.mvp.view.impl;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -26,7 +28,7 @@ import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 
 public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	private final Logger LOG = LoggerFactory.getLogger(VTableWithUsersBirthdayImpl.class);
-	
+	private final ObservableList<UserModel> tableModel = FXCollections.observableArrayList();
 	private final BorderPane tablePane = new BorderPane();
 	private final TableView<UserModel> userBirthdayTable = new TableView<UserModel>();
 	
@@ -36,8 +38,8 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	
 	@SuppressWarnings("unchecked")
 	private void init() {		
-		this.userBirthdayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		
+		this.userBirthdayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);		
+		this.userBirthdayTable.setItems(tableModel);
 		final TableColumn<UserModel, String> userIconColumn = new TableColumn<>("Фотография");
 	    userIconColumn.setCellValueFactory(new PropertyValueFactory<>("icon"));
 	    userIconColumn.setCellFactory((TableColumn<UserModel, String> param) -> {
@@ -45,25 +47,27 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 		            @Override
 		            public void updateItem(final String item, final boolean empty) { 
 		            	if(!empty) {
-		            		URL url = null;
-			            	if(item == null){   
-			            		url = this.getClass().getResource( "/resources/nonePicture.jpg");
-			                } else {
-			                	
-			                	try {
-			                		final StringBuilder pathToIcon = new StringBuilder("\\\\mailkolaer\\e$\\HTTP\\WWW\\asupkolaer\\app_ie8\\assets\\images\\vCard\\o_").append(item);
-									url = new File(pathToIcon.toString()).toURI().toURL();
-								} catch (MalformedURLException e) {
-									LOG.error("Невозможно преобразовать в URL.");
-								}
-			                }
-			                
-		                    final ImageView imageview = new ImageView();
-		                    imageview.setFitHeight(100);
-		                    imageview.setFitWidth(116);
-		                    imageview.setImage(new Image(url.toString(), true));
-		                    
-		                    this.setGraphic(new BorderPane(imageview));
+			            		Platform.runLater(() -> {
+			            		URL url = null;
+				            	if(item == null){   
+				            		url = this.getClass().getResource( "/resources/nonePicture.jpg");
+				                } else {
+				                	
+				                	try {
+				                		final StringBuilder pathToIcon = new StringBuilder("\\\\mailkolaer\\e$\\HTTP\\WWW\\asupkolaer\\app_ie8\\assets\\images\\vCard\\o_").append(item);
+										url = new File(pathToIcon.toString()).toURI().toURL();
+									} catch (MalformedURLException e) {
+										LOG.error("Невозможно преобразовать в URL.");
+									}
+				                }
+				                
+			                    final ImageView imageview = new ImageView();
+			                    imageview.setFitHeight(100);
+			                    imageview.setFitWidth(116);
+			                    imageview.setImage(new Image(url.toString(), true));
+			                    
+			                    this.setGraphic(new BorderPane(imageview));
+		            		});
 		            	}
 		            }
 		        };           	       
@@ -88,15 +92,17 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    	        @Override
 	    	        protected void updateItem(Date item, boolean empty) {
 	    	            super.updateItem(item, empty);
-
+	    	            
 	    	            if (item == null || empty) {
 	    	                setText(null);
 	    	            } else {
-	    	            	final SimpleStringProperty property = new SimpleStringProperty();
-	    	    	    	final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-	    	    	    	property.setValue(dateFormat.format(item));
-	    	    	    	
-	    	                setText(property.getValue());
+	    	            	Platform.runLater(() -> {
+		    	            	final SimpleStringProperty property = new SimpleStringProperty();
+		    	    	    	final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		    	    	    	property.setValue(dateFormat.format(item));
+		    	    	    	
+		    	                setText(property.getValue());
+	    	            	});
 	    	            }
 	    	        }
 	    	    };
@@ -127,7 +133,12 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	}
 
 	@Override
-	public void setData(final ObservableList<UserModel> userList) {
-		this.userBirthdayTable.setItems(userList);
+	public void setData(final List<UserModel> userList) {
+		Platform.runLater(() -> {
+			//TODO BUG!
+			userBirthdayTable.getItems().clear();
+			userBirthdayTable.getItems().addAll(userList);
+			//this.userBirthdayTable.setItems(FXCollections.observableArrayList(userList));
+		});
 	}
 }
