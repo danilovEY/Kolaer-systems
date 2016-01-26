@@ -16,13 +16,24 @@ import ru.kolaer.server.restful.tools.UsersManager;
 @RestController
 @RequestMapping(value="/system")
 public class SystemController {
-
+	private static String status = "available";
 	@Autowired
 	private UsersManager usersManager;
 	
 	@RequestMapping(path = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Collection<DbKolaerUser> getUsers() {
 		return usersManager.getUsers();
+	}
+	
+	@RequestMapping(path = "/server/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public String getStatus() {
+		return status;
+	}
+	
+	@RequestMapping(path = "/server/status/status", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public String setStatus(final @PathVariable String status) {
+		SystemController.status = status;
+		return status;
 	}
 	
 	@RequestMapping(path = "/users/ping", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
