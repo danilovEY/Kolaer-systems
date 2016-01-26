@@ -57,7 +57,7 @@ public class PTabImpl implements PTab {
 				} catch (Exception e) {
 					LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(), e);
 				}			
-				//treadActTab.shutdown();
+				treadActTab.shutdown();
 			}, treadActTab).exceptionally(t -> {
 				LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	
@@ -66,7 +66,7 @@ public class PTabImpl implements PTab {
 			CompletableFuture.runAsync(() -> {
 				this.view.setContent(app.getContent());
 				this.isActive = true;
-				//treadRunApp.shutdown();
+				treadRunApp.shutdown();
 			}, treadRunApp).exceptionally(t -> {
 				LOG.error("Ошибка при отображении плагина \"{}\"!",this.plugin.getName(),t);
 				return null;	

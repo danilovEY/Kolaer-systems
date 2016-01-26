@@ -50,27 +50,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		this.pluginsTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldTab, newTab)  -> {
-			if(oldTab != null) {
-				final ExecutorService treadDesActTab = Executors.newSingleThreadExecutor();				
-				CompletableFuture.runAsync(() -> {	
-					final PTab tab = this.pluginMap.get(oldTab.getText());
-					tab.deActiveTab();
-					this.notifyCloseTab(tab);
-				}, treadDesActTab);			
-				treadDesActTab.shutdown();
-			}
-			
-			if(newTab != null) {
-				final ExecutorService treadActTab = Executors.newSingleThreadExecutor();			
-				CompletableFuture.runAsync(() -> {
-					final PTab tab = this.pluginMap.get(newTab.getText());
-					tab.activeTab();
-					this.notifyOpenTab(tab);
-				}, treadActTab);			
-				treadActTab.shutdown();
-			}
-		});
+
 	}
 
 	@Override
@@ -105,8 +85,10 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 			return null;
 		}).thenAcceptAsync((tab) -> {
 			Platform.runLater(() -> {
+				//Для того, чтобы АСУП открывался первым
 				if(tab.getPlugin().getName().equals("ASUP")) {
 					this.pluginsTabPane.getTabs().add(0, tab.getView().getContent());
+					this.initSelectionModel();
 					this.pluginsTabPane.getSelectionModel().selectFirst();
 				} else {
 					this.pluginsTabPane.getTabs().add(tab.getView().getContent());
@@ -120,6 +102,29 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 		});	
 	}
 	
+	private void initSelectionModel() {
+		this.pluginsTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldTab, newTab)  -> {
+			if(oldTab != null) {
+				final ExecutorService treadDesActTab = Executors.newSingleThreadExecutor();				
+				CompletableFuture.runAsync(() -> {	
+					final PTab tab = this.pluginMap.get(oldTab.getText());
+					tab.deActiveTab();
+					this.notifyCloseTab(tab);
+				}, treadDesActTab);			
+				treadDesActTab.shutdown();
+			}
+			
+			if(newTab != null) {
+				final ExecutorService treadActTab = Executors.newSingleThreadExecutor();			
+				CompletableFuture.runAsync(() -> {
+					final PTab tab = this.pluginMap.get(newTab.getText());
+					tab.activeTab();
+					this.notifyOpenTab(tab);
+				}, treadActTab);			
+				treadActTab.shutdown();
+			}
+		});
+	}
 	
 	@Override
 	public void removePlugin(UniformSystemPlugin plugin) {
@@ -129,8 +134,8 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 
 	@Override
 	public void removeAll() {
-		// TODO Auto-generated method stub
-		
+		this.pluginMap.values().parallelStream().forEach(tab -> tab.closeTab());
+		this.pluginMap.clear();
 	}
 
 	@Override
