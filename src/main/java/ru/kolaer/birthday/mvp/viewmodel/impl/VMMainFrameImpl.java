@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -57,15 +58,16 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	public void setVMTableWithUsersBithday(VMTableWithUsersBithday vmTable) {
 		this.vmTable = vmTable;
 		final VTableWithUsersBithday vTable = vmTable.getView();
-		
-		this.scrollTablePane.setContent(vTable.getViewPane());
-		
-		this.scrollTablePane.heightProperty().addListener((observable, oldValue, newValue) -> {
-			vTable.getViewPane().setPrefHeight(scrollTablePane.getHeight());
-		});
-		
-		this.scrollTablePane.widthProperty().addListener((observable, oldValue, newValue) -> {
-			vTable.getViewPane().setPrefWidth(scrollTablePane.getWidth());
+		Platform.runLater(() -> {
+			this.scrollTablePane.setContent(vTable.getViewPane());
+			
+			this.scrollTablePane.heightProperty().addListener((observable, oldValue, newValue) -> {
+				vTable.getViewPane().setPrefHeight(scrollTablePane.getHeight());
+			});
+			
+			this.scrollTablePane.widthProperty().addListener((observable, oldValue, newValue) -> {
+				vTable.getViewPane().setPrefWidth(scrollTablePane.getWidth());
+			});
 		});
 	}
 }

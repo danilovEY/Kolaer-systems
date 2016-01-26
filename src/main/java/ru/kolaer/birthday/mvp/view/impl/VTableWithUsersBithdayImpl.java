@@ -38,7 +38,7 @@ public class VTableWithUsersBithdayImpl implements VTableWithUsersBithday {
 		            	if(!empty) {
 			                URL tempIconUrl = item;
 			            	if(item == null){   
-			            		tempIconUrl = this.getClass().getResource("/nonePicture.jpg");
+			            		tempIconUrl = this.getClass().getResource("/resources/nonePicture.jpg");
 			                }
 			                
 		                    final ImageView imageview = new ImageView();
@@ -101,6 +101,4 @@ public class VTableWithUsersBithdayImpl implements VTableWithUsersBithday {
 	public void setData(final ObservableList<UserModel> userList) {
 		this.userBithdayTable.setItems(userList);
 	}
-	
-	
 }

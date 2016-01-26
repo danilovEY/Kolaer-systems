@@ -3,7 +3,6 @@ package ru.kolaer.birthday.runnable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +14,7 @@ import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBithday;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMMainFrameImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMTableWithUsersBithdayImpl;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
+import ru.kolaer.client.javafx.system.ServerStatus;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
 public class BithdayApplication implements UniformSystemApplication {
@@ -52,8 +52,13 @@ public class BithdayApplication implements UniformSystemApplication {
 				Platform.runLater(() -> {
 					root.setCenter(this.mainPane);
 					root.setPrefSize(800, 600);
-					editorKid.getUISystemUS().getNotification().showSimpleNotify("Init", "Bithday!");
 				});
+				
+				if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.NOT_AVAILABLE) {
+					this.editorKid.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.");
+					return;
+				}
+				
 				this.initTable(frame);
 			}catch(MalformedURLException e){
 				throw e;
@@ -69,7 +74,7 @@ public class BithdayApplication implements UniformSystemApplication {
 	}
 	
 	private void initTable(VMMainFrame frameContent) {
-		this.vmTable = new VMTableWithUsersBithdayImpl();		
+		this.vmTable = new VMTableWithUsersBithdayImpl(this.editorKid);		
 		frameContent.setVMTableWithUsersBithday(this.vmTable);
 		
 		
