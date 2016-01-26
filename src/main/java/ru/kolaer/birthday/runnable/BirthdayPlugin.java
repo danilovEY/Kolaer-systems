@@ -1,7 +1,9 @@
 package ru.kolaer.birthday.runnable;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import ru.kolaer.birthday.service.BirthdayService;
 import ru.kolaer.client.javafx.plugins.UniformSystem;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.plugins.UniformSystemLabel;
@@ -12,10 +14,12 @@ import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 @UniformSystem
 public class BirthdayPlugin implements UniformSystemPlugin {
 	private UniformSystemApplication application;
-	
+	private List<Service> servicesList;
 	@Override
 	public void initialization(final UniformSystemEditorKit editorKid) throws Exception {
 		this.application = new BirthdayApplication(editorKid);
+		this.servicesList = new ArrayList<>();
+		this.servicesList.add(new BirthdayService(editorKid));
 	}
 
 	@Override
@@ -35,7 +39,7 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 
 	@Override
 	public List<Service> getServices() {
-		return null;
+		return this.servicesList;
 	}
 
 }
