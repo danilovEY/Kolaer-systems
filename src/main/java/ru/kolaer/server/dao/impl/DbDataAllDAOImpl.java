@@ -1,5 +1,7 @@
 package ru.kolaer.server.dao.impl;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class DbDataAllDAOImpl implements DbDataAllDAO {
 	}
 
 	@Override
-	public List<DbDataAll> getUserRangeBirthday(Date startDate, Date endDate) {
+	public List<DbDataAll> getUserRangeBirthday(final Date startDate, final Date endDate) {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
 		final List<DbDataAll> result = entityManager.createQuery("SELECT t FROM DbDataAll t where t.birthday BETWEEN :startDate AND :endDate", DbDataAll.class)
@@ -60,10 +62,11 @@ public class DbDataAllDAOImpl implements DbDataAllDAO {
 	}
 	
 	@Override
-	public List<DbDataAll> getUsersByBirthday(Date date) {
+	public List<DbDataAll> getUsersByBirthday(final Date date) {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
-		final List<DbDataAll> result = entityManager.createQuery("SELECT t FROM DbDataAll t where t.birthday = :date", DbDataAll.class)
+
+		final List<DbDataAll> result = entityManager.createQuery("SELECT t FROM DbDataAll t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", DbDataAll.class)
 	            .setParameter("date", date, TemporalType.DATE)
 	            .getResultList();
 		entityManager.getTransaction().commit();
