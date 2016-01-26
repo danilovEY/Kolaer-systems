@@ -1,9 +1,5 @@
 package ru.kolaer.birthday.mvp.viewmodel.impl;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ru.kolaer.birthday.mvp.model.UserModel;
@@ -12,7 +8,7 @@ import ru.kolaer.birthday.mvp.view.VTableWithUsersBithday;
 import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBithdayImpl;
 import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBithday;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
-import ru.kolaer.server.dao.entities.DbUsers1c;
+import ru.kolaer.server.dao.entities.DbDataAll;
 
 public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBithday{
 	private final VTableWithUsersBithday table = new VTableWithUsersBithdayImpl();
@@ -30,9 +26,9 @@ public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBithday{
 
 	private void initWithEditorKid()  {
 		final ObservableList<UserModel> userModelList = FXCollections.observableArrayList();
-		DbUsers1c[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUser1cDataBase().getUsersBithdayToday();
+		DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBithdayToday();
 		
-		for(DbUsers1c user : users) {
+		for(DbDataAll user : users) {
 			if(this.checkUser(user)) {
 				final UserModel userModel = new UserModelImpl();
 				userModel.setPersonNumber(user.getPersonNumber().intValue());
@@ -53,8 +49,8 @@ public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBithday{
 		return this.table;
 	}
 
-	private boolean checkUser(final DbUsers1c user) {
-		if(user.getPost().contains("слесарь"))
+	private boolean checkUser(final DbDataAll user) {
+		if(user.getCategoryUnit().equals("Рабочий"))
 			return false;
 		
 		return true;
