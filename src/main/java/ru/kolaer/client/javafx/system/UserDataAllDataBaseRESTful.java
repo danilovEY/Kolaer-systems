@@ -25,7 +25,7 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	}
 
 	@Override
-	public DbDataAll[] getUsersByBithday(Date date) {
+	public DbDataAll[] getUsersByBirthday(Date date) {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     	property.setValue(dateFormat.format(date));
@@ -34,7 +34,7 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	}
 
 	@Override
-	public DbDataAll[] getUsersByRengeBithday(Date dateBegin, Date dateEnd) {
+	public DbDataAll[] getUsersByRengeBirthday(Date dateBegin, Date dateEnd) {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		final SimpleStringProperty propertyBegin = new SimpleStringProperty();
@@ -47,7 +47,7 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	}
 
 	@Override
-	public DbDataAll[] getUsersBithdayToday() {
+	public DbDataAll[] getUsersBirthdayToday() {
 		final DbDataAll[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/birthday/today", DbDataAll[].class);
 		return users;
 	}

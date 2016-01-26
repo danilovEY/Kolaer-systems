@@ -5,7 +5,7 @@ import java.util.Date;
 public interface UserDataBase<T> {
 	T[] getAllUser();
 	T[] getUsersMax(int maxCount);
-	T[] getUsersByBithday(Date date);
-	T[] getUsersByRengeBithday(Date dateBegin, Date dateEnd);
-	T[] getUsersBithdayToday();
+	T[] getUsersByBirthday(Date date);
+	T[] getUsersByRengeBirthday(Date dateBegin, Date dateEnd);
+	T[] getUsersBirthdayToday();
 }

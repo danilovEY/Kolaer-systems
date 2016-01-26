@@ -25,7 +25,7 @@ public class User1cDataBaseRESTful implements User1cDataBase {
 	}
 
 	@Override
-	public DbUsers1c[] getUsersByBithday(Date date) {
+	public DbUsers1c[] getUsersByBirthday(Date date) {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     	property.setValue(dateFormat.format(date));
@@ -34,7 +34,7 @@ public class User1cDataBaseRESTful implements User1cDataBase {
 	}
 
 	@Override
-	public DbUsers1c[] getUsersByRengeBithday(Date dateBegin, Date dateEnd) {
+	public DbUsers1c[] getUsersByRengeBirthday(Date dateBegin, Date dateEnd) {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		final SimpleStringProperty propertyBegin = new SimpleStringProperty();
@@ -47,7 +47,7 @@ public class User1cDataBaseRESTful implements User1cDataBase {
 	}
 
 	@Override
-	public DbUsers1c[] getUsersBithdayToday() {
+	public DbUsers1c[] getUsersBirthdayToday() {
 		final DbUsers1c[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/user1c/get/users/birthday/today", DbUsers1c[].class);
 		return users;
 	}
