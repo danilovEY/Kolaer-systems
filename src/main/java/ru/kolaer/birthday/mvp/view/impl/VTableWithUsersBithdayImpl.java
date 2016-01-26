@@ -3,6 +3,7 @@ package ru.kolaer.birthday.mvp.view.impl;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -64,13 +65,25 @@ public class VTableWithUsersBithdayImpl implements VTableWithUsersBithday {
 	    final TableColumn<UserModel, String> userThirdNameColumn = new TableColumn<>("Отчество");
 	    userThirdNameColumn.setCellValueFactory(new PropertyValueFactory<>("thirdName"));
 	    
-	    final TableColumn<UserModel, String> userBithdayColumn = new TableColumn<>("Дата рождения");
+	    final TableColumn<UserModel, Date> userBithdayColumn = new TableColumn<>("Дата рождения");
 	    userBithdayColumn.setCellValueFactory(new PropertyValueFactory<>("bithday"));
-	    userBithdayColumn.setCellValueFactory(film -> {
-	    	final SimpleStringProperty property = new SimpleStringProperty();
-	    	final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-	    	property.setValue(dateFormat.format(film.getValue().getBithday()));
-	    	return property;
+	    userBithdayColumn.setCellFactory(film -> {
+	    	 return new TableCell<UserModel, Date>() {
+	    	        @Override
+	    	        protected void updateItem(Date item, boolean empty) {
+	    	            super.updateItem(item, empty);
+
+	    	            if (item == null || empty) {
+	    	                setText(null);
+	    	            } else {
+	    	            	final SimpleStringProperty property = new SimpleStringProperty();
+	    	    	    	final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+	    	    	    	property.setValue(dateFormat.format(item));
+	    	    	    	
+	    	                setText(property.getValue());
+	    	            }
+	    	        }
+	    	    };
     	});
 	    
 	    final TableColumn<UserModel, String> userDepartamentColumn = new TableColumn<>("Цех/Отдел");
@@ -84,7 +97,7 @@ public class VTableWithUsersBithdayImpl implements VTableWithUsersBithday {
 	    userDepartamentColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
 	    userPersonNumberColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
 	    
-		this.userBithdayTable.getColumns().addAll(userIconColumn, userPersonNumberColumn, userFirstNameColumn, userSecondNameColumn,
+		this.userBithdayTable.getColumns().addAll(userIconColumn, userPersonNumberColumn, userSecondNameColumn, userFirstNameColumn,
 				userThirdNameColumn,
 				userDepartamentColumn,
 				userBithdayColumn);

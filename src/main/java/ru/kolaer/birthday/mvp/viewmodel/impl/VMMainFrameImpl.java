@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBithday;
@@ -25,7 +25,7 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	private VMTableWithUsersBithday vmTable;
 	
 	@FXML
-	private ScrollPane scrollTablePane;
+	private BorderPane tablePane;
 	@FXML
 	private FlowPane calendarPane;
 	
@@ -33,7 +33,7 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	public void initialize() {
 		
 		
-		//this.calendarPane.getChildren().add(new VMCalendarImpl().getView().getViewPane());
+		this.calendarPane.getChildren().add(new VMCalendarImpl().getView().getViewPane());
 	}
 	
 	@Override
@@ -59,15 +59,7 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 		this.vmTable = vmTable;
 		final VTableWithUsersBithday vTable = vmTable.getView();
 		Platform.runLater(() -> {
-			this.scrollTablePane.setContent(vTable.getViewPane());
-			
-			this.scrollTablePane.heightProperty().addListener((observable, oldValue, newValue) -> {
-				vTable.getViewPane().setPrefHeight(scrollTablePane.getHeight());
-			});
-			
-			this.scrollTablePane.widthProperty().addListener((observable, oldValue, newValue) -> {
-				vTable.getViewPane().setPrefWidth(scrollTablePane.getWidth());
-			});
+			this.tablePane.setCenter(vTable.getViewPane());
 		});
 	}
 }

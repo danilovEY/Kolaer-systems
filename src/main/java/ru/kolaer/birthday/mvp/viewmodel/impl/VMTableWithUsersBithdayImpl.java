@@ -1,5 +1,9 @@
 package ru.kolaer.birthday.mvp.viewmodel.impl;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ru.kolaer.birthday.mvp.model.UserModel;
@@ -26,17 +30,19 @@ public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBithday{
 
 	private void initWithEditorKid()  {
 		final ObservableList<UserModel> userModelList = FXCollections.observableArrayList();
-		
-		DbUsers1c[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUser1cDataBase().getUsersMax(5);
+		DbUsers1c[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUser1cDataBase().getUsersBithdayToday();
 		
 		for(DbUsers1c user : users) {
-			final UserModel userModel = new UserModelImpl();
-			userModel.setFirstName(user.getName());
-			userModel.setSecondName(user.getSurname());
-			userModel.setThirdName(user.getPatronymic());
-			userModel.setBithday(user.getBirthday());
-			userModel.setDepartament(user.getDepartament());
-			userModelList.add(userModel);
+			if(this.checkUser(user)) {
+				final UserModel userModel = new UserModelImpl();
+				userModel.setPersonNumber(user.getPersonNumber().intValue());
+				userModel.setFirstName(user.getName());
+				userModel.setSecondName(user.getSurname());
+				userModel.setThirdName(user.getPatronymic());
+				userModel.setBithday(user.getBirthday());
+				userModel.setDepartament(user.getDepartament());
+				userModelList.add(userModel);
+			}
 		}
 		
 		this.table.setData(userModelList);
@@ -47,4 +53,12 @@ public class VMTableWithUsersBithdayImpl implements VMTableWithUsersBithday{
 		return this.table;
 	}
 
+	private boolean checkUser(final DbUsers1c user) {
+		if(user.getPost().contains("слесарь"))
+			return false;
+		
+		return true;
+		
+	}
+	
 }

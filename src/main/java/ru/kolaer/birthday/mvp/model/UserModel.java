@@ -16,4 +16,6 @@ public interface UserModel {
 	public void setBithday(Date bithday);
 	public URL getIcon();
 	public void setIcon(URL icon);
+	public Integer getPersonNumber();
+	public void setPersonNumber(Integer personNumber);
 }
