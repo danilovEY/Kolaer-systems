@@ -52,15 +52,14 @@ public class BirthdayApplication implements UniformSystemApplication {
 		}
 		
 		if(this.mainPane == null) {
-			try(final InputStream stream = VMMainFrameImpl.FXML_VIEW.openStream()){
+			try(final InputStream stream = this.getClass().getResourceAsStream("/resources/birthdayView/VMainFrame.fxml")){
 				final FXMLLoader loader = new FXMLLoader();
 				this.mainPane = loader.load(stream);
 				final VMMainFrameImpl frame =  loader.getController();
 				Platform.runLater(() -> {
 					root.setCenter(this.mainPane);
 					root.setPrefSize(800, 600);
-				});
-				
+				});	
 				this.initTable(frame);
 			}catch(MalformedURLException e){
 				throw e;
