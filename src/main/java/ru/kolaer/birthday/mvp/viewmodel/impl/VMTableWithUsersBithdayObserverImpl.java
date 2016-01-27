@@ -1,6 +1,7 @@
 package ru.kolaer.birthday.mvp.viewmodel.impl;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,8 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 	@Override
 	public void updateSelectedDate(LocalDate date, List<UserModel> users) {
 		this.table.setData(users);
-		this.table.setTitle("\"" + date + "\" день рождения у:");
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		this.table.setTitle("\"" + date.format(formatter) + "\" день рождения у:");
 	}
 	
 }

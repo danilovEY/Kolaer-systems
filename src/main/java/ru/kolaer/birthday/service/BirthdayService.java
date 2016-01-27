@@ -1,6 +1,7 @@
 package ru.kolaer.birthday.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javafx.util.Duration;
 import ru.kolaer.client.javafx.services.Service;
@@ -18,15 +19,16 @@ public class BirthdayService implements Service {
 	@Override
 	public void run() {
 		if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.AVAILABLE) {
-			DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+			final DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
 			final StringBuilder todayBirthday = new StringBuilder();
 			for(DbDataAll user : users) {
 				if(this.checkUser(user)) {
 					todayBirthday.append(user.getInitials()).append(" (").append(user.getPhone()).append(") - ").append(user.getDepartamentAbbreviated()).append("\n");
 				}
 			}
-			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now()).append("\". Поздравляем с днем рождения!\n");
-			this.editorKid.getUISystemUS().getNotification().showSimpleNotify(title.toString(), todayBirthday.toString(), Duration.hours(1));
+			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\". Поздравляем с днем рождения!\n");
+			this.editorKid.getUISystemUS().getNotification().showSimpleNotify(title.toString(), todayBirthday.toString(), Duration.minutes(10));
 		}
 	}
 
