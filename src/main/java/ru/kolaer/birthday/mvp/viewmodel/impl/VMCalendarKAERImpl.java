@@ -17,51 +17,53 @@ import ru.kolaer.birthday.mvp.viewmodel.VMCalendar;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
-public class VMCalendarImpl implements VMCalendar {
+public class VMCalendarKAERImpl implements VMCalendar {
 	private final VCalendar view = new VCalendarImpl();
 	private UserManagerModel userManager;
 	private ObserverCalendar observerCalendar;
 	private final UniformSystemEditorKit editorKid;
-	
-	public VMCalendarImpl(final UserManagerModel userManager) {
-		this.userManager = userManager;	
+
+	public VMCalendarKAERImpl(final UserManagerModel userManager) {
+		this.userManager = userManager;
 		this.editorKid = null;
-		this.init();
-	}
-	
-	public VMCalendarImpl(final UniformSystemEditorKit editorKid) {
-		this.editorKid = editorKid;		
 		this.init();
 	}
 
-	public VMCalendarImpl() {
-		this.editorKid = null;
-		this.userManager = null;	
+	public VMCalendarKAERImpl(final UniformSystemEditorKit editorKid) {
+		this.editorKid = editorKid;
 		this.init();
 	}
-	
+
+	public VMCalendarKAERImpl() {
+		this.editorKid = null;
+		this.userManager = null;
+		this.init();
+	}
+
 	private void init() {
-		this.view.setDayCellFactory( (datePicker) -> {
-	          return new DateCell() {
-	            @Override
-	            public void updateItem(LocalDate item, boolean empty) {
-	              super.updateItem(item, empty);
+		this.view.setDayCellFactory((datePicker) -> {
+			return new DateCell() {
+				@Override
+				public void updateItem(LocalDate item, boolean empty) {
+					super.updateItem(item, empty);
 
-	              int countUsersDataAll = editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getCountUsersBirthday(Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-	              
-	              if(countUsersDataAll != 0) {
-	            	  countUsersDataAll *= 15;
-	            	  this.setStyle("-fx-background-color: #"+(99-countUsersDataAll) + "" + (99-countUsersDataAll) + "FF;");
-	              }
-	            }
-	          };
-	      });
+					int countUsersDataAll = editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase()
+							.getCountUsersBirthday(Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-	      this.view.setOnAction(e -> {
-	    	 this.notifySelectedDate(this.view.getSelectDate()); 
-	      });
+					if (countUsersDataAll != 0) {
+						countUsersDataAll *= 15;
+						this.setStyle("-fx-background-color: #" + (99 - countUsersDataAll) + ""
+								+ (99 - countUsersDataAll) + "FF;");
+					}
+				}
+			};
+		});
+		this.view.setTitle("КолАЭР");
+		this.view.setOnAction(e -> {
+			this.notifySelectedDate(this.view.getSelectDate());
+		});
 	}
-	
+
 	@Override
 	public VCalendar getView() {
 		return this.view;
@@ -79,11 +81,13 @@ public class VMCalendarImpl implements VMCalendar {
 
 	@Override
 	public void notifySelectedDate(final LocalDate date) {
-		if(this.observerCalendar != null) {
+		if (this.observerCalendar != null) {
 			final List<UserModel> users = new ArrayList<>();
-			if(this.editorKid != null) {
-				final DbDataAll[] usersDataAll = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-				for(DbDataAll user : usersDataAll) {
+			if (this.editorKid != null) {
+				final DbDataAll[] usersDataAll = this.editorKid.getUSNetwork().getKolaerDataBase()
+						.getUserDataAllDataBase()
+						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+				for (DbDataAll user : usersDataAll) {
 					final UserModel userModel = new UserModelImpl();
 					userModel.setPersonNumber(user.getPersonNumber().intValue());
 					userModel.setFirstName(user.getName());
@@ -94,7 +98,7 @@ public class VMCalendarImpl implements VMCalendar {
 					userModel.setIcon(user.getVCard());
 					users.add(userModel);
 				}
-			}	
+			}
 			this.observerCalendar.updateSelectedDate(date, users);
 		}
 	}

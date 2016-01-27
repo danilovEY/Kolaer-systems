@@ -15,6 +15,9 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,6 +26,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.TextAlignment;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 
@@ -31,6 +35,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	private final ObservableList<UserModel> tableModel = FXCollections.observableArrayList();
 	private final BorderPane tablePane = new BorderPane();
 	private final TableView<UserModel> userBirthdayTable = new TableView<UserModel>();
+	private final Label titleLabel = new Label();
 	
 	public VTableWithUsersBirthdayImpl() {
 		this.init();
@@ -125,6 +130,12 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 				userDepartamentColumn,
 				userBirthdayColumn);
 		
+		this.titleLabel.setText("Сегодня поздравим с днем рождения!");
+		this.titleLabel.setStyle("-fx-font-size: 20pt;");
+		this.titleLabel.setAlignment(Pos.CENTER);
+		this.titleLabel.setContentDisplay(ContentDisplay.CENTER);
+		this.titleLabel.setMaxWidth(Double.MAX_VALUE);
+		this.tablePane.setTop(this.titleLabel);
 		this.tablePane.setCenter(this.userBirthdayTable);
 	}
 
@@ -137,6 +148,13 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	public void setData(final List<UserModel> userList) {
 		Platform.runLater(() -> {
 			userBirthdayTable.getItems().setAll(userList);
+		});
+	}
+
+	@Override
+	public void setTitle(final String text) {
+		Platform.runLater(() -> {
+			this.titleLabel.setText(text);
 		});
 	}
 }

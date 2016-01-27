@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.chart.*?>
@@ -15,7 +16,10 @@
             <BorderPane fx:id="tablePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="486.0" prefWidth="1078.0" BorderPane.alignment="CENTER" />
          </top>
          <center>
-            <FlowPane fx:id="calendarPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <FlowPane fx:id="calendarPane" alignment="CENTER" columnHalignment="CENTER" hgap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="10.0" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </BorderPane.margin></FlowPane>
          </center>
       </BorderPane>
    </children>

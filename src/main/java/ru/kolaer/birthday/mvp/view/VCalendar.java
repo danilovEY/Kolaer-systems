@@ -12,4 +12,5 @@ public interface VCalendar extends View {
 	void setDayCellFactory(Callback<DatePicker, DateCell> value);
 	void setOnAction(EventHandler<ActionEvent> value);
 	LocalDate getSelectDate();
+	void setTitle(String title);
 }

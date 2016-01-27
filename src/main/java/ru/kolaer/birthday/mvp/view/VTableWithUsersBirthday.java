@@ -6,4 +6,5 @@ import ru.kolaer.birthday.mvp.model.UserModel;
 
 public interface VTableWithUsersBirthday extends View {
 	void setData(List<UserModel> userList);
+	void setTitle(String text);
 }

@@ -7,8 +7,10 @@ import com.sun.javafx.scene.control.skin.DatePickerSkin;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
@@ -17,7 +19,7 @@ import ru.kolaer.birthday.mvp.view.VCalendar;
 public class VCalendarImpl implements VCalendar {
 	private final BorderPane mainPane = new BorderPane();
 	private final DatePicker pick = new DatePicker();
-	
+	private final Label label = new Label();
 	
 	public VCalendarImpl() {
 		Platform.runLater(() -> {
@@ -27,6 +29,10 @@ public class VCalendarImpl implements VCalendar {
 	
 	private void init() {
 		this.pick.setShowWeekNumbers(true);
+		this.label.setAlignment(Pos.CENTER);
+		this.label.setStyle("-fx-font-size: 12pt;");
+		this.label.setMaxWidth(Double.MAX_VALUE);
+		this.mainPane.setTop(label);
 	}
 	
 	@Override
@@ -53,6 +59,13 @@ public class VCalendarImpl implements VCalendar {
 	public void setOnAction(final EventHandler<ActionEvent> value) {
 		Platform.runLater(() -> {
 			this.pick.setOnAction(value);
+		});
+	}
+
+	@Override
+	public void setTitle(final String title) {
+		Platform.runLater(() -> {
+			this.label.setText(title);
 		});
 	}		
 }

@@ -53,6 +53,7 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 	@Override
 	public void updateSelectedDate(LocalDate date, List<UserModel> users) {
 		this.table.setData(users);
+		this.table.setTitle("\"" + date + "\" день рождения у:");
 	}
 	
 }

@@ -12,7 +12,7 @@ import javafx.scene.layout.Pane;
 import ru.kolaer.birthday.mvp.viewmodel.VMCalendar;
 import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
 import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthdayObserver;
-import ru.kolaer.birthday.mvp.viewmodel.impl.VMCalendarImpl;
+import ru.kolaer.birthday.mvp.viewmodel.impl.VMCalendarKAERImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMMainFrameImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMTableWithUsersBithdayObserverImpl;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
@@ -78,7 +78,7 @@ public class BirthdayApplication implements UniformSystemApplication {
 		this.vmTable = new VMTableWithUsersBithdayObserverImpl(this.editorKid);		
 		frameContent.setVMTableWithUsersBirthday(this.vmTable);
 		
-		final VMCalendar calendar = new VMCalendarImpl(this.editorKid);
+		final VMCalendar calendar = new VMCalendarKAERImpl(this.editorKid);
 		calendar.registerObserver(vmTable);
 		
 		frameContent.addVMCalendar(calendar);
