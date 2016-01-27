@@ -2,6 +2,7 @@ package ru.kolaer.birthday.service;
 
 import java.time.LocalDate;
 
+import javafx.util.Duration;
 import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.ServerStatus;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
@@ -25,7 +26,7 @@ public class BirthdayService implements Service {
 				}
 			}
 			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now()).append("\". Поздравляем с днем рождения!\n");
-			this.editorKid.getUISystemUS().getNotification().showSimpleNotify(title.toString(), todayBirthday.toString());
+			this.editorKid.getUISystemUS().getNotification().showSimpleNotify(title.toString(), todayBirthday.toString(), Duration.hours(1));
 		}
 	}
 
