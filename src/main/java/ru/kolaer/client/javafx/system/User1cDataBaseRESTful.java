@@ -51,5 +51,11 @@ public class User1cDataBaseRESTful implements User1cDataBase {
 		final DbUsers1c[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/user1c/get/users/birthday/today", DbUsers1c[].class);
 		return users;
 	}
+
+	@Override
+	public int getCountUsersBirthday(Date date) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

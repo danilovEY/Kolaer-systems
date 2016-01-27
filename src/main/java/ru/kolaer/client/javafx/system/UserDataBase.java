@@ -8,4 +8,5 @@ public interface UserDataBase<T> {
 	T[] getUsersByBirthday(Date date);
 	T[] getUsersByRengeBirthday(Date dateBegin, Date dateEnd);
 	T[] getUsersBirthdayToday();
+	int getCountUsersBirthday(Date date);
 }

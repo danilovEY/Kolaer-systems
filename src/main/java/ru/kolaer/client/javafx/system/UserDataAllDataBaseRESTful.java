@@ -11,7 +11,7 @@ import ru.kolaer.server.dao.entities.DbDataAll;
 
 public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	private final RestTemplate restTemplate = new RestTemplate();
-	
+	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	@Override
 	public DbDataAll[] getAllUser() {
 		final DbDataAll[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/max", DbDataAll[].class);
@@ -27,7 +27,6 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	@Override
 	public DbDataAll[] getUsersByBirthday(Date date) {
     	final SimpleStringProperty property = new SimpleStringProperty();
-    	final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     	property.setValue(dateFormat.format(date));
 		final DbDataAll[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/birthday/" + property.getValue(), DbDataAll[].class);
 		return users;
@@ -35,8 +34,6 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 
 	@Override
 	public DbDataAll[] getUsersByRengeBirthday(Date dateBegin, Date dateEnd) {
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
 		final SimpleStringProperty propertyBegin = new SimpleStringProperty();
     	final SimpleStringProperty propertyEnd = new SimpleStringProperty();
     	propertyBegin.setValue(dateFormat.format(dateBegin));
@@ -50,6 +47,14 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	public DbDataAll[] getUsersBirthdayToday() {
 		final DbDataAll[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/birthday/today", DbDataAll[].class);
 		return users;
+	}
+
+	@Override
+	public int getCountUsersBirthday(Date date) {	
+    	final SimpleStringProperty property = new SimpleStringProperty();
+    	property.setValue(dateFormat.format(date));
+		final Integer countUsers = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/birthday/"+property.getValue()+"/count", Integer.class);
+		return countUsers;
 	}
 
 }
