@@ -68,6 +68,8 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 			                    
 			                    this.setGraphic(new BorderPane(imageview));
 		            		});
+		            	} else {
+		            		this.setGraphic(null);
 		            	}
 		            }
 		        };           	       
@@ -135,10 +137,8 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	@Override
 	public void setData(final List<UserModel> userList) {
 		Platform.runLater(() -> {
-			//TODO BUG!
 			userBirthdayTable.getItems().clear();
 			userBirthdayTable.getItems().addAll(userList);
-			//this.userBirthdayTable.setItems(FXCollections.observableArrayList(userList));
 		});
 	}
 }
