@@ -54,17 +54,14 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 
 	private boolean checkUser(final DbDataAll user) {
 		if(user.getCategoryUnit().equals("Рабочий"))
-			return false;
-		
+			return false;	
 		return true;
 		
 	}
 
-
 	@Override
 	public void updateSelectedDate(LocalDate date, List<UserModel> users) {
 		this.table.setData(users);
-		System.out.println("Selected : " + date);
 	}
 	
 }

@@ -12,15 +12,7 @@
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <BorderPane fx:id="tablePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="486.0" prefWidth="1078.0" BorderPane.alignment="CENTER">
-               <top>
-                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Сегодня поздравляем с Днем Рождения:" textAlignment="CENTER" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font size="36.0" />
-                     </font>
-                  </Label>
-               </top>
-            </BorderPane>
+            <BorderPane fx:id="tablePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="486.0" prefWidth="1078.0" BorderPane.alignment="CENTER" />
          </top>
          <center>
             <FlowPane fx:id="calendarPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />

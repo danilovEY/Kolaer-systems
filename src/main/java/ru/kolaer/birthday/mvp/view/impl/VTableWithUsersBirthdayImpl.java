@@ -46,6 +46,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    	return new TableCell<UserModel, String>(){
 		            @Override
 		            public void updateItem(final String item, final boolean empty) { 
+		            	this.setGraphic(null);
 		            	if(!empty) {
 			            		Platform.runLater(() -> {
 			            		URL url = null;
@@ -66,10 +67,8 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 			                    imageview.setFitWidth(116);
 			                    imageview.setImage(new Image(url.toString(), true));
 			                    
-			                    this.setGraphic(new BorderPane(imageview));
+			                    this.setGraphic(imageview);
 		            		});
-		            	} else {
-		            		this.setGraphic(null);
 		            	}
 		            }
 		        };           	       
@@ -96,7 +95,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    	            super.updateItem(item, empty);
 	    	            
 	    	            if (item == null || empty) {
-	    	                setText(null);
+	    	                setText("");
 	    	            } else {
 	    	            	Platform.runLater(() -> {
 		    	            	final SimpleStringProperty property = new SimpleStringProperty();
@@ -137,8 +136,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	@Override
 	public void setData(final List<UserModel> userList) {
 		Platform.runLater(() -> {
-			userBirthdayTable.getItems().clear();
-			userBirthdayTable.getItems().addAll(userList);
+			userBirthdayTable.getItems().setAll(userList);
 		});
 	}
 }

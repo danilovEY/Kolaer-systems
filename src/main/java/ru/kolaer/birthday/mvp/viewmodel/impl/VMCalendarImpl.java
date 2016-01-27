@@ -46,8 +46,13 @@ public class VMCalendarImpl implements VMCalendar {
 	            @Override
 	            public void updateItem(LocalDate item, boolean empty) {
 	              super.updateItem(item, empty);
-	              //setStyle("-fx-background-color: #FF0000;");
-	              //System.out.println(item);
+
+	              int countUsersDataAll = editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getCountUsersBirthday(Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+	              
+	              if(countUsersDataAll != 0) {
+	            	  countUsersDataAll *= 15;
+	            	  this.setStyle("-fx-background-color: #"+(99-countUsersDataAll) + "" + (99-countUsersDataAll) + "FF;");
+	              }
 	            }
 	          };
 	      });
