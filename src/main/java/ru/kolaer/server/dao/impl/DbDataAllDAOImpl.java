@@ -52,7 +52,7 @@ public class DbDataAllDAOImpl implements DbDataAllDAO {
 	public List<DbDataAll> getUserRangeBirthday(final Date startDate, final Date endDate) {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
-		final List<DbDataAll> result = entityManager.createQuery("SELECT t FROM DbDataAll t where t.birthday BETWEEN :startDate AND :endDate", DbDataAll.class)
+		final List<DbDataAll> result = entityManager.createQuery("SELECT t FROM DbDataAll t where t.categoryUnit = 'Специалист' and t.birthday BETWEEN :startDate AND :endDate", DbDataAll.class)
 	            .setParameter("startDate", startDate, TemporalType.DATE)
 	            .setParameter("endDate", endDate, TemporalType.DATE)
 	            .getResultList();
@@ -66,7 +66,7 @@ public class DbDataAllDAOImpl implements DbDataAllDAO {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
 
-		final List<DbDataAll> result = entityManager.createQuery("SELECT t FROM DbDataAll t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", DbDataAll.class)
+		final List<DbDataAll> result = entityManager.createQuery("SELECT t FROM DbDataAll t where t.categoryUnit = 'Специалист' and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", DbDataAll.class)
 	            .setParameter("date", date, TemporalType.DATE)
 	            .getResultList();
 		entityManager.getTransaction().commit();
@@ -78,11 +78,23 @@ public class DbDataAllDAOImpl implements DbDataAllDAO {
 	public List<DbDataAll> getUserBirthdayToday() {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
-		final List<DbDataAll> result = entityManager.createQuery("FROM DbDataAll t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) ", DbDataAll.class)
+		final List<DbDataAll> result = entityManager.createQuery("FROM DbDataAll t where t.categoryUnit = 'Специалист' and day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE)", DbDataAll.class)
 	            .getResultList();
 		entityManager.getTransaction().commit();
 		entityManager.close();
 		return result;
+	}
+
+	@Override
+	public int getCountUserBirthday(final Date date) {
+		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
+		entityManager.getTransaction().begin();
+		final Number result = entityManager.createQuery("SELECT count(t) FROM DbDataAll t where t.categoryUnit = 'Специалист' and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", Number.class)
+				.setParameter("date", date, TemporalType.DATE)
+				.getSingleResult();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return result.intValue();
 	}
 
 }

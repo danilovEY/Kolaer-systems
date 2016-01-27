@@ -73,4 +73,17 @@ public class DataBaseDataAllController {
 			return Collections.emptyList();
 		}
 	}	
+	
+	@RequestMapping(value = "/get/users/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public int getCountUsersBirsday(final @PathVariable String date) {
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    
+		try {
+			final Date datePasre = sdf.parse(date);
+			return dbDataAllDAO.getCountUserBirthday(datePasre);
+		} catch (ParseException e) {
+			LOG.error("Ошибка! Не коректные данные: ({})", date);
+			return 0;
+		}
+	}
 }
