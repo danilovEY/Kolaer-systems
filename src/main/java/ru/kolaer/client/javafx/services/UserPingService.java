@@ -47,13 +47,13 @@ public class UserPingService implements Service {
 				e.printStackTrace();
 			}
 			try {
-				String bool = restTemplate.getForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/ping", String.class);
+				String bool = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/ping", String.class);
 				
 				if(bool.equals("false")){
-					restTemplate.postForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/ping", "true", String.class);
+					restTemplate.postForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/ping", "true", String.class);
 				}
 			} catch(RestClientException ex) {
-				LOG.error("Сервер \"{}\" не доступен!", Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/ping");
+				LOG.error("Сервер \"{}\" не доступен!", "http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/ping");
 			}
 		}
 	}

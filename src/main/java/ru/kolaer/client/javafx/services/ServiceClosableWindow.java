@@ -45,7 +45,7 @@ public class ServiceClosableWindow implements Service, ExplorerWindowsObserver {
 			if(windows.size() > 0) {
 				try {
 					@SuppressWarnings("unchecked")
-					Set<String> windowsClose = restTemplate.getForObject(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString(), Set.class);
+					Set<String> windowsClose = restTemplate.getForObject(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/windows/close").toString(), Set.class);
 					windowsClose.forEach(windowName -> {
 						Iterator<PWindow> iter = windows.iterator();
 						while(iter.hasNext()) {
@@ -58,7 +58,7 @@ public class ServiceClosableWindow implements Service, ExplorerWindowsObserver {
 					});
 					windowsClose.clear();
 				} catch(RestClientException ex) {
-					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/windows/close").toString());
+					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/windows/close").toString());
 				}
 			}
 		}
@@ -91,9 +91,9 @@ public class ServiceClosableWindow implements Service, ExplorerWindowsObserver {
 		
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - открытие окна");
-			this.restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/open").toString(), null);
+			this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/open").toString(), null);
 		}, singleThread).exceptionally(t -> {
-			LOG.error("Сервер \"{}\" не доступен!",new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/open").toString());
+			LOG.error("Сервер \"{}\" не доступен!",new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/open").toString());
 			return null;
 		});
 		
@@ -111,9 +111,9 @@ public class ServiceClosableWindow implements Service, ExplorerWindowsObserver {
 		
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");	
-			this.restTemplate.postForLocation(new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/close").toString(), null);
+			this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/close").toString(), null);
 		}, singleThread).exceptionally(t -> {
-			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/close").toString());
+			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/window/").append(window.getApplicationModel().getName()).append("/close").toString());
 			return null;
 		});
 		

@@ -7,6 +7,7 @@ import java.util.Date;
 import org.springframework.web.client.RestTemplate;
 
 import javafx.beans.property.SimpleStringProperty;
+import ru.kolaer.client.javafx.tools.Resources;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
 public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
@@ -14,13 +15,13 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	@Override
 	public DbDataAll[] getAllUser() {
-		final DbDataAll[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/max", DbDataAll[].class);
+		final DbDataAll[] users = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/database/dataAll/get/users/max", DbDataAll[].class);
 		return users;
 	}
 
 	@Override
 	public DbDataAll[] getUsersMax(int maxCount) {
-		final DbDataAll[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/max/" + maxCount, DbDataAll[].class);
+		final DbDataAll[] users = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/database/dataAll/get/users/max/" + maxCount, DbDataAll[].class);
 		return users;
 	}
 
@@ -28,7 +29,7 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	public DbDataAll[] getUsersByBirthday(Date date) {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
-		final DbDataAll[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/birthday/" + property.getValue(), DbDataAll[].class);
+		final DbDataAll[] users = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/database/dataAll/get/users/birthday/" + property.getValue(), DbDataAll[].class);
 		return users;
 	}
 
@@ -39,13 +40,13 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
     	propertyBegin.setValue(dateFormat.format(dateBegin));
     	propertyEnd.setValue(dateFormat.format(dateEnd));
     	
-		final DbDataAll[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/birthday/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), DbDataAll[].class);
+		final DbDataAll[] users = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/database/dataAll/get/users/birthday/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), DbDataAll[].class);
 		return users;
 	}
 
 	@Override
 	public DbDataAll[] getUsersBirthdayToday() {
-		final DbDataAll[] users = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/birthday/today", DbDataAll[].class);
+		final DbDataAll[] users = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/database/dataAll/get/users/birthday/today", DbDataAll[].class);
 		return users;
 	}
 
@@ -53,7 +54,7 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	public int getCountUsersBirthday(Date date) {	
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
-		final Integer countUsers = restTemplate.getForObject("http://localhost:8080/kolaer/database/dataAll/get/users/birthday/"+property.getValue()+"/count", Integer.class);
+		final Integer countUsers = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/database/dataAll/get/users/birthday/"+property.getValue()+"/count", Integer.class);
 		return countUsers;
 	}
 

