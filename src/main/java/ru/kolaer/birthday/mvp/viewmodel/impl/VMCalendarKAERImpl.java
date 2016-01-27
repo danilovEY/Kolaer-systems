@@ -5,7 +5,10 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
+import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.control.DateCell;
 import ru.kolaer.birthday.mvp.model.UserManagerModel;
 import ru.kolaer.birthday.mvp.model.UserModel;
@@ -46,15 +49,20 @@ public class VMCalendarKAERImpl implements VMCalendar {
 				@Override
 				public void updateItem(LocalDate item, boolean empty) {
 					super.updateItem(item, empty);
-
-					int countUsersDataAll = editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase()
-							.getCountUsersBirthday(Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-
-					if (countUsersDataAll != 0) {
-						countUsersDataAll *= 15;
-						this.setStyle("-fx-background-color: #" + (99 - countUsersDataAll) + ""
-								+ (99 - countUsersDataAll) + "FF;");
-					}
+					CompletableFuture.runAsync(() -> {
+						final Node node = this;
+					
+						int countUsersDataAll = editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase()
+								.getCountUsersBirthday(Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+	
+						if (countUsersDataAll != 0) {
+							final int count = 99 - countUsersDataAll * 15;
+							Platform.runLater(() -> {
+								this.setStyle("-fx-background-color: #" + count + ""
+										+ count + "FF;");
+							});
+						}
+					});
 				}
 			};
 		});
