@@ -84,17 +84,15 @@ public class VMCalendarImpl implements VMCalendar {
 			if(this.editorKid != null) {
 				final DbDataAll[] usersDataAll = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				for(DbDataAll user : usersDataAll) {
-					if(!user.getCategoryUnit().equals("Рабочий")){
-						final UserModel userModel = new UserModelImpl();
-						userModel.setPersonNumber(user.getPersonNumber().intValue());
-						userModel.setFirstName(user.getName());
-						userModel.setSecondName(user.getSurname());
-						userModel.setThirdName(user.getPatronymic());
-						userModel.setBirthday(user.getBirthday());
-						userModel.setDepartament(user.getDepartamentAbbreviated());
-						userModel.setIcon(user.getVCard());
-						users.add(userModel);
-					}
+					final UserModel userModel = new UserModelImpl();
+					userModel.setPersonNumber(user.getPersonNumber().intValue());
+					userModel.setFirstName(user.getName());
+					userModel.setSecondName(user.getSurname());
+					userModel.setThirdName(user.getPatronymic());
+					userModel.setBirthday(user.getBirthday());
+					userModel.setDepartament(user.getDepartamentAbbreviated());
+					userModel.setIcon(user.getVCard());
+					users.add(userModel);
 				}
 			}	
 			this.observerCalendar.updateSelectedDate(date, users);
