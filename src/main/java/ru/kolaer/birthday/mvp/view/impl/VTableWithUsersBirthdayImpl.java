@@ -91,6 +91,9 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    final TableColumn<UserModel, String> userThirdNameColumn = new TableColumn<>("Отчество");
 	    userThirdNameColumn.setCellValueFactory(new PropertyValueFactory<>("thirdName"));
 	    
+	    final TableColumn<UserModel, String> userPhoneColumn = new TableColumn<>("Телефон");
+	    userPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+	    
 	    final TableColumn<UserModel, Date> userBirthdayColumn = new TableColumn<>("Дата рождения");
 	    userBirthdayColumn.setCellValueFactory(new PropertyValueFactory<>("birthday"));
 	    userBirthdayColumn.setCellFactory(film -> {
@@ -122,12 +125,14 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    userSecondNameColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
 	    userThirdNameColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
 	    userBirthdayColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
+	    userPhoneColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
 	    userDepartamentColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
 	    userPersonNumberColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
 	    
 		this.userBirthdayTable.getColumns().addAll(userIconColumn, userPersonNumberColumn, userSecondNameColumn, userFirstNameColumn,
 				userThirdNameColumn,
 				userDepartamentColumn,
+				userPhoneColumn,
 				userBirthdayColumn);
 		
 		this.titleLabel.setText("Сегодня поздравим с днем рождения!");

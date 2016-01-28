@@ -17,4 +17,6 @@ public interface UserModel {
 	public void setIcon(String icon);
 	public Integer getPersonNumber();
 	public void setPersonNumber(Integer personNumber);
+	public String getPhoneNumber();
+	public void setPhoneNumber(String phoneNumber);
 }

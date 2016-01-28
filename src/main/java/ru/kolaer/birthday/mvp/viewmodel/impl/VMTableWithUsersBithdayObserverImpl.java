@@ -39,6 +39,7 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 			userModel.setThirdName(user.getPatronymic());
 			userModel.setBirthday(user.getBirthday());
 			userModel.setDepartament(user.getDepartamentAbbreviated());
+			userModel.setPhoneNumber(user.getPhone());
 			userModel.setIcon(user.getVCard());
 			userModelList.add(userModel);
 		}
