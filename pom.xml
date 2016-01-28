@@ -14,6 +14,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<dependencies>
+		<dependency>
+			<groupId>ru.kolaer</groupId>
+			<artifactId>ru.kolaer.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
+
 	<!-- Сценарий для построения проекта -->
 	<build>
 		<outputDirectory>target/classes</outputDirectory>
