@@ -99,11 +99,13 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 				this.threadCache.submit(() -> {
 					final CGroupLabels cGroup = new CGroupLabels(group);
 					nodes.add(cGroup);
-					List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
-						return new CLabel(label);
-					}).collect(Collectors.toList());
-					
-					this.addCache(cGroup, labelList);
+					final ExecutorService threads = Executors.newCachedThreadPool();
+					threads.submit(() -> {
+						List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
+							return new CLabel(label);
+						}).collect(Collectors.toList());
+						this.addCache(cGroup, labelList);
+					});
 					cGroup.registerOberver(this);
 				});	
 			});

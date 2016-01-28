@@ -74,10 +74,6 @@ public class CMainFrame extends Application {
 		});
 		threadForLoadGroup.shutdown();
 		
-		Platform.runLater(() -> {
-			this.contentPanel.setStyle("-fx-background-image: url('" + Resources.BACKGROUND_IMAGE.toString() + "'); ");
-		});
-		
 		CompletableFuture.runAsync(() -> {
 			final File img = new File(SettingSingleton.getInstance().getPathBanner());
 			Platform.runLater(() -> {
@@ -92,7 +88,12 @@ public class CMainFrame extends Application {
 		}, threadForBanner);
 		threadForBanner.shutdown();
 		
-		Platform.runLater(() -> {	
+		Platform.runLater(() -> {
+			
+			Platform.runLater(() -> {
+				this.contentPanel.setStyle("-fx-background-image: url('" + Resources.BACKGROUND_IMAGE.toString() + "'); ");
+			});
+			
 			final ContextMenu contextNavigationPanel = new ContextMenu();
 			final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);	
 	
