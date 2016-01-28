@@ -10,7 +10,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +49,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		this.initSelectionModel();
 	}
 
 	@Override
@@ -88,7 +87,6 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 				//Для того, чтобы АСУП открывался первым
 				if(tab.getModel().getName().equals("ASUP")) {
 					this.pluginsTabPane.getTabs().add(0, tab.getView().getContent());
-					this.initSelectionModel();
 					this.pluginsTabPane.getSelectionModel().selectFirst();
 				} else {
 					this.pluginsTabPane.getTabs().add(tab.getView().getContent());
