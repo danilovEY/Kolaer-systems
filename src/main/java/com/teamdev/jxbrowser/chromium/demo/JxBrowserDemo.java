@@ -83,12 +83,12 @@ public class JxBrowserDemo{
 			return PrintStatus.CANCEL;
 		});
 		
-        browserView.setKeyFilter(event -> {
+       /* browserView.setKeyFilter(event -> {
         	if(event.isControlDown() && event.getCode() == KeyCode.P){
         		browser.getPrintHandler().onPrint(null);
         	}
             return event.isControlDown() && event.getCode() == KeyCode.P;
-        });
+        });*/
 		
 		browserView.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
 			browser.setContextMenuHandler(context -> {	
