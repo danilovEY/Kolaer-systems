@@ -27,6 +27,7 @@ import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
+import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.tools.Resources;
 
@@ -38,12 +39,14 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 	private Menu fileMenu;
 	@FXML
 	private MenuItem exitMenuItem;
+	private final ServiceControlManager servicesManager;
 	private final UniformSystemEditorKit editorKid;
 	private Map<String, PTab> pluginMap = new HashMap<>();
 	private List<ExplorerTabsObserver> observers = new LinkedList<>();
 	
-	public VMTabExplorerImpl(UniformSystemEditorKit editorKid) {
+	public VMTabExplorerImpl(final ServiceControlManager servicesManager, final UniformSystemEditorKit editorKid) {
 		super(Resources.V_TAB_EXPLORER);
+		this.servicesManager = servicesManager;
 		this.editorKid = editorKid;
 	}
 
@@ -65,6 +68,10 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 			Thread.currentThread().setName("Инициализация плангина "+plugin.getName()+" в виде вкладки");
 			try {
 				plugin.initialization(this.editorKid);
+				if(plugin.getServices() != null) {
+					Thread.currentThread().setName("Запуск служб из плагина: " + plugin.getName());
+					plugin.getServices().parallelStream().forEach(this.servicesManager::addService);
+				}
 			} catch (Exception e) {
 				LOG.error("Ошибка при инициализации плагина: {}", plugin.getName(), e);
 			}
@@ -73,13 +80,11 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 		.exceptionally(t -> {
 			LOG.error("Ошибка при инициализации плагина");
 			return null;
-		})
-		.thenApplyAsync((plg) -> {
+		}).thenApplyAsync((plg) -> {
 			final PTab tabPlugin = new PTabImpl(jarClassLoaser, plg);
 			this.pluginMap.put(plg.getApplication().getName(), tabPlugin);
 			return tabPlugin;
-		}, threadFroLoadPlug)
-		.exceptionally(t -> {
+		}, threadFroLoadPlug).exceptionally(t -> {
 			LOG.error("Ошибка при создании вкладки плагина");
 			return null;
 		}).thenAcceptAsync((tab) -> {

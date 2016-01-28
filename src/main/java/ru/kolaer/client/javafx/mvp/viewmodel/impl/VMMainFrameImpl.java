@@ -41,11 +41,10 @@ public class VMMainFrameImpl extends Application {
     @FXML
     public void initialize() { 
     	this.editorKid = new UniformSystemEditorKitImpl();
-    	
-    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.editorKid);
-    	this.mainPane.setCenter(explorer.getContent());
-    	
     	this.servicesManager = new ServiceControlManager();
+    	
+    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, this.editorKid);
+    	this.mainPane.setCenter(explorer.getContent());
     	
     	this.initApplicationParams();
     	
@@ -65,14 +64,7 @@ public class VMMainFrameImpl extends Application {
 		}, threadScanPlugins).exceptionally(t -> {
 			LOG.error("Ошибка при сканировании плагинов!", t);
 			return null;
-		}).thenAcceptAsync(pluginList -> {
-			pluginList.parallelStream().forEach(plugin -> {
-				if(plugin.getServices() != null) {
-					Thread.currentThread().setName("Запуск служб из плагина: " + plugin.getName());
-					plugin.getServices().parallelStream().forEach(this.servicesManager::addService);
-				}
-			});
-    	});
+		});
     	threadScanPlugins.shutdown();
     }
     

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 
 public class ServiceControlManager {
-	private static final Logger LOG = LoggerFactory.getLogger(ServiceControlManager.class);
+	private final Logger LOG = LoggerFactory.getLogger(ServiceControlManager.class);
 	private final List<Service> servicesList = new LinkedList<>();
 	private final ExecutorService readPluginsThread = Executors.newCachedThreadPool();
 	private boolean autoRun = false;
@@ -34,14 +34,13 @@ public class ServiceControlManager {
 	}
 	
 	public void addService(final Service service) {
-		this.servicesList.add(service);
-		
-		if(this.autoRun && !service.isRunning())
-			this.runService(service);
+		this.addService(service, this.autoRun);
 	}
 	
 	public void addService(final Service service, final boolean run) {
 		this.servicesList.add(service);
+		
+		LOG.info("Добавлена служба: {}", service.getName());
 		
 		if((run || this.autoRun) && !service.isRunning()) {
 			this.runService(service);
