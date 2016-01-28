@@ -1,6 +1,5 @@
 package ru.kolaer.birthday.mvp.model.impl;
 
-import java.net.URL;
 import java.util.Date;
 
 import ru.kolaer.birthday.mvp.model.UserModel;

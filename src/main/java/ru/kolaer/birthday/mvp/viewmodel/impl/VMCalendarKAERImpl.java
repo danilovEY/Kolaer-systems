@@ -58,7 +58,7 @@ public class VMCalendarKAERImpl implements VMCalendar {
 						if (countUsersDataAll != 0) {
 							final int count = 99 - countUsersDataAll * 15;
 							Platform.runLater(() -> {
-								this.setStyle("-fx-background-color: #" + count + ""
+								node.setStyle("-fx-background-color: #" + count + ""
 										+ count + "FF;");
 							});
 						}

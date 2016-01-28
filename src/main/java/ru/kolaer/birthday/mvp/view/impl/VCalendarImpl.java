@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import ru.kolaer.birthday.mvp.view.VCalendar;
 
+@SuppressWarnings("restriction")
 public class VCalendarImpl implements VCalendar {
 	private final BorderPane mainPane = new BorderPane();
 	private final DatePicker pick = new DatePicker();
