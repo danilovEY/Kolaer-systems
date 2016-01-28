@@ -5,7 +5,17 @@ import ru.kolaer.client.javafx.plugins.UniformSystemApplicationAdapter;
 import ru.kolaer.client.javafx.plugins.UniformSystemPluginAdapter;
 
 public class PMainApplication extends UniformSystemPluginAdapter {
-
+	private final UniformSystemApplicationAdapter app = new UniformSystemApplicationAdapter() {
+		@Override
+		public void stop() {
+			System.exit(-1);
+		}
+		
+		@Override
+		public String getName() {
+			return "Main";
+		}
+	};
 	@Override
 	public String getName() {
 		return "Main";
@@ -13,17 +23,6 @@ public class PMainApplication extends UniformSystemPluginAdapter {
 	
 	@Override
 	public UniformSystemApplication getApplication() {
-		return new UniformSystemApplicationAdapter() {
-			@Override
-			public void stop() {
-				System.exit(-1);
-			}
-			
-			@Override
-			public String getName() {
-				// TODO Auto-generated method stub
-				return "Main";
-			}
-		};
+		return app;
 	}
 }

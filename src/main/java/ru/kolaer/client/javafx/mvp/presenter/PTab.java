@@ -5,8 +5,6 @@ import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 
 public interface PTab {
-	UniformSystemApplication getModel();
-	
 	VTab getView();
 	void setView(VTab tab);
 	
@@ -14,5 +12,5 @@ public interface PTab {
 	void deActiveTab();
 	void closeTab();
 	
-	UniformSystemPlugin getPlugin();
+	UniformSystemPlugin getModel();
 }

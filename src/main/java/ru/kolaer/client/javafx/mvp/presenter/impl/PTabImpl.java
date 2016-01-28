@@ -40,7 +40,7 @@ public class PTabImpl implements PTab {
 	}
 
 	@Override
-	public UniformSystemPlugin getPlugin() {
+	public UniformSystemPlugin getModel() {
 		return this.plugin;
 	}
 
@@ -120,11 +120,4 @@ public class PTabImpl implements PTab {
 		});
 		treadCloseTab.shutdown();
 	}
-
-	@Override
-	public UniformSystemApplication getModel() {
-		return this.app;
-	}
-	
-	
 }

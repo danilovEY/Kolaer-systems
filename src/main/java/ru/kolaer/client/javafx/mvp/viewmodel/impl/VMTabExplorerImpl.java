@@ -86,7 +86,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 		}).thenAcceptAsync((tab) -> {
 			Platform.runLater(() -> {
 				//Для того, чтобы АСУП открывался первым
-				if(tab.getPlugin().getName().equals("ASUP")) {
+				if(tab.getModel().getName().equals("ASUP")) {
 					this.pluginsTabPane.getTabs().add(0, tab.getView().getContent());
 					this.initSelectionModel();
 					this.pluginsTabPane.getSelectionModel().selectFirst();

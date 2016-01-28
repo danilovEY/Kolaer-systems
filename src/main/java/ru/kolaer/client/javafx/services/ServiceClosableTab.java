@@ -54,13 +54,8 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 			}
 			
 			@Override
-			public UniformSystemPlugin getPlugin() {
+			public UniformSystemPlugin getModel() {
 				return app;
-			}
-			
-			@Override
-			public UniformSystemApplication getModel() {
-				return null;
 			}
 			
 			@Override
@@ -82,7 +77,7 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 				
 			}
 		};
-		this.updateOpenTab(mainTab);
+		this.updateAddTab(mainTab);
 		
 		Thread.currentThread().setName("Прослушивание внутреннего эксплорера");
 		while(this.isRunning) {
@@ -99,7 +94,7 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 						Iterator<PTab> iter = tabs.iterator();
 						while(iter.hasNext()) {
 							final PTab tab = iter.next();
-							if(tabName.equals(tab.getPlugin().getName())) {
+							if(tabName.equals(tab.getModel().getName())) {
 								tab.closeTab();
 								iter.remove();
 							}
@@ -143,9 +138,9 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 		
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - открытие окна");
-			this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(tab.getPlugin().getName()).append("/open").toString(), null);
+			this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(tab.getModel().getName()).append("/open").toString(), null);
 		}, singleThread).exceptionally(t -> {
-			LOG.error("Сервер \"{}\" не доступен!",new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(tab.getPlugin().getName()).append("/open").toString());
+			LOG.error("Сервер \"{}\" не доступен!",new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(tab.getModel().getName()).append("/open").toString());
 			return null;
 		});
 		
@@ -161,9 +156,9 @@ public class ServiceClosableTab implements Service, ExplorerTabsObserver {
 		
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");	
-			this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(tab.getPlugin().getName()).append("/close").toString(), null);
+			this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(tab.getModel().getName()).append("/close").toString(), null);
 		}, singleThread).exceptionally(t -> {
-			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(tab.getPlugin().getName()).append("/close").toString());
+			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(tab.getModel().getName()).append("/close").toString());
 			return null;
 		});
 		
