@@ -21,9 +21,9 @@ import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
  * @version 0.1
  */
 public class ASMCApplication implements UniformSystemApplication {
-	// Панель с контентом плагина.
+	/**Панель с контентом плагина.*/
 	private final BorderPane root = new BorderPane();
-	// Панель с .fxml-контента главного окна.
+	/**Панель с .fxml-контента главного окна.*/
 	private AnchorPane pane;
 
 	@Override
