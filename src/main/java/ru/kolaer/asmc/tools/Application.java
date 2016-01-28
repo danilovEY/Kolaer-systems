@@ -7,8 +7,6 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.teamdev.jxbrowser.chromium.demo.JxBrowserDemo;
-
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -97,11 +95,11 @@ public class Application implements Runnable {
 					String pathWeb = "";
 					if(SettingSingleton.getInstance().isAllLabels()) {
 						if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
-							Platform.runLater(() -> {
+							/*Platform.runLater(() -> {
 								final JxBrowserDemo web = new JxBrowserDemo();
 								web.show(true);
 								web.load(pathApp);
-							});
+							});*/
 							return;
 						} else if(SettingSingleton.getInstance().isDefaultUserWebBrowser()) {
 							r.exec("explorer \"" + this.pathApp + "\"");
@@ -124,9 +122,9 @@ public class Application implements Runnable {
 							alert.setContentText("Запуск стандартного браузера...");
 							alert.show();
 
-							final JxBrowserDemo web = new JxBrowserDemo();
+							/*final JxBrowserDemo web = new JxBrowserDemo();
 							web.show(true);
-							web.load(pathApp);
+							web.load(pathApp);*/
 						});
 					}
 				} else {		

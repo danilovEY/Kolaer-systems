@@ -13,24 +13,12 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<repositories>
-		<repository>
-			<id>com.teamdev</id>
-			<url>http://maven.teamdev.com/repository/products</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<dependency>
 			<groupId>ru.kolaer</groupId>
 			<artifactId>ru.kolaer.api</artifactId>
 			<version>0.0.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.teamdev.jxbrowser</groupId>
-			<artifactId>jxbrowser-win</artifactId>
-			<version>6.0</version>
 		</dependency>
 	</dependencies>
 
