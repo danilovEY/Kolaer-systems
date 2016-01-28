@@ -39,7 +39,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	/**
 	 * {@linkplain CNavigationContentObserver}
 	 */
-	public CNavigationContentObserver(Pane panelWithGroups, Pane panelWithLabels) {
+	public CNavigationContentObserver(final Pane panelWithGroups, final Pane panelWithLabels) {
 		this.panelWithGroups = panelWithGroups;
 		this.panelWithLabels = panelWithLabels;
 	}

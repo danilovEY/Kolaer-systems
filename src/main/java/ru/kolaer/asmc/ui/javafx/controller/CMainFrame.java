@@ -3,13 +3,12 @@ package ru.kolaer.asmc.ui.javafx.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,8 +41,10 @@ public class CMainFrame extends Application {
 	/** Элемент в меню для получения админ. прав. */
 	@FXML
 	private MenuItem rootMenuItem;
+	/** Элемент в меню для настроек. */
 	@FXML
 	private MenuItem settingMenuItem;
+	/** Элемент в менюо о программе. */
 	@FXML
 	private MenuItem menuItemAbout;
 	/** Панель с группами ярлыков. */
@@ -60,39 +61,38 @@ public class CMainFrame extends Application {
 	private ScrollPane contentScrollPanel;
 	@FXML
 	public void initialize() {
-		ExecutorService threadPool = Executors.newFixedThreadPool(2);
+		final ExecutorService threadForLoadGroup = Executors.newSingleThreadExecutor();
+		final ExecutorService threadForBanner = Executors.newSingleThreadExecutor();
 		
 		final CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
 		
-		Platform.runLater(() -> {			
+		CompletableFuture.runAsync(() -> {
+			Thread.currentThread().setName("Загрузка и добавление групп");
 			observer.loadAndRegGroups();
+		}, threadForLoadGroup).exceptionally(t -> {
+			return null;
 		});
-		
-		threadPool.submit(() -> {
-			Platform.runLater(() -> {
-				final String image = Resources.BACKGROUND_IMAGE.toString();
-				this.contentPanel.setStyle("-fx-background-image: url('" + image + "'); ");
-			});
-		});
-		
-		threadPool.submit(() -> {
-			final File img = new File(SettingSingleton.getInstance().getPathBanner());
-			if(img.exists() && img.isFile()) {
-				Platform.runLater(() -> {
-					ImageViewPane imagePane = new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner(), true)));
-					imagePane.setMaxHeight(300);
-					
-					this.mainPanel.setTop(imagePane);
-				});
-			} else {
-				this.mainPanel.setTop(null);
-			}
-		});
-		
-		threadPool.shutdown();	
+		threadForLoadGroup.shutdown();
 		
 		Platform.runLater(() -> {
+			this.contentPanel.setStyle("-fx-background-image: url('" + Resources.BACKGROUND_IMAGE.toString() + "'); ");
+		});
 		
+		CompletableFuture.runAsync(() -> {
+			final File img = new File(SettingSingleton.getInstance().getPathBanner());
+			Platform.runLater(() -> {
+				if(img.exists() && img.isFile()) {			
+						final ImageViewPane imagePane = new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner(), true)));
+						imagePane.setMaxHeight(300);				
+						this.mainPanel.setTop(imagePane);
+				} else {
+					this.mainPanel.setTop(null);
+				}
+			});
+		}, threadForBanner);
+		threadForBanner.shutdown();
+		
+		Platform.runLater(() -> {	
 			final ContextMenu contextNavigationPanel = new ContextMenu();
 			final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);	
 	
@@ -149,7 +149,7 @@ public class CMainFrame extends Application {
 				setting.showAndWait();
 				final File imgage = new File(SettingSingleton.getInstance().getPathBanner());
 				if(imgage.exists() && imgage.isFile()) {
-					mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner()))));
+					mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner(), true))));
 				} else {
 					mainPanel.setTop(null);
 				}
