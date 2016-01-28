@@ -44,10 +44,10 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		this.panelWithLabels = panelWithLabels;
 	}
 
-	public void addGroupLabels(MGroupLabels group) {
+	public void addGroupLabels(final MGroupLabels group) {
 		SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups().add(group);
 		SettingSingleton.getInstance().saveGroups();
-		
+
 		final CGroupLabels cGroup = new CGroupLabels(group);
 		cGroup.registerOberver(this);
 		this.panelWithGroups.getChildren().add(cGroup);
@@ -93,20 +93,21 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		final List<Node> nodes = new ArrayList<>();
 		thread.submit(() -> {
 			List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups();
-			this.threadCache = Executors.newFixedThreadPool(groupsList.size() + 1);
-			groupsList.stream()
+			this.threadCache = Executors.newCachedThreadPool();
+			groupsList.parallelStream()
 			.forEach((group) -> {
 				this.threadCache.submit(() -> {
-					final CGroupLabels cGroup = new CGroupLabels(group);
-					nodes.add(cGroup);
-					final ExecutorService threads = Executors.newCachedThreadPool();
-					threads.submit(() -> {
-						List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
-							return new CLabel(label);
-						}).collect(Collectors.toList());
-						this.addCache(cGroup, labelList);
-					});
-					cGroup.registerOberver(this);
+						final CGroupLabels cGroup = new CGroupLabels(group);
+						nodes.add(cGroup);
+						final ExecutorService threads = Executors.newSingleThreadExecutor();
+						threads.submit(() -> {
+							List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
+								return new CLabel(label);
+							}).collect(Collectors.toList());
+							this.addCache(cGroup, labelList);
+						});
+						threads.shutdown();
+						cGroup.registerOberver(this);
 				});	
 			});
 			
@@ -115,11 +116,14 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 			Platform.runLater(() -> {
 				try {
 					this.threadCache.awaitTermination(2, TimeUnit.MINUTES);
-					this.panelWithGroups.getChildren().setAll(
-							nodes.stream().sorted((a, b) -> Integer.compare(Integer.valueOf(a.getUserData().toString()), Integer.valueOf(b.getUserData().toString())))
-							.collect(Collectors.toList()));	
+
+					final List<Node> n = nodes.parallelStream().sorted((a, b) -> Integer.compare(Integer.valueOf(a.getUserData().toString()), Integer.valueOf(b.getUserData().toString())))
+					.collect(Collectors.toList());
+					Platform.runLater(() -> {
+						this.panelWithGroups.getChildren().setAll(n);	
+					});
 					
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					e.printStackTrace();
 				}
 			});
@@ -132,26 +136,21 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	 * @param group
 	 * @return
 	 */
-	private CGroupLabels getCGroupLabelCache(MGroupLabels group) {
-		CGroupLabels cGroup = null;
-		Stream<CGroupLabels> filtre = this.cache.keySet().stream().filter(g -> {
-			return g.getModel() == group;
-		});
-		
-		for(CGroupLabels g : filtre.collect(Collectors.toList())) {
-			cGroup = g;
+	private CGroupLabels getCGroupLabelCache(final MGroupLabels group) {
+		for(CGroupLabels gr : this.cache.keySet()){
+			if(gr.getModel() == group)
+				return gr;
 		}
-		
-		return cGroup;
+		return null;
 	}
 	/**Добавить группу и ярлыки в кэш.*/
-	private void addCache(CGroupLabels group, List<CLabel> labels) {
+	private void addCache(final CGroupLabels group, final List<CLabel> labels) {
 		this.cache.put(group, labels);
 	}
 	
 	@Override
-	public void updateClick(MGroupLabels mGroup) {
-		CGroupLabels group = this.getCGroupLabelCache(this.selectedGroup);
+	public void updateClick(final MGroupLabels mGroup) {
+		final CGroupLabels group = this.getCGroupLabelCache(this.selectedGroup);
 		if(group!=null)
 			this.cache.get(group).forEach(label -> {
 				label.removeObserver(this);
@@ -159,25 +158,28 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		
 		this.panelWithLabels.getChildren().clear();
 		
-		this.selectedGroup = null;
 		this.selectedGroup = mGroup;
 		
-		CGroupLabels newGroup = this.getCGroupLabelCache(mGroup);
+		final CGroupLabels newGroup = this.getCGroupLabelCache(mGroup);
 		//Если в кэше нет группы с ярлыками, то загружаем вручную
 		if(newGroup != null) {
-			this.cache.get(newGroup).stream()
+			this.cache.get(newGroup).parallelStream()
 			.sorted((a, b) -> Integer.compare(a.getModel().getPriority(), b.getModel().getPriority()))
 			.forEach(label -> {
-				this.panelWithLabels.getChildren().add(label);
-				label.registerOberver(this);
+				Platform.runLater(() -> {
+					this.panelWithLabels.getChildren().add(label);
+					label.registerOberver(this);
+				});
 			});
 		} else {
-			mGroup.getLabelList().stream()
+			mGroup.getLabelList().parallelStream()
 			.sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority()))
 			.forEach((g) -> {
-				final CLabel label = new CLabel(g);
-				this.panelWithLabels.getChildren().add(label);
-				label.registerOberver(this);
+				Platform.runLater(() -> {
+					final CLabel label = new CLabel(g);
+					this.panelWithLabels.getChildren().add(label);
+					label.registerOberver(this);
+				});
 			});
 		}
 	}
