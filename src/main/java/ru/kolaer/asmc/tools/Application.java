@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,10 +19,12 @@ import javafx.scene.control.Alert.AlertType;
  *
  */
 public class Application implements Runnable {
-
+	/**Путь к запускающему файлу.*/
 	private String pathApp;
+	/**Путь к программу с помощью чего открывать пользОткрывать с мо*/
 	private String openWith;
-	private ExecutorService thread = Executors.newSingleThreadExecutor();
+	/**Поток для запуска приложения пользователя.*/
+	private ExecutorService threadForRunApp = Executors.newSingleThreadExecutor();
 	
 	public Application(String path, String openWith) {
 		this.pathApp = path;
@@ -29,9 +32,19 @@ public class Application implements Runnable {
 	}
 
 	public void start() {
-		if (this.pathApp != null && !this.pathApp.equals(""))
-			thread.submit(this);
-		else {
+		if (this.pathApp != null && !this.pathApp.equals("")) {
+			CompletableFuture.runAsync(this).exceptionally(t -> {
+				Platform.runLater(() -> {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Ошибка!");
+					alert.setHeaderText(t.getMessage());
+					alert.show();
+				});
+				return null;
+			});
+			this.threadForRunApp.submit(this);
+			this.threadForRunApp.shutdown();
+		} else {
 			Platform.runLater(() -> {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Ошибка!");
@@ -39,7 +52,6 @@ public class Application implements Runnable {
 				alert.show();
 			});
 		}
-		thread.shutdown();
 	}
 
 	public static boolean isWindows() {
