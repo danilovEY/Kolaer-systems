@@ -24,16 +24,16 @@ public class Application implements Runnable {
 	/**Путь к программу с помощью чего открывать пользОткрывать с мо*/
 	private String openWith;
 	/**Поток для запуска приложения пользователя.*/
-	private ExecutorService threadForRunApp = Executors.newSingleThreadExecutor();
+	private final ExecutorService threadForRunApp = Executors.newSingleThreadExecutor();
 	
-	public Application(String path, String openWith) {
+	public Application(final String path, final String openWith) {
 		this.pathApp = path;
 		this.openWith = openWith;
 	}
 
 	public void start() {
 		if (this.pathApp != null && !this.pathApp.equals("")) {
-			CompletableFuture.runAsync(this).exceptionally(t -> {
+			CompletableFuture.runAsync(this, threadForRunApp).exceptionally(t -> {
 				Platform.runLater(() -> {
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Ошибка!");
@@ -42,7 +42,6 @@ public class Application implements Runnable {
 				});
 				return null;
 			});
-			this.threadForRunApp.submit(this);
 			this.threadForRunApp.shutdown();
 		} else {
 			Platform.runLater(() -> {
@@ -81,15 +80,12 @@ public class Application implements Runnable {
 	 *            - Ссылка.
 	 * @return - Возвращает true если это ссылка.
 	 */
-	public static boolean isURL(String url) {
+	public static boolean isURL(final String url) {
 		try {
 			new URL(url);
 			return true;
-		} catch (MalformedURLException e) {
-    		String urlFile = url;
-    		String type = urlFile.substring(urlFile.lastIndexOf('.'));
-    		
-    		switch(type) {
+		} catch (final MalformedURLException e) {
+    		switch(url.substring(url.lastIndexOf('.'))) {
     			case ".html" : return true;
     			case ".php" : return true;
     			default : return false;
@@ -100,18 +96,19 @@ public class Application implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Runtime r = Runtime.getRuntime();
-
-			if (isWindows()) {
-				if (isURL(pathApp)) {
+			final Runtime r = Runtime.getRuntime();
+			
+			if (Application.isWindows()) {
+				if (Application.isURL(pathApp)) {
 					String pathWeb = "";
 					if(SettingSingleton.getInstance().isAllLabels()) {
 						if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
-							/*Platform.runLater(() -> {
-								final JxBrowserDemo web = new JxBrowserDemo();
-								web.show(true);
-								web.load(pathApp);
-							});*/
+							Platform.runLater(() -> {
+								Alert alert = new Alert(AlertType.ERROR);
+								alert.setTitle("Ошибка!");
+								alert.setHeaderText("Стандартный браузер больше не поддерживается.");
+								alert.show();
+							});
 							return;
 						} else if(SettingSingleton.getInstance().isDefaultUserWebBrowser()) {
 							r.exec("explorer \"" + this.pathApp + "\"");
@@ -131,12 +128,7 @@ public class Application implements Runnable {
 							Alert alert = new Alert(AlertType.ERROR);
 							alert.setTitle("Ошибка!");
 							alert.setHeaderText("Браузер \"" + simpleWebBrowser.getAbsolutePath() + "\" не найден.");
-							alert.setContentText("Запуск стандартного браузера...");
 							alert.show();
-
-							/*final JxBrowserDemo web = new JxBrowserDemo();
-							web.show(true);
-							web.load(pathApp);*/
 						});
 					}
 				} else {		
@@ -163,7 +155,7 @@ public class Application implements Runnable {
 					}
 				}
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			Platform.runLater(() -> {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Ошибка!");
@@ -178,7 +170,7 @@ public class Application implements Runnable {
 		return pathApp;
 	}
 
-	public void setPathApp(String pathApp) {
+	public void setPathApp(final String pathApp) {
 		this.pathApp = pathApp;
 	}
 }
