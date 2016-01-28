@@ -1,6 +1,7 @@
 package ru.kolaer.asmc.tools;
 
 import java.io.Serializable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,13 +13,10 @@ import ru.kolaer.asmc.tools.serializations.SerializationObjects;
  *
  */
 public class SettingSingleton implements Serializable {
-
 	private static final long serialVersionUID = -360823673740807137L;
 
 	private transient static SettingSingleton inctance;
-	private static final transient ExecutorService executor = Executors.newFixedThreadPool(2);
 	private static boolean init = false;
-	
 	
 	private transient boolean isRoot = false;
 	private final String ROOT_LOGIN_NAME = "root";
@@ -56,10 +54,13 @@ public class SettingSingleton implements Serializable {
 			serializationObjects.setSerializeSetting(SettingSingleton.inctance);			
 		}
 		SettingSingleton.inctance.setSerializationObjects(serializationObjects);
-
-		executor.submit(() -> {
+		
+		final ExecutorService executor = Executors.newSingleThreadExecutor();
+		CompletableFuture.runAsync(() -> {
+			//Вызов метода, для добавления в кэш.
 			serializationObjects.getSerializeGroups();
-			return;
+		}, executor).exceptionally(t -> {
+			return null;
 		});
 		executor.shutdown();		
 	}
@@ -72,7 +73,7 @@ public class SettingSingleton implements Serializable {
 		return rootPass;
 	}
 
-	public void setRootPass(String rootPass) {
+	public void setRootPass(final String rootPass) {
 		this.rootPass = rootPass;
 	}
 
@@ -84,7 +85,7 @@ public class SettingSingleton implements Serializable {
 		return isRoot;
 	}
 
-	public void setRoot(boolean isRoot) {
+	public void setRoot(final boolean isRoot) {
 		this.isRoot = isRoot;
 	}
 
@@ -107,7 +108,7 @@ public class SettingSingleton implements Serializable {
 		return defaultWebBrowser;
 	}
 
-	public void setDefaultWebBrowser(boolean defaultWebBrowser) {
+	public void setDefaultWebBrowser(final boolean defaultWebBrowser) {
 		this.defaultWebBrowser = defaultWebBrowser;
 	}
 
@@ -115,7 +116,7 @@ public class SettingSingleton implements Serializable {
 		return pathWebBrowser;
 	}
 
-	public void setPathWebBrowser(String pathWebBrowser) {
+	public void setPathWebBrowser(final String pathWebBrowser) {
 		this.pathWebBrowser = pathWebBrowser;
 	}
 
@@ -123,7 +124,7 @@ public class SettingSingleton implements Serializable {
 		return isAllLabels;
 	}
 
-	public void setAllLabels(boolean isAllLabels) {
+	public void setAllLabels(final boolean isAllLabels) {
 		this.isAllLabels = isAllLabels;
 	}
 
@@ -131,11 +132,11 @@ public class SettingSingleton implements Serializable {
 		return pathBanner;
 	}
 
-	public void setPathBanner(String pathBanner) {
+	public void setPathBanner(final String pathBanner) {
 		this.pathBanner = pathBanner;
 	}
 
-	public void setSerializationObjects(SerializationObjects serializationGroups) {
+	public void setSerializationObjects(final SerializationObjects serializationGroups) {
 		this.serializationObjects = serializationGroups;
 	}
 
@@ -143,7 +144,7 @@ public class SettingSingleton implements Serializable {
 		return defaultUserWebBrowser;
 	}
 
-	public void setDefaultUserWebBrowser(boolean defaultUserWebBrowser) {
+	public void setDefaultUserWebBrowser(final boolean defaultUserWebBrowser) {
 		this.defaultUserWebBrowser = defaultUserWebBrowser;
 	}
 }
