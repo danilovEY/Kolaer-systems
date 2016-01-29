@@ -1,5 +1,7 @@
 package ru.kolaer.server.restful.controller.system;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +64,10 @@ public class UserSystemController {
 	public Set<String> getStatusApplication(final @PathVariable String user, @PathVariable final String status) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
 		if(status.equals("close")) {
-			return userData.getCloseApplications();
+			final Set<String> closeApp = userData.getCloseApplications();
+			final Set<String> ret = new HashSet<>(closeApp);
+			userData.getCloseApplications().clear();
+			return ret;
 		} else {
 			return userData.getOpeningWindows();
 		}
