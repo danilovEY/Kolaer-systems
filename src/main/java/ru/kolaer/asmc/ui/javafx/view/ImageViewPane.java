@@ -11,7 +11,7 @@ import javafx.scene.layout.Region;
 
 public class ImageViewPane extends Region {
 
-    private ObjectProperty<ImageView> imageViewProperty = new SimpleObjectProperty<ImageView>();
+    private final ObjectProperty<ImageView> imageViewProperty = new SimpleObjectProperty<ImageView>();
 
     public ObjectProperty<ImageView> imageViewProperty() {
         return imageViewProperty;
@@ -21,7 +21,7 @@ public class ImageViewPane extends Region {
         return imageViewProperty.get();
     }
 
-    public void setImageView(ImageView imageView) {
+    public void setImageView(final ImageView imageView) {
         this.imageViewProperty.set(imageView);
     }
 
@@ -31,7 +31,7 @@ public class ImageViewPane extends Region {
 
     @Override
     protected void layoutChildren() {
-        ImageView imageView = imageViewProperty.get();
+    	final ImageView imageView = imageViewProperty.get();
         if (imageView != null) {
             imageView.setFitWidth(getWidth());
             imageView.setFitHeight(getHeight());
@@ -40,12 +40,12 @@ public class ImageViewPane extends Region {
         super.layoutChildren();
     }
 
-    public ImageViewPane(ImageView imageView) {
+    public ImageViewPane(final ImageView imageView) {
     	this.maxHeight(200);
         imageViewProperty.addListener(new ChangeListener<ImageView>() {
 
             @Override
-            public void changed(ObservableValue<? extends ImageView> arg0, ImageView oldIV, ImageView newIV) {
+            public void changed(final ObservableValue<? extends ImageView> arg0, final ImageView oldIV, final ImageView newIV) {
                 if (oldIV != null) {
                     getChildren().remove(oldIV);
                 }

@@ -58,7 +58,7 @@ public class CSetting extends BaseController implements Dialog {
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void initialize(final URL location, final ResourceBundle resources) {
 		this.cancelButton.setOnAction(e -> {
 			this.dialog.close();
 		});
@@ -157,7 +157,7 @@ public class CSetting extends BaseController implements Dialog {
 		
 		this.changePassButton.setOnAction(e -> {
 			SettingSingleton.getInstance().setRootPass(this.textPassRoot.getText());
-			Alert alert = new Alert(AlertType.INFORMATION);
+			final Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Пароль сохранен!");
 			alert.setHeaderText("Пароль успешно изменен!");
 			alert.showAndWait();
@@ -178,7 +178,7 @@ public class CSetting extends BaseController implements Dialog {
 
 	@Override
 	public Optional<?> showAndWait() {
-		String title = Resources.SETTING_LABEL_FRAME_TITLE;
+		final String title = Resources.SETTING_LABEL_FRAME_TITLE;
 		this.dialog.setTitle(title);
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
@@ -186,8 +186,8 @@ public class CSetting extends BaseController implements Dialog {
 
 		try {
 			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
-		} catch (IllegalArgumentException e) {
-			Alert alert = new Alert(AlertType.ERROR);
+		} catch (final IllegalArgumentException e) {
+			final Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");
 			alert.setHeaderText("Не найден файл: \"" + Resources.AER_LOGO + "\"");
 			alert.showAndWait();

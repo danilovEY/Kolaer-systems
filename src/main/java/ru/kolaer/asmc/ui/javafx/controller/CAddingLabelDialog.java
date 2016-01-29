@@ -74,7 +74,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	 * 
 	 * @param model
 	 */
-	public CAddingLabelDialog(MLabel model) {
+	public CAddingLabelDialog(final MLabel model) {
 		super(Resources.V_ADDING_LABEL);
 		this.init();
 		this.result = model;
@@ -91,14 +91,14 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void initialize(final URL location, final ResourceBundle resources) {
 		
 		this.buttonSetAppWith.setOnAction(e -> {
 			final FileChooser fileC = new FileChooser();
 			fileC.setTitle("Выбор файла");
 			fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
 			
-			String path = this.pathOpenAppWith.getText() == null ? System.getProperty("user.home") : this.pathOpenAppWith.getText();
+			final String path = this.pathOpenAppWith.getText() == null ? System.getProperty("user.home") : this.pathOpenAppWith.getText();
 			
 			final File startDir = new File(path);
 			String startPath = System.getProperty("user.home");
@@ -121,7 +121,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			fileC.setTitle("Выбор файла");
 			fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
 			
-			String path = this.pathOpenAppWith.getText() == null ? System.getProperty("user.home") : this.pathOpenAppWith.getText();
+			final String path = this.pathOpenAppWith.getText() == null ? System.getProperty("user.home") : this.pathOpenAppWith.getText();
 			
 			final File startDir = new File(path);
 			String startPath = System.getProperty("user.home");
@@ -144,7 +144,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			if (key.getCode() != KeyCode.ENTER)
 				return;
 
-			Optional<File> file = Optional.of(new File(this.pathIconText.getText()));
+			final Optional<File> file = Optional.of(new File(this.pathIconText.getText()));
 
 			if (file.isPresent() && (file.get().exists() && file.get().isFile())) {
 				this.rbDefaultIcon.setSelected(false);
@@ -152,8 +152,8 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 				this.pathIconText.setText(new String(file.get().getAbsolutePath()));
 				try {
 					this.image.setImage(new Image(file.get().toURI().toURL().toString()));
-				} catch (Exception e) {
-					Alert alert = new Alert(AlertType.ERROR);
+				} catch (final Exception e) {
+					final Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Ошибка!");
 					alert.setHeaderText("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath());
 					alert.setContentText(e.toString());
@@ -165,9 +165,9 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	}
 
 	@FXML
-	public void actionButtonOK(ActionEvent event) {
+	public void actionButtonOK(final ActionEvent event) {
 		if(!this.textPriority.getText().matches("[0-9]*")) {
-			Alert alert = new Alert(AlertType.WARNING);
+			final Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Внимание!");
 			alert.setHeaderText("Приоритет может быть только числом!");
 			alert.show();
@@ -192,24 +192,24 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	}
 
 	@FXML
-	public void actionButtonCancel(ActionEvent event) {
+	public void actionButtonCancel(final ActionEvent event) {
 		this.dialog.close();
 	}
 
 	@FXML
-	public void actionRBNoneIcon(ActionEvent event) {
+	public void actionRBNoneIcon(final ActionEvent event) {
 		this.image.setImage(null);
 		this.pathIconText.setText("");
 	}
 
 	@FXML
-	public void actionRBDefaultIcon(ActionEvent event) {
+	public void actionRBDefaultIcon(final ActionEvent event) {
 		this.image.setImage(new Image(Resources.AER_ICON.toString() ));
 		this.pathIconText.setText(Resources.AER_ICON.toString());
 	}
 
 	@FXML
-	public void actionButtonSetPathIcon(ActionEvent event) {
+	public void actionButtonSetPathIcon(final ActionEvent event) {
 		final File startDir = new File(this.pathIconText.getText());
 		String startPath = System.getProperty("user.home");
 		if(startDir.isFile()) {
@@ -227,8 +227,8 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			this.pathIconText.setText(new String(file.get().getAbsolutePath()));
 			try {
 				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
-			} catch (Exception e) {
-				Alert alert = new Alert(AlertType.ERROR);
+			} catch (final Exception e) {
+				final Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Ошибка!");
 				alert.setHeaderText("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath());
 				alert.setContentText(e.toString());
@@ -256,7 +256,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 				this.rbDefaultIcon.setSelected(true);
 				this.rbNoneIcon.setSelected(false);
 			} else {
-				File file = new File(this.result.getPathImage());
+				final File file = new File(this.result.getPathImage());
 
 				if (file != null && file.exists() && file.isFile()) {
 					this.rbDefaultIcon.setSelected(false);
@@ -264,8 +264,8 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 					this.pathIconText.setText(new String(file.getAbsolutePath()));
 					try {
 						this.image.setImage(new Image(file.toURI().toURL().toString()));
-					} catch (Exception e) {
-						Alert alert = new Alert(AlertType.ERROR);
+					} catch (final Exception e) {
+						final Alert alert = new Alert(AlertType.ERROR);
 						alert.setTitle("Ошибка!");
 						alert.setHeaderText("Невозможно переконвертировать в URL файл:" + file.getAbsolutePath());
 						alert.setContentText(e.toString());
@@ -275,7 +275,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			}
 		}
 
-		String title = this.result == null ? Resources.ADDING_LABEL_FRAME_TITLE : Resources.EDDING_LABEL_FRAME_TITLE;
+		final String title = this.result == null ? Resources.ADDING_LABEL_FRAME_TITLE : Resources.EDDING_LABEL_FRAME_TITLE;
 		this.dialog.setTitle(title);
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
@@ -283,8 +283,8 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 
 		try {
 			this.dialog.getIcons().add(new Image("file:" + Resources.AER_LOGO.toString()));
-		} catch (IllegalArgumentException e) {
-			Alert alert = new Alert(AlertType.ERROR);
+		} catch (final IllegalArgumentException e) {
+			final Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");
 			alert.setHeaderText("Не найден файл: \"" + Resources.AER_LOGO + "\"");
 			alert.showAndWait();

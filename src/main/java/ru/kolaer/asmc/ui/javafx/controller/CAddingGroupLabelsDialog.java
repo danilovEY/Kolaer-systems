@@ -45,16 +45,16 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 	 * {@linkplain CAddingGroupLabelsDialog.java}
 	 * @param groupModel - Редактировать группу.
 	 */
-	public CAddingGroupLabelsDialog(MGroupLabels groupModel) {
+	public CAddingGroupLabelsDialog(final MGroupLabels groupModel) {
 		super(Resources.V_ADDING_GROUP_LABELS);
 		this.result = groupModel;
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {		
+	public void initialize(final URL location, final ResourceBundle resources) {		
 		this.okButton.setOnAction(e -> {
 			if(!this.textPriority.getText().matches("[0-9]*")) {
-				Alert alert = new Alert(AlertType.WARNING);
+				final Alert alert = new Alert(AlertType.WARNING);
 				alert.setTitle("Внимание!");
 				alert.setHeaderText("Приоритет может быть только числом!");
 				alert.show();
@@ -83,7 +83,7 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 			this.textPriority.setText(String.valueOf(this.result.getPriority()));
 		}
 		
-		String title = this.result == null ? Resources.ADDING_GROUP_FRAME_TITLE : Resources.EDING_GROUP_FRAME_TITLE;
+		final String title = this.result == null ? Resources.ADDING_GROUP_FRAME_TITLE : Resources.EDING_GROUP_FRAME_TITLE;
 		this.dialog.setTitle(title);
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
@@ -91,8 +91,8 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 		
 		try {
 			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
-		} catch(IllegalArgumentException e) {
-			Alert alert = new Alert(AlertType.ERROR);
+		} catch(final IllegalArgumentException e) {
+			final Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");
 			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
 			alert.showAndWait();

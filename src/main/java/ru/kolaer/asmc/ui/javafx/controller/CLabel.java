@@ -59,7 +59,7 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 		super(Resources.V_LABEL);
 	}
 
-	public CLabel(MLabel model) {
+	public CLabel(final MLabel model) {
 		super(Resources.V_LABEL);
 		this.model = model;
 
@@ -69,7 +69,7 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void initialize(final URL location, final ResourceBundle resources) {
 		final ContextMenu labelContextMenu = new ContextMenu();
 
 		final MenuItem editLabel = new MenuItem(Resources.MENU_ITEM_EDIT_LABEL);
@@ -77,7 +77,7 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 		labelContextMenu.getItems().addAll(editLabel, deleteLabel);
 		
 		//=====Event====
-		EventHandler<ContextMenuEvent> contextMenu = e -> {
+		final EventHandler<ContextMenuEvent> contextMenu = e -> {
 			if(!SettingSingleton.getInstance().isRoot()) 
 				labelContextMenu.hide();
 		};
@@ -92,7 +92,7 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 		});
 		
 		deleteLabel.setOnAction(e -> {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
+			final Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setHeaderText("Вы действительно хотите удалить ярлык \""+ this.model.getName() + "\"?");
 			if(alert.showAndWait().get() == ButtonType.OK) {
 				this.notifyObserverDelete();
@@ -102,7 +102,7 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 		this.button.setOnAction(e -> this.notifyObserverClick());
 	}
 
-	private void updateView(MLabel label) {
+	private void updateView(final MLabel label) {
 		this.nameLabel.setText(label.getName());
 		this.button.setText(label.getInfo());
 		
@@ -115,8 +115,8 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 			try{
 				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
 			}
-			catch(Exception e1){
-				Alert alert = new Alert(AlertType.ERROR);
+			catch(final Exception e1){
+				final Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Ошибка!");
 				alert.setHeaderText("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath());
 				alert.setContentText(e1.toString());
@@ -154,7 +154,7 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 	 * @param model
 	 *            the {@linkplain #model} to set
 	 */
-	public void setModel(MLabel model) {
+	public void setModel(final MLabel model) {
 		this.model = model;
 	}
 

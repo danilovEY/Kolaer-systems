@@ -51,7 +51,7 @@ public class ASMCApplication implements UniformSystemApplication {
 		if(this.pane == null){
 			SettingSingleton.initialization();
 			try(final InputStream stream = Resources.V_MAIN_FRAME.openStream()){
-				FXMLLoader loader = new FXMLLoader();
+				final FXMLLoader loader = new FXMLLoader();
 				this.pane = loader.load(stream);
 				final InputStream inputStream = this.getClass().getResourceAsStream("/resources/CSS/Default/Default.css");
 				final URL inputStreamUrl = this.getClass().getResource("/resources/CSS/Default/Default.css");
@@ -61,9 +61,9 @@ public class ASMCApplication implements UniformSystemApplication {
 					root.setCenter(pane);
 					root.setPrefSize(800, 600);
 				});
-			}catch(MalformedURLException e){
+			}catch(final MalformedURLException e){
 				throw e;
-			}catch(IOException e){
+			}catch(final IOException e){
 				throw e;
 			}
 		}

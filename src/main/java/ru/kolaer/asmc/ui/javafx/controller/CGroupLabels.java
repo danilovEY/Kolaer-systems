@@ -45,7 +45,7 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 	 * {@linkplain CGroupLabels}
 	 * @param group Модель.
 	 */
-	public CGroupLabels(MGroupLabels group) {
+	public CGroupLabels(final MGroupLabels group) {
 		super(Resources.V_GROUP_LABELS);
 		this.model = group;
 		super.setUserData(Integer.valueOf(group.getPriority()));
@@ -53,12 +53,12 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 
 	}
 	
-	public void setText(String text){
+	public void setText(final String text){
 		this.button.setText(text);
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void initialize(final URL location, final ResourceBundle resources) {
 		
 		final ContextMenu contextGroupPanel = new ContextMenu();
 		final MenuItem editGroupLabels = new MenuItem(Resources.MENU_ITEM_EDIT_GROUP);
@@ -74,7 +74,7 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 		});
 		
 		deleteGroupLabels.setOnAction(e -> {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
+			final Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setHeaderText("Вы действительно хотите удалить группу \""+ this.model.getNameGroup() + "\"?");
 			if(alert.showAndWait().get() == ButtonType.OK) {
 				this.notifyObserverDelete();
@@ -120,7 +120,7 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 	/**
 	 * @param model the {@linkplain #model} to set
 	 */
-	public void setModel(MGroupLabels model) {
+	public void setModel(final MGroupLabels model) {
 		this.model = model;
 	}
 

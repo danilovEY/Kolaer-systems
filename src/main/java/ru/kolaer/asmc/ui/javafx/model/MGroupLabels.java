@@ -16,19 +16,19 @@ public class MGroupLabels implements Serializable {
 		
 	}
 	
-	public MGroupLabels(String text, int prioriry) {
+	public MGroupLabels(final String text, final int prioriry) {
 		this.nameGroup = text;
 		this.priority = prioriry;
 	}
 
-	public void addLabel(MLabel label){
+	public void addLabel(final MLabel label){
 		this.labelList.add(label);
 	}
 	
 	public String getNameGroup() {
 		return nameGroup;
 	}
-	public void setNameGroup(String nameGroup) {
+	public void setNameGroup(final String nameGroup) {
 		this.nameGroup = nameGroup;
 	}
 	public List<MLabel> getLabelList() {

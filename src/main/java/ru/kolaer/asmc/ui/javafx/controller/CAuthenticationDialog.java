@@ -38,15 +38,15 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void initialize(final URL location, final ResourceBundle resources) {
 		this.okButton.setOnAction(e -> {
-			SettingSingleton setting = SettingSingleton.getInstance();
+			final SettingSingleton setting = SettingSingleton.getInstance();
 			if(setting.getRootLoginName().equals(this.loginText.getText()) 
 					&& setting.getRootPass().equals(this.passText.getText())){
 				setting.setRoot(true);
 				this.dialog.close();
 			} else {
-				Alert alert = new Alert(AlertType.ERROR);
+				final Alert alert = new Alert(AlertType.ERROR);
         		alert.setTitle("Ошибка");
         		alert.setHeaderText("Не правельный логин или пароль!");
         		alert.showAndWait();
@@ -71,8 +71,8 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 
 		try {
 			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
-		} catch(IllegalArgumentException e) {
-			Alert alert = new Alert(AlertType.ERROR);
+		} catch(final IllegalArgumentException e) {
+			final Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");
 			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
 			alert.showAndWait();
