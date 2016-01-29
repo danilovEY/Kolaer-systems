@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -91,9 +91,9 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		this.panelWithGroups.getChildren().clear();
 		this.panelWithLabels.getChildren().clear();
 		final List<Node> nodes = new ArrayList<>();
+		this.threadCache = Executors.newCachedThreadPool();
 		thread.submit(() -> {
 			List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups();
-			this.threadCache = Executors.newCachedThreadPool();
 			groupsList.parallelStream()
 			.forEach((group) -> {
 				this.threadCache.submit(() -> {
@@ -108,6 +108,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 						});
 						threads.shutdown();
 						cGroup.registerOberver(this);
+						return cGroup;
 				});	
 			});
 			
@@ -117,7 +118,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 				try {
 					this.threadCache.awaitTermination(2, TimeUnit.MINUTES);
 
-					final List<Node> n = nodes.parallelStream().sorted((a, b) -> Integer.compare(Integer.valueOf(a.getUserData().toString()), Integer.valueOf(b.getUserData().toString())))
+					final List<Node> n = nodes.parallelStream().sorted((a, b) ->  Integer.compare(Integer.valueOf(Optional.ofNullable(a.getUserData().toString()).orElse("99")), Integer.valueOf(Optional.ofNullable(b.getUserData().toString()).orElse("99"))))
 					.collect(Collectors.toList());
 					Platform.runLater(() -> {
 						this.panelWithGroups.getChildren().setAll(n);	
