@@ -10,9 +10,7 @@ public class TestIP {
 			  InetAddress inet = InetAddress.getLocalHost();
 			  InetAddress[] ips = InetAddress.getAllByName(inet.getHostName());
 			  if (ips  != null ) {
-			    for (int i = 0; i < ips.length; i++) {
-			      System.out.println(ips[i]);
-			    }
+				  System.out.println(inet.getHostAddress());
 			  }
 			} catch (UnknownHostException e) {
 

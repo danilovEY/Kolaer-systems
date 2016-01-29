@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import ru.kolaer.client.javafx.plugins.PluginReader;
 import ru.kolaer.client.javafx.services.ServiceClosableTab;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
+import ru.kolaer.client.javafx.services.SeviceUserIP;
 import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
@@ -52,6 +53,7 @@ public class VMMainFrameImpl extends Application {
     	CompletableFuture.runAsync(() -> {
     		Thread.currentThread().setName("Инициализация менеджера служб и добавление служб");	
     		this.servicesManager.addService(new UserPingService());
+    		this.servicesManager.addService(new SeviceUserIP());
     		this.servicesManager.addService(new UserWindowsKeyListenerService());
     		this.servicesManager.addService(new ServiceClosableTab(explorer));
     	}, threadServices);
