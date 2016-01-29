@@ -101,7 +101,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 						nodes.add(cGroup);
 						final ExecutorService threads = Executors.newSingleThreadExecutor();
 						threads.submit(() -> {
-							List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
+							final List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
 								return new CLabel(label);
 							}).collect(Collectors.toList());
 							this.addCache(cGroup, labelList);
@@ -185,13 +185,13 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	}
 
 	@Override
-	public void updateEdit(MGroupLabels group) {
-		ExecutorService thread = Executors.newSingleThreadExecutor();
+	public void updateEdit(final MGroupLabels group) {
+		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(()->{
 			SettingSingleton.getInstance().saveGroups();
 		});
 		thread.shutdown();
-			
+		
 		this.panelWithGroups.getChildren().setAll(this.panelWithGroups.getChildren().stream().map(g -> {
 			return((CGroupLabels) g);})
 				.sorted((a, b) -> Integer.compare(a.getModel().getPriority(), b.getModel().getPriority()))
@@ -199,20 +199,22 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	}
 
 	@Override
-	public void updateDelete(MGroupLabels model) {
-		Executors.newSingleThreadExecutor().submit(()->{
+	public void updateDelete(final MGroupLabels model) {
+		final ExecutorService thread = Executors.newSingleThreadExecutor();
+		thread.submit(()->{
 			SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups().remove(model);
 			SettingSingleton.getInstance().saveGroups();
 		});
+		thread.shutdown();
 		
-		Alert alertDeleteMassage = new Alert(AlertType.NONE,"Удаление элемента...", ButtonType.OK);
+		final Alert alertDeleteMassage = new Alert(AlertType.NONE,"Удаление элемента...", ButtonType.OK);
 		alertDeleteMassage.show();
 		
 		try {
 			boolean load = this.threadCache.awaitTermination(15, TimeUnit.SECONDS);
 			alertDeleteMassage.close();
 			if(!load) {
-				Alert alertError = new Alert(AlertType.ERROR,"Превышено ошидание. Повтор загрузки...", ButtonType.OK);
+				final Alert alertError = new Alert(AlertType.ERROR,"Превышено ошидание. Повтор загрузки...", ButtonType.OK);
 				alertError.show();
 				this.loadAndRegGroups();
 				return;
@@ -225,7 +227,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		alertDeleteMassage.close();
 		
 		if(this.threadCache.isTerminated()) {			
-			CGroupLabels del = this.getCGroupLabelCache(model);
+			final CGroupLabels del = this.getCGroupLabelCache(model);
 			if(model == this.selectedGroup){
 				this.selectedGroup = null;
 				
@@ -242,17 +244,18 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	}
 
 	@Override
-	public void updateClick(MLabel model) {
-		ExecutorService thread = Executors.newSingleThreadExecutor();
+	public void updateClick(final MLabel model) {
+		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(()->{
 			final Application app = new Application(model.getPathApplication(), model.getPathOpenAppWith());
 			app.start();
 		});		
+		thread.shutdown();
 	}
 	
 	@Override
-	public void updateEdit(MLabel model) {
-		ExecutorService thread = Executors.newSingleThreadExecutor();
+	public void updateEdit(final MLabel model) {
+		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(()->{
 			SettingSingleton.getInstance().saveGroups();
 		});
@@ -265,26 +268,26 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	}
 
 	@Override
-	public void updateDelete(MLabel model) {
+	public void updateDelete(final MLabel model) {
 		
 		if(this.selectedGroup == null) return;
 		
 		this.selectedGroup.getLabelList().remove(model);
 		
-		ExecutorService thread = Executors.newSingleThreadExecutor();
+		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(()->{
 			SettingSingleton.getInstance().saveGroups();
 		});
 		thread.shutdown();
 		
-		Alert alertDeleteMassage = new Alert(AlertType.NONE,"Удаление элемента...", ButtonType.OK);
+		final Alert alertDeleteMassage = new Alert(AlertType.NONE,"Удаление элемента...", ButtonType.OK);
 		alertDeleteMassage.show();
 		
 		try {
 			boolean load = this.threadCache.awaitTermination(15, TimeUnit.SECONDS);
 			alertDeleteMassage.close();
 			if(!load) {
-				Alert alertError = new Alert(AlertType.ERROR,"Превышено ошидание. Повтор загрузки...", ButtonType.OK);
+				final Alert alertError = new Alert(AlertType.ERROR,"Превышено ошидание. Повтор загрузки...", ButtonType.OK);
 				alertError.show();
 				this.loadAndRegGroups();
 				return;
@@ -298,9 +301,9 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		
 		if(this.threadCache.isTerminated()) {
 			
-			CGroupLabels del = this.getCGroupLabelCache(this.selectedGroup);
+			final CGroupLabels del = this.getCGroupLabelCache(this.selectedGroup);
 			
-			for(CLabel l : this.cache.get(del).stream().filter(label -> {
+			for(final CLabel l : this.cache.get(del).stream().filter(label -> {
 				return label.getModel() == model;
 			}).collect(Collectors.toList())) {
 				this.panelWithLabels.getChildren().remove(l);
