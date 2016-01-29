@@ -23,9 +23,7 @@ public class BirthdayService implements Service {
 			final DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
 			final StringBuilder todayBirthday = new StringBuilder();
 			for(DbDataAll user : users) {
-				if(this.checkUser(user)) {
-					todayBirthday.append(user.getInitials()).append(" (").append(Optional.ofNullable(user.getPhone()).orElse("")).append(") - ").append(user.getDepartamentAbbreviated()).append("\n");
-				}
+				todayBirthday.append(user.getInitials()).append(" (").append(Optional.ofNullable(user.getPhone()).orElse("")).append(") - ").append(user.getDepartamentAbbreviated()).append("\n");
 			}
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\". Поздравляем с днем рождения!\n");
