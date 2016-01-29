@@ -39,7 +39,6 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 			
 			for(DbDataAll user : users) {
 				final UserModel userModel = new UserModelImpl();
-				userModel.setPersonNumber(user.getPersonNumber().intValue());
 				userModel.setFirstName(user.getName());
 				userModel.setSecondName(user.getSurname());
 				userModel.setThirdName(user.getPatronymic());
