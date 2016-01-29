@@ -50,13 +50,4 @@ public class BirthdayService implements Service {
 	public void stop() {
 		
 	}
-	
-
-	private boolean checkUser(final DbDataAll user) {
-		if(user.getCategoryUnit().equals("Рабочий"))
-			return false;
-		
-		return true;
-		
-	}
 }
