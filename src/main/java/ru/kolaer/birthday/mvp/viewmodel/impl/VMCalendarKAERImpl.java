@@ -97,6 +97,7 @@ public class VMCalendarKAERImpl implements VMCalendar {
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				for (DbDataAll user : usersDataAll) {
 					final UserModel userModel = new UserModelImpl();
+					userModel.setOrganization("КолАЭР");
 					userModel.setFirstName(user.getName());
 					userModel.setSecondName(user.getSurname());
 					userModel.setThirdName(user.getPatronymic());

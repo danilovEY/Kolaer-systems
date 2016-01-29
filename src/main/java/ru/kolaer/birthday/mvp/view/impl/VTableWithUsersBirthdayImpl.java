@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +36,15 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	private final BorderPane tablePane = new BorderPane();
 	private final TableView<UserModel> userBirthdayTable = new TableView<UserModel>();
 	private final Label titleLabel = new Label();
+	private final DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols(){
+
+        @Override
+        public String[] getMonths() {
+            return new String[]{"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
+                "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
+        }
+        
+    };
 	
 	public VTableWithUsersBirthdayImpl() {
 		this.init();
@@ -106,7 +116,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    	            } else {
 	    	            	Platform.runLater(() -> {
 		    	            	final SimpleStringProperty property = new SimpleStringProperty();
-		    	    	    	final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		    	    	    	final DateFormat dateFormat = new SimpleDateFormat("dd MMMMM", myDateFormatSymbols);
 		    	    	    	property.setValue(dateFormat.format(item));
 		    	    	    	
 		    	                setText(property.getValue());
@@ -142,7 +152,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 		this.tablePane.setTop(this.titleLabel);
 		this.tablePane.setCenter(this.userBirthdayTable);
 	}
-
+	
 	@Override
 	public Pane getViewPane() {
 		return this.tablePane;
@@ -162,3 +172,5 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 		});
 	}
 }
+
+
