@@ -13,6 +13,8 @@ import javafx.scene.layout.Pane;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
+import ru.kolaer.client.javafx.system.ProgressBarObservable;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
 /**
  * Реализация приложения для единой системы КолАЭР.
@@ -25,6 +27,11 @@ public class ASMCApplication implements UniformSystemApplication {
 	private final BorderPane root = new BorderPane();
 	/**Панель с .fxml-контента главного окна.*/
 	private AnchorPane pane;
+	private final UniformSystemEditorKit editorKid;
+	
+	public ASMCApplication(final UniformSystemEditorKit editorKid) {
+		this.editorKid = editorKid;
+	}
 
 	@Override
 	public String getIcon() {
@@ -49,6 +56,7 @@ public class ASMCApplication implements UniformSystemApplication {
 	@Override
 	public void run() throws Exception {
 		if(this.pane == null){
+			final ProgressBarObservable progress = this.editorKid.getUISystemUS().getDialog().showLoadingDialog("Загрузка компонентов");
 			SettingSingleton.initialization();
 			try(final InputStream stream = Resources.V_MAIN_FRAME.openStream()){
 				final FXMLLoader loader = new FXMLLoader();
@@ -59,7 +67,8 @@ public class ASMCApplication implements UniformSystemApplication {
 				inputStream.close();
 				Platform.runLater(() -> {
 					root.setCenter(pane);
-					root.setPrefSize(800, 600);
+					root.setPrefSize(800, 600);	
+					progress.setValue(-2);
 				});
 			}catch(final MalformedURLException e){
 				throw e;
