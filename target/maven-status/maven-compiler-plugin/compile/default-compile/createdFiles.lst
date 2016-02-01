@@ -14,6 +14,7 @@ ru\kolaer\client\javafx\system\ProgressBarObservable.class
 ru\kolaer\client\javafx\system\UniformSystemEditorKit.class
 ru\kolaer\client\javafx\services\Service.class
 ru\kolaer\client\javafx\system\NetworkUS.class
+ru\kolaer\client\javafx\system\StatusBarUS.class
 ru\kolaer\server\dao\entities\DbUsers1c.class
 ru\kolaer\client\javafx\system\UserDataBase.class
 ru\kolaer\client\javafx\system\KolaerDataBase.class
