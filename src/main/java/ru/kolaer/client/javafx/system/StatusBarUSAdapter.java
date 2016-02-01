@@ -3,7 +3,7 @@ package ru.kolaer.client.javafx.system;
 public class StatusBarUSAdapter implements StatusBarUS{
 
 	@Override
-	public void addProgressBar(ProgressBarObservable progressBar) {
+	public void addProgressBar(ProgressBarObserver progressBar) {
 
 	}
 

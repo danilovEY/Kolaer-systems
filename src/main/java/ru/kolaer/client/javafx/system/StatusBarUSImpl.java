@@ -6,12 +6,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
 public class StatusBarUSImpl implements StatusBarUS {
 	private final HBox statusBar;
-	private LinkedList<Label> messages = new LinkedList<>();
+	private final LinkedList<Node> nodes = new LinkedList<>();
 	
 	public StatusBarUSImpl(final HBox statusBar) {
 		this.statusBar = statusBar;
@@ -19,8 +20,8 @@ public class StatusBarUSImpl implements StatusBarUS {
 	}
 
 	@Override
-	public void addProgressBar(ProgressBarObservable progressBar) {
-		// TODO Auto-generated method stub
+	public void addProgressBar(ProgressBarObserver progressBar) {
+		
 
 	}
 	
@@ -32,10 +33,10 @@ public class StatusBarUSImpl implements StatusBarUS {
 		thread.submit(() -> {
 			while(true) {
 				TimeUnit.SECONDS.sleep(10);
-				if(!this.messages.isEmpty()) {
-					this.messages.removeFirst();
+				if(!this.nodes.isEmpty()) {
+					this.nodes.removeFirst();
 					Platform.runLater(() -> {
-						this.statusBar.getChildren().setAll(this.messages);
+						this.statusBar.getChildren().setAll(this.nodes);
 					});
 				}
 			}
@@ -45,13 +46,15 @@ public class StatusBarUSImpl implements StatusBarUS {
 	
 	@Override
 	public void addMessage(String message) {
-		if(this.statusBar != null) {
-			Platform.runLater(() -> {
-				final Label label = new Label(message);
-				this.messages.add(label);
-				this.statusBar.getChildren().setAll(messages);
-			});
-		}
+		if(this.statusBar == null)
+			return;
+		
+		Platform.runLater(() -> {
+			final Label label = new Label(message);
+			label.setStyle("-fx-background-color: #00FFFF");
+			this.nodes.add(label);
+			this.statusBar.getChildren().setAll(nodes);
+		});
 	}
 
 }

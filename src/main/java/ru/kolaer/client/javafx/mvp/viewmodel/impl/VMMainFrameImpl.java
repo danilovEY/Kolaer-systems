@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -45,6 +46,8 @@ public class VMMainFrameImpl extends Application {
     @FXML
     public void initialize() {
     	final HBox statusBar = new HBox();
+    	statusBar.setPadding(new Insets(0, 30, 0, 30));
+    	statusBar.setSpacing(30);
     	statusBar.setAlignment(Pos.CENTER_RIGHT);
     	statusBar.setStyle("-fx-background-color: #66CCFF");
     	final UniformSystemEditorKit editorKid = new UniformSystemEditorKitImpl(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
