@@ -7,8 +7,10 @@ ru\kolaer\client\javafx\system\UserDataAllDataBase.class
 ru\kolaer\client\javafx\services\GlobalService.class
 ru\kolaer\client\javafx\services\LocaleService.class
 ru\kolaer\client\javafx\system\NotificationUS.class
+ru\kolaer\client\javafx\system\ProgressBarObserver.class
 ru\kolaer\client\javafx\system\ServerStatus.class
 ru\kolaer\client\javafx\plugins\UniformSystemPlugin.class
+ru\kolaer\client\javafx\system\ProgressBarObservable.class
 ru\kolaer\client\javafx\system\UniformSystemEditorKit.class
 ru\kolaer\client\javafx\services\Service.class
 ru\kolaer\client\javafx\system\NetworkUS.class
