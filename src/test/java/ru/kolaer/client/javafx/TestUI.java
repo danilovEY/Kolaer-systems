@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import ru.kolaer.client.javafx.system.ProgressBarObservable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitImpl;
 
@@ -17,7 +18,9 @@ public class TestUI extends Application {
 	
 	@Test
 	public void testDialogLoading() throws InterruptedException {
-		this.uniformSystemEditorKit.getUISystemUS().getDialog().showLoadingDialog("123", "456");
+		final ProgressBarObservable prog = this.uniformSystemEditorKit.getUISystemUS().getDialog().showLoadingDialog("456");
+		TimeUnit.SECONDS.sleep(1);
+		prog.setValue(-2);
 		TimeUnit.SECONDS.sleep(2);
 	}
 	

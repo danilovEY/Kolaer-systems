@@ -9,7 +9,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -36,16 +35,25 @@ public class DialogUSImpl implements DialogUS {
 	}
 
 	@Override
-	public ProgressBar showLoadingDialog(String title, String text) {
-		final ProgressBar progress = new DefaultProgressBar();
+	public ProgressBarObservable showLoadingDialog(String text) {
+		final ProgressBarObservable progress = new DefaultProgressBar();
+		
 		Platform.runLater(() -> {
-			final Stage stage = new Stage();
-			stage.initStyle(StageStyle.UNDECORATED);
-			stage.setResizable(false);
-			final Label textLabel = new Label(text);
-			textLabel.setStyle("-fx-font-size: 17pt;");
-			textLabel.setAlignment(Pos.CENTER);
+			final Stage stage = new Stage();	
 			final ProgressIndicator pi = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
+			progress.registerObserverProgressBar(value -> {
+				Platform.runLater(() -> {
+				if(value < -1.0)
+					stage.close();
+
+					pi.setProgress(value);
+				});
+			});
+			
+			final Label textLabel = new Label(text);
+			textLabel.setStyle("-fx-font-size: 20pt;");
+			textLabel.setAlignment(Pos.CENTER);
+			
 			final HBox mainPane = new HBox(textLabel, pi);	
 			mainPane.setAlignment(Pos.CENTER);
 			mainPane.setPadding(new Insets(20, 20, 20, 20));
@@ -61,6 +69,9 @@ public class DialogUSImpl implements DialogUS {
 	                    ");"
 	        );
 			mainPane.setEffect(new DropShadow());
+
+			stage.initStyle(StageStyle.UNDECORATED);
+			stage.setResizable(false);
 			stage.setScene(new Scene(mainPane));
 			stage.showAndWait();
 		});
