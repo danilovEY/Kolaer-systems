@@ -19,6 +19,7 @@ public class SeviceUserIP implements Service {
 	
 	@Override
 	public void run() {
+		Thread.currentThread().setName("Передача IP");
 		while(this.isRun) {
 			final StringBuilder url = new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL.toString())
 					.append("/system/user/")

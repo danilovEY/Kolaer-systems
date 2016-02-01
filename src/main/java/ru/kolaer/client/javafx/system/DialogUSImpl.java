@@ -49,7 +49,7 @@ public class DialogUSImpl implements DialogUS {
 					pi.setProgress(value);
 				});
 			});
-			
+			progress.setValue(progress.getValue());
 			final Label textLabel = new Label(text);
 			textLabel.setStyle("-fx-font-size: 20pt;");
 			textLabel.setAlignment(Pos.CENTER);

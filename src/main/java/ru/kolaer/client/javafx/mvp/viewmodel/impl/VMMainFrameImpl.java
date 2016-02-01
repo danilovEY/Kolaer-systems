@@ -13,10 +13,12 @@ import org.slf4j.LoggerFactory;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import ru.kolaer.client.javafx.plugins.PluginReader;
 import ru.kolaer.client.javafx.services.ServiceClosableTab;
@@ -24,6 +26,8 @@ import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.SeviceUserIP;
 import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
+import ru.kolaer.client.javafx.system.StatusBarUSImpl;
+import ru.kolaer.client.javafx.system.UISystemUSImpl;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitImpl;
 import ru.kolaer.client.javafx.tools.Resources;
@@ -37,14 +41,17 @@ public class VMMainFrameImpl extends Application {
 	
 	private ServiceControlManager servicesManager;
 	private Stage stage;
-	private UniformSystemEditorKit editorKid;
 	
     @FXML
-    public void initialize() { 
-    	this.editorKid = new UniformSystemEditorKitImpl();
+    public void initialize() {
+    	final HBox statusBar = new HBox();
+    	statusBar.setAlignment(Pos.CENTER_RIGHT);
+    	statusBar.setStyle("-fx-background-color: #66CCFF");
+    	final UniformSystemEditorKit editorKid = new UniformSystemEditorKitImpl(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
     	this.servicesManager = new ServiceControlManager();
     	
-    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, this.editorKid);
+    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, editorKid);
+    	this.mainPane.setBottom(statusBar);
     	this.mainPane.setCenter(explorer.getContent());
     	
     	this.initApplicationParams();
@@ -67,7 +74,10 @@ public class VMMainFrameImpl extends Application {
 			LOG.error("Ошибка при сканировании плагинов!", t);
 			return null;
 		});
-    	threadScanPlugins.shutdown();
+    	threadScanPlugins.shutdown(); 
+    	
+    	editorKid.getUISystemUS().getStatusBar().addMessage("AAA");
+    	editorKid.getUISystemUS().getStatusBar().addMessage("BBB");
     }
     
     private void initApplicationParams() {
