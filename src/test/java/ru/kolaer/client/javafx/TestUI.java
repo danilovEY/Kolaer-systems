@@ -20,7 +20,9 @@ public class TestUI extends Application {
 	public void testDialogLoading() throws InterruptedException {
 		final ProgressBarObservable prog = this.uniformSystemEditorKit.getUISystemUS().getDialog().showLoadingDialog("456");
 		TimeUnit.SECONDS.sleep(1);
-		prog.setValue(-2);
+		prog.setValue(0.1);
+		TimeUnit.SECONDS.sleep(1);
+		prog.setValue(-1.0);
 		TimeUnit.SECONDS.sleep(2);
 	}
 	
