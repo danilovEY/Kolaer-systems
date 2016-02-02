@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
@@ -34,32 +36,46 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 		this.initWithEditorKid();
 	}
 
-	private void initWithEditorKid()  {
-		final List<UserModel> userModelList = new ArrayList<>();
+	private void initWithEditorKid()  {		
 		CompletableFuture.runAsync(() -> {
-			final ProgressBarObservable progressLoadUsers = editorKid.getUISystemUS().getDialog().showLoadingDialog("Загрузка данных с сервера");
-			final DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
-			progressLoadUsers.setValue(-2.0);
-			final ProgressBarObservable progressReadUsers = editorKid.getUISystemUS().getDialog().showLoadingDialog("Чтение данных");
-			final double step = 100/users.length * 0.01;
-			double value = 0;	
-			for(final DbDataAll user : users) {
-				progressReadUsers.setValue(value);
-				value += step;
-				final UserModel userModel = new UserModelImpl();
-				userModel.setOrganization("КолАЭР");
-				userModel.setFirstName(user.getName());
-				userModel.setSecondName(user.getSurname());
-				userModel.setThirdName(user.getPatronymic());
-				userModel.setBirthday(user.getBirthday());
-				userModel.setDepartament(user.getDepartamentAbbreviated());
-				userModel.setPhoneNumber(user.getPhone());
-				userModel.setIcon(user.getVCard());
-				userModelList.add(userModel);
-			}
-			progressReadUsers.setValue(1);
-			this.table.setData(userModelList);
-			progressReadUsers.setValue(-2);
+			final Service<Void> service = new Service<Void>() {
+				@Override
+				protected Task<Void> createTask() {
+					return new Task<Void>() {
+						@Override
+						protected Void call() throws Exception {
+							this.updateTitle("Загрузка");
+							this.updateMessage("Загрузка данных с сервера");
+							this.updateProgress(0, 10);
+							final DbDataAll[] users = editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+							this.updateProgress(users.length, users.length * 2);
+							this.updateMessage("Чтение данных");
+							int index = 0;
+							final List<UserModel> userModelList = new ArrayList<>();
+							for(final DbDataAll user : users) {
+								final UserModel userModel = new UserModelImpl();
+								userModel.setOrganization("КолАЭР");
+								userModel.setFirstName(user.getName());
+								userModel.setSecondName(user.getSurname());
+								userModel.setThirdName(user.getPatronymic());
+								userModel.setBirthday(user.getBirthday());
+								userModel.setDepartament(user.getDepartamentAbbreviated());
+								userModel.setPhoneNumber(user.getPhone());
+								userModel.setIcon(user.getVCard());
+								userModelList.add(userModel);	
+								this.updateProgress(index, users.length * 2);
+								index++;
+							}
+							this.updateMessage("Добавление данных");
+							table.setData(userModelList);
+							this.updateProgress(users.length * 2, users.length * 2);
+							return null;
+						}
+					};
+				}
+			};
+			service.start();
+			this.editorKid.getUISystemUS().getDialog().showLoadingDialog(service);
 		}).exceptionally(t -> {
 			LOG.error("Ошибка!", t);
 			return null;
@@ -72,7 +88,7 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 	}
 
 	@Override
-	public void updateSelectedDate(LocalDate date, List<UserModel> users) {
+	public void updateSelectedDate(final LocalDate date, final List<UserModel> users) {
 		this.table.setData(users);
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 		this.table.setTitle("\"" + date.format(formatter) + "\" день рождения у:");
