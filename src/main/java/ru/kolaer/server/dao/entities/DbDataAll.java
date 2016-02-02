@@ -5,369 +5,296 @@
  */
 package ru.kolaer.server.dao.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class DbDataAll{
-    private Short personNumber;
-    private String initials;
-    private String surname;
-    private String name;
-    private String patronymic;
-    private String departament;
-    private String departamentAbbreviated;
-    private String post;
-    private String gender;
-    private String email;
-    private String emailPassword;
-    private String phone;
-    private String mobilePhone;
-    private String pager;
-    private String room;
-    private String login;
-    private String password;
-    private String pCname;
-    private Short iPaddr;
-    private String vCard;
-    private Date birthday;
-    private Date dateInviteWork;
-    private String visible;
-    private String privilegeAuto;
-    private String privilegeAskid;
-    private String privilegeWalking;
-    private String privilegeAertube;
-    private String privilegeHoliday;
-    private String privilegeExamsBase;
-    private String privilegeVacationShedule;
-    private Short idDepartament;
-    private String medcontrolValue;
-    private String categoryUnit;
-    private String numCertificate;
-    private Date medicalView;
-
-    public DbDataAll() {
-    }
-
-    public DbDataAll(Short personNumber) {
-        this.personNumber = personNumber;
-    }
-
-    public DbDataAll(Short personNumber, String initials, String surname, String name, String patronymic, String post, String gender, String vCard, String visible, String privilegeAertube, String privilegeHoliday, String privilegeExamsBase, String privilegeVacationShedule, String medcontrolValue, String categoryUnit) {
-        this.personNumber = personNumber;
-        this.initials = initials;
-        this.surname = surname;
-        this.name = name;
-        this.patronymic = patronymic;
-        this.post = post;
-        this.gender = gender;
-        this.vCard = vCard;
-        this.visible = visible;
-        this.privilegeAertube = privilegeAertube;
-        this.privilegeHoliday = privilegeHoliday;
-        this.privilegeExamsBase = privilegeExamsBase;
-        this.privilegeVacationShedule = privilegeVacationShedule;
-        this.medcontrolValue = medcontrolValue;
-        this.categoryUnit = categoryUnit;
-    }
-
-    public Short getPersonNumber() {
-        return personNumber;
-    }
-
-    public void setPersonNumber(Short personNumber) {
-        this.personNumber = personNumber;
-    }
-
-    public String getInitials() {
-        return initials;
-    }
-
-    public void setInitials(String initials) {
-        this.initials = initials;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
-    public String getDepartament() {
-        return departament;
-    }
-
-    public void setDepartament(String departament) {
-        this.departament = departament;
-    }
-
-    public String getDepartamentAbbreviated() {
-        return departamentAbbreviated;
-    }
-
-    public void setDepartamentAbbreviated(String departamentAbbreviated) {
-        this.departamentAbbreviated = departamentAbbreviated;
-    }
-
-    public String getPost() {
-        return post;
-    }
-
-    public void setPost(String post) {
-        this.post = post;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmailPassword() {
-        return emailPassword;
-    }
-
-    public void setEmailPassword(String emailPassword) {
-        this.emailPassword = emailPassword;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getMobilePhone() {
-        return mobilePhone;
-    }
-
-    public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
-    }
-
-    public String getPager() {
-        return pager;
-    }
-
-    public void setPager(String pager) {
-        this.pager = pager;
-    }
-
-    public String getRoom() {
-        return room;
-    }
-
-    public void setRoom(String room) {
-        this.room = room;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPCname() {
-        return pCname;
-    }
-
-    public void setPCname(String pCname) {
-        this.pCname = pCname;
-    }
-
-    public Short getIPaddr() {
-        return iPaddr;
-    }
-
-    public void setIPaddr(Short iPaddr) {
-        this.iPaddr = iPaddr;
-    }
-
-    public String getVCard() {
-        return vCard;
-    }
-
-    public void setVCard(String vCard) {
-        this.vCard = vCard;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public Date getDateInviteWork() {
-        return dateInviteWork;
-    }
-
-    public void setDateInviteWork(Date dateInviteWork) {
-        this.dateInviteWork = dateInviteWork;
-    }
-
-    public String getVisible() {
-        return visible;
-    }
-
-    public void setVisible(String visible) {
-        this.visible = visible;
-    }
-
-    public String getPrivilegeAuto() {
-        return privilegeAuto;
-    }
-
-    public void setPrivilegeAuto(String privilegeAuto) {
-        this.privilegeAuto = privilegeAuto;
-    }
-
-    public String getPrivilegeAskid() {
-        return privilegeAskid;
-    }
-
-    public void setPrivilegeAskid(String privilegeAskid) {
-        this.privilegeAskid = privilegeAskid;
-    }
-
-    public String getPrivilegeWalking() {
-        return privilegeWalking;
-    }
-
-    public void setPrivilegeWalking(String privilegeWalking) {
-        this.privilegeWalking = privilegeWalking;
-    }
-
-    public String getPrivilegeAertube() {
-        return privilegeAertube;
-    }
-
-    public void setPrivilegeAertube(String privilegeAertube) {
-        this.privilegeAertube = privilegeAertube;
-    }
-
-    public String getPrivilegeHoliday() {
-        return privilegeHoliday;
-    }
-
-    public void setPrivilegeHoliday(String privilegeHoliday) {
-        this.privilegeHoliday = privilegeHoliday;
-    }
-
-    public String getPrivilegeExamsBase() {
-        return privilegeExamsBase;
-    }
-
-    public void setPrivilegeExamsBase(String privilegeExamsBase) {
-        this.privilegeExamsBase = privilegeExamsBase;
-    }
-
-    public String getPrivilegeVacationShedule() {
-        return privilegeVacationShedule;
-    }
-
-    public void setPrivilegeVacationShedule(String privilegeVacationShedule) {
-        this.privilegeVacationShedule = privilegeVacationShedule;
-    }
-
-    public Short getIdDepartament() {
-        return idDepartament;
-    }
-
-    public void setIdDepartament(Short idDepartament) {
-        this.idDepartament = idDepartament;
-    }
-
-    public String getMedcontrolValue() {
-        return medcontrolValue;
-    }
-
-    public void setMedcontrolValue(String medcontrolValue) {
-        this.medcontrolValue = medcontrolValue;
-    }
-
-    public String getCategoryUnit() {
-        return categoryUnit;
-    }
-
-    public void setCategoryUnit(String categoryUnit) {
-        this.categoryUnit = categoryUnit;
-    }
-
-    public String getNumCertificate() {
-        return numCertificate;
-    }
-
-    public void setNumCertificate(String numCertificate) {
-        this.numCertificate = numCertificate;
-    }
-
-    public Date getMedicalView() {
-        return medicalView;
-    }
-
-    public void setMedicalView(Date medicalView) {
-        this.medicalView = medicalView;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (personNumber != null ? personNumber.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof DbDataAll)) {
-            return false;
-        }
-        DbDataAll other = (DbDataAll) object;
-        if ((this.personNumber == null && other.personNumber != null) || (this.personNumber != null && !this.personNumber.equals(other.personNumber))) {
-            return false;
-        }
-        return true;
-    }
+public class DbDataAll implements Serializable {
+
+	private static final long serialVersionUID = 8116697743480287748L;
+
+	private int personNumber;
+	private Date birthday;
+	private String categoryUnit;
+	private String controlledAccessArea;
+	private Date dateInviteWork;
+	private String departament;
+	private String departamentAbbreviated;
+	private String email;
+	private String emailPassword;
+	private String gender;
+	private int idDepartament;
+	private String initials;
+	private String login;
+	private String medcontrolValue;
+	private Date medicalView;
+	private String mobilePhone;
+	private String name;
+	private String numCertificate;
+	private String num_certificate_GE;
+	private String pager;
+	private String password;
+	private String patronymic;
+	private String PC_name;
+	private String phone;
+	private String post;
+	private String privilegeHoliday;
+	private String room;
+	private String specialization;
+	private String surname;
+	private String vCard;
+	private String visible;
+
+	public DbDataAll() {
+	}
+
+	public int getPersonNumber() {
+		return this.personNumber;
+	}
+
+	public void setPersonNumber(int personNumber) {
+		this.personNumber = personNumber;
+	}
+
+	public Date getBirthday() {
+		return this.birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getCategoryUnit() {
+		return this.categoryUnit;
+	}
+
+	public void setCategoryUnit(String categoryUnit) {
+		this.categoryUnit = categoryUnit;
+	}
+
+	public String getControlledAccessArea() {
+		return this.controlledAccessArea;
+	}
+
+	public void setControlledAccessArea(String controlledAccessArea) {
+		this.controlledAccessArea = controlledAccessArea;
+	}
+
+	public Date getDateInviteWork() {
+		return this.dateInviteWork;
+	}
+
+	public void setDateInviteWork(Date dateInviteWork) {
+		this.dateInviteWork = dateInviteWork;
+	}
+
+	public String getDepartament() {
+		return this.departament;
+	}
+
+	public void setDepartament(String departament) {
+		this.departament = departament;
+	}
+
+	public String getDepartamentAbbreviated() {
+		return this.departamentAbbreviated;
+	}
+
+	public void setDepartamentAbbreviated(String departamentAbbreviated) {
+		this.departamentAbbreviated = departamentAbbreviated;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEmailPassword() {
+		return this.emailPassword;
+	}
+
+	public void setEmailPassword(String emailPassword) {
+		this.emailPassword = emailPassword;
+	}
+
+	public String getGender() {
+		return this.gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public int getIdDepartament() {
+		return this.idDepartament;
+	}
+
+	public void setIdDepartament(int idDepartament) {
+		this.idDepartament = idDepartament;
+	}
+
+	public String getInitials() {
+		return this.initials;
+	}
+
+	public void setInitials(String initials) {
+		this.initials = initials;
+	}
+
+	public String getLogin() {
+		return this.login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getMedcontrolValue() {
+		return this.medcontrolValue;
+	}
+
+	public void setMedcontrolValue(String medcontrolValue) {
+		this.medcontrolValue = medcontrolValue;
+	}
+
+	public Date getMedicalView() {
+		return this.medicalView;
+	}
+
+	public void setMedicalView(Date medicalView) {
+		this.medicalView = medicalView;
+	}
+
+	public String getMobilePhone() {
+		return this.mobilePhone;
+	}
+
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getNumCertificate() {
+		return this.numCertificate;
+	}
+
+	public void setNumCertificate(String numCertificate) {
+		this.numCertificate = numCertificate;
+	}
+
+	public String getNum_certificate_GE() {
+		return this.num_certificate_GE;
+	}
+
+	public void setNum_certificate_GE(String num_certificate_GE) {
+		this.num_certificate_GE = num_certificate_GE;
+	}
+
+	public String getPager() {
+		return this.pager;
+	}
+
+	public void setPager(String pager) {
+		this.pager = pager;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPatronymic() {
+		return this.patronymic;
+	}
+
+	public void setPatronymic(String patronymic) {
+		this.patronymic = patronymic;
+	}
+
+	public String getPC_name() {
+		return this.PC_name;
+	}
+
+	public void setPC_name(String PC_name) {
+		this.PC_name = PC_name;
+	}
+
+	public String getPhone() {
+		return this.phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getPost() {
+		return this.post;
+	}
+
+	public void setPost(String post) {
+		this.post = post;
+	}
+
+	public String getPrivilegeHoliday() {
+		return this.privilegeHoliday;
+	}
+
+	public void setPrivilegeHoliday(String privilegeHoliday) {
+		this.privilegeHoliday = privilegeHoliday;
+	}
+
+	public String getRoom() {
+		return this.room;
+	}
+
+	public void setRoom(String room) {
+		this.room = room;
+	}
+
+	public String getSpecialization() {
+		return this.specialization;
+	}
+
+	public void setSpecialization(String specialization) {
+		this.specialization = specialization;
+	}
+
+	public String getSurname() {
+		return this.surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public String getVCard() {
+		return this.vCard;
+	}
+
+	public void setVCard(String vCard) {
+		this.vCard = vCard;
+	}
+
+	public String getVisible() {
+		return this.visible;
+	}
+
+	public void setVisible(String visible) {
+		this.visible = visible;
+	}
+
 
     @Override
     public String toString() {
