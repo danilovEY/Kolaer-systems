@@ -5,14 +5,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.controlsfx.dialog.ProgressDialog;
-
 import javafx.application.Platform;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 
 public class StatusBarUSImpl implements StatusBarUS {
@@ -25,14 +21,24 @@ public class StatusBarUSImpl implements StatusBarUS {
 	}
 
 	@Override
-	public void addProgressBar(ProgressBarObserver progressBar) {
+	public void addProgressBar(final ProgressBarObservable progressBar) {
 		if(this.statusBar == null)
 			return;
-
-		Platform.runLater(() -> {
-			
+		
+		final ProgressBar prog = new ProgressBar(ProgressBar.INDETERMINATE_PROGRESS);
+		progressBar.registerObserverProgressBar(value -> {
+			if(value > 1) {
+				Platform.runLater(() -> {
+					this.nodes.remove(prog);
+					this.statusBar.getChildren().remove(prog);
+				});
+			}
 		});
-
+		
+		Platform.runLater(() -> {		
+			this.nodes.add(prog);
+			this.statusBar.getChildren().add(prog);
+		});
 	}
 	
 	private void startTask() {
@@ -42,10 +48,11 @@ public class StatusBarUSImpl implements StatusBarUS {
 		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			while(true) {
-				TimeUnit.SECONDS.sleep(10);
-				if(!this.nodes.isEmpty()) {
+				TimeUnit.SECONDS.sleep(15);
+				if(!this.nodes.isEmpty() && this.nodes.size() > 10) {
 					this.nodes.removeFirst();
 					Platform.runLater(() -> {
+						this.statusBar.getChildren().clear();
 						this.statusBar.getChildren().setAll(this.nodes);
 					});
 				}
@@ -55,7 +62,7 @@ public class StatusBarUSImpl implements StatusBarUS {
 	}
 	
 	@Override
-	public void addMessage(String message) {
+	public void addMessage(final String message) {
 		if(this.statusBar == null)
 			return;
 		

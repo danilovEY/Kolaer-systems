@@ -3,12 +3,13 @@ package ru.kolaer.client.javafx.system;
 public class StatusBarUSAdapter implements StatusBarUS{
 
 	@Override
-	public void addProgressBar(ProgressBarObserver progressBar) {
-
+	public void addMessage(String message) {
+		
 	}
 
 	@Override
-	public void addMessage(String message) {
+	public void addProgressBar(ProgressBarObservable progressBar) {
+		// TODO Auto-generated method stub
 		
 	}
 
