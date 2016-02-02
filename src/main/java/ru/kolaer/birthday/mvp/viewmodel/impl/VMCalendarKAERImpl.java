@@ -17,6 +17,8 @@ import ru.kolaer.birthday.mvp.view.VCalendar;
 import ru.kolaer.birthday.mvp.view.impl.VCalendarImpl;
 import ru.kolaer.birthday.mvp.viewmodel.ObserverCalendar;
 import ru.kolaer.birthday.mvp.viewmodel.VMCalendar;
+import ru.kolaer.client.javafx.system.DefaultProgressBar;
+import ru.kolaer.client.javafx.system.ProgressBarObservable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
@@ -92,10 +94,17 @@ public class VMCalendarKAERImpl implements VMCalendar {
 		if (this.observerCalendar != null) {
 			final List<UserModel> users = new ArrayList<>();
 			if (this.editorKid != null) {
+				final ProgressBarObservable obs = new DefaultProgressBar();
+				this.editorKid.getUISystemUS().getStatusBar().addProgressBar(obs);
 				final DbDataAll[] usersDataAll = this.editorKid.getUSNetwork().getKolaerDataBase()
 						.getUserDataAllDataBase()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+				obs.setValue(-1);
+				final double step = 100/usersDataAll.length * 0.01;
+				double value = 0;	
 				for (DbDataAll user : usersDataAll) {
+					obs.setValue(value);
+					value += step;
 					final UserModel userModel = new UserModelImpl();
 					userModel.setOrganization("КолАЭР");
 					userModel.setFirstName(user.getName());
@@ -107,8 +116,11 @@ public class VMCalendarKAERImpl implements VMCalendar {
 					userModel.setPhoneNumber(user.getPhone());
 					users.add(userModel);
 				}
+				obs.setValue(1);
+				obs.setValue(2);
 			}
 			this.observerCalendar.updateSelectedDate(date, users);
+			
 		}
 	}
 

@@ -5,8 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +15,6 @@ import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBirthdayImpl;
 import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthdayObserver;
-import ru.kolaer.client.javafx.system.ProgressBarObservable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
