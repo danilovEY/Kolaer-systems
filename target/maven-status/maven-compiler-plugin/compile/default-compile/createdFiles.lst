@@ -21,3 +21,4 @@ ru\kolaer\client\javafx\system\KolaerDataBase.class
 ru\kolaer\client\javafx\plugins\UniformSystemApplication.class
 ru\kolaer\server\dao\entities\DbApplication.class
 ru\kolaer\server\dao\entities\DbDataAll.class
+ru\kolaer\client\javafx\system\DefaultProgressBar.class
