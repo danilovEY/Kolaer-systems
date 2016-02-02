@@ -1,7 +1,5 @@
 package ru.kolaer.birthday.mvp.view.impl;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -38,13 +36,12 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	private final TableView<UserModel> userBirthdayTable = new TableView<UserModel>();
 	private final Label titleLabel = new Label();
 	private final DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols(){
-
-        @Override
+		private static final long serialVersionUID = -1561907971611705068L;
+		@Override
         public String[] getMonths() {
             return new String[]{"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
                 "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
-        }
-        
+        }      
     };
 	
 	public VTableWithUsersBirthdayImpl() {
@@ -80,7 +77,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 									LOG.error("Ошибка при конвертации кодировки URL!", e);
 								}
 			                }       	
-		                    this.setGraphic(imageview);
+		                    this.setGraphic(new BorderPane(imageview));
 	            		});
 	            	}
 	            }
@@ -109,7 +106,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    	        @Override
 	    	        protected void updateItem(Date item, boolean empty) {
 	    	            super.updateItem(item, empty);
-	    	            
+	    	            setText("");
 	    	            if (item == null || empty) {
 	    	                setText("");
 	    	            } else {
@@ -128,19 +125,18 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    final TableColumn<UserModel, String> userDepartamentColumn = new TableColumn<>("Цех/Отдел");
 	    userDepartamentColumn.setCellValueFactory(new PropertyValueFactory<>("departament"));
 	    
-	    userIconColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
-	    userFirstNameColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
-	    userSecondNameColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
-	    userThirdNameColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
-	    userBirthdayColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
-	    userPhoneColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
-	    userDepartamentColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
-	    userOrganizationColumn.setStyle( "-fx-alignment: CENTER-LEFT; -fx-font-size: 17pt;");
+	    userIconColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
+	    userFirstNameColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
+	    userSecondNameColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
+	    userThirdNameColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
+	    userBirthdayColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
+	    userPhoneColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
+	    userDepartamentColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
+	    userOrganizationColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
 	    
 		this.userBirthdayTable.getColumns().addAll(userOrganizationColumn, userIconColumn, userSecondNameColumn, userFirstNameColumn,
 				userThirdNameColumn,
 				userDepartamentColumn,
-				userPhoneColumn,
 				userBirthdayColumn);
 		
 		this.titleLabel.setText("Сегодня поздравим с днем рождения!");

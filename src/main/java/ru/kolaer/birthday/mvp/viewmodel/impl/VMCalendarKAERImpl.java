@@ -100,27 +100,28 @@ public class VMCalendarKAERImpl implements VMCalendar {
 						.getUserDataAllDataBase()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				obs.setValue(-1);
-				final double step = 100/usersDataAll.length * 0.01;
-				double value = 0;	
-				for (DbDataAll user : usersDataAll) {
-					obs.setValue(value);
-					value += step;
-					final UserModel userModel = new UserModelImpl();
-					userModel.setOrganization("КолАЭР");
-					userModel.setFirstName(user.getName());
-					userModel.setSecondName(user.getSurname());
-					userModel.setThirdName(user.getPatronymic());
-					userModel.setBirthday(user.getBirthday());
-					userModel.setDepartament(user.getDepartamentAbbreviated());
-					userModel.setIcon(user.getVCard());
-					userModel.setPhoneNumber(user.getPhone());
-					users.add(userModel);
+				if(usersDataAll.length != 0) {
+					final double step = 100/usersDataAll.length * 0.01;
+					double value = 0;	
+					for (DbDataAll user : usersDataAll) {
+						obs.setValue(value);
+						value += step;
+						final UserModel userModel = new UserModelImpl();
+						userModel.setOrganization("КолАЭР");
+						userModel.setFirstName(user.getName());
+						userModel.setSecondName(user.getSurname());
+						userModel.setThirdName(user.getPatronymic());
+						userModel.setBirthday(user.getBirthday());
+						userModel.setDepartament(user.getDepartamentAbbreviated());
+						userModel.setIcon(user.getVCard());
+						userModel.setPhoneNumber(user.getPhone());
+						users.add(userModel);
+					}
+					obs.setValue(1);
 				}
-				obs.setValue(1);
 				obs.setValue(2);
 			}
-			this.observerCalendar.updateSelectedDate(date, users);
-			
+			this.observerCalendar.updateSelectedDate(date, users);		
 		}
 	}
 
