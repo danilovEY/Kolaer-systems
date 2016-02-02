@@ -1,13 +1,16 @@
 package ru.kolaer.client.javafx.system;
 
+import org.controlsfx.dialog.ProgressDialog;
+
 import javafx.application.Platform;
+import javafx.concurrent.Service;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -24,7 +27,7 @@ public class DialogUSImpl implements DialogUS {
 	public void showErrorDialog(String title, String text) {
 		this.showDialog(AlertType.ERROR, title, text);
 	}
-	
+
 	private void showDialog(AlertType type, String title, String text) {
 		Platform.runLater(() -> {
 			final Alert dialog = new Alert(type);
@@ -76,6 +79,14 @@ public class DialogUSImpl implements DialogUS {
 			stage.showAndWait();
 		});
 		return progress;
+	}
+
+	@Override
+	public void showLoadingDialog(final Service<?> service) {
+		Platform.runLater(() -> {
+			final ProgressDialog dialog = new ProgressDialog(service);
+			dialog.showAndWait();
+		});
 	}
 
 }
