@@ -41,18 +41,18 @@ public class DialogUSImpl implements DialogUS {
 	public ProgressBarObservable showLoadingDialog(String text) {
 		final ProgressBarObservable progress = new DefaultProgressBar();
 		
-		final Stage stage = new Stage();	
-		final ProgressIndicator pi = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
-		progress.registerObserverProgressBar(value -> {	
-			if(value > 1){
-				Platform.runLater(() -> {		
-					stage.close();
+		Platform.runLater(() -> {	
+			final Stage stage = new Stage();	
+			final ProgressIndicator pi = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
+			progress.registerObserverProgressBar(value -> {	
+				Platform.runLater(() -> {
+					if(value > 1){				
+						stage.close();
+					}
 					pi.setProgress(value);
 				});
-			}
-		});
-		
-		Platform.runLater(() -> {	
+			});
+			
 			progress.setValue(progress.getValue());
 			final Label textLabel = new Label(text);
 			textLabel.setStyle("-fx-font-size: 20pt;");

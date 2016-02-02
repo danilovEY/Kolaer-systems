@@ -78,9 +78,6 @@ public class VMMainFrameImpl extends Application {
 			return null;
 		});
     	threadScanPlugins.shutdown(); 
-    	
-    	editorKid.getUISystemUS().getStatusBar().addMessage("AAA");
-    	editorKid.getUISystemUS().getStatusBar().addMessage("BBB");
     }
     
     private void initApplicationParams() {
