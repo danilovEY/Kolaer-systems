@@ -3,6 +3,7 @@ package ru.kolaer.birthday.mvp.view.impl;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -58,34 +59,32 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    userIconColumn.setCellValueFactory(new PropertyValueFactory<>("icon"));
 	    userIconColumn.setCellFactory((TableColumn<UserModel, String> param) -> {
 	    	return new TableCell<UserModel, String>(){
-		            @Override
-		            public void updateItem(final String item, final boolean empty) { 
-		            	this.setGraphic(null);
-		            	if(!empty) {
-			            		Platform.runLater(() -> {
-			            		URL url = null;
-				            	if(item == null){   
-				            		url = this.getClass().getResource( "/resources/nonePicture.jpg");
-				                } else {
-				                	
-				                	try {
-				                		final StringBuilder pathToIcon = new StringBuilder("\\\\mailkolaer\\e$\\HTTP\\WWW\\asupkolaer\\app_ie8\\assets\\images\\vCard\\o_").append(item);
-										url = new File(pathToIcon.toString()).toURI().toURL();
-									} catch (MalformedURLException e) {
-										LOG.error("Невозможно преобразовать в URL.");
-									}
-				                }
-				                
-			                    final ImageView imageview = new ImageView();
-			                    imageview.setFitHeight(100);
-			                    imageview.setFitWidth(116);
-			                    imageview.setImage(new Image(url.toString(), true));
-			                    
-			                    this.setGraphic(imageview);
-		            		});
-		            	}
-		            }
-		        };           	       
+	            @Override
+	            public void updateItem(final String item, final boolean empty) { 
+	            	this.setGraphic(null);
+	            	if(!empty) {
+	            		Platform.runLater(() -> {
+		                    final ImageView imageview = new ImageView();
+		                    imageview.setFitHeight(100);
+		                    imageview.setFitWidth(116);
+		                    
+			            	if(item == null){   
+			            		final URL url = this.getClass().getResource( "/resources/nonePicture.jpg");
+			            		imageview.setImage(new Image(url.toString(), true));
+			                } else {
+			                	
+								try{
+									final StringBuilder pathToIcon = new StringBuilder("http://asupkolaer/app_ie8/assets/images/vCard/o_").append(URLEncoder.encode(item, "UTF-8"));
+				                	imageview.setImage(new Image(pathToIcon.toString().replaceAll("\\+", "%20"), true));
+								}catch(Exception e){
+									LOG.error("Ошибка при конвертации кодировки URL!", e);
+								}
+			                }       	
+		                    this.setGraphic(imageview);
+	            		});
+	            	}
+	            }
+	        };           	       
 	    });
 	    
 	    final TableColumn<UserModel, Integer> userOrganizationColumn = new TableColumn<>("Организация");
