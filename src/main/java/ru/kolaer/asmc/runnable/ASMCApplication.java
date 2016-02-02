@@ -68,7 +68,7 @@ public class ASMCApplication implements UniformSystemApplication {
 				Platform.runLater(() -> {
 					root.setCenter(pane);
 					root.setPrefSize(800, 600);	
-					progress.setValue(-2);
+					progress.setValue(2);
 				});
 			}catch(final MalformedURLException e){
 				throw e;
