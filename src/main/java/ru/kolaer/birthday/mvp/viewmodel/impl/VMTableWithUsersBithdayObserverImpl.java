@@ -59,6 +59,7 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 								userModel.setDepartament(user.getDepartamentAbbreviated());
 								userModel.setPhoneNumber(user.getPhone());
 								userModel.setIcon(user.getVCard());
+								userModel.setPost(user.getPost());
 								userModelList.add(userModel);	
 								this.updateProgress(index, users.length * 2);
 								index++;

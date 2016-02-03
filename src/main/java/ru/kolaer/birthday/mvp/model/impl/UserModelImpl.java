@@ -13,8 +13,17 @@ public class UserModelImpl implements UserModel {
 	private Date birthday;
 	private String icon;
 	private String phoneNumber;
+	private String post;
 	
-	public UserModelImpl(String organization, String firstName, String secondName, String thirdName, String departament, Date birthday, String icon, String phoneNumber){
+	public UserModelImpl(final String organization, 
+			final String firstName, 
+			final String secondName, 
+			final String thirdName, 
+			final String departament, 
+			final Date birthday, 
+			final String icon, 
+			final String phoneNumber, 
+			final String post){
 		this.organization = organization;
 		this.firstName = firstName;
 		this.secondName = secondName;
@@ -23,6 +32,7 @@ public class UserModelImpl implements UserModel {
 		this.birthday = birthday;
 		this.phoneNumber = phoneNumber;
 		this.icon = icon;
+		this.post = post;
 	}
 	
 	public UserModelImpl() {
@@ -82,5 +92,13 @@ public class UserModelImpl implements UserModel {
 	@Override
 	public void setOrganization(final String organization) {
 		this.organization = organization;
+	}
+
+	public String getPost() {
+		return post;
+	}
+
+	public void setPost(String post) {
+		this.post = post;
 	}
 }

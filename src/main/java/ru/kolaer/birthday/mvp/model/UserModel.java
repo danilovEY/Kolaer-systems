@@ -19,4 +19,6 @@ public interface UserModel {
 	public void setPhoneNumber(String phoneNumber);
 	public String getOrganization();
 	public void setOrganization(String organization);
+	public String getPost();
+	public void setPost(String post);
 }

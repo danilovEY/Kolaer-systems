@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,17 +14,27 @@ import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import ru.kolaer.birthday.mvp.model.UserModel;
@@ -52,6 +63,41 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	private void init() {		
 		this.userBirthdayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);		
 		this.userBirthdayTable.setItems(tableModel);
+		this.userBirthdayTable.getSelectionModel().setCellSelectionEnabled(true);
+		this.userBirthdayTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		this.userBirthdayTable.setEditable(true);
+
+		final MenuItem item = new MenuItem("Копировать");
+	    item.setOnAction(event -> {
+            final StringBuilder clipboardString = new StringBuilder();
+            final Iterator<Integer> iter = userBirthdayTable.getSelectionModel().getSelectedIndices().iterator();
+            while(iter.hasNext()) {
+            	int index = iter.next();
+	            for( final TablePosition<UserModel, Object> col : userBirthdayTable.getSelectionModel().getSelectedCells()){
+	            	if(col.getRow() == index) {
+	            		final ObservableValue<Object> observableValue = col.getTableColumn().getCellObservableValue(index);
+		            	if(observableValue != null) {
+		            		if(observableValue.getValue().getClass() == Date.class) {
+		            			final SimpleStringProperty property = new SimpleStringProperty();
+		    	    	    	final DateFormat dateFormat = new SimpleDateFormat("dd MMMMM", myDateFormatSymbols);
+		    	    	    	property.setValue(dateFormat.format((Date)observableValue.getValue()));
+		    	    	    	clipboardString.append(property.getValue()).append(" ");
+		            		} else {
+		            			clipboardString.append(observableValue.getValue()).append(" ");
+		            		}
+		            	}
+	            	}
+	            }
+	            clipboardString.deleteCharAt(clipboardString.length()-1).append('\n');
+            }
+            final ClipboardContent content = new ClipboardContent();
+
+            content.putString(clipboardString.toString());
+            Clipboard.getSystemClipboard().setContent(content);
+	    });
+
+	    this.userBirthdayTable.setContextMenu(new ContextMenu(item));
+		
 		final TableColumn<UserModel, String> userIconColumn = new TableColumn<>("Фотография");
 	    userIconColumn.setCellValueFactory(new PropertyValueFactory<>("icon"));
 	    userIconColumn.setCellFactory((TableColumn<UserModel, String> param) -> {
@@ -99,6 +145,9 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    final TableColumn<UserModel, String> userPhoneColumn = new TableColumn<>("Телефон");
 	    userPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
 	    
+	    final TableColumn<UserModel, String> userPostColumn = new TableColumn<>("Должность");
+	    userPostColumn.setCellValueFactory(new PropertyValueFactory<>("post"));
+	    
 	    final TableColumn<UserModel, Date> userBirthdayColumn = new TableColumn<>("Дата рождения");
 	    userBirthdayColumn.setCellValueFactory(new PropertyValueFactory<>("birthday"));
 	    userBirthdayColumn.setCellFactory(film -> {
@@ -125,17 +174,19 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    final TableColumn<UserModel, String> userDepartamentColumn = new TableColumn<>("Цех/Отдел");
 	    userDepartamentColumn.setCellValueFactory(new PropertyValueFactory<>("departament"));
 	    
-	    userIconColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
-	    userFirstNameColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
-	    userSecondNameColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
-	    userThirdNameColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
-	    userBirthdayColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
-	    userPhoneColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
-	    userDepartamentColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
-	    userOrganizationColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 13pt;");
+	    userPostColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
+	    userIconColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
+	    userFirstNameColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
+	    userSecondNameColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
+	    userThirdNameColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
+	    userBirthdayColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
+	    userPhoneColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
+	    userDepartamentColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
+	    userOrganizationColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
 	    
 		this.userBirthdayTable.getColumns().addAll(userOrganizationColumn, userIconColumn, userSecondNameColumn, userFirstNameColumn,
 				userThirdNameColumn,
+				userPostColumn,
 				userDepartamentColumn,
 				userBirthdayColumn);
 		

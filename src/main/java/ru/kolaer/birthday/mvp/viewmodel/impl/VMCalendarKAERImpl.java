@@ -114,6 +114,7 @@ public class VMCalendarKAERImpl implements VMCalendar {
 						userModel.setBirthday(user.getBirthday());
 						userModel.setDepartament(user.getDepartamentAbbreviated());
 						userModel.setIcon(user.getVCard());
+						userModel.setPost(user.getPost());
 						userModel.setPhoneNumber(user.getPhone());
 						users.add(userModel);
 					}
