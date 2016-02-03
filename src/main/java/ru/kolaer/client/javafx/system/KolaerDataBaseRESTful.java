@@ -1,8 +1,9 @@
 package ru.kolaer.client.javafx.system;
 
 public class KolaerDataBaseRESTful implements KolaerDataBase {
-	private User1cDataBase user1cDataBase = new User1cDataBaseRESTful();
-	private UserDataAllDataBase dataAllDataBase = new UserDataAllDataBaseRESTful();
+	private final User1cDataBase user1cDataBase = new User1cDataBaseRESTful();
+	private final UserDataAllDataBase dataAllDataBase = new UserDataAllDataBaseRESTful();
+	private final UserBirthdayAllDataBase userBirthdayAllDataBase = new UserBirthdayAllDataBaseImpl();
 	
 	@Override
 	public User1cDataBase getUser1cDataBase() {
@@ -12,6 +13,11 @@ public class KolaerDataBaseRESTful implements KolaerDataBase {
 	@Override
 	public UserDataAllDataBase getUserDataAllDataBase() {
 		return this.dataAllDataBase;
+	}
+
+	@Override
+	public UserBirthdayAllDataBase getUserBirthdayAllDataBase() {
+		return this.userBirthdayAllDataBase;
 	}
 
 }
