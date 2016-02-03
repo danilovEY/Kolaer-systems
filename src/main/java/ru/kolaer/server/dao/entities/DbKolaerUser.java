@@ -1,9 +1,8 @@
 package ru.kolaer.server.dao.entities;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.LinkedList;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.kolaer.server.restful.tools.UserLog;
@@ -16,9 +15,9 @@ public class DbKolaerUser implements Serializable {
 	private final transient UserLog log;
 	private boolean ping = true;
 	
-	private Set<String> ipSet = new HashSet<>();
-	private Set<String> openingWindows = new HashSet<>();
-	private Set<String> closingWindows = new HashSet<>();
+	private List<String> ipSet = new LinkedList<>();
+	private List<String> openingWindows = new LinkedList<>();
+	private List<String> closingWindows = new LinkedList<>();
 	
 	public DbKolaerUser(final String user) {
 		this.log = new UserLog(user);
@@ -29,11 +28,11 @@ public class DbKolaerUser implements Serializable {
 		return this.name;
 	}
 	
-	public Set<String> getIpSet() {
+	public List<String> getIpSet() {
 		return this.ipSet;
 	}
 
-	public Set<String> getOpeningWindows() {
+	public List<String> getOpeningWindows() {
 		return this.openingWindows;
 	}
 
@@ -60,7 +59,7 @@ public class DbKolaerUser implements Serializable {
 		this.closingWindows.add(name);
 	}
 	
-	public Set<String> getCloseApplications() {
+	public List<String> getCloseApplications() {
 		return this.closingWindows;
 	}
 	
@@ -81,8 +80,9 @@ public class DbKolaerUser implements Serializable {
 	public void disconect() {
 		this.log.addSystemMessage("Пользователь \"" + this.name + "\" удален!");
 		this.log.shutdown();
-		ipSet.clear();
-		openingWindows.clear();
+		this.ipSet.clear();
+		this.closingWindows.clear();
+		this.openingWindows.clear();
 	}
 	/**
 	 * @return the {@linkplain #ping}

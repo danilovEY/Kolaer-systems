@@ -1,9 +1,6 @@
 package ru.kolaer.server.restful.controller.system;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,13 +58,10 @@ public class UserSystemController {
 	}
 	
 	@RequestMapping(path = "/app/{status}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Set<String> getStatusApplication(final @PathVariable String user, @PathVariable final String status) {
+	public List<String> getStatusApplication(final @PathVariable String user, @PathVariable final String status) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
 		if(status.equals("close")) {
-			final Set<String> closeApp = userData.getCloseApplications();
-			final Set<String> ret = new HashSet<>(closeApp);
-			userData.getCloseApplications().clear();
-			return ret;
+			return userData.getCloseApplications();
 		} else {
 			return userData.getOpeningWindows();
 		}
