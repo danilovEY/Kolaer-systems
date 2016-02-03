@@ -18,8 +18,10 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import ru.kolaer.server.dao.DbBirthdayAllDAO;
 import ru.kolaer.server.dao.DbDataAllDAO;
 import ru.kolaer.server.dao.DbUser1сDAO;
+import ru.kolaer.server.dao.impl.DbBirthdayAllDAOImpl;
 import ru.kolaer.server.dao.impl.DbDataAllDAOImpl;
 import ru.kolaer.server.dao.impl.DbUser1cDAOImpl;
 import ru.kolaer.server.restful.tools.UsersManager;
@@ -78,6 +80,12 @@ public class KolaerServerConfig {
     	final UsersManager usersManager = new UsersManager();
     	usersManager.startPing();
     	return usersManager; 	
+    }
+    
+    @Bean(name = "dbBirthdayAllDAO")
+    public DbBirthdayAllDAO dbBirthdayAllDAO() {
+    	final DbBirthdayAllDAO dbBirthdayAllDAO = new DbBirthdayAllDAOImpl();
+    	return dbBirthdayAllDAO;
     }
     
     @Bean(name = "dbDataAllDAO")
