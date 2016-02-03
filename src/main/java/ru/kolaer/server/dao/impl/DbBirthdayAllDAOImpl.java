@@ -1,6 +1,7 @@
 package ru.kolaer.server.dao.impl;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -111,15 +112,15 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 	public void insertDataList(final List<DbBirthdayAll> dataList) {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
-		final Query query = entityManager.createQuery("DELETE FROM DbBirthdayAll");
-		query.executeUpdate();
 		
-		dataList.parallelStream().forEach(user -> {
-			entityManager.persist(user);
-			entityManager.flush();
-			entityManager.clear();
-		});
-		
+        List<DbBirthdayAll> tempEnqList = dataList;
+        for (Iterator<DbBirthdayAll> it = tempEnqList.iterator(); it.hasNext();) {
+        	DbBirthdayAll enquiry = it.next();
+        	entityManager.persist(enquiry);
+        	entityManager.flush();
+        	entityManager.clear();
+        }	
+        
 		entityManager.getTransaction().commit();
 		entityManager.close();
 	}
