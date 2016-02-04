@@ -43,7 +43,7 @@ public class DataBaseDataAllController {
 	}
 	
 	@RequestMapping(value = "/get/users/birthday/{startDate}/{endDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<DbDataAll> getUsersRangeBirsday(final @PathVariable String startDate, final @PathVariable String endDate) {
+	public List<DbDataAll> getUsersRangeBirthday(final @PathVariable String startDate, final @PathVariable String endDate) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    
 		try {
@@ -57,12 +57,12 @@ public class DataBaseDataAllController {
 	}	
 	
 	@RequestMapping(value = "/get/users/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<DbDataAll> getUsersRangeBirsday() {
+	public List<DbDataAll> getUsersRangeBirthday() {
 		return dbDataAllDAO.getUserBirthdayToday();
 	}
 	
 	@RequestMapping(value = "/get/users/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<DbDataAll> getUsersRangeBirsday(final @PathVariable String date) {
+	public List<DbDataAll> getUsersRangeBirthday(final @PathVariable String date) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    
 		try {
@@ -75,7 +75,7 @@ public class DataBaseDataAllController {
 	}	
 	
 	@RequestMapping(value = "/get/users/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public int getCountUsersBirsday(final @PathVariable String date) {
+	public int getCountUsersBirthday(final @PathVariable String date) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    
 		try {

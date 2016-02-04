@@ -45,7 +45,7 @@ public class DataBaseBirthdayAllController {
 	}
 	
 	@RequestMapping(value = "/get/users/birthday/{startDate}/{endDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<DbBirthdayAll> getUsersRangeBirsday(final @PathVariable String startDate, final @PathVariable String endDate) {
+	public List<DbBirthdayAll> getUsersRangeBirthday(final @PathVariable String startDate, final @PathVariable String endDate) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    
 		try {
@@ -59,17 +59,30 @@ public class DataBaseBirthdayAllController {
 	}	
 	
 	@RequestMapping(value = "/get/users/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<DbBirthdayAll> getUsersRangeBirsday() {
+	public List<DbBirthdayAll> getUsersRangeBirthday() {
 		return dbBirthdayAllDAO.getUserBirthdayToday();
 	}
 	
 	@RequestMapping(value = "/get/users/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<DbBirthdayAll> getUsersRangeBirsday(final @PathVariable String date) {
+	public List<DbBirthdayAll> getUsersRangeBirthday(final @PathVariable String date) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    
 		try {
 			final Date datePasre = sdf.parse(date);
 			return dbBirthdayAllDAO.getUsersByBirthday(datePasre);
+		} catch (ParseException e) {
+			LOG.error("Ошибка! Не коректные данные: ({})", date);
+			return Collections.emptyList();
+		}
+	}	
+	
+	@RequestMapping(value = "/get/users/{orgainzation}/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<DbBirthdayAll> getUsersRangeBirthdayAndOrg(final @PathVariable String date, final @PathVariable String orgainzation) {
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    
+		try {
+			final Date datePasre = sdf.parse(date);
+			return dbBirthdayAllDAO.getUsersByBirthdayAndOrg(datePasre, orgainzation);
 		} catch (ParseException e) {
 			LOG.error("Ошибка! Не коректные данные: ({})", date);
 			return Collections.emptyList();
@@ -88,6 +101,19 @@ public class DataBaseBirthdayAllController {
 		try {
 			final Date datePasre = sdf.parse(date);
 			return dbBirthdayAllDAO.getCountUserBirthday(datePasre);
+		} catch (ParseException e) {
+			LOG.error("Ошибка! Не коректные данные: ({})", date);
+			return 0;
+		}
+	}
+	
+	@RequestMapping(value = "/get/users/{orgainzation}/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public int getCountUsersBirsday(final @PathVariable String date, final @PathVariable String orgainzation) {
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    
+		try {
+			final Date datePasre = sdf.parse(date);
+			return dbBirthdayAllDAO.getCountUserBirthdayAndOrg(datePasre, orgainzation);
 		} catch (ParseException e) {
 			LOG.error("Ошибка! Не коректные данные: ({})", date);
 			return 0;
