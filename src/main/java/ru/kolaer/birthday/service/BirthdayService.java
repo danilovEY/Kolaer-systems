@@ -8,6 +8,7 @@ import javafx.util.Duration;
 import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.ServerStatus;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
+import ru.kolaer.server.dao.entities.DbBirthdayAll;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
 public class BirthdayService implements Service {
@@ -21,9 +22,14 @@ public class BirthdayService implements Service {
 	public void run() {
 		if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.AVAILABLE) {
 			final DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+			final DbBirthdayAll[] usersBirthday = editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
+			
 			final StringBuilder todayBirthday = new StringBuilder();
 			for(DbDataAll user : users) {
 				todayBirthday.append(user.getInitials()).append(" (").append(Optional.ofNullable(user.getPhone()).orElse("")).append(") - ").append(user.getDepartamentAbbreviated()).append("\n");
+			}
+			for(DbBirthdayAll user : usersBirthday) {
+				todayBirthday.append(user.getInitials()).append(" (").append(Optional.ofNullable(user.getPhone()).orElse("")).append(") - ").append(user.getDepartament()).append("\n");
 			}
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\". Поздравляем с днем рождения!\n");
