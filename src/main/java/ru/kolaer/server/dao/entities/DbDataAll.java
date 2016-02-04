@@ -99,9 +99,6 @@ public class DbDataAll implements Serializable {
 	@Column(nullable=false, length=50)
 	private String patronymic;
 
-	@Column(length=2)
-	private String PC_name;
-
 	@Column(length=40)
 	private String phone;
 
@@ -303,14 +300,6 @@ public class DbDataAll implements Serializable {
 
 	public void setPatronymic(String patronymic) {
 		this.patronymic = patronymic;
-	}
-
-	public String getPC_name() {
-		return this.PC_name;
-	}
-
-	public void setPC_name(String PC_name) {
-		this.PC_name = PC_name;
 	}
 
 	public String getPhone() {

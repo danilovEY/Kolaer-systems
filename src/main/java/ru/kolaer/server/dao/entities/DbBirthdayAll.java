@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name="db_birthday_all")
 public class DbBirthdayAll implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -9086880039708838378L;
 
 	@Id
 	@Column(unique=true, nullable=false)
