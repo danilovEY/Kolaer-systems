@@ -92,115 +92,121 @@ public class BirthdayApplication implements UniformSystemApplication {
 		}, service).exceptionally(t -> {
 			LOG.error("Ошибка!", t);
 			return null;
+		}).thenRunAsync(() -> {
+			CompletableFuture<VMCalendar> cKaer = CompletableFuture.supplyAsync(() -> {
+				final VMCalendar calendarKAER = new VMCalendarKAER(this.editorKid);
+				calendarKAER.registerObserver(this.vmTable);
+				return calendarKAER;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
+
+			CompletableFuture<VMCalendar> cCo = CompletableFuture.supplyAsync(() -> {
+				final VMCalendar calendarCO = new VMCalendarAffiliates("Центральный аппарат", this.editorKid);
+				calendarCO.registerObserver(this.vmTable);
+				return calendarCO;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
+
+			CompletableFuture<VMCalendar> cBal = CompletableFuture.supplyAsync(() -> {
+				final VMCalendar calendarBal = new VMCalendarAffiliates("БалаковоАтомэнергоремонт", this.editorKid);
+				calendarBal.registerObserver(this.vmTable);
+				return calendarBal;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
+
+			CompletableFuture<VMCalendar> cVol = CompletableFuture.supplyAsync(() -> {
+				final VMCalendar calendarVol = new VMCalendarAffiliates("ВолгодонскАтомэнергоремонт", this.editorKid);
+				calendarVol.registerObserver(this.vmTable);
+				return calendarVol;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
+
+			CompletableFuture<VMCalendar> cCal = CompletableFuture.supplyAsync(() -> {
+				final VMCalendar calendarCal = new VMCalendarAffiliates("КалининАтомэнергоремонт", this.editorKid);
+				calendarCal.registerObserver(this.vmTable);
+				return calendarCal;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
+
+			CompletableFuture<VMCalendar> cKur = CompletableFuture.supplyAsync(() -> {
+				final VMCalendar calendarKur = new VMCalendarAffiliates("КурскАтомэнергоремонт", this.editorKid);
+				calendarKur.registerObserver(this.vmTable);
+				return calendarKur;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
+
+			CompletableFuture<VMCalendar> cLen = CompletableFuture.supplyAsync(() -> {
+				final VMCalendar calendarLen = new VMCalendarAffiliates("ЛенАтомэнергоремонт", this.editorKid);
+				calendarLen.registerObserver(this.vmTable);
+				return calendarLen;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
+
+			CompletableFuture<VMCalendar> cNov = CompletableFuture.supplyAsync(() -> {
+				final VMCalendar calendarNov = new VMCalendarAffiliates("НововоронежАтомэнергоремонт", this.editorKid);
+				calendarNov.registerObserver(this.vmTable);
+				return calendarNov;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
+
+			CompletableFuture<VMCalendar> cSmo = CompletableFuture.supplyAsync(() -> {
+				final VMCalendar calendarSmo = new VMCalendarAffiliates("СмоленскАтомэнергоремонт", this.editorKid);
+				calendarSmo.registerObserver(this.vmTable);
+				return calendarSmo;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
+
+			CompletableFuture<VMCalendar> cUra = CompletableFuture.supplyAsync(() -> {
+				final VMCalendar calendarUra = new VMCalendarAffiliates("УралАтомэнергоремонт", this.editorKid);
+				calendarUra.registerObserver(this.vmTable);
+				return calendarUra;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
+			
+			try{
+				frameContent.addVMCalendar(cKaer.get());
+				frameContent.addVMCalendar(cCo.get());
+				frameContent.addVMCalendar(cBal.get());
+				frameContent.addVMCalendar(cVol.get());
+				frameContent.addVMCalendar(cCal.get());
+				frameContent.addVMCalendar(cKur.get());
+				frameContent.addVMCalendar(cLen.get());
+				frameContent.addVMCalendar(cNov.get());
+				frameContent.addVMCalendar(cSmo.get());
+				frameContent.addVMCalendar(cUra.get());
+			}catch(InterruptedException | ExecutionException e){
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			service.shutdown();
 		});
 
-		CompletableFuture<VMCalendar> cKaer = CompletableFuture.supplyAsync(() -> {
-			final VMCalendar calendarKAER = new VMCalendarKAER(this.editorKid);
-			calendarKAER.registerObserver(this.vmTable);
-			return calendarKAER;
-		}, service).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		});
-
-		CompletableFuture<VMCalendar> cCo = CompletableFuture.supplyAsync(() -> {
-			final VMCalendar calendarCO = new VMCalendarAffiliates("Центральный аппарат", this.editorKid);
-			calendarCO.registerObserver(this.vmTable);
-			return calendarCO;
-		}, service).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		});
-
-		CompletableFuture<VMCalendar> cBal = CompletableFuture.supplyAsync(() -> {
-			final VMCalendar calendarBal = new VMCalendarAffiliates("БалаковоАтомэнергоремонт", this.editorKid);
-			calendarBal.registerObserver(this.vmTable);
-			return calendarBal;
-		}, service).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		});
-
-		CompletableFuture<VMCalendar> cVol = CompletableFuture.supplyAsync(() -> {
-			final VMCalendar calendarVol = new VMCalendarAffiliates("ВолгодонскАтомэнергоремонт", this.editorKid);
-			calendarVol.registerObserver(this.vmTable);
-			return calendarVol;
-		}, service).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		});
-
-		CompletableFuture<VMCalendar> cCal = CompletableFuture.supplyAsync(() -> {
-			final VMCalendar calendarCal = new VMCalendarAffiliates("КалининАтомэнергоремонт", this.editorKid);
-			calendarCal.registerObserver(this.vmTable);
-			return calendarCal;
-		}, service).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		});
-
-		CompletableFuture<VMCalendar> cKur = CompletableFuture.supplyAsync(() -> {
-			final VMCalendar calendarKur = new VMCalendarAffiliates("КурскАтомэнергоремонт", this.editorKid);
-			calendarKur.registerObserver(this.vmTable);
-			return calendarKur;
-		}, service).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		});
-
-		CompletableFuture<VMCalendar> cLen = CompletableFuture.supplyAsync(() -> {
-			final VMCalendar calendarLen = new VMCalendarAffiliates("ЛенАтомэнергоремонт", this.editorKid);
-			calendarLen.registerObserver(this.vmTable);
-			return calendarLen;
-		}, service).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		});
-
-		CompletableFuture<VMCalendar> cNov = CompletableFuture.supplyAsync(() -> {
-			final VMCalendar calendarNov = new VMCalendarAffiliates("НововоронежАтомэнергоремонт", this.editorKid);
-			calendarNov.registerObserver(this.vmTable);
-			return calendarNov;
-		}, service).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		});
-
-		CompletableFuture<VMCalendar> cSmo = CompletableFuture.supplyAsync(() -> {
-			final VMCalendar calendarSmo = new VMCalendarAffiliates("СмоленскАтомэнергоремонт", this.editorKid);
-			calendarSmo.registerObserver(this.vmTable);
-			return calendarSmo;
-		}, service).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		});
-
-		CompletableFuture<VMCalendar> cUra = CompletableFuture.supplyAsync(() -> {
-			final VMCalendar calendarUra = new VMCalendarAffiliates("УралАтомэнергоремонт", this.editorKid);
-			calendarUra.registerObserver(this.vmTable);
-			return calendarUra;
-		}, service).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		});
-
-		try{
-			frameContent.addVMCalendar(cKaer.get());
-			frameContent.addVMCalendar(cCo.get());
-			frameContent.addVMCalendar(cBal.get());
-			frameContent.addVMCalendar(cVol.get());
-			frameContent.addVMCalendar(cCal.get());
-			frameContent.addVMCalendar(cKur.get());
-			frameContent.addVMCalendar(cLen.get());
-			frameContent.addVMCalendar(cNov.get());
-			frameContent.addVMCalendar(cSmo.get());
-			frameContent.addVMCalendar(cUra.get());
-		}catch(InterruptedException | ExecutionException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		service.shutdown();
+
+
+		
+		
 	}
 
 }
