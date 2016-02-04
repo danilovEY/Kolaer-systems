@@ -5,7 +5,7 @@ import java.util.Date;
 
 
 public class DbBirthdayAll implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -9086880039708838378L;
 
 	private short id;
 	private String organization;
