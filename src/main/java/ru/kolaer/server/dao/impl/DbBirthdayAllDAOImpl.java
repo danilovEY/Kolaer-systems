@@ -77,7 +77,7 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 	public List<DbBirthdayAll> getUserBirthdayToday() {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
-		final List<DbBirthdayAll> result = entityManager.createQuery("FROM DbBirthdayAll t where and day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE)", DbBirthdayAll.class)
+		final List<DbBirthdayAll> result = entityManager.createQuery("FROM DbBirthdayAll t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE)", DbBirthdayAll.class)
 	            .getResultList();
 		entityManager.getTransaction().commit();
 		entityManager.close();
