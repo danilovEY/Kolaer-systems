@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,12 +25,51 @@ import ru.kolaer.server.restful.controller.request.obj.RequestDbBirthdayAllList;
 
 public class RestTest {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		RestTemplate restTemplate = new RestTemplate();
+		
+
+		/*RequestDbBirthdayAllList CO = new RequestDbBirthdayAllList(getDataFromXML("ca_list.xml", "Центральный аппарат"));
+		RequestDbBirthdayAllList bal = new RequestDbBirthdayAllList(getDataFromXML("balakovo.xml", "БалаковоАтомэнергоремонт"));
+		RequestDbBirthdayAllList vol = new RequestDbBirthdayAllList(getDataFromXML("volgodonsk.xml", "ВолгодонскАтомэнергоремонт"));
+		RequestDbBirthdayAllList udo = new RequestDbBirthdayAllList(getDataFromXML("udomlya.xml", "КалининАтомэнергоремонт"));
+		RequestDbBirthdayAllList kur = new RequestDbBirthdayAllList(getDataFromXML("kurchatov.xml", "КурскАтомэнергоремонт"));
+		RequestDbBirthdayAllList sos = new RequestDbBirthdayAllList(getDataFromXML("sosnoviyBor.xml", "ЛенАтомэнергоремонт"));
+		RequestDbBirthdayAllList nov = new RequestDbBirthdayAllList(getDataFromXML("novovoroneg.xml", "НововоронежАтомэнергоремонт"));
+		RequestDbBirthdayAllList des = new RequestDbBirthdayAllList(getDataFromXML("desnogorsk.xml", "СмоленскАтомэнергоремонт"));
+		RequestDbBirthdayAllList zar = new RequestDbBirthdayAllList(getDataFromXML("zarechny.xml", "УралАтомэнергоремонт"));
+		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", CO, RequestDbBirthdayAllList.class);
+		TimeUnit.SECONDS.sleep(5);
+		System.out.println("bal");
+		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", bal, RequestDbBirthdayAllList.class);
+		TimeUnit.SECONDS.sleep(5);
+		System.out.println("vol");
+		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", vol, RequestDbBirthdayAllList.class);
+		TimeUnit.SECONDS.sleep(5);
+		System.out.println("udo");
+		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", udo, RequestDbBirthdayAllList.class);
+		TimeUnit.SECONDS.sleep(5);
+		System.out.println("kur");
+		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", kur, RequestDbBirthdayAllList.class);
+		TimeUnit.SECONDS.sleep(5);
+		System.out.println("sos");
+		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", sos, RequestDbBirthdayAllList.class);
+		TimeUnit.SECONDS.sleep(5);
+		System.out.println("nov");
+		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", nov, RequestDbBirthdayAllList.class);
+		TimeUnit.SECONDS.sleep(5);
+		System.out.println("des");
+		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", des, RequestDbBirthdayAllList.class);
+		TimeUnit.SECONDS.sleep(5);
+		System.out.println("zar");
+		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", zar, RequestDbBirthdayAllList.class);*/
+	}
+	
+	public static List<DbBirthdayAll> getDataFromXML(String path, String organizaton) {
 		List<DbBirthdayAll> list = new ArrayList<>();
 
 		try{
-			final File xmlFile = new File("ca_list.xml");
+			final File xmlFile = new File(path);
 			final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			final DocumentBuilder db = dbf.newDocumentBuilder();
 			final Document doc = db.parse(xmlFile);
@@ -41,6 +81,9 @@ public class RestTest {
 				final Node node = nodeList.item(i);
 				if(Node.ELEMENT_NODE == node.getNodeType()){
 					final Element element = (Element) node;
+					final String categ = element.getAttribute("ows__x041a__x0430__x0442__x0435__x04");
+					if(categ.equals("Рабочий"))
+						continue;
 					final String initial = element.getAttribute("ows_LinkTitleNoMenu");
 					final String post = element.getAttribute("ows_JobTitle");
 					final String dep = element.getAttribute("ows_Department");
@@ -48,12 +91,10 @@ public class RestTest {
 					final String mobilePhone = element.getAttribute("ows_CellPhone");
 					final String email = element.getAttribute("ows_EMail");
 					final String birthday = element.getAttribute("ows_Birthday");
-					final String categ = element.getAttribute("ows__x041a__x0430__x0442__x0435__x04");
-
 					final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					
 					final DbBirthdayAll user = new DbBirthdayAll();
-					user.setOrganization("Центральный аппарат");
+					user.setOrganization(organizaton);
 					user.setBirthday(sdf.parse(birthday));
 					user.setCategoryUnit(categ);
 					user.setDepartament(dep);
@@ -70,11 +111,8 @@ public class RestTest {
 		}catch(ParseException e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		RequestDbBirthdayAllList obj = new RequestDbBirthdayAllList(list);
-		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", obj, RequestDbBirthdayAllList.class);
-
+		} 
+		return list;
 	}
 
 }
