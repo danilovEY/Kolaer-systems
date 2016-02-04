@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -52,7 +51,7 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 	public List<DbBirthdayAll> getUserRangeBirthday(final Date startDate, final Date endDate) {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
-		final List<DbBirthdayAll> result = entityManager.createQuery("SELECT t FROM DbBirthdayAll t where t.categoryUnit = 'Специалист' and t.birthday BETWEEN :startDate AND :endDate", DbBirthdayAll.class)
+		final List<DbBirthdayAll> result = entityManager.createQuery("SELECT t FROM DbBirthdayAll t where t.birthday BETWEEN :startDate AND :endDate", DbBirthdayAll.class)
 	            .setParameter("startDate", startDate, TemporalType.DATE)
 	            .setParameter("endDate", endDate, TemporalType.DATE)
 	            .getResultList();
@@ -66,7 +65,7 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
 
-		final List<DbBirthdayAll> result = entityManager.createQuery("SELECT t FROM DbBirthdayAll t where t.categoryUnit = 'Специалист' and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", DbBirthdayAll.class)
+		final List<DbBirthdayAll> result = entityManager.createQuery("SELECT t FROM DbBirthdayAll t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", DbBirthdayAll.class)
 	            .setParameter("date", date, TemporalType.DATE)
 	            .getResultList();
 		entityManager.getTransaction().commit();
@@ -78,7 +77,7 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 	public List<DbBirthdayAll> getUserBirthdayToday() {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
-		final List<DbBirthdayAll> result = entityManager.createQuery("FROM DbBirthdayAll t where t.categoryUnit = 'Специалист' and day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE)", DbBirthdayAll.class)
+		final List<DbBirthdayAll> result = entityManager.createQuery("FROM DbBirthdayAll t where and day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE)", DbBirthdayAll.class)
 	            .getResultList();
 		entityManager.getTransaction().commit();
 		entityManager.close();
@@ -89,7 +88,7 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 	public int getCountUserBirthday(final Date date) {
 		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
 		entityManager.getTransaction().begin();
-		final Number result = entityManager.createQuery("SELECT count(t) FROM DbBirthdayAll t where t.categoryUnit = 'Специалист' and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", Number.class)
+		final Number result = entityManager.createQuery("SELECT count(t) FROM DbBirthdayAll t where and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", Number.class)
 				.setParameter("date", date, TemporalType.DATE)
 				.getSingleResult();
 		entityManager.getTransaction().commit();
@@ -123,6 +122,33 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
         
 		entityManager.getTransaction().commit();
 		entityManager.close();
+	}
+
+	@Override
+	public List<DbBirthdayAll> getUsersByBirthdayAndOrg(Date date, String organization) {
+		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
+		entityManager.getTransaction().begin();
+
+		final List<DbBirthdayAll> result = entityManager.createQuery("SELECT t FROM DbBirthdayAll t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", DbBirthdayAll.class)
+				.setParameter("org", organization)
+				.setParameter("date", date, TemporalType.DATE)
+	            .getResultList();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return result;
+	}
+
+	@Override
+	public int getCountUserBirthdayAndOrg(Date date, String organization) {
+		final EntityManager entityManager = entityManagerFactory.getObject().createEntityManager();
+		entityManager.getTransaction().begin();
+		final Number result = entityManager.createQuery("SELECT count(t) FROM DbBirthdayAll t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", Number.class)
+				.setParameter("org", organization)
+				.setParameter("date", date, TemporalType.DATE)
+				.getSingleResult();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return result.intValue();
 	}
 
 }
