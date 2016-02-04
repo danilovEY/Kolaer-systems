@@ -2,7 +2,6 @@ package ru.kolaer.birthday.mvp.viewmodel.impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
@@ -16,6 +15,7 @@ import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBirthdayImpl;
 import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthdayObserver;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
+import ru.kolaer.server.dao.entities.DbBirthdayAll;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
 public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirthdayObserver{
@@ -41,17 +41,17 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 					return new Task<Void>() {
 						@Override
 						protected Void call() throws Exception {
-							this.updateTitle("Загрузка");
+							this.updateTitle("КолАтомэнергоремонт");
 							this.updateMessage("Загрузка данных с сервера");
 							this.updateProgress(0, 10);
 							final DbDataAll[] users = editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
 							this.updateProgress(users.length, users.length * 2);
 							this.updateMessage("Чтение данных");
 							int index = 0;
-							final List<UserModel> userModelList = new ArrayList<>();
 							for(final DbDataAll user : users) {
 								final UserModel userModel = new UserModelImpl();
-								userModel.setOrganization("КолАЭР");
+								userModel.setOrganization("КолАтомэнергоремонт");
+								userModel.setInitials(user.getInitials());
 								userModel.setFirstName(user.getName());
 								userModel.setSecondName(user.getSurname());
 								userModel.setThirdName(user.getPatronymic());
@@ -60,12 +60,10 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 								userModel.setPhoneNumber(user.getPhone());
 								userModel.setIcon(user.getVCard());
 								userModel.setPost(user.getPost());
-								userModelList.add(userModel);	
+								table.addData(userModel);
 								this.updateProgress(index, users.length * 2);
 								index++;
 							}
-							this.updateMessage("Добавление данных");
-							table.setData(userModelList);
 							this.updateProgress(users.length * 2, users.length * 2);
 							return null;
 						}
@@ -77,6 +75,40 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 		}).exceptionally(t -> {
 			LOG.error("Ошибка!", t);
 			return null;
+		}).thenRunAsync(() -> {
+			final Service<Void> service = new Service<Void>() {
+				@Override
+				protected Task<Void> createTask() {
+					return new Task<Void>() {
+						@Override
+						protected Void call() throws Exception {
+							this.updateTitle("Филиалы");
+							this.updateMessage("Загрузка данных с сервера");
+							this.updateProgress(0, 10);
+							final DbBirthdayAll[] users = editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
+							this.updateProgress(users.length, users.length * 2);
+							this.updateMessage("Чтение данных");
+							int index = 0;
+							for(final DbBirthdayAll user : users) {
+								final UserModel userModel = new UserModelImpl();
+								userModel.setOrganization(user.getOrganization());
+								userModel.setInitials(user.getInitials());
+								userModel.setBirthday(user.getBirthday());
+								userModel.setDepartament(user.getDepartament());
+								userModel.setPhoneNumber(user.getPhone());
+								userModel.setPost(user.getPost());
+								table.addData(userModel);
+								this.updateProgress(index, users.length * 2);
+								index++;
+							}
+							this.updateProgress(users.length * 2, users.length * 2);
+							return null;
+						}
+					};
+				}
+			};
+			service.start();
+			this.editorKid.getUISystemUS().getDialog().showLoadingDialog(service);
 		});
 	}
 

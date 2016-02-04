@@ -14,12 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
@@ -104,18 +101,17 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    	return new TableCell<UserModel, String>(){
 	            @Override
 	            public void updateItem(final String item, final boolean empty) { 
-	            	this.setGraphic(null);
-	            	if(!empty) {
-	            		Platform.runLater(() -> {
+	            	Platform.runLater(() -> {
+		            	this.setGraphic(null);
+		            	if(!empty) {
 		                    final ImageView imageview = new ImageView();
 		                    imageview.setFitHeight(100);
 		                    imageview.setFitWidth(116);
 		                    
 			            	if(item == null){   
-			            		final URL url = this.getClass().getResource( "/resources/nonePicture.jpg");
+			            		final URL url = this.getClass().getResource("/nonePicture.jpg");
 			            		imageview.setImage(new Image(url.toString(), true));
-			                } else {
-			                	
+			                } else {                	
 								try{
 									final StringBuilder pathToIcon = new StringBuilder("http://asupkolaer/app_ie8/assets/images/vCard/o_").append(URLEncoder.encode(item, "UTF-8"));
 				                	imageview.setImage(new Image(pathToIcon.toString().replaceAll("\\+", "%20"), true));
@@ -124,8 +120,8 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 								}
 			                }       	
 		                    this.setGraphic(new BorderPane(imageview));
-	            		});
-	            	}
+		            	}
+	            	});
 	            }
 	        };           	       
 	    });
@@ -142,6 +138,9 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    final TableColumn<UserModel, String> userThirdNameColumn = new TableColumn<>("Отчество");
 	    userThirdNameColumn.setCellValueFactory(new PropertyValueFactory<>("thirdName"));
 	    
+	    final TableColumn<UserModel, String> userInitialsColumn = new TableColumn<>("ФИО");
+	    userInitialsColumn.setCellValueFactory(new PropertyValueFactory<>("initials"));
+	    
 	    final TableColumn<UserModel, String> userPhoneColumn = new TableColumn<>("Телефон");
 	    userPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
 	    
@@ -154,19 +153,20 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    	 return new TableCell<UserModel, Date>() {
 	    	        @Override
 	    	        protected void updateItem(Date item, boolean empty) {
-	    	            super.updateItem(item, empty);
-	    	            setText("");
-	    	            if (item == null || empty) {
-	    	                setText("");
-	    	            } else {
-	    	            	Platform.runLater(() -> {
-		    	            	final SimpleStringProperty property = new SimpleStringProperty();
-		    	    	    	final DateFormat dateFormat = new SimpleDateFormat("dd MMMMM", myDateFormatSymbols);
-		    	    	    	property.setValue(dateFormat.format(item));
-		    	    	    	
-		    	                setText(property.getValue());
-	    	            	});
-	    	            }
+	    	        	Platform.runLater(() -> {
+		    	        	setText("");
+		    	        	super.updateItem(item, empty);
+		    	            if (item == null || empty) {
+		    	                setText("");
+		    	            } else {
+		    	            	
+			    	            	final SimpleStringProperty property = new SimpleStringProperty();
+			    	    	    	final DateFormat dateFormat = new SimpleDateFormat("dd MMMMM", myDateFormatSymbols);
+			    	    	    	property.setValue(dateFormat.format(item));
+			    	    	    	
+			    	                setText(property.getValue());	
+		    	            }
+	    	        	});
 	    	        }
 	    	    };
     	});
@@ -174,6 +174,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    final TableColumn<UserModel, String> userDepartamentColumn = new TableColumn<>("Цех/Отдел");
 	    userDepartamentColumn.setCellValueFactory(new PropertyValueFactory<>("departament"));
 	    
+	    userInitialsColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
 	    userPostColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
 	    userIconColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
 	    userFirstNameColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
@@ -184,8 +185,8 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    userDepartamentColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
 	    userOrganizationColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
 	    
-		this.userBirthdayTable.getColumns().addAll(userOrganizationColumn, userIconColumn, userSecondNameColumn, userFirstNameColumn,
-				userThirdNameColumn,
+		this.userBirthdayTable.getColumns().addAll(userOrganizationColumn, userIconColumn, 
+				userInitialsColumn,
 				userPostColumn,
 				userDepartamentColumn,
 				userBirthdayColumn);
@@ -215,6 +216,13 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	public void setTitle(final String text) {
 		Platform.runLater(() -> {
 			this.titleLabel.setText(text);
+		});
+	}
+
+	@Override
+	public void addData(UserModel user) {
+		Platform.runLater(() -> {
+			userBirthdayTable.getItems().add(user);
 		});
 	}
 }

@@ -21,4 +21,6 @@ public interface UserModel {
 	public void setOrganization(String organization);
 	public String getPost();
 	public void setPost(String post);
+	public String getInitials();
+	public void setInitials(String initials);
 }

@@ -14,6 +14,7 @@ public class UserModelImpl implements UserModel {
 	private String icon;
 	private String phoneNumber;
 	private String post;
+	private String initials;
 	
 	public UserModelImpl(final String organization, 
 			final String firstName, 
@@ -23,7 +24,8 @@ public class UserModelImpl implements UserModel {
 			final Date birthday, 
 			final String icon, 
 			final String phoneNumber, 
-			final String post){
+			final String post,
+			final String initials){
 		this.organization = organization;
 		this.firstName = firstName;
 		this.secondName = secondName;
@@ -33,6 +35,7 @@ public class UserModelImpl implements UserModel {
 		this.phoneNumber = phoneNumber;
 		this.icon = icon;
 		this.post = post;
+		this.initials = initials;
 	}
 	
 	public UserModelImpl() {
@@ -100,5 +103,13 @@ public class UserModelImpl implements UserModel {
 
 	public void setPost(String post) {
 		this.post = post;
+	}
+
+	public String getInitials() {
+		return initials;
+	}
+
+	public void setInitials(String initials) {
+		this.initials = initials;
 	}
 }
