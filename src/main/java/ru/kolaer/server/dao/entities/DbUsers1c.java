@@ -23,9 +23,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Danilov
  */
-@Entity
-@Table(name = "db_users_1c", catalog = "kolaer_base", schema = "")
-@XmlRootElement
+//@Entity
+//@Table(name = "db_users_1c", catalog = "kolaer_base", schema = "")
+//@XmlRootElement
 public class DbUsers1c implements Serializable {
 
     private static final long serialVersionUID = 1L;

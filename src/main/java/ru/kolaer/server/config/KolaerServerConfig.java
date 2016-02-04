@@ -103,18 +103,20 @@ public class KolaerServerConfig {
     private HibernateJpaVendorAdapter jpaVendorAdapter() {
     	final HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
     	jpaVendorAdapter.setShowSql(true);
-    	jpaVendorAdapter.setGenerateDdl(true);
+    	jpaVendorAdapter.setGenerateDdl(false);
     	
     	return jpaVendorAdapter;
     }
     
     private Properties getHibernateProperties() {
     	final Properties properties = new Properties();
+    	
         properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
         properties.put(PROP_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
         properties.put("db.hibernate.max_fetch_depth", 3);
         properties.put("db.hibernate.jdbc.fetch_size", 50);
         properties.put("db.hibernate.jdbc.batch_size", 10);
+        properties.put("hibernate.hbm2ddl.auto", "none");
  
         return properties;
     }
