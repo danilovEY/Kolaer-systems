@@ -5,11 +5,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
-import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.control.DateCell;
 import ru.kolaer.birthday.mvp.model.UserManagerModel;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
@@ -21,7 +16,6 @@ import ru.kolaer.client.javafx.system.DefaultProgressBar;
 import ru.kolaer.client.javafx.system.ProgressBarObservable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
-import ru.kolaer.server.dao.entities.DbDataAll;
 
 public class VMCalendarAffiliates implements VMCalendar {
 	private final String ORGANIZATION;
@@ -36,28 +30,7 @@ public class VMCalendarAffiliates implements VMCalendar {
 	}
 
 	private void init() {
-		this.view.setDayCellFactory((datePicker) -> {
-			return new DateCell() {
-				@Override
-				public void updateItem(LocalDate item, boolean empty) {
-					super.updateItem(item, empty);
-					CompletableFuture.runAsync(() -> {
-						final Node node = this;
-					
-						int countUsersDataAll = editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase()
-								.getCountUsersBirthday(Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant()), ORGANIZATION);
-	
-						if (countUsersDataAll != 0) {
-							final int count = 99 - countUsersDataAll * 15;
-							Platform.runLater(() -> {
-								node.setStyle("-fx-background-color: #" + count + ""
-										+ count + "FF;");
-							});
-						}
-					});
-				}
-			};
-		});
+		this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase(), ORGANIZATION));	
 		this.view.setTitle(ORGANIZATION);
 		this.view.setOnAction(e -> {
 			this.notifySelectedDate(this.view.getSelectDate());

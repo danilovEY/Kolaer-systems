@@ -53,7 +53,9 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
     };
 	
 	public VTableWithUsersBirthdayImpl() {
-		this.init();
+		Platform.runLater(() -> {
+			this.init();
+		});
 	}
 	
 	@SuppressWarnings("unchecked")
