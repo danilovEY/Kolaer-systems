@@ -33,7 +33,14 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 		this.initWithEditorKid();
 	}
 
-	private void initWithEditorKid()  {		
+	private void initWithEditorKid()  {	
+		
+		this.table.setMouseClick(e -> {
+			if(e.getClickCount() == 2) {
+				new VMDetailedInformationStageImpl(null).show();
+			}
+		});
+		
 		CompletableFuture.runAsync(() -> {
 			final Service<Void> service = new Service<Void>() {
 				@Override

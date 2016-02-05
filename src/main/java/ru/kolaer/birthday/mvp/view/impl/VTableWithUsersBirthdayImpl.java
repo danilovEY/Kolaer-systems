@@ -17,6 +17,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
@@ -32,6 +33,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import ru.kolaer.birthday.mvp.model.UserModel;
@@ -65,7 +67,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 		this.userBirthdayTable.getSelectionModel().setCellSelectionEnabled(true);
 		this.userBirthdayTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.userBirthdayTable.setEditable(true);
-
+		
 		final MenuItem item = new MenuItem("Копировать");
 	    item.setOnAction(event -> {
             final StringBuilder clipboardString = new StringBuilder();
@@ -226,6 +228,11 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 		Platform.runLater(() -> {
 			userBirthdayTable.getItems().add(user);
 		});
+	}
+
+	@Override
+	public void setMouseClick(EventHandler<? super MouseEvent> value) {
+		this.userBirthdayTable.setOnMouseClicked(value);
 	}
 }
 
