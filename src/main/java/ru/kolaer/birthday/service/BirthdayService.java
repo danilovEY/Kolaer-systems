@@ -2,8 +2,6 @@ package ru.kolaer.birthday.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-
 import javafx.util.Duration;
 import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.ServerStatus;
@@ -26,10 +24,10 @@ public class BirthdayService implements Service {
 			
 			final StringBuilder todayBirthday = new StringBuilder();
 			for(DbDataAll user : users) {
-				todayBirthday.append(user.getInitials()).append(" (").append(Optional.ofNullable(user.getPhone()).orElse("")).append(") - ").append(user.getDepartamentAbbreviated()).append("\n");
+				todayBirthday.append(user.getInitials()).append(" (").append("КолАЭР").append(") - ").append(user.getDepartamentAbbreviated()).append("\n");
 			}
 			for(DbBirthdayAll user : usersBirthday) {
-				todayBirthday.append(user.getInitials()).append(" (").append(Optional.ofNullable(user.getPhone()).orElse("")).append(") - ").append(user.getDepartament()).append("\n");
+				todayBirthday.append(user.getInitials()).append(" (").append(this.getNameOrganization(user.getOrganization())).append(") - ").append(user.getDepartament()).append("\n");
 			}
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\". Поздравляем с днем рождения!\n");
@@ -37,6 +35,22 @@ public class BirthdayService implements Service {
 		}
 	}
 
+	private String getNameOrganization(final String org) {
+		switch(org) {		
+			case "БалаковоАтомэнергоремонт": return "БалАЭР";
+			case "ВолгодонскАтомэнергоремонт": return "ВДАЭР";
+			case "КалининАтомэнергоремонт": return "КАЭР";
+			case "КурскАтомэнергоремонт": return "КурскАЭР";
+			case "ЛенАтомэнергоремонт": return "ЛенАЭР";
+			case "НововоронежАтомэнергоремонт": return "НВАЭР";
+			case "СмоленскАтомэнергоремонт": return "САЭР";
+			case "УралАтомэнергоремонт": return "УралАЭР";
+			case "Центральный аппарат": return "ЦА";
+			case "КолАтомэнергоремонт": return "КолАЭР";
+			default: return org;
+		}
+	}
+	
 	@Override
 	public void setRunningStatus(boolean isRun) {
 
