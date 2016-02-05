@@ -38,7 +38,7 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 	}
 
 	@Override
-	public DateCell call(DatePicker param) {
+	public DateCell call(final DatePicker param) {
 		return new DateCell() {
 			@Override
 			public void updateItem(final LocalDate item, final boolean empty) {
@@ -47,7 +47,6 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 				} else {
 					if(index == 0) {
 						if(item.equals(startDate)) {
-							System.out.println("Equals");
 							update = false;
 						} else {
 							update = true;
@@ -56,7 +55,7 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 					}		
 					index++;
 				}
-				System.out.println(index + " - " + startDate + " - " + item + " - " + update);
+
 				final int ind = index;
 				final Node node = this;
 				
@@ -69,7 +68,6 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 
 				CompletableFuture.runAsync(() -> {
 					int countUsersDataAll = 0;
-					System.out.println("Download");
 					if(organization != null) {
 						countUsersDataAll = ((UserBirthdayAllDataBase)userDB).getCountUsersBirthday(Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant()), organization);
 					} else {
@@ -96,5 +94,4 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 			}
 		};
 	}
-
 }
