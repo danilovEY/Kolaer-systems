@@ -3,7 +3,7 @@ package ru.kolaer.client.javafx.mvp.presenter;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
 
 /**
- * Контроллер для JavaFX - окна.
+ * Пресентер для JavaFX - окна.
  * @author danilovey
  *
  */
