@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomStage;
-import ru.kolaer.client.javafx.mvp.presenter.PPlugin;
 import ru.kolaer.client.javafx.mvp.presenter.PWindow;
 import ru.kolaer.client.javafx.mvp.presenter.PWindowPlugin;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
