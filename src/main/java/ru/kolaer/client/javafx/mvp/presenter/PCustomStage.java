@@ -5,7 +5,7 @@ import ru.kolaer.client.javafx.mvp.view.VCustomStage;
 /**
  * Пресентер для JavaFX - окна.
  * @author danilovey
- *
+ * @deprecated Замена на {@linkplain PTab}.
  */
 public interface PCustomStage extends PWindow {
 	/**Получить view окна.*/
