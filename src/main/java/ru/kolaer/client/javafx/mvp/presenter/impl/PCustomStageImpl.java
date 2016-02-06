@@ -7,7 +7,6 @@ import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javafx.application.Platform;
 import ru.kolaer.client.javafx.mvp.presenter.PCustomStage;
 import ru.kolaer.client.javafx.mvp.view.VCustomStage;
 import ru.kolaer.client.javafx.mvp.view.VWindow;
@@ -15,21 +14,50 @@ import ru.kolaer.client.javafx.mvp.view.impl.VCustomStageImpl;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMApplicationOnTaskPane;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 
+/**
+ * Имплеминтация {@linkplain PCustomStage}. При открытии окна, 
+ * создает view-панель для панели задач.
+ *
+ * @author Danilov
+ * @version 0.1
+ */
 public class PCustomStageImpl implements PCustomStage {
-	private static final Logger LOG = LoggerFactory.getLogger(PCustomStageImpl.class);
-	private final URLClassLoader classLoader;
-	private final UniformSystemApplication application;
+	private final Logger LOG = LoggerFactory.getLogger(PCustomStageImpl.class);
 	
+	/**Класс-лоадер плагина.*/
+	private final URLClassLoader classLoader;
+	/**Приложение плагина.*/
+	private final UniformSystemApplication application;
+	/**View окна.*/
 	private VCustomStage view;
+	/**View плагина на панели задач.*/
 	private VMApplicationOnTaskPane taskPane;
 	
+	/**
+	 * {@linkplain PCustomStageImpl}.
+	 * @param app - Плагин.
+	 */
 	public PCustomStageImpl(final UniformSystemApplication app) {
 		this(app, Optional.ofNullable(app.getName()).orElse("Приложение"));
 	}
+	
+	/**
+	 * {@linkplain PCustomStageImpl}.
+	 * @param app - Плагин.
+	 * @param name - Имя плагина.
+	 */
 	public PCustomStageImpl(final UniformSystemApplication app, final String name) {
 		this((URLClassLoader) PCustomStageImpl.class.getClassLoader(), app, name);
 	}
 	
+	/**
+	 * {@linkplain PCustomStageImpl}.
+	 * @param app - Плагин.
+	 * @param name - Имя плагина.
+	 * @param classLoader - класс-лоадер плагина.
+	 * 
+	 * @throws NullPointerException - если плагин null.
+	 */
 	public PCustomStageImpl(final URLClassLoader classLoader, final UniformSystemApplication app, final String name) {
 		this.application = app;
 		this.classLoader = classLoader;
@@ -44,16 +72,17 @@ public class PCustomStageImpl implements PCustomStage {
 	public void show() {
 		CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setName("Запуск плагина");
-			Thread.currentThread().setContextClassLoader(this.classLoader);
+			Thread.currentThread().setContextClassLoader(this.classLoader);			
 			
 			try {
 				this.application.run();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				LOG.error("Ошибка при запуске плагина!", e);
 			}
 			return this.application;
 		}).exceptionally(t -> {
 			LOG.error("Ошибка при запуске плагина!", t);
+			this.close();
 			return null;
 		}).thenAccept((app) -> {
 			this.view.setContent(app.getContent());
@@ -102,20 +131,16 @@ public class PCustomStageImpl implements PCustomStage {
 	}
 	@Override
 	public void setView(final VWindow view) {
-		Platform.runLater(() -> {
-			Thread.currentThread().setName("Конвертация окна");
-			Thread.currentThread().setContextClassLoader(this.classLoader);
-			final VCustomStage stage = new VCustomStageImpl();
-			stage.setContent(view.getContent());
-			stage.setTitle(view.getTitle());
-			stage.setVisible(view.isShowing());
-			stage.setIconWindow(this.application.getIcon());
-			stage.setOnCloseAction(e -> {
-				this.close();
-			});
-			
-			this.setView(stage);
+		final VCustomStage stage = new VCustomStageImpl(this.classLoader);
+		stage.setContent(view.getContent());
+		stage.setTitle(view.getTitle());
+		stage.setVisible(view.isShowing());
+		stage.setIconWindow(this.application.getIcon());
+		stage.setOnCloseAction(e -> {
+			this.close();
 		});
+		
+		this.setView(stage);
 	}
 	
 	@Override
