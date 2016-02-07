@@ -6,7 +6,6 @@ import java.util.List;
 import ru.kolaer.birthday.service.BirthdayService;
 import ru.kolaer.client.javafx.plugins.UniformSystem;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
-import ru.kolaer.client.javafx.plugins.UniformSystemLabel;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
@@ -25,11 +24,6 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 	@Override
 	public String getName() {
 		return "Birthday";
-	}
-
-	@Override
-	public UniformSystemLabel getLabel() {
-		return null;
 	}
 
 	@Override
