@@ -20,12 +20,6 @@ public class UniformSystemPluginAdapter implements UniformSystemPlugin {
 	}
 
 	@Override
-	public UniformSystemLabel getLabel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public UniformSystemApplication getApplication() {
 		// TODO Auto-generated method stub
 		return null;

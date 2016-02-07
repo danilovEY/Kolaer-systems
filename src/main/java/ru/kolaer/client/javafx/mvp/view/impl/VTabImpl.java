@@ -30,7 +30,7 @@ public class VTabImpl implements VTab {
 	
 	public VTabImpl(final URLClassLoader loader, final UniformSystemApplication app) {		
 		this.app = app;
-		
+		this.tab = new Tab();
 		Platform.runLater(() -> {
 			Thread.currentThread().setName("Инициализация вкладки: " + app.getName());
 			Thread.currentThread().setContextClassLoader(loader);		
@@ -39,8 +39,7 @@ public class VTabImpl implements VTab {
 		});
 	}
 	
-	private void init() {
-		this.tab = new Tab();
+	private void init() {	
 		this.tab.setText(Optional.ofNullable(this.app.getName()).orElse("Плагин"));
 		this.tab.setContent(this.app.getContent());
 

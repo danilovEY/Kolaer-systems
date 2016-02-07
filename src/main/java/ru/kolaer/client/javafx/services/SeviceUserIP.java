@@ -21,11 +21,13 @@ public class SeviceUserIP implements Service {
 	public void run() {
 		Thread.currentThread().setName("Передача IP");
 		while(this.isRun) {
+			
 			final StringBuilder url = new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL.toString())
 					.append("/system/user/")
 					.append(this.username)
 					.append("/ip");
 			try {
+				TimeUnit.MINUTES.sleep(1);
 				final InetAddress inet = InetAddress.getLocalHost();
 				rest.postForObject(url.toString(), inet.getHostAddress(), String.class);
 				TimeUnit.HOURS.sleep(2);

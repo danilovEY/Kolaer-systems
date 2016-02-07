@@ -1,11 +1,13 @@
 package ru.kolaer.client.javafx.services;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,7 @@ import ch.qos.logback.classic.Level;
 
 public class ServiceControlManager {
 	private final Logger LOG = LoggerFactory.getLogger(ServiceControlManager.class);
-	private final List<Service> servicesList = new ArrayList<>();
+	private final Map<Service, Future<Void>> runnableService = new HashMap<>();
 	private final ExecutorService readPluginsThread = Executors.newCachedThreadPool();
 	private boolean autoRun = false;
 	
@@ -23,16 +25,20 @@ public class ServiceControlManager {
 	}
 	
 	public void runAllServices() {
-		this.servicesList.parallelStream().forEach(this::runService);
+		this.runnableService.keySet().parallelStream().forEach(this::runService);
 	}
 	
 	public void runService(final Service service) {
-		LOG.info("Запуск службы: \"{}\"", service.getName());
-		service.setRunningStatus(true);
-		CompletableFuture.runAsync(service, readPluginsThread).exceptionally(t -> {
-			LOG.error("Ошибка в запуске службы!", t);
-			return null;
-		});	
+		if(!service.isRunning()) {
+			LOG.info("Запуск службы: \"{}\"", service.getName());
+			service.setRunningStatus(true);
+			final Future<Void> futureService = CompletableFuture.runAsync(service, readPluginsThread).exceptionally(t -> {
+				LOG.error("Ошибка в запуске службы!", t);
+				return null;
+			});	
+			this.runnableService.put(service, futureService);
+			
+		}
 	}
 	
 	public void addService(final Service service) {
@@ -40,7 +46,7 @@ public class ServiceControlManager {
 	}
 	
 	public void addService(final Service service, final boolean run) {
-		this.servicesList.add(service);
+		this.runnableService.put(service, null);
 		
 		LOG.info("Добавлена служба: {}", service.getName());
 		
@@ -50,27 +56,34 @@ public class ServiceControlManager {
 	}
 	
 	public void removeService(final Service service){
-		service.setRunningStatus(false);
-		service.stop();
-		this.servicesList.remove(service);
+		if(service != null) {
+			service.setRunningStatus(false);
+			service.stop();
+			
+			final Future<Void> future = this.runnableService.get(service);
+			if(future != null) {
+				try{
+					future.get(10, TimeUnit.SECONDS);
+				} catch(final Exception ex) {
+					future.cancel(true);
+				}
+			}
+		}
 	}
 	
 	public void removeAllServices() {
-		this.servicesList.parallelStream().forEach(service -> { 
+		this.runnableService.entrySet().forEach(entity -> {
+			final Service service = entity.getKey();
 			service.setRunningStatus(false);
 			service.stop();
-		});
-		this.servicesList.clear();
-	}
-	
-	public void removeService(final String nameService) {
-		Iterator<Service> iter = this.servicesList.iterator();
-		while(iter.hasNext()) {
-			final Service service = iter.next();
-			if(service.getName().equals(nameService)) {
-				iter.remove();
+			try {
+				entity.getValue().get(10, TimeUnit.SECONDS);
+			} catch(final Exception ex) {
+				entity.getValue().cancel(true);
 			}
-		}
+		});
+
+		this.runnableService.clear();
 	}
 	
 	public void setAutoRun(final boolean autoRun) {
@@ -81,7 +94,7 @@ public class ServiceControlManager {
 		return this.autoRun;
 	}
 	
-	public List<Service> getServices() {
-		return this.servicesList;
+	public Set<Service> getServices() {
+		return this.runnableService.keySet();
 	}
 }
