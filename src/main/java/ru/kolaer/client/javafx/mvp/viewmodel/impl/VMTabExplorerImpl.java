@@ -23,15 +23,16 @@ import javafx.scene.control.TabPane;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
 import ru.kolaer.client.javafx.mvp.view.ImportFXML;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObresvable;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerTabsObserver;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
+import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.tools.Resources;
 
-public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, ExplorerTabsObresvable {
+public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, ExplorerObresvable {
 	private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerImpl.class);
 	@FXML
 	private TabPane pluginsTabPane;
@@ -42,7 +43,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 	private final ServiceControlManager servicesManager;
 	private final UniformSystemEditorKit editorKid;
 	private Map<String, PTab> pluginMap = new HashMap<>();
-	private List<ExplorerTabsObserver> observers = new LinkedList<>();
+	private List<ExplorerObserver> observers = new LinkedList<>();
 	
 	public VMTabExplorerImpl(final ServiceControlManager servicesManager, final UniformSystemEditorKit editorKid) {
 		super(Resources.V_TAB_EXPLORER);
@@ -96,7 +97,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 				} else {
 					this.pluginsTabPane.getTabs().add(tab.getView().getContent());
 				}
-				this.notifyAddTab(tab);
+				this.notifyAddPlugin(tab);
 				threadFroLoadPlug.shutdown();
 			});
 		}, threadFroLoadPlug).exceptionally(t -> {
@@ -112,7 +113,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 				CompletableFuture.runAsync(() -> {	
 					final PTab tab = this.pluginMap.get(oldTab.getText());
 					tab.deActiveTab();
-					this.notifyCloseTab(tab);
+					this.notifyDeactivationPlugin(tab);
 				}, treadDesActTab);			
 				treadDesActTab.shutdown();
 			}
@@ -122,7 +123,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 				CompletableFuture.runAsync(() -> {
 					final PTab tab = this.pluginMap.get(newTab.getText());
 					tab.activeTab();
-					this.notifyOpenTab(tab);
+					this.notifyActivationPlugin(tab);
 				}, treadActTab);			
 				treadActTab.shutdown();
 			}
@@ -152,27 +153,27 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 	}
 
 	@Override
-	public void notifyOpenTab(final PTab tab) {
-		this.observers.parallelStream().forEach(obs -> obs.updateOpenTab(tab));
-	}
-
-	@Override
-	public void notifyCloseTab(final PTab tab) {
-		this.observers.parallelStream().forEach(obs -> obs.updateCloseTab(tab));
-	}
-
-	@Override
-	public void registerObserver(final ExplorerTabsObserver observer) {
+	public void registerObserver(final ExplorerObserver observer) {
 		this.observers.add(observer);
 	}
 
 	@Override
-	public void removeObserver(final ExplorerTabsObserver observer) {
+	public void removeObserver(final ExplorerObserver observer) {
 		this.observers.remove(observer);
 	}
 
 	@Override
-	public void notifyAddTab(final PTab tab) {
-		this.observers.parallelStream().forEach(obs -> obs.updateAddTab(tab));
+	public void notifyActivationPlugin(RemoteActivationDeactivationPlugin tab) {
+		this.observers.parallelStream().forEach(obs -> obs.updateActivationPlugin(tab));
+	}
+
+	@Override
+	public void notifyDeactivationPlugin(RemoteActivationDeactivationPlugin tab) {
+		this.observers.parallelStream().forEach(obs -> obs.updateDeactivationPlugin(tab));
+	}
+
+	@Override
+	public void notifyAddPlugin(RemoteActivationDeactivationPlugin tab) {
+		this.observers.parallelStream().forEach(obs -> obs.updateAddPlugin(tab));
 	}
 }

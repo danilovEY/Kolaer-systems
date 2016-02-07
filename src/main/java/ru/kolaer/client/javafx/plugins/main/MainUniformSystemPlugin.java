@@ -1,10 +1,17 @@
-package ru.kolaer.client.javafx.mvp.presenter.impl;
+package ru.kolaer.client.javafx.plugins.main;
 
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplicationAdapter;
 import ru.kolaer.client.javafx.plugins.UniformSystemPluginAdapter;
+import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
 
-public class PMainApplication extends UniformSystemPluginAdapter {
+/**
+ * Presenter главного окна. Для регистрации главного в службе {@linkplain ServiceRemoteActivOrDeactivPlugin}.
+ * @author Danilov
+ * @version 0.1
+ */
+public class MainUniformSystemPlugin extends UniformSystemPluginAdapter {
+	/**Модель имплеминтируищая метод для завешения приложения.*/
 	private final UniformSystemApplicationAdapter app = new UniformSystemApplicationAdapter() {
 		@Override
 		public void stop() {

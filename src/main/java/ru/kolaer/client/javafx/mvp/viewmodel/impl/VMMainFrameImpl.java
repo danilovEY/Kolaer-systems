@@ -22,7 +22,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import ru.kolaer.client.javafx.plugins.PluginReader;
-import ru.kolaer.client.javafx.services.ServiceClosableTab;
+import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.SeviceUserIP;
 import ru.kolaer.client.javafx.services.UserPingService;
@@ -65,7 +65,7 @@ public class VMMainFrameImpl extends Application {
     		this.servicesManager.addService(new UserPingService());
     		this.servicesManager.addService(new SeviceUserIP());
     		this.servicesManager.addService(new UserWindowsKeyListenerService());
-    		this.servicesManager.addService(new ServiceClosableTab(explorer));
+    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer));
     	}, threadServices);
     	threadServices.shutdown();
     	
