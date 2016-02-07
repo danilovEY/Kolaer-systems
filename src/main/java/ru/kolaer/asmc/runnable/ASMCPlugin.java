@@ -4,7 +4,6 @@ import java.util.List;
 
 import ru.kolaer.client.javafx.plugins.UniformSystem;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
-import ru.kolaer.client.javafx.plugins.UniformSystemLabel;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
@@ -20,17 +19,12 @@ public class ASMCPlugin implements UniformSystemPlugin {
 	
 	@Override
 	public void initialization(final UniformSystemEditorKit editorKid) throws Exception {
-		this.app = new ASMCApplication(editorKid);
+		this.app = new ASMCApplication();
 	}
 
 	@Override
 	public String getName() {
 		return "ASUP";
-	}
-
-	@Override
-	public UniformSystemLabel getLabel() {
-		return null;
 	}
 
 	@Override
