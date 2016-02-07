@@ -74,8 +74,7 @@ public class PTabImpl implements PTab {
 			});
 		
 			this.view.setContent(app.getContent());
-			this.isActive = true;
-			
+			this.isActive = true;	
 		}
 	}
 
@@ -119,7 +118,7 @@ public class PTabImpl implements PTab {
 
 	@Override
 	public void activation() {
-		
+		//TODO Сделать загрузку плагина.
 	}
 
 	@Override

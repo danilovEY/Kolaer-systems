@@ -22,7 +22,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
-import ru.kolaer.client.javafx.mvp.view.ImportFXML;
+import ru.kolaer.client.javafx.mvp.view.LoadFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
@@ -32,7 +32,7 @@ import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.tools.Resources;
 
-public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, ExplorerObresvable {
+public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, ExplorerObresvable {
 	private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerImpl.class);
 	@FXML
 	private TabPane pluginsTabPane;
