@@ -5,6 +5,5 @@ import javafx.concurrent.Service;
 public interface DialogUS {
 	void showSimpleDialog(String title, String text);
 	void showErrorDialog(String title, String text);
-	ProgressBarObservable showLoadingDialog(String text);
 	void showLoadingDialog(Service<?> service);
 }
