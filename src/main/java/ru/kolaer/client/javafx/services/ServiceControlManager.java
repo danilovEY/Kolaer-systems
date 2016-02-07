@@ -1,10 +1,12 @@
 package ru.kolaer.client.javafx.services;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +14,7 @@ import ch.qos.logback.classic.Level;
 
 public class ServiceControlManager {
 	private final Logger LOG = LoggerFactory.getLogger(ServiceControlManager.class);
-	private final List<Service> servicesList = new LinkedList<>();
+	private final List<Service> servicesList = new ArrayList<>();
 	private final ExecutorService readPluginsThread = Executors.newCachedThreadPool();
 	private boolean autoRun = false;
 	
@@ -59,6 +61,16 @@ public class ServiceControlManager {
 			service.stop();
 		});
 		this.servicesList.clear();
+	}
+	
+	public void removeService(final String nameService) {
+		Iterator<Service> iter = this.servicesList.iterator();
+		while(iter.hasNext()) {
+			final Service service = iter.next();
+			if(service.getName().equals(nameService)) {
+				iter.remove();
+			}
+		}
 	}
 	
 	public void setAutoRun(final boolean autoRun) {

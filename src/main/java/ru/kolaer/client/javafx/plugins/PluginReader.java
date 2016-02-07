@@ -91,7 +91,7 @@ public class PluginReader {
 			final List<UniformSystemPlugin> result = new ArrayList<>();
 			for(final Future<UniformSystemPlugin> future : futureList){
 				try{
-					final UniformSystemPlugin plg = future.get(30, TimeUnit.SECONDS);
+					final UniformSystemPlugin plg = future.get(1, TimeUnit.MINUTES);
 					if(plg != null)
 						result.add(plg);
 				} catch(Exception e){
@@ -103,7 +103,7 @@ public class PluginReader {
 		});
 
 		try{
-			return thread.get(1, TimeUnit.MINUTES);
+			return thread.get(5, TimeUnit.MINUTES);
 		}catch(InterruptedException | ExecutionException | TimeoutException e){
 			LOG.error("Потоки прерваны. Истекло время ожидания!");
 			return Collections.emptyList();

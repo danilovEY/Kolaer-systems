@@ -100,6 +100,7 @@ public class PTabImpl implements PTab {
 	@Override
 	public void closeTab() {
 		CompletableFuture.runAsync(() -> {
+			Thread.currentThread().setName("Закрытие плагина: " + this.plugin.getName());
 			this.deActiveTab();
 			this.view.closeTab();
 			try {

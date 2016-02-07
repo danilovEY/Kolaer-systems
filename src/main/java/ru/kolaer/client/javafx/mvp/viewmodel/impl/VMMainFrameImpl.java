@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,14 +14,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import ru.kolaer.client.javafx.plugins.PluginReader;
-import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
+import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
 import ru.kolaer.client.javafx.services.SeviceUserIP;
 import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
@@ -33,51 +32,58 @@ import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
+/**
+ * Главное окно приложения.
+ *
+ * @author Danilov
+ * @version 0.1
+ */
 public class VMMainFrameImpl extends Application {
 	private static final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
+	/**Мапа где ключ и значение соответствует ключам и значениям приложения.*/
 	private static final Map<String, String> PARAM = new HashMap<>();
 	
+	/**Панель с контентом главного окна.*/
 	@FXML
     private BorderPane mainPane;
-	
-	private ServiceControlManager servicesManager;
+	/**Менеджер служб.*/
+	private final ServiceControlManager servicesManager = new ServiceControlManager();
+	/**Главное окно приложения.*/
 	private Stage stage;
 	
     @FXML
     public void initialize() {
+    	this.initApplicationParams(); 
+    	
+    	//Статус бар приложения.
     	final HBox statusBar = new HBox();
     	statusBar.setPadding(new Insets(0, 30, 0, 30));
     	statusBar.setSpacing(30);
     	statusBar.setAlignment(Pos.CENTER_RIGHT);
     	statusBar.setStyle("-fx-background-color: #66CCFF");
-    	final UniformSystemEditorKit editorKid = new UniformSystemEditorKitImpl(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
-    	this.servicesManager = new ServiceControlManager();
     	
+    	final UniformSystemEditorKit editorKid = new UniformSystemEditorKitImpl(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
+    	
+    	//Инициализация вкладочного explorer'а. 
     	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, editorKid);
+    	
     	this.mainPane.setBottom(statusBar);
     	this.mainPane.setCenter(explorer.getContent());
     	
-    	this.initApplicationParams();
-    	
-    	final ExecutorService threadServices = Executors.newSingleThreadExecutor();
     	CompletableFuture.runAsync(() -> {
-    		Thread.currentThread().setName("Инициализация менеджера служб и добавление служб");	
-    		this.servicesManager.addService(new UserPingService());
-    		this.servicesManager.addService(new SeviceUserIP());
-    		this.servicesManager.addService(new UserWindowsKeyListenerService());
-    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer));
-    	}, threadServices);
-    	threadServices.shutdown();
-    	
-    	final ExecutorService threadScanPlugins = Executors.newSingleThreadExecutor();  
+    		Thread.currentThread().setName("Добавление системны служб");	
+    		this.servicesManager.addService(new UserPingService(), true);
+    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer), true);
+    	});
+
     	CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setName("Скан и добавление плагинов");
 			return new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
-		}, threadScanPlugins).exceptionally(t -> {
+		}).exceptionally(t -> {
 			LOG.error("Ошибка при сканировании плагинов!", t);
+			editorKid.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Ошибка при сканировании плагинов!");
 			return null;
 		});
-    	threadScanPlugins.shutdown(); 
     }
     
     private void initApplicationParams() {
@@ -89,8 +95,10 @@ public class VMMainFrameImpl extends Application {
 		final String service = PARAM.get("service");
 		if(service == null || !service.equals("false")) {		
 			this.servicesManager.setAutoRun(true);
-			this.servicesManager.runAllServices();
-		}
+    		this.servicesManager.addService(new SeviceUserIP());
+    		this.servicesManager.addService(new UserWindowsKeyListenerService());
+    		this.servicesManager.runAllServices();
+		} 
     }
     
 	@Override
@@ -105,7 +113,7 @@ public class VMMainFrameImpl extends Application {
 			LOG.error("Не удалось загрузить: "+ Resources.V_MAIN_FRAME, e);
 			System.exit(-9);
 		}
-
+		this.stage.getIcons().add(new Image(Resources.ICON_START_BUTTON.toString(), true));
 		this.stage.setOnCloseRequest(e -> {
 			System.exit(0);
 		});	

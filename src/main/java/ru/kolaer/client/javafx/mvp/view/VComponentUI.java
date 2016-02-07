@@ -9,7 +9,7 @@ import javafx.scene.Parent;
  */
 public interface VComponentUI {
 	/**Задать view контент.*/
-	void setContent(final Parent content);
+	void setContent(Parent content);
 	/**Получить view контент.*/
 	Parent getContent();
 }
