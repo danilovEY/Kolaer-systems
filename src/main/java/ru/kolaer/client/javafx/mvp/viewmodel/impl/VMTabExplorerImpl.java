@@ -82,7 +82,7 @@ public class VMTabExplorerImpl extends  ImportFXML implements VTabExplorer, Expl
 			LOG.error("Ошибка при инициализации плагина");
 			return null;
 		}).thenApplyAsync((plg) -> {
-			final PTab tabPlugin = new PTabImpl(jarClassLoaser, plg);
+			final PTab tabPlugin = new PTabImpl(jarClassLoaser, plg, this.editorKid);
 			this.pluginMap.put(plg.getApplication().getName(), tabPlugin);
 			return tabPlugin;
 		}, threadFroLoadPlug).exceptionally(t -> {

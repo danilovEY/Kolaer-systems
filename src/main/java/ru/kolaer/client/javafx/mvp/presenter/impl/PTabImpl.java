@@ -2,8 +2,6 @@ package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import java.net.URLClassLoader;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,20 +11,36 @@ import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.mvp.view.impl.VTabImpl;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
+/**
+ * Реализация интерфейса {@linkplain PTab}. Содержит classLoader плагина.
+ * @author Danilov
+ * @version 0.1
+ */
 public class PTabImpl implements PTab {
 	private final Logger LOG = LoggerFactory.getLogger(PTabImpl.class);
-	
+	/**Плагин.*/
 	private final UniformSystemPlugin plugin;
+	/**Приложение плагина.*/
 	private final UniformSystemApplication app;
+	/**View.*/
 	private final VTab view;
+	/**Флаг активации вкладки.*/
 	private boolean isActive = false;
+	/**ClassLoader плагина.*/
 	private final URLClassLoader loader;
-	
-	public PTabImpl(final URLClassLoader loader, final UniformSystemPlugin plugin) {
+	private final UniformSystemEditorKit editorKid;
+	/**
+	 * {@linkplain PTabImpl}
+	 * @param loader - Загрузчик плагина.
+	 * @param plugin - Плагин.
+	 */
+	public PTabImpl(final URLClassLoader loader, final UniformSystemPlugin plugin, final UniformSystemEditorKit editorKid) {
 		this.plugin = plugin;
 		this.loader = loader;
 		this.app = this.plugin.getApplication();
+		this.editorKid = editorKid;
 		this.view = new VTabImpl(loader, plugin.getApplication());
 	}
 
@@ -48,64 +62,44 @@ public class PTabImpl implements PTab {
 	@Override
 	public void activeTab() {
 		if(!this.isActive) {
-			final ExecutorService treadRunApp = Executors.newSingleThreadExecutor();
-			final ExecutorService treadActTab = Executors.newSingleThreadExecutor();
 			CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getName());
 				Thread.currentThread().setContextClassLoader(this.loader);
 				try {
 					this.app.run();
-				} catch (Exception e) {
-					LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(), e);
+				} catch (final Exception e) {
+					LOG.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getName(), e);
+					this.editorKid.getUISystemUS().getDialog().showErrorDialog(this.plugin.getName(), "Ошибка при запуске плагина!");
 				}			
-				treadActTab.shutdown();
-			}, treadActTab).exceptionally(t -> {
-				LOG.error("Ошибка при запуске плагина \"{}\"!",this.plugin.getName(),t);
-				return null;	
 			});
-					
-			CompletableFuture.runAsync(() -> {
-				this.view.setContent(app.getContent());
-				this.isActive = true;
-				treadRunApp.shutdown();
-			}, treadRunApp).exceptionally(t -> {
-				LOG.error("Ошибка при отображении плагина \"{}\"!",this.plugin.getName(),t);
-				return null;	
-			});
+		
+			this.view.setContent(app.getContent());
+			this.isActive = true;
+			
 		}
 	}
 
 	@Override
 	public void deActiveTab() {
 		if(this.isActive) {
-			final ExecutorService treadDeActTab = Executors.newSingleThreadExecutor();
-			CompletableFuture.supplyAsync(() -> {
+			CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Остановка плагина: " + this.plugin.getName());
 				Thread.currentThread().setContextClassLoader(this.loader);
 				try {
 					this.app.stop();
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getName(),e);
+					this.editorKid.getUISystemUS().getDialog().showErrorDialog(this.plugin.getName(), "Ошибка при остановке плагина!");
 				}
-				return app;
-			}, treadDeActTab).exceptionally(t -> {
-				LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getName(),t);
-				return null;	
-			}).thenApplyAsync((app) -> {
-				this.view.setContent(null);
-				this.isActive = false;
-				treadDeActTab.shutdown();
-				return app;
-			}).exceptionally(t -> {
-				LOG.error("Ошибка при отображении плагина \"{}\"!",this.plugin.getName(),t);
-				return null;	
-			});	
+			});
+
+			this.view.setContent(null);
+			this.isActive = false;
 		}
 	}
 
 	@Override
 	public void closeTab() {
-		final ExecutorService treadCloseTab = Executors.newSingleThreadExecutor();
 		CompletableFuture.runAsync(() -> {
 			this.deActiveTab();
 			this.view.closeTab();
@@ -114,12 +108,13 @@ public class PTabImpl implements PTab {
 				this.loader.close();
 			} catch (Exception e) {
 				LOG.error("Ошибка при закрытии clssloader'а.", e);
+				throw new RuntimeException(e);
 			}
-		}, treadCloseTab).exceptionally(t -> {
+		}).exceptionally(t -> {
 			LOG.error("Ошибка при закрытии приложения: {}", this.app.getName(), t);
+			System.exit(-9);
 			return null;
 		});
-		treadCloseTab.shutdown();
 	}
 
 	@Override
