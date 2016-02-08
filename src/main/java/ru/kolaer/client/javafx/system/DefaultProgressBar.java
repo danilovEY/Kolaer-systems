@@ -3,6 +3,12 @@ package ru.kolaer.client.javafx.system;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Реализация стандартного статус-бара.
+ * 
+ * @author danilovey
+ * @version 0.1
+ */
 public class DefaultProgressBar implements ProgressBarObservable {
 	private double value = 0;
 	private final List<ProgressBarObserver> observers = new LinkedList<>();
