@@ -11,10 +11,18 @@ import org.springframework.web.client.RestTemplate;
 
 import ru.kolaer.client.javafx.tools.Resources;
 
+/**
+ * Служба для передачи IP пользователя на сервер.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class SeviceUserIP implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(SeviceUserIP.class);
+	/**Имя пользователя.*/
 	private final String username = System.getProperty("user.name");
 	private boolean isRun = false;
+	/**Объект для взаимодействия с сервером.*/
 	private final RestTemplate rest = new RestTemplate();
 	
 	@Override
@@ -27,7 +35,7 @@ public class SeviceUserIP implements Service {
 					.append(this.username)
 					.append("/ip");
 			try {
-				TimeUnit.MINUTES.sleep(1);
+				TimeUnit.SECONDS.sleep(15);
 				final InetAddress inet = InetAddress.getLocalHost();
 				rest.postForObject(url.toString(), inet.getHostAddress(), String.class);
 				TimeUnit.HOURS.sleep(2);

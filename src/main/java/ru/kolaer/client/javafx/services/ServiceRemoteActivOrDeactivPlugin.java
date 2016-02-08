@@ -3,7 +3,6 @@ package ru.kolaer.client.javafx.services;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -16,13 +15,21 @@ import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.tools.Resources;
 
+/**
+ * Служба для удаленного активации/дезактивации плагина.
+ * 
+ * @author danilovey
+ * @version 0.1
+ */
 public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObserver {
-	private static final Logger LOG = LoggerFactory.getLogger(ServiceRemoteActivOrDeactivPlugin.class);
-	
+	private final Logger LOG = LoggerFactory.getLogger(ServiceRemoteActivOrDeactivPlugin.class);
+	/**Объект для взаимодействия с REST.*/
 	private final RestTemplate restTemplate = new RestTemplate();	
+	/**Имя пользователя.*/
 	private final String username = System.getProperty("user.name");
 	private final ExplorerObresvable explorer;
 	private boolean isRunning = false;
+	/**Список активных плагинов.*/
 	private final List<RemoteActivationDeactivationPlugin> plugins = new LinkedList<>();
 	
 	public ServiceRemoteActivOrDeactivPlugin(final ExplorerObresvable explorer) {
@@ -39,14 +46,16 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 			try {
 				TimeUnit.SECONDS.sleep(5);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOG.error("Ошибка!", e);
+				this.isRunning = false;
+				return;
 			}
 			if(plugins.size() > 0) {
 				try {
 					@SuppressWarnings("unchecked")
-					Set<String> pluginsClose = restTemplate.getForObject(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString(), Set.class);
+					final List<String> pluginsClose = restTemplate.getForObject(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString(), List.class);
 					pluginsClose.forEach(tabName -> {
-						Iterator<RemoteActivationDeactivationPlugin> iter = plugins.iterator();
+						final Iterator<RemoteActivationDeactivationPlugin> iter = plugins.iterator();
 						while(iter.hasNext()) {
 							final RemoteActivationDeactivationPlugin plugin = iter.next();
 							if(tabName.equals(plugin.getName())) {
@@ -56,7 +65,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 						}	
 					});
 					pluginsClose.clear();
-				} catch(RestClientException ex) {
+				} catch(final RestClientException ex) {
 					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString());
 				}
 			}

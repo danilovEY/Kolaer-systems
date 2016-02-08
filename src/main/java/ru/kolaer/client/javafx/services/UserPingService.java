@@ -10,24 +10,26 @@ import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.javafx.tools.Resources;
 
 /**
- *
+ * Служба для пинга сервера (чтобы сервер автоматически не удалил подключенного пользователя).
  * @author Danilov
  * @version 0.1
  */
 public class UserPingService implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(UserPingService.class);
+	/**Объект для взаимодействия с сервером.*/
 	private final RestTemplate restTemplate = new RestTemplate();
+	/**Имя пользователя.*/
 	private final String username = System.getProperty("user.name");
-	private boolean isRun = false;
+	private boolean isRunning = false;
 	
 	@Override
 	public void setRunningStatus(final boolean isRun) {
-		this.isRun = isRun;
+		this.isRunning = isRun;
 	}
 
 	@Override
 	public boolean isRunning() {
-		return this.isRun;
+		return this.isRunning;
 	}
 
 	@Override
@@ -37,18 +39,20 @@ public class UserPingService implements Service {
 
 	@Override
 	public void run() {
-		this.isRun = true;
+		this.isRunning = true;
 		Thread.currentThread().setName("Прием и передача пинга");
-		while(this.isRun){
+		while(this.isRunning){
 			try {
 				TimeUnit.SECONDS.sleep(3);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.error("Ошибка!", e);
+				this.isRunning = false;
+				return;
 			}
 			try {
+				//Получаем статус пинга пользователя.
 				String bool = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/ping", String.class);
-				
+				//Если false, значит серверу нужен наш пинг.
 				if(bool.equals("false")){
 					restTemplate.postForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/ping", "true", String.class);
 				}
@@ -60,6 +64,6 @@ public class UserPingService implements Service {
 
 	@Override
 	public void stop() {
-		this.isRun = false;
+		this.isRunning = false;
 	}
 }

