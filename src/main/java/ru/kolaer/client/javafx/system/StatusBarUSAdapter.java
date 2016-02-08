@@ -1,5 +1,10 @@
 package ru.kolaer.client.javafx.system;
 
+/**
+ * 
+ * @author danilovey
+ * @version 0.1
+ */
 public class StatusBarUSAdapter implements StatusBarUS{
 
 	@Override

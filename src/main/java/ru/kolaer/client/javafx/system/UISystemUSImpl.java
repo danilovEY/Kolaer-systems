@@ -1,5 +1,11 @@
 package ru.kolaer.client.javafx.system;
 
+/**
+ * Реализация системных (приложения) объектов.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class UISystemUSImpl implements UISystemUS {
 	private final NotificationUS notification = new NotificationUSImpl();
 	private final DialogUS dialog = new DialogUSImpl();

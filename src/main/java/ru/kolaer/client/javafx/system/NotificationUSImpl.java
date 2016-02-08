@@ -5,6 +5,12 @@ import org.controlsfx.control.Notifications;
 import javafx.application.Platform;
 import javafx.util.Duration;
 
+/**
+ * Реализация интерфейса для работы с оповещением.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class NotificationUSImpl implements NotificationUS {
 
 	@Override
