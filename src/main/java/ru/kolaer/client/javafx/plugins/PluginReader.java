@@ -22,17 +22,26 @@ import org.slf4j.LoggerFactory;
 
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 
+/**
+ * Чтение плагинов в виде .jar файлов.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class PluginReader {
-	private static final Logger LOG = LoggerFactory.getLogger(PluginReader.class);
-
+	private final Logger LOG = LoggerFactory.getLogger(PluginReader.class);
+	/**Путь к папке с плагинами.*/
 	private final String pathToPlugins;
 
 	public PluginReader(final String pathToPlugins) {
 		this.pathToPlugins = pathToPlugins;
 	}
-
+	/**
+	 * Сканирование папки с плагинами.
+	 * @param explorer - Ezplorer в который добавляются плагины.
+	 * @return - Список плагинов.
+	 */
 	public List<UniformSystemPlugin> scanPlugins(final VMExplorer explorer) {
-
 		LOG.debug("Сканирование папки: \"{}\"", this.pathToPlugins);
 		final File dirToPlugins = new File(this.pathToPlugins);
 		if(!dirToPlugins.isDirectory()){
@@ -94,7 +103,7 @@ public class PluginReader {
 					final UniformSystemPlugin plg = future.get(1, TimeUnit.MINUTES);
 					if(plg != null)
 						result.add(plg);
-				} catch(Exception e){
+				} catch(final Exception e){
 					LOG.error("Истекло время ожидания!");
 					continue;
 				}
@@ -105,7 +114,7 @@ public class PluginReader {
 		try{
 			return thread.get(5, TimeUnit.MINUTES);
 		}catch(InterruptedException | ExecutionException | TimeoutException e){
-			LOG.error("Потоки прерваны. Истекло время ожидания!");
+			LOG.error("Потоки прерваны. Истекло время ожидания!", e);
 			return Collections.emptyList();
 		}
 	}
