@@ -5,7 +5,14 @@ import org.springframework.web.client.RestTemplate;
 
 import ru.kolaer.client.javafx.tools.Resources;
 
+/**
+ * Реализация интерфейса для работы с сетью.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class NetworkUSImpl implements NetworkUS {
+	/**БД через RESTful.*/
 	private final KolaerDataBase kolaerDataBase = new KolaerDataBaseRESTful();
 
 	@Override

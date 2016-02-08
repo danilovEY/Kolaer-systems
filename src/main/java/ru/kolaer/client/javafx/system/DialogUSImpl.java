@@ -7,6 +7,12 @@ import javafx.concurrent.Service;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * Реализация диалоговых окон.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class DialogUSImpl implements DialogUS {
 
 	@Override
@@ -29,7 +35,10 @@ public class DialogUSImpl implements DialogUS {
 	}
 
 	@Override
-	public void showLoadingDialog(final Service<?> service) {
+	public void showLoadingDialog(final Service<?> service) {		
+		if(!service.isRunning())
+			service.start();
+		
 		Platform.runLater(() -> {
 			final ProgressDialog dialog = new ProgressDialog(service);
 			dialog.showAndWait();
