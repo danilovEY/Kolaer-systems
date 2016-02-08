@@ -21,7 +21,7 @@ import ru.kolaer.client.javafx.tools.User32.MSG;
  * @author danilovey
  * @version 0.1
  */
-public class UserWindowsKeyListenerService implements LocaleService {
+public class UserWindowsKeyListenerService implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(UserWindowsKeyListenerService.class);
 	/**Объект для работы с сервером.*/
 	private final RestTemplate restTemplate = new RestTemplate();
