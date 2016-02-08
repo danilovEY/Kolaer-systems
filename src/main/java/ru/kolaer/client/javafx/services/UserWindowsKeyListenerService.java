@@ -67,10 +67,10 @@ public class UserWindowsKeyListenerService implements LocaleService {
 				User32.RegisterHotKey(null, i, 0, i);
 				
 				if(i>40) {
-					User32.RegisterHotKey(null, i + 1000, 0x0001, i); //Ctrl
-					User32.RegisterHotKey(null, i + 2000, 0x0002, i); //Alt
-					User32.RegisterHotKey(null, i + 3000, 0x0004, i); //Shift
-					User32.RegisterHotKey(null, i + 4000, 0x0008, i); //Win
+					User32.RegisterHotKey(null, i + 1000, User32.MOD_ALT, i);
+					User32.RegisterHotKey(null, i + 2000, User32.MOD_CONTROL, i);
+					User32.RegisterHotKey(null, i + 3000, User32.MOD_SHIFT, i);
+					User32.RegisterHotKey(null, i + 4000, User32.MOD_WIN, i);
 				}
 			}
 		}).thenRunAsync(() -> {
@@ -180,11 +180,12 @@ public class UserWindowsKeyListenerService implements LocaleService {
 						}
 
 						User32.RegisterHotKey(null, this.id, 0, this.id);
+						
 						if(this.id>40) {
-							User32.RegisterHotKey(null, this.id + 1000, 0x0001, this.id);
-							User32.RegisterHotKey(null, this.id + 2000, 0x0002, this.id);
-							User32.RegisterHotKey(null, this.id + 3000, 0x0004, this.id);
-							User32.RegisterHotKey(null, this.id + 4000, 0x0008, this.id);
+							User32.RegisterHotKey(null, this.id + 1000, User32.MOD_ALT, this.id);
+							User32.RegisterHotKey(null, this.id + 2000, User32.MOD_CONTROL, this.id);
+							User32.RegisterHotKey(null, this.id + 3000, User32.MOD_SHIFT, this.id);
+							User32.RegisterHotKey(null, this.id + 4000, User32.MOD_WIN, this.id);
 						}
 					}
 				}

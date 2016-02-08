@@ -1,20 +1,3 @@
-/*
- * Copyright (c) 2011 Denis Tulskiy
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * version 3 along with this work.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package ru.kolaer.client.javafx.tools;
 
 import java.util.Arrays;
@@ -27,10 +10,6 @@ import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.win32.W32APIOptions;
 
-/**
- * Author: Denis Tulskiy
- * Date: 6/15/11
- */
 public class User32 {
     static {
         Native.register(NativeLibrary.getInstance("user32", W32APIOptions.DEFAULT_OPTIONS));
@@ -48,20 +27,24 @@ public class User32 {
     public static final int VK_MEDIA_PLAY_PAUSE = 0xB3;
     public static final int PM_REMOVE = 0x0001;
 
+    /**Регистрация клавиш.*/
     public static native boolean RegisterHotKey(Pointer hWnd, int id, int fsModifiers, int vk);
-
+    /**Убрать из регистрации клавишу.*/
     public static native boolean UnregisterHotKey(Pointer hWnd, int id);
-
+    /**Получить системное сообщение.*/
     public static native boolean GetMessage(MSG lpMsg, Pointer hWnd, int wMsgFilterMin, int wMsgFilterMax, int wRemoveMsg);
-
-    public static native boolean GetAsyncKeyState(int key);
+    /**Получить положение клавиши.*/
     public static native byte GetKeyState(int key);
+    /**Пролучить евент клавиатуры.*/
     public static native void keybd_event(int i, int j,int dwFlags,long dwExtraInfo);
+    /**Получить раскладку.*/
     public static native byte GetKeyboardLayout(int idT);
+    /**Получить активное окно.*/
     public static native Pointer GetForegroundWindow();
-    
+    /**Получить PID окна.*/
     public static native int GetWindowThreadProcessId(Pointer hWnd, int id);
     
+    /**Структура сообщения.*/
     public static class MSG extends Structure {
         public Pointer hWnd;
         public int message;
