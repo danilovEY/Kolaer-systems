@@ -10,6 +10,12 @@ import javafx.beans.property.SimpleStringProperty;
 import ru.kolaer.client.javafx.tools.Resources;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
+/**
+ * Реализация работы с таблицой через RESTful.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	private final RestTemplate restTemplate = new RestTemplate();
 	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

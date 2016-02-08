@@ -10,6 +10,12 @@ import javafx.beans.property.SimpleStringProperty;
 import ru.kolaer.client.javafx.tools.Resources;
 import ru.kolaer.server.dao.entities.DbUsers1c;
 
+/**
+ * Реализация работы с таблицой через RESTful.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class User1cDataBaseRESTful implements User1cDataBase {
 	private final RestTemplate restTemplate = new RestTemplate();
 	

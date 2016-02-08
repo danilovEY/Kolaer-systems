@@ -11,6 +11,12 @@ import javafx.beans.property.SimpleStringProperty;
 import ru.kolaer.client.javafx.tools.Resources;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
 
+/**
+ * Реализация работы с таблицой через RESTful.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {	
 	private final RestTemplate restTemplate = new RestTemplate();
 	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
