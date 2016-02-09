@@ -4,16 +4,32 @@ import java.util.Date;
 
 import ru.kolaer.birthday.mvp.model.UserModel;
 
+/**
+ * Реализация {@linkplain UserModel}.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class UserModelImpl implements UserModel {
+	/**Фамилия.*/
 	private String firstName;
+	/**Имя.*/
 	private String secondName;
+	/**Отчество.*/
 	private String thirdName;
+	/**Отдел.*/
 	private String departament;
+	/**Организация.*/
 	private String organization;
+	/**Дата рождения.*/
 	private Date birthday;
+	/**Путь к фото.*/
 	private String icon;
+	/**Телефонный номер.*/
 	private String phoneNumber;
+	/**Должность.*/
 	private String post;
+	/**Инициалы.*/
 	private String initials;
 	
 	public UserModelImpl(final String organization, 
