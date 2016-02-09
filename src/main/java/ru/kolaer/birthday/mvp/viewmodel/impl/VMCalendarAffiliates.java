@@ -5,7 +5,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import ru.kolaer.birthday.mvp.model.UserManagerModel;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.VCalendar;
@@ -85,16 +84,4 @@ public class VMCalendarAffiliates implements VMCalendar {
 	public VCalendar getView() {
 		return this.view;
 	}
-
-	@Override
-	public void setModel(UserManagerModel model) {
-		
-	}
-
-	@Override
-	public UserManagerModel getModel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

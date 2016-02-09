@@ -5,7 +5,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import ru.kolaer.birthday.mvp.model.UserManagerModel;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.VCalendar;
@@ -21,16 +20,9 @@ public class VMCalendarKAER implements VMCalendar {
 	
 	private final String ORGANIZATION = "КолАтомэнергоремонт";
 	private final VCalendar view = new VCalendarImpl();
-	private UserManagerModel userManager;
 	private ObserverCalendar observerCalendar;
 	private final UniformSystemEditorKit editorKid;
-
-	public VMCalendarKAER(final UserManagerModel userManager) {
-		this.userManager = userManager;
-		this.editorKid = null;
-		this.init();
-	}
-
+	
 	public VMCalendarKAER(final UniformSystemEditorKit editorKid) {
 		this.editorKid = editorKid;
 		this.init();
@@ -38,7 +30,6 @@ public class VMCalendarKAER implements VMCalendar {
 
 	public VMCalendarKAER() {
 		this.editorKid = null;
-		this.userManager = null;
 		this.init();
 	}
 
@@ -53,16 +44,6 @@ public class VMCalendarKAER implements VMCalendar {
 	@Override
 	public VCalendar getView() {
 		return this.view;
-	}
-
-	@Override
-	public void setModel(final UserManagerModel model) {
-		this.userManager = model;
-	}
-
-	@Override
-	public UserManagerModel getModel() {
-		return this.userManager;
 	}
 
 	@Override
