@@ -17,6 +17,12 @@ import javafx.util.Callback;
 import ru.kolaer.birthday.mvp.view.VCalendar;
 
 @SuppressWarnings("restriction")
+/**
+ * 
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class VCalendarImpl implements VCalendar {
 	private final BorderPane mainPane = new BorderPane();
 	private final DatePicker pick = new DatePicker();
