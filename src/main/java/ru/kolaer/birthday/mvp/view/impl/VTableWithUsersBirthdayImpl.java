@@ -39,12 +39,23 @@ import javafx.scene.layout.Pane;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 
+/**
+ * View - таблици с днями рождениями.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	private final Logger LOG = LoggerFactory.getLogger(VTableWithUsersBirthdayImpl.class);
+	/**Модель объектов для таблици.*/
 	private final ObservableList<UserModel> tableModel = FXCollections.observableArrayList();
+	/**Панель с таблицой.*/
 	private final BorderPane tablePane = new BorderPane();
+	/**Таблица*/
 	private final TableView<UserModel> userBirthdayTable = new TableView<UserModel>();
+	/**Заголовок таблици.*/
 	private final Label titleLabel = new Label();
+	/**Формат месяцев.*/
 	private final DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols(){
 		private static final long serialVersionUID = -1561907971611705068L;
 		@Override
@@ -92,7 +103,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	            clipboardString.deleteCharAt(clipboardString.length()-1).append('\n');
             }
             final ClipboardContent content = new ClipboardContent();
-
+            //В буфер
             content.putString(clipboardString.toString());
             Clipboard.getSystemClipboard().setContent(content);
 	    });
@@ -117,6 +128,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 			            		imageview.setImage(new Image(url.toString(), true));
 			                } else {                	
 								try{
+									//Берем фотки с местного сайта
 									final StringBuilder pathToIcon = new StringBuilder("http://asupkolaer/app_ie8/assets/images/vCard/o_").append(URLEncoder.encode(item, "UTF-8"));
 				                	imageview.setImage(new Image(pathToIcon.toString().replaceAll("\\+", "%20"), true));
 								}catch(Exception e){

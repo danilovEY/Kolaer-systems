@@ -19,14 +19,16 @@ import ru.kolaer.birthday.mvp.view.VCalendar;
 @SuppressWarnings("restriction")
 /**
  * 
- *
+ * Реализация view-календаря. Взят скин из DatePicker.
  * @author danilovey
  * @version 0.1
  */
 public class VCalendarImpl implements VCalendar {
+	/**Панель с календарем.*/
 	private final BorderPane mainPane = new BorderPane();
 	private final DatePicker pick = new DatePicker();
-	private final Label label = new Label();
+	/**Заголовок календаря.*/
+	private final Label title = new Label();
 	
 	public VCalendarImpl() {
 		Platform.runLater(() -> {
@@ -36,10 +38,10 @@ public class VCalendarImpl implements VCalendar {
 	
 	private void init() {
 		this.pick.setShowWeekNumbers(true);
-		this.label.setAlignment(Pos.CENTER);
-		this.label.setStyle("-fx-font-size: 12pt;");
-		this.label.setMaxWidth(Double.MAX_VALUE);
-		this.mainPane.setTop(label);
+		this.title.setAlignment(Pos.CENTER);
+		this.title.setStyle("-fx-font-size: 12pt;");
+		this.title.setMaxWidth(Double.MAX_VALUE);
+		this.mainPane.setTop(title);
 	}
 	
 	@Override
@@ -72,7 +74,7 @@ public class VCalendarImpl implements VCalendar {
 	@Override
 	public void setTitle(final String title) {
 		Platform.runLater(() -> {
-			this.label.setText(title);
+			this.title.setText(title);
 		});
 	}		
 }
