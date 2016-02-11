@@ -36,10 +36,10 @@ public class DialogUSImpl implements DialogUS {
 
 	@Override
 	public void showLoadingDialog(final Service<?> service) {		
-		if(!service.isRunning())
-			service.start();
-		
 		Platform.runLater(() -> {
+			if(!service.isRunning())
+				service.start();
+
 			final ProgressDialog dialog = new ProgressDialog(service);
 			dialog.showAndWait();
 		});
