@@ -1,8 +1,11 @@
 package ru.kolaer.birthday.mvp.viewmodel;
 
+import ru.kolaer.birthday.mvp.presenter.PCalendar;
+import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
+
 public interface VMMainFrame {
-	VMTableWithUsersBirthdayObserver getVMTableWithUsersBirthday();
-	void setVMTableWithUsersBirthday(VMTableWithUsersBirthdayObserver vmTable);
+	PTableWithUsersBirthdayObserver getVMTableWithUsersBirthday();
+	void setVMTableWithUsersBirthday(PTableWithUsersBirthdayObserver vmTable);
 	
-	void addVMCalendar(VMCalendar calendar);
+	void addVMCalendar(PCalendar calendar);
 }

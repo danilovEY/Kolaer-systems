@@ -1,4 +1,4 @@
-package ru.kolaer.birthday.mvp.viewmodel.impl;
+package ru.kolaer.birthday.mvp.presenter.impl;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -7,28 +7,28 @@ import java.util.Date;
 import java.util.List;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
+import ru.kolaer.birthday.mvp.presenter.ObserverCalendar;
+import ru.kolaer.birthday.mvp.presenter.PCalendar;
 import ru.kolaer.birthday.mvp.view.VCalendar;
 import ru.kolaer.birthday.mvp.view.impl.VCalendarImpl;
-import ru.kolaer.birthday.mvp.viewmodel.ObserverCalendar;
-import ru.kolaer.birthday.mvp.viewmodel.VMCalendar;
 import ru.kolaer.client.javafx.system.DefaultProgressBar;
 import ru.kolaer.client.javafx.system.ProgressBarObservable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
-public class VMCalendarKAER implements VMCalendar {
+public class PCalendarKAER implements PCalendar {
 	
 	private final String ORGANIZATION = "КолАтомэнергоремонт";
 	private final VCalendar view = new VCalendarImpl();
 	private ObserverCalendar observerCalendar;
 	private final UniformSystemEditorKit editorKid;
 	
-	public VMCalendarKAER(final UniformSystemEditorKit editorKid) {
+	public PCalendarKAER(final UniformSystemEditorKit editorKid) {
 		this.editorKid = editorKid;
 		this.init();
 	}
 
-	public VMCalendarKAER() {
+	public PCalendarKAER() {
 		this.editorKid = null;
 		this.init();
 	}

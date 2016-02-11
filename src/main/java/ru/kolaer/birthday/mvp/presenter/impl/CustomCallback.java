@@ -1,4 +1,4 @@
-package ru.kolaer.birthday.mvp.viewmodel.impl;
+package ru.kolaer.birthday.mvp.presenter.impl;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

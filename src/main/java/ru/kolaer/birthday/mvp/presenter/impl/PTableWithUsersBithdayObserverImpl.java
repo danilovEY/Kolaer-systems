@@ -1,4 +1,4 @@
-package ru.kolaer.birthday.mvp.viewmodel.impl;
+package ru.kolaer.birthday.mvp.presenter.impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,24 +11,24 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
+import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBirthdayImpl;
-import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthdayObserver;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
-public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirthdayObserver{
+public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthdayObserver{
 	private final VTableWithUsersBirthday table = new VTableWithUsersBirthdayImpl();
-	private final Logger LOG = LoggerFactory.getLogger(VMTableWithUsersBithdayObserverImpl.class);
+	private final Logger LOG = LoggerFactory.getLogger(PTableWithUsersBithdayObserverImpl.class);
 	private final UniformSystemEditorKit editorKid;
 	
-	public VMTableWithUsersBithdayObserverImpl() {
+	public PTableWithUsersBithdayObserverImpl() {
 		this(null);
 	}
 	
 	
-	public VMTableWithUsersBithdayObserverImpl(final UniformSystemEditorKit editorKid) {
+	public PTableWithUsersBithdayObserverImpl(final UniformSystemEditorKit editorKid) {
 		this.editorKid = editorKid;
 		this.initWithEditorKid();
 	}
@@ -37,7 +37,7 @@ public class VMTableWithUsersBithdayObserverImpl implements VMTableWithUsersBirt
 		
 		this.table.setMouseClick(e -> {
 			if(e.getClickCount() == 2) {
-				new VMDetailedInformationStageImpl(null).show();
+				new PDetailedInformationStageImpl(null).show();
 			}
 		});
 		

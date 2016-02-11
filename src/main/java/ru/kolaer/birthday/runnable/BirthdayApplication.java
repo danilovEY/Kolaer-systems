@@ -16,13 +16,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import ru.kolaer.birthday.mvp.viewmodel.VMCalendar;
+import ru.kolaer.birthday.mvp.presenter.PCalendar;
+import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
+import ru.kolaer.birthday.mvp.presenter.impl.PCalendarAffiliates;
+import ru.kolaer.birthday.mvp.presenter.impl.PCalendarKAER;
+import ru.kolaer.birthday.mvp.presenter.impl.PTableWithUsersBithdayObserverImpl;
 import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
-import ru.kolaer.birthday.mvp.viewmodel.VMTableWithUsersBirthdayObserver;
-import ru.kolaer.birthday.mvp.viewmodel.impl.VMCalendarAffiliates;
-import ru.kolaer.birthday.mvp.viewmodel.impl.VMCalendarKAER;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMMainFrameImpl;
-import ru.kolaer.birthday.mvp.viewmodel.impl.VMTableWithUsersBithdayObserverImpl;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.system.ServerStatus;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
@@ -33,7 +33,7 @@ public class BirthdayApplication implements UniformSystemApplication {
 	private final UniformSystemEditorKit editorKid;
 	private final BorderPane root = new BorderPane();
 	private AnchorPane mainPane;
-	private VMTableWithUsersBirthdayObserver vmTable;
+	private PTableWithUsersBirthdayObserver vmTable;
 
 	public BirthdayApplication(UniformSystemEditorKit editorKid) {
 		this.editorKid = editorKid;
@@ -87,14 +87,14 @@ public class BirthdayApplication implements UniformSystemApplication {
 	private void initTable(VMMainFrame frameContent) {
 		ExecutorService service = Executors.newCachedThreadPool();
 		CompletableFuture.runAsync(() -> {
-			this.vmTable = new VMTableWithUsersBithdayObserverImpl(this.editorKid);
+			this.vmTable = new PTableWithUsersBithdayObserverImpl(this.editorKid);
 			frameContent.setVMTableWithUsersBirthday(this.vmTable);
 		}, service).exceptionally(t -> {
 			LOG.error("Ошибка!", t);
 			return null;
 		}).thenRunAsync(() -> {
-			CompletableFuture<VMCalendar> cKaer = CompletableFuture.supplyAsync(() -> {
-				final VMCalendar calendarKAER = new VMCalendarKAER(this.editorKid);
+			CompletableFuture<PCalendar> cKaer = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarKAER = new PCalendarKAER(this.editorKid);
 				calendarKAER.registerObserver(this.vmTable);
 				return calendarKAER;
 			}, service).exceptionally(t -> {
@@ -102,8 +102,8 @@ public class BirthdayApplication implements UniformSystemApplication {
 				return null;
 			});
 
-			CompletableFuture<VMCalendar> cCo = CompletableFuture.supplyAsync(() -> {
-				final VMCalendar calendarCO = new VMCalendarAffiliates("Центральный аппарат", this.editorKid);
+			CompletableFuture<PCalendar> cCo = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarCO = new PCalendarAffiliates("Центральный аппарат", this.editorKid);
 				calendarCO.registerObserver(this.vmTable);
 				return calendarCO;
 			}, service).exceptionally(t -> {
@@ -111,8 +111,8 @@ public class BirthdayApplication implements UniformSystemApplication {
 				return null;
 			});
 
-			CompletableFuture<VMCalendar> cBal = CompletableFuture.supplyAsync(() -> {
-				final VMCalendar calendarBal = new VMCalendarAffiliates("БалаковоАтомэнергоремонт", this.editorKid);
+			CompletableFuture<PCalendar> cBal = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarBal = new PCalendarAffiliates("БалаковоАтомэнергоремонт", this.editorKid);
 				calendarBal.registerObserver(this.vmTable);
 				return calendarBal;
 			}, service).exceptionally(t -> {
@@ -120,8 +120,8 @@ public class BirthdayApplication implements UniformSystemApplication {
 				return null;
 			});
 
-			CompletableFuture<VMCalendar> cVol = CompletableFuture.supplyAsync(() -> {
-				final VMCalendar calendarVol = new VMCalendarAffiliates("ВолгодонскАтомэнергоремонт", this.editorKid);
+			CompletableFuture<PCalendar> cVol = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarVol = new PCalendarAffiliates("ВолгодонскАтомэнергоремонт", this.editorKid);
 				calendarVol.registerObserver(this.vmTable);
 				return calendarVol;
 			}, service).exceptionally(t -> {
@@ -129,8 +129,8 @@ public class BirthdayApplication implements UniformSystemApplication {
 				return null;
 			});
 
-			CompletableFuture<VMCalendar> cCal = CompletableFuture.supplyAsync(() -> {
-				final VMCalendar calendarCal = new VMCalendarAffiliates("КалининАтомэнергоремонт", this.editorKid);
+			CompletableFuture<PCalendar> cCal = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarCal = new PCalendarAffiliates("КалининАтомэнергоремонт", this.editorKid);
 				calendarCal.registerObserver(this.vmTable);
 				return calendarCal;
 			}, service).exceptionally(t -> {
@@ -138,8 +138,8 @@ public class BirthdayApplication implements UniformSystemApplication {
 				return null;
 			});
 
-			CompletableFuture<VMCalendar> cKur = CompletableFuture.supplyAsync(() -> {
-				final VMCalendar calendarKur = new VMCalendarAffiliates("КурскАтомэнергоремонт", this.editorKid);
+			CompletableFuture<PCalendar> cKur = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarKur = new PCalendarAffiliates("КурскАтомэнергоремонт", this.editorKid);
 				calendarKur.registerObserver(this.vmTable);
 				return calendarKur;
 			}, service).exceptionally(t -> {
@@ -147,8 +147,8 @@ public class BirthdayApplication implements UniformSystemApplication {
 				return null;
 			});
 
-			CompletableFuture<VMCalendar> cLen = CompletableFuture.supplyAsync(() -> {
-				final VMCalendar calendarLen = new VMCalendarAffiliates("ЛенАтомэнергоремонт", this.editorKid);
+			CompletableFuture<PCalendar> cLen = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarLen = new PCalendarAffiliates("ЛенАтомэнергоремонт", this.editorKid);
 				calendarLen.registerObserver(this.vmTable);
 				return calendarLen;
 			}, service).exceptionally(t -> {
@@ -156,8 +156,8 @@ public class BirthdayApplication implements UniformSystemApplication {
 				return null;
 			});
 
-			CompletableFuture<VMCalendar> cNov = CompletableFuture.supplyAsync(() -> {
-				final VMCalendar calendarNov = new VMCalendarAffiliates("НововоронежАтомэнергоремонт", this.editorKid);
+			CompletableFuture<PCalendar> cNov = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarNov = new PCalendarAffiliates("НововоронежАтомэнергоремонт", this.editorKid);
 				calendarNov.registerObserver(this.vmTable);
 				return calendarNov;
 			}, service).exceptionally(t -> {
@@ -165,8 +165,8 @@ public class BirthdayApplication implements UniformSystemApplication {
 				return null;
 			});
 
-			CompletableFuture<VMCalendar> cSmo = CompletableFuture.supplyAsync(() -> {
-				final VMCalendar calendarSmo = new VMCalendarAffiliates("СмоленскАтомэнергоремонт", this.editorKid);
+			CompletableFuture<PCalendar> cSmo = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarSmo = new PCalendarAffiliates("СмоленскАтомэнергоремонт", this.editorKid);
 				calendarSmo.registerObserver(this.vmTable);
 				return calendarSmo;
 			}, service).exceptionally(t -> {
@@ -174,8 +174,8 @@ public class BirthdayApplication implements UniformSystemApplication {
 				return null;
 			});
 
-			CompletableFuture<VMCalendar> cUra = CompletableFuture.supplyAsync(() -> {
-				final VMCalendar calendarUra = new VMCalendarAffiliates("УралАтомэнергоремонт", this.editorKid);
+			CompletableFuture<PCalendar> cUra = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarUra = new PCalendarAffiliates("УралАтомэнергоремонт", this.editorKid);
 				calendarUra.registerObserver(this.vmTable);
 				return calendarUra;
 			}, service).exceptionally(t -> {
