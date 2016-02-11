@@ -16,15 +16,27 @@ import javafx.util.Callback;
 import ru.kolaer.client.javafx.system.UserBirthdayAllDataBase;
 import ru.kolaer.client.javafx.system.UserDataBase;
 
+/**
+ * 
+ * Реализация {@linkplain Callback} для получения от сервера сотрудников по определенной дате рождения.
+ * @author danilovey
+ * @version 0.1
+ */
 public class CustomCallback implements Callback<DatePicker, DateCell> {
 	private final Logger LOG = LoggerFactory.getLogger(CustomCallback.class);
-	
+	/**Объект, который хранит начальную дату во view-календаря.*/
 	private LocalDate startDate = LocalDate.now();
+	/**Оттенки для каждой даты.*/
 	private final String[] arrayColor = new String[42];
+	/**Счеткик дат.*/
 	private int index = 0;
+	/**Индекс последней даты.*/
 	private final int finish = 41;
+	/**Флаг true, если нужно пересчитать пользователей и закрасить дату.*/
 	private boolean update = true;
+	/**БД с пользователями.*/
 	private final UserDataBase<?> userDB;
+	/**Имя организации.*/
 	private final String organization;
 	
 	public CustomCallback(final UserDataBase<?> userDB) {
@@ -76,6 +88,7 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 					
 					if (countUsersDataAll != 0) {
 						final int count = 99 - countUsersDataAll * 15;
+						//В зависимости от кол-ва людей меняется интенсивность закрашивания даты.
 						Platform.runLater(() -> {							
 							final String color = "-fx-background-color: #" + count + "" + count + "FF;";					
 							arrayColor[ind] = color;

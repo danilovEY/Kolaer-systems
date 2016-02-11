@@ -7,43 +7,17 @@ import java.util.Date;
 import java.util.List;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
-import ru.kolaer.birthday.mvp.presenter.ObserverCalendar;
 import ru.kolaer.birthday.mvp.presenter.PCalendar;
-import ru.kolaer.birthday.mvp.view.VCalendar;
-import ru.kolaer.birthday.mvp.view.impl.VCalendarImpl;
 import ru.kolaer.client.javafx.system.DefaultProgressBar;
 import ru.kolaer.client.javafx.system.ProgressBarObservable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
-public class PCalendarKAER implements PCalendar {
-	
-	private final String ORGANIZATION = "КолАтомэнергоремонт";
-	private final VCalendar view = new VCalendarImpl();
-	private ObserverCalendar observerCalendar;
-	private final UniformSystemEditorKit editorKid;
+public class PCalendarKAER extends PCalendarBase implements PCalendar {
 	
 	public PCalendarKAER(final UniformSystemEditorKit editorKid) {
-		this.editorKid = editorKid;
-		this.init();
-	}
-
-	public PCalendarKAER() {
-		this.editorKid = null;
-		this.init();
-	}
-
-	private void init() {
+		super("КолАтомэнергоремонт", editorKid);
 		this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase()));	
-		this.view.setTitle(ORGANIZATION);
-		this.view.setOnAction(e -> {
-			this.notifySelectedDate(this.view.getSelectDate());
-		});
-	}
-
-	@Override
-	public VCalendar getView() {
-		return this.view;
 	}
 
 	@Override
@@ -83,15 +57,4 @@ public class PCalendarKAER implements PCalendar {
 			this.observerCalendar.updateSelectedDate(date, users);		
 		}
 	}
-
-	@Override
-	public void registerObserver(final ObserverCalendar observer) {
-		this.observerCalendar = observer;
-	}
-
-	@Override
-	public void removeObserver(final ObserverCalendar observer) {
-		this.observerCalendar = null;
-	}
-
 }

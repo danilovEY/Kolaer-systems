@@ -19,7 +19,7 @@ import ru.kolaer.birthday.mvp.view.VCalendar;
 @SuppressWarnings("restriction")
 /**
  * 
- * Реализация view-календаря. Взят скин из DatePicker.
+ * Реализация view-календаря. Взят скин из DatePicker, где размер его 7x6 дней.
  * @author danilovey
  * @version 0.1
  */

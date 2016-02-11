@@ -7,35 +7,24 @@ import java.util.Date;
 import java.util.List;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
-import ru.kolaer.birthday.mvp.presenter.ObserverCalendar;
-import ru.kolaer.birthday.mvp.presenter.PCalendar;
-import ru.kolaer.birthday.mvp.view.VCalendar;
-import ru.kolaer.birthday.mvp.view.impl.VCalendarImpl;
 import ru.kolaer.client.javafx.system.DefaultProgressBar;
 import ru.kolaer.client.javafx.system.ProgressBarObservable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
 
-public class PCalendarAffiliates implements PCalendar {
-	private final String ORGANIZATION;
-	private VCalendar view = new VCalendarImpl();
-	private ObserverCalendar observerCalendar;
-	private final UniformSystemEditorKit editorKid;
-	
-	public PCalendarAffiliates(final String organization, final UniformSystemEditorKit editorKid) {
-		this.editorKid = editorKid;
-		this.ORGANIZATION = organization;
-		this.init();
+/**
+ * Календарь для филиала.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
+public class PCalendarAffiliates extends PCalendarBase  {
+
+	public PCalendarAffiliates(String organization, UniformSystemEditorKit editorKid) {
+		super(organization, editorKid);
+		this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase(), ORGANIZATION));	
 	}
 
-	private void init() {
-		this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase(), ORGANIZATION));	
-		this.view.setTitle(ORGANIZATION);
-		this.view.setOnAction(e -> {
-			this.notifySelectedDate(this.view.getSelectDate());
-		});
-	}
-	
 	@Override
 	public void notifySelectedDate(LocalDate date) {
 		if (this.observerCalendar != null) {
@@ -70,18 +59,5 @@ public class PCalendarAffiliates implements PCalendar {
 		}
 	}
 
-	@Override
-	public void registerObserver(ObserverCalendar observer) {
-		this.observerCalendar = observer;
-	}
-
-	@Override
-	public void removeObserver(ObserverCalendar observer) {
-		this.observerCalendar = null;
-	}
-
-	@Override
-	public VCalendar getView() {
-		return this.view;
-	}
+	
 }
