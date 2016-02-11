@@ -13,7 +13,7 @@ import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
 
 /**
- * Календарь для филиала.
+ * Календарь для филиалов.
  *
  * @author danilovey
  * @version 0.1

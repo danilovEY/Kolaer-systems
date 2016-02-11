@@ -18,9 +18,16 @@ import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
+/**
+ * Presenter таблици с сотрудниками.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthdayObserver{
-	private final VTableWithUsersBirthday table = new VTableWithUsersBirthdayImpl();
 	private final Logger LOG = LoggerFactory.getLogger(PTableWithUsersBithdayObserverImpl.class);
+	/**View таблици.*/
+	private final VTableWithUsersBirthday table = new VTableWithUsersBirthdayImpl();
 	private final UniformSystemEditorKit editorKid;
 	
 	public PTableWithUsersBithdayObserverImpl() {

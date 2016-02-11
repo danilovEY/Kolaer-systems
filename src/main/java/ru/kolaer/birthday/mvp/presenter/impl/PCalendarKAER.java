@@ -13,6 +13,12 @@ import ru.kolaer.client.javafx.system.ProgressBarObservable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
+/**
+ * Presenter календаря КолАЕРа.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class PCalendarKAER extends PCalendarBase implements PCalendar {
 	
 	public PCalendarKAER(final UniformSystemEditorKit editorKid) {

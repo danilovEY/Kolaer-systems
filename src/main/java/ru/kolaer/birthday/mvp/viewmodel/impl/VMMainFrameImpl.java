@@ -20,9 +20,17 @@ import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
 
+/**
+ * Реализация {@linkplain VMMainFrame}.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class VMMainFrameImpl extends Application implements VMMainFrame {
+	/**Путь к view.*/
 	public static final URL FXML_VIEW = VMMainFrameImpl.class.getResource("/resources/birthdayView/VMainFrame.fxml");
 	private final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
+	/**Presenter таблици*/
 	private PTableWithUsersBirthdayObserver vmTable;
 	
 	@FXML
@@ -32,7 +40,6 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	
 	@FXML
 	public void initialize() {
-		
 	}
 	
 	@Override
@@ -44,7 +51,6 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 			LOG.error("Ошибка при чтении {}", FXML_VIEW, ex);
 			
 		}
-		
 		primaryStage.show();
 	}
 

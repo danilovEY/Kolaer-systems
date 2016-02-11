@@ -11,9 +11,17 @@ import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
 @UniformSystem
+/**
+ * Реализация модуля.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class BirthdayPlugin implements UniformSystemPlugin {
 	private UniformSystemApplication application;
+	/**Список служб.*/
 	private List<Service> servicesList;
+	
 	@Override
 	public void initialization(final UniformSystemEditorKit editorKid) throws Exception {
 		this.application = new BirthdayApplication(editorKid);
@@ -35,5 +43,4 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 	public List<Service> getServices() {
 		return this.servicesList;
 	}
-
 }

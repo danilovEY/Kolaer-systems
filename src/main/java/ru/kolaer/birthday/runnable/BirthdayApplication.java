@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,6 +26,12 @@ import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.system.ServerStatus;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
+/**
+ * Реализация контента модуля.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class BirthdayApplication implements UniformSystemApplication {
 	private final Logger LOG = LoggerFactory.getLogger(BirthdayApplication.class);
 
@@ -182,31 +187,28 @@ public class BirthdayApplication implements UniformSystemApplication {
 				LOG.error("Ошибка!", t);
 				return null;
 			});
-			
+
 			try{
 				frameContent.addVMCalendar(cKaer.get());
-				frameContent.addVMCalendar(cCo.get());
-				frameContent.addVMCalendar(cBal.get());
-				frameContent.addVMCalendar(cVol.get());
-				frameContent.addVMCalendar(cCal.get());
-				frameContent.addVMCalendar(cKur.get());
-				frameContent.addVMCalendar(cLen.get());
-				frameContent.addVMCalendar(cNov.get());
-				frameContent.addVMCalendar(cSmo.get());
-				frameContent.addVMCalendar(cUra.get());
-			}catch(InterruptedException | ExecutionException e){
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+				CompletableFuture.runAsync(() -> {
+					try{
+						frameContent.addVMCalendar(cCo.get());
+						frameContent.addVMCalendar(cBal.get());
+						frameContent.addVMCalendar(cVol.get());
+						frameContent.addVMCalendar(cCal.get());
+						frameContent.addVMCalendar(cKur.get());
+						frameContent.addVMCalendar(cLen.get());
+						frameContent.addVMCalendar(cNov.get());
+						frameContent.addVMCalendar(cSmo.get());
+						frameContent.addVMCalendar(cUra.get());
+					} catch(final Exception e){
+						LOG.error("Ошибка при добавлении календаря!", e);
+					}
+				});
+			} catch(final Exception ex){
+				LOG.error("Ошибка при добавлении календаря KolAER!", ex);
+			}			
 			service.shutdown();
-		});
-
-		
-
-
-		
-		
+		}, service);
 	}
-
 }
