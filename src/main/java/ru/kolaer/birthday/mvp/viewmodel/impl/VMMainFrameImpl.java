@@ -2,6 +2,8 @@ package ru.kolaer.birthday.mvp.viewmodel.impl;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +14,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Pagination;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.kolaer.birthday.mvp.presenter.PCalendar;
 import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
@@ -30,16 +33,27 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	/**Путь к view.*/
 	public static final URL FXML_VIEW = VMMainFrameImpl.class.getResource("/resources/birthdayView/VMainFrame.fxml");
 	private final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
-	/**Presenter таблици*/
+	/**Presenter таблици.*/
 	private PTableWithUsersBirthdayObserver vmTable;
+	private List<PCalendar> calendarList = new ArrayList<>();
+	private Pagination paneWithListCalendar;
 	
 	@FXML
 	private BorderPane tablePane;
 	@FXML
-	private FlowPane calendarPane;
+	private VBox paneWithCalendars;
 	
 	@FXML
 	public void initialize() {
+		this.paneWithListCalendar = new Pagination();
+		this.paneWithCalendars.getChildren().add(this.paneWithListCalendar);
+		this.paneWithListCalendar.setPageFactory(param -> {
+				if(calendarList.isEmpty())
+					return null;
+				final PCalendar calenndar = calendarList.get(param);
+				calenndar.initDayCellFactory();
+				return calenndar.getView().getViewPane();
+		});
 	}
 	
 	@Override
@@ -71,7 +85,8 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	@Override
 	public void addVMCalendar(final PCalendar calendar) {
 		Platform.runLater(() -> {
-			this.calendarPane.getChildren().add(calendar.getView().getViewPane());
+			this.calendarList.add(calendar);
+			this.paneWithListCalendar.setPageCount(this.calendarList.size());
 		});
 	}
 }

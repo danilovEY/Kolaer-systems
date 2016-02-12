@@ -77,7 +77,7 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 					});
 					return;
 				}
-
+				
 				CompletableFuture.runAsync(() -> {
 					int countUsersDataAll = 0;
 					if(organization != null) {

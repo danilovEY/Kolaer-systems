@@ -22,7 +22,6 @@ public class PCalendarAffiliates extends PCalendarBase  {
 
 	public PCalendarAffiliates(String organization, UniformSystemEditorKit editorKid) {
 		super(organization, editorKid);
-		this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase(), ORGANIZATION));	
 	}
 
 	@Override
@@ -59,5 +58,11 @@ public class PCalendarAffiliates extends PCalendarBase  {
 		}
 	}
 
-	
+	@Override
+	public void initDayCellFactory() {
+		if(!this.isInitDayCellFactory) {
+			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase(), ORGANIZATION));	
+			this.isInitDayCellFactory = true;
+		}
+	}	
 }

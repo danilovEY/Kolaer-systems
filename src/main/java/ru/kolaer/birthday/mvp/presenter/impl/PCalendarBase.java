@@ -19,6 +19,7 @@ public abstract class PCalendarBase implements PCalendar {
 	protected VCalendar view = new VCalendarImpl();
 	/**Слушатель календаря.*/
 	protected ObserverCalendar observerCalendar;
+	protected boolean isInitDayCellFactory = false;
 	protected final UniformSystemEditorKit editorKid;
 	
 	public PCalendarBase(final String organization, final UniformSystemEditorKit editorKid) {
@@ -32,6 +33,11 @@ public abstract class PCalendarBase implements PCalendar {
 		this.view.setOnAction(e -> {
 			this.notifySelectedDate(this.view.getSelectDate());
 		});
+	}
+	
+	@Override
+	public boolean isInitDayCellFactory() {
+		return this.isInitDayCellFactory;
 	}
 	
 	@Override

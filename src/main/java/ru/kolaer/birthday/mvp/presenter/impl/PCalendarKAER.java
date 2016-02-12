@@ -23,7 +23,6 @@ public class PCalendarKAER extends PCalendarBase implements PCalendar {
 	
 	public PCalendarKAER(final UniformSystemEditorKit editorKid) {
 		super("КолАтомэнергоремонт", editorKid);
-		this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase()));	
 	}
 
 	@Override
@@ -61,6 +60,14 @@ public class PCalendarKAER extends PCalendarBase implements PCalendar {
 				obs.setValue(2);
 			}
 			this.observerCalendar.updateSelectedDate(date, users);		
+		}
+	}
+
+	@Override
+	public void initDayCellFactory() {
+		if(!this.isInitDayCellFactory) {
+			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase()));
+			this.isInitDayCellFactory = true;
 		}
 	}
 }
