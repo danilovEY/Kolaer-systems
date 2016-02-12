@@ -48,11 +48,11 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 		this.paneWithListCalendar = new Pagination();
 		this.paneWithCalendars.getChildren().add(this.paneWithListCalendar);
 		this.paneWithListCalendar.setPageFactory(param -> {
-				if(calendarList.isEmpty())
-					return null;
-				final PCalendar calenndar = calendarList.get(param);
-				calenndar.initDayCellFactory();
-				return calenndar.getView().getViewPane();
+			if(calendarList.isEmpty())
+				return null;
+			final PCalendar calenndar = calendarList.get(param);
+			calenndar.initDayCellFactory();
+			return calenndar.getView().getViewPane();
 		});
 	}
 	

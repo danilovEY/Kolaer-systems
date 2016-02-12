@@ -19,4 +19,6 @@ public interface VTableWithUsersBirthday extends View {
 	void setTitle(String text);
 	/**Задать действие на нажатие по сотруднику в таблице.*/
 	void setMouseClick(EventHandler<? super MouseEvent> value);
+	
+	UserModel getSelectModel();
 }

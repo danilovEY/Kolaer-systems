@@ -44,7 +44,7 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 		
 		this.table.setMouseClick(e -> {
 			if(e.getClickCount() == 2) {
-				new PDetailedInformationStageImpl(null).show();
+				new PDetailedInformationStageImpl(this.table.getSelectModel()).show();
 			}
 		});
 		
@@ -65,12 +65,13 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 							for(final DbDataAll user : users) {
 								final UserModel userModel = new UserModelImpl();
 								userModel.setOrganization("КолАтомэнергоремонт");
+								userModel.setEmail(user.getEmail());
 								userModel.setInitials(user.getInitials());
 								userModel.setFirstName(user.getName());
 								userModel.setSecondName(user.getSurname());
 								userModel.setThirdName(user.getPatronymic());
 								userModel.setBirthday(user.getBirthday());
-								userModel.setDepartament(user.getDepartamentAbbreviated());
+								userModel.setDepartament(user.getDepartament());
 								userModel.setPhoneNumber(user.getPhone());
 								userModel.setIcon(user.getVCard());
 								userModel.setPost(user.getPost());
@@ -108,6 +109,7 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 								userModel.setOrganization(user.getOrganization());
 								userModel.setInitials(user.getInitials());
 								userModel.setBirthday(user.getBirthday());
+								userModel.setEmail(user.getEmail());
 								userModel.setDepartament(user.getDepartament());
 								userModel.setPhoneNumber(user.getPhone());
 								userModel.setPost(user.getPost());

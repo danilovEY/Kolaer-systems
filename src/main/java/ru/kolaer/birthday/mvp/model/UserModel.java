@@ -8,45 +8,47 @@ import java.util.Date;
  * @author danilovey
  * @version 0.1
  */
-public interface UserModel {
+ public interface UserModel {
 	/**Получить фамилию.*/
-	public String getFirstName();
+	 String getFirstName();
 	/**Задать фамилию.*/
-	public void setFirstName(String firstName);
+	 void setFirstName(String firstName);
 	/**Получить имя.*/
-	public String getSecondName();
+	 String getSecondName();
 	/**Задать имя.*/
-	public void setSecondName(String secondName);
+	 void setSecondName(String secondName);
 	/**Получить отчество.*/
-	public String getThirdName();
+	 String getThirdName();
 	/**Задать отчество.*/
-	public void setThirdName(String thirdName);
+	 void setThirdName(String thirdName);
 	/**Получить цех/отдел.*/
-	public String getDepartament();
+	 String getDepartament();
 	/**Задать цех/отдел.*/
-	public void setDepartament(String departament);
+	 void setDepartament(String departament);
 	/**Получить дату рождения.*/
-	public Date getBirthday();
+	 Date getBirthday();
 	/**Задать дату рождения.*/
-	public void setBirthday(Date birthday);
+	 void setBirthday(Date birthday);
 	/**Получить путь к фотографии*/
-	public String getIcon();
+	 String getIcon();
 	/**Задать путь к фоторграфии.*/
-	public void setIcon(String icon);
+	 void setIcon(String icon);
 	/**Получить телефонный номер.*/
-	public String getPhoneNumber();
+	 String getPhoneNumber();
 	/**Задать телефонный номер.*/
-	public void setPhoneNumber(String phoneNumber);
+	 void setPhoneNumber(String phoneNumber);
 	/**Получить имя организации.*/
-	public String getOrganization();
+	 String getOrganization();
 	/**Задать имя организации.*/
-	public void setOrganization(String organization);
+	 void setOrganization(String organization);
 	/**Получить должность.*/
-	public String getPost();
+	 String getPost();
 	/**Задать должность.*/
-	public void setPost(String post);
+	 void setPost(String post);
 	/**Получить инициалы.*/
-	public String getInitials();
+	 String getInitials();
 	/**Задать инициалы*/
-	public void setInitials(String initials);
+	 void setInitials(String initials);
+	String getEmail();
+	void setEmail(String email);
 }

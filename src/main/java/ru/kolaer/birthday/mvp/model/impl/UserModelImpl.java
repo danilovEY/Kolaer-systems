@@ -31,6 +31,7 @@ public class UserModelImpl implements UserModel {
 	private String post;
 	/**Инициалы.*/
 	private String initials;
+	private String email;
 	
 	public UserModelImpl(final String organization, 
 			final String firstName, 
@@ -127,5 +128,13 @@ public class UserModelImpl implements UserModel {
 
 	public void setInitials(String initials) {
 		this.initials = initials;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

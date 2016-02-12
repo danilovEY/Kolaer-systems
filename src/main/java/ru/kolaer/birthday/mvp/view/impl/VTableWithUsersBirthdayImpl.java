@@ -174,13 +174,12 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 		    	        	super.updateItem(item, empty);
 		    	            if (item == null || empty) {
 		    	                setText("");
-		    	            } else {
-		    	            	
-			    	            	final SimpleStringProperty property = new SimpleStringProperty();
-			    	    	    	final DateFormat dateFormat = new SimpleDateFormat("dd MMMMM", myDateFormatSymbols);
-			    	    	    	property.setValue(dateFormat.format(item));
-			    	    	    	
-			    	                setText(property.getValue());	
+		    	            } else {		    	            	
+		    	            	final SimpleStringProperty property = new SimpleStringProperty();
+		    	    	    	final DateFormat dateFormat = new SimpleDateFormat("dd MMMMM", myDateFormatSymbols);
+		    	    	    	property.setValue(dateFormat.format(item));
+		    	    	    	
+		    	                setText(property.getValue());	
 		    	            }
 	    	        	});
 	    	        }
@@ -245,6 +244,11 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	@Override
 	public void setMouseClick(EventHandler<? super MouseEvent> value) {
 		this.userBirthdayTable.setOnMouseClicked(value);
+	}
+
+	@Override
+	public UserModel getSelectModel() {
+		return this.userBirthdayTable.getSelectionModel().getSelectedItem();
 	}
 }
 
