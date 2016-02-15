@@ -20,10 +20,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import ru.kolaer.server.dao.DbBirthdayAllDAO;
 import ru.kolaer.server.dao.DbDataAllDAO;
-import ru.kolaer.server.dao.DbUser1сDAO;
 import ru.kolaer.server.dao.impl.DbBirthdayAllDAOImpl;
 import ru.kolaer.server.dao.impl.DbDataAllDAOImpl;
-import ru.kolaer.server.dao.impl.DbUser1cDAOImpl;
 import ru.kolaer.server.restful.tools.UsersManager;
  
 @Configuration
@@ -48,12 +46,10 @@ public class KolaerServerConfig {
     @Bean
     public DataSource dataSource() {
     	final DriverManagerDataSource dataSource = new DriverManagerDataSource();
- 
         dataSource.setDriverClassName(env.getRequiredProperty(PROP_DATABASE_DRIVER));
         dataSource.setUrl(env.getRequiredProperty(PROP_DATABASE_URL));
         dataSource.setUsername(env.getRequiredProperty(PROP_DATABASE_USERNAME));
         dataSource.setPassword(env.getRequiredProperty(PROP_DATABASE_PASSWORD));
- 
         return dataSource;
     }
  
@@ -71,7 +67,6 @@ public class KolaerServerConfig {
     public JpaTransactionManager transactionManager() {
     	final JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
- 
         return transactionManager;
     }
     
@@ -94,31 +89,21 @@ public class KolaerServerConfig {
     	return dbUser1сDAO;
     }
     
-    @Bean(name = "dbUser1cDAO")
-    public DbUser1сDAO dbUser1cDAO() {
-    	final DbUser1сDAO dbUser1сDAO = new DbUser1cDAOImpl();
-    	return dbUser1сDAO;
-    }
-    
     private HibernateJpaVendorAdapter jpaVendorAdapter() {
     	final HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
     	jpaVendorAdapter.setShowSql(true);
     	jpaVendorAdapter.setGenerateDdl(false);
-    	
     	return jpaVendorAdapter;
     }
     
     private Properties getHibernateProperties() {
     	final Properties properties = new Properties();
-    	
         properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
         properties.put(PROP_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
         properties.put("db.hibernate.max_fetch_depth", 3);
         properties.put("db.hibernate.jdbc.fetch_size", 50);
         properties.put("db.hibernate.jdbc.batch_size", 10);
         properties.put("hibernate.hbm2ddl.auto", "none");
- 
         return properties;
     }
- 
 }
