@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -47,43 +48,45 @@ public class VMMainFrameImpl extends Application {
 	@FXML
     private BorderPane mainPane;
 	/**Менеджер служб.*/
-	private final ServiceControlManager servicesManager = new ServiceControlManager();
+	private ServiceControlManager servicesManager;
 	/**Главное окно приложения.*/
 	private Stage stage;
 	
     @FXML
-    public void initialize() {
-    	this.initApplicationParams(); 
-    	
-    	//Статус бар приложения.
-    	final HBox statusBar = new HBox();
-    	statusBar.setPadding(new Insets(0, 30, 0, 30));
-    	statusBar.setSpacing(30);
-    	statusBar.setAlignment(Pos.CENTER_RIGHT);
-    	statusBar.setStyle("-fx-background-color: #66CCFF");
-    	
-    	final UniformSystemEditorKit editorKid = new UniformSystemEditorKitImpl(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
-    	
-    	//Инициализация вкладочного explorer'а. 
-    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, editorKid);
-    	
-    	this.mainPane.setBottom(statusBar);
-    	this.mainPane.setCenter(explorer.getContent());
-    	
-    	CompletableFuture.runAsync(() -> {
-    		Thread.currentThread().setName("Добавление системны служб");	
-    		this.servicesManager.addService(new UserPingService(), true);
-    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer), true);
+    public void initialize() { 	
+    	Platform.runLater(() -> {
+        	this.servicesManager = new ServiceControlManager();
+        	this.initApplicationParams(); 
+	    	//Статус бар приложения.
+	    	final HBox statusBar = new HBox();
+	    	statusBar.setPadding(new Insets(0, 30, 0, 30));
+	    	statusBar.setSpacing(30);
+	    	statusBar.setAlignment(Pos.CENTER_RIGHT);
+	    	statusBar.setStyle("-fx-background-color: #66CCFF");
+	    	
+	    	final UniformSystemEditorKit editorKid = new UniformSystemEditorKitImpl(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
+	    	
+	    	//Инициализация вкладочного explorer'а. 
+	    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, editorKid);
+	    	
+	    	this.mainPane.setBottom(statusBar);
+	    	this.mainPane.setCenter(explorer.getContent());
+	    	
+	    	CompletableFuture.runAsync(() -> {
+	    		Thread.currentThread().setName("Добавление системны служб");	
+	    		this.servicesManager.addService(new UserPingService(), true);
+	    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer), true);
+	    	});
+	
+	    	CompletableFuture.supplyAsync(() -> {
+				Thread.currentThread().setName("Скан и добавление плагинов");
+				return new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
+			}).exceptionally(t -> {
+				LOG.error("Ошибка при сканировании плагинов!", t);
+				editorKid.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Ошибка при сканировании плагинов!");
+				return null;
+			});
     	});
-
-    	CompletableFuture.supplyAsync(() -> {
-			Thread.currentThread().setName("Скан и добавление плагинов");
-			return new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
-		}).exceptionally(t -> {
-			LOG.error("Ошибка при сканировании плагинов!", t);
-			editorKid.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Ошибка при сканировании плагинов!");
-			return null;
-		});
     }
     
     private void initApplicationParams() {
@@ -106,13 +109,15 @@ public class VMMainFrameImpl extends Application {
 		this.stage = stage;
 		
 		PARAM.putAll(this.getParameters().getNamed());
-		
-		try {
-			this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
-		} catch(IOException e) {
-			LOG.error("Не удалось загрузить: "+ Resources.V_MAIN_FRAME, e);
-			System.exit(-9);
-		}
+		Platform.runLater(() -> {
+			try {
+				this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
+				this.stage.setMaximized(true);
+			} catch(IOException e) {
+				LOG.error("Не удалось загрузить: "+ Resources.V_MAIN_FRAME, e);
+				System.exit(-9);
+			}
+		});
 		this.stage.getIcons().add(new Image(Resources.ICON_START_BUTTON.toString(), true));
 		this.stage.setOnCloseRequest(e -> {
 			System.exit(0);
@@ -127,7 +132,6 @@ public class VMMainFrameImpl extends Application {
 		this.stage.setMinHeight(650);
 		this.stage.setMinWidth(850);
 		this.stage.centerOnScreen();
-		this.stage.setMaximized(true);
 		this.stage.show();
 	}
 }
