@@ -100,7 +100,7 @@ public class PDetailedInformationStageImpl extends BorderPane implements Initial
 		this.post.setText(user.getPost());
 		
 		final SimpleStringProperty birthday = new SimpleStringProperty();
-    	final DateFormat dateFormat = new SimpleDateFormat("dd.MM");
+    	final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
     	birthday.setValue(dateFormat.format((Date)user.getBirthday()));	
 		this.birthday.setText(birthday.get());
 		
