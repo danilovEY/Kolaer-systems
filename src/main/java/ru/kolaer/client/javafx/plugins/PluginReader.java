@@ -45,7 +45,7 @@ public class PluginReader {
 		LOG.debug("Сканирование папки: \"{}\"", this.pathToPlugins);
 		final File dirToPlugins = new File(this.pathToPlugins);
 		if(!dirToPlugins.isDirectory()){
-			LOG.error("Путь: {} не является папкой или ее нет!", this.pathToPlugins);
+			LOG.error("Путь: {} не является папкой или ее нет!", dirToPlugins.getAbsolutePath());
 			return Collections.emptyList();
 		}
 
