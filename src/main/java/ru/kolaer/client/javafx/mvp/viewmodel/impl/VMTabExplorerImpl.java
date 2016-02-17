@@ -84,11 +84,17 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 			LOG.error("Ошибка при инициализации плагина");
 			return null;
 		}).thenApplyAsync((plg) -> {
-			if(plg != null) {
+			if(plg != null && plg.getApplication() != null) {
 				final PTab tabPlugin = new PTabImpl(jarClassLoaser, plg, this.editorKit);
 				this.pluginMap.put(plg.getApplication().getName(), tabPlugin);
 				return tabPlugin;
 			} else {
+				try{
+					jarClassLoaser.close();
+				} catch(final Exception e){
+					LOG.error("Ошибка при закритии class loader плагина: {}", plugin.getName());
+					this.editorKit.getUISystemUS().getDialog().showErrorDialog(plugin.getName(), "Ошибка при закритии class loader плагина!");
+				}
 				return null;
 			}
 		}).exceptionally(t -> {

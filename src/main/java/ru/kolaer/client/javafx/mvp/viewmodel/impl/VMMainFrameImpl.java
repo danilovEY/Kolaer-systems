@@ -65,7 +65,7 @@ public class VMMainFrameImpl extends Application {
 	    	statusBar.setStyle("-fx-background-color: #66CCFF");
 	    	
 	    	final UniformSystemEditorKit editorKid = new UniformSystemEditorKitImpl(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
-	    	
+
 	    	//Инициализация вкладочного explorer'а. 
 	    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, editorKid);
 	    	

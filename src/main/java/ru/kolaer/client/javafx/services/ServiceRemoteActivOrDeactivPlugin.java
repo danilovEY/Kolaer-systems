@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
+import ru.kolaer.client.javafx.plugins.main.MainRemoteActivDeactivPlugin;
 import ru.kolaer.client.javafx.tools.Resources;
 
 /**
@@ -40,6 +41,8 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 	@Override
 	public void run() {
 		this.isRunning = true;
+		
+		this.updateAddPlugin(new MainRemoteActivDeactivPlugin());
 		
 		Thread.currentThread().setName("Прослушивание внутреннего эксплорера");
 		while(this.isRunning) {

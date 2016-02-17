@@ -20,17 +20,17 @@ public class UISystemUSImpl implements UISystemUS {
 	}
 
 	@Override
-	public NotificationUS getNotification() {
+	public synchronized NotificationUS getNotification() {
 		return this.notification;
 	}
 
 	@Override
-	public DialogUS getDialog() {
+	public synchronized DialogUS getDialog() {
 		return this.dialog;
 	}
 
 	@Override
-	public StatusBarUS getStatusBar() {	
+	public synchronized StatusBarUS getStatusBar() {	
 		return this.statusBar;
 	}
 
