@@ -14,6 +14,7 @@ import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBirthdayImpl;
+import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
 import ru.kolaer.server.dao.entities.DbDataAll;
@@ -44,7 +45,7 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 		
 		this.table.setMouseClick(e -> {
 			if(e.getClickCount() == 2) {
-				new PDetailedInformationStageImpl(this.table.getSelectModel()).show();
+				new VMDetailedInformationStageImpl(this.table.getSelectModel()).show();
 			}
 		});
 		

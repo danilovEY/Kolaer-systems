@@ -7,10 +7,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<fx:root prefHeight="731.0" prefWidth="697.0" type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<fx:root prefHeight="653.0" prefWidth="697.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="731.0" prefWidth="655.0" BorderPane.alignment="CENTER">
+      <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="655.0" prefWidth="697.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="icon" fitHeight="231.0" fitWidth="252.0" layoutX="223.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" />
             <GridPane alignment="CENTER_LEFT" layoutX="98.0" layoutY="254.0" prefHeight="446.0" prefWidth="505.0">
@@ -59,7 +58,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label text="День рождение:" GridPane.rowIndex="6">
+                  <Label text="День рождение:" visible="false" GridPane.rowIndex="6">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -69,7 +68,7 @@
                   <TextField fx:id="post" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <TextField fx:id="phoneNumber" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <TextField fx:id="email" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField fx:id="birthday" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField fx:id="birthday" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                </children>
             </GridPane>
          </children>

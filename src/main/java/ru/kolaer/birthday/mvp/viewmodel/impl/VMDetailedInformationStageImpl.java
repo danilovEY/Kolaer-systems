@@ -1,4 +1,4 @@
-package ru.kolaer.birthday.mvp.presenter.impl;
+package ru.kolaer.birthday.mvp.viewmodel.impl;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,10 +24,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import ru.kolaer.birthday.mvp.model.UserModel;
-import ru.kolaer.birthday.mvp.presenter.PDetailedInformationStage;
+import ru.kolaer.birthday.mvp.viewmodel.VMDetailedInformationStage;
 
-public class PDetailedInformationStageImpl extends BorderPane implements Initializable, PDetailedInformationStage {
-	private final Logger LOG = LoggerFactory.getLogger(PDetailedInformationStageImpl.class);
+public class VMDetailedInformationStageImpl extends BorderPane implements Initializable, VMDetailedInformationStage {
+	private final Logger LOG = LoggerFactory.getLogger(VMDetailedInformationStageImpl.class);
 	private final UserModel user;
 	private Stage stage;
 	@FXML
@@ -47,7 +47,7 @@ public class PDetailedInformationStageImpl extends BorderPane implements Initial
 	@FXML
 	private TextField birthday;
 	
-	public PDetailedInformationStageImpl(final UserModel user) {
+	public VMDetailedInformationStageImpl(final UserModel user) {
 		this.user = user;
 		this.init();
 	}
