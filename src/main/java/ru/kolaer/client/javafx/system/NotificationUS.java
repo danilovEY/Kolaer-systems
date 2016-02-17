@@ -13,6 +13,12 @@ public interface NotificationUS {
 	void showSimpleNotify(String title, String text);
 	/**Показать нотификацию с ошибкой.*/
 	void showErrorNotify(String title, String text);
+	/**Показать нотификацию предупреждением.*/
+	void showWarningNotify(String title, String text);
+	/**Показать нотификацию с информацией.*/
+	void showInformationNotify(String title, String text);
+	/**Показать нотификацию с информацией.*/
+	void showInformationNotify(String title, String text, Duration duration);
 	/**Показать нотификацию с задержкой.*/
 	void showSimpleNotify(String title, String text, Duration duration);
 }
