@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.tools;
 
+import java.io.InputStream;
 import java.net.URL;
 
 public interface Resources {
@@ -20,6 +21,7 @@ public interface Resources {
 	
 	public static final String WINDOW_CSS = Resources.class.getResource("/css/window.css").toExternalForm();
 	public static final URL ICON_START_BUTTON = Resources.class.getResource("/css/aerIcon.png");
+	public static final InputStream ICON_MAIN_FRAME = Resources.class.getResourceAsStream("/css/favicon.ico");
 	
 	public static final String L_MENU_FILE = "Файл";
 	public static final String L_MENU_HELP = "Помощь";

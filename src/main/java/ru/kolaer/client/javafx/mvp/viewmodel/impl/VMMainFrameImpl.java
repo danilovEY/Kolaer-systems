@@ -118,7 +118,7 @@ public class VMMainFrameImpl extends Application {
 				System.exit(-9);
 			}
 		});
-		this.stage.getIcons().add(new Image(Resources.ICON_START_BUTTON.toString(), true));
+		this.stage.getIcons().add(new Image("/css/aerIcon.png"));
 		this.stage.setOnCloseRequest(e -> {
 			System.exit(0);
 		});	
