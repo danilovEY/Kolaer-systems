@@ -1,7 +1,5 @@
 package ru.kolaer.client.javafx.system;
 
-import java.util.concurrent.TimeUnit;
-
 import org.controlsfx.control.Notifications;
 
 import javafx.application.Platform;
@@ -22,17 +20,23 @@ public class NotificationUSImpl implements NotificationUS {
 
 	@Override
 	public void showSimpleNotify(final String title, final String text, Duration duration) {
-		NotificationUSImpl.getInstanceNotify(true, title, text, duration, 0);
+		Platform.runLater(() -> {
+			NotificationUSImpl.getInstanceNotify(true, title, text, duration, 0);
+		});
 	}
 
 	@Override
 	public void showErrorNotify(String title, String text) {	
-		NotificationUSImpl.getInstanceNotify(true, title, text, Duration.minutes(1), 3);
+		Platform.runLater(() -> {
+			NotificationUSImpl.getInstanceNotify(true, title, text, Duration.minutes(1), 3);
+		});
 	}
 
 	@Override
 	public void showWarningNotify(String title, String text) {		
-		NotificationUSImpl.getInstanceNotify(true, title, text, Duration.seconds(30), 2);
+		Platform.runLater(() -> {
+			NotificationUSImpl.getInstanceNotify(true, title, text, Duration.seconds(15), 2);
+		});
 	}
 
 	@Override
@@ -42,29 +46,24 @@ public class NotificationUSImpl implements NotificationUS {
 
 	@Override
 	public void showInformationNotify(String title, String text, Duration duration) {
-		NotificationUSImpl.getInstanceNotify(false, title, text, duration, 1);
+		Platform.runLater(() -> {
+			NotificationUSImpl.getInstanceNotify(false, title, text, duration, 1);
+		});
 	}
 
 	private static synchronized void getInstanceNotify(boolean isDark, String title, String text, Duration duration, int idStyle) {
-		Platform.runLater(() -> {
-			final Notifications notify = Notifications.create();
-			if(isDark)
-				notify.darkStyle();
-			notify.title(title);
-			notify.text(text);
-			notify.hideAfter(duration);
-			switch(idStyle) {
-				case 0: notify.show(); break;
-				case 1: notify.showInformation(); break;
-				case 2: notify.showWarning(); break;
-				case 3: notify.showError(); break;
-				default: notify.show(); break;
-			}
-		});
-		try{
-			TimeUnit.SECONDS.sleep(1);
-		}catch(InterruptedException e){
-			e.printStackTrace();
-		}
+		final Notifications notify = Notifications.create();
+		if(isDark)
+			notify.darkStyle();
+		notify.title(title);
+		notify.text(text);
+		notify.hideAfter(duration);
+		switch(idStyle) {
+			case 0: notify.show(); break;
+			case 1: notify.showInformation(); break;
+			case 2: notify.showWarning(); break;
+			case 3: notify.showError(); break;
+			default: notify.show(); break;
+		}	
 	}
 }
