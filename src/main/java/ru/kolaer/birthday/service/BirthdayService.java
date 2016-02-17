@@ -2,6 +2,11 @@ package ru.kolaer.birthday.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.CompletableFuture;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.util.Duration;
 import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.ServerStatus;
@@ -10,6 +15,7 @@ import ru.kolaer.server.dao.entities.DbBirthdayAll;
 import ru.kolaer.server.dao.entities.DbDataAll;
 
 public class BirthdayService implements Service {
+	private final Logger LOG = LoggerFactory.getLogger(BirthdayService.class);
 	private final UniformSystemEditorKit editorKid;
 	
 	public BirthdayService(final UniformSystemEditorKit editorKid) {
@@ -18,20 +24,25 @@ public class BirthdayService implements Service {
 	
 	@Override
 	public void run() {
-		if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.AVAILABLE) {
-			final DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
-			final DbBirthdayAll[] usersBirthday = editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
-			
-			final StringBuilder todayBirthday = new StringBuilder();
-			for(DbDataAll user : users) {
-				todayBirthday.append(user.getInitials()).append(" (").append("КолАЭР").append(") - ").append(user.getDepartamentAbbreviated()).append("\n");
+		try {
+			if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.AVAILABLE) {
+				final DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+				final DbBirthdayAll[] usersBirthday = editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
+				
+				final StringBuilder todayBirthday = new StringBuilder();
+				for(DbDataAll user : users) {
+					todayBirthday.append(user.getInitials()).append(" (").append("КолАЭР").append(") - ").append(user.getDepartamentAbbreviated()).append("\n");
+				}
+				for(DbBirthdayAll user : usersBirthday) {
+					todayBirthday.append(user.getInitials()).append(" (").append(this.getNameOrganization(user.getOrganization())).append(") - ").append(user.getDepartament()).append("\n");
+				}
+				final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+				final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\". Поздравляем с днем рождения!\n");
+				
+				this.editorKid.getUISystemUS().getNotification().showInformationNotify(title.toString(), todayBirthday.toString(), Duration.hours(1));
 			}
-			for(DbBirthdayAll user : usersBirthday) {
-				todayBirthday.append(user.getInitials()).append(" (").append(this.getNameOrganization(user.getOrganization())).append(") - ").append(user.getDepartament()).append("\n");
-			}
-			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\". Поздравляем с днем рождения!\n");
-			this.editorKid.getUISystemUS().getNotification().showSimpleNotify(title.toString(), todayBirthday.toString(), Duration.hours(1));
+		} catch(final Exception ex) {
+			LOG.error("Ошибка при отображении информации!", ex);
 		}
 	}
 

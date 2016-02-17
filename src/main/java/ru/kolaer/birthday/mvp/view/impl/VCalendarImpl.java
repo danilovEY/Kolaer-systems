@@ -25,13 +25,16 @@ import ru.kolaer.birthday.mvp.view.VCalendar;
  */
 public class VCalendarImpl implements VCalendar {
 	/**Панель с календарем.*/
-	private final BorderPane mainPane = new BorderPane();
-	private final DatePicker pick = new DatePicker();
+	private BorderPane mainPane;
+	private DatePicker pick;
 	/**Заголовок календаря.*/
-	private final Label title = new Label();
+	private Label title;
 	
 	public VCalendarImpl() {
 		Platform.runLater(() -> {
+			this.pick = new DatePicker();
+			this.mainPane = new BorderPane();
+			this.title = new Label();
 			this.init();
 		});
 	}
