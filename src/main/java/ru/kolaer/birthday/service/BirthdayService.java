@@ -8,7 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
 import javafx.util.Duration;
+import ru.kolaer.birthday.mvp.model.UserModel;
+import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
+import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
 import ru.kolaer.client.javafx.services.Service;
+import ru.kolaer.client.javafx.system.NotifyAction;
 import ru.kolaer.client.javafx.system.ServerStatus;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
@@ -28,24 +32,44 @@ public class BirthdayService implements Service {
 			final DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
 			final DbBirthdayAll[] usersBirthday = editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
 			
-			final StringBuilder todayBirthday = new StringBuilder();
+			final NotifyAction[] actions = new NotifyAction[users.length + usersBirthday.length];
+			int i = 0;
+
 			for(DbDataAll user : users) {
-				todayBirthday.append(user.getInitials()).append(" (").append("КолАЭР").append(") - ").append(user.getDepartamentAbbreviated()).append("\n");
+				actions[i] = new NotifyAction(user.getInitials() + " (КолАЭР) - " + user.getDepartamentAbbreviated(), e -> {
+					final UserModel userModel = new UserModelImpl();
+					userModel.setOrganization("КолАтомэнергоремонт");
+					userModel.setInitials(user.getInitials());
+					userModel.setBirthday(user.getBirthday());
+					userModel.setDepartament(user.getDepartament());
+					userModel.setPost(user.getPost());
+					userModel.setPhoneNumber(user.getPhone());
+					Platform.runLater(() -> {
+						new VMDetailedInformationStageImpl(userModel).show();
+					});	
+				});
+				i++;
 			}
 			for(DbBirthdayAll user : usersBirthday) {
-				todayBirthday.append(user.getInitials()).append(" (").append(this.getNameOrganization(user.getOrganization())).append(")");
-				
-				if(user.getDepartament() != null && !user.getDepartament().replaceAll(" ", "").equals("")) {
-					todayBirthday.append(" - ").append(user.getDepartament());
-				}
-				
-				todayBirthday.append("\n");
+				actions[i] = new NotifyAction(user.getInitials() + " (КолАЭР) - " + user.getDepartament(), e -> {
+					final UserModel userModel = new UserModelImpl();
+					userModel.setOrganization(this.getNameOrganization(user.getOrganization()));
+					userModel.setInitials(user.getInitials());
+					userModel.setBirthday(user.getBirthday());
+					userModel.setDepartament(user.getDepartament());
+					userModel.setPost(user.getPost());
+					userModel.setPhoneNumber(user.getPhone());
+					Platform.runLater(() -> {
+						new VMDetailedInformationStageImpl(userModel).show();
+					});					
+				});
+				i++;
 			}
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\". Поздравляем с днем рождения!\n");
 			
 			Platform.runLater(() -> {
-				this.editorKid.getUISystemUS().getNotification().showInformationNotify(title.toString(), todayBirthday.toString(), Duration.hours(1));
+				this.editorKid.getUISystemUS().getNotification().showSimpleNotify(title.toString(), null, Duration.hours(1), actions);
 			});
 		}
 	}
