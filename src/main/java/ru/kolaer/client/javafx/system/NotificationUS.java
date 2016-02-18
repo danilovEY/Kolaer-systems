@@ -21,4 +21,8 @@ public interface NotificationUS {
 	void showInformationNotify(String title, String text, Duration duration);
 	/**Показать нотификацию с задержкой.*/
 	void showSimpleNotify(String title, String text, Duration duration);
+	void showSimpleNotify(String title, String text, Duration duration, NotifyAction... actions);
+	void showErrorNotify(String title, String text, final NotifyAction... actions);
+	void showWarningNotify(String title, String text, final NotifyAction... actions);
+	void showInformationNotify(String title, String text, Duration duration, final NotifyAction... actions);
 }
