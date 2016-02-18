@@ -172,17 +172,27 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 	}
 
 	@Override
-	public void notifyActivationPlugin(RemoteActivationDeactivationPlugin tab) {
+	public void notifyActivationPlugin(final RemoteActivationDeactivationPlugin tab) {
 		this.observers.parallelStream().forEach(obs -> obs.updateActivationPlugin(tab));
 	}
 
 	@Override
-	public void notifyDeactivationPlugin(RemoteActivationDeactivationPlugin tab) {
+	public void notifyDeactivationPlugin(final RemoteActivationDeactivationPlugin tab) {
 		this.observers.parallelStream().forEach(obs -> obs.updateDeactivationPlugin(tab));
 	}
 
 	@Override
-	public void notifyAddPlugin(RemoteActivationDeactivationPlugin tab) {
+	public void notifyAddPlugin(final RemoteActivationDeactivationPlugin tab) {
 		this.observers.parallelStream().forEach(obs -> obs.updateAddPlugin(tab));
+	}
+
+	@Override
+	public void showPlugin(final int index) {
+		this.pluginsTabPane.getSelectionModel().select(index);
+	}
+
+	@Override
+	public void showPlugin(final UniformSystemPlugin plugin) {
+		this.pluginsTabPane.getSelectionModel().select(pluginMap.get(plugin.getApplication().getName()).getView().getContent());
 	}
 }

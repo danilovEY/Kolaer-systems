@@ -1,5 +1,7 @@
 package ru.kolaer.client.javafx.system;
 
+import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
+
 /**
  * Реализация системных (приложения) объектов.
  *
@@ -7,16 +9,26 @@ package ru.kolaer.client.javafx.system;
  * @version 0.1
  */
 public class UISystemUSImpl implements UISystemUS {
-	private final NotificationUS notification = new NotificationUSImpl();
-	private final DialogUS dialog = new DialogUSImpl();
-	private final StatusBarUS statusBar;
+	private NotificationUS notification = new NotificationUSImpl();
+	private DialogUS dialog = new DialogUSImpl();
+	private StatusBarUS statusBar;
+	private VMExplorer explorer;
+	
+	public UISystemUSImpl(final VMExplorer explorer, final StatusBarUS statusBar) {
+		this.statusBar = statusBar;
+		this.explorer = explorer;
+	}
 	
 	public UISystemUSImpl(final StatusBarUS statusBar) {
-		this.statusBar = statusBar;
+		this(null, statusBar);
+	}
+	
+	public UISystemUSImpl(final VMExplorer explorer) {
+		this(explorer, new StatusBarUSAdapter());
 	}
 	
 	public UISystemUSImpl() {
-		this.statusBar = new StatusBarUSAdapter();
+		this(null, new StatusBarUSAdapter());
 	}
 
 	@Override
@@ -34,4 +46,28 @@ public class UISystemUSImpl implements UISystemUS {
 		return this.statusBar;
 	}
 
+	@Override
+	public VMExplorer getExplorer() {
+		return this.explorer;
+	}
+
+	@Override
+	public void setNotification(final NotificationUS notificationUS) {
+		this.notification = notificationUS;
+	}
+
+	@Override
+	public void setDialog(final DialogUS dialogUS) {
+		this.dialog = dialogUS;
+	}
+
+	@Override
+	public void setStatusBar(final StatusBarUS statusBarUS) {
+		this.statusBar = statusBarUS;
+	}
+
+	@Override
+	public void setExplorer(final VMExplorer vmExplorer) {
+		this.explorer = vmExplorer;
+	}
 }
