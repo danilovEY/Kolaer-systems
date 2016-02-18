@@ -1,10 +1,12 @@
 package ru.kolaer.client.javafx.system;
 
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -20,6 +22,10 @@ import ru.kolaer.server.dao.entities.DbBirthdayAll;
 public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {	
 	private final RestTemplate restTemplate = new RestTemplate();
 	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	public UserBirthdayAllDataBaseImpl() {
+		this.restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+	}
 	
 	@Override
 	public DbBirthdayAll[] getAllUser() {

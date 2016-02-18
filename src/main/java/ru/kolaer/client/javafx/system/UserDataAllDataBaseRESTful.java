@@ -1,9 +1,11 @@
 package ru.kolaer.client.javafx.system;
 
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -19,6 +21,11 @@ import ru.kolaer.server.dao.entities.DbDataAll;
 public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 	private final RestTemplate restTemplate = new RestTemplate();
 	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	public UserDataAllDataBaseRESTful() {
+		this.restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+	}
+	
 	@Override
 	public DbDataAll[] getAllUser() {
 		final DbDataAll[] users = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/database/dataAll/get/users/max", DbDataAll[].class);
