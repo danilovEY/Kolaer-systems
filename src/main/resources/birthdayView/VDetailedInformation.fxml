@@ -32,7 +32,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="initial" GridPane.columnIndex="1" />
+                  <TextField fx:id="initial" editable="false" GridPane.columnIndex="1" />
                   <Label text="Должность:" GridPane.rowIndex="3">
                      <font>
                         <Font size="18.0" />
@@ -63,11 +63,11 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="organization" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="dep" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField fx:id="post" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField fx:id="phoneNumber" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField fx:id="email" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="organization" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="dep" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="post" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="phoneNumber" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="email" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <TextField fx:id="birthday" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                </children>
             </GridPane>
