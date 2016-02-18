@@ -15,55 +15,67 @@ public class NotificationUSImpl implements NotificationUS {
 
 	@Override
 	public void showSimpleNotify(final String title, final String text) {
-		this.showSimpleNotify(title, text, Duration.seconds(5));
+		Platform.runLater(() -> {
+			final Notifications notify = Notifications.create();
+			notify.hideAfter(Duration.seconds(5));
+			notify.title(title);
+			notify.text(text);
+			notify.show();
+		});
 	}
 
 	@Override
 	public void showSimpleNotify(final String title, final String text, Duration duration) {
 		Platform.runLater(() -> {
-			NotificationUSImpl.getInstanceNotify(true, title, text, duration, 0);
+			final Notifications notify = Notifications.create();
+			notify.hideAfter(duration);
+			notify.title(title);
+			notify.text(text);
+			notify.show();
 		});
 	}
 
 	@Override
 	public void showErrorNotify(String title, String text) {	
 		Platform.runLater(() -> {
-			NotificationUSImpl.getInstanceNotify(true, title, text, Duration.minutes(1), 3);
+			final Notifications notify = Notifications.create();
+			notify.hideAfter(Duration.seconds(15));
+			notify.title(title);
+			notify.text(text);
+			notify.showError();
 		});
 	}
 
 	@Override
 	public void showWarningNotify(String title, String text) {		
 		Platform.runLater(() -> {
-			NotificationUSImpl.getInstanceNotify(true, title, text, Duration.seconds(15), 2);
+			final Notifications notify = Notifications.create();
+			notify.hideAfter(Duration.seconds(10));
+			notify.title(title);
+			notify.text(text);
+			notify.showWarning();
 		});
 	}
 
 	@Override
 	public void showInformationNotify(String title, String text) {
-		this.showInformationNotify(title, text, Duration.seconds(5));
+		Platform.runLater(() -> {
+			final Notifications notify = Notifications.create();
+			notify.hideAfter(Duration.seconds(5));
+			notify.title(title);
+			notify.text(text);
+			notify.showInformation();
+		});
 	}
 
 	@Override
 	public void showInformationNotify(String title, String text, Duration duration) {
 		Platform.runLater(() -> {
-			NotificationUSImpl.getInstanceNotify(false, title, text, duration, 1);
+			final Notifications notify = Notifications.create();
+			notify.hideAfter(duration);
+			notify.title(title);
+			notify.text(text);
+			notify.showInformation();
 		});
-	}
-
-	private static synchronized void getInstanceNotify(boolean isDark, String title, String text, Duration duration, int idStyle) {
-		final Notifications notify = Notifications.create();
-		if(isDark)
-			notify.darkStyle();
-		notify.title(title);
-		notify.text(text);
-		notify.hideAfter(duration);
-		switch(idStyle) {
-			case 0: notify.show(); break;
-			case 1: notify.showInformation(); break;
-			case 2: notify.showWarning(); break;
-			case 3: notify.showError(); break;
-			default: notify.show(); break;
-		}	
 	}
 }
