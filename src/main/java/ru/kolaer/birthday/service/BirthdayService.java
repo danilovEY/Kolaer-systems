@@ -35,30 +35,20 @@ public class BirthdayService implements Service {
 			final NotifyAction[] actions = new NotifyAction[users.length + usersBirthday.length];
 			int i = 0;
 
-			for(DbDataAll user : users) {
-				actions[i] = new NotifyAction(user.getInitials() + " (КолАЭР) - " + user.getDepartamentAbbreviated(), e -> {
-					final UserModel userModel = new UserModelImpl();
-					userModel.setOrganization("КолАтомэнергоремонт");
-					userModel.setInitials(user.getInitials());
-					userModel.setBirthday(user.getBirthday());
-					userModel.setDepartament(user.getDepartament());
-					userModel.setPost(user.getPost());
-					userModel.setPhoneNumber(user.getPhone());
+			for(final DbDataAll user : users) {
+				actions[i] = new NotifyAction(user.getInitials() + " (КолАЭР) " + user.getDepartamentAbbreviated(), e -> {
+					final UserModel userModel = new UserModelImpl(user);
+					
 					Platform.runLater(() -> {
 						new VMDetailedInformationStageImpl(userModel).show();
 					});	
 				});
 				i++;
 			}
-			for(DbBirthdayAll user : usersBirthday) {
-				actions[i] = new NotifyAction(user.getInitials() + " (КолАЭР) - " + user.getDepartament(), e -> {
-					final UserModel userModel = new UserModelImpl();
+			for(final DbBirthdayAll user : usersBirthday) {
+				actions[i] = new NotifyAction(user.getInitials() + " ("+ this.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
+					final UserModel userModel = new UserModelImpl(user);
 					userModel.setOrganization(this.getNameOrganization(user.getOrganization()));
-					userModel.setInitials(user.getInitials());
-					userModel.setBirthday(user.getBirthday());
-					userModel.setDepartament(user.getDepartament());
-					userModel.setPost(user.getPost());
-					userModel.setPhoneNumber(user.getPhone());
 					Platform.runLater(() -> {
 						new VMDetailedInformationStageImpl(userModel).show();
 					});					

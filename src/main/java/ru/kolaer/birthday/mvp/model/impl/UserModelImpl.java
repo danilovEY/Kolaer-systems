@@ -3,6 +3,8 @@ package ru.kolaer.birthday.mvp.model.impl;
 import java.util.Date;
 
 import ru.kolaer.birthday.mvp.model.UserModel;
+import ru.kolaer.server.dao.entities.DbBirthdayAll;
+import ru.kolaer.server.dao.entities.DbDataAll;
 
 /**
  * Реализация {@linkplain UserModel}.
@@ -57,6 +59,24 @@ public class UserModelImpl implements UserModel {
 	
 	public UserModelImpl() {
 		
+	}
+	
+	public UserModelImpl(final DbDataAll user) {
+		this.setOrganization("КолАтомэнергоремонт");
+		this.setInitials(user.getInitials());
+		this.setBirthday(user.getBirthday());
+		this.setDepartament(user.getDepartament());
+		this.setPost(user.getPost());
+		this.setPhoneNumber(user.getPhone());
+	}
+	
+	public UserModelImpl(final DbBirthdayAll user) {
+		this.setOrganization(user.getOrganization());
+		this.setInitials(user.getInitials());
+		this.setBirthday(user.getBirthday());
+		this.setDepartament(user.getDepartament());
+		this.setPost(user.getPost());
+		this.setPhoneNumber(user.getPhone());
 	}
 	
 	public String getFirstName() {
