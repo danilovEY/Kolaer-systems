@@ -250,6 +250,13 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	public UserModel getSelectModel() {
 		return this.userBirthdayTable.getSelectionModel().getSelectedItem();
 	}
+
+	@Override
+	public void clear() {
+		Platform.runLater(() -> {
+			tableModel.clear();
+		});
+	}
 }
 
 

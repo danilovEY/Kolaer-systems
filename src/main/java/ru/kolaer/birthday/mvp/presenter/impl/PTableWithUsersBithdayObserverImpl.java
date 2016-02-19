@@ -56,6 +56,7 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 					return new Task<Void>() {
 						@Override
 						protected Void call() throws Exception {
+							table.clear();
 							this.updateTitle("КолАтомэнергоремонт");
 							this.updateMessage("Загрузка данных с сервера");
 							this.updateProgress(0, 10);

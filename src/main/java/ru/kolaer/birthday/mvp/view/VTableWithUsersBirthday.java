@@ -21,4 +21,5 @@ public interface VTableWithUsersBirthday extends View {
 	void setMouseClick(EventHandler<? super MouseEvent> value);
 	
 	UserModel getSelectModel();
+	void clear();
 }
