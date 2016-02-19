@@ -1,5 +1,6 @@
 package ru.kolaer.server.dao.impl;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -92,7 +93,6 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 
 	@Override
 	public List<DbBirthdayAll> getUsersByBirthdayAndOrg(Date date, String organization) {
-
 		final List<DbBirthdayAll> result = entityManager.createQuery("SELECT t FROM DbBirthdayAll t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", DbBirthdayAll.class)
 				.setParameter("org", organization)
 				.setParameter("date", date, TemporalType.DATE)
@@ -111,6 +111,9 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 
 	@Override
 	public List<DbBirthdayAll> getUsersByInitials(String initials) {
+		if(initials == null || initials.isEmpty())
+			return Collections.emptyList();
+			
 		final List<DbBirthdayAll> result = entityManager.createQuery("FROM DbBirthdayAll t where and t.initials like :initials", DbBirthdayAll.class)
 				.setParameter("initials", "%" + initials + "%")
 				.getResultList();
