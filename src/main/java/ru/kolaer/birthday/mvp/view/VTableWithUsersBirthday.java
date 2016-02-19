@@ -22,4 +22,5 @@ public interface VTableWithUsersBirthday extends View {
 	
 	UserModel getSelectModel();
 	void clear();
+	String getTitle();
 }

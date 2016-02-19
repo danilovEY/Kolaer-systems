@@ -257,6 +257,11 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 			tableModel.clear();
 		});
 	}
+
+	@Override
+	public String getTitle() {
+		return titleLabel.getText();
+	}
 }
 
 

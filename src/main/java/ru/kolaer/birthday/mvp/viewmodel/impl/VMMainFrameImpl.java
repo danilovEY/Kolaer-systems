@@ -72,6 +72,12 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 		this.vmTable = vmTable;
 		final VTableWithUsersBirthday vTable = vmTable.getView();
 		Platform.runLater(() -> {
+			final Button butTodayUsers = new Button("Показать сегодняшние дни рождения!");
+			butTodayUsers.setMaxWidth(Double.MAX_VALUE);
+			butTodayUsers.setOnAction(e -> {
+				vmTable.showTodayBirthday();
+			});
+			this.paneWithCalendars.getChildren().add(0,butTodayUsers);
 			this.tablePane.setCenter(vTable.getViewPane());
 		});
 	}

@@ -4,4 +4,5 @@ import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 
 public interface PTableWithUsersBirthdayObserver extends ObserverCalendar {
 	VTableWithUsersBirthday getView();
+	void showTodayBirthday();
 }

@@ -49,6 +49,24 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 			}
 		});
 		
+		this.showTodayBirthday();
+	}
+
+	@Override
+	public VTableWithUsersBirthday getView() {
+		return this.table;
+	}
+
+	@Override
+	public void updateSelectedDate(final LocalDate date, final List<UserModel> users) {
+		this.table.setData(users);
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		this.table.setTitle("\"" + date.format(formatter) + "\" день рождения у:");
+	}
+
+
+	@Override
+	public void showTodayBirthday() {
 		CompletableFuture.runAsync(() -> {
 			final Service<Void> service = new Service<Void>() {
 				@Override
@@ -111,18 +129,6 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 			service.start();
 			this.editorKid.getUISystemUS().getDialog().showLoadingDialog(service);
 		});
-	}
-
-	@Override
-	public VTableWithUsersBirthday getView() {
-		return this.table;
-	}
-
-	@Override
-	public void updateSelectedDate(final LocalDate date, final List<UserModel> users) {
-		this.table.setData(users);
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-		this.table.setTitle("\"" + date.format(formatter) + "\" день рождения у:");
 	}
 	
 }
