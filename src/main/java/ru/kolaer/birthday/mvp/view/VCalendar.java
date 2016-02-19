@@ -22,4 +22,5 @@ public interface VCalendar extends View {
 	/**Получить дату выбранную пользователем.*/
 	LocalDate getSelectDate();
 	void setTitle(String title);
+	String getTitle();
 }

@@ -79,5 +79,10 @@ public class VCalendarImpl implements VCalendar {
 		Platform.runLater(() -> {
 			this.title.setText(title);
 		});
+	}
+
+	@Override
+	public String getTitle() {
+		return this.title.getText();
 	}		
 }

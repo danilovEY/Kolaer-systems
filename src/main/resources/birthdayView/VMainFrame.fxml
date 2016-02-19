@@ -16,7 +16,7 @@
             <BorderPane fx:id="tablePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="769.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
          </center>
          <right>
-            <VBox fx:id="paneWithCalendars" alignment="CENTER" BorderPane.alignment="CENTER">
+            <VBox fx:id="paneWithCalendars" alignment="TOP_CENTER" BorderPane.alignment="CENTER">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>

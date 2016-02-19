@@ -42,17 +42,7 @@ public class PCalendarKAER extends PCalendarBase implements PCalendar {
 					for (DbDataAll user : usersDataAll) {
 						obs.setValue(value);
 						value += step;
-						final UserModel userModel = new UserModelImpl();
-						userModel.setOrganization(ORGANIZATION);
-						userModel.setInitials(user.getInitials());
-						userModel.setFirstName(user.getName());
-						userModel.setSecondName(user.getSurname());
-						userModel.setThirdName(user.getPatronymic());
-						userModel.setBirthday(user.getBirthday());
-						userModel.setDepartament(user.getDepartamentAbbreviated());
-						userModel.setIcon(user.getVCard());
-						userModel.setPost(user.getPost());
-						userModel.setPhoneNumber(user.getPhone());
+						final UserModel userModel = new UserModelImpl(user);
 						users.add(userModel);
 					}
 					obs.setValue(1);

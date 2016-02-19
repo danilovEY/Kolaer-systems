@@ -68,6 +68,11 @@ public class UserModelImpl implements UserModel {
 		this.setDepartament(user.getDepartament());
 		this.setPost(user.getPost());
 		this.setPhoneNumber(user.getPhone());
+		this.setEmail(user.getEmail());
+		this.setFirstName(user.getName());
+		this.setSecondName(user.getSurname());
+		this.setThirdName(user.getPatronymic());
+		this.setIcon(user.getVCard());
 	}
 	
 	public UserModelImpl(final DbBirthdayAll user) {
@@ -77,6 +82,7 @@ public class UserModelImpl implements UserModel {
 		this.setDepartament(user.getDepartament());
 		this.setPost(user.getPost());
 		this.setPhoneNumber(user.getPhone());
+		this.setEmail(user.getEmail());
 	}
 	
 	public String getFirstName() {

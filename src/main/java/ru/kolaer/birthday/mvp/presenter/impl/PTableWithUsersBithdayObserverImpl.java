@@ -64,18 +64,7 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 							this.updateMessage("Чтение данных");
 							int index = 0;
 							for(final DbDataAll user : users) {
-								final UserModel userModel = new UserModelImpl();
-								userModel.setOrganization("КолАтомэнергоремонт");
-								userModel.setEmail(user.getEmail());
-								userModel.setInitials(user.getInitials());
-								userModel.setFirstName(user.getName());
-								userModel.setSecondName(user.getSurname());
-								userModel.setThirdName(user.getPatronymic());
-								userModel.setBirthday(user.getBirthday());
-								userModel.setDepartament(user.getDepartament());
-								userModel.setPhoneNumber(user.getPhone());
-								userModel.setIcon(user.getVCard());
-								userModel.setPost(user.getPost());
+								final UserModel userModel = new UserModelImpl(user);
 								table.addData(userModel);
 								this.updateProgress(index, users.length * 2);
 								index++;
@@ -106,14 +95,8 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 							this.updateMessage("Чтение данных");
 							int index = 0;
 							for(final DbBirthdayAll user : users) {
-								final UserModel userModel = new UserModelImpl();
+								final UserModel userModel = new UserModelImpl(user);
 								userModel.setOrganization(user.getOrganization());
-								userModel.setInitials(user.getInitials());
-								userModel.setBirthday(user.getBirthday());
-								userModel.setEmail(user.getEmail());
-								userModel.setDepartament(user.getDepartament());
-								userModel.setPhoneNumber(user.getPhone());
-								userModel.setPost(user.getPost());
 								table.addData(userModel);
 								this.updateProgress(index, users.length * 2);
 								index++;

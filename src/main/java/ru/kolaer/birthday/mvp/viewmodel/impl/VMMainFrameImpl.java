@@ -14,7 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Pagination;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -36,7 +36,8 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	/**Presenter таблици.*/
 	private PTableWithUsersBirthdayObserver vmTable;
 	private List<PCalendar> calendarList = new ArrayList<>();
-	private Pagination paneWithListCalendar;
+
+	private BorderPane calendarPane;
 	
 	@FXML
 	private BorderPane tablePane;
@@ -45,15 +46,8 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	
 	@FXML
 	public void initialize() {
-		this.paneWithListCalendar = new Pagination();
-		this.paneWithCalendars.getChildren().add(this.paneWithListCalendar);
-		this.paneWithListCalendar.setPageFactory(param -> {
-			if(calendarList.isEmpty())
-				return null;
-			final PCalendar calenndar = calendarList.get(param);
-			calenndar.initDayCellFactory();
-			return calenndar.getView().getViewPane();
-		});
+		this.calendarPane = new BorderPane();
+		this.paneWithCalendars.getChildren().add(this.calendarPane);
 	}
 	
 	@Override
@@ -86,7 +80,17 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	public void addVMCalendar(final PCalendar calendar) {
 		Platform.runLater(() -> {
 			this.calendarList.add(calendar);
-			this.paneWithListCalendar.setPageCount(this.calendarList.size());
+			final Button calendarBut = new Button(calendar.getView().getTitle());
+			calendarBut.setMaxWidth(Double.MAX_VALUE);
+			calendarBut.setOnAction(e -> {
+				if(!calendar.isInitDayCellFactory()) {
+					calendar.initDayCellFactory();
+				}
+				this.calendarPane.setCenter(calendar.getView().getViewPane());
+				
+			});
+			
+			this.paneWithCalendars.getChildren().add(this.paneWithCalendars.getChildren().size() - 1, calendarBut);
 		});
 	}
 }

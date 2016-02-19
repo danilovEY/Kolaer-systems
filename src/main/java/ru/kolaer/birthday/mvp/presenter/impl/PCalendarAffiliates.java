@@ -41,13 +41,8 @@ public class PCalendarAffiliates extends PCalendarBase  {
 					for (DbBirthdayAll user : usersDataAll) {
 						obs.setValue(value);
 						value += step;
-						final UserModel userModel = new UserModelImpl();
+						final UserModel userModel = new UserModelImpl(user);
 						userModel.setOrganization(ORGANIZATION);
-						userModel.setInitials(user.getInitials());
-						userModel.setBirthday(user.getBirthday());
-						userModel.setDepartament(user.getDepartament());
-						userModel.setPost(user.getPost());
-						userModel.setPhoneNumber(user.getPhone());
 						users.add(userModel);
 					}
 					obs.setValue(1);
