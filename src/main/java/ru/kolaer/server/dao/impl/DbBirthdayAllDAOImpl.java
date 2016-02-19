@@ -109,4 +109,12 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 		return result.intValue();
 	}
 
+	@Override
+	public List<DbBirthdayAll> getUsersByInitials(String initials) {
+		final List<DbBirthdayAll> result = entityManager.createQuery("FROM DbBirthdayAll t where and t.initials like :initials", DbBirthdayAll.class)
+				.setParameter("initials", "%" + initials + "%")
+				.getResultList();
+		return result;
+	}
+
 }

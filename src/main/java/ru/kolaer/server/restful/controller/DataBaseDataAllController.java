@@ -86,4 +86,9 @@ public class DataBaseDataAllController {
 			return 0;
 		}
 	}
+	
+	@RequestMapping(value = "/get/users/by/initials/{initials}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<DbDataAll> getUsersByInitials(final @PathVariable String initials) {
+			return dbDataAllDAO.getUsersByInitials(initials);
+	}
 }
