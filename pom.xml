@@ -4,7 +4,7 @@
 
 	<groupId>ru.kolaer</groupId>
 	<artifactId>ru.kolaer.api</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<packaging>jar</packaging>
 
 	<name>ru.kolaer.api</name>
