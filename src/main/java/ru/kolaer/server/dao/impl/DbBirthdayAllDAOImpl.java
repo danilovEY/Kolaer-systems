@@ -67,7 +67,7 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 
 	@Override
 	public int getCountUserBirthday(final Date date) {
-		final Number result = entityManager.createQuery("SELECT count(t) FROM DbBirthdayAll t where and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", Number.class)
+		final Number result = entityManager.createQuery("SELECT count(t) FROM DbBirthdayAll t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", Number.class)
 				.setParameter("date", date, TemporalType.DATE)
 				.getSingleResult();
 		return result.intValue();
@@ -114,7 +114,7 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 		if(initials == null || initials.isEmpty())
 			return Collections.emptyList();
 			
-		final List<DbBirthdayAll> result = entityManager.createQuery("FROM DbBirthdayAll t where and t.initials like :initials", DbBirthdayAll.class)
+		final List<DbBirthdayAll> result = entityManager.createQuery("FROM DbBirthdayAll t where t.initials like :initials", DbBirthdayAll.class)
 				.setParameter("initials", "%" + initials + "%")
 				.getResultList();
 		return result;

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ru.kolaer.server.dao.DbBirthdayAllDAO;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
+import ru.kolaer.server.dao.entities.DbDataAll;
 import ru.kolaer.server.restful.controller.request.obj.RequestDbBirthdayAllList;
 
 @RestController
@@ -118,5 +119,10 @@ public class DataBaseBirthdayAllController {
 			LOG.error("Ошибка! Не коректные данные: ({})", date);
 			return 0;
 		}
+	}
+	
+	@RequestMapping(value = "/get/users/by/initials/{initials}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<DbBirthdayAll> getUsersByInitials(final @PathVariable String initials) {
+			return dbBirthdayAllDAO.getUsersByInitials(initials);
 	}
 }
