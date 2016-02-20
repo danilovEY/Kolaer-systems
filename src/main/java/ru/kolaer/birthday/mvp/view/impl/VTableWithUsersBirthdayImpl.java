@@ -37,6 +37,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import ru.kolaer.birthday.mvp.model.UserModel;
+import ru.kolaer.birthday.mvp.view.VSearchUsers;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 
 /**
@@ -51,6 +52,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	private final ObservableList<UserModel> tableModel = FXCollections.observableArrayList();
 	/**Панель с таблицой.*/
 	private final BorderPane tablePane = new BorderPane();
+	private final BorderPane titlePane = new BorderPane();
 	/**Таблица*/
 	private final TableView<UserModel> userBirthdayTable = new TableView<UserModel>();
 	/**Заголовок таблици.*/
@@ -117,6 +119,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	            @Override
 	            public void updateItem(final String item, final boolean empty) { 
 	            	Platform.runLater(() -> {
+	            		LOG.trace("Image: " + item);
 		            	this.setGraphic(null);
 		            	if(!empty) {
 		                    final ImageView imageview = new ImageView();
@@ -211,7 +214,8 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 		this.titleLabel.setAlignment(Pos.CENTER);
 		this.titleLabel.setContentDisplay(ContentDisplay.CENTER);
 		this.titleLabel.setMaxWidth(Double.MAX_VALUE);
-		this.tablePane.setTop(this.titleLabel);
+		this.titlePane.setCenter(this.titleLabel);
+		this.tablePane.setTop(this.titlePane);
 		this.tablePane.setCenter(this.userBirthdayTable);
 	}
 	
@@ -261,6 +265,11 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	@Override
 	public String getTitle() {
 		return titleLabel.getText();
+	}
+
+	@Override
+	public void addSearch(final VSearchUsers searchUsers) {
+		this.titlePane.setRight(searchUsers.getViewPane());
 	}
 }
 

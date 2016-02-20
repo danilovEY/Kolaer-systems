@@ -11,6 +11,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
+import ru.kolaer.birthday.mvp.presenter.PSearchUsers;
 import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBirthdayImpl;
@@ -50,6 +51,10 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 		});
 		
 		this.showTodayBirthday();
+		
+		final PSearchUsers searchUsers = new PSearchImpl(this.editorKid);
+		this.table.addSearch(searchUsers.getView());
+		searchUsers.addObserver(this);
 	}
 
 	@Override
@@ -130,5 +135,9 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 			this.editorKid.getUISystemUS().getDialog().showLoadingDialog(service);
 		});
 	}
-	
+
+	@Override
+	public void updateUsers(List<UserModel> users) {
+		this.table.setData(users);
+	}
 }
