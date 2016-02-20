@@ -4,7 +4,7 @@
 
 	<groupId>ru.kolaer.client</groupId>
 	<artifactId>ru.kolaer.client.javafx</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
 
 	<name>ru.kolaer.client.javafx</name>
@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>ru.kolaer</groupId>
 			<artifactId>ru.kolaer.api</artifactId>
-			<version>0.0.3</version>
+			<version>0.0.4</version>
 		</dependency>
 
 		<dependency>

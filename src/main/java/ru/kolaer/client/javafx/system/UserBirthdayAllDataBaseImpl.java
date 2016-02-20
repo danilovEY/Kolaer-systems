@@ -93,4 +93,12 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
 		return countUsers;
 	}
 
+	@Override
+	public DbBirthdayAll[] getUsersByInitials(String initials) {
+		if(initials == null || initials.isEmpty())
+			throw new NullPointerException("Initials is null!");
+		final DbBirthdayAll[] users = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/database/birthdayAll/get/users/by/initials/" + initials, DbBirthdayAll[].class);
+		return users;
+	}
+
 }

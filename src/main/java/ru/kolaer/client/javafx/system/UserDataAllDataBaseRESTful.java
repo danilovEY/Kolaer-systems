@@ -71,4 +71,12 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase{
 		return countUsers;
 	}
 
+	@Override
+	public DbDataAll[] getUsersByInitials(String initials) {
+		if(initials == null || initials.isEmpty())
+			throw new NullPointerException("Initials is null!");
+		final DbDataAll[] users = restTemplate.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/database/dataAll/get/users/by/initials/" + initials, DbDataAll[].class);
+		return users;
+	}
+
 }
