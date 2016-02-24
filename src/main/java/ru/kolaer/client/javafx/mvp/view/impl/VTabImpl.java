@@ -42,7 +42,7 @@ public class VTabImpl implements VTab {
 	private void init() {	
 		this.tab.setText(Optional.ofNullable(this.app.getName()).orElse("Плагин"));
 		this.tab.setContent(this.app.getContent());
-
+		this.tab.setStyle(".tab .tab:selected{-fx-background-color: #3c3c3c;} .tab.tab-label { -fx-text-fill: -fx-text-base-color; -fx-font-size: 18px;}");
 		final MenuItem openInWinodow = new MenuItem("Открыть в новом окне");
 		openInWinodow.setOnAction(e -> {
 			Platform.runLater(() -> {

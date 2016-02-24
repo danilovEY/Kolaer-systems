@@ -21,14 +21,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import ru.kolaer.client.javafx.plugins.PluginReader;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
 import ru.kolaer.client.javafx.services.SeviceUserIP;
 import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
-import ru.kolaer.client.javafx.system.NotifyAction;
 import ru.kolaer.client.javafx.system.StatusBarUSImpl;
 import ru.kolaer.client.javafx.system.UISystemUSImpl;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
@@ -110,8 +108,11 @@ public class VMMainFrameImpl extends Application {
 	@Override
 	public void start(final Stage stage) {	
 		this.stage = stage;
+		this.stage.setMinHeight(650);
+		this.stage.setMinWidth(850);
 		
 		PARAM.putAll(this.getParameters().getNamed());
+		
 		Platform.runLater(() -> {
 			try {
 				this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
@@ -121,6 +122,7 @@ public class VMMainFrameImpl extends Application {
 				System.exit(-9);
 			}
 		});
+		
 		this.stage.getIcons().add(new Image("/css/aerIcon.png"));
 		this.stage.setOnCloseRequest(e -> {
 			System.exit(0);
@@ -132,8 +134,7 @@ public class VMMainFrameImpl extends Application {
 				this.stage.setFullScreen(true);
 		});
 		this.stage.setTitle("Единая система КолАЭР");
-		this.stage.setMinHeight(650);
-		this.stage.setMinWidth(850);
+
 		this.stage.centerOnScreen();
 		this.stage.show();
 	}
