@@ -2,6 +2,7 @@ package ru.kolaer.birthday.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +59,14 @@ public class BirthdayService implements Service {
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\". Поздравляем с днем рождения!\n");
 			
+			try{
+				TimeUnit.SECONDS.sleep(1);
+			}catch(InterruptedException e){
+				LOG.error("Привышено ожижание", e);
+			}
+			
 			Platform.runLater(() -> {
-				this.editorKid.getUISystemUS().getNotification().showSimpleNotify(title.toString(), null, Duration.hours(1), actions);
+				this.editorKid.getUISystemUS().getNotification().showSimpleNotify(title.toString(), null, Duration.hours(24), actions);
 			});
 		}
 	}

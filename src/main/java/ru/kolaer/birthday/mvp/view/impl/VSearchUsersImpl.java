@@ -1,8 +1,5 @@
 package ru.kolaer.birthday.mvp.view.impl;
 
-import java.util.concurrent.TimeUnit;
-
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
