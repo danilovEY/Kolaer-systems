@@ -75,9 +75,10 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		});
 
 		this.cache.clear();
-
-		this.panelWithGroups.getChildren().clear();
-		this.panelWithLabels.getChildren().clear();
+		Platform.runLater(() -> {
+			this.panelWithGroups.getChildren().clear();
+			this.panelWithLabels.getChildren().clear();
+		});
 
 		final List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups();
 
@@ -87,18 +88,18 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 			
 		Platform.runLater(() -> {
 			groupsList.forEach((group) -> {
-					final CGroupLabels cGroup = new CGroupLabels(group);			
-					this.panelWithGroups.getChildren().add(cGroup);
-				
-					final ExecutorService threads = Executors.newSingleThreadExecutor();
-					threads.submit(() -> {
-						final List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
-							return new CLabel(label);
-						}).collect(Collectors.toList());
-						this.addCache(cGroup, labelList);
-					});
-					threads.shutdown();
-					cGroup.registerOberver(this);				
+				final CGroupLabels cGroup = new CGroupLabels(group);			
+				this.panelWithGroups.getChildren().add(cGroup);
+			
+				final ExecutorService threads = Executors.newSingleThreadExecutor();
+				threads.submit(() -> {
+					final List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
+						return new CLabel(label);
+					}).collect(Collectors.toList());
+					this.addCache(cGroup, labelList);
+				});
+				threads.shutdown();
+				cGroup.registerOberver(this);				
 			});
 		});
 	}
