@@ -43,6 +43,16 @@ public class CSetting extends BaseController implements Dialog {
 	private Button buttonSetPathBanner;
 	
 	@FXML
+	private TextField textPathBannerLeft;
+	@FXML
+	private Button buttonSetPathBannerLeft;
+	
+	@FXML
+	private TextField textPathBannerRigth;
+	@FXML
+	private Button buttonSetPathBannerRigth;
+	
+	@FXML
 	private PasswordField textPassRoot;
 	@FXML
 	private Button changePassButton;
@@ -134,6 +144,48 @@ public class CSetting extends BaseController implements Dialog {
 			}
 		});
 		
+		this.buttonSetPathBannerLeft.setOnAction(e -> {
+			final FileChooser fileC = new FileChooser();
+			fileC.setTitle("Выбор файла");
+			fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
+			
+			final File startDir = new File(this.textPathBannerLeft.getText());
+			String startPath = System.getProperty("user.home");
+			if(startDir.isFile()) {
+				startPath = startDir.getAbsolutePath().substring(0, startDir.getAbsolutePath().length() - startDir.getName().length());
+			} else {
+				startPath = startDir.getAbsolutePath();
+			}
+			fileC.setInitialDirectory(new File(startPath));
+
+			final Optional<File> file = Optional.ofNullable(fileC.showOpenDialog(dialog));
+
+			if (file.isPresent() && file.get().exists()) {
+				this.textPathBannerLeft.setText(file.get().getAbsolutePath());
+			}
+		});
+		
+		this.buttonSetPathBannerRigth.setOnAction(e -> {
+			final FileChooser fileC = new FileChooser();
+			fileC.setTitle("Выбор файла");
+			fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
+			
+			final File startDir = new File(this.textPathBannerRigth.getText());
+			String startPath = System.getProperty("user.home");
+			if(startDir.isFile()) {
+				startPath = startDir.getAbsolutePath().substring(0, startDir.getAbsolutePath().length() - startDir.getName().length());
+			} else {
+				startPath = startDir.getAbsolutePath();
+			}
+			fileC.setInitialDirectory(new File(startPath));
+
+			final Optional<File> file = Optional.ofNullable(fileC.showOpenDialog(dialog));
+
+			if (file.isPresent() && file.get().exists()) {
+				this.textPathBannerRigth.setText(file.get().getAbsolutePath());
+			}
+		});
+		
 		this.buttonSetPathWB.setOnAction(e -> {
 			final FileChooser fileC = new FileChooser();
 			fileC.setTitle("Выбор файла");
@@ -169,6 +221,8 @@ public class CSetting extends BaseController implements Dialog {
 			set.setAllLabels(this.cbAllLabels.isSelected());
 			set.setDefaultWebBrowser(this.rbDefaultWB.isSelected());
 			set.setPathBanner(this.textPathBanner.getText());
+			set.setPathBannerLeft(this.textPathBannerLeft.getText());
+			set.setPathBannerRigth(this.textPathBannerRigth.getText());
 			set.setPathWebBrowser(this.textPathWB.getText());
 			set.setDefaultUserWebBrowser(this.rbDefaultUserWB.isSelected());
 			SettingSingleton.getInstance().saveSetting();

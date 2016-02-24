@@ -31,6 +31,10 @@ public class SettingSingleton implements Serializable {
 	private String pathWebBrowser = "";
 	/**Путь к банеру.*/
 	private String pathBanner = "";
+	/**Путь к банеру.*/
+	private String pathBannerLeft = "";
+	/**Путь к банеру.*/
+	private String pathBannerRigth = "";
 	/**Сериализованные объекты.*/
 	private transient SerializationObjects serializationObjects;
 	
@@ -146,5 +150,21 @@ public class SettingSingleton implements Serializable {
 
 	public void setDefaultUserWebBrowser(final boolean defaultUserWebBrowser) {
 		this.defaultUserWebBrowser = defaultUserWebBrowser;
+	}
+
+	public String getPathBannerLeft() {
+		return pathBannerLeft;
+	}
+
+	public void setPathBannerLeft(String pathBannerLeft) {
+		this.pathBannerLeft = pathBannerLeft;
+	}
+
+	public String getPathBannerRigth() {
+		return pathBannerRigth;
+	}
+
+	public void setPathBannerRigth(String pathBannerRigth) {
+		this.pathBannerRigth = pathBannerRigth;
 	}
 }

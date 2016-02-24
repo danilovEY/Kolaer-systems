@@ -75,16 +75,7 @@ public class CMainFrame extends Application {
 		threadForLoadGroup.shutdown();
 		
 		CompletableFuture.runAsync(() -> {
-			final File img = new File(SettingSingleton.getInstance().getPathBanner());
-			Platform.runLater(() -> {
-				if(img.exists() && img.isFile()) {			
-						final ImageViewPane imagePane = new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner(), true)));
-						imagePane.setMaxHeight(300);				
-						this.mainPanel.setTop(imagePane);
-				} else {
-					this.mainPanel.setTop(null);
-				}
-			});
+			this.updateBanner();
 		}, threadForBanner);
 		threadForBanner.shutdown();
 		
@@ -148,17 +139,46 @@ public class CMainFrame extends Application {
 			this.settingMenuItem.setOnAction(e -> {
 				final CSetting setting = new CSetting();
 				setting.showAndWait();
-				final File imgage = new File(SettingSingleton.getInstance().getPathBanner());
-				if(imgage.exists() && imgage.isFile()) {
-					mainPanel.setTop(new ImageViewPane(new ImageView(new Image("file:"+SettingSingleton.getInstance().getPathBanner(), true))));
-				} else {
-					mainPanel.setTop(null);
-				}
+				this.updateBanner();
 			});
 			
 			this.menuItemAbout.setOnAction(e -> {
 				new CAbout().show();
 			});
+		});
+	}
+	
+	private void updateBanner() {
+		final File imgCenter = new File(SettingSingleton.getInstance().getPathBanner());
+		final File imgLeft = new File(SettingSingleton.getInstance().getPathBannerLeft());
+		final File imgRigth = new File(SettingSingleton.getInstance().getPathBannerRigth());
+		
+		Platform.runLater(() -> {
+			final BorderPane imagePane = new BorderPane();
+			imagePane.setStyle("-fx-background-color: #000000,linear-gradient(#f8f8f8, #e7e7e7);");
+			imagePane.setMaxHeight(300);
+			imagePane.setMaxWidth(Double.MAX_VALUE);
+			
+			this.mainPanel.setTop(imagePane);
+			
+			if(imgLeft.exists() && imgLeft.isFile()) {
+				ImageView left = new ImageView(new Image("file:" + imgLeft.getAbsolutePath(), true));
+				left.setPreserveRatio(false);
+
+				imagePane.setLeft(left);
+			} 
+			
+			if(imgRigth.exists() && imgRigth.isFile()) {
+				ImageView rigth = new ImageView(new Image("file:" + imgRigth.getAbsolutePath(), true));
+				rigth.setPreserveRatio(false);
+				
+				imagePane.setRight(rigth);
+			}
+			
+			if(imgCenter.exists() && imgCenter.isFile()) {
+				ImageViewPane center = new ImageViewPane(new ImageView(new Image("file:" + imgCenter.getAbsolutePath(), true)));
+				imagePane.setCenter(center);
+			}
 		});
 	}
 	

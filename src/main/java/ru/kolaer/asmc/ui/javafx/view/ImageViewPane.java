@@ -33,7 +33,7 @@ public class ImageViewPane extends Region {
     protected void layoutChildren() {
     	final ImageView imageView = imageViewProperty.get();
         if (imageView != null) {
-            imageView.setFitWidth(getWidth());
+            imageView.setFitWidth(0);
             imageView.setFitHeight(getHeight());
             layoutInArea(imageView, 0, 0, getWidth(), getHeight(), 0, HPos.CENTER, VPos.CENTER);
         }
@@ -41,7 +41,6 @@ public class ImageViewPane extends Region {
     }
 
     public ImageViewPane(final ImageView imageView) {
-    	this.maxHeight(200);
         imageViewProperty.addListener(new ChangeListener<ImageView>() {
 
             @Override

@@ -56,17 +56,43 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TitledPane animated="false" layoutX="14.0" layoutY="14.0" prefHeight="78.0" prefWidth="312.0" text="Баннер">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="46.0" prefWidth="269.0">
-                                 <children>
-                                    <Label layoutX="14.0" layoutY="14.0" text="Путь:" />
-                                    <Button fx:id="buttonSetPathBanner" layoutX="239.0" layoutY="10.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="65.0" text="Обзор..." />
-                                    <TextField fx:id="textPathBanner" layoutX="49.0" layoutY="10.0" prefHeight="25.0" prefWidth="184.0" />
-                                 </children>
-                              </AnchorPane>
-                          </content>
-                        </TitledPane>
+                        <Accordion layoutX="14.0" layoutY="14.0" prefHeight="125.0" prefWidth="311.0">
+                          <panes>
+                            <TitledPane animated="false" text="Центральный баннер">
+                                 <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="46.0" prefWidth="269.0">
+                                       <children>
+                                          <Label layoutX="14.0" layoutY="14.0" text="Путь:" />
+                                          <Button fx:id="buttonSetPathBanner" layoutX="239.0" layoutY="10.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="65.0" text="Обзор..." />
+                                          <TextField fx:id="textPathBanner" layoutX="49.0" layoutY="10.0" prefHeight="25.0" prefWidth="184.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                            </TitledPane>
+                            <TitledPane animated="false" text="Левый баннер">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="46.0" prefWidth="269.0">
+                                       <children>
+                                          <Label layoutX="14.0" layoutY="14.0" text="Путь:" />
+                                          <Button fx:id="buttonSetPathBannerLeft" layoutX="239.0" layoutY="10.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="65.0" text="Обзор..." />
+                                          <TextField fx:id="textPathBannerLeft" layoutX="49.0" layoutY="10.0" prefHeight="25.0" prefWidth="184.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                            </TitledPane>
+                            <TitledPane animated="false" text="Правый баннер">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="46.0" prefWidth="269.0">
+                                       <children>
+                                          <Label layoutX="14.0" layoutY="14.0" text="Путь:" />
+                                          <Button fx:id="buttonSetPathBannerRigth" layoutX="239.0" layoutY="10.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="65.0" text="Обзор..." />
+                                          <TextField fx:id="textPathBannerRigth" layoutX="49.0" layoutY="10.0" prefHeight="25.0" prefWidth="184.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                            </TitledPane>
+                          </panes>
+                        </Accordion>
                      </children>
                   </AnchorPane>
               </content>
