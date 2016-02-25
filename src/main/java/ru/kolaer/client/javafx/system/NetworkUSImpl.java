@@ -14,6 +14,8 @@ import ru.kolaer.client.javafx.tools.Resources;
 public class NetworkUSImpl implements NetworkUS {
 	/**БД через RESTful.*/
 	private final KolaerDataBase kolaerDataBase = new KolaerDataBaseRESTful();
+	/**БД через RESTful.*/
+	private final OtherPublicAPI otherPublicAPI = new OtherPublicAPIImpl();
 
 	@Override
 	public KolaerDataBase getKolaerDataBase() {
@@ -25,6 +27,8 @@ public class NetworkUSImpl implements NetworkUS {
 		final RestTemplate rest = new RestTemplate();
 		try {
 			final String status = rest.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/server/status", String.class);
+			if(status == null)
+				return ServerStatus.NOT_AVAILABLE;
 			switch (status) {
 				case "available": return ServerStatus.AVAILABLE;
 				case "not available": return ServerStatus.NOT_AVAILABLE;
@@ -33,5 +37,10 @@ public class NetworkUSImpl implements NetworkUS {
 		} catch(RestClientException ex) {
 			return ServerStatus.NOT_AVAILABLE;
 		}
+	}
+
+	@Override
+	public OtherPublicAPI getOtherPublicAPI() {
+		return this.otherPublicAPI;
 	}
 }
