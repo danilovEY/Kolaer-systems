@@ -19,7 +19,12 @@ public class OtherAPIController {
 	@Autowired
 	private PublicHolidaysDAO publicHolidaysDAO;
 	
-	@RequestMapping(value = "/get/holidays/{month}/{year}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/holidays/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void updatePublicHolidays() {	
+		this.publicHolidaysDAO.initObjects();
+	}
+	
+	@RequestMapping(value = "/holidays/get/{month}/{year}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public PublicHolidays[] getPublicHolidays(@PathVariable final String month, @PathVariable final String year) {	
 		final List<PublicHolidays> holidays = publicHolidaysDAO.getPublicHolidaysByMonth(Integer.valueOf(month));
 		return holidays.toArray(new PublicHolidays[holidays.size()]);
