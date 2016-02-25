@@ -56,7 +56,7 @@ public class PCalendarAffiliates extends PCalendarBase  {
 	@Override
 	public void initDayCellFactory() {
 		if(!this.isInitDayCellFactory) {
-			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase(), ORGANIZATION));	
+			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getOtherPublicAPI(), editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase(), ORGANIZATION));	
 			this.isInitDayCellFactory = true;
 		}
 	}	

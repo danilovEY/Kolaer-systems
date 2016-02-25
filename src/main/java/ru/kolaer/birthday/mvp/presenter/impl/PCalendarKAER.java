@@ -56,7 +56,7 @@ public class PCalendarKAER extends PCalendarBase implements PCalendar {
 	@Override
 	public void initDayCellFactory() {
 		if(!this.isInitDayCellFactory) {
-			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase()));
+			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getOtherPublicAPI(), editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase()));
 			this.isInitDayCellFactory = true;
 		}
 	}
