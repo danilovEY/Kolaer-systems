@@ -8,6 +8,8 @@ package ru.kolaer.client.javafx.system;
 public interface NetworkUS {
 	/**Получить объект для работы с БД.*/
 	KolaerDataBase getKolaerDataBase();
+	/**Получить объект для работы со сторонними API.*/
+	OtherPublicAPI getOtherPublicAPI();
 	/**Получить статус сервера.*/
 	ServerStatus getServerStatus();
 }
