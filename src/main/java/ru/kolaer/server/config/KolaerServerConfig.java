@@ -22,6 +22,7 @@ import ru.kolaer.server.dao.DbBirthdayAllDAO;
 import ru.kolaer.server.dao.DbDataAllDAO;
 import ru.kolaer.server.dao.impl.DbBirthdayAllDAOImpl;
 import ru.kolaer.server.dao.impl.DbDataAllDAOImpl;
+import ru.kolaer.server.dao.impl.PublicHolidaysDAO;
 import ru.kolaer.server.restful.tools.UsersManager;
  
 @Configuration
@@ -68,6 +69,13 @@ public class KolaerServerConfig {
     	final JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
+    }
+    
+    @Bean(name = "publicHolidaysDAO")
+    public PublicHolidaysDAO getPublicHolidaysDAO() {
+    	final PublicHolidaysDAO publicHolidaysDAO = new PublicHolidaysDAO();
+    	publicHolidaysDAO.initObjects();
+    	return publicHolidaysDAO;
     }
     
     @Bean(name = "usersManager")
