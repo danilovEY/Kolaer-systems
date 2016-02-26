@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ru.kolaer.server.dao.DbBirthdayAllDAO;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
-import ru.kolaer.server.dao.entities.DbDataAll;
 import ru.kolaer.server.restful.controller.request.obj.RequestDbBirthdayAllList;
 
 @RestController

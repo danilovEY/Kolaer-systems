@@ -29,4 +29,10 @@ public class OtherAPIController {
 		final List<PublicHolidays> holidays = publicHolidaysDAO.getPublicHolidaysByMonth(Integer.valueOf(month));
 		return holidays.toArray(new PublicHolidays[holidays.size()]);
 	}
+	
+	@RequestMapping(value = "/holidays/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public PublicHolidays[] getPublicHolidays() {	
+		final List<PublicHolidays> holidays = publicHolidaysDAO.getAllPublicHolidays();
+		return holidays.toArray(new PublicHolidays[holidays.size()]);
+	}
 }
