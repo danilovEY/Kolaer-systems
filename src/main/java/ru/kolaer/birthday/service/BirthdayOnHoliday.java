@@ -1,6 +1,8 @@
 package ru.kolaer.birthday.service;
 
 import java.time.LocalDate;
+import java.util.concurrent.TimeUnit;
+
 import javafx.application.Platform;
 import javafx.util.Duration;
 import ru.kolaer.birthday.mvp.model.UserModel;
@@ -78,6 +80,12 @@ public class BirthdayOnHoliday implements Service {
 				});					
 			});
 			i++;
+		}
+		
+		try{
+			TimeUnit.SECONDS.sleep(1);
+		}catch(InterruptedException e){
+			e.printStackTrace();
 		}
 		
 		Platform.runLater(() -> {
