@@ -20,6 +20,13 @@ public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
 	public PublicHolidays[] getPublicHolidays(final int month, final int year) {
 		final RestTemplate rest = new RestTemplate();
 		
-		return rest.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/other/get/holidays/" + String.valueOf(month) + "/" + String.valueOf(year), PublicHolidays[].class);
+		return rest.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/other/holidays/get/" + String.valueOf(month) + "/" + String.valueOf(year), PublicHolidays[].class);
+	}
+
+	@Override
+	public PublicHolidays[] getPublicHolidaysAll() {
+		final RestTemplate rest = new RestTemplate();
+		
+		return rest.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/other/holidays/get/all", PublicHolidays[].class);
 	}
 }
