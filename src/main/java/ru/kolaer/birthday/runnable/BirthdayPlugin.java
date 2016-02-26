@@ -3,6 +3,7 @@ package ru.kolaer.birthday.runnable;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.kolaer.birthday.service.BirthdayOnHoliday;
 import ru.kolaer.birthday.service.BirthdayService;
 import ru.kolaer.client.javafx.plugins.UniformSystem;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
@@ -27,6 +28,7 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 		this.application = new BirthdayApplication(editorKid);
 		this.servicesList = new ArrayList<>();
 		this.servicesList.add(new BirthdayService(editorKid));
+		this.servicesList.add(new BirthdayOnHoliday(editorKid));
 	}
 
 	@Override

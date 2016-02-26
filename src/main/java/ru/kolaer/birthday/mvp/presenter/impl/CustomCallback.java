@@ -15,10 +15,8 @@ import javafx.scene.Node;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.util.Callback;
-import ru.kolaer.client.javafx.system.OtherPublicAPI;
 import ru.kolaer.client.javafx.system.UserBirthdayAllDataBase;
 import ru.kolaer.client.javafx.system.UserDataBase;
-import ru.kolaer.server.dao.entities.PublicHolidays;
 
 /**
  * 
@@ -42,19 +40,16 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 	private final UserDataBase<?> userDB;
 	/**Имя организации.*/
 	private final String organization;
-	private final OtherPublicAPI otherPublicAPI;
 	private final ExecutorService threads = Executors.newCachedThreadPool();
 	
-	public CustomCallback(final OtherPublicAPI otherPublicAPI, final UserDataBase<?> userDB) {
+	public CustomCallback(final UserDataBase<?> userDB) {
 		this.userDB = userDB;
 		this.organization = null;
-		this.otherPublicAPI = otherPublicAPI;
 	}
 	
-	public CustomCallback(final OtherPublicAPI otherPublicAPI, final UserBirthdayAllDataBase userDB, final String organization) {
+	public CustomCallback(final UserBirthdayAllDataBase userDB, final String organization) {
 		this.userDB = userDB;
 		this.organization = organization;
-		this.otherPublicAPI = otherPublicAPI;
 	}
 
 	@Override
@@ -99,12 +94,7 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 							//В зависимости от кол-ва людей меняется интенсивность закрашивания даты.
 						Platform.runLater(() -> {							
 							String color = "-fx-background-color: #" + count + "" + count + "FF;";
-							for(final PublicHolidays holiday : otherPublicAPI.getPublicHolidaysDateBase().getPublicHolidays(item.getMonthValue(), item.getYear())){
-								if(holiday.getDate().getDay() == item.getDayOfMonth() ) {
-									color += "-fx-text-fill: red;";
-									break;
-								}
-							}
+
 							arrayColor[ind] = color;
 							node.setStyle(color);
 						});

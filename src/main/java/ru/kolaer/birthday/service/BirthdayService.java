@@ -12,6 +12,7 @@ import javafx.util.Duration;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
+import ru.kolaer.birthday.tools.Tools;
 import ru.kolaer.client.javafx.services.Service;
 import ru.kolaer.client.javafx.system.NotifyAction;
 import ru.kolaer.client.javafx.system.ServerStatus;
@@ -21,17 +22,17 @@ import ru.kolaer.server.dao.entities.DbDataAll;
 
 public class BirthdayService implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(BirthdayService.class);
-	private final UniformSystemEditorKit editorKid;
+	private final UniformSystemEditorKit editorKit;
 	
 	public BirthdayService(final UniformSystemEditorKit editorKid) {
-		this.editorKid = editorKid;
+		this.editorKit = editorKid;
 	}
 	
 	@Override
 	public void run() {
-		if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.AVAILABLE) {
-			final DbDataAll[] users = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
-			final DbBirthdayAll[] usersBirthday = editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
+		if(this.editorKit.getUSNetwork().getServerStatus() == ServerStatus.AVAILABLE) {
+			final DbDataAll[] users = this.editorKit.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+			final DbBirthdayAll[] usersBirthday = editorKit.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
 			
 			final NotifyAction[] actions = new NotifyAction[users.length + usersBirthday.length];
 			int i = 0;
@@ -47,9 +48,9 @@ public class BirthdayService implements Service {
 				i++;
 			}
 			for(final DbBirthdayAll user : usersBirthday) {
-				actions[i] = new NotifyAction(user.getInitials() + " ("+ this.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
+				actions[i] = new NotifyAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
 					final UserModel userModel = new UserModelImpl(user);
-					userModel.setOrganization(this.getNameOrganization(user.getOrganization()));
+					userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
 					Platform.runLater(() -> {
 						new VMDetailedInformationStageImpl(userModel).show();
 					});					
@@ -66,24 +67,8 @@ public class BirthdayService implements Service {
 			}
 			
 			Platform.runLater(() -> {
-				this.editorKid.getUISystemUS().getNotification().showSimpleNotify(title.toString(), null, Duration.hours(24), actions);
+				this.editorKit.getUISystemUS().getNotification().showSimpleNotify(title.toString(), null, Duration.hours(24), actions);
 			});
-		}
-	}
-
-	private String getNameOrganization(final String org) {
-		switch(org) {		
-			case "БалаковоАтомэнергоремонт": return "БалАЭР";
-			case "ВолгодонскАтомэнергоремонт": return "ВДАЭР";
-			case "КалининАтомэнергоремонт": return "КАЭР";
-			case "КурскАтомэнергоремонт": return "КурскАЭР";
-			case "ЛенАтомэнергоремонт": return "ЛенАЭР";
-			case "НововоронежАтомэнергоремонт": return "НВАЭР";
-			case "СмоленскАтомэнергоремонт": return "САЭР";
-			case "УралАтомэнергоремонт": return "УралАЭР";
-			case "Центральный аппарат": return "ЦА";
-			case "КолАтомэнергоремонт": return "КолАЭР";
-			default: return org;
 		}
 	}
 	
