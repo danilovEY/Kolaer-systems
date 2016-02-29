@@ -64,11 +64,11 @@ public class VMMainFrameImpl extends Application {
 	    	statusBar.setAlignment(Pos.CENTER_RIGHT);
 	    	statusBar.setStyle("-fx-background-color: #66CCFF");
 	    	
-	    	final UniformSystemEditorKit editorKid = new UniformSystemEditorKitImpl(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
+	    	final UniformSystemEditorKit editorKit = new UniformSystemEditorKitImpl(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
 	    	
 	    	//Инициализация вкладочного explorer'а. 
-	    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, editorKid);
-	    	editorKid.getUISystemUS().setExplorer(explorer);
+	    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, editorKit);
+	    	editorKit.getUISystemUS().setExplorer(explorer);
 	    	
 	    	this.mainPane.setBottom(statusBar);
 	    	this.mainPane.setCenter(explorer.getContent());
@@ -76,7 +76,7 @@ public class VMMainFrameImpl extends Application {
 	    	CompletableFuture.runAsync(() -> {
 	    		Thread.currentThread().setName("Добавление системны служб");	
 	    		this.servicesManager.addService(new UserPingService(), true);
-	    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer), true);
+	    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
 	    	});
 	
 	    	CompletableFuture.supplyAsync(() -> {
@@ -84,7 +84,7 @@ public class VMMainFrameImpl extends Application {
 				return new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
 			}).exceptionally(t -> {
 				LOG.error("Ошибка при сканировании плагинов!", t);
-				editorKid.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Ошибка при сканировании плагинов!");
+				editorKit.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Ошибка при сканировании плагинов!");
 				return null;
 			});
     	});

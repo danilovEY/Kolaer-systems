@@ -1,11 +1,11 @@
 package ru.kolaer.client.javafx.system;
 
-import org.controlsfx.dialog.ProgressDialog;
-
-import javafx.application.Platform;
 import javafx.concurrent.Service;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import ru.kolaer.client.javafx.mvp.presenter.PDialog;
+import ru.kolaer.client.javafx.mvp.presenter.impl.PDialogImpl;
+import ru.kolaer.client.javafx.mvp.view.impl.VErrorDialog;
+import ru.kolaer.client.javafx.mvp.view.impl.VInfoDialog;
+import ru.kolaer.client.javafx.mvp.view.impl.VProgressDialog;
 
 /**
  * Реализация диалоговых окон.
@@ -16,33 +16,37 @@ import javafx.scene.control.Alert.AlertType;
 public class DialogUSImpl implements DialogUS {
 
 	@Override
-	public void showSimpleDialog(String title, String text) {
-		this.showDialog(AlertType.NONE, title, text);
+	public PDialog showSimpleDialog(String title, String text) {
+		final PDialog dialog = new PDialogImpl();
+		dialog.setText(text);
+		dialog.setTitle(title);
+		return dialog;
 	}
 
 	@Override
-	public void showErrorDialog(String title, String text) {
-		this.showDialog(AlertType.ERROR, title, text);
-	}
-
-	private void showDialog(AlertType type, String title, String text) {
-		Platform.runLater(() -> {
-			final Alert dialog = new Alert(type);
-			dialog.setContentText(text);
-			dialog.setTitle(title);
-			dialog.show();
-		});
+	public PDialog showErrorDialog(String title, String text) {
+		final PDialog dialog = new PDialogImpl();
+		dialog.setView(new VErrorDialog());
+		dialog.setText(text);
+		dialog.setTitle(title);
+		return dialog;
 	}
 
 	@Override
-	public void showLoadingDialog(final Service<?> service) {		
-		Platform.runLater(() -> {
-			if(!service.isRunning())
-				service.start();
-
-			final ProgressDialog dialog = new ProgressDialog(service);
-			dialog.showAndWait();
-		});
+	public PDialog showLoadingDialog(final Service<?> service) {		
+		final PDialog dialog = new PDialogImpl();
+		dialog.setView(new VProgressDialog(service));
+		dialog.setText("Загрузка");
+		dialog.setTitle("Загрузка");
+		return dialog;
 	}
 
+	@Override
+	public PDialog showInfoDialog(String title, String text) {
+		final PDialog dialog = new PDialogImpl();
+		dialog.setView(new VInfoDialog());
+		dialog.setText(text);
+		dialog.setTitle(title);
+		return dialog;
+	}
 }
