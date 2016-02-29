@@ -42,6 +42,7 @@ public class NotificationUSImpl implements NotificationUS {
 		Platform.runLater(() -> {
 			final Notifications notify = this.addActions(Notifications.create(), actions);
 			notify.hideAfter(Duration.seconds(15));
+			notify.position(Pos.BOTTOM_CENTER);
 			if(title != null)
 				notify.title(title);
 			if(text != null) {
@@ -61,6 +62,7 @@ public class NotificationUSImpl implements NotificationUS {
 		Platform.runLater(() -> {
 			final Notifications notify = this.addActions(Notifications.create(), actions);
 			notify.hideAfter(Duration.seconds(10));
+			notify.position(Pos.BOTTOM_CENTER);
 			if(title != null)
 				notify.title(title);
 			if(text != null) {
