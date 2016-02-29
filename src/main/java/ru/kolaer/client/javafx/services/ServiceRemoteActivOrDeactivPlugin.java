@@ -46,13 +46,6 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 		
 		Thread.currentThread().setName("Прослушивание внутреннего эксплорера");
 		while(this.isRunning) {
-			try {
-				TimeUnit.SECONDS.sleep(5);
-			} catch (Exception e) {
-				LOG.error("Ошибка!", e);
-				this.isRunning = false;
-				return;
-			}
 			if(plugins.size() > 0) {
 				try {
 					@SuppressWarnings("unchecked")
@@ -71,6 +64,14 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 				} catch(final RestClientException ex) {
 					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString());
 				}
+			}
+			
+			try {
+				TimeUnit.SECONDS.sleep(5);
+			} catch (Exception e) {
+				LOG.error("Ошибка!", e);
+				this.isRunning = false;
+				return;
 			}
 		}
 	}
