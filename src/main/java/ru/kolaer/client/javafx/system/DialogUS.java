@@ -1,13 +1,16 @@
 package ru.kolaer.client.javafx.system;
 
 import javafx.concurrent.Service;
+import ru.kolaer.client.javafx.mvp.presenter.PDialog;
 
 /**Интерфейс для вызова диалоговых окон.*/
 public interface DialogUS {
 	/**Показать простой диалоговое окно.*/
-	void showSimpleDialog(String title, String text);
+	PDialog showSimpleDialog(String title, String text);
 	/**Показать диалоговое окно информирующая об ошибке.*/
-	void showErrorDialog(String title, String text);
+	PDialog showErrorDialog(String title, String text);
+	/**Показать диалоговое информирующее окно.*/
+	PDialog showInfoDialog(String title, String text);
 	/**Показать диалоговое окно в progress bar'ом.*/
-	void showLoadingDialog(Service<?> service);
+	PDialog showLoadingDialog(Service<?> service);
 }
