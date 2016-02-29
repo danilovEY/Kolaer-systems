@@ -102,7 +102,7 @@ public class NotificationUSImpl implements NotificationUS {
 		});
 	}
 	
-	private Notifications addActions(final Notifications notify, final NotifyAction... actions) {
+	private synchronized Notifications addActions(final Notifications notify, final NotifyAction... actions) {
 		if(actions != null && actions.length != 0) {
 			final Action[] actionsObj = new Action[actions.length];	
 			final VBox vBox = new VBox();
