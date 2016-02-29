@@ -82,7 +82,7 @@ public class NotificationUSImpl implements NotificationUS {
 	
 	@Override
 	public void showInformationNotify(final String title, final String text, final Duration duration, final NotifyAction... actions) {
-		this.showInformationNotify(title, text, duration, Pos.BASELINE_RIGHT, actions);
+		this.showInformationNotify(title, text, duration, Pos.BOTTOM_RIGHT, actions);
 	}
 	
 	private synchronized Notifications addActions(final Notifications notify, final NotifyAction... actions) {
