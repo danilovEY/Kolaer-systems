@@ -80,7 +80,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 		this.userBirthdayTable.getSelectionModel().setCellSelectionEnabled(true);
 		this.userBirthdayTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.userBirthdayTable.setEditable(true);
-		this.userBirthdayTable.setPlaceholder(new Label("Дней рождений нет!"));
+		
 		
 		final MenuItem item = new MenuItem("Копировать");
 	    item.setOnAction(event -> {
@@ -271,6 +271,13 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	@Override
 	public void addSearch(final VSearchUsers searchUsers) {
 		this.titlePane.setRight(searchUsers.getViewPane());
+	}
+
+	@Override
+	public void setNoContentText(String text) {
+		Platform.runLater(() -> {
+			this.userBirthdayTable.setPlaceholder(new Label(text));
+		});
 	}
 }
 

@@ -64,9 +64,16 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 
 	@Override
 	public void updateSelectedDate(final LocalDate date, final List<UserModel> users) {
-		this.table.setData(users);
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-		this.table.setTitle("\"" + date.format(formatter) + "\" день рождения у:");
+		if(users.size() > 0) {
+			this.table.setData(users);
+			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+			this.table.setTitle("\"" + date.format(formatter) + "\" день рождения у:");
+		} else {
+			this.table.clear();
+			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+			this.table.setTitle("\"" + date.format(formatter) + "\" именинники отсутствуют!");
+			this.table.setNoContentText("\"" + date.format(formatter) + "\" именинники отсутствуют!");
+		}
 	}
 
 

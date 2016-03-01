@@ -17,6 +17,7 @@ public interface VTableWithUsersBirthday extends View {
 	/**Добавить сотрудников.*/
 	void addData(UserModel user);
 	void setTitle(String text);
+	void setNoContentText(String text);
 	/**Задать действие на нажатие по сотруднику в таблице.*/
 	void setMouseClick(EventHandler<? super MouseEvent> value);
 	void addSearch(VSearchUsers searchUsers);
