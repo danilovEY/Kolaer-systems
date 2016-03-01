@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class SerializationObjects {
 	private final String fileNameSerializeObjects = "objects.aer";
 	private final File dir = new File(pathDitSerializedObject);
 	private final File settingFile = new File("setting.aer");
-	private File fileSer = null;
+	private File fileSer = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
 	private List<MGroupLabels> cacheObjects;
 
 	public SerializationObjects() {
@@ -44,38 +43,7 @@ public class SerializationObjects {
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		final File[] files = dir.listFiles();
-		long lastTimeMod = -1;
-		this.fileSer = null;
-		for(File file : files) {
-			if(lastTimeMod < file.lastModified() && file.isFile() && file.getName().endsWith("aer")) {
-				lastTimeMod = file.lastModified();
-				this.fileSer = file;
-			}
-		}
 		
-		if(files.length >= 10) {
-			for(File file : files) {
-				if(file != this.fileSer)
-					file.delete();
-			}
-		}
-		
-		if (this.fileSer == null) {
-			this.fileSer = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
-			try (FileOutputStream fileOutSer = new FileOutputStream(this.fileSer);
-					ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
-			} catch (FileNotFoundException e) {
-				Platform.runLater(() -> {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Ошибка!");
-					alert.setHeaderText("Не найден файл: " + this.fileSer.getAbsolutePath());
-					alert.showAndWait();
-				});
-			} catch (IOException e2) {
-				System.exit(-9);
-			}
-		}
 		return true;
 	}
 	
@@ -131,6 +99,7 @@ public class SerializationObjects {
 	}
 	
 	/**Получить сериализованные группы.*/
+	@SuppressWarnings("unchecked")
 	public List<MGroupLabels> getSerializeGroups() {
 		
 		if(this.cacheObjects != null)
@@ -174,8 +143,7 @@ public class SerializationObjects {
 	/**Сериализовать список групп.*/
 	public void setSerializeGroups(List<MGroupLabels> groupModels) {
 
-		File newSerObj = new File(pathDitSerializedObject + "/" + new SimpleDateFormat("MM.dd.yyyy_HH.mm.ss").format(System.currentTimeMillis())
-				+ "_" + fileNameSerializeObjects);
+		File newSerObj = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
 		try{
 			newSerObj.createNewFile();
 		}
