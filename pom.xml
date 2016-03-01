@@ -4,7 +4,7 @@
 
 	<groupId>ru.kolaer</groupId>
 	<artifactId>ru.kolaer.birthday</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
 
 	<name>ru.kolaer.birthday</name>

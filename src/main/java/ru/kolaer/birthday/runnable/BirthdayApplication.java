@@ -18,6 +18,7 @@ import javafx.scene.layout.Pane;
 import ru.kolaer.birthday.mvp.presenter.PCalendar;
 import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
 import ru.kolaer.birthday.mvp.presenter.impl.PCalendarAffiliates;
+import ru.kolaer.birthday.mvp.presenter.impl.PCalendarAll;
 import ru.kolaer.birthday.mvp.presenter.impl.PCalendarKAER;
 import ru.kolaer.birthday.mvp.presenter.impl.PTableWithUsersBithdayObserverImpl;
 import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
@@ -187,6 +188,15 @@ public class BirthdayApplication implements UniformSystemApplication {
 				LOG.error("Ошибка!", t);
 				return null;
 			});
+			
+			CompletableFuture<PCalendar> cAll = CompletableFuture.supplyAsync(() -> {
+				final PCalendar calendarAll = new PCalendarAll(this.editorKid);
+				calendarAll.registerObserver(this.vmTable);
+				return calendarAll;
+			}, service).exceptionally(t -> {
+				LOG.error("Ошибка!", t);
+				return null;
+			});
 
 			try{
 				frameContent.addVMCalendar(cKaer.get());
@@ -201,6 +211,7 @@ public class BirthdayApplication implements UniformSystemApplication {
 						frameContent.addVMCalendar(cNov.get());
 						frameContent.addVMCalendar(cSmo.get());
 						frameContent.addVMCalendar(cUra.get());
+						frameContent.addVMCalendar(cAll.get());
 					} catch(final Exception e){
 						LOG.error("Ошибка при добавлении календаря!", e);
 					}

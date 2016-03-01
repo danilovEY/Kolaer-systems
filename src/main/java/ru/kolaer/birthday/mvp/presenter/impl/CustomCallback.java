@@ -1,8 +1,6 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.util.Callback;
+import ru.kolaer.birthday.tools.Tools;
 import ru.kolaer.client.javafx.system.UserBirthdayAllDataBase;
 import ru.kolaer.client.javafx.system.UserDataBase;
 
@@ -37,19 +36,24 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 	/**Флаг true, если нужно пересчитать пользователей и закрасить дату.*/
 	private boolean update = true;
 	/**БД с пользователями.*/
-	private final UserDataBase<?> userDB;
+	private final UserDataBase<?>[] usersDB;
 	/**Имя организации.*/
 	private final String organization;
 	private final ExecutorService threads = Executors.newCachedThreadPool();
 	
 	public CustomCallback(final UserDataBase<?> userDB) {
-		this.userDB = userDB;
+		this.usersDB = new UserDataBase<?>[]{userDB};
 		this.organization = null;
 	}
 	
 	public CustomCallback(final UserBirthdayAllDataBase userDB, final String organization) {
-		this.userDB = userDB;
+		this.usersDB = new UserDataBase<?>[]{userDB};
 		this.organization = organization;
+	}
+	
+	public CustomCallback(final UserDataBase<?>... userDB) {
+		this.usersDB = userDB;
+		this.organization = null;
 	}
 
 	@Override
@@ -84,16 +88,18 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 				CompletableFuture.runAsync(() -> {
 					int countUsersDataAll = 0;
 					if(organization != null) {
-						countUsersDataAll = ((UserBirthdayAllDataBase)userDB).getCountUsersBirthday(Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant()), organization);
+						countUsersDataAll = ((UserBirthdayAllDataBase)usersDB[0]).getCountUsersBirthday(Tools.convertToDate(item), organization);
 					} else {
-						countUsersDataAll = userDB.getCountUsersBirthday(Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+						for(UserDataBase<?> base : usersDB) {
+							countUsersDataAll += base.getCountUsersBirthday(Tools.convertToDate(item));
+						}
 					}
 					
 					if (countUsersDataAll != 0) {
-						final int count = 99 - countUsersDataAll * 15;
+						final int count = 255 - countUsersDataAll * 15;
 							//В зависимости от кол-ва людей меняется интенсивность закрашивания даты.
 						Platform.runLater(() -> {							
-							String color = "-fx-background-color: #" + count + "" + count + "FF;";
+							String color = "-fx-background-color: rgb(" + count + ", " + count + ", 255);";
 
 							arrayColor[ind] = color;
 							node.setStyle(color);
