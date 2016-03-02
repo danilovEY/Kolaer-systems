@@ -58,8 +58,7 @@ public class CGroupLabels extends BaseController implements ObservableGroupLabel
 	}
 
 	@Override
-	public void initialize(final URL location, final ResourceBundle resources) {
-		
+	public void initialize(final URL location, final ResourceBundle resources) {	
 		final ContextMenu contextGroupPanel = new ContextMenu();
 		final MenuItem editGroupLabels = new MenuItem(Resources.MENU_ITEM_EDIT_GROUP);
 		final MenuItem deleteGroupLabels = new MenuItem(Resources.MENU_ITEM_DELETE_GROUP);
