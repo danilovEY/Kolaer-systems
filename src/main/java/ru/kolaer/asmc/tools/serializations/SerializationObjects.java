@@ -76,7 +76,7 @@ public class SerializationObjects {
 	
 	/**Получить сериализованные группы.*/
 	@SuppressWarnings("unchecked")
-	public List<MGroupLabels> getSerializeGroups() {
+	public synchronized List<MGroupLabels> getSerializeGroups() {
 		if(this.cacheObjects != null)
 			return this.cacheObjects;
 
