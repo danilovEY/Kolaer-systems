@@ -17,6 +17,7 @@ public class DbBirthdayAll implements Serializable {
 	private String mobilePhone;
 	private String phone;
 	private String post;
+	private String vCard;
 
 	public DbBirthdayAll() {
 	}
@@ -100,5 +101,14 @@ public class DbBirthdayAll implements Serializable {
 	public void setOrganization(String organization) {
 		this.organization = organization;
 	}
+
+	public String getvCard() {
+		return vCard;
+	}
+
+	public void setvCard(String vCard) {
+		this.vCard = vCard;
+	}
+
 
 }
