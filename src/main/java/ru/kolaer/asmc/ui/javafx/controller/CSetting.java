@@ -74,7 +74,9 @@ public class CSetting extends BaseController implements Dialog {
 		});
 		
 		this.textPathWB.setText(SettingSingleton.getInstance().getPathWebBrowser());
-		this.textPathBanner.setText(SettingSingleton.getInstance().getPathBanner());		
+		this.textPathBanner.setText(SettingSingleton.getInstance().getPathBanner());
+		this.textPathBannerLeft.setText(SettingSingleton.getInstance().getPathBannerLeft());	
+		this.textPathBannerRigth.setText(SettingSingleton.getInstance().getPathBannerRigth());	
 		
 		if(SettingSingleton.getInstance().isDefaultWebBrowser()) {
 			this.rbDefaultUserWB.setSelected(false);
