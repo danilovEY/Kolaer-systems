@@ -10,9 +10,13 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import ru.kolaer.asmc.runnable.ASMCApplication;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
@@ -22,7 +26,8 @@ import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
  * @version 0.1
  */
 public class SerializationObjects {
-
+	private final Logger LOG = LoggerFactory.getLogger(SerializationObjects.class);
+	
 	private final String pathDitSerializedObject = "data";
 	private final String fileNameSerializeObjects = "objects.aer";
 	private final File dir = new File(pathDitSerializedObject);
@@ -47,54 +52,42 @@ public class SerializationObjects {
 		return true;
 	}
 	
-	public void setSerializeSetting(SettingSingleton setting) {
-		if(!this.settingFile.exists())
+	public void setSerializeSetting(final SettingSingleton setting) {
+		if(!this.settingFile.exists()) {
 			try {
 				this.settingFile.createNewFile();
-			} catch (IOException e2) {
-				e2.printStackTrace();
+			} catch (final IOException e2) {
+				LOG.error("Невозможно создать файл: {}", this.settingFile.getAbsolutePath(), e2);
 			}
-		try (FileOutputStream fileOutSer = new FileOutputStream(this.settingFile);
-				ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
-
+		}
+		
+		try (final FileOutputStream fileOutSer = new FileOutputStream(this.settingFile);
+				final ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
 			objectOutputStream.writeObject(setting);
-
-		} catch (FileNotFoundException e) {
-			Platform.runLater(() -> {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка!");
-				alert.setHeaderText("Не найден файл: " + this.settingFile.getAbsolutePath());
-				alert.setContentText(e.getMessage());
-				alert.showAndWait();
-			});
-		} catch (IOException e1) {
+		} catch (final FileNotFoundException e) {
+			LOG.error("Не найден файл: {}", this.settingFile.getAbsolutePath(), e);
+		} catch (final IOException e1) {
+			LOG.error("Ошибка: {}", this.settingFile.getAbsolutePath(), e1);
 			System.exit(-9);
 		}
 	}
 	
-	public SettingSingleton getSerializeSetting() {
-		
+	public SettingSingleton getSerializeSetting() {	
 		if(!this.settingFile.exists())
 			return SettingSingleton.getInstance();
 		
-		try (FileInputStream fileInput = new FileInputStream(this.settingFile);
-				ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
-				if(SettingSingleton.getInstance() == null) {
-					return (SettingSingleton) objectInput.readObject();
-				}				
-				return SettingSingleton.getInstance();
-			} catch (ClassNotFoundException e) {
-				Platform.runLater(() -> {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Ошибка!");
-					alert.setHeaderText("Класс не найден!" + this.settingFile.getAbsolutePath());
-					alert.setContentText(e.getMessage());
-					alert.showAndWait();
-				});
-				return SettingSingleton.getInstance();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+		if(SettingSingleton.getInstance() != null) {
+			return SettingSingleton.getInstance();
+		}
+		
+		try (final FileInputStream fileInput = new FileInputStream(this.settingFile);
+				final ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
+			return (SettingSingleton) objectInput.readObject();			
+		} catch (final ClassNotFoundException e) {
+			LOG.error("Класс не найден!", e);
+		} catch (final IOException e1) {
+			LOG.error("Ошибка!", e1);
+		}
 		return SettingSingleton.getInstance();
 	}
 	
