@@ -52,9 +52,9 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 		while(this.isRunning) {
 			if(plugins.size() > 0) {
 				try {
-					@SuppressWarnings("unchecked")
-					final List<String> pluginsClose = restTemplate.getForObject(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString(), List.class);
-					pluginsClose.forEach((final String tabName) -> {
+					final String[] pluginsClose = restTemplate.getForObject(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString(), String[].class);
+					for(final String tabName : pluginsClose) {
+						LOG.debug("Закрыть плагин: {}", tabName );
 						final Iterator<RemoteActivationDeactivationPlugin> iter = plugins.iterator();
 						while(iter.hasNext()) {
 							final RemoteActivationDeactivationPlugin plugin = iter.next();
@@ -78,8 +78,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 								iter.remove();
 							}
 						}	
-					});
-					pluginsClose.clear();
+					}
 				} catch(final RestClientException ex) {
 					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString());
 				}

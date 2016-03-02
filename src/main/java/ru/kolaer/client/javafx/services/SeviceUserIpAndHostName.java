@@ -17,8 +17,8 @@ import ru.kolaer.client.javafx.tools.Resources;
  * @author danilovey
  * @version 0.1
  */
-public class SeviceUserIP implements Service {
-	private final Logger LOG = LoggerFactory.getLogger(SeviceUserIP.class);
+public class SeviceUserIpAndHostName implements Service {
+	private final Logger LOG = LoggerFactory.getLogger(SeviceUserIpAndHostName.class);
 	/**Имя пользователя.*/
 	private final String username = System.getProperty("user.name");
 	private boolean isRun = false;
@@ -27,17 +27,16 @@ public class SeviceUserIP implements Service {
 	
 	@Override
 	public void run() {
-		Thread.currentThread().setName("Передача IP");
+		Thread.currentThread().setName("Передача IP и имя компьютера");
 		while(this.isRun) {
 			
-			final StringBuilder url = new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL.toString())
-					.append("/system/user/")
-					.append(this.username)
-					.append("/ip");
+			final String url = "http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + this.username;
+					
 			try {
-				TimeUnit.SECONDS.sleep(15);
+				TimeUnit.SECONDS.sleep(5);
 				final InetAddress inet = InetAddress.getLocalHost();
-				rest.postForObject(url.toString(), inet.getHostAddress(), String.class);
+				rest.postForObject(url + "/ip", inet.getHostAddress(), String.class);
+				rest.postForObject(url + "/hostname", inet.getHostName(), String.class);
 				TimeUnit.HOURS.sleep(2);
 			} catch(final RestClientException ex) {
 				LOG.error("URL: \"{}\" не доступен!", url.toString());
@@ -61,7 +60,7 @@ public class SeviceUserIP implements Service {
 
 	@Override
 	public String getName() {
-		return "Передача IP";
+		return "Передача IP и имя компьютера";
 	}
 
 	@Override

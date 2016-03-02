@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 import ru.kolaer.client.javafx.plugins.PluginReader;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
-import ru.kolaer.client.javafx.services.SeviceUserIP;
+import ru.kolaer.client.javafx.services.SeviceUserIpAndHostName;
 import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
 import ru.kolaer.client.javafx.system.StatusBarUSImpl;
@@ -99,7 +99,7 @@ public class VMMainFrameImpl extends Application {
 		final String service = PARAM.get("service");
 		if(service == null || !service.equals("false")) {		
 			this.servicesManager.setAutoRun(true);
-    		this.servicesManager.addService(new SeviceUserIP());
+    		this.servicesManager.addService(new SeviceUserIpAndHostName());
     		this.servicesManager.addService(new UserWindowsKeyListenerService());
     		this.servicesManager.runAllServices();
 		} 
