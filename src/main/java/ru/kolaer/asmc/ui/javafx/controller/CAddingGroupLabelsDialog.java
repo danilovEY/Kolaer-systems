@@ -4,6 +4,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -23,9 +26,9 @@ import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
  * @version 0.2
  */
 public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
+	private final Logger LOG = LoggerFactory.getLogger(CAddingGroupLabelsDialog.class);
 	
-	private final Stage dialog = new Stage();
-	
+	private Stage dialog;
 	private MGroupLabels result;
 	
 	@FXML
@@ -51,7 +54,8 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 	}
 
 	@Override
-	public void initialize(final URL location, final ResourceBundle resources) {		
+	public void initialize(final URL location, final ResourceBundle resources) {
+		this.dialog = new Stage();
 		this.okButton.setOnAction(e -> {
 			if(!this.textPriority.getText().matches("[0-9]*")) {
 				final Alert alert = new Alert(AlertType.WARNING);
@@ -92,10 +96,7 @@ public class CAddingGroupLabelsDialog extends BaseController implements Dialog{
 		try {
 			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		} catch(final IllegalArgumentException e) {
-			final Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Ошибка!");
-			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
-			alert.showAndWait();
+			LOG.error("Не найден файл: {}", Resources.AER_LOGO);
 		}
 		
 		this.dialog.showAndWait();
