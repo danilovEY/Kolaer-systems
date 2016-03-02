@@ -5,6 +5,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -27,7 +30,8 @@ import ru.kolaer.asmc.ui.javafx.model.MLabel;
  * @version 0.1
  */
 public class CAddingLabelDialog extends BaseController implements Dialog {
-
+	private final Logger LOG = LoggerFactory.getLogger(CAddingLabelDialog.class);
+	
 	private MLabel result;
 	@FXML
 	private Button buttonSetFile;
@@ -58,8 +62,8 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 	@FXML
 	private Button buttonSetAppWith;
 	
-	private final FileChooser fileChooser = new FileChooser();
-	private final Stage dialog = new Stage();
+	private FileChooser fileChooser;
+	private Stage dialog;
 
 	/**
 	 * {@linkplain CAddingLabelDialog}
@@ -92,6 +96,8 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources) {
+		this.fileChooser = new FileChooser();
+		this.dialog = new Stage();
 		
 		this.buttonSetAppWith.setOnAction(e -> {
 			final FileChooser fileC = new FileChooser();
@@ -153,6 +159,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 				try {
 					this.image.setImage(new Image(file.get().toURI().toURL().toString()));
 				} catch (final Exception e) {
+					LOG.error("Невозможно переконвертировать в URL файл: {}", file.get().getAbsolutePath());
 					final Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Ошибка!");
 					alert.setHeaderText("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath());
@@ -228,6 +235,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			try {
 				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
 			} catch (final Exception e) {
+				LOG.error("Невозможно переконвертировать в URL файл: {}", file.get().getAbsolutePath());
 				final Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Ошибка!");
 				alert.setHeaderText("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath());
@@ -265,6 +273,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 					try {
 						this.image.setImage(new Image(file.toURI().toURL().toString()));
 					} catch (final Exception e) {
+						LOG.error("Невозможно переконвертировать в URL файл: {}", file.getAbsolutePath());
 						final Alert alert = new Alert(AlertType.ERROR);
 						alert.setTitle("Ошибка!");
 						alert.setHeaderText("Невозможно переконвертировать в URL файл:" + file.getAbsolutePath());
@@ -284,6 +293,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 		try {
 			this.dialog.getIcons().add(new Image("file:" + Resources.AER_LOGO.toString()));
 		} catch (final IllegalArgumentException e) {
+			LOG.error("Не найден файл: {}",Resources.AER_LOGO);
 			final Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");
 			alert.setHeaderText("Не найден файл: \"" + Resources.AER_LOGO + "\"");

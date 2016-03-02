@@ -107,7 +107,7 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 		this.button.setText(label.getInfo());
 		
 		ToolTipManager.sharedInstance().setDismissDelay(0);
-		toolTip.setText(label.getInfo());
+		toolTip.setText(label.getName());
 		
 		final Optional<File> file = Optional.of(new File(label.getPathImage()));
 

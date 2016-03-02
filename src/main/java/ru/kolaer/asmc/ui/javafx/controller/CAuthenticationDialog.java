@@ -4,6 +4,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -18,8 +21,9 @@ import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 
 public class CAuthenticationDialog extends BaseController implements Dialog {
-
-	private final Stage dialog = new Stage();
+	private final Logger LOG = LoggerFactory.getLogger(CAuthenticationDialog.class);
+		
+	private Stage dialog;
 	
 	@FXML
 	private TextField loginText;
@@ -39,6 +43,8 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources) {
+		this.dialog = new Stage();
+		
 		this.okButton.setOnAction(e -> {
 			final SettingSingleton setting = SettingSingleton.getInstance();
 			if(setting.getRootLoginName().equals(this.loginText.getText()) 
@@ -46,6 +52,7 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 				setting.setRoot(true);
 				this.dialog.close();
 			} else {
+				LOG.error("Не найден файл: {}",  Resources.AER_LOGO);
 				final Alert alert = new Alert(AlertType.ERROR);
         		alert.setTitle("Ошибка");
         		alert.setHeaderText("Не правельный логин или пароль!");
@@ -72,6 +79,7 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 		try {
 			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		} catch(final IllegalArgumentException e) {
+			LOG.error("Не найден файл: {}",  Resources.AER_LOGO);
 			final Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Ошибка!");
 			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
