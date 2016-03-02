@@ -127,7 +127,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 		                    imageview.setFitHeight(100);
 		                    imageview.setFitWidth(116);
 		                    
-			            	if(item == null){   
+			            	if(item == null || item.equals("")){   
 			            		final URL url = this.getClass().getResource("/nonePicture.jpg");
 			            		imageview.setImage(new Image(url.toString(), true));
 			                } else {                	

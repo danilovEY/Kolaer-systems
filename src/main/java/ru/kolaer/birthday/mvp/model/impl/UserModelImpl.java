@@ -83,6 +83,7 @@ public class UserModelImpl implements UserModel {
 		this.setPost(user.getPost());
 		this.setPhoneNumber(user.getPhone());
 		this.setEmail(user.getEmail());
+		this.setIcon(user.getvCard());
 	}
 	
 	public String getFirstName() {
