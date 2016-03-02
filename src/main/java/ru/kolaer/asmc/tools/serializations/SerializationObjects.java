@@ -14,10 +14,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import ru.kolaer.asmc.runnable.ASMCApplication;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
@@ -31,7 +27,6 @@ public class SerializationObjects {
 	
 	private final String pathDitSerializedObject = "data";
 	private final String fileNameSerializeObjects = "objects.aer";
-	private final File dir = new File(pathDitSerializedObject);
 	private final File settingFile = new File("setting.aer");
 	private File fileSer = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
 	private List<MGroupLabels> cacheObjects;
@@ -102,36 +97,32 @@ public class SerializationObjects {
 	}
 
 	/**Сериализовать список групп.*/
-	public void setSerializeGroups(List<MGroupLabels> groupModels) {
+	public void setSerializeGroups(final List<MGroupLabels> groupModels) {
 		final File newSerObj = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
+		if(newSerObj.exists()) {
+			newSerObj.delete();
+		}
+			
 		try{
 			newSerObj.createNewFile();
-		}
-		catch(IOException e2){
-			Platform.runLater(() -> {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка!");
-				alert.setHeaderText("Не удалось создать файл: " + newSerObj.getAbsolutePath());
-				alert.setContentText(e2.getMessage());
-				alert.showAndWait();
-			});
+		} catch(final IOException e2){
+			LOG.error("Не удалось создать файл: {}", newSerObj.getAbsolutePath(), e2);
 		}
 		
-		try (FileOutputStream fileOutSer = new FileOutputStream(newSerObj);
-				ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
-
+		try (final FileOutputStream fileOutSer = new FileOutputStream(newSerObj);
+				final ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
 			objectOutputStream.writeObject(groupModels);
-
-		} catch (FileNotFoundException e) {
-			Platform.runLater(() -> {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка!");
-				alert.setHeaderText("Не найден файл: " + newSerObj.getAbsolutePath());
-				alert.setContentText(e.getMessage());
-				alert.showAndWait();
-			});
+		} catch (final FileNotFoundException e) {
+			LOG.error("Не найден файл: {}", newSerObj.getAbsolutePath());
 		} catch (IOException e1) {
-			System.exit(-9);
+			LOG.error("Ошибка! Создается локальная база!", e1);
+			try (final FileOutputStream fileOutSer = new FileOutputStream(new File("C:\\Temp\\" + fileNameSerializeObjects));
+					final ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
+				objectOutputStream.writeObject(groupModels);
+			} catch (final Exception ex) {
+				LOG.error("Ошибка!", ex);
+				System.exit(-9);
+			}
 		}
 	}
 }

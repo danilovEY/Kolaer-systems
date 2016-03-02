@@ -155,7 +155,7 @@ public class CMainFrame extends Application {
 		
 		Platform.runLater(() -> {
 			final BorderPane imagePane = new BorderPane();
-			imagePane.setStyle("-fx-background-color: #000000,linear-gradient(#f8f8f8, #e7e7e7);");
+			imagePane.setStyle("-fx-background-color: #FFFFFF"); //,linear-gradient(#f8f8f8, #e7e7e7);
 			imagePane.setMaxHeight(300);
 			imagePane.setMaxWidth(Double.MAX_VALUE);
 			
