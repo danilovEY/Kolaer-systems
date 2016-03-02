@@ -3,19 +3,26 @@ package ru.kolaer.asmc.ui.javafx.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.tools.Resources;
 
+/**
+ * Окно о программе.
+ *
+ * @author danilovey
+ * @version 0.1
+ */
 public class CAbout extends BaseController implements Initializable{
+	private final Logger LOG = LoggerFactory.getLogger(CAbout.class);
 	
-	private Stage dialog = new Stage();
 	@FXML
 	private Label labelVersion;
 	
@@ -30,23 +37,21 @@ public class CAbout extends BaseController implements Initializable{
 	}
 	
 	public void show() {
-		String title = "О программе";
-		this.dialog.setTitle(title);
-		this.dialog.setScene(new Scene(this));
-		this.dialog.setResizable(false);
-		this.dialog.centerOnScreen();
-		this.dialog.setOnCloseRequest(e -> {
-			this.dialog.close();
+		final Stage dialog = new Stage();
+		dialog.setTitle("О программе");
+		dialog.setScene(new Scene(this));
+		dialog.setResizable(false);
+		dialog.centerOnScreen();
+		dialog.setOnCloseRequest(e -> {
+			dialog.close();
 		});
+		
 		try {
-			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
+			dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		} catch (IllegalArgumentException e) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Ошибка!");
-			alert.setHeaderText("Не найден файл: \"" + Resources.AER_LOGO + "\"");
-			alert.showAndWait();
+			LOG.error("Не найден файл: {}", Resources.AER_LOGO);
 		}
 
-		this.dialog.showAndWait();
+		dialog.showAndWait();
 	}
 }

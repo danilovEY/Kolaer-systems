@@ -30,7 +30,7 @@ public interface Resources
 	/**Фон.*/
 	public static final URL BACKGROUND_IMAGE = Resources.class.getResource("/resources/geometric-background.png");
 	/**Версия*/
-	public static final String VERSION = "3.0";	
+	public static final String VERSION = "3.3";	
 	
 	public static final String DIALOG_LOADING_COMPONENTS = "Загрузка компонентов";
 	
