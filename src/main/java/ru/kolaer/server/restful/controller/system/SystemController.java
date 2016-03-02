@@ -64,4 +64,18 @@ public class SystemController {
 		}
 	}
 	
+	@RequestMapping(path = "/users/{user}/app/{window}/{status}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void closeWindow(@PathVariable final String user, @PathVariable final String window, @PathVariable final String status) {
+		if(status.equals("close")) {
+			this.usersManager.getUsers().parallelStream().forEach(kolaerUser -> {
+				if(kolaerUser.getName().equals(user)) {
+					kolaerUser.addCloseApplication(window);
+					return;
+				}
+			});
+		} else {
+			
+		}
+	}
+	
 }

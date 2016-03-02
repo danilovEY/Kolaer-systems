@@ -1,6 +1,5 @@
 package ru.kolaer.server.restful.controller.system;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +38,13 @@ public class UserSystemController {
 		userData.addIp(ip);
 		return true;
 	}
+	
+	@RequestMapping(path = "/hostname", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public boolean addUserHostName(final @PathVariable String user, final @RequestBody String hostName) {
+		final DbKolaerUser userData =  this.getOrCreate(user);
+		userData.addHostName(hostName);
+		return true;
+	}
 
 	@RequestMapping(path = "/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Boolean ping(final @PathVariable String user) {
@@ -58,12 +64,16 @@ public class UserSystemController {
 	}
 	
 	@RequestMapping(path = "/app/{status}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<String> getStatusApplication(final @PathVariable String user, @PathVariable final String status) {
+	public String[] getStatusApplication(final @PathVariable String user, @PathVariable final String status) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
 		if(status.equals("close")) {
-			return userData.getCloseApplications();
+			final String[] closes = userData.getCloseApplications().toArray(new String[userData.getCloseApplications().size()]);
+			userData.getCloseApplications().clear();
+			return closes;
 		} else {
-			return userData.getOpeningWindows();
+			final String[] open = userData.getOpeningWindows().toArray(new String[userData.getOpeningWindows().size()]);
+			userData.getCloseApplications().clear();
+			return open;
 		}
 	}
 	

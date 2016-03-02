@@ -45,6 +45,9 @@ public class DbBirthdayAll implements Serializable {
 
 	@Column(nullable=false, length=100)
 	private String post;
+	
+	@Column(nullable=false, length=70)
+	private String vCard;
 
 	public DbBirthdayAll() {
 	}
@@ -127,6 +130,14 @@ public class DbBirthdayAll implements Serializable {
 
 	public void setOrganization(String organization) {
 		this.organization = organization;
+	}
+
+	public String getvCard() {
+		return vCard;
+	}
+
+	public void setvCard(String vCard) {
+		this.vCard = vCard;
 	}
 
 }
