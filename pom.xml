@@ -20,6 +20,12 @@
 			<artifactId>ru.kolaer.api</artifactId>
 			<version>0.0.4</version>
 		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.3</version>
+		</dependency>
 	</dependencies>
 
 	<!-- Сценарий для построения проекта -->
@@ -49,7 +55,6 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<finalName>ASMC-v${project.version}</finalName>
 					<archive>
 						<manifest>
 							<mainClass>ru.kolaer.asmc.runnable.JavaFXLauncher</mainClass>
@@ -58,20 +63,7 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
-					<descriptors>
-						<descriptor>src/main/resources/jar.xml</descriptor>
-						<descriptor>src/main/resources/zip.xml</descriptor>
-					</descriptors>
 				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 			<!-- Плагин позволяет использовать указанную версию jdk -->
