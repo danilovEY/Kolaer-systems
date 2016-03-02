@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -37,19 +38,6 @@ public class SerializationObjects {
 
 	public SerializationObjects() {
 
-	}
-
-	/**
-	 * Проверяет файл {@link #fileNameSerializeObjects} на его наличие.
-	 * Иначе создает.
-	 * @return true - если файл создан.
-	 */
-	private boolean checkFile() {
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		
-		return true;
 	}
 	
 	public void setSerializeSetting(final SettingSingleton setting) {
@@ -94,49 +82,28 @@ public class SerializationObjects {
 	/**Получить сериализованные группы.*/
 	@SuppressWarnings("unchecked")
 	public List<MGroupLabels> getSerializeGroups() {
-		
 		if(this.cacheObjects != null)
 			return this.cacheObjects;
-		
-		if(!this.checkFile()) {
-			Platform.runLater(() -> {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка!");
-				alert.setHeaderText("Файл был удален: " + this.fileSer.getAbsolutePath());
-				alert.showAndWait();
-			});
-		}
 
-		try (FileInputStream fileInput = new FileInputStream(this.fileSer);
-				ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
-			try {
-				 this.cacheObjects = new ArrayList<>();
-				 if(objectInput.available() != -1) {
-					 final List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
-					 this.cacheObjects.addAll(groupList);
-				 }			
-				return this.cacheObjects;
-			} catch (ClassNotFoundException e) {
-				Platform.runLater(() -> {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Ошибка!");
-					alert.setHeaderText("Класс не найден!" + this.fileSer.getAbsolutePath());
-					alert.setContentText(e.getMessage());
-					alert.showAndWait();
-				});
-				return this.cacheObjects;
+		try(FileInputStream fileInput = new FileInputStream(this.fileSer); ObjectInputStream objectInput = new ObjectInputStream(fileInput)){
+			if(objectInput.available() != -1){
+				final List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
+				this.cacheObjects = new ArrayList<>(groupList);
 			}
-		} catch (IOException e) {
-			this.fileSer.delete();
-			this.fileSer = null;
-			return this.getSerializeGroups();
+			return this.cacheObjects;
+		}catch(final ClassNotFoundException e){
+			LOG.error("Класс не найден!", e);
+			return Collections.emptyList();
+		}
+		catch(final Exception e){
+			LOG.error("Ошибка!", e);
+			return Collections.emptyList();
 		}
 	}
 
 	/**Сериализовать список групп.*/
 	public void setSerializeGroups(List<MGroupLabels> groupModels) {
-
-		File newSerObj = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
+		final File newSerObj = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
 		try{
 			newSerObj.createNewFile();
 		}
