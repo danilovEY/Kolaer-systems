@@ -40,7 +40,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	public void addGroupLabels(final MGroupLabels group) {
 		SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups().add(group);
 		SettingSingleton.getInstance().saveGroups();
-
+		
 		final CGroupLabels cGroup = new CGroupLabels(group);
 		cGroup.registerOberver(this);
 		this.panelWithGroups.getChildren().add(cGroup);
