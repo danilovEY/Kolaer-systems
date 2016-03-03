@@ -24,6 +24,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.text.Font;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
@@ -70,8 +71,9 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources) {
+		
 		final ContextMenu labelContextMenu = new ContextMenu();
-
+		
 		final MenuItem editLabel = new MenuItem(Resources.MENU_ITEM_EDIT_LABEL);
 		final MenuItem deleteLabel = new MenuItem(Resources.MENU_ITEM_DELETE_LABEL);
 		labelContextMenu.getItems().addAll(editLabel, deleteLabel);
@@ -103,7 +105,9 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 	}
 
 	private void updateView(final MLabel label) {
+		this.nameLabel.setFont(Font.font(18 - label.getName().length() * 0.15));
 		this.nameLabel.setText(label.getName());
+		this.button.setFont(Font.font(18 - label.getName().length() * 0.15));
 		this.button.setText(label.getInfo());
 		
 		ToolTipManager.sharedInstance().setDismissDelay(0);

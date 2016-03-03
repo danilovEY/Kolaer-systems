@@ -38,6 +38,11 @@ import ru.kolaer.asmc.ui.javafx.view.ImageViewPane;
  * @version 0.2
  */
 public class CMainFrame extends Application {
+	/** Панель с ярлыками. */
+	@FXML
+	private BorderPane mainPanel;
+	@FXML
+	private FlowPane contentPanel;
 	/** Элемент в меню для получения админ. прав. */
 	@FXML
 	private MenuItem rootMenuItem;
@@ -50,15 +55,11 @@ public class CMainFrame extends Application {
 	/** Панель с группами ярлыков. */
 	@FXML
 	private VBox navigatePanel;
-	/** Панель с ярлыками. */
-	@FXML
-	private BorderPane mainPanel;
-	@FXML
-	private FlowPane contentPanel;
 	@FXML
 	private ScrollPane navigateScrollPanel;
 	@FXML
 	private ScrollPane contentScrollPanel;
+	
 	@FXML
 	public void initialize() {
 		final ExecutorService threadForLoadGroup = Executors.newSingleThreadExecutor();
