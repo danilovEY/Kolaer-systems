@@ -46,11 +46,13 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups().add(group);
 		SettingSingleton.getInstance().saveGroups();
 		
-		final CGroupLabels cGroup = new CGroupLabels(group);
-		cGroup.registerOberver(this);
-		this.panelWithGroups.getChildren().add(cGroup);
-		this.panelWithGroups.getChildren().setAll(this.panelWithGroups.getChildren().sorted((a, b) -> Integer.compare(((CGroupLabels) a).getModel().getPriority(), ((CGroupLabels) b).getModel().getPriority())));
-		this.addCache(cGroup, new ArrayList<>());
+		Platform.runLater(() -> {
+			final CGroupLabels cGroup = new CGroupLabels(group);
+			cGroup.registerOberver(this);
+			this.panelWithGroups.getChildren().add(cGroup);
+			this.panelWithGroups.getChildren().setAll(this.panelWithGroups.getChildren().sorted((a, b) -> Integer.compare(((CGroupLabels) a).getModel().getPriority(), ((CGroupLabels) b).getModel().getPriority())));
+			this.addCache(cGroup, new ArrayList<>());
+		});
 	}
 
 	public void addLabel(MLabel label) {
@@ -101,7 +103,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 				final ExecutorService threads = Executors.newSingleThreadExecutor();
 				threads.submit(() -> {
 					final List<CLabel> cacheList = new ArrayList<>();
-					for(final MLabel label : cGroup.getModel().getLabelList()){
+					cGroup.getModel().getLabelList().forEach(label -> {
 						final CountDownLatch block = new CountDownLatch(1);	
 						Platform.runLater(() -> {
 							cacheList.add(new CLabel(label));
@@ -113,7 +115,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 						}catch(final Exception e){
 							LOG.error("Ошибка!", e);
 						}
-					};
+					});
 					
 					this.addCache(cGroup, cacheList);
 				});
