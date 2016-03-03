@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
@@ -22,7 +26,8 @@ import ru.kolaer.asmc.ui.javafx.model.MLabel;
  * @version 0.1
  */
 public class CNavigationContentObserver implements ObserverGroupLabels, ObserverLabel {
-
+	private final Logger LOG = LoggerFactory.getLogger(CNavigationContentObserver.class);
+	
 	private final Pane panelWithGroups;
 	private final Pane panelWithLabels;
 	private MGroupLabels selectedGroup;
@@ -53,12 +58,14 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 			return;
 		this.selectedGroup.addLabel(label);
 		SettingSingleton.getInstance().saveGroups();
-
+		
+		Platform.runLater(() -> {
 		final CLabel cLabel = new CLabel(label);
-		cLabel.registerOberver(this);
-		this.panelWithLabels.getChildren().add(cLabel);
-		this.panelWithLabels.getChildren().setAll(this.panelWithLabels.getChildren().sorted((a, b) -> Integer.compare(((CLabel) a).getModel().getPriority(), ((CLabel) b).getModel().getPriority())));
-		this.cache.get(this.getCGroupLabelCache(this.selectedGroup)).add(cLabel);
+			cLabel.registerOberver(this);
+			this.panelWithLabels.getChildren().add(cLabel);
+			this.panelWithLabels.getChildren().setAll(this.panelWithLabels.getChildren().sorted((a, b) -> Integer.compare(((CLabel) a).getModel().getPriority(), ((CLabel) b).getModel().getPriority())));
+			this.cache.get(this.getCGroupLabelCache(this.selectedGroup)).add(cLabel);
+		});
 	}
 
 	public MGroupLabels getSelectedItem() {
@@ -93,10 +100,22 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 			
 				final ExecutorService threads = Executors.newSingleThreadExecutor();
 				threads.submit(() -> {
-					final List<CLabel> labelList = cGroup.getModel().getLabelList().stream().map(label -> {
-						return new CLabel(label);
-					}).collect(Collectors.toList());
-					this.addCache(cGroup, labelList);
+					final List<CLabel> cacheList = new ArrayList<>();
+					for(final MLabel label : cGroup.getModel().getLabelList()){
+						final CountDownLatch block = new CountDownLatch(1);	
+						Platform.runLater(() -> {
+							cacheList.add(new CLabel(label));
+							block.countDown();
+						});
+						
+						try{
+							block.await();
+						}catch(final Exception e){
+							LOG.error("Ошибка!", e);
+						}
+					};
+					
+					this.addCache(cGroup, cacheList);
 				});
 				threads.shutdown();
 				cGroup.registerOberver(this);				
