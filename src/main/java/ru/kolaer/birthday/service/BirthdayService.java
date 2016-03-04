@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.util.Duration;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
@@ -67,7 +68,7 @@ public class BirthdayService implements Service {
 			}
 			
 			Platform.runLater(() -> {
-				this.editorKit.getUISystemUS().getNotification().showSimpleNotify(title.toString(), null, Duration.hours(24), actions);
+				this.editorKit.getUISystemUS().getNotification().showSimpleNotify(title.toString(), null, Duration.hours(24),Pos.BOTTOM_CENTER, actions);
 			});
 		}
 	}

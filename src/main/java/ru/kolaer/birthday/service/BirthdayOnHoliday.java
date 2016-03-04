@@ -21,7 +21,6 @@ public class BirthdayOnHoliday implements Service {
 	private final UniformSystemEditorKit editorKit;
 	private boolean tomorrow = false;
 	private boolean arterTomorrow = false;
-	
 	public BirthdayOnHoliday(final UniformSystemEditorKit editorKit) {
 		this.editorKit = editorKit;
 	}
@@ -31,6 +30,15 @@ public class BirthdayOnHoliday implements Service {
 		if(this.editorKit.getUSNetwork().getServerStatus() == ServerStatus.AVAILABLE) {
 			final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
 			final LocalDate date = LocalDate.now();
+			if(date.getDayOfWeek().getValue() == 5 ) {
+				if(!this.tomorrow) {
+					this.showNotify("В субботу ", date.plusDays(1), new PublicHolidays(null, "выходной", "holiday", null));
+				} 
+				if(!this.arterTomorrow) {
+					this.showNotify("В воскресенье ", date.plusDays(2), new PublicHolidays(null, "выходной", "holiday", null));
+				}
+			}
+			
 			for(final PublicHolidays holiday : holidays) {
 				if(date.getDayOfMonth() == holiday.getDate().getDay()) {
 					this.showNotify("Сегодня ", date, holiday);
@@ -40,15 +48,10 @@ public class BirthdayOnHoliday implements Service {
 				} else if(date.getDayOfMonth() + 2 == holiday.getDate().getDay()) {
 					this.arterTomorrow = true;
 					this.showNotify("После завтра ", date.plusDays(2), holiday);
-				} 
-			}
-			
-			if(date.getDayOfWeek().getValue() == 5 ) {
-				if(!this.tomorrow) {
-					this.showNotify("В субботу ", date.plusDays(1), new PublicHolidays(null, "выходной", "holiday", null));
-				} 
-				if(!this.arterTomorrow) {
-					this.showNotify("В воскресенье ", date.plusDays(2), new PublicHolidays(null, "выходной", "holiday", null));
+				} if(date.getDayOfMonth() + 3 == holiday.getDate().getDay()) {
+					this.showNotify("Через 3 дня ", date.plusDays(3), holiday);
+				} if(date.getDayOfMonth() + 4 == holiday.getDate().getDay()) {
+					this.showNotify("Через 4 дня ", date.plusDays(4), holiday);
 				}
 			}
 		}
