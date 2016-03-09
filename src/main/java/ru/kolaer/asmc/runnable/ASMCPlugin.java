@@ -36,4 +36,9 @@ public class ASMCPlugin implements UniformSystemPlugin {
 	public List<Service> getServices() {
 		return null;
 	}
+
+	@Override
+	public void updatePluginObjects(String key, Object object) {
+		
+	}
 }
