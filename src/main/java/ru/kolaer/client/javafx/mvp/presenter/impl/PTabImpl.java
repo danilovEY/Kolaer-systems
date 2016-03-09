@@ -41,7 +41,7 @@ public class PTabImpl implements PTab {
 		this.loader = loader;
 		this.app = this.plugin.getApplication();
 		this.editorKid = editorKid;
-		this.view = new VTabImpl(loader, plugin.getApplication());
+		this.view = new VTabImpl(loader, this.app);
 	}
 
 	@Override

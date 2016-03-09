@@ -2,12 +2,14 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +46,9 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 	private final UniformSystemEditorKit editorKit;
 	/**Ключ - Имя вкладки, значение - Presenter вкладки.*/
 	private Map<String, PTab> pluginMap = new HashMap<>();
+	private List<UniformSystemPlugin> plugins = new ArrayList<>();
 	/**Коллекция обсерверов.*/
-	private List<ExplorerObserver> observers = new LinkedList<>();
+	private List<ExplorerObserver> observers = new ArrayList<>();
 	
 	public VMTabExplorerImpl(final ServiceControlManager servicesManager, final UniformSystemEditorKit editorKid) {
 		super(Resources.V_TAB_EXPLORER);
@@ -70,6 +73,7 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 			Thread.currentThread().setName("Инициализация плангина "+plugin.getName()+" в виде вкладки");
 			try {
 				plugin.initialization(this.editorKit);
+				this.plugins.add(plugin);
 				if(plugin.getServices() != null) {
 					Thread.currentThread().setName("Добавление служб из плагина: " + plugin.getName());
 					plugin.getServices().parallelStream().forEach(this.servicesManager::addService);
@@ -81,7 +85,7 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 			}
 			return plugin;
 		}).exceptionally(t -> {
-			LOG.error("Ошибка при инициализации плагина");
+			LOG.error("Ошибка при инициализации плагина", t);
 			return null;
 		}).thenApplyAsync((plg) -> {
 			if(plg != null && plg.getApplication() != null) {
@@ -140,9 +144,16 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 	}
 	
 	@Override
-	public void removePlugin(UniformSystemPlugin plugin) {
-		// TODO Доделать удаление плагина
-		
+	public void removePlugin(final UniformSystemPlugin plugin) {
+		final Iterator<PTab> iter = this.pluginMap.values().iterator();
+		while(iter.hasNext()) {
+			final PTab tab = iter.next();
+			if(tab.getModel() == plugin) {
+				tab.closeTab();
+				iter.remove();
+				this.plugins.remove(plugin);
+			}
+		}
 	}
 
 	@Override
@@ -194,5 +205,10 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 	@Override
 	public void showPlugin(final UniformSystemPlugin plugin) {
 		this.pluginsTabPane.getSelectionModel().select(pluginMap.get(plugin.getApplication().getName()).getView().getContent());
+	}
+
+	@Override
+	public void notifyPlugins(final String key, final Object object) {
+		this.plugins.parallelStream().forEach(plugin -> plugin.updatePluginObjects(key, object));
 	}
 }
