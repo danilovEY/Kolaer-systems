@@ -45,4 +45,8 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 	public List<Service> getServices() {
 		return this.servicesList;
 	}
+
+	@Override
+	public void updatePluginObjects(String key, Object object) {
+	}
 }
