@@ -21,4 +21,6 @@ public interface UniformSystemPlugin {
 	UniformSystemApplication getApplication();
 	/**Получить коллекцию служб плагина.*/
 	List<Service> getServices();
+	
+	void updatePluginObjects(String key, Object object);
 }
