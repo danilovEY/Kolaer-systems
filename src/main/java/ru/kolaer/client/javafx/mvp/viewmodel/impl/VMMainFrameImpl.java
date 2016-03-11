@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import ru.kolaer.client.javafx.plugins.PluginReader;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
+import ru.kolaer.client.javafx.services.ServiceScreen;
 import ru.kolaer.client.javafx.services.SeviceUserIpAndHostName;
 import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
@@ -76,6 +77,7 @@ public class VMMainFrameImpl extends Application {
 	    	CompletableFuture.runAsync(() -> {
 	    		Thread.currentThread().setName("Добавление системны служб");	
 	    		this.servicesManager.addService(new UserPingService(), true);
+	    		this.servicesManager.addService(new ServiceScreen());
 	    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
 	    	});
 	
