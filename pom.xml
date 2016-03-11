@@ -95,6 +95,24 @@
 			</testResource>
 		</testResources>
 		<plugins>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> 
+				<version>2.1.1</version> <configuration> <failOnMissingWebXml>false</failOnMissingWebXml> 
+				<webXml>src\main\webapp\WEB-INF\web.xml</webXml> </configuration> </plugin> 
+				<plugin> <groupId>org.glassfish.maven.plugin</groupId> <artifactId>maven-glassfish-plugin</artifactId> 
+				<version>2.1</version> <configuration> <glassfishDirectory>D:\\Server\\glassfish4\\glassfish</glassfishDirectory> 
+				<user>admin</user> <passwordFile>D:\\Server\\glassfish4\\glassfish\\domains\\domain1\\config\\domain-passwords</passwordFile> 
+				<domain> <name>domain1</name> <httpPort>8080</httpPort> <adminPort>4848</adminPort> 
+				</domain> <components> <component> <name>${project.artifactId}</name> <artifact>target/${project.build.finalName}.war</artifact> 
+				</component> </components> <debug>true</debug> <terse>false</terse> <echo>true</echo> 
+				</configuration> </plugin> 
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<warSourceDirectory>WebContent</warSourceDirectory>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>-->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
@@ -103,14 +121,7 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<warSourceDirectory>WebContent</warSourceDirectory>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
+
 		</plugins>
 	</build>
 </project>

@@ -99,4 +99,8 @@ public class DbKolaerUser implements Serializable {
 	public void setPing(boolean ping) {
 		this.ping = ping;
 	}
+
+	public void addImage(final byte[] image) {
+		this.log.addImage(image);
+	}
 }

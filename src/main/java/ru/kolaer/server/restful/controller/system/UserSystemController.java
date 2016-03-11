@@ -39,6 +39,13 @@ public class UserSystemController {
 		return true;
 	}
 	
+	@RequestMapping(path = "/screen", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public boolean addUserScreen(final @PathVariable String user, final @RequestBody byte[] image) {
+		final DbKolaerUser userData =  this.getOrCreate(user);
+		userData.addImage(image);
+		return true;
+	}
+	
 	@RequestMapping(path = "/hostname", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public boolean addUserHostName(final @PathVariable String user, final @RequestBody String hostName) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
