@@ -37,6 +37,7 @@ import ru.kolaer.client.javafx.tools.Resources;
  */
 public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, ExplorerObresvable {
 	private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerImpl.class);
+	private boolean openASUP = false;
 	/**Вкладочная панель.*/
 	@FXML
 	private TabPane pluginsTabPane;
@@ -109,6 +110,7 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 				Platform.runLater(() -> {
 					//Для того, чтобы АСУП открывался первым (приказ начальника)
 					if(tab.getModel().getName().equals("ASUP")) {
+						this.openASUP = true;
 						this.pluginsTabPane.getTabs().add(0, tab.getView().getContent());
 						this.pluginsTabPane.getSelectionModel().selectFirst();
 					} else {
@@ -125,6 +127,9 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 	/**Инициализация модели выбора вкладки.*/
 	private void initSelectionModel() {
 		this.pluginsTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldTab, newTab)  -> {
+			if(!this.openASUP)
+				return;
+			
 			if(oldTab != null) {		
 				CompletableFuture.runAsync(() -> {	
 					final PTab tab = this.pluginMap.get(oldTab.getText());
