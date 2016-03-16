@@ -1,6 +1,7 @@
 package ru.kolaer.client.javafx.mvp.viewmodel;
 
 import java.net.URLClassLoader;
+import java.util.List;
 
 import ru.kolaer.client.javafx.mvp.view.VComponentUI;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
@@ -19,6 +20,8 @@ public interface VMExplorer extends VComponentUI {
 	void removePlugin(UniformSystemPlugin plugin);
 	/**Удалить все плагины.*/
 	void removeAll();
+	
+	List<UniformSystemPlugin> getPlugins();
 	
 	void showPlugin(int index);
 	void showPlugin(UniformSystemPlugin plugin);
