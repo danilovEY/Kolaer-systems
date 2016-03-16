@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +53,7 @@ public class PluginReader {
 		final File[] jarFiles = dirToPlugins.listFiles((final File dir, final String name) -> {
 			return name.endsWith(".jar") ? true : false;
 		});
-
+		final ExecutorService threadReadPlugin= Executors.newSingleThreadExecutor();
 		CompletableFuture<List<UniformSystemPlugin>> thread = CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setName("Интеграция class loader'ов в системный class loader");
 			final List<Future<UniformSystemPlugin>> futureList = new ArrayList<>();
@@ -109,7 +110,8 @@ public class PluginReader {
 				}
 			}
 			return result;
-		});
+		}, threadReadPlugin);
+		threadReadPlugin.shutdown();
 
 		try{
 			return thread.get(5, TimeUnit.MINUTES);

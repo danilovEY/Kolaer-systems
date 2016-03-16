@@ -54,7 +54,7 @@ public class VTabImpl implements VTab {
 					});
 				}
 				this.tab.setContent(null);
-				this.stage.setScene(new Scene(new BorderPane(this.tab.getContent()), 1024, 768));
+				this.stage.setScene(new Scene(new BorderPane(this.app.getContent()), 1024, 768));
 				this.stage.centerOnScreen();
 				this.stage.show();
 			});

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,20 +75,24 @@ public class VMMainFrameImpl extends Application {
 	    	
 	    	this.mainPane.setBottom(statusBar);
 	    	this.mainPane.setCenter(explorer.getContent());
-	    	
+	    	final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
 	    	CompletableFuture.runAsync(() -> {
 	    		Thread.currentThread().setName("Добавление системны служб");	
 	    		this.servicesManager.addService(new UserPingService(), true);
 	    		this.servicesManager.addService(new ServiceScreen());
 	    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
-	    	});
-	
-	    	CompletableFuture.supplyAsync(() -> {
+	    		threadStartService.shutdown();
+	    	}, threadStartService);
+	    	
+	    	final ExecutorService threadScan = Executors.newSingleThreadExecutor();
+	    	CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Скан и добавление плагинов");
-				return new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
-			}).exceptionally(t -> {
+				new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
+				threadScan.shutdown();
+			}, threadScan).exceptionally(t -> {
 				LOG.error("Ошибка при сканировании плагинов!", t);
 				editorKit.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Ошибка при сканировании плагинов!");
+				threadScan.shutdownNow();
 				return null;
 			});
     	});

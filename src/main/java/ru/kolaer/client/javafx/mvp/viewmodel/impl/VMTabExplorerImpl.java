@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +39,7 @@ import ru.kolaer.client.javafx.tools.Resources;
  */
 public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, ExplorerObresvable {
 	private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerImpl.class);
-	private boolean openASUP = false;
+	private transient boolean openASUP = false;
 	/**Вкладочная панель.*/
 	@FXML
 	private TabPane pluginsTabPane;
@@ -69,6 +71,7 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 
 	@Override
 	public void addPlugin(final UniformSystemPlugin plugin, final URLClassLoader jarClassLoaser) {
+		final ExecutorService threadInitPlugin= Executors.newFixedThreadPool(3);
 		CompletableFuture.supplyAsync(() -> {
 			Thread.currentThread().setContextClassLoader(jarClassLoaser);
 			Thread.currentThread().setName("Инициализация плангина "+plugin.getName()+" в виде вкладки");
@@ -85,7 +88,7 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 				return null;
 			}
 			return plugin;
-		}).exceptionally(t -> {
+		}, threadInitPlugin).exceptionally(t -> {
 			LOG.error("Ошибка при инициализации плагина", t);
 			return null;
 		}).thenApplyAsync((plg) -> {
@@ -102,7 +105,7 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 				}
 				return null;
 			}
-		}).exceptionally(t -> {
+		}, threadInitPlugin).exceptionally(t -> {
 			LOG.error("Ошибка при создании вкладки плагина");
 			return null;
 		}).thenAcceptAsync((tab) -> {
@@ -118,6 +121,8 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 					}
 					this.notifyAddPlugin(tab);
 				});
+			} else {
+				threadInitPlugin.shutdownNow();
 			}
 		}).exceptionally(t -> {
 			LOG.error("Ошибка при добавлении плагина");
@@ -130,20 +135,24 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 			if(!this.openASUP)
 				return;
 			
-			if(oldTab != null) {		
+			if(oldTab != null) {	
+				final ExecutorService threadActivPlugin= Executors.newSingleThreadExecutor();
 				CompletableFuture.runAsync(() -> {	
 					final PTab tab = this.pluginMap.get(oldTab.getText());
 					tab.deActiveTab();
 					this.notifyDeactivationPlugin(tab);
-				});			
+					threadActivPlugin.shutdown();
+				}, threadActivPlugin);			
 			}
 			
 			if(newTab != null) {
+				final ExecutorService threadDeActivPlugin= Executors.newSingleThreadExecutor();
 				CompletableFuture.runAsync(() -> {
 					final PTab tab = this.pluginMap.get(newTab.getText());
 					tab.activeTab();
 					this.notifyActivationPlugin(tab);
-				});
+					threadDeActivPlugin.shutdown();
+				}, threadDeActivPlugin);
 			}
 		});
 	}
@@ -215,5 +224,10 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 	@Override
 	public void notifyPlugins(final String key, final Object object) {
 		this.plugins.parallelStream().forEach(plugin -> plugin.updatePluginObjects(key, object));
+	}
+
+	@Override
+	public List<UniformSystemPlugin> getPlugins() {
+		return this.plugins;
 	}
 }

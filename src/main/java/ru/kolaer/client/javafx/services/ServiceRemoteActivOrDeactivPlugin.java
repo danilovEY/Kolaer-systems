@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -59,6 +61,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 						while(iter.hasNext()) {
 							final RemoteActivationDeactivationPlugin plugin = iter.next();
 							if(tabName.equals(plugin.getName())) {
+								final ExecutorService threadPush= Executors.newSingleThreadExecutor();
 								CompletableFuture.runAsync(() -> {
 									final PDialog dialog = this.editorKit.getUISystemUS().getDialog().showInfoDialog("Внимание! Пришел запрос с сервера!", "Через 5 секунд закроется: \"" + tabName + "\"");
 									dialog.show();
@@ -69,7 +72,8 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 									}
 									plugin.deactivation();
 									dialog.close();
-								}).exceptionally(t -> {
+									threadPush.shutdown();
+								}, threadPush).exceptionally(t -> {
 									LOG.error("Ошибка при закрытии плагина!", t);
 									plugin.deactivation();
 									return null;
@@ -119,11 +123,12 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 	public void updateActivationPlugin(final RemoteActivationDeactivationPlugin plugin) {
 		if(!this.isRunning)
 			return;
-
+		final ExecutorService threadPush= Executors.newSingleThreadExecutor();
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - открытие окна");
 			this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/open").toString(), null);
-		}).exceptionally(t -> {
+			threadPush.shutdown();
+		}, threadPush).exceptionally(t -> {
 			LOG.error("Сервер \"{}\" не доступен!",new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/open").toString());
 			return null;
 		});
@@ -133,11 +138,12 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 	public void updateDeactivationPlugin(final RemoteActivationDeactivationPlugin plugin) {
 		if(!this.isRunning)
 			return;
-
+		final ExecutorService threadPush= Executors.newSingleThreadExecutor();
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");	
 			this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/close").toString(), null);
-		}).exceptionally(t -> {
+			threadPush.shutdown();
+		}, threadPush).exceptionally(t -> {
 			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/close").toString());
 			return null;
 		});
