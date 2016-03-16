@@ -30,6 +30,7 @@ import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
 import ru.kolaer.asmc.ui.javafx.view.ImageViewPane;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
 /**
  * Контроллер главного окна приложения.
@@ -60,20 +61,11 @@ public class CMainFrame extends Application {
 	@FXML
 	private ScrollPane contentScrollPanel;
 	
+	private CNavigationContentObserver observer;
+	
 	@FXML
 	public void initialize() {
-		final ExecutorService threadForLoadGroup = Executors.newSingleThreadExecutor();
 		final ExecutorService threadForBanner = Executors.newSingleThreadExecutor();
-		
-		final CNavigationContentObserver observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel);
-		
-		CompletableFuture.runAsync(() -> {
-			Thread.currentThread().setName("Загрузка и добавление групп");
-			observer.loadAndRegGroups();
-		}, threadForLoadGroup).exceptionally(t -> {
-			return null;
-		});
-		threadForLoadGroup.shutdown();
 		
 		CompletableFuture.runAsync(() -> {
 			this.updateBanner();
@@ -191,6 +183,19 @@ public class CMainFrame extends Application {
 	@FXML
 	public void actionGettingRootMenuItem(ActionEvent event) {
 		new CAuthenticationDialog().showAndWait().get();
+	}
+	
+	public void addEditorKit(final UniformSystemEditorKit editorKit) {
+		this.observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel, editorKit);
+		
+		final ExecutorService threadForLoadGroup = Executors.newSingleThreadExecutor();
+		CompletableFuture.runAsync(() -> {
+			Thread.currentThread().setName("Загрузка и добавление групп");
+			observer.loadAndRegGroups();
+		}, threadForLoadGroup).exceptionally(t -> {
+			return null;
+		});
+		threadForLoadGroup.shutdown();
 	}
 	
 	@Override

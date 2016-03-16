@@ -11,6 +11,8 @@ import java.util.concurrent.Executors;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
 /**
  * Запускает задачу.
@@ -25,10 +27,12 @@ public class Application implements Runnable {
 	private String openWith;
 	/**Поток для запуска приложения пользователя.*/
 	private final ExecutorService threadForRunApp = Executors.newSingleThreadExecutor();
+	private final UniformSystemEditorKit editorKit;
 	
-	public Application(final String path, final String openWith) {
+	public Application(final String path, final String openWith, final UniformSystemEditorKit editorKit) {
 		this.pathApp = path;
 		this.openWith = openWith;
+		this.editorKit = editorKit;
 	}
 
 	public void start() {
@@ -103,12 +107,14 @@ public class Application implements Runnable {
 					String pathWeb = "";
 					if(SettingSingleton.getInstance().isAllLabels()) {
 						if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
-							Platform.runLater(() -> {
-								Alert alert = new Alert(AlertType.ERROR);
-								alert.setTitle("Ошибка!");
-								alert.setHeaderText("Стандартный браузер больше не поддерживается.");
-								alert.show();
-							});
+							for(final UniformSystemPlugin plugin : this.editorKit.getUISystemUS().getExplorer().getPlugins()) {
+								if(plugin.getName().equals("Browser")) {
+									this.editorKit.getUISystemUS().getExplorer().showPlugin(plugin);
+									break;
+								}
+							}
+							
+							this.editorKit.getUISystemUS().getExplorer().notifyPlugins("url", this.pathApp);
 							return;
 						} else if(SettingSingleton.getInstance().isDefaultUserWebBrowser()) {
 							r.exec("cmd /C explorer \"" + this.pathApp + "\"");

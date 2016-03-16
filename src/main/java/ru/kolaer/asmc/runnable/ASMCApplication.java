@@ -12,7 +12,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
+import ru.kolaer.asmc.ui.javafx.controller.CMainFrame;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
 /**
  * Реализация приложения для единой системы КолАЭР.
@@ -26,6 +28,10 @@ public class ASMCApplication implements UniformSystemApplication {
 	private final BorderPane root = new BorderPane();
 	/**Панель с .fxml-контента главного окна.*/
 	private AnchorPane pane;
+	private final UniformSystemEditorKit editorKid;
+	public ASMCApplication(final UniformSystemEditorKit editorKid) {
+		this.editorKid = editorKid;
+	}
 
 	@Override
 	public String getIcon() {
@@ -54,6 +60,7 @@ public class ASMCApplication implements UniformSystemApplication {
 			try(final InputStream stream = Resources.V_MAIN_FRAME.openStream()){
 				final FXMLLoader loader = new FXMLLoader();
 				pane = loader.load(stream);
+				((CMainFrame)loader.getController()).addEditorKit(this.editorKid);
 				final InputStream inputStream = this.getClass().getResourceAsStream("/resources/CSS/Default/Default.css");
 				final URL inputStreamUrl = this.getClass().getResource("/resources/CSS/Default/Default.css");
 				if(inputStreamUrl != null)

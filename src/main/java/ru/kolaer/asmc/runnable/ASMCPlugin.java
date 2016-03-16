@@ -19,7 +19,7 @@ public class ASMCPlugin implements UniformSystemPlugin {
 	
 	@Override
 	public void initialization(final UniformSystemEditorKit editorKid) throws Exception {
-		this.app = new ASMCApplication();
+		this.app = new ASMCApplication(editorKid);
 	}
 
 	@Override

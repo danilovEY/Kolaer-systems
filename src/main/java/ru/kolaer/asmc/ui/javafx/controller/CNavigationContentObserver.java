@@ -18,6 +18,7 @@ import ru.kolaer.asmc.tools.Application;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
 /**
  * Контроллер-слушатель действий групп и ярлыков.
@@ -31,15 +32,17 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	private final Pane panelWithGroups;
 	private final Pane panelWithLabels;
 	private MGroupLabels selectedGroup;
-
+	private final UniformSystemEditorKit editorKit;
+	
 	private final Map<CGroupLabels, List<CLabel>> cache = new HashMap<>();
 
 	/**
 	 * {@linkplain CNavigationContentObserver}
 	 */
-	public CNavigationContentObserver(final Pane panelWithGroups, final Pane panelWithLabels) {
+	public CNavigationContentObserver(final Pane panelWithGroups, final Pane panelWithLabels, final UniformSystemEditorKit editorKit) {
 		this.panelWithGroups = panelWithGroups;
 		this.panelWithLabels = panelWithLabels;
+		this.editorKit = editorKit; 
 	}
 
 	public void addGroupLabels(final MGroupLabels group) {
@@ -217,7 +220,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	public void updateClick(final MLabel model) {
 		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
-			final Application app = new Application(model.getPathApplication(), model.getPathOpenAppWith());
+			final Application app = new Application(model.getPathApplication(), model.getPathOpenAppWith(), this.editorKit);
 			app.start();
 		});
 		thread.shutdown();
