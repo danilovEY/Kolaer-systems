@@ -111,7 +111,7 @@ public class Application implements Runnable {
 							});
 							return;
 						} else if(SettingSingleton.getInstance().isDefaultUserWebBrowser()) {
-							r.exec("explorer \"" + this.pathApp + "\"");
+							r.exec("cmd /C explorer \"" + this.pathApp + "\"");
 							return;
 						} else {
 							pathWeb = SettingSingleton.getInstance().getPathWebBrowser();
@@ -141,7 +141,7 @@ public class Application implements Runnable {
 							if (file.isDirectory()) {
 								r.exec("explorer.exe \"" + this.pathApp + "\"");
 							} else {
-								r.exec("cmd /C \"" + this.pathApp + "\"");
+								r.exec("cmd /C explorer \"" + this.pathApp + "\"");
 							}
 						}
 					} else {
