@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import ru.kolaer.server.dao.entities.DbKolaerUser;
+import ru.kolaer.server.dao.entities.PackageNetwork;
 import ru.kolaer.server.restful.tools.UsersManager;
 
 @RestController
@@ -18,6 +19,7 @@ public class UserSystemController {
 	@Autowired
 	private UsersManager usersManager;
 
+	
 	private DbKolaerUser getOrCreate(final String user) {
 		return this.usersManager.getUserByName(user, true);
 	}
@@ -46,6 +48,12 @@ public class UserSystemController {
 		return true;
 	}
 	
+	@RequestMapping(path = "/package/screen", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addUserScreenFromPackage(final @PathVariable String user, final @RequestBody PackageNetwork image) {
+		final DbKolaerUser userData =  this.getOrCreate(user);
+		userData.addImage(image.getPureData());
+	}
+
 	@RequestMapping(path = "/hostname", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public boolean addUserHostName(final @PathVariable String user, final @RequestBody String hostName) {
 		final DbKolaerUser userData =  this.getOrCreate(user);
@@ -83,7 +91,7 @@ public class UserSystemController {
 			return open;
 		}
 	}
-	
+
 	@RequestMapping(path = "/app/{app}/{status}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addApplication(final @PathVariable String user, final @PathVariable String app,
 			@PathVariable String status) {
