@@ -17,6 +17,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import ru.kolaer.client.javafx.tools.Resources;
+import ru.kolaer.server.dao.entities.PackageNetwork;
 
 public class ServiceScreen implements Service {
 	private Logger LOG = LoggerFactory.getLogger(ServiceScreen.class);
@@ -27,7 +28,7 @@ public class ServiceScreen implements Service {
 	@Override
 	public void run() {
 		try{
-			TimeUnit.SECONDS.sleep(15);
+			TimeUnit.SECONDS.sleep(20);
 		}catch(final InterruptedException e1){
 			LOG.error("Превышено ожидание", e1);
 			this.isRun = false;
@@ -45,8 +46,8 @@ public class ServiceScreen implements Service {
 					ImageIO.write(capture, "jpg", baos);
 					baos.flush();
 					imageInByte = baos.toByteArray();
-
-					restTemplate.postForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/screen", imageInByte, byte[].class);
+					final PackageNetwork packageNetwork = new PackageNetwork(imageInByte, true);
+					restTemplate.postForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/package/screen", packageNetwork, PackageNetwork.class);
 				}catch(final IOException e){
 					LOG.error("Невозможно записать скриншот!", e);
 				}catch(final RestClientException ex){
@@ -57,7 +58,7 @@ public class ServiceScreen implements Service {
 			}
 
 			try{
-				TimeUnit.MINUTES.sleep(5);
+				TimeUnit.MINUTES.sleep(3);
 			}catch(final InterruptedException e1){
 				LOG.error("Превышено ожидание", e1);
 				this.isRun = false;
