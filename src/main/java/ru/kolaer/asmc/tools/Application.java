@@ -8,6 +8,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -21,6 +24,8 @@ import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
  *
  */
 public class Application implements Runnable {
+	private final Logger LOG = LoggerFactory.getLogger(Application.class);
+	
 	/**Путь к запускающему файлу.*/
 	private String pathApp;
 	/**Путь к программу с помощью чего открывать пользОткрывать с мо*/
@@ -38,12 +43,7 @@ public class Application implements Runnable {
 	public void start() {
 		if (this.pathApp != null && !this.pathApp.equals("")) {
 			CompletableFuture.runAsync(this, threadForRunApp).exceptionally(t -> {
-				Platform.runLater(() -> {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Ошибка!");
-					alert.setHeaderText(t.getMessage());
-					alert.show();
-				});
+				LOG.error("Неудалось запустить: {}", this.pathApp, t);
 				return null;
 			});
 			this.threadForRunApp.shutdown();
