@@ -4,7 +4,7 @@
 
 	<groupId>ru.kolaer</groupId>
 	<artifactId>ru.kolaer.api</artifactId>
-	<version>0.0.5</version>
+	<version>0.1</version>
 	<packaging>jar</packaging>
 
 	<name>ru.kolaer.api</name>
@@ -13,6 +13,14 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.main</artifactId>
+			<version>5.4.0</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
