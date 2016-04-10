@@ -1,19 +1,18 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
-import java.net.URLClassLoader;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.mvp.view.impl.VTabImpl;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
 import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
+
+import java.net.URLClassLoader;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Реализация интерфейса {@linkplain PTab}. Содержит classLoader плагина.
@@ -69,7 +68,7 @@ public class PTabImpl implements PTab {
 				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getName());
 				Thread.currentThread().setContextClassLoader(this.loader);
 				try {
-					this.app.run();
+					this.app.start();
 					
 					this.view.setContent(app.getContent());
 				} catch (final Exception e) {

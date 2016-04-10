@@ -20,7 +20,7 @@ public class UniformSystemApplicationAdapter implements UniformSystemApplication
 	}
 
 	@Override
-	public void run() throws Exception {
+	public void start() throws Exception {
 		
 	}
 
