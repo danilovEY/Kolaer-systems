@@ -1,5 +1,9 @@
 package ru.kolaer.client.javafx.system;
 
+import ru.kolaer.api.system.KolaerDataBase;
+import ru.kolaer.api.system.UserBirthdayAllDataBase;
+import ru.kolaer.api.system.UserDataAllDataBase;
+
 /**
  * Реализация работы с БД через RESTful сервис.
  *

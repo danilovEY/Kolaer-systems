@@ -1,19 +1,20 @@
 package ru.kolaer.client.javafx.services;
 
-import java.nio.charset.Charset;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
+import ru.kolaer.api.services.Service;
 import ru.kolaer.client.javafx.tools.Resources;
 import ru.kolaer.client.javafx.tools.User32;
 import ru.kolaer.client.javafx.tools.User32.MSG;
+
+import java.nio.charset.Charset;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Служба для прошлушивания клавиатуры windows-пользователей и отправки клавиши на сервер.

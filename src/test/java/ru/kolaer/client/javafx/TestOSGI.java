@@ -1,12 +1,9 @@
 package ru.kolaer.client.javafx;
 
 import org.junit.Test;
-import org.osgi.framework.BundleException;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.plugins.SearchPlugins;
-
-import java.io.IOException;
 
 /**
  * Created by Danilov on 10.04.2016.
@@ -14,7 +11,7 @@ import java.io.IOException;
 public class TestOSGI {
 
     @Test
-    public void testPluginManager() throws ClassNotFoundException, BundleException, InstantiationException, IllegalAccessException, IOException {
+    public void testPluginManager() throws Exception {
         final PluginManager pm = new PluginManager();
 
         pm.initialization();
@@ -24,8 +21,10 @@ public class TestOSGI {
         for(PluginBundle p :  searchPlugins.search()) {
 
             System.out.println(p.getNamePlugin());
-            pm.installPlugin(p);
-            pm.getInfoToBundle().get(p).start();
+            pm.install(p);
+            p.start();
+            System.out.println(p.getUniformSystemPlugin().getName());
+            //pm.getInfoToBundle().get(p).start();
         }
 
 

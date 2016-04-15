@@ -1,11 +1,11 @@
 package ru.kolaer.client.javafx.system;
 
-import java.time.LocalDate;
-
 import org.springframework.web.client.RestTemplate;
-
+import ru.kolaer.api.dao.entities.PublicHolidays;
+import ru.kolaer.api.system.PublicHolidaysDateBase;
 import ru.kolaer.client.javafx.tools.Resources;
-import ru.kolaer.server.dao.entities.PublicHolidays;
+
+import java.time.LocalDate;
 
 public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
 

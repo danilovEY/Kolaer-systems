@@ -2,7 +2,10 @@ package ru.kolaer.client.javafx.system;
 
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
+import ru.kolaer.api.system.KolaerDataBase;
+import ru.kolaer.api.system.NetworkUS;
+import ru.kolaer.api.system.OtherPublicAPI;
+import ru.kolaer.api.system.ServerStatus;
 import ru.kolaer.client.javafx.tools.Resources;
 
 /**

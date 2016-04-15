@@ -1,15 +1,5 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -23,18 +13,23 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import ru.kolaer.client.javafx.plugins.PluginReader;
-import ru.kolaer.client.javafx.services.ServiceControlManager;
-import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
-import ru.kolaer.client.javafx.services.ServiceScreen;
-import ru.kolaer.client.javafx.services.SeviceUserIpAndHostName;
-import ru.kolaer.client.javafx.services.UserPingService;
-import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.client.javafx.plugins.PluginBundle;
+import ru.kolaer.client.javafx.plugins.PluginManager;
+import ru.kolaer.client.javafx.services.*;
 import ru.kolaer.client.javafx.system.StatusBarUSImpl;
 import ru.kolaer.client.javafx.system.UISystemUSImpl;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitImpl;
 import ru.kolaer.client.javafx.tools.Resources;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Главное окно приложения.
@@ -87,7 +82,37 @@ public class VMMainFrameImpl extends Application {
 	    	final ExecutorService threadScan = Executors.newSingleThreadExecutor();
 	    	CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Скан и добавление плагинов");
-				new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
+
+				final PluginManager pluginManager = new PluginManager();
+				//new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
+
+
+				try {
+					pluginManager.initialization();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				for(PluginBundle p :  pluginManager.getSearchPlugins().search()) {
+
+					System.out.println(p.getNamePlugin());
+
+					/*try {
+						pluginManager.install(p);
+						p.start();
+						//p.getUniformSystemPlugin();
+						explorer.addPlugin(p.getUniformSystemPlugin());
+					} catch (BundleException e) {
+						e.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}*/
+
+
+					//System.out.println(p.getUniformSystemPlugin().getName());
+					//pm.getInfoToBundle().get(p).start();
+				}
+
 				threadScan.shutdown();
 			}, threadScan).exceptionally(t -> {
 				LOG.error("Ошибка при сканировании плагинов!", t);

@@ -1,6 +1,10 @@
 package ru.kolaer.client.javafx.system;
 
-import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
+import ru.kolaer.api.mvp.viewmodel.VMExplorer;
+import ru.kolaer.api.system.DialogUS;
+import ru.kolaer.api.system.NotificationUS;
+import ru.kolaer.api.system.StatusBarUS;
+import ru.kolaer.api.system.UISystemUS;
 
 /**
  * Реализация системных (приложения) объектов.

@@ -1,6 +1,7 @@
 package ru.kolaer.client.javafx.plugins;
 
 import javafx.scene.layout.Pane;
+import ru.kolaer.api.plugin.UniformSystemApplication;
 
 public class UniformSystemApplicationAdapter implements UniformSystemApplication {
 

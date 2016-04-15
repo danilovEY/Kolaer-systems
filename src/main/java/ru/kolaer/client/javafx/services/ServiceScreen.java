@@ -1,23 +1,19 @@
 package ru.kolaer.client.javafx.services;
 
-import java.awt.AWTException;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import javax.imageio.ImageIO;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
+import ru.kolaer.api.dao.entities.PackageNetwork;
+import ru.kolaer.api.services.Service;
 import ru.kolaer.client.javafx.tools.Resources;
-import ru.kolaer.server.dao.entities.PackageNetwork;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class ServiceScreen implements Service {
 	private Logger LOG = LoggerFactory.getLogger(ServiceScreen.class);

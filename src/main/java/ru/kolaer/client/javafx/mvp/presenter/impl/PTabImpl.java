@@ -2,12 +2,12 @@ package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugin.UniformSystemApplication;
+import ru.kolaer.api.plugin.UniformSystemPlugin;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.mvp.view.impl.VTabImpl;
-import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
-import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 
 import java.net.URLClassLoader;
 import java.util.concurrent.CompletableFuture;

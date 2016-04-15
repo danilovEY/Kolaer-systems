@@ -1,18 +1,14 @@
 package ru.kolaer.client.javafx.services;
 
+import ch.qos.logback.classic.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.services.Service;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.Level;
+import java.util.concurrent.*;
 
 /**
  * Менеджер служб для запуска службы в новых потоках.

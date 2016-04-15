@@ -1,9 +1,11 @@
 package ru.kolaer.client.javafx.plugins;
 
-import java.util.List;
+import ru.kolaer.api.plugin.UniformSystemApplication;
+import ru.kolaer.api.plugin.UniformSystemPlugin;
+import ru.kolaer.api.services.Service;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 
-import ru.kolaer.client.javafx.services.Service;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
+import java.util.List;
 
 public class UniformSystemPluginAdapter implements UniformSystemPlugin {
 

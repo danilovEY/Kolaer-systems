@@ -1,13 +1,14 @@
 package ru.kolaer.client.javafx.system;
 
-import org.controlsfx.control.Notifications;
-import org.controlsfx.control.action.Action;
-
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
+import org.controlsfx.control.action.Action;
+import ru.kolaer.api.system.NotificationUS;
+import ru.kolaer.api.system.NotifyAction;
 
 /**
  * Реализация интерфейса для работы с оповещением.

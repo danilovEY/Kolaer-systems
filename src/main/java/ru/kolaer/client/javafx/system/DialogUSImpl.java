@@ -1,7 +1,8 @@
 package ru.kolaer.client.javafx.system;
 
 import javafx.concurrent.Service;
-import ru.kolaer.client.javafx.mvp.presenter.PDialog;
+import ru.kolaer.api.mvp.presenter.PDialog;
+import ru.kolaer.api.system.DialogUS;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PDialogImpl;
 import ru.kolaer.client.javafx.mvp.view.impl.VErrorDialog;
 import ru.kolaer.client.javafx.mvp.view.impl.VInfoDialog;

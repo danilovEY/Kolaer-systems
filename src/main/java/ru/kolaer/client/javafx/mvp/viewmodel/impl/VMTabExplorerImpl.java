@@ -1,35 +1,29 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugin.UniformSystemPlugin;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
 import ru.kolaer.client.javafx.mvp.view.LoadFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
-import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.tools.Resources;
+
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Реализация вкладочного explorer'а.

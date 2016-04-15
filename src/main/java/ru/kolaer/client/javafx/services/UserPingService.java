@@ -1,13 +1,13 @@
 package ru.kolaer.client.javafx.services;
 
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
+import ru.kolaer.api.services.Service;
 import ru.kolaer.client.javafx.tools.Resources;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Служба для пинга сервера (чтобы сервер автоматически не удалил подключенного пользователя).

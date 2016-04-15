@@ -1,10 +1,9 @@
 package ru.kolaer.client.javafx.mvp.view.impl;
 
-import org.controlsfx.dialog.ProgressDialog;
-
 import javafx.application.Platform;
 import javafx.concurrent.Service;
-import ru.kolaer.client.javafx.mvp.view.VDialog;
+import org.controlsfx.dialog.ProgressDialog;
+import ru.kolaer.api.mvp.view.VDialog;
 
 public class VProgressDialog implements VDialog {
 	private final Service<?> service;

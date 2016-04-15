@@ -1,6 +1,6 @@
 package ru.kolaer.client.javafx.plugins.main;
 
-import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
+import ru.kolaer.api.plugin.UniformSystemApplication;
 import ru.kolaer.client.javafx.plugins.UniformSystemApplicationAdapter;
 import ru.kolaer.client.javafx.plugins.UniformSystemPluginAdapter;
 import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;

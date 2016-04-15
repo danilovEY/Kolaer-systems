@@ -1,5 +1,17 @@
 package ru.kolaer.client.javafx.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.mvp.presenter.PDialog;
+import ru.kolaer.api.services.Service;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
+import ru.kolaer.client.javafx.plugins.main.MainRemoteActivDeactivPlugin;
+import ru.kolaer.client.javafx.tools.Resources;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,18 +19,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-
-import ru.kolaer.client.javafx.mvp.presenter.PDialog;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
-import ru.kolaer.client.javafx.plugins.main.MainRemoteActivDeactivPlugin;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
-import ru.kolaer.client.javafx.tools.Resources;
 
 /**
  * Служба для удаленного активации/дезактивации плагина.

@@ -1,5 +1,11 @@
 package ru.kolaer.client.javafx.plugins;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.viewmodel.VMExplorer;
+import ru.kolaer.api.plugin.UniformSystem;
+import ru.kolaer.api.plugin.UniformSystemPlugin;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -8,20 +14,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 
 /**
  * Чтение плагинов в виде .jar файлов.

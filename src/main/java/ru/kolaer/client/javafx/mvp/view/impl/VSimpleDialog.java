@@ -1,14 +1,13 @@
 package ru.kolaer.client.javafx.mvp.view.impl;
 
-import java.util.concurrent.CountDownLatch;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import ru.kolaer.client.javafx.mvp.view.VDialog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.view.VDialog;
+
+import java.util.concurrent.CountDownLatch;
 
 public class VSimpleDialog implements VDialog {
 	private final Logger LOG = LoggerFactory.getLogger(VSimpleDialog.class);

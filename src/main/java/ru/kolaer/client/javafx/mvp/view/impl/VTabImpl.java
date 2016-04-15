@@ -1,8 +1,5 @@
 package ru.kolaer.client.javafx.mvp.view.impl;
 
-import java.net.URLClassLoader;
-import java.util.Optional;
-
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -11,8 +8,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ru.kolaer.api.plugin.UniformSystemApplication;
 import ru.kolaer.client.javafx.mvp.view.VTab;
-import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
+
+import java.net.URLClassLoader;
+import java.util.Optional;
 
 /**
  * Реализация {@linkplain VTab}.

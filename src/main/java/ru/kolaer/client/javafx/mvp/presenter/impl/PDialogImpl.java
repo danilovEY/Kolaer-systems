@@ -1,7 +1,7 @@
 package ru.kolaer.client.javafx.mvp.presenter.impl;
 
-import ru.kolaer.client.javafx.mvp.presenter.PDialog;
-import ru.kolaer.client.javafx.mvp.view.VDialog;
+import ru.kolaer.api.mvp.presenter.PDialog;
+import ru.kolaer.api.mvp.view.VDialog;
 import ru.kolaer.client.javafx.mvp.view.impl.VSimpleDialog;
 
 public class PDialogImpl implements PDialog {
