@@ -80,7 +80,7 @@ public class SerializationObjects {
 		if(this.cacheObjects != null)
 			return this.cacheObjects;
 		if(!this.fileSer.exists()) {
-			return Collections.emptyList();
+			return new ArrayList<>();
 		}
 		try(FileInputStream fileInput = new FileInputStream(this.fileSer); ObjectInputStream objectInput = new ObjectInputStream(fileInput)){
 			if(objectInput.available() != -1){

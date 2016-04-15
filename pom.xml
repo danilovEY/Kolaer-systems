@@ -34,7 +34,7 @@
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testOutputDirectory>target/test-classes</testOutputDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
-		<defaultGoal>clean compile bundle:manifest assembly:single</defaultGoal>
+		<defaultGoal>clean compile bundle:manifest package</defaultGoal>
 
 		<!-- Ресурсы -->
 		<resources>
@@ -47,7 +47,7 @@
 		<!-- Плагины для сценария -->
 		<plugins>
 
-			<!-- Плагин для создания jar файла с манифестом -->
+			<!-- Плагин для создания jar файла с манифестом
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -65,6 +65,28 @@
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>-->
+
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestFile>${basedir}/target/classes/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>manifest</goal>
 						</goals>
 					</execution>
 				</executions>
