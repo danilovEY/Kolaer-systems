@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ru.kolaer</groupId>
-	<artifactId>ru.kolaer.client.javafx</artifactId>
-	<version>0.0.2</version>
+	<artifactId>ru.kolaer.client.usa</artifactId>
+	<version>0.1</version>
 	<packaging>jar</packaging>
 
-	<name>ru.kolaer.client.javafx</name>
+	<name>ru.kolaer.client.usa</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
