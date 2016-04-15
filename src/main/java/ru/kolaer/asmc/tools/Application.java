@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import ru.kolaer.client.javafx.plugins.UniformSystemPlugin;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
+import ru.kolaer.api.plugin.UniformSystemPlugin;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 
 /**
  * Запускает задачу.

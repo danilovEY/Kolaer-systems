@@ -13,8 +13,8 @@ import javafx.scene.layout.Pane;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.controller.CMainFrame;
-import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
+import ru.kolaer.api.plugin.UniformSystemApplication;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 
 /**
  * Реализация приложения для единой системы КолАЭР.
@@ -54,11 +54,12 @@ public class ASMCApplication implements UniformSystemApplication {
 	}
 
 	@Override
-	public void run() throws Exception {
+	public void start() throws Exception {
 		if(this.pane == null){
 			SettingSingleton.initialization();
 			try(final InputStream stream = Resources.V_MAIN_FRAME.openStream()){
 				final FXMLLoader loader = new FXMLLoader();
+				loader.setController(new CMainFrame());
 				pane = loader.load(stream);
 				((CMainFrame)loader.getController()).addEditorKit(this.editorKid);
 				final InputStream inputStream = this.getClass().getResourceAsStream("/resources/CSS/Default/Default.css");

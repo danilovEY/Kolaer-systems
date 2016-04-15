@@ -30,7 +30,7 @@ import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
 import ru.kolaer.asmc.ui.javafx.view.ImageViewPane;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 
 /**
  * Контроллер главного окна приложения.

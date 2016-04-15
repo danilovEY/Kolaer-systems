@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>ru.kolaer</groupId>
 			<artifactId>ru.kolaer.api</artifactId>
-			<version>0.0.4</version>
+			<version>0.1</version>
 		</dependency>
 
 		<dependency>
@@ -34,7 +34,7 @@
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testOutputDirectory>target/test-classes</testOutputDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
-		<defaultGoal>clean compile assembly:single</defaultGoal>
+		<defaultGoal>clean compile bundle:manifest assembly:single</defaultGoal>
 
 		<!-- Ресурсы -->
 		<resources>
@@ -43,27 +43,57 @@
 				<targetPath>resources</targetPath>
 			</resource>
 		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-			</testResource>
-		</testResources>
 
 		<!-- Плагины для сценария -->
-
 		<plugins>
+
+			<!-- Плагин для создания jar файла с манифестом -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>ru.kolaer.asmc.runnable.JavaFXLauncher</mainClass>
-						</manifest>
-					</archive>
+					<finalName>${artifactId}-${version}</finalName>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<appendAssemblyId>false</appendAssemblyId>
+					<archive>
+						<manifestFile>${basedir}/target/classes/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
 				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Плагин для создания манифеста -->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.4.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Main-Class>ru.kolaer.asmc.runnable.JavaFXLauncher</Main-Class>
+						<Bundle-Activator>ru.kolaer.asmc.runnable.ASMCPlugin</Bundle-Activator>
+						<Bundle-ClassPath>.</Bundle-ClassPath>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Export-Package>org.osgi.framework</Export-Package>
+					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>install</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- Плагин позволяет использовать указанную версию jdk -->

@@ -79,7 +79,9 @@ public class SerializationObjects {
 	public synchronized List<MGroupLabels> getSerializeGroups() {
 		if(this.cacheObjects != null)
 			return this.cacheObjects;
-
+		if(!this.fileSer.exists()) {
+			return Collections.emptyList();
+		}
 		try(FileInputStream fileInput = new FileInputStream(this.fileSer); ObjectInputStream objectInput = new ObjectInputStream(fileInput)){
 			if(objectInput.available() != -1){
 				final List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
