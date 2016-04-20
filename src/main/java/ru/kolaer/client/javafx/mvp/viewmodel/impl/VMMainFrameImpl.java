@@ -1,7 +1,6 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -13,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -23,6 +23,7 @@ import ru.kolaer.client.javafx.system.StatusBarUSImpl;
 import ru.kolaer.client.javafx.system.UISystemUSImpl;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitImpl;
 import ru.kolaer.client.javafx.tools.Resources;
+import ru.kolaer.client.javafx.tools.Tools;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -51,8 +52,8 @@ public class VMMainFrameImpl extends Application {
 	private Stage stage;
 	
     @FXML
-    public void initialize() { 	
-    	Platform.runLater(() -> {
+    public void initialize() {
+		Tools.runOnThreadFX(() -> {
         	this.servicesManager = new ServiceControlManager();
         	this.initApplicationParams(); 
 	    	//Статус бар приложения.
@@ -67,14 +68,16 @@ public class VMMainFrameImpl extends Application {
 	    	//Инициализация вкладочного explorer'а. 
 	    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, editorKit);
 	    	editorKit.getUISystemUS().setExplorer(explorer);
-	    	
+
 	    	this.mainPane.setBottom(statusBar);
 	    	this.mainPane.setCenter(explorer.getContent());
+
+
+			editorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.").show();
 	    	final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
 	    	CompletableFuture.runAsync(() -> {
 	    		Thread.currentThread().setName("Добавление системны служб");	
 	    		this.servicesManager.addService(new UserPingService(), true);
-	    		this.servicesManager.addService(new ServiceScreen());
 	    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
 	    		threadStartService.shutdown();
 	    	}, threadStartService);
@@ -97,7 +100,7 @@ public class VMMainFrameImpl extends Application {
 
 					System.out.println(p.getNamePlugin());
 
-					/*try {
+					try {
 						pluginManager.install(p);
 						p.start();
 						//p.getUniformSystemPlugin();
@@ -106,17 +109,19 @@ public class VMMainFrameImpl extends Application {
 						e.printStackTrace();
 					} catch (Exception e) {
 						e.printStackTrace();
-					}*/
+					}
+				}
+
 
 
 					//System.out.println(p.getUniformSystemPlugin().getName());
 					//pm.getInfoToBundle().get(p).start();
-				}
+
 
 				threadScan.shutdown();
 			}, threadScan).exceptionally(t -> {
 				LOG.error("Ошибка при сканировании плагинов!", t);
-				editorKit.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Ошибка при сканировании плагинов!");
+				editorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Ошибка при сканировании плагинов!").show();
 				threadScan.shutdownNow();
 				return null;
 			});
@@ -133,6 +138,7 @@ public class VMMainFrameImpl extends Application {
 		if(service == null || !service.equals("false")) {		
 			this.servicesManager.setAutoRun(true);
     		this.servicesManager.addService(new SeviceUserIpAndHostName());
+			this.servicesManager.addService(new ServiceScreen());
     		this.servicesManager.addService(new UserWindowsKeyListenerService());
     		this.servicesManager.runAllServices();
 		} 
@@ -145,8 +151,8 @@ public class VMMainFrameImpl extends Application {
 		this.stage.setMinWidth(850);
 		
 		PARAM.putAll(this.getParameters().getNamed());
-		
-		Platform.runLater(() -> {
+
+		Tools.runOnThreadFX(() -> {
 			try {
 				this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
 				this.stage.setMaximized(true);
@@ -155,7 +161,7 @@ public class VMMainFrameImpl extends Application {
 				System.exit(-9);
 			}
 		});
-		
+
 		this.stage.getIcons().add(new Image("/css/aerIcon.png"));
 		this.stage.setOnCloseRequest(e -> {
 			System.exit(0);

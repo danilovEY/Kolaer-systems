@@ -73,7 +73,7 @@ public class PTabImpl implements PTab {
 					this.view.setContent(app.getContent());
 				} catch (final Exception e) {
 					LOG.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getName(), e);
-					this.editorKid.getUISystemUS().getDialog().showErrorDialog(this.plugin.getName(), "Ошибка при запуске плагина!");
+					this.editorKid.getUISystemUS().getDialog().createErrorDialog(this.plugin.getName(), "Ошибка при запуске плагина!").show();
 				}
 				threadRunPlugin.shutdown();
 			}, threadRunPlugin);
@@ -93,7 +93,7 @@ public class PTabImpl implements PTab {
 					this.app.stop();
 				} catch (final Exception e) {
 					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getName(),e);
-					this.editorKid.getUISystemUS().getDialog().showErrorDialog(this.plugin.getName(), "Ошибка при остановке плагина!");
+					this.editorKid.getUISystemUS().getDialog().createErrorDialog(this.plugin.getName(), "Ошибка при остановке плагина!").show();
 				}
 				threadStopPlugin.shutdown();
 			}, threadStopPlugin);

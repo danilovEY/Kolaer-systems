@@ -17,7 +17,7 @@ import ru.kolaer.client.javafx.mvp.view.impl.VProgressDialog;
 public class DialogUSImpl implements DialogUS {
 
 	@Override
-	public PDialog showSimpleDialog(String title, String text) {
+	public PDialog createSimpleDialog(String title, String text) {
 		final PDialog dialog = new PDialogImpl();
 		dialog.setText(text);
 		dialog.setTitle(title);
@@ -25,7 +25,7 @@ public class DialogUSImpl implements DialogUS {
 	}
 
 	@Override
-	public PDialog showErrorDialog(String title, String text) {
+	public PDialog createErrorDialog(String title, String text) {
 		final PDialog dialog = new PDialogImpl();
 		dialog.setView(new VErrorDialog());
 		dialog.setText(text);
@@ -34,7 +34,7 @@ public class DialogUSImpl implements DialogUS {
 	}
 
 	@Override
-	public PDialog showLoadingDialog(final Service<?> service) {		
+	public PDialog createLoadingDialog(final Service<?> service) {
 		final PDialog dialog = new PDialogImpl();
 		dialog.setView(new VProgressDialog(service));
 		dialog.setText("Загрузка");
@@ -43,7 +43,7 @@ public class DialogUSImpl implements DialogUS {
 	}
 
 	@Override
-	public PDialog showInfoDialog(String title, String text) {
+	public PDialog createInfoDialog(String title, String text) {
 		final PDialog dialog = new PDialogImpl();
 		dialog.setView(new VInfoDialog());
 		dialog.setText(text);

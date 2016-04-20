@@ -1,26 +1,18 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.control.TabPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugin.UniformSystemPlugin;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
-import ru.kolaer.client.javafx.mvp.view.LoadFXML;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
-import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
-import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
-import ru.kolaer.client.javafx.tools.Resources;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.Iterator;
+import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,26 +23,12 @@ import java.util.concurrent.Executors;
  * @author danilovey
  * @version 0.1
  */
-public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, ExplorerObresvable {
+public class VMTabExplorerImpl extends AbstractVMTabExplorer {
 	private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerImpl.class);
 	private transient boolean openASUP = false;
-	/**Вкладочная панель.*/
-	@FXML
-	private TabPane pluginsTabPane;
-	/**Менеджер служб.*/
-	private final ServiceControlManager servicesManager;
-	/**Системные инструменты.*/
-	private final UniformSystemEditorKit editorKit;
-	/**Ключ - Имя вкладки, значение - Presenter вкладки.*/
-	private Map<String, PTab> pluginMap = new HashMap<>();
-	private List<UniformSystemPlugin> plugins = new ArrayList<>();
-	/**Коллекция обсерверов.*/
-	private List<ExplorerObserver> observers = new ArrayList<>();
 	
 	public VMTabExplorerImpl(final ServiceControlManager servicesManager, final UniformSystemEditorKit editorKid) {
-		super(Resources.V_TAB_EXPLORER);
-		this.servicesManager = servicesManager;
-		this.editorKit = editorKid;
+		super(servicesManager, editorKid);
 	}
 
 	@Override
@@ -78,7 +56,7 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 				}
 			} catch (final Exception e) {
 				LOG.error("Ошибка при инициализации плагина: {}", plugin.getName(), e);
-				this.editorKit.getUISystemUS().getDialog().showErrorDialog(Thread.currentThread().getName(), "Ошибка при инициализации плагина!");
+				this.editorKit.getUISystemUS().getDialog().createErrorDialog(Thread.currentThread().getName(), "Ошибка при инициализации плагина!").show();
 				return null;
 			}
 			return plugin;
@@ -95,7 +73,7 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 					jarClassLoaser.close();
 				} catch(final Exception e){
 					LOG.error("Ошибка при закритии class loader плагина: {}", plugin.getName());
-					this.editorKit.getUISystemUS().getDialog().showErrorDialog(plugin.getName(), "Ошибка при закритии class loader плагина!");
+					this.editorKit.getUISystemUS().getDialog().createErrorDialog(plugin.getName(), "Ошибка при закритии class loader плагина!").show();
 				}
 				return null;
 			}
@@ -168,60 +146,5 @@ public class VMTabExplorerImpl extends  LoadFXML implements VTabExplorer, Explor
 	public void removeAll() {
 		this.pluginMap.values().parallelStream().forEach(tab -> tab.closeTab());
 		this.pluginMap.clear();
-	}
-
-	@Override
-	public void setContent(final Parent content) {
-		this.setCenter(content);
-	}
-
-	@Override
-	public Parent getContent() {
-		return this;
-	}
-
-	@Override
-	public void registerObserver(final ExplorerObserver observer) {
-		this.observers.add(observer);
-	}
-
-	@Override
-	public void removeObserver(final ExplorerObserver observer) {
-		this.observers.remove(observer);
-	}
-
-	@Override
-	public void notifyActivationPlugin(final RemoteActivationDeactivationPlugin tab) {
-		this.observers.parallelStream().forEach(obs -> obs.updateActivationPlugin(tab));
-	}
-
-	@Override
-	public void notifyDeactivationPlugin(final RemoteActivationDeactivationPlugin tab) {
-		this.observers.parallelStream().forEach(obs -> obs.updateDeactivationPlugin(tab));
-	}
-
-	@Override
-	public void notifyAddPlugin(final RemoteActivationDeactivationPlugin tab) {
-		this.observers.parallelStream().forEach(obs -> obs.updateAddPlugin(tab));
-	}
-
-	@Override
-	public void showPlugin(final int index) {
-		this.pluginsTabPane.getSelectionModel().select(index);
-	}
-
-	@Override
-	public void showPlugin(final UniformSystemPlugin plugin) {
-		this.pluginsTabPane.getSelectionModel().select(pluginMap.get(plugin.getApplication().getName()).getView().getContent());
-	}
-
-	@Override
-	public void notifyPlugins(final String key, final Object object) {
-		this.plugins.parallelStream().forEach(plugin -> plugin.updatePluginObjects(key, object));
-	}
-
-	@Override
-	public List<UniformSystemPlugin> getPlugins() {
-		return this.plugins;
 	}
 }

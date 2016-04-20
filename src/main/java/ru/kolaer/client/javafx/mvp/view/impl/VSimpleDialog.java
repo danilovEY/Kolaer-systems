@@ -1,11 +1,10 @@
 package ru.kolaer.client.javafx.mvp.view.impl;
 
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.view.VDialog;
+import ru.kolaer.client.javafx.tools.Tools;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -15,23 +14,31 @@ public class VSimpleDialog implements VDialog {
 	protected Alert dialog;
 	
 	public VSimpleDialog() {
-		final CountDownLatch latch = new CountDownLatch(1);
-		Platform.runLater(() -> {
-			this.dialog = new Alert(AlertType.NONE);
-			latch.countDown();
-		});
-		
-		try{
-			latch.await();
-		}catch(final InterruptedException e){
-			LOG.error("Ошибка!", e);
-			latch.countDown();
-		}
+            final CountDownLatch latch = new CountDownLatch(1);
+            LOG.info("111");
+            Tools.runOnThreadFX(() -> {
+                LOG.info("222");
+                this.dialog = new Alert(Alert.AlertType.NONE);
+                LOG.info("333");
+                latch.countDown();
+                LOG.info("444");
+            });
+            LOG.info("555");
+            try{
+                latch.await();
+            }catch(final InterruptedException e){
+                LOG.error("Ошибка!", e);
+                latch.countDown();
+            }
+        //} else {
+           // this.dialog = new Alert(Alert.AlertType.NONE);
+       // }
+
 	}
 	
 	@Override
 	public void show(boolean isDialog) {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			if(isDialog) {
 				this.dialog.showAndWait();
 			} else {
@@ -42,14 +49,14 @@ public class VSimpleDialog implements VDialog {
 
 	@Override
 	public void close() {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			this.dialog.close();
 		});
 	}
 
 	@Override
 	public void setTitle(final String title) {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			this.dialog.setTitle(title);
 			this.dialog.setHeaderText(title);
 		});
@@ -62,7 +69,7 @@ public class VSimpleDialog implements VDialog {
 
 	@Override
 	public void setText(final String text) {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			this.dialog.setContentText(text);
 		});
 	}

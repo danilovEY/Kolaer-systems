@@ -63,7 +63,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 							if(tabName.equals(plugin.getName())) {
 								final ExecutorService threadPush= Executors.newSingleThreadExecutor();
 								CompletableFuture.runAsync(() -> {
-									final PDialog dialog = this.editorKit.getUISystemUS().getDialog().showInfoDialog("Внимание! Пришел запрос с сервера!", "Через 5 секунд закроется: \"" + tabName + "\"");
+									final PDialog dialog = this.editorKit.getUISystemUS().getDialog().createInfoDialog("Внимание! Пришел запрос с сервера!", "Через 5 секунд закроется: \"" + tabName + "\"");
 									dialog.show();
 									try {
 										TimeUnit.SECONDS.sleep(5);
