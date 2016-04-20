@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class Tools {
     private static final Logger LOG = LoggerFactory.getLogger(Tools.class);
 
-    public static void runOnThreadFXAndWain(final Runnable runnable, boolean wait, final long time, final TimeUnit timeUnit) {
+    public static void runOnThreadFXAndWain(final Runnable runnable, final long time, final TimeUnit timeUnit) {
         Objects.requireNonNull(runnable, "runnable");
 
         final CountDownLatch countDownLatch = new CountDownLatch(1);
