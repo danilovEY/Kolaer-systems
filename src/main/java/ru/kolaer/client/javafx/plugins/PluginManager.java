@@ -51,12 +51,15 @@ public class PluginManager {
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework, " +
-                "ru.kolaer.api.plugin, ru.kolaer.api.services, ru.kolaer.api.system, ru.kolaer.api.mvp.view, ru.kolaer.api.mvp.presenter, ru.kolaer.api.mvp.viewmodel");
+                "ru.kolaer.api.plugin, ru.kolaer.api.services, ru.kolaer.api.system, " +
+                "ru.kolaer.api.mvp.view, ru.kolaer.api.mvp.presenter, ru.kolaer.api.mvp.viewmodel, " +
+                "ru.kolaer.api.dao.entities");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
                 "javafx.application, javafx.beans.property," +
                 "javafx.beans.value, javafx.collections, javafx.collections.transformation, javafx.event," +
-                "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.image, javafx.scene.input , javafx.scene.layout," +
+                "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.image, " +
+                "javafx.scene.input , javafx.scene.layout, javafx.util, javafx.concurrent," +
                 "javafx.scene.text, javafx.stage, javax.swing, org.slf4j;version=1.7.7");
 
         try {
