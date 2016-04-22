@@ -4,7 +4,7 @@ import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.view.VDialog;
-import ru.kolaer.client.javafx.tools.Tools;
+import ru.kolaer.api.tools.Tools;
 
 import java.util.concurrent.TimeUnit;
 

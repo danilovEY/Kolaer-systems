@@ -1,9 +1,9 @@
 package ru.kolaer.client.javafx.mvp.view.impl;
 
-import javafx.application.Platform;
 import javafx.concurrent.Service;
 import org.controlsfx.dialog.ProgressDialog;
 import ru.kolaer.api.mvp.view.VDialog;
+import ru.kolaer.api.tools.Tools;
 
 public class VProgressDialog implements VDialog {
 	private final Service<?> service;
@@ -11,14 +11,14 @@ public class VProgressDialog implements VDialog {
 	
 	public VProgressDialog(final Service<?> service) {
 		this.service = service;
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			this.dialog = new ProgressDialog(service);
 		});
 	}
 
 	@Override
 	public void setText(final String text) {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			this.setText(text);
 		});
 	}
@@ -30,7 +30,7 @@ public class VProgressDialog implements VDialog {
 
 	@Override
 	public void show(boolean isDialog) {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			if(!service.isRunning())
 				service.start();
 			if(isDialog) {
@@ -43,7 +43,7 @@ public class VProgressDialog implements VDialog {
 
 	@Override
 	public void setTitle(final String title) {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			this.dialog.setTitle(title);
 		});
 	}
@@ -55,7 +55,7 @@ public class VProgressDialog implements VDialog {
 
 	@Override
 	public void close() {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			if(service.isRunning())
 				service.cancel();
 			

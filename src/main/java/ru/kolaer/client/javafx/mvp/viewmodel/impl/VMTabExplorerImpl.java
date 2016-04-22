@@ -1,10 +1,10 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
-import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugin.UniformSystemPlugin;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
  */
 public class VMTabExplorerImpl extends AbstractVMTabExplorer {
 	private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerImpl.class);
-	private transient boolean openASUP = false;
+	private transient boolean openASUP = true;
 	
 	public VMTabExplorerImpl(final ServiceControlManager servicesManager, final UniformSystemEditorKit editorKid) {
 		super(servicesManager, editorKid);
@@ -82,7 +82,7 @@ public class VMTabExplorerImpl extends AbstractVMTabExplorer {
 			return null;
 		}).thenAcceptAsync((tab) -> {
 			if(tab != null) {
-				Platform.runLater(() -> {
+				Tools.runOnThreadFX(() -> {
 					//Для того, чтобы АСУП открывался первым (приказ начальника)
 					if(tab.getModel().getName().equals("ASUP")) {
 						this.openASUP = true;

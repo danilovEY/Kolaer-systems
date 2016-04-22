@@ -10,6 +10,7 @@ import ru.kolaer.api.plugin.AbstractUniformSystemPlugin;
 import ru.kolaer.api.plugin.UniformSystemPlugin;
 
 import java.net.URI;
+import java.util.Objects;
 
 /**
  * Created by Danilov on 10.04.2016.
@@ -40,9 +41,10 @@ public abstract class PluginBundle {
         }
 
         final ServiceReference<?>[] registeredServices = this.bundle.getRegisteredServices();
-        for(final ServiceReference<?> service : registeredServices) {
+        Objects.nonNull(registeredServices);
+        for (final ServiceReference<?> service : registeredServices) {
             final Object uniformSystemPlugin = bundleContext.getService(service);
-            if(uniformSystemPlugin instanceof AbstractUniformSystemPlugin) {
+            if (uniformSystemPlugin instanceof AbstractUniformSystemPlugin) {
                 return (UniformSystemPlugin) uniformSystemPlugin;
             }
         }

@@ -11,7 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -32,15 +35,9 @@ public class PluginManager {
     }
 
     public void initialization() throws Exception {
-        final File frameworkDir = new File(System.getProperty("java.io.tmpdir"), "KolaerCache-" + UUID.randomUUID().toString());
+        final File frameworkDir = new File(System.getProperty("java.io.tmpdir"), "KolaerCache");
 
         final Map<String, String> frameworkProperties = new HashMap<>();
-        frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "ru.kolaer.api.plugin, ru.kolaer.api.services, ru.kolaer.api.system, " +
-                "javafx.application, javafx.beans.property," +
-                "javafx.beans.value, javafx.collections, javafx.collections.transformation, javafx.event," +
-                "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.image, javafx.scene.input , javafx.scene.layout," +
-                "javafx.scene.text, javafx.stage, javax.swing, org.slf4j;version=1.7.7, ru.kolaer.api.mvp.viewmodel");
-        frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
         try {
             frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
@@ -48,6 +45,19 @@ public class PluginManager {
             LOG.error("Не удалось создать каталог для кэша OSGi!");
             throw e;
         }
+
+        frameworkProperties.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+        frameworkProperties.put("felix.log.level", "3");
+        frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
+
+        frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework, " +
+                "ru.kolaer.api.plugin, ru.kolaer.api.services, ru.kolaer.api.system, ru.kolaer.api.mvp.view, ru.kolaer.api.mvp.presenter, ru.kolaer.api.mvp.viewmodel");
+
+        frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
+                "javafx.application, javafx.beans.property," +
+                "javafx.beans.value, javafx.collections, javafx.collections.transformation, javafx.event," +
+                "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.image, javafx.scene.input , javafx.scene.layout," +
+                "javafx.scene.text, javafx.stage, javax.swing, org.slf4j;version=1.7.7");
 
         try {
             final FrameworkFactory factory = new FrameworkFactory();

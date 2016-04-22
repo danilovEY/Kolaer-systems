@@ -1,6 +1,5 @@
 package ru.kolaer.client.javafx.mvp.view.impl;
 
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
@@ -9,6 +8,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ru.kolaer.api.plugin.UniformSystemApplication;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 
 import java.net.URLClassLoader;
@@ -31,7 +31,7 @@ public class VTabImpl implements VTab {
 	public VTabImpl(final URLClassLoader loader, final UniformSystemApplication app) {		
 		this.app = app;
 		this.tab = new Tab();
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			Thread.currentThread().setName("Инициализация вкладки: " + app.getName());
 			Thread.currentThread().setContextClassLoader(loader);		
 			
@@ -45,7 +45,7 @@ public class VTabImpl implements VTab {
 		this.tab.setStyle(".tab .tab:selected{-fx-background-color: #3c3c3c;} .tab.tab-label { -fx-text-fill: -fx-text-base-color; -fx-font-size: 18px;}");
 		final MenuItem openInWinodow = new MenuItem("Открыть в новом окне");
 		openInWinodow.setOnAction(e -> {
-			Platform.runLater(() -> {
+			Tools.runOnThreadFX(() -> {
 				if(this.stage == null) {
 					this.stage = new Stage();				
 					this.stage.setOnCloseRequest(event -> {
@@ -70,14 +70,14 @@ public class VTabImpl implements VTab {
 
 	@Override
 	public void setContent(final Node parent) {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			this.tab.setContent(parent);
 		});
 	}
 
 	@Override
 	public void closeTab() {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			if(this.stage != null) {
 				this.stage.close();
 			}

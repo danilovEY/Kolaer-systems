@@ -1,6 +1,5 @@
 package ru.kolaer.client.javafx.system;
 
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -9,6 +8,7 @@ import org.controlsfx.control.Notifications;
 import org.controlsfx.control.action.Action;
 import ru.kolaer.api.system.NotificationUS;
 import ru.kolaer.api.system.NotifyAction;
+import ru.kolaer.api.tools.Tools;
 
 /**
  * Реализация интерфейса для работы с оповещением.
@@ -40,7 +40,7 @@ public class NotificationUSImpl implements NotificationUS {
 	
 	@Override
 	public void showErrorNotify(final String title, final String text, final NotifyAction... actions) {	
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			final Notifications notify = this.addActions(Notifications.create(), actions);
 			notify.hideAfter(Duration.seconds(15));
 			notify.position(Pos.BOTTOM_CENTER);
@@ -60,7 +60,7 @@ public class NotificationUSImpl implements NotificationUS {
 	
 	@Override
 	public void showWarningNotify(final String title, final String text, final NotifyAction... actions) {		
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			final Notifications notify = this.addActions(Notifications.create(), actions);
 			notify.hideAfter(Duration.seconds(10));
 			notify.position(Pos.BOTTOM_CENTER);
@@ -110,7 +110,7 @@ public class NotificationUSImpl implements NotificationUS {
 
 	@Override
 	public void showSimpleNotify(final String title, final  String text, final Duration duration, final Pos pos, final NotifyAction... actions) {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			final Notifications notify = this.addActions(Notifications.create(), actions);
 			notify.hideAfter(duration);	
 			notify.position(pos);
@@ -125,7 +125,7 @@ public class NotificationUSImpl implements NotificationUS {
 
 	@Override
 	public void showInformationNotify(final String title, final String text, final Duration duration, final Pos pos, final NotifyAction... actions) {
-		Platform.runLater(() -> {
+		Tools.runOnThreadFX(() -> {
 			final Notifications notify = this.addActions(Notifications.create(), actions);
 			notify.hideAfter(duration);
 			notify.position(pos);

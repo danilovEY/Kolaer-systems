@@ -5,11 +5,16 @@ import ru.kolaer.api.mvp.view.VDialog;
 import ru.kolaer.client.javafx.mvp.view.impl.VSimpleDialog;
 
 public class PDialogImpl implements PDialog {
-	private VDialog view = new VSimpleDialog();
+	private VDialog view;
 	
 	public PDialogImpl() {
-		
+		this.view = new VSimpleDialog();
 	}
+
+	public PDialogImpl(final VDialog view) {
+		this.view = view;
+	}
+
 	
 	@Override
 	public void setView(final VDialog view) {

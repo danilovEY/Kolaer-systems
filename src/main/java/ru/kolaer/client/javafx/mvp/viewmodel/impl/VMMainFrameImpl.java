@@ -16,14 +16,17 @@ import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
-import ru.kolaer.client.javafx.services.*;
+import ru.kolaer.client.javafx.services.ServiceControlManager;
+import ru.kolaer.client.javafx.services.ServiceScreen;
+import ru.kolaer.client.javafx.services.SeviceUserIpAndHostName;
+import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
 import ru.kolaer.client.javafx.system.StatusBarUSImpl;
 import ru.kolaer.client.javafx.system.UISystemUSImpl;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitImpl;
 import ru.kolaer.client.javafx.tools.Resources;
-import ru.kolaer.client.javafx.tools.Tools;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -72,13 +75,11 @@ public class VMMainFrameImpl extends Application {
 	    	this.mainPane.setBottom(statusBar);
 	    	this.mainPane.setCenter(explorer.getContent());
 
-
-			editorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.").show();
 	    	final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
 	    	CompletableFuture.runAsync(() -> {
 	    		Thread.currentThread().setName("Добавление системны служб");	
-	    		this.servicesManager.addService(new UserPingService(), true);
-	    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
+	    		//this.servicesManager.addService(new UserPingService(), true);
+	    		//this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
 	    		threadStartService.shutdown();
 	    	}, threadStartService);
 	    	
@@ -87,37 +88,25 @@ public class VMMainFrameImpl extends Application {
 				Thread.currentThread().setName("Скан и добавление плагинов");
 
 				final PluginManager pluginManager = new PluginManager();
-				//new PluginReader(Resources.PATH_TO_DIR_WITH_PLUGINS).scanPlugins(explorer);
-
 
 				try {
 					pluginManager.initialization();
 				} catch (Exception e) {
-					e.printStackTrace();
+					LOG.error("Ошибка при инициализации менеджера плагинов!", e);
 				}
 
 				for(PluginBundle p :  pluginManager.getSearchPlugins().search()) {
 
-					System.out.println(p.getNamePlugin());
+					LOG.info("Plugin: {}", p.getNamePlugin());
 
 					try {
 						pluginManager.install(p);
 						p.start();
-						//p.getUniformSystemPlugin();
 						explorer.addPlugin(p.getUniformSystemPlugin());
 					} catch (BundleException e) {
-						e.printStackTrace();
-					} catch (Exception e) {
-						e.printStackTrace();
+						LOG.error("Ошибка при установке/запуска плагина: {}", p.getSymbolicNamePlugin(), e);
 					}
 				}
-
-
-
-					//System.out.println(p.getUniformSystemPlugin().getName());
-					//pm.getInfoToBundle().get(p).start();
-
-
 				threadScan.shutdown();
 			}, threadScan).exceptionally(t -> {
 				LOG.error("Ошибка при сканировании плагинов!", t);
