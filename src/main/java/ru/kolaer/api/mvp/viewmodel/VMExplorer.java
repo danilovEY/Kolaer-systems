@@ -15,7 +15,7 @@ public interface VMExplorer extends VComponentUI {
 	/**Добавить плагин.*/
 	void addPlugin(UniformSystemPlugin plugin);
 	/**Добавить плагин с его class loader'ом.*/
-	void addPlugin(UniformSystemPlugin plugin, final URLClassLoader jarClassLoaser);
+	void addPlugin(UniformSystemPlugin plugin, final URLClassLoader jarClassLoader);
 	/**Удалить плагин.*/
 	void removePlugin(UniformSystemPlugin plugin);
 	/**Удалить все плагины.*/
