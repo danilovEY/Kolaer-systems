@@ -7,8 +7,6 @@ import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.presenter.PSearchUsers;
@@ -26,18 +24,13 @@ import ru.kolaer.api.dao.entities.DbDataAll;
  * @author danilovey
  * @version 0.1
  */
-public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthdayObserver{
-	private final Logger LOG = LoggerFactory.getLogger(PTableWithUsersBithdayObserverImpl.class);
+public class PTableWithUsersBirthdayObserverImpl implements PTableWithUsersBirthdayObserver{
+	private final Logger LOG = LoggerFactory.getLogger(PTableWithUsersBirthdayObserverImpl.class);
 	/**View таблици.*/
 	private final VTableWithUsersBirthday table = new VTableWithUsersBirthdayImpl();
 	private final UniformSystemEditorKit editorKid;
 	
-	public PTableWithUsersBithdayObserverImpl() {
-		this(null);
-	}
-	
-	
-	public PTableWithUsersBithdayObserverImpl(final UniformSystemEditorKit editorKid) {
+	public PTableWithUsersBirthdayObserverImpl(final UniformSystemEditorKit editorKid) {
 		this.editorKid = editorKid;
 		this.initWithEditorKid();
 	}

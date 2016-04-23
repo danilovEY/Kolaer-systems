@@ -1,13 +1,11 @@
 package ru.kolaer.birthday.runnable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +14,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import ru.kolaer.api.mvp.presenter.PDialog;
-import ru.kolaer.birthday.mvp.presenter.PCalendar;
 import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
-import ru.kolaer.birthday.mvp.presenter.impl.PCalendarAffiliates;
-import ru.kolaer.birthday.mvp.presenter.impl.PCalendarAll;
-import ru.kolaer.birthday.mvp.presenter.impl.PCalendarKAER;
-import ru.kolaer.birthday.mvp.presenter.impl.PTableWithUsersBithdayObserverImpl;
+import ru.kolaer.birthday.mvp.presenter.impl.PTableWithUsersBirthdayObserverImpl;
 import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMMainFrameImpl;
 import ru.kolaer.api.plugin.UniformSystemApplication;
@@ -96,7 +89,7 @@ public class BirthdayApplication implements UniformSystemApplication {
 	private void initTable(VMMainFrame frameContent) {
 		ExecutorService service = Executors.newCachedThreadPool();
 		CompletableFuture.runAsync(() -> {
-			this.vmTable = new PTableWithUsersBithdayObserverImpl(this.editorKid);
+			this.vmTable = new PTableWithUsersBirthdayObserverImpl(this.editorKid);
 			frameContent.setVMTableWithUsersBirthday(this.vmTable);
 		}, service).exceptionally(t -> {
 			LOG.error("Ошибка!", t);
