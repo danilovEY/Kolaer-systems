@@ -23,6 +23,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.mashape.unirest</groupId>
+			<artifactId>unirest-java</artifactId>
+			<version>1.4.9</version>
+		</dependency>
+
+		<dependency>
 			<groupId>ru.kolaer</groupId>
 			<artifactId>ru.kolaer.api</artifactId>
 			<version>0.1</version>
