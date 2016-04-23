@@ -4,7 +4,7 @@ import ru.kolaer.birthday.mvp.presenter.ObserverCalendar;
 import ru.kolaer.birthday.mvp.presenter.PCalendar;
 import ru.kolaer.birthday.mvp.view.VCalendar;
 import ru.kolaer.birthday.mvp.view.impl.VCalendarImpl;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 
 /**
  * Реализация базовых методов для presenter'ов календарей.

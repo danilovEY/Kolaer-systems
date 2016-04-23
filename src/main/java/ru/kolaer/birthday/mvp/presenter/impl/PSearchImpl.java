@@ -9,10 +9,10 @@ import ru.kolaer.birthday.mvp.presenter.ObserverSearch;
 import ru.kolaer.birthday.mvp.presenter.PSearchUsers;
 import ru.kolaer.birthday.mvp.view.VSearchUsers;
 import ru.kolaer.birthday.mvp.view.impl.VSearchUsersImpl;
-import ru.kolaer.client.javafx.system.ServerStatus;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
-import ru.kolaer.server.dao.entities.DbBirthdayAll;
-import ru.kolaer.server.dao.entities.DbDataAll;
+import ru.kolaer.api.system.ServerStatus;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.dao.entities.DbBirthdayAll;
+import ru.kolaer.api.dao.entities.DbDataAll;
 
 public class PSearchImpl implements PSearchUsers {
 	private List<ObserverSearch> observers = new ArrayList<>();

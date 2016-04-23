@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
+import javafx.fxml.Initializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,9 +31,8 @@ import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
  * @author danilovey
  * @version 0.1
  */
-public class VMMainFrameImpl extends Application implements VMMainFrame {
-	/**Путь к view.*/
-	public static final URL FXML_VIEW = VMMainFrameImpl.class.getResource("/resources/birthdayView/VMainFrame.fxml");
+public class VMMainFrameImpl implements VMMainFrame, Initializable {
+
 	private final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
 	/**Presenter таблици.*/
 	private PTableWithUsersBirthdayObserver vmTable;
@@ -43,24 +44,6 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 	private BorderPane tablePane;
 	@FXML
 	private VBox paneWithCalendars;
-	
-	@FXML
-	public void initialize() {
-		this.calendarPane = new BorderPane();
-		this.paneWithCalendars.getChildren().add(this.calendarPane);
-	}
-	
-	@Override
-	public void start(final Stage primaryStage) throws Exception {	
-		try {
-			final Parent root = FXMLLoader.load(FXML_VIEW);
-			primaryStage.setScene(new Scene(root, 800, 600));
-		} catch(IOException ex) {
-			LOG.error("Ошибка при чтении {}", FXML_VIEW, ex);
-			
-		}
-		primaryStage.show();
-	}
 
 	@Override
 	public PTableWithUsersBirthdayObserver getVMTableWithUsersBirthday() {
@@ -98,5 +81,11 @@ public class VMMainFrameImpl extends Application implements VMMainFrame {
 			
 			this.paneWithCalendars.getChildren().add(this.paneWithCalendars.getChildren().size() - 1, calendarBut);
 		});
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		this.calendarPane = new BorderPane();
+		this.paneWithCalendars.getChildren().add(this.calendarPane);
 	}
 }

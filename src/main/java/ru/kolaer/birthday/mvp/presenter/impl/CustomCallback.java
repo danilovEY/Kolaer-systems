@@ -14,8 +14,8 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.util.Callback;
 import ru.kolaer.birthday.tools.Tools;
-import ru.kolaer.client.javafx.system.UserBirthdayAllDataBase;
-import ru.kolaer.client.javafx.system.UserDataBase;
+import ru.kolaer.api.system.UserBirthdayAllDataBase;
+import ru.kolaer.api.system.UserDataBase;
 
 /**
  * 

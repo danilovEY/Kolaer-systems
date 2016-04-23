@@ -7,6 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import ru.kolaer.api.mvp.presenter.PDialog;
 import ru.kolaer.birthday.mvp.presenter.PCalendar;
 import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
 import ru.kolaer.birthday.mvp.presenter.impl.PCalendarAffiliates;
@@ -23,9 +25,9 @@ import ru.kolaer.birthday.mvp.presenter.impl.PCalendarKAER;
 import ru.kolaer.birthday.mvp.presenter.impl.PTableWithUsersBithdayObserverImpl;
 import ru.kolaer.birthday.mvp.viewmodel.VMMainFrame;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMMainFrameImpl;
-import ru.kolaer.client.javafx.plugins.UniformSystemApplication;
-import ru.kolaer.client.javafx.system.ServerStatus;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
+import ru.kolaer.api.plugin.UniformSystemApplication;
+import ru.kolaer.api.system.ServerStatus;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 
 /**
  * Реализация контента модуля.
@@ -61,17 +63,18 @@ public class BirthdayApplication implements UniformSystemApplication {
 	}
 
 	@Override
-	public void run() throws Exception {
+	public void start() throws Exception {
 		if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.NOT_AVAILABLE){
-			this.editorKid.getUISystemUS().getDialog().showErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.");
-			return;
+			this.editorKid.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.").show();
+			//return;
 		}
 
 		if(this.mainPane == null){
-			try(final InputStream stream = this.getClass().getResourceAsStream("/birthdayView/VMainFrame.fxml")){
-				final FXMLLoader loader = new FXMLLoader();
-				this.mainPane = loader.load(stream);
-				final VMMainFrameImpl frame = loader.getController();
+			try{
+				final FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/birthdayView/VMainFrame.fxml"));
+				final VMMainFrameImpl frame = new VMMainFrameImpl();
+				loader.setController(frame);
+				this.mainPane = loader.load();
 				Platform.runLater(() -> {
 					root.setCenter(this.mainPane);
 					root.setPrefSize(800, 600);
@@ -99,7 +102,7 @@ public class BirthdayApplication implements UniformSystemApplication {
 			LOG.error("Ошибка!", t);
 			return null;
 		}).thenRunAsync(() -> {
-			CompletableFuture<PCalendar> cKaer = CompletableFuture.supplyAsync(() -> {
+			/*CompletableFuture<PCalendar> cKaer = CompletableFuture.supplyAsync(() -> {
 				final PCalendar calendarKAER = new PCalendarKAER(this.editorKid);
 				calendarKAER.registerObserver(this.vmTable);
 				return calendarKAER;
@@ -219,7 +222,7 @@ public class BirthdayApplication implements UniformSystemApplication {
 			} catch(final Exception ex){
 				LOG.error("Ошибка при добавлении календаря KolAER!", ex);
 			}			
-			service.shutdown();
+			service.shutdown();*/
 		}, service);
 	}
 }

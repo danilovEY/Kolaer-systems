@@ -3,8 +3,8 @@ package ru.kolaer.birthday.mvp.model.impl;
 import java.util.Date;
 
 import ru.kolaer.birthday.mvp.model.UserModel;
-import ru.kolaer.server.dao.entities.DbBirthdayAll;
-import ru.kolaer.server.dao.entities.DbDataAll;
+import ru.kolaer.api.dao.entities.DbBirthdayAll;
+import ru.kolaer.api.dao.entities.DbDataAll;
 
 /**
  * Реализация {@linkplain UserModel}.

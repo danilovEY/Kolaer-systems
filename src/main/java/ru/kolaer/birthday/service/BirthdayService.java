@@ -14,12 +14,12 @@ import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
 import ru.kolaer.birthday.tools.Tools;
-import ru.kolaer.client.javafx.services.Service;
-import ru.kolaer.client.javafx.system.NotifyAction;
-import ru.kolaer.client.javafx.system.ServerStatus;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
-import ru.kolaer.server.dao.entities.DbBirthdayAll;
-import ru.kolaer.server.dao.entities.DbDataAll;
+import ru.kolaer.api.services.Service;
+import ru.kolaer.api.system.NotifyAction;
+import ru.kolaer.api.system.ServerStatus;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.dao.entities.DbBirthdayAll;
+import ru.kolaer.api.dao.entities.DbDataAll;
 
 public class BirthdayService implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(BirthdayService.class);

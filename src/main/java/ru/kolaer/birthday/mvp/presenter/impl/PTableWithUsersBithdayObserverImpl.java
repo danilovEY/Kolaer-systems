@@ -16,9 +16,9 @@ import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBirthdayImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
-import ru.kolaer.server.dao.entities.DbBirthdayAll;
-import ru.kolaer.server.dao.entities.DbDataAll;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.dao.entities.DbBirthdayAll;
+import ru.kolaer.api.dao.entities.DbDataAll;
 
 /**
  * Presenter таблици с сотрудниками.
@@ -80,66 +80,18 @@ public class PTableWithUsersBithdayObserverImpl implements PTableWithUsersBirthd
 	@Override
 	public void showTodayBirthday() {
 		CompletableFuture.runAsync(() -> {
-			final Service<Void> service = new Service<Void>() {
-				@Override
-				protected Task<Void> createTask() {
-					return new Task<Void>() {
-						@Override
-						protected Void call() throws Exception {
-							table.clear();
-							this.updateTitle("КолАтомэнергоремонт");
-							this.updateMessage("Загрузка данных с сервера");
-							this.updateProgress(0, 10);
-							final DbDataAll[] users = editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
-							this.updateProgress(users.length, users.length * 2);
-							this.updateMessage("Чтение данных");
-							int index = 0;
-							for(final DbDataAll user : users) {
-								final UserModel userModel = new UserModelImpl(user);
-								table.addData(userModel);
-								this.updateProgress(index, users.length * 2);
-								index++;
-							}
-							this.updateProgress(users.length * 2, users.length * 2);
-							return null;
-						}
-					};
-				}
-			};
-			service.start();
-			this.editorKid.getUISystemUS().getDialog().showLoadingDialog(service);
-		}).exceptionally(t -> {
-			LOG.error("Ошибка!", t);
-			return null;
-		}).thenRunAsync(() -> {
-			final Service<Void> service = new Service<Void>() {
-				@Override
-				protected Task<Void> createTask() {
-					return new Task<Void>() {
-						@Override
-						protected Void call() throws Exception {
-							this.updateTitle("Филиалы");
-							this.updateMessage("Загрузка данных с сервера");
-							this.updateProgress(0, 10);
-							final DbBirthdayAll[] users = editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
-							this.updateProgress(users.length, users.length * 2);
-							this.updateMessage("Чтение данных");
-							int index = 0;
-							for(final DbBirthdayAll user : users) {
-								final UserModel userModel = new UserModelImpl(user);
-								userModel.setOrganization(user.getOrganization());
-								table.addData(userModel);
-								this.updateProgress(index, users.length * 2);
-								index++;
-							}
-							this.updateProgress(users.length * 2, users.length * 2);
-							return null;
-						}
-					};
-				}
-			};
-			service.start();
-			this.editorKid.getUISystemUS().getDialog().showLoadingDialog(service);
+			final DbDataAll[] usersKolaer = editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+			for(final DbDataAll user : usersKolaer) {
+				final UserModel userModel = new UserModelImpl(user);
+				table.addData(userModel);
+			}
+
+			final DbBirthdayAll[] usersOther = editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
+			for(final DbBirthdayAll user : usersOther) {
+				final UserModel userModel = new UserModelImpl(user);
+				userModel.setOrganization(user.getOrganization());
+				table.addData(userModel);
+			}
 		});
 	}
 

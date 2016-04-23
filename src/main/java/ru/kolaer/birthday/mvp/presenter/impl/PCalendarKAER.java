@@ -8,10 +8,10 @@ import java.util.List;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.presenter.PCalendar;
-import ru.kolaer.client.javafx.system.DefaultProgressBar;
-import ru.kolaer.client.javafx.system.ProgressBarObservable;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKit;
-import ru.kolaer.server.dao.entities.DbDataAll;
+import ru.kolaer.api.system.DefaultProgressBar;
+import ru.kolaer.api.system.ProgressBarObservable;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.dao.entities.DbDataAll;
 
 /**
  * Presenter календаря КолАЕРа.
