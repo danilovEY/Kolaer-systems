@@ -1,5 +1,6 @@
 package ru.kolaer.api.plugin;
 
+import java.util.Collection;
 import java.util.List;
 
 import ru.kolaer.api.mvp.view.VComponentUI;
@@ -20,7 +21,7 @@ public interface UniformSystemPlugin extends VComponentUI {
 	String getIcon();
 
 	/**Получить коллекцию служб плагина.*/
-	List<Service> getServices();
+	Collection<Service> getServices();
 
 	/**Запустить работу плагина.*/
 	void start() throws Exception;
