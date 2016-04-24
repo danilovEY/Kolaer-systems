@@ -12,7 +12,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -95,17 +94,30 @@ public class VMMainFrameImpl extends Application {
 					LOG.error("Ошибка при инициализации менеджера плагинов!", e);
 				}
 
-				for(PluginBundle p :  pluginManager.getSearchPlugins().search()) {
+				for(final PluginBundle p :  pluginManager.getSearchPlugins().search()) {
 
 					LOG.info("Plugin: {}", p.getNamePlugin());
 
-					try {
+					/*try {
 						pluginManager.install(p);
-						p.start();
-						explorer.addPlugin(p.getUniformSystemPlugin());
+
+						Enumeration<URL> entrs = p.getBundle().findEntries("/", "*.class", true);
+						while (entrs.hasMoreElements()) {
+							URL url = entrs.nextElement();
+							Class cls = p.getBundle().loadClass(url.getPath().substring(1,url.getPath().length() - ".class".length()).replace("/","."));
+							for(Class inter : cls.getInterfaces()) {
+								System.out.println(inter);
+							}
+							//System.out.println(cls.getAnnotations());
+						}
+
+						//p.start();
+						//explorer.addPlugin(p.getUniformSystemPlugin());
 					} catch (BundleException e) {
 						LOG.error("Ошибка при установке/запуска плагина: {}", p.getSymbolicNamePlugin(), e);
-					}
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}*/
 				}
 				threadScan.shutdown();
 			}, threadScan).exceptionally(t -> {

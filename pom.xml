@@ -4,7 +4,7 @@
 
 	<groupId>ru.kolaer</groupId>
 	<artifactId>ru.kolaer.client.usa</artifactId>
-	<version>0.1</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
 	<name>ru.kolaer.client.usa</name>
@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>ru.kolaer</groupId>
 			<artifactId>ru.kolaer.api</artifactId>
-			<version>0.1</version>
+			<version>1.0</version>
 		</dependency>
 
 		<dependency>

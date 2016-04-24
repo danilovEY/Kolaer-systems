@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugin.UniformSystemPlugin;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.LoadFXML;
@@ -81,7 +81,7 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements VTabExpl
     }
 
     @Override
-    public void showPlugin(final int index) {
+    public void showPlugin(final String name) {
         this.pluginsTabPane.getSelectionModel().select(index);
     }
 

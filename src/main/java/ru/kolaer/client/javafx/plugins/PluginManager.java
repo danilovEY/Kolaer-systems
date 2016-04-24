@@ -60,7 +60,7 @@ public class PluginManager {
                 "javafx.beans.value, javafx.collections, javafx.collections.transformation, javafx.event," +
                 "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.image, " +
                 "javafx.scene.input , javafx.scene.layout, javafx.util, javafx.concurrent," +
-                "javafx.scene.text, javafx.stage, javax.swing, javafx.scene.control.cell, org.slf4j;version=1.7.7");
+                "javafx.scene.text, javafx.stage, javax.swing, com.sun.javafx.scene.control.skin, javafx.scene.control.cell, org.slf4j;version=1.7.7");
 
         try {
             final FrameworkFactory factory = new FrameworkFactory();

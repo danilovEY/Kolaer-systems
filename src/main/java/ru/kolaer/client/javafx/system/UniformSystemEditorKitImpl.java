@@ -11,15 +11,20 @@ import ru.kolaer.api.system.UniformSystemEditorKit;
  * @version 0.1
  */
 public class UniformSystemEditorKitImpl implements UniformSystemEditorKit {
-	private NetworkUS network = new NetworkUSImpl();
-	private UISystemUS uiSystem;
-	
-	public UniformSystemEditorKitImpl(final UISystemUS uiSystem) {
-		this.uiSystem = uiSystem;
+	private static UniformSystemEditorKit instance;
+
+	public static UniformSystemEditorKit getInstance() {
+		if(instance == null)
+			instance = new UniformSystemEditorKitImpl();
+
+		return instance;
 	}
-	
-	public UniformSystemEditorKitImpl() {
-		this.uiSystem = null;
+
+	private NetworkUS network;
+	private UISystemUS uiSystem;
+
+	private UniformSystemEditorKitImpl() {
+		this.network = new NetworkUSImpl();
 	}
 
 	@Override
@@ -33,12 +38,12 @@ public class UniformSystemEditorKitImpl implements UniformSystemEditorKit {
 	}
 
 	@Override
-	public void setUSNetwork(NetworkUS networkUS) {
+	public void setUSNetwork(final NetworkUS networkUS) {
 		this.network = networkUS;
 	}
 
 	@Override
-	public void setUISystemUS(UISystemUS uiSystemUS) {
+	public void setUISystemUS(final UISystemUS uiSystemUS) {
 		this.uiSystem = uiSystemUS;
 	}	
 }
