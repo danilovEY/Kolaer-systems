@@ -6,14 +6,12 @@ import javafx.scene.control.TabPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.LoadFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
-import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import java.util.ArrayList;
@@ -29,20 +27,14 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements VTabExpl
     /**Вкладочная панель.*/
     @FXML
     protected TabPane pluginsTabPane;
-    /**Менеджер служб.*/
-    protected final ServiceControlManager servicesManager;
-    /**Системные инструменты.*/
-    protected final UniformSystemEditorKit editorKit;
     /**Ключ - Имя вкладки, значение - Presenter вкладки.*/
     protected Map<String, PTab> pluginMap = new HashMap<>();
     protected List<UniformSystemPlugin> plugins = new ArrayList<>();
     /**Коллекция обсерверов.*/
     protected List<ExplorerObserver> observers = new ArrayList<>();
 
-    public AbstractVMTabExplorer(final ServiceControlManager servicesManager, final UniformSystemEditorKit editorKid) {
+    public AbstractVMTabExplorer() {
         super(Resources.V_TAB_EXPLORER);
-        this.servicesManager = servicesManager;
-        this.editorKit = editorKid;
     }
 
     @Override
@@ -82,12 +74,20 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements VTabExpl
 
     @Override
     public void showPlugin(final String name) {
-        this.pluginsTabPane.getSelectionModel().select(index);
+        if(this.pluginMap.containsKey(name)) {
+            this.pluginsTabPane.getSelectionModel().select(this.pluginMap.get(name).getView().getContent());
+        }
     }
 
     @Override
-    public void showPlugin(final UniformSystemPlugin plugin) {
-        this.pluginsTabPane.getSelectionModel().select(pluginMap.get(plugin.getApplication().getName()).getView().getContent());
+    public void showPlugin(final UniformSystemPlugin uniformSystemPlugin) {
+        this.pluginMap.keySet().forEach(pluginNameTab -> {
+            final PTab tab = this.pluginMap.get(pluginNameTab);
+            if(tab.getModel() == uniformSystemPlugin) {
+                this.showPlugin(pluginNameTab);
+                return;
+            }
+        });
     }
 
     @Override

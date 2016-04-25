@@ -10,12 +10,12 @@ import ru.kolaer.api.system.UniformSystemEditorKit;
  * @author danilovey
  * @version 0.1
  */
-public class UniformSystemEditorKitImpl implements UniformSystemEditorKit {
+public class UniformSystemEditorKitSingleton implements UniformSystemEditorKit {
 	private static UniformSystemEditorKit instance;
 
 	public static UniformSystemEditorKit getInstance() {
 		if(instance == null)
-			instance = new UniformSystemEditorKitImpl();
+			instance = new UniformSystemEditorKitSingleton();
 
 		return instance;
 	}
@@ -23,7 +23,7 @@ public class UniformSystemEditorKitImpl implements UniformSystemEditorKit {
 	private NetworkUS network;
 	private UISystemUS uiSystem;
 
-	private UniformSystemEditorKitImpl() {
+	private UniformSystemEditorKitSingleton() {
 		this.network = new NetworkUSImpl();
 	}
 

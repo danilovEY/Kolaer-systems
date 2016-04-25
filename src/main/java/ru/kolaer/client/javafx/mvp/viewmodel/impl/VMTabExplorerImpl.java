@@ -2,12 +2,11 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugin.UniformSystemPlugin;
-import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
-import ru.kolaer.client.javafx.services.ServiceControlManager;
+import ru.kolaer.client.javafx.system.SettingsSingleton;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -26,10 +25,6 @@ import java.util.concurrent.Executors;
 public class VMTabExplorerImpl extends AbstractVMTabExplorer {
 	private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerImpl.class);
 	private transient boolean openASUP = true;
-	
-	public VMTabExplorerImpl(final ServiceControlManager servicesManager, final UniformSystemEditorKit editorKid) {
-		super(servicesManager, editorKid);
-	}
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources) {
@@ -42,17 +37,17 @@ public class VMTabExplorerImpl extends AbstractVMTabExplorer {
 	}
 
 	@Override
-	public void addPlugin(final UniformSystemPlugin plugin, final URLClassLoader jarClassLoaser) {
+	public void addPlugin(final UniformSystemPlugin plugin, final URLClassLoader jarClassLoader) {
 		final ExecutorService threadInitPlugin= Executors.newFixedThreadPool(3);
 		CompletableFuture.supplyAsync(() -> {
-			Thread.currentThread().setContextClassLoader(jarClassLoaser);
+			Thread.currentThread().setContextClassLoader(jarClassLoader);
 			Thread.currentThread().setName("Инициализация плангина "+plugin.getName()+" в виде вкладки");
 			try {
-				plugin.initialization(this.editorKit);
+				plugin.initialization(SettingsSingleton.getInstance().getUniformSystemEditorKit());
 				this.plugins.add(plugin);
 				if(plugin.getServices() != null) {
 					Thread.currentThread().setName("Добавление служб из плагина: " + plugin.getName());
-					plugin.getServices().parallelStream().forEach(this.servicesManager::addService);
+					plugin.getServices().parallelStream().forEach(SettingsSingleton.getInstance().getServiceControlManager()::addService);
 				}
 			} catch (final Exception e) {
 				LOG.error("Ошибка при инициализации плагина: {}", plugin.getName(), e);
@@ -65,12 +60,12 @@ public class VMTabExplorerImpl extends AbstractVMTabExplorer {
 			return null;
 		}).thenApplyAsync((plg) -> {
 			if(plg != null && plg.getApplication() != null) {
-				final PTab tabPlugin = new PTabImpl(jarClassLoaser, plg, this.editorKit);
+				final PTab tabPlugin = new PTabImpl(jarClassLoader, plg, this.editorKit);
 				this.pluginMap.put(plg.getApplication().getName(), tabPlugin);
 				return tabPlugin;
 			} else {
 				try{
-					jarClassLoaser.close();
+					jarClassLoader.close();
 				} catch(final Exception e){
 					LOG.error("Ошибка при закритии class loader плагина: {}", plugin.getName());
 					this.editorKit.getUISystemUS().getDialog().createErrorDialog(plugin.getName(), "Ошибка при закритии class loader плагина!").show();

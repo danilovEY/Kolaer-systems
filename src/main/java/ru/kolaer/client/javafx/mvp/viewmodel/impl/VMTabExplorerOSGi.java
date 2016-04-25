@@ -1,24 +1,20 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.mvp.viewmodel.PluginOSGi;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
-import ru.kolaer.client.javafx.plugins.PluginManager;
-import ru.kolaer.client.javafx.services.ServiceControlManager;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
 /**
  * Created by Danilov on 15.04.2016.
  */
 public class VMTabExplorerOSGi extends AbstractVMTabExplorer implements PluginOSGi {
-    private PluginManager pluginManager;
 
-    public VMTabExplorerOSGi(final PluginManager pluginManager, final ServiceControlManager servicesManager, final UniformSystemEditorKit editorKid) {
-        super(servicesManager, editorKid);
-        this.pluginManager = pluginManager;
+    public VMTabExplorerOSGi() {
+
     }
 
 
@@ -43,6 +39,11 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer implements PluginOS
     }
 
     @Override
+    public void addAllPlugins(Collection<UniformSystemPlugin> collection) {
+
+    }
+
+    @Override
     public void removePlugin(UniformSystemPlugin plugin) {
 
     }
@@ -52,11 +53,13 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer implements PluginOS
 
     }
 
-    public PluginManager getPluginManager() {
-        return pluginManager;
+    @Override
+    public void addTabPlugin(String tabName, UniformSystemPlugin uniformSystemPlugin) {
+
     }
 
-    public void setPluginManager(PluginManager pluginManager) {
-        this.pluginManager = pluginManager;
+    @Override
+    public void removeTabPlugin(String name) {
+
     }
 }
