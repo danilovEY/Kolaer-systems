@@ -1,9 +1,7 @@
-package ru.kolaer.api.restful.controller.request.obj;
+package ru.kolaer.api.mvp.model;
 
 import java.util.Collections;
 import java.util.List;
-
-import ru.kolaer.api.dao.entities.DbBirthdayAll;
 
 public class RequestDbBirthdayAllList {
 	private List<DbBirthdayAll> birthdayList;

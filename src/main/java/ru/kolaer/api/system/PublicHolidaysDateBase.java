@@ -1,6 +1,6 @@
 package ru.kolaer.api.system;
 
-import ru.kolaer.api.dao.entities.PublicHolidays;
+import ru.kolaer.api.mvp.model.PublicHolidays;
 
 public interface PublicHolidaysDateBase {
 	PublicHolidays[] getPublicHolidaysInThisMonth();

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.kolaer.api.dao.entities;
+package ru.kolaer.api.mvp.model;
 
 import java.io.Serializable;
 import java.util.Date;

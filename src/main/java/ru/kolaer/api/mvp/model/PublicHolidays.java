@@ -1,4 +1,4 @@
-package ru.kolaer.api.dao.entities;
+package ru.kolaer.api.mvp.model;
 
 public class PublicHolidays {
 	private JSONDate date;

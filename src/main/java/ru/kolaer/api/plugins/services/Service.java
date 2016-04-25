@@ -1,4 +1,4 @@
-package ru.kolaer.api.services;
+package ru.kolaer.api.plugins.services;
 
 /**Интерфейс службы.*/
 public interface Service extends Runnable {

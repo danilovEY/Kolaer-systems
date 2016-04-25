@@ -1,10 +1,10 @@
-package ru.kolaer.api.plugin;
+package ru.kolaer.api.plugins;
 
+import java.net.URI;
 import java.util.Collection;
-import java.util.List;
 
 import ru.kolaer.api.mvp.view.VComponentUI;
-import ru.kolaer.api.services.Service;
+import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 
 /**
@@ -18,7 +18,7 @@ public interface UniformSystemPlugin extends VComponentUI {
 	void initialization(UniformSystemEditorKit editorKid) throws Exception;
 
 	/**Получить путь к ресурсу иконки.*/
-	String getIcon();
+	URI getIcon();
 
 	/**Получить коллекцию служб плагина.*/
 	Collection<Service> getServices();

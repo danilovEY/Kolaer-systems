@@ -1,4 +1,4 @@
-package ru.kolaer.api.dao.entities;
+package ru.kolaer.api.mvp.model;
 
 public class JSONDate {
 	private int day;
