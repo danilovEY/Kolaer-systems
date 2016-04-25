@@ -2,7 +2,7 @@ package ru.kolaer.client.javafx.plugins.main;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugin.UniformSystemPlugin;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
 
 /**

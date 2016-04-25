@@ -2,8 +2,7 @@ package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugin.UniformSystemApplication;
-import ru.kolaer.api.plugin.UniformSystemPlugin;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.VTab;
@@ -23,8 +22,6 @@ public class PTabImpl implements PTab {
 	private final Logger LOG = LoggerFactory.getLogger(PTabImpl.class);
 	/**Плагин.*/
 	private final UniformSystemPlugin plugin;
-	/**Приложение плагина.*/
-	private final UniformSystemApplication app;
 	/**View.*/
 	private final VTab view;
 	/**Флаг активации вкладки.*/

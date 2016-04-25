@@ -12,11 +12,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
@@ -29,6 +31,7 @@ import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -70,7 +73,7 @@ public class VMMainFrameImpl extends Application {
 			editorKit.setUISystemUS(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
 	    	
 	    	//Инициализация вкладочного explorer'а. 
-	    	final VMExplorer explorer = new VMTabExplorerOSGi();
+	    	final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
 
 	    	this.mainPane.setBottom(statusBar);
 	    	this.mainPane.setCenter(explorer.getContent());
@@ -86,7 +89,6 @@ public class VMMainFrameImpl extends Application {
 	    	final ExecutorService threadScan = Executors.newSingleThreadExecutor();
 	    	CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Скан и добавление плагинов");
-
 				final PluginManager pluginManager = new PluginManager();
 
 				try {
@@ -95,30 +97,47 @@ public class VMMainFrameImpl extends Application {
 					LOG.error("Ошибка при инициализации менеджера плагинов!", e);
 				}
 
-				for(final PluginBundle p :  pluginManager.getSearchPlugins().search()) {
+				for(final PluginBundle pluginBundle :  pluginManager.getSearchPlugins().search()) {
+					LOG.info("Plugin: {}", pluginBundle.getSymbolicNamePlugin());
 
-					LOG.info("Plugin: {}", p.getNamePlugin());
+					try {
+						pluginManager.install(pluginBundle);
 
-					/*try {
-						pluginManager.install(p);
-
-						Enumeration<URL> entrs = p.getBundle().findEntries("/", "*.class", true);
-						while (entrs.hasMoreElements()) {
-							URL url = entrs.nextElement();
-							Class cls = p.getBundle().loadClass(url.getPath().substring(1,url.getPath().length() - ".class".length()).replace("/","."));
-							for(Class inter : cls.getInterfaces()) {
-								System.out.println(inter);
+						final ExecutorService initPluginThread = Executors.newCachedThreadPool();
+						CompletableFuture.supplyAsync(() -> {
+							final UniformSystemPlugin uniformSystemPlugin = pluginBundle.getUniformSystemPlugin();
+							try {
+								uniformSystemPlugin.initialization(UniformSystemEditorKitSingleton.getInstance());
+							} catch (final Exception e) {
+								LOG.error("Ошибка при инициализации плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
+								try {
+									pluginManager.uninstall(pluginBundle);
+								} catch (final BundleException e1) {
+									LOG.error("Ошибка при удалении плагина: {}",pluginBundle.getSymbolicNamePlugin(), e1);
+								}
 							}
-							//System.out.println(cls.getAnnotations());
-						}
 
-						//p.start();
-						//explorer.addPlugin(p.getUniformSystemPlugin());
-					} catch (BundleException e) {
-						LOG.error("Ошибка при установке/запуска плагина: {}", p.getSymbolicNamePlugin(), e);
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}*/
+							return pluginBundle;
+						}, initPluginThread).thenAcceptAsync(plugin -> {
+							final Collection<Service> pluginServices = plugin.getUniformSystemPlugin().getServices();
+							if(pluginServices != null) {
+								pluginServices.parallelStream().forEach(this.servicesManager::addService);
+							}
+
+							final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
+							explorer.addTabPlugin(tabName, plugin);
+						}).exceptionally(t -> {
+							return null;
+						});
+					} catch (final BundleException e) {
+						LOG.error("Ошибка при установке/запуска плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
+						try {
+							pluginManager.uninstall(pluginBundle);
+						} catch (BundleException e1) {
+							LOG.error("Ошибка при удалении плагина: {}",pluginBundle.getSymbolicNamePlugin(), e1);
+						}
+						continue;
+					}
 				}
 				threadScan.shutdown();
 			}, threadScan).exceptionally(t -> {

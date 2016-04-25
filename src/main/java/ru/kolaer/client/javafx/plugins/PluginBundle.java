@@ -24,6 +24,7 @@ public abstract class PluginBundle {
     private BundleContext bundleContext;
     private boolean isInstall = false;
     private boolean isStart = false;
+    private UniformSystemPlugin uniformSystemPlugin;
 
 
     public UniformSystemPlugin getUniformSystemPlugin() {
@@ -37,9 +38,7 @@ public abstract class PluginBundle {
             return null;
         }
 
-
-
-        return null;
+        return this.uniformSystemPlugin;
     }
 
     public void start() throws BundleException {
@@ -68,6 +67,10 @@ public abstract class PluginBundle {
         }
     }
 
+    protected void setUniformSystemPlugin(final UniformSystemPlugin plugin) {
+        this.uniformSystemPlugin = plugin;
+    }
+
     protected void setInstall(final boolean install) {
         this.isInstall = install;
     }
@@ -76,7 +79,7 @@ public abstract class PluginBundle {
         return bundle;
     }
 
-    public void setBundle(Bundle bundle) {
+    protected void setBundle(Bundle bundle) {
         this.bundle = bundle;
     }
 
@@ -84,7 +87,7 @@ public abstract class PluginBundle {
         return bundleContext;
     }
 
-    public void setBundleContext(BundleContext bundleContext) {
+    protected void setBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
     }
 
@@ -100,7 +103,7 @@ public abstract class PluginBundle {
         return symbolicNamePlugin;
     }
 
-    public void setSymbolicNamePlugin(String symbolicNamePlugin) {
+    protected void setSymbolicNamePlugin(String symbolicNamePlugin) {
         this.symbolicNamePlugin = symbolicNamePlugin;
     }
 
@@ -108,7 +111,7 @@ public abstract class PluginBundle {
         return uriPlugin;
     }
 
-    public void setUriPlugin(URI uriPlugin) {
+    protected void setUriPlugin(URI uriPlugin) {
         this.uriPlugin = uriPlugin;
     }
 
@@ -116,7 +119,7 @@ public abstract class PluginBundle {
         return version;
     }
 
-    public void setVersion(String version) {
+    protected void setVersion(String version) {
         this.version = version;
     }
 
@@ -124,7 +127,7 @@ public abstract class PluginBundle {
         return pathPlugin;
     }
 
-    public void setPathPlugin(String pathPlugin) {
+    protected void setPathPlugin(String pathPlugin) {
         this.pathPlugin = pathPlugin;
     }
 
@@ -132,7 +135,7 @@ public abstract class PluginBundle {
         return namePlugin;
     }
 
-    public void setNamePlugin(String namePlugin) {
+    protected void setNamePlugin(String namePlugin) {
         this.namePlugin = namePlugin;
     }
 }

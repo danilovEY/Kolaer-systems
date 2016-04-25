@@ -1,7 +1,5 @@
 package ru.kolaer.client.javafx.plugins.main;
 
-import ru.kolaer.api.plugin.UniformSystemApplication;
-import ru.kolaer.client.javafx.plugins.UniformSystemApplicationAdapter;
 import ru.kolaer.client.javafx.plugins.UniformSystemPluginAdapter;
 import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
 
@@ -11,25 +9,8 @@ import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
  * @version 0.1
  */
 public class MainUniformSystemPlugin extends UniformSystemPluginAdapter {
-	/**Модель имплеминтируищая метод для завешения приложения.*/
-	private final UniformSystemApplicationAdapter app = new UniformSystemApplicationAdapter() {
-		@Override
-		public void stop() {
-			System.exit(-1);
-		}
-		
-		@Override
-		public String getName() {
-			return "Main";
-		}
-	};
 	@Override
-	public String getName() {
-		return app.getName();
-	}
-	
-	@Override
-	public UniformSystemApplication getApplication() {
-		return app;
+	public void stop() {
+		System.exit(-1);
 	}
 }

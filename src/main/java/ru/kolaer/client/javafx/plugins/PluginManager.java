@@ -8,13 +8,12 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.launch.Framework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URL;
+import java.util.*;
 
 
 /**
@@ -90,6 +89,34 @@ public class PluginManager {
             pluginBundle.setBundle(bundle);
             pluginBundle.setBundleContext(this.context);
             pluginBundle.setInstall(true);
+
+            final Enumeration<URL> entrs = bundle.findEntries("/", "*.class", true);
+            while (entrs.hasMoreElements()) {
+                final URL url = entrs.nextElement();
+                final String classPath = url.getPath().substring(1,url.getPath().length() - ".class".length());
+                Class cls = null;
+
+                try {
+                    cls = bundle.loadClass(classPath.replace("/","."));
+                } catch (ClassNotFoundException e) {
+                    LOG.error("Ошибка при чтении класса: {}", classPath, e);
+                    continue;
+                }
+
+                for(Class inter : cls.getInterfaces()) {
+                    if(inter == UniformSystemPlugin.class) {
+                        try {
+                            final UniformSystemPlugin plugin = (UniformSystemPlugin) inter.newInstance();
+                            pluginBundle.setUniformSystemPlugin(plugin);
+                            return true;
+                        } catch (InstantiationException | IllegalAccessException e) {
+                           LOG.error("Ошибка при создании объекта: {}", pluginBundle.getSymbolicNamePlugin(), e);
+                            break;
+                        }
+                    }
+                }
+            }
+
         } else {
             LOG.error("URL plugin: {} is null!", pluginBundle.getSymbolicNamePlugin());
             return false;
@@ -114,6 +141,7 @@ public class PluginManager {
             pluginBundle.setBundle(null);
             pluginBundle.setBundleContext(null);
             pluginBundle.setInstall(false);
+            pluginBundle.setUniformSystemPlugin(null);
         }
 
         return true;

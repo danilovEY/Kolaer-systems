@@ -1,6 +1,5 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
-import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 
 import java.net.URL;
@@ -24,7 +23,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public void addPlugin(PluginBundle pluginBundle) {
-        this.addTabPlugin(pluginBundle.getNamePlugin(), pluginBundle.getUniformSystemPlugin());
+        this.addTabPlugin(pluginBundle.getNamePlugin(), pluginBundle);
     }
 
     @Override
@@ -44,8 +43,8 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
 
     @Override
-    public void addTabPlugin(String tabName, UniformSystemPlugin uniformSystemPlugin) {
-        
+    public void addTabPlugin(String tabName, PluginBundle uniformSystemPlugin) {
+
     }
 
     @Override
