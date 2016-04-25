@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.services.Service;
+import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import java.util.concurrent.TimeUnit;
@@ -21,11 +21,6 @@ public class UserPingService implements Service {
 	/**Имя пользователя.*/
 	private final String username = System.getProperty("user.name");
 	private boolean isRunning = false;
-	
-	@Override
-	public void setRunningStatus(final boolean isRun) {
-		this.isRunning = isRun;
-	}
 
 	@Override
 	public boolean isRunning() {

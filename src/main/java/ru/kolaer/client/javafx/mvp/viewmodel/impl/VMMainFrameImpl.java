@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
@@ -65,11 +66,11 @@ public class VMMainFrameImpl extends Application {
 	    	statusBar.setAlignment(Pos.CENTER_RIGHT);
 	    	statusBar.setStyle("-fx-background-color: #66CCFF");
 	    	
-	    	final UniformSystemEditorKit editorKit = new UniformSystemEditorKitSingleton(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
+	    	final UniformSystemEditorKit editorKit = UniformSystemEditorKitSingleton.getInstance();
+			editorKit.setUISystemUS(new UISystemUSImpl(new StatusBarUSImpl(statusBar)));
 	    	
 	    	//Инициализация вкладочного explorer'а. 
-	    	final VMTabExplorerImpl explorer = new VMTabExplorerImpl(this.servicesManager, editorKit);
-	    	editorKit.getUISystemUS().setExplorer(explorer);
+	    	final VMExplorer explorer = new VMTabExplorerOSGi();
 
 	    	this.mainPane.setBottom(statusBar);
 	    	this.mainPane.setCenter(explorer.getContent());

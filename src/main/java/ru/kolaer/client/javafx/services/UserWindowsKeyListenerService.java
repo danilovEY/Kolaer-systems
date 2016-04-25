@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.services.Service;
+import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.tools.Resources;
 import ru.kolaer.client.javafx.tools.User32;
 import ru.kolaer.client.javafx.tools.User32.MSG;
@@ -42,11 +42,6 @@ public class UserWindowsKeyListenerService implements Service {
 	 */
 	public UserWindowsKeyListenerService() {
 		this.restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-	}
-
-	@Override
-	public void setRunningStatus(boolean isRun) {
-		this.isRun = isRun;
 	}
 
 	@Override

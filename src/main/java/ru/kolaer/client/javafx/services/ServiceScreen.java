@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.dao.entities.PackageNetwork;
-import ru.kolaer.api.services.Service;
+import ru.kolaer.api.mvp.model.PackageNetwork;
+import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import javax.imageio.ImageIO;
@@ -61,11 +61,6 @@ public class ServiceScreen implements Service {
 				return;
 			}
 		}
-	}
-
-	@Override
-	public void setRunningStatus(final boolean isRun) {
-		this.isRun = isRun;
 	}
 
 	@Override

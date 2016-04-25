@@ -5,12 +5,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.LoadFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
+import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
 import ru.kolaer.client.javafx.tools.Resources;
 
@@ -29,7 +29,7 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements VTabExpl
     protected TabPane pluginsTabPane;
     /**Ключ - Имя вкладки, значение - Presenter вкладки.*/
     protected Map<String, PTab> pluginMap = new HashMap<>();
-    protected List<UniformSystemPlugin> plugins = new ArrayList<>();
+    protected List<PluginBundle> plugins = new ArrayList<>();
     /**Коллекция обсерверов.*/
     protected List<ExplorerObserver> observers = new ArrayList<>();
 
@@ -80,10 +80,10 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements VTabExpl
     }
 
     @Override
-    public void showPlugin(final UniformSystemPlugin uniformSystemPlugin) {
+    public void showPlugin(final PluginBundle uniformSystemPlugin) {
         this.pluginMap.keySet().forEach(pluginNameTab -> {
             final PTab tab = this.pluginMap.get(pluginNameTab);
-            if(tab.getModel() == uniformSystemPlugin) {
+            if(tab.getModel() == uniformSystemPlugin.getUniformSystemPlugin()) {
                 this.showPlugin(pluginNameTab);
                 return;
             }
@@ -92,11 +92,11 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements VTabExpl
 
     @Override
     public void notifyPlugins(final String key, final Object object) {
-        this.plugins.parallelStream().forEach(plugin -> plugin.updatePluginObjects(key, object));
+        this.plugins.parallelStream().forEach(plugin -> plugin.getUniformSystemPlugin().updatePluginObjects(key, object));
     }
 
     @Override
-    public List<UniformSystemPlugin> getPlugins() {
+    public List<PluginBundle> getPlugins() {
         return this.plugins;
     }
 }

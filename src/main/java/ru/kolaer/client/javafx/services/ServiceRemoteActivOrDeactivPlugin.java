@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.presenter.PDialog;
-import ru.kolaer.api.services.Service;
+import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
@@ -96,11 +96,6 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 				return;
 			}
 		}
-	}
-
-	@Override
-	public void setRunningStatus(boolean isRun) {
-		this.isRunning = isRun;
 	}
 
 	@Override

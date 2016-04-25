@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.services.Service;
+import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import java.net.InetAddress;
@@ -28,6 +28,7 @@ public class SeviceUserIpAndHostName implements Service {
 	@Override
 	public void run() {
 		Thread.currentThread().setName("Передача IP и имя компьютера");
+		this.isRun = true;
 		while(this.isRun) {
 			
 			final String url = "http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + this.username;
@@ -46,11 +47,6 @@ public class SeviceUserIpAndHostName implements Service {
 				LOG.error("Прерыване задержки потока!");
 			}
 		}
-	}
-
-	@Override
-	public void setRunningStatus(final boolean isRun) {
-		this.isRun = isRun;
 	}
 
 	@Override

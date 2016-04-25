@@ -1,6 +1,6 @@
 package ru.kolaer.client.javafx.mvp.presenter;
 
-import ru.kolaer.api.plugin.UniformSystemPlugin;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
 

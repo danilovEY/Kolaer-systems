@@ -3,7 +3,7 @@ package ru.kolaer.client.javafx.services;
 import ch.qos.logback.classic.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.services.Service;
+import ru.kolaer.api.plugins.services.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +39,6 @@ public class ServiceControlManager {
 	public void runService(final Service service) {
 		if(!service.isRunning()) {
 			LOG.info("Запуск службы: \"{}\"", service.getName());
-			service.setRunningStatus(true);
 			final Future<Void> futureService = CompletableFuture.runAsync(service, readPluginsThread).exceptionally(t -> {
 				LOG.error("Ошибка в запуске службы!", t);
 				return null;
@@ -52,7 +51,6 @@ public class ServiceControlManager {
 	/**Рестарт службы.*/
 	public void resetService(final Service service) {
 		if(service.isRunning()) {
-			service.setRunningStatus(false);
 			service.stop();
 			this.runnableService.get(service).cancel(true);
 			this.runnableService.remove(service);
@@ -79,7 +77,6 @@ public class ServiceControlManager {
 	/**Удалить службу.*/
 	public void removeService(final Service service){
 		if(service != null) {
-			service.setRunningStatus(false);
 			service.stop();
 			
 			final Future<Void> future = this.runnableService.get(service);
@@ -97,7 +94,6 @@ public class ServiceControlManager {
 	public void removeAllServices() {
 		this.runnableService.entrySet().forEach(entity -> {
 			final Service service = entity.getKey();
-			service.setRunningStatus(false);
 			service.stop();
 			try {
 				entity.getValue().get(10, TimeUnit.SECONDS);

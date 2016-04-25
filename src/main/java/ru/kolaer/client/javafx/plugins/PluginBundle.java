@@ -3,14 +3,11 @@ package ru.kolaer.client.javafx.plugins;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugin.AbstractUniformSystemPlugin;
-import ru.kolaer.api.plugin.UniformSystemPlugin;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 
 import java.net.URI;
-import java.util.Objects;
 
 /**
  * Created by Danilov on 10.04.2016.
@@ -40,14 +37,7 @@ public abstract class PluginBundle {
             return null;
         }
 
-        final ServiceReference<?>[] registeredServices = this.bundle.getRegisteredServices();
-        Objects.nonNull(registeredServices);
-        for (final ServiceReference<?> service : registeredServices) {
-            final Object uniformSystemPlugin = bundleContext.getService(service);
-            if (uniformSystemPlugin instanceof AbstractUniformSystemPlugin) {
-                return (UniformSystemPlugin) uniformSystemPlugin;
-            }
-        }
+
 
         return null;
     }
