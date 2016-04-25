@@ -2,13 +2,12 @@ package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.mvp.view.impl.VTabImpl;
+import ru.kolaer.client.javafx.plugins.PluginBundle;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 
-import java.net.URLClassLoader;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,25 +20,18 @@ import java.util.concurrent.Executors;
 public class PTabImpl implements PTab {
 	private final Logger LOG = LoggerFactory.getLogger(PTabImpl.class);
 	/**Плагин.*/
-	private final UniformSystemPlugin plugin;
+	private final PluginBundle plugin;
 	/**View.*/
 	private final VTab view;
 	/**Флаг активации вкладки.*/
 	private boolean isActive = false;
-	/**ClassLoader плагина.*/
-	private final URLClassLoader loader;
-	private final UniformSystemEditorKit editorKid;
 	/**
 	 * {@linkplain PTabImpl}
-	 * @param loader - Загрузчик плагина.
 	 * @param plugin - Плагин.
 	 */
-	public PTabImpl(final URLClassLoader loader, final UniformSystemPlugin plugin, final UniformSystemEditorKit editorKid) {
+	public PTabImpl(final PluginBundle plugin) {
 		this.plugin = plugin;
-		this.loader = loader;
-		this.app = this.plugin.getApplication();
-		this.editorKid = editorKid;
-		this.view = new VTabImpl(loader, this.app);
+		this.view = new VTabImpl(plugin.getUniformSystemPlugin());
 	}
 
 	@Override
@@ -53,7 +45,7 @@ public class PTabImpl implements PTab {
 	}
 
 	@Override
-	public UniformSystemPlugin getModel() {
+	public PluginBundle getModel() {
 		return this.plugin;
 	}
 
@@ -62,15 +54,14 @@ public class PTabImpl implements PTab {
 		if(!this.isActive) {
 			final ExecutorService threadRunPlugin = Executors.newSingleThreadExecutor();
 			CompletableFuture.runAsync(() -> {
-				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getName());
-				Thread.currentThread().setContextClassLoader(this.loader);
+				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getSymbolicNamePlugin());
 				try {
-					this.app.start();
+					this.plugin.getUniformSystemPlugin().start();
 					
-					this.view.setContent(app.getContent());
+					this.view.setContent(plugin.getUniformSystemPlugin().getContent());
 				} catch (final Exception e) {
-					LOG.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getName(), e);
-					this.editorKid.getUISystemUS().getDialog().createErrorDialog(this.plugin.getName(), "Ошибка при запуске плагина!").show();
+					LOG.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), e);
+					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createErrorDialog(this.plugin.getNamePlugin(), "Ошибка при запуске плагина!").show();
 				}
 				threadRunPlugin.shutdown();
 			}, threadRunPlugin);
@@ -84,13 +75,12 @@ public class PTabImpl implements PTab {
 		if(this.isActive) {
 			final ExecutorService threadStopPlugin = Executors.newSingleThreadExecutor();
 			CompletableFuture.runAsync(() -> {
-				Thread.currentThread().setName("Остановка плагина: " + this.plugin.getName());
-				Thread.currentThread().setContextClassLoader(this.loader);
+				Thread.currentThread().setName("Остановка плагина: " + this.plugin.getSymbolicNamePlugin());
 				try {
-					this.app.stop();
+					this.plugin.getUniformSystemPlugin().stop();
 				} catch (final Exception e) {
-					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getName(),e);
-					this.editorKid.getUISystemUS().getDialog().createErrorDialog(this.plugin.getName(), "Ошибка при остановке плагина!").show();
+					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getSymbolicNamePlugin(),e);
+					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createErrorDialog(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!").show();
 				}
 				threadStopPlugin.shutdown();
 			}, threadStopPlugin);
@@ -104,16 +94,10 @@ public class PTabImpl implements PTab {
 	public void closeTab() {
 		final ExecutorService threadClosePlugin = Executors.newSingleThreadExecutor();
 		CompletableFuture.runAsync(() -> {
-			Thread.currentThread().setName("Закрытие плагина: " + this.plugin.getName());
+			Thread.currentThread().setName("Закрытие плагина: " + this.plugin.getSymbolicNamePlugin());
 			this.deActiveTab();
 			this.view.closeTab();
-			try {
-				this.loader.clearAssertionStatus();
-				this.loader.close();
-			} catch (Exception e) {
-				LOG.error("Ошибка при закрытии clssloader'а.", e);
-				throw new RuntimeException(e);
-			}
+
 			threadClosePlugin.shutdown();
 		}, threadClosePlugin).exceptionally(t -> {
 			LOG.error("Ошибка при закрытии приложения: {}", this.app.getName(), t);

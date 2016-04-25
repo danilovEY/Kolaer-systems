@@ -7,7 +7,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ru.kolaer.api.plugin.UniformSystemApplication;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 
@@ -23,8 +22,6 @@ import java.util.Optional;
 public class VTabImpl implements VTab {
 	/**JavaFX вкладка.*/
 	private Tab tab;
-	/**Приложение плагина.*/
-	private final UniformSystemApplication app;
 	/**Окно плагина.*/
 	private Stage stage;
 	

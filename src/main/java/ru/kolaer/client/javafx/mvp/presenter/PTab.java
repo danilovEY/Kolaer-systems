@@ -1,7 +1,7 @@
 package ru.kolaer.client.javafx.mvp.presenter;
 
-import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.mvp.view.VTab;
+import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
 
 /**
@@ -11,7 +11,7 @@ import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
  */
 public interface PTab extends RemoteActivationDeactivationPlugin {
 	/**Получить модель.*/
-	UniformSystemPlugin getModel();
+	PluginBundle getModel();
 	
 	/**Получить view вкладки.*/
 	VTab getView();
