@@ -22,7 +22,6 @@ public abstract class PluginBundle {
     private Bundle bundle;
     private BundleContext bundleContext;
     private boolean isInstall = false;
-    private boolean isStart = false;
     private UniformSystemPlugin uniformSystemPlugin;
 
 
@@ -34,32 +33,6 @@ public abstract class PluginBundle {
 
         return this.uniformSystemPlugin;
     }
-
-   /* public void start() throws BundleException {
-        if(this.isInstall) {
-            if(!this.isStart) {
-                this.bundle.start();
-                this.isStart = true;
-            } else {
-                LOG.warn("Плагин: {} уже запущен!", this.symbolicNamePlugin);
-            }
-        } else {
-            LOG.warn("Плагин: {} не установлен!", this.symbolicNamePlugin);
-        }
-    }
-
-    public void stop() throws BundleException {
-        if(this.isInstall) {
-            if(this.isStart) {
-                this.bundle.stop();
-                this.isStart = false;
-            } else {
-                LOG.warn("Плагин: {} не запущен!", this.symbolicNamePlugin);
-            }
-        } else {
-            LOG.warn("Плагин: {} не установлен!", this.symbolicNamePlugin);
-        }
-    }*/
 
     protected void setUniformSystemPlugin(final UniformSystemPlugin plugin) {
         this.uniformSystemPlugin = plugin;
@@ -87,10 +60,6 @@ public abstract class PluginBundle {
 
     public boolean isInstall() {
         return isInstall;
-    }
-
-    public boolean isStart() {
-        return isStart;
     }
 
     public String getSymbolicNamePlugin() {

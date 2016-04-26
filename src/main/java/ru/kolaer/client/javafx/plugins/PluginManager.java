@@ -50,7 +50,8 @@ public class PluginManager {
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework, " +
-                "ru.kolaer.api.plugins, ru.kolaer.api.plugins.services, ru.kolaer.api.system");
+                "ru.kolaer.api.plugins, ru.kolaer.api.plugins.services, ru.kolaer.api.system, ru.kolaer.api.mvp.model," +
+                "ru.kolaer.api.mvp.presenter");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
                 "javafx.application, javafx.beans.property," +
