@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>ru.kolaer</groupId>
 			<artifactId>ru.kolaer.api</artifactId>
-			<version>0.1</version>
+			<version>1.0</version>
 		</dependency>
 
 		<dependency>
@@ -46,30 +46,6 @@
 
 		<!-- Плагины для сценария -->
 		<plugins>
-
-			<!-- Плагин для создания jar файла с манифестом
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<finalName>${artifactId}-${version}</finalName>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<appendAssemblyId>false</appendAssemblyId>
-					<archive>
-						<manifestFile>${basedir}/target/classes/META-INF/MANIFEST.MF</manifestFile>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>-->
-
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
@@ -92,6 +68,15 @@
 				</executions>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<outputDirectory>..\ru.kolaer.client.javafx\plugins</outputDirectory>
+				</configuration>
+			</plugin>
+
 			<!-- Плагин для создания манифеста -->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
@@ -101,10 +86,13 @@
 				<configuration>
 					<instructions>
 						<Main-Class>ru.kolaer.asmc.runnable.JavaFXLauncher</Main-Class>
-						<Bundle-Activator>ru.kolaer.asmc.runnable.ASMCPlugin</Bundle-Activator>
 						<Bundle-ClassPath>.</Bundle-ClassPath>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-						<Export-Package>org.osgi.framework</Export-Package>
+						<Bundle-Name>АСУП</Bundle-Name>
+						<Export-Package>javafx.application, javafx.beans.property,
+							javafx.beans.value, javafx.collections, javafx.collections.transformation, javafx.event,
+							javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.image, javafx.scene.input, javafx.scene.layout,
+							javafx.scene.text, javafx.stage, javax.swing, org.slf4j;version=1.7.7</Export-Package>
 					</instructions>
 				</configuration>
 				<executions>

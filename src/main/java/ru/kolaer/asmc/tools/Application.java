@@ -1,5 +1,12 @@
 package ru.kolaer.asmc.tools;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -7,15 +14,6 @@ import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import ru.kolaer.api.plugin.UniformSystemPlugin;
-import ru.kolaer.api.system.UniformSystemEditorKit;
 
 /**
  * Запускает задачу.
@@ -107,14 +105,14 @@ public class Application implements Runnable {
 					String pathWeb = "";
 					if(SettingSingleton.getInstance().isAllLabels()) {
 						if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
-							for(final UniformSystemPlugin plugin : this.editorKit.getUISystemUS().getExplorer().getPlugins()) {
+							/*for(final UniformSystemPlugin plugin : this.editorKit.getUISystemUS().getExplorer().getPlugins()) {
 								if(plugin.getName().equals("Browser")) {
 									this.editorKit.getUISystemUS().getExplorer().showPlugin(plugin);
 									break;
 								}
 							}
 							
-							this.editorKit.getUISystemUS().getExplorer().notifyPlugins("url", this.pathApp);
+							this.editorKit.getUISystemUS().getExplorer().notifyPlugins("url", this.pathApp);*/
 							return;
 						} else if(SettingSingleton.getInstance().isDefaultUserWebBrowser()) {
 							r.exec("cmd /C explorer \"" + this.pathApp + "\"");

@@ -79,6 +79,7 @@ public class SerializationObjects {
 	public synchronized List<MGroupLabels> getSerializeGroups() {
 		if(this.cacheObjects != null)
 			return this.cacheObjects;
+
 		if(!this.fileSer.exists()) {
 			return new ArrayList<>();
 		}
@@ -104,16 +105,13 @@ public class SerializationObjects {
 		if(newSerObj.exists()) {
 			newSerObj.delete();
 		}
-			
-		try{
-			newSerObj.createNewFile();
-		} catch(final IOException e2){
-			LOG.error("Не удалось создать файл: {}", newSerObj.getAbsolutePath(), e2);
-		}
+
+		newSerObj.getParentFile().mkdirs();
 		
-		try (final FileOutputStream fileOutSer = new FileOutputStream(newSerObj);
+		try (final FileOutputStream fileOutSer = new FileOutputStream(newSerObj, true);
 				final ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
 			objectOutputStream.writeObject(groupModels);
+
 		} catch (final FileNotFoundException e) {
 			LOG.error("Не найден файл: {}", newSerObj.getAbsolutePath());
 		} catch (IOException e1) {
