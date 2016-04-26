@@ -50,9 +50,7 @@ public class PluginManager {
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework, " +
-                "ru.kolaer.api.plugin, ru.kolaer.api.services, ru.kolaer.api.system, " +
-                "ru.kolaer.api.mvp.view, ru.kolaer.api.mvp.presenter, ru.kolaer.api.mvp.viewmodel, " +
-                "ru.kolaer.api.dao.entities");
+                "ru.kolaer.api.plugins, ru.kolaer.api.plugins.services, ru.kolaer.api.system");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
                 "javafx.application, javafx.beans.property," +
@@ -106,7 +104,8 @@ public class PluginManager {
                 for(Class inter : cls.getInterfaces()) {
                     if(inter == UniformSystemPlugin.class) {
                         try {
-                            final UniformSystemPlugin plugin = (UniformSystemPlugin) inter.newInstance();
+                            LOG.info("Class is USP: {}", cls);
+                            final UniformSystemPlugin plugin = (UniformSystemPlugin) cls.newInstance();
                             pluginBundle.setUniformSystemPlugin(plugin);
                             return true;
                         } catch (InstantiationException | IllegalAccessException e) {

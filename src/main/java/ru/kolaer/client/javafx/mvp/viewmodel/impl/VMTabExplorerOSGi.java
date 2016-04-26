@@ -1,24 +1,29 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.javafx.mvp.presenter.PTab;
+import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 
 import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Danilov on 15.04.2016.
  */
 public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
-
-    public VMTabExplorerOSGi() {
-
-    }
-
+    private static final Logger LOG = LoggerFactory.getLogger(VMTabExplorerOSGi.class);
+    private boolean openASUP = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        this.initSelectionModel();
     }
 
     @Override
@@ -44,11 +49,61 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public void addTabPlugin(String tabName, PluginBundle uniformSystemPlugin) {
+        final ExecutorService initPluginContentThread = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() -> {
+            if(uniformSystemPlugin.getSymbolicNamePlugin().equals("ru.kolaer.asmc"))
+                this.openASUP = true;
 
+            final PTab tab = new PTabImpl(uniformSystemPlugin);
+            tab.getView().setTitle(tabName);
+
+            this.pluginMap.put(tabName, tab);
+
+            Tools.runOnThreadFX(() -> {
+                this.pluginsTabPane.getTabs().add(tab.getView().getContent());
+            });
+
+        }, initPluginContentThread).exceptionally(t -> {
+            LOG.error("Ошибка!", t);
+            return null;
+        });
     }
 
     @Override
     public void removeTabPlugin(String name) {
 
+    }
+
+    /**Инициализация модели выбора вкладки.*/
+    private void initSelectionModel() {
+        this.pluginsTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldTab, newTab)  -> {
+            if(!this.openASUP)
+                return;
+
+            if(oldTab != null) {
+                final ExecutorService threadActivPlugin= Executors.newSingleThreadExecutor();
+                CompletableFuture.runAsync(() -> {
+                    final PTab tab = this.pluginMap.get(oldTab.getText());
+                    tab.deActiveTab();
+                    this.notifyDeactivationPlugin(tab);
+                    threadActivPlugin.shutdown();
+                }, threadActivPlugin);
+            }
+
+            if(newTab != null) {
+                final ExecutorService threadDeActivPlugin= Executors.newSingleThreadExecutor();
+                CompletableFuture.runAsync(() -> {
+                    final PTab tab = this.pluginMap.get(newTab.getText());
+                    tab.activeTab();
+                    this.notifyActivationPlugin(tab);
+                    threadDeActivPlugin.shutdown();
+                }, threadDeActivPlugin);
+            }
+        });
+    }
+
+    @Override
+    public void notifyPlugins(String key, Object object) {
+        super.notifyPlugins(key, object);
     }
 }

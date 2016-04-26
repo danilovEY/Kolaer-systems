@@ -2,7 +2,6 @@ package ru.kolaer.client.javafx.plugins;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
@@ -33,15 +32,10 @@ public abstract class PluginBundle {
             return null;
         }
 
-        if(!this.isStart) {
-            LOG.warn("Плагин: {} не запущен!", this.symbolicNamePlugin);
-            return null;
-        }
-
         return this.uniformSystemPlugin;
     }
 
-    public void start() throws BundleException {
+   /* public void start() throws BundleException {
         if(this.isInstall) {
             if(!this.isStart) {
                 this.bundle.start();
@@ -65,7 +59,7 @@ public abstract class PluginBundle {
         } else {
             LOG.warn("Плагин: {} не установлен!", this.symbolicNamePlugin);
         }
-    }
+    }*/
 
     protected void setUniformSystemPlugin(final UniformSystemPlugin plugin) {
         this.uniformSystemPlugin = plugin;

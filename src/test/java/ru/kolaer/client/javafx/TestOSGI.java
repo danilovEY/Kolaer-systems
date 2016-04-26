@@ -22,7 +22,7 @@ public class TestOSGI {
 
             System.out.println(p.getNamePlugin());
             pm.install(p);
-            p.start();
+
             System.out.println(p.getUniformSystemPlugin());
             //pm.getInfoToBundle().get(p).start();
         }
