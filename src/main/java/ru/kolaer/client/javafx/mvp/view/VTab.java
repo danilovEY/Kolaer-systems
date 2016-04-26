@@ -14,6 +14,8 @@ public interface VTab {
 	Tab getContent();
 	/**Задать контент вкладки.*/
 	void setContent(Node node);
+	void setTitle(String title);
+	String getTitle();
 	/**Закрыть вкладку.*/
 	void closeTab();
 }

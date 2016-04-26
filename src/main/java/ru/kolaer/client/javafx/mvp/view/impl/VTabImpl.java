@@ -10,8 +10,7 @@ import javafx.stage.Stage;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 
-import java.net.URLClassLoader;
-import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Реализация {@linkplain VTab}.
@@ -21,43 +20,40 @@ import java.util.Optional;
  */
 public class VTabImpl implements VTab {
 	/**JavaFX вкладка.*/
-	private Tab tab;
+	private final Tab tab;
 	/**Окно плагина.*/
 	private Stage stage;
-	
-	public VTabImpl(final URLClassLoader loader, final UniformSystemApplication app) {		
-		this.app = app;
+
+	private Node content;
+
+	public VTabImpl() {
 		this.tab = new Tab();
-		Tools.runOnThreadFX(() -> {
-			Thread.currentThread().setName("Инициализация вкладки: " + app.getName());
-			Thread.currentThread().setContextClassLoader(loader);		
-			
+		Tools.runOnThreadFXAndWain(() -> {
 			this.init();
-		});
+		}, 20, TimeUnit.SECONDS);
 	}
 	
 	private void init() {	
-		this.tab.setText(Optional.ofNullable(this.app.getName()).orElse("Плагин"));
-		this.tab.setContent(this.app.getContent());
+		this.tab.setText("Плагин");
 		this.tab.setStyle(".tab .tab:selected{-fx-background-color: #3c3c3c;} .tab.tab-label { -fx-text-fill: -fx-text-base-color; -fx-font-size: 18px;}");
-		final MenuItem openInWinodow = new MenuItem("Открыть в новом окне");
-		openInWinodow.setOnAction(e -> {
+		final MenuItem openInWindow = new MenuItem("Открыть в новом окне");
+		openInWindow.setOnAction(e -> {
 			Tools.runOnThreadFX(() -> {
 				if(this.stage == null) {
 					this.stage = new Stage();				
 					this.stage.setOnCloseRequest(event -> {
 							stage.setScene(null);
-							tab.setContent(VTabImpl.this.app.getContent());
+							tab.setContent(VTabImpl.this.content);
 					});
 				}
 				this.tab.setContent(null);
-				this.stage.setScene(new Scene(new BorderPane(this.app.getContent()), 1024, 768));
+				this.stage.setScene(new Scene(new BorderPane(VTabImpl.this.content), 1024, 768));
 				this.stage.centerOnScreen();
 				this.stage.show();
 			});
 		});
 		
-		this.tab.setContextMenu(new ContextMenu(openInWinodow));
+		this.tab.setContextMenu(new ContextMenu(openInWindow));
 	}
 
 	@Override
@@ -67,9 +63,22 @@ public class VTabImpl implements VTab {
 
 	@Override
 	public void setContent(final Node parent) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnThreadFXAndWain(() -> {
+			this.content = parent;
 			this.tab.setContent(parent);
+		},20, TimeUnit.SECONDS);
+	}
+
+	@Override
+	public void setTitle(final String title) {
+		Tools.runOnThreadFX(() -> {
+			this.tab.setText(title);
 		});
+	}
+
+	@Override
+	public String getTitle() {
+		return this.tab.getText();
 	}
 
 	@Override

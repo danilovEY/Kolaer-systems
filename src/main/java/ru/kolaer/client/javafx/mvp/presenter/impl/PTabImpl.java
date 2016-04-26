@@ -31,7 +31,9 @@ public class PTabImpl implements PTab {
 	 */
 	public PTabImpl(final PluginBundle plugin) {
 		this.plugin = plugin;
-		this.view = new VTabImpl(plugin.getUniformSystemPlugin());
+		this.view = new VTabImpl();
+		this.view.setTitle(plugin.getNamePlugin());
+		this.view.setContent(plugin.getUniformSystemPlugin().getContent());
 	}
 
 	@Override
@@ -72,6 +74,11 @@ public class PTabImpl implements PTab {
 
 	@Override
 	public void deActiveTab() {
+
+	}
+
+	@Override
+	public void closeTab() {
 		if(this.isActive) {
 			final ExecutorService threadStopPlugin = Executors.newSingleThreadExecutor();
 			CompletableFuture.runAsync(() -> {
@@ -82,29 +89,16 @@ public class PTabImpl implements PTab {
 					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getSymbolicNamePlugin(),e);
 					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createErrorDialog(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!").show();
 				}
+
+				this.view.setContent(null);
+				this.isActive = false;
+
+				this.view.closeTab();
 				threadStopPlugin.shutdown();
 			}, threadStopPlugin);
 
-			this.view.setContent(null);
-			this.isActive = false;
+
 		}
-	}
-
-	@Override
-	public void closeTab() {
-		final ExecutorService threadClosePlugin = Executors.newSingleThreadExecutor();
-		CompletableFuture.runAsync(() -> {
-			Thread.currentThread().setName("Закрытие плагина: " + this.plugin.getSymbolicNamePlugin());
-			this.deActiveTab();
-			this.view.closeTab();
-
-			threadClosePlugin.shutdown();
-		}, threadClosePlugin).exceptionally(t -> {
-			LOG.error("Ошибка при закрытии приложения: {}", this.app.getName(), t);
-			threadClosePlugin.shutdownNow();
-			System.exit(-9);
-			return null;
-		});
 	}
 
 	@Override
@@ -119,6 +113,6 @@ public class PTabImpl implements PTab {
 
 	@Override
 	public String getName() {
-		return this.plugin.getName();
+		return this.plugin.getNamePlugin();
 	}
 }

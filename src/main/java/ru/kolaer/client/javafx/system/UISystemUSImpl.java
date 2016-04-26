@@ -1,10 +1,10 @@
 package ru.kolaer.client.javafx.system;
 
-import ru.kolaer.api.mvp.viewmodel.VMExplorer;
 import ru.kolaer.api.system.DialogUS;
 import ru.kolaer.api.system.NotificationUS;
 import ru.kolaer.api.system.StatusBarUS;
 import ru.kolaer.api.system.UISystemUS;
+import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 
 /**
  * Реализация системных (приложения) объектов.
@@ -51,11 +51,6 @@ public class UISystemUSImpl implements UISystemUS {
 	}
 
 	@Override
-	public VMExplorer getExplorer() {
-		return this.explorer;
-	}
-
-	@Override
 	public void setNotification(final NotificationUS notificationUS) {
 		this.notification = notificationUS;
 	}
@@ -68,10 +63,5 @@ public class UISystemUSImpl implements UISystemUS {
 	@Override
 	public void setStatusBar(final StatusBarUS statusBarUS) {
 		this.statusBar = statusBarUS;
-	}
-
-	@Override
-	public void setExplorer(final VMExplorer vmExplorer) {
-		this.explorer = vmExplorer;
 	}
 }

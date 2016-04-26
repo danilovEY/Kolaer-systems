@@ -22,7 +22,7 @@ public class MainRemoteActivDeactivPlugin implements RemoteActivationDeactivatio
 	@Override
 	public void deactivation() {
 		try{
-			this.app.getApplication().stop();
+			this.app.stop();
 		}catch(Exception e){
 			LOG.error("Ошибка при закрытии основного приложения!", e);
 			System.exit(-9);
@@ -31,6 +31,6 @@ public class MainRemoteActivDeactivPlugin implements RemoteActivationDeactivatio
 
 	@Override
 	public String getName() {
-		return app.getName();
+		return "Main";
 	}
 }

@@ -1,7 +1,7 @@
 package ru.kolaer.client.javafx.system;
 
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.dao.entities.PublicHolidays;
+import ru.kolaer.api.mvp.model.PublicHolidays;
 import ru.kolaer.api.system.PublicHolidaysDateBase;
 import ru.kolaer.client.javafx.tools.Resources;
 

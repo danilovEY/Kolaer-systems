@@ -3,7 +3,7 @@ package ru.kolaer.client.javafx.system;
 import javafx.beans.property.SimpleStringProperty;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.dao.entities.DbDataAll;
+import ru.kolaer.api.mvp.model.DbDataAll;
 import ru.kolaer.api.system.UserDataAllDataBase;
 import ru.kolaer.client.javafx.tools.Resources;
 

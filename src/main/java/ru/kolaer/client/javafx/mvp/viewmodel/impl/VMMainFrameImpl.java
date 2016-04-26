@@ -21,10 +21,7 @@ import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
-import ru.kolaer.client.javafx.services.ServiceControlManager;
-import ru.kolaer.client.javafx.services.ServiceScreen;
-import ru.kolaer.client.javafx.services.SeviceUserIpAndHostName;
-import ru.kolaer.client.javafx.services.UserWindowsKeyListenerService;
+import ru.kolaer.client.javafx.services.*;
 import ru.kolaer.client.javafx.system.StatusBarUSImpl;
 import ru.kolaer.client.javafx.system.UISystemUSImpl;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
@@ -81,8 +78,8 @@ public class VMMainFrameImpl extends Application {
 	    	final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
 	    	CompletableFuture.runAsync(() -> {
 	    		Thread.currentThread().setName("Добавление системны служб");	
-	    		//this.servicesManager.addService(new UserPingService(), true);
-	    		//this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
+	    		this.servicesManager.addService(new UserPingService(), true);
+	    		this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
 	    		threadStartService.shutdown();
 	    	}, threadStartService);
 	    	
