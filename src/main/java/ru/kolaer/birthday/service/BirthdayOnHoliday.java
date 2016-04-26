@@ -1,23 +1,23 @@
 package ru.kolaer.birthday.service;
 
-import java.time.LocalDate;
-import java.util.concurrent.TimeUnit;
-
 import javafx.application.Platform;
 import javafx.util.Duration;
+import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.DbDataAll;
+import ru.kolaer.api.mvp.model.PublicHolidays;
+import ru.kolaer.api.plugins.services.Service;
+import ru.kolaer.api.system.NotifyAction;
+import ru.kolaer.api.system.ServerStatus;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
 import ru.kolaer.birthday.tools.Tools;
-import ru.kolaer.api.services.Service;
-import ru.kolaer.api.system.NotifyAction;
-import ru.kolaer.api.system.ServerStatus;
-import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.dao.entities.DbBirthdayAll;
-import ru.kolaer.api.dao.entities.DbDataAll;
-import ru.kolaer.api.dao.entities.PublicHolidays;
 
-public class BirthdayOnHoliday implements Service {	
+import java.time.LocalDate;
+import java.util.concurrent.TimeUnit;
+
+public class BirthdayOnHoliday implements Service {
 	private final UniformSystemEditorKit editorKit;
 	private boolean tomorrow = false;
 	private boolean arterTomorrow = false;
@@ -95,11 +95,6 @@ public class BirthdayOnHoliday implements Service {
 			
 			this.editorKit.getUISystemUS().getNotification().showSimpleNotify(title + holiday.getLocalName() + ". День рождения в этот день празднуют:", null, Duration.hours(24), actions);
 		});
-	}
-	
-	@Override
-	public void setRunningStatus(boolean isRun) {
-		
 	}
 
 	@Override

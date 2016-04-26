@@ -1,25 +1,24 @@
 package ru.kolaer.birthday.service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.DbDataAll;
+import ru.kolaer.api.plugins.services.Service;
+import ru.kolaer.api.system.NotifyAction;
+import ru.kolaer.api.system.ServerStatus;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
 import ru.kolaer.birthday.tools.Tools;
-import ru.kolaer.api.services.Service;
-import ru.kolaer.api.system.NotifyAction;
-import ru.kolaer.api.system.ServerStatus;
-import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.dao.entities.DbBirthdayAll;
-import ru.kolaer.api.dao.entities.DbDataAll;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 public class BirthdayService implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(BirthdayService.class);
@@ -71,11 +70,6 @@ public class BirthdayService implements Service {
 				this.editorKit.getUISystemUS().getNotification().showSimpleNotify(title.toString(), null, Duration.hours(24),Pos.BOTTOM_CENTER, actions);
 			});
 		}
-	}
-	
-	@Override
-	public void setRunningStatus(boolean isRun) {
-
 	}
 
 	@Override

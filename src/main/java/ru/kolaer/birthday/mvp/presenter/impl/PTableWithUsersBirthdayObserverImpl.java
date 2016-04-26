@@ -1,12 +1,10 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.DbDataAll;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.presenter.PSearchUsers;
@@ -14,9 +12,11 @@ import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
 import ru.kolaer.birthday.mvp.view.VTableWithUsersBirthday;
 import ru.kolaer.birthday.mvp.view.impl.VTableWithUsersBirthdayImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
-import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.dao.entities.DbBirthdayAll;
-import ru.kolaer.api.dao.entities.DbDataAll;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Presenter таблици с сотрудниками.

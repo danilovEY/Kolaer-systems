@@ -1,10 +1,10 @@
 package ru.kolaer.birthday.mvp.model.impl;
 
-import java.util.Date;
-
+import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.DbDataAll;
 import ru.kolaer.birthday.mvp.model.UserModel;
-import ru.kolaer.api.dao.entities.DbBirthdayAll;
-import ru.kolaer.api.dao.entities.DbDataAll;
+
+import java.util.Date;
 
 /**
  * Реализация {@linkplain UserModel}.

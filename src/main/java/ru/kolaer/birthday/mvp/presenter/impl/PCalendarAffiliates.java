@@ -1,16 +1,17 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
+import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.system.DefaultProgressBar;
+import ru.kolaer.api.system.ProgressBarObservable;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.birthday.mvp.model.UserModel;
+import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import ru.kolaer.birthday.mvp.model.UserModel;
-import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
-import ru.kolaer.api.system.DefaultProgressBar;
-import ru.kolaer.api.system.ProgressBarObservable;
-import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.dao.entities.DbBirthdayAll;
 
 /**
  * Календарь для филиалов.

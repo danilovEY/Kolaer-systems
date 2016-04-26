@@ -1,18 +1,18 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.DbDataAll;
+import ru.kolaer.api.system.ServerStatus;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.presenter.ObserverSearch;
 import ru.kolaer.birthday.mvp.presenter.PSearchUsers;
 import ru.kolaer.birthday.mvp.view.VSearchUsers;
 import ru.kolaer.birthday.mvp.view.impl.VSearchUsersImpl;
-import ru.kolaer.api.system.ServerStatus;
-import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.dao.entities.DbBirthdayAll;
-import ru.kolaer.api.dao.entities.DbDataAll;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PSearchImpl implements PSearchUsers {
 	private List<ObserverSearch> observers = new ArrayList<>();
