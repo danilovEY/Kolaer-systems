@@ -40,7 +40,6 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<targetPath>resources</targetPath>
 			</resource>
 		</resources>
 
@@ -89,10 +88,6 @@
 						<Bundle-ClassPath>.</Bundle-ClassPath>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Name>АСУП</Bundle-Name>
-						<Export-Package>javafx.application, javafx.beans.property,
-							javafx.beans.value, javafx.collections, javafx.collections.transformation, javafx.event,
-							javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.image, javafx.scene.input, javafx.scene.layout,
-							javafx.scene.text, javafx.stage, javax.swing, org.slf4j;version=1.7.7</Export-Package>
 					</instructions>
 				</configuration>
 				<executions>

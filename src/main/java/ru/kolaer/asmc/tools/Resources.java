@@ -10,25 +10,25 @@ import java.net.URL;
 public interface Resources
 {
 	/*==========View Resources=============*/
-	public static final URL V_MAIN_FRAME = Resources.class.getResource("/resources/view/VMainFrame.fxml");
-	public static final URL V_GROUP_LABELS =  Resources.class.getResource("/resources/view/VGroupLabels.fxml");
-	public static final URL V_LABEL =  Resources.class.getResource("/resources/view/VLabel.fxml");
-	public static final URL V_AUTHENTICATION =  Resources.class.getResource("/resources/view/VAuthentication.fxml");
-	public static final URL V_ADDING_GROUP_LABELS =  Resources.class.getResource("/resources/view/VAddingGroupLabels.fxml");
-	public static final URL V_ADDING_LABEL =  Resources.class.getResource("/resources/view/VAddingLabel.fxml");
-	public static final URL V_WEB_BROWSER =  Resources.class.getResource("/resources/view/VWebBrowser.fxml");
-	public static final URL V_SETTING =  Resources.class.getResource("/resources/view/VSetting.fxml");
-	public static final URL V_ABOUT =  Resources.class.getResource("/resources/view/VAbout.fxml");
+	public static final URL V_MAIN_FRAME = Resources.class.getResource("/view/VMainFrame.fxml");
+	public static final URL V_GROUP_LABELS =  Resources.class.getResource("/view/VGroupLabels.fxml");
+	public static final URL V_LABEL =  Resources.class.getResource("/view/VLabel.fxml");
+	public static final URL V_AUTHENTICATION =  Resources.class.getResource("/view/VAuthentication.fxml");
+	public static final URL V_ADDING_GROUP_LABELS =  Resources.class.getResource("/view/VAddingGroupLabels.fxml");
+	public static final URL V_ADDING_LABEL =  Resources.class.getResource("/view/VAddingLabel.fxml");
+	public static final URL V_WEB_BROWSER =  Resources.class.getResource("/view/VWebBrowser.fxml");
+	public static final URL V_SETTING =  Resources.class.getResource("/view/VSetting.fxml");
+	public static final URL V_ABOUT =  Resources.class.getResource("/view/VAbout.fxml");
 	
 	
 	/**Стандарткая иконка для ярлыка.*/
-	public static final URL AER_ICON = Resources.class.getResource("/resources/aerIcon.png");
+	public static final URL AER_ICON = Resources.class.getResource("/aerIcon.png");
 	/**Иконка для приложения.*/
-	public static final URL AER_LOGO = Resources.class.getResource("/resources/aerLogo.png");
+	public static final URL AER_LOGO = Resources.class.getResource("/aerLogo.png");
 	/**Иконка для приложения.*/
-	public static final URL ABOUT_INFO_IMAGE = Resources.class.getResource("/resources/aboutInfo.jpg");
+	public static final URL ABOUT_INFO_IMAGE = Resources.class.getResource("/aboutInfo.jpg");
 	/**Фон.*/
-	public static final URL BACKGROUND_IMAGE = Resources.class.getResource("/resources/geometric-background.png");
+	public static final URL BACKGROUND_IMAGE = Resources.class.getResource("/geometric-background.png");
 	/**Версия*/
 	public static final String VERSION = "3.3";	
 	

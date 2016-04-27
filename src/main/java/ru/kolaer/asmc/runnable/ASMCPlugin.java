@@ -50,8 +50,8 @@ public class ASMCPlugin implements UniformSystemPlugin {
 				loader.setController(new CMainFrame());
 				pane = loader.load(stream);
 				((CMainFrame)loader.getController()).addEditorKit(this.editorKit);
-				final InputStream inputStream = this.getClass().getResourceAsStream("/resources/CSS/Default/Default.css");
-				final URL inputStreamUrl = this.getClass().getResource("/resources/CSS/Default/Default.css");
+				final InputStream inputStream = this.getClass().getResourceAsStream("/CSS/Default/Default.css");
+				final URL inputStreamUrl = this.getClass().getResource("/CSS/Default/Default.css");
 				if(inputStreamUrl != null)
 					pane.getStylesheets().addAll(inputStreamUrl.toExternalForm());
 				inputStream.close();

@@ -5,6 +5,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 
 import java.io.File;
@@ -105,14 +107,14 @@ public class Application implements Runnable {
 					String pathWeb = "";
 					if(SettingSingleton.getInstance().isAllLabels()) {
 						if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
-							/*for(final UniformSystemPlugin plugin : this.editorKit.getUISystemUS().getExplorer().getPlugins()) {
-								if(plugin.getName().equals("Browser")) {
-									this.editorKit.getUISystemUS().getExplorer().showPlugin(plugin);
+							for(final UniformSystemPlugin plugin : this.editorKit.getPluginsUS().getPlugins()) {
+								if(this.editorKit.getPluginsUS().getNamePlugin(plugin).equals("Браузер")) {
+									this.editorKit.getPluginsUS().showPlugin(plugin);
 									break;
 								}
 							}
 							
-							this.editorKit.getUISystemUS().getExplorer().notifyPlugins("url", this.pathApp);*/
+							this.editorKit.getPluginsUS().notifyPlugins("url", this.pathApp);
 							return;
 						} else if(SettingSingleton.getInstance().isDefaultUserWebBrowser()) {
 							r.exec("cmd /C explorer \"" + this.pathApp + "\"");
