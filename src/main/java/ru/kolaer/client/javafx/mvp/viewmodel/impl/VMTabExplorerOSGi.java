@@ -52,16 +52,18 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     public void addTabPlugin(String tabName, PluginBundle uniformSystemPlugin) {
         final ExecutorService initPluginContentThread = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
-            if(uniformSystemPlugin.getSymbolicNamePlugin().equals("ru.kolaer.asmc"))
-                this.openASUP = true;
-
             final PTab tab = new PTabImpl(uniformSystemPlugin);
             tab.getView().setTitle(tabName);
 
             this.pluginTabMap.put(tabName, tab);
 
             Tools.runOnThreadFX(() -> {
-                this.pluginsTabPane.getTabs().add(tab.getView().getContent());
+                if(uniformSystemPlugin.getSymbolicNamePlugin().equals("ru.kolaer.asmc")) {
+                    this.openASUP = true;
+                    this.pluginsTabPane.getTabs().add(0,tab.getView().getContent());
+                } else {
+                	 this.pluginsTabPane.getTabs().add(tab.getView().getContent());
+                }
             });
 
         }, initPluginContentThread).exceptionally(t -> {
