@@ -4,7 +4,7 @@
 
 	<groupId>ru.kolaer</groupId>
 	<artifactId>ru.kolaer.birthday</artifactId>
-	<version>0.0.2</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
 	<name>ru.kolaer.birthday</name>
@@ -88,6 +88,7 @@
 						<Bundle-Activator>ru.kolaer.birthday.runnable.BirthdayPlugin</Bundle-Activator>
 						<Bundle-ClassPath>.</Bundle-ClassPath>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Name>День рождения</Bundle-Name>
 						<Export-Package>com.sun.javafx.scene.control.skin, javafx.concurrent, javafx.scene.control.cell,
 							javafx.util</Export-Package>
 					</instructions>
