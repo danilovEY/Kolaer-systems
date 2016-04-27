@@ -6,7 +6,7 @@ import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 
-import java.net.URI;
+import java.net.URL;
 import java.util.Collection;
 
 public class UniformSystemPluginAdapter implements UniformSystemPlugin {
@@ -17,7 +17,7 @@ public class UniformSystemPluginAdapter implements UniformSystemPlugin {
 	}
 
 	@Override
-	public URI getIcon() {
+	public URL getIcon() {
 		return null;
 	}
 
