@@ -4,7 +4,6 @@ import ru.kolaer.api.mvp.view.VComponentUI;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Explorer приложения на котором содержится все плагины.
@@ -20,11 +19,4 @@ public interface VMExplorer extends VComponentUI {
 	void removePlugin(PluginBundle plugin);
 	/**Удалить все плагины.*/
 	void removeAll();
-
-	List<PluginBundle> getPlugins();
-
-	void showPlugin(String name);
-	void showPlugin(PluginBundle plugin);
-
-	void notifyPlugins(String key, Object object);
 }

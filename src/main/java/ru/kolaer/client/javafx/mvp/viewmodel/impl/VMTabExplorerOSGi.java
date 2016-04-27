@@ -2,6 +2,7 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.presenter.impl.PTabImpl;
@@ -57,7 +58,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
             final PTab tab = new PTabImpl(uniformSystemPlugin);
             tab.getView().setTitle(tabName);
 
-            this.pluginMap.put(tabName, tab);
+            this.pluginTabMap.put(tabName, tab);
 
             Tools.runOnThreadFX(() -> {
                 this.pluginsTabPane.getTabs().add(tab.getView().getContent());
@@ -83,7 +84,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
             if(oldTab != null) {
                 final ExecutorService threadActivPlugin= Executors.newSingleThreadExecutor();
                 CompletableFuture.runAsync(() -> {
-                    final PTab tab = this.pluginMap.get(oldTab.getText());
+                    final PTab tab = this.pluginTabMap.get(oldTab.getText());
                     tab.deActiveTab();
                     this.notifyDeactivationPlugin(tab);
                     threadActivPlugin.shutdown();
@@ -93,7 +94,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
             if(newTab != null) {
                 final ExecutorService threadDeActivPlugin= Executors.newSingleThreadExecutor();
                 CompletableFuture.runAsync(() -> {
-                    final PTab tab = this.pluginMap.get(newTab.getText());
+                    final PTab tab = this.pluginTabMap.get(newTab.getText());
                     tab.activeTab();
                     this.notifyActivationPlugin(tab);
                     threadDeActivPlugin.shutdown();
@@ -103,7 +104,22 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     }
 
     @Override
+    public void showPlugin(UniformSystemPlugin uniformSystemPlugin) {
+
+    }
+
+    @Override
     public void notifyPlugins(String key, Object object) {
         super.notifyPlugins(key, object);
+    }
+
+    @Override
+    public String getPluginVersion(UniformSystemPlugin uniformSystemPlugin) {
+        return null;
+    }
+
+    @Override
+    public String getNamePlugin(UniformSystemPlugin uniformSystemPlugin) {
+        return null;
     }
 }

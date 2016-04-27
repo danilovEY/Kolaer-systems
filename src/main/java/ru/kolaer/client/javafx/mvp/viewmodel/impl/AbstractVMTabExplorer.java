@@ -5,6 +5,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.api.system.PluginsUS;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.LoadFXML;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
@@ -14,22 +16,19 @@ import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
 import ru.kolaer.client.javafx.tools.Resources;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Danilov on 15.04.2016.
  */
-public abstract class AbstractVMTabExplorer extends LoadFXML implements VTabExplorer, ExplorerObresvable {
+public abstract class AbstractVMTabExplorer extends LoadFXML implements PluginsUS, VTabExplorer, ExplorerObresvable {
     private final Logger LOG = LoggerFactory.getLogger(AbstractVMTabExplorer.class);
     /**Вкладочная панель.*/
     @FXML
     protected TabPane pluginsTabPane;
     /**Ключ - Имя вкладки, значение - Presenter вкладки.*/
-    protected Map<String, PTab> pluginMap = new HashMap<>();
-    protected List<PluginBundle> plugins = new ArrayList<>();
+    protected Map<String, PTab> pluginTabMap = new HashMap<>();
+    protected Map<PluginBundle, UniformSystemPlugin> plugins = new HashMap<>();
     /**Коллекция обсерверов.*/
     protected List<ExplorerObserver> observers = new ArrayList<>();
 
@@ -74,17 +73,16 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements VTabExpl
 
     @Override
     public void showPlugin(final String name) {
-        if(this.pluginMap.containsKey(name)) {
-            this.pluginsTabPane.getSelectionModel().select(this.pluginMap.get(name).getView().getContent());
+        if(this.pluginTabMap.containsKey(name)) {
+            this.pluginsTabPane.getSelectionModel().select(this.pluginTabMap.get(name).getView().getContent());
         }
     }
 
     @Override
-    public void showPlugin(final PluginBundle uniformSystemPlugin) {
-        this.pluginMap.keySet().forEach(pluginNameTab -> {
-            final PTab tab = this.pluginMap.get(pluginNameTab);
-            if(tab.getModel() == uniformSystemPlugin.getUniformSystemPlugin()) {
-                this.showPlugin(pluginNameTab);
+    public void showPlugin(final UniformSystemPlugin uniformSystemPlugin) {
+        this.pluginTabMap.values().parallelStream().forEach(pTab -> {
+            if(pTab.getModel().getUniformSystemPlugin() == uniformSystemPlugin) {
+                pluginsTabPane.getSelectionModel().select(pTab.getView().getContent());
                 return;
             }
         });
@@ -92,11 +90,11 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements VTabExpl
 
     @Override
     public void notifyPlugins(final String key, final Object object) {
-        this.plugins.parallelStream().forEach(plugin -> plugin.getUniformSystemPlugin().updatePluginObjects(key, object));
+        this.plugins.values().parallelStream().forEach(plugin -> plugin.updatePluginObjects(key, object));
     }
 
     @Override
-    public List<PluginBundle> getPlugins() {
-        return this.plugins;
+    public Collection<UniformSystemPlugin> getPlugins() {
+        return this.plugins.values();
     }
 }
