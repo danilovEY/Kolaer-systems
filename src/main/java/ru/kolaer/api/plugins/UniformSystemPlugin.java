@@ -14,6 +14,7 @@ import java.util.Collection;
  * @version 1.0
  */
 public interface UniformSystemPlugin extends VComponentUI {
+
 	/**Инициализация плагина */
 	void initialization(UniformSystemEditorKit editorKid) throws Exception;
 
@@ -29,4 +30,5 @@ public interface UniformSystemPlugin extends VComponentUI {
 	void stop() throws Exception;
 
 	void updatePluginObjects(String key, Object object);
+
 }
