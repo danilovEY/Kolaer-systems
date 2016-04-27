@@ -46,17 +46,17 @@ public class PluginManager {
         }
 
         frameworkProperties.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
-        frameworkProperties.put("felix.log.level", "3");
+        frameworkProperties.put("felix.log.level", "4");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
-        frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework, " +
-                "ru.kolaer.api.plugins, ru.kolaer.api.plugins.services, ru.kolaer.api.system, ru.kolaer.api.mvp.model," +
-                "ru.kolaer.api.mvp.presenter");
+        frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework,"+
+        		"ru.kolaer.api.plugins, ru.kolaer.api.plugins.services, ru.kolaer.api.system, ru.kolaer.api.mvp.model," +
+                "ru.kolaer.api.mvp.presenter, ru.kolaer.api.tools" );
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
-                "javafx.application, javafx.beans.property," +
-                "javafx.beans.value, javafx.collections, javafx.collections.transformation, javafx.event," +
-                "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.image, " +
+                "javafx.application, javafx.beans.property, " +
+                "javafx.beans.value, javafx.collections, javafx.collections.transformation, javafx.event, " +
+                "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.canvas, javafx.scene.image, " +
                 "javafx.scene.input , javafx.scene.layout, javafx.util, javafx.concurrent," +
                 "javafx.scene.text, javafx.stage, javax.swing, com.sun.javafx.scene.control.skin, javafx.scene.control.cell, org.slf4j;version=1.7.7");
 
@@ -69,7 +69,7 @@ public class PluginManager {
             framework.start();
 
             this.context = framework.getBundleContext();
-        }  catch (BundleException e) {
+        }  catch (Exception e) {
             LOG.error("Ошибка при инициализации или старта OSGi-framework!", e);
             throw e;
         }
@@ -97,7 +97,7 @@ public class PluginManager {
 
                 try {
                     cls = bundle.loadClass(classPath.replace("/","."));
-                } catch (ClassNotFoundException e) {
+                } catch (ClassNotFoundException | NoClassDefFoundError e) {
                     LOG.error("Ошибка при чтении класса: {}", classPath, e);
                     continue;
                 }

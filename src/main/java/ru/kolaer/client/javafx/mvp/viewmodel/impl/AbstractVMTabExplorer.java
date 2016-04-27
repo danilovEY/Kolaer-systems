@@ -28,7 +28,7 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements PluginsU
     protected TabPane pluginsTabPane;
     /**Ключ - Имя вкладки, значение - Presenter вкладки.*/
     protected Map<String, PTab> pluginTabMap = new HashMap<>();
-    protected Map<PluginBundle, UniformSystemPlugin> plugins = new HashMap<>();
+    protected Map<UniformSystemPlugin, PluginBundle> plugins = new HashMap<>();
     /**Коллекция обсерверов.*/
     protected List<ExplorerObserver> observers = new ArrayList<>();
 
@@ -90,11 +90,11 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements PluginsU
 
     @Override
     public void notifyPlugins(final String key, final Object object) {
-        this.plugins.values().parallelStream().forEach(plugin -> plugin.updatePluginObjects(key, object));
+        this.plugins.keySet().parallelStream().forEach(plugin -> plugin.updatePluginObjects(key, object));
     }
 
     @Override
     public Collection<UniformSystemPlugin> getPlugins() {
-        return this.plugins.values();
+        return this.plugins.keySet();
     }
 }

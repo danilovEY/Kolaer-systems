@@ -71,9 +71,9 @@ public class VTabImpl implements VTab {
 
 	@Override
 	public void setTitle(final String title) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnThreadFXAndWain(() -> {
 			this.tab.setText(title);
-		});
+		},20, TimeUnit.SECONDS);
 	}
 
 	@Override

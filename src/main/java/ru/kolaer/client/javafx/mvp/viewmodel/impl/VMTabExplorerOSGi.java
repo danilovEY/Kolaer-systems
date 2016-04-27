@@ -20,8 +20,8 @@ import java.util.concurrent.Executors;
  */
 public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     private static final Logger LOG = LoggerFactory.getLogger(VMTabExplorerOSGi.class);
-    private boolean openASUP = false;
-
+    private boolean openASUP = true;
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initSelectionModel();
@@ -56,16 +56,19 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
             tab.getView().setTitle(tabName);
 
             this.pluginTabMap.put(tabName, tab);
-
+            this.plugins.put(uniformSystemPlugin.getUniformSystemPlugin(), uniformSystemPlugin);
+            
             Tools.runOnThreadFX(() -> {
+            	LOG.info("{}: Добавление вкладки...", uniformSystemPlugin.getSymbolicNamePlugin());
                 if(uniformSystemPlugin.getSymbolicNamePlugin().equals("ru.kolaer.asmc")) {
                     this.openASUP = true;
                     this.pluginsTabPane.getTabs().add(0,tab.getView().getContent());
+                    this.pluginsTabPane.getSelectionModel().select(0);
                 } else {
                 	 this.pluginsTabPane.getTabs().add(tab.getView().getContent());
                 }
             });
-
+            initPluginContentThread.shutdown();
         }, initPluginContentThread).exceptionally(t -> {
             LOG.error("Ошибка!", t);
             return null;
@@ -107,7 +110,12 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public void showPlugin(UniformSystemPlugin uniformSystemPlugin) {
-
+    	this.pluginTabMap.values().parallelStream().forEach(tab -> {
+    		if(tab.getModel().getUniformSystemPlugin() == uniformSystemPlugin) {
+    			this.pluginsTabPane.getSelectionModel().select(tab.getView().getContent());
+    			return;
+    		}
+    	});
     }
 
     @Override
@@ -117,11 +125,11 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public String getPluginVersion(UniformSystemPlugin uniformSystemPlugin) {
-        return null;
+        return this.plugins.get(uniformSystemPlugin).getVersion();
     }
 
     @Override
     public String getNamePlugin(UniformSystemPlugin uniformSystemPlugin) {
-        return null;
+        return this.plugins.get(uniformSystemPlugin).getNamePlugin();
     }
 }

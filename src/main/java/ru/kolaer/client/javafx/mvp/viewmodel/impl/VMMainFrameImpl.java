@@ -97,7 +97,7 @@ public class VMMainFrameImpl extends Application {
 
             final ExecutorService threadScan = Executors.newSingleThreadExecutor();
             CompletableFuture.runAsync(() -> {
-                Thread.currentThread().setName("Скан и добавление плагинов");
+                Thread.currentThread().setName("Инициализация менеджера плагинов");
                 final PluginManager pluginManager = new PluginManager();
 
                 try {
@@ -108,10 +108,11 @@ public class VMMainFrameImpl extends Application {
                 }
 
                 for (final PluginBundle pluginBundle : pluginManager.getSearchPlugins().search()) {
-                    final ExecutorService initPluginThread = Executors.newCachedThreadPool();
+                    final ExecutorService initPluginThread = Executors.newSingleThreadExecutor();
                     CompletableFuture.supplyAsync(() -> {
                         try {
-                            LOG.info("Plugin: {}", pluginBundle.getSymbolicNamePlugin());
+                        	Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
+                            LOG.info("{}: Установка плагина.", pluginBundle.getSymbolicNamePlugin());
                             pluginManager.install(pluginBundle);
                         } catch (final BundleException e) {
                             LOG.error("Ошибка при установке/запуска плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
@@ -119,36 +120,48 @@ public class VMMainFrameImpl extends Application {
                                 pluginManager.uninstall(pluginBundle);
                             } catch (BundleException e1) {
                                 LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
-                                throw new ExceptionInInitializerError("Ошибка при удалении плагина");
+                                return null;
                             }
+                            return null;
                         }
                         return pluginBundle;
                     }, initPluginThread).thenApplyAsync(plugin -> {
-                        final UniformSystemPlugin uniformSystemPlugin = pluginBundle.getUniformSystemPlugin();
-                        try {
-                            uniformSystemPlugin.initialization(UniformSystemEditorKitSingleton.getInstance());
-                        } catch (final Exception e) {
-                            LOG.error("Ошибка при инициализации плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
-                            try {
-                                pluginManager.uninstall(pluginBundle);
-                            } catch (final BundleException e1) {
-                                LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
-                            }
-                        }
-
+                    	if(plugin != null) {
+	                    	LOG.info("{}: Получение USP...", plugin.getSymbolicNamePlugin());
+	                        final UniformSystemPlugin uniformSystemPlugin = pluginBundle.getUniformSystemPlugin();
+	                        if(uniformSystemPlugin == null) {
+	                        	LOG.info("{}: USP is null!", plugin.getSymbolicNamePlugin());
+	                        	return null;
+	                        }
+	                        try {
+	                        	LOG.info("{}: Инициализация USP...", plugin.getSymbolicNamePlugin());
+	                            uniformSystemPlugin.initialization(UniformSystemEditorKitSingleton.getInstance());
+	                        } catch (final Exception e) {
+	                            LOG.error("Ошибка при инициализации плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
+	                            try {
+	                                pluginManager.uninstall(pluginBundle);
+	                            } catch (final BundleException e1) {
+	                                LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
+	                            }
+	                        }
+                    	}
                         return plugin;
                     }, initPluginThread).thenAcceptAsync(plugin -> {
-                        final Collection<Service> pluginServices = plugin.getUniformSystemPlugin().getServices();
-                        if (pluginServices != null) {
-                            pluginServices.parallelStream().forEach(this.servicesManager::addService);
-                        }
-
-                        final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
-                        explorer.addTabPlugin(tabName, plugin);
-                    }).exceptionally(t -> {
+                    	if(plugin != null) {
+	                    	LOG.info("{}: Получение служб...", plugin.getSymbolicNamePlugin());
+	                        final Collection<Service> pluginServices = plugin.getUniformSystemPlugin().getServices();
+	                        if (pluginServices != null) {
+	                            pluginServices.parallelStream().forEach(this.servicesManager::addService);
+	                        }
+	
+	                        final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
+	                        explorer.addTabPlugin(tabName, plugin);
+                    	}
+                        initPluginThread.shutdown();
+                    }, initPluginThread).exceptionally(t -> {
+                    	LOG.error("Ошибка!", t);
                         return null;
                     });
-
                 }
                 threadScan.shutdown();
             }, threadScan).exceptionally(t -> {
