@@ -139,7 +139,7 @@ public class CMainFrame extends Application {
 				new CAbout().show();
 			});
 			
-			this.addEditorKit(null);
+			
 		});
 	}
 	
@@ -207,13 +207,13 @@ public class CMainFrame extends Application {
 				final FXMLLoader loader = new FXMLLoader(Resources.V_MAIN_FRAME);
 				loader.setController(this);
 				final Parent root = loader.load();
+				this.addEditorKit(null);
 				if(root != null) {
-						primaryStage.setScene(new Scene(root));	
-						primaryStage.centerOnScreen();
-						primaryStage.show();
+					primaryStage.setScene(new Scene(root));	
+					primaryStage.centerOnScreen();
+					primaryStage.show();
 				}
-			}
-			catch(IOException e){
+			}catch(IOException e){
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Ошибка!");
 				alert.setHeaderText("Ошибка при инициализации view: \""+Resources.V_MAIN_FRAME+"\"");
@@ -245,7 +245,5 @@ public class CMainFrame extends Application {
 			}
 		});
 		thread.shutdown();
-		
-		
 	}
 }
