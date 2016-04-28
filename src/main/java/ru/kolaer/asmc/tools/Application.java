@@ -62,6 +62,11 @@ public class Application implements Runnable {
 		return (os.indexOf("win") >= 0);
 	}
 
+	public static boolean isWindowsXP() {
+		String os = System.getProperty("os.name").toLowerCase();
+		return (os.indexOf("xp") >= 0);
+	}
+	
 	public static boolean isMac() {
 		String os = System.getProperty("os.name").toLowerCase();
 		return (os.indexOf("mac") >= 0);
@@ -97,6 +102,17 @@ public class Application implements Runnable {
 		}
 	}
 
+	private void operUrlInPluginBrowser(final String url) {
+		for(final UniformSystemPlugin plugin : this.editorKit.getPluginsUS().getPlugins()) {
+			if(this.editorKit.getPluginsUS().getNamePlugin(plugin).equals("Браузер")) {
+				this.editorKit.getPluginsUS().showPlugin(plugin);
+				break;
+			}
+		}
+		
+		this.editorKit.getPluginsUS().notifyPlugins("url", url);
+	}
+	
 	@Override
 	public void run() {
 		try {
@@ -107,17 +123,14 @@ public class Application implements Runnable {
 					String pathWeb = "";
 					if(SettingSingleton.getInstance().isAllLabels()) {
 						if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
-							for(final UniformSystemPlugin plugin : this.editorKit.getPluginsUS().getPlugins()) {
-								if(this.editorKit.getPluginsUS().getNamePlugin(plugin).equals("Браузер")) {
-									this.editorKit.getPluginsUS().showPlugin(plugin);
-									break;
-								}
-							}
-							
-							this.editorKit.getPluginsUS().notifyPlugins("url", this.pathApp);
+							this.operUrlInPluginBrowser(this.pathApp);
 							return;
 						} else if(SettingSingleton.getInstance().isDefaultUserWebBrowser()) {
-							r.exec("cmd /C explorer \"" + this.pathApp + "\"");
+							if(isWindowsXP()) {
+								this.operUrlInPluginBrowser(this.pathApp);
+							} else {
+								r.exec("cmd /C explorer \"" + this.pathApp + "\"");
+							}
 							return;
 						} else {
 							pathWeb = SettingSingleton.getInstance().getPathWebBrowser();
