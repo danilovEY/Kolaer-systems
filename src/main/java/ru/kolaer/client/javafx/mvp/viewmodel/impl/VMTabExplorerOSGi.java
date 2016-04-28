@@ -113,7 +113,9 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     public void showPlugin(final UniformSystemPlugin uniformSystemPlugin) {
     	this.pluginTabMap.values().parallelStream().forEach(tab -> {
     		if(tab.getModel().getUniformSystemPlugin() == uniformSystemPlugin) {
-    			this.pluginsTabPane.getSelectionModel().select(tab.getView().getContent());
+    			Tools.runOnThreadFX(() -> {
+    				this.pluginsTabPane.getSelectionModel().select(tab.getView().getContent());
+    			});
     			return;
     		}
     	});
