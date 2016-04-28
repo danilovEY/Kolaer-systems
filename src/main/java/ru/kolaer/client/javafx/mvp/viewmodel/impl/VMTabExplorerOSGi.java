@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
  * Created by Danilov on 15.04.2016.
  */
 public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
-    private static final Logger LOG = LoggerFactory.getLogger(VMTabExplorerOSGi.class);
+    private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerOSGi.class);
     private boolean openASUP = false;
     
     @Override
@@ -71,6 +71,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
             initPluginContentThread.shutdown();
         }, initPluginContentThread).exceptionally(t -> {
             LOG.error("Ошибка!", t);
+            initPluginContentThread.shutdownNow();
             return null;
         });
     }

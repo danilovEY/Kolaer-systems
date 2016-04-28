@@ -21,7 +21,6 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.services.*;
-import ru.kolaer.client.javafx.system.StatusBarUSImpl;
 import ru.kolaer.client.javafx.system.UISystemUSImpl;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.tools.Resources;
@@ -51,8 +50,7 @@ public class VMMainFrameImpl extends Application {
     /**
      * Панель с контентом главного окна.
      */
-    @FXML
-    private BorderPane mainPane;
+    @FXML private BorderPane mainPane;
     /**
      * Менеджер служб.
      */
@@ -64,8 +62,11 @@ public class VMMainFrameImpl extends Application {
 
     @FXML
     public void initialize() {
+    	Thread.currentThread().setName("Главный поток");
+    	
         this.servicesManager = new ServiceControlManager();
         this.initApplicationParams();
+        
         //Статус бар приложения.
         final HBox statusBar = new HBox();
         statusBar.setPadding(new Insets(0, 30, 0, 30));
@@ -76,7 +77,7 @@ public class VMMainFrameImpl extends Application {
         //Инициализация вкладочного explorer'а.
         final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
 
-        final UISystemUSImpl uiSystemUS = new UISystemUSImpl(new StatusBarUSImpl(statusBar));
+        final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
 
         final UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
         editorKit.setUISystemUS(uiSystemUS);
@@ -112,13 +113,13 @@ public class VMMainFrameImpl extends Application {
                 CompletableFuture.supplyAsync(() -> {
                     try {
                     	Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
-                        LOG.info("{}: Установка плагина.", pluginBundle.getSymbolicNamePlugin());
+                        LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
                         pluginManager.install(pluginBundle);
                     } catch (final BundleException e) {
                         LOG.error("Ошибка при установке/запуска плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
                         try {
                             pluginManager.uninstall(pluginBundle);
-                        } catch (BundleException e1) {
+                        } catch (final BundleException e1) {
                             LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
                         }
                         initPluginThread.shutdownNow();

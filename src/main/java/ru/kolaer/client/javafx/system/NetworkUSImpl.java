@@ -37,7 +37,7 @@ public class NetworkUSImpl implements NetworkUS {
 				case "not available": return ServerStatus.NOT_AVAILABLE;
 				default: return ServerStatus.UNKNOW;
 			}
-		} catch(RestClientException ex) {
+		} catch(final RestClientException ex) {
 			return ServerStatus.NOT_AVAILABLE;
 		}
 	}

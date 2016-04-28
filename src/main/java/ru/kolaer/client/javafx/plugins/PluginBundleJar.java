@@ -37,7 +37,7 @@ public class PluginBundleJar extends PluginBundle {
 
         final  PluginBundleJar pluginBundle = new PluginBundleJar(plugin);
 
-        try (final JarInputStream is = new JarInputStream(new FileInputStream(plugin))) {
+        try (final FileInputStream fileInputStream = new FileInputStream(plugin); final JarInputStream is = new JarInputStream(fileInputStream)) {
             final Manifest mf = is.getManifest();
             if(mf == null) {
                 LOG.error("Не найден манифест в файле: {}", plugin.getAbsoluteFile());

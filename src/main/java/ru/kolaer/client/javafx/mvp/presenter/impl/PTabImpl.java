@@ -66,7 +66,11 @@ public class PTabImpl implements PTab {
 					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createErrorDialog(this.plugin.getNamePlugin(), "Ошибка при запуске плагина!").show();
 				}
 				threadRunPlugin.shutdown();
-			}, threadRunPlugin);
+			}, threadRunPlugin).exceptionally(t -> {
+				LOG.error("Ошибка в работе плагина: {}", this.plugin.getSymbolicNamePlugin(), t);
+				threadRunPlugin.shutdownNow();
+				return null;
+			});
 
 			this.isActive = true;	
 		}
@@ -86,7 +90,7 @@ public class PTabImpl implements PTab {
 				try {
 					this.plugin.getUniformSystemPlugin().stop();
 				} catch (final Exception e) {
-					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getSymbolicNamePlugin(),e);
+					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getSymbolicNamePlugin(), e);
 					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createErrorDialog(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!").show();
 				}
 
@@ -95,7 +99,11 @@ public class PTabImpl implements PTab {
 
 				this.view.closeTab();
 				threadStopPlugin.shutdown();
-			}, threadStopPlugin);
+			}, threadStopPlugin).exceptionally(t -> {
+				LOG.error("Ошибка при остановке плагина: {}", this.plugin.getSymbolicNamePlugin(), t);
+				threadStopPlugin.shutdownNow();
+				return null;
+			});
 		}
 	}
 

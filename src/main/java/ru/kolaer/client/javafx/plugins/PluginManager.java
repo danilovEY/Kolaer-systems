@@ -93,30 +93,26 @@ public class PluginManager {
             while (entrs.hasMoreElements()) {
                 final URL url = entrs.nextElement();
                 final String classPath = url.getPath().substring(1,url.getPath().length() - ".class".length());
-                Class cls = null;
-
                 try {
-                    cls = bundle.loadClass(classPath.replace("/","."));
-                } catch (ClassNotFoundException | NoClassDefFoundError e) {
-                    LOG.error("Ошибка при чтении класса: {}", classPath, e);
-                    continue;
-                }
-
-                for(Class inter : cls.getInterfaces()) {
-                    if(inter == UniformSystemPlugin.class) {
-                        try {
-                            LOG.info("Class is USP: {}", cls);
-                            final UniformSystemPlugin plugin = (UniformSystemPlugin) cls.newInstance();
-                            pluginBundle.setUniformSystemPlugin(plugin);
-                            return true;
-                        } catch (InstantiationException | IllegalAccessException e) {
-                           LOG.error("Ошибка при создании объекта: {}", pluginBundle.getSymbolicNamePlugin(), e);
-                            break;
+                	final Class<?> cls = bundle.loadClass(classPath.replace("/","."));
+                    
+                    for(Class<?> inter : cls.getInterfaces()) {
+                        if(inter == UniformSystemPlugin.class) {
+                            try {
+                                LOG.info("Class is USP: {}", cls);
+                                final UniformSystemPlugin plugin = (UniformSystemPlugin) cls.newInstance();
+                                pluginBundle.setUniformSystemPlugin(plugin);
+                                return true;
+                            } catch (InstantiationException | IllegalAccessException e) {
+                               LOG.error("Ошибка при создании объекта: {}", pluginBundle.getSymbolicNamePlugin(), e);
+                                break;
+                            }
                         }
                     }
+                } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                    LOG.error("Ошибка при чтении класса: {}", classPath, e);
                 }
             }
-
         } else {
             LOG.error("URL plugin: {} is null!", pluginBundle.getSymbolicNamePlugin());
             return false;
@@ -145,12 +141,6 @@ public class PluginManager {
         }
 
         return true;
-    }
-
-
-    public void updatePlugins() {
-        final List<PluginBundle> plugins =  this.searchPlugins.search();
-
     }
 
     public void setSearchPlugins(SearchPlugins searchPlugins) {
