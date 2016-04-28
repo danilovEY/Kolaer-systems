@@ -96,8 +96,6 @@ public class PTabImpl implements PTab {
 				this.view.closeTab();
 				threadStopPlugin.shutdown();
 			}, threadStopPlugin);
-
-
 		}
 	}
 

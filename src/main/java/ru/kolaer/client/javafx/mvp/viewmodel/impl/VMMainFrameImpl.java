@@ -151,7 +151,7 @@ public class VMMainFrameImpl extends Application {
 	                        if (pluginServices != null) {
 	                            pluginServices.parallelStream().forEach(this.servicesManager::addService);
 	                        }
-	                        System.out.println("----------" + plugin.getSymbolicNamePlugin());
+	                        
 	                        final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
 	                        explorer.addTabPlugin(tabName, plugin);
                     	}

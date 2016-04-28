@@ -23,22 +23,22 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     private boolean openASUP = false;
     
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         this.initSelectionModel();
     }
 
     @Override
-    public void addPlugin(PluginBundle pluginBundle) {
+    public void addPlugin(final PluginBundle pluginBundle) {
         this.addTabPlugin(pluginBundle.getNamePlugin(), pluginBundle);
     }
 
     @Override
-    public void addAllPlugins(Collection<PluginBundle> plugins) {
+    public void addAllPlugins(final Collection<PluginBundle> plugins) {
         plugins.parallelStream().forEach(this::addPlugin);
     }
 
     @Override
-    public void removePlugin(PluginBundle pluginBundle) {
+    public void removePlugin(final PluginBundle pluginBundle) {
         this.removeTabPlugin(pluginBundle.getNamePlugin());
     }
 
@@ -49,7 +49,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
 
     @Override
-    public void addTabPlugin(String tabName, PluginBundle uniformSystemPlugin) {
+    public void addTabPlugin(final String tabName, final PluginBundle uniformSystemPlugin) {
         final ExecutorService initPluginContentThread = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             final PTab tab = new PTabImpl(uniformSystemPlugin);
@@ -76,7 +76,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     }
 
     @Override
-    public void removeTabPlugin(String name) {
+    public void removeTabPlugin(final String name) {
 
     }
 
@@ -109,7 +109,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     }
 
     @Override
-    public void showPlugin(UniformSystemPlugin uniformSystemPlugin) {
+    public void showPlugin(final UniformSystemPlugin uniformSystemPlugin) {
     	this.pluginTabMap.values().parallelStream().forEach(tab -> {
     		if(tab.getModel().getUniformSystemPlugin() == uniformSystemPlugin) {
     			this.pluginsTabPane.getSelectionModel().select(tab.getView().getContent());
@@ -119,17 +119,17 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     }
 
     @Override
-    public void notifyPlugins(String key, Object object) {
+    public void notifyPlugins(final String key, final Object object) {
         super.notifyPlugins(key, object);
     }
 
     @Override
-    public String getPluginVersion(UniformSystemPlugin uniformSystemPlugin) {
+    public String getPluginVersion(final UniformSystemPlugin uniformSystemPlugin) {
         return this.plugins.get(uniformSystemPlugin).getVersion();
     }
 
     @Override
-    public String getNamePlugin(UniformSystemPlugin uniformSystemPlugin) {
+    public String getNamePlugin(final UniformSystemPlugin uniformSystemPlugin) {
         return this.plugins.get(uniformSystemPlugin).getNamePlugin();
     }
 }
