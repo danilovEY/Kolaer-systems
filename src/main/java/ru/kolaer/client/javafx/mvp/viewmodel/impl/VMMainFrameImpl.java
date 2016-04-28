@@ -3,14 +3,11 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
@@ -67,12 +64,6 @@ public class VMMainFrameImpl extends Application {
         this.servicesManager = new ServiceControlManager();
         this.initApplicationParams();
         
-        //Статус бар приложения.
-        final HBox statusBar = new HBox();
-        statusBar.setPadding(new Insets(0, 30, 0, 30));
-        statusBar.setSpacing(30);
-        statusBar.setAlignment(Pos.CENTER_RIGHT);
-        statusBar.setStyle("-fx-background-color: #66CCFF");
 
         //Инициализация вкладочного explorer'а.
         final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
@@ -83,7 +74,6 @@ public class VMMainFrameImpl extends Application {
         editorKit.setUISystemUS(uiSystemUS);
         editorKit.setPluginsUS(explorer);
 
-        this.mainPane.setBottom(statusBar);
         this.mainPane.setCenter(explorer.getContent());
 
         final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
