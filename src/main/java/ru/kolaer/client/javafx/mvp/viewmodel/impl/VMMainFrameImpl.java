@@ -29,6 +29,7 @@ import ru.kolaer.client.javafx.tools.Resources;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -63,111 +64,115 @@ public class VMMainFrameImpl extends Application {
 
     @FXML
     public void initialize() {
-        Tools.runOnThreadFX(() -> {
-            this.servicesManager = new ServiceControlManager();
-            this.initApplicationParams();
-            //Статус бар приложения.
-            final HBox statusBar = new HBox();
-            statusBar.setPadding(new Insets(0, 30, 0, 30));
-            statusBar.setSpacing(30);
-            statusBar.setAlignment(Pos.CENTER_RIGHT);
-            statusBar.setStyle("-fx-background-color: #66CCFF");
+        this.servicesManager = new ServiceControlManager();
+        this.initApplicationParams();
+        //Статус бар приложения.
+        final HBox statusBar = new HBox();
+        statusBar.setPadding(new Insets(0, 30, 0, 30));
+        statusBar.setSpacing(30);
+        statusBar.setAlignment(Pos.CENTER_RIGHT);
+        statusBar.setStyle("-fx-background-color: #66CCFF");
 
-            //Инициализация вкладочного explorer'а.
-            final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
+        //Инициализация вкладочного explorer'а.
+        final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
 
-            final UISystemUSImpl uiSystemUS = new UISystemUSImpl(new StatusBarUSImpl(statusBar));
+        final UISystemUSImpl uiSystemUS = new UISystemUSImpl(new StatusBarUSImpl(statusBar));
 
-            final UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
-            editorKit.setUISystemUS(uiSystemUS);
-            editorKit.setPluginsUS(explorer);
+        final UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
+        editorKit.setUISystemUS(uiSystemUS);
+        editorKit.setPluginsUS(explorer);
 
-            this.mainPane.setBottom(statusBar);
-            this.mainPane.setCenter(explorer.getContent());
+        this.mainPane.setBottom(statusBar);
+        this.mainPane.setCenter(explorer.getContent());
 
-            final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
-            CompletableFuture.runAsync(() -> {
-                Thread.currentThread().setName("Добавление системны служб");
-                this.servicesManager.addService(new UserPingService(), true);
-                this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
-                threadStartService.shutdown();
-            }, threadStartService);
+        final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() -> {
+            Thread.currentThread().setName("Добавление системны служб");
+            this.servicesManager.addService(new UserPingService(), true);
+            this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
+            threadStartService.shutdown();
+        }, threadStartService);
 
-            final ExecutorService threadScan = Executors.newSingleThreadExecutor();
-            CompletableFuture.runAsync(() -> {
-                Thread.currentThread().setName("Инициализация менеджера плагинов");
-                final PluginManager pluginManager = new PluginManager();
+        final ExecutorService threadScan = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() -> {
+            Thread.currentThread().setName("Инициализация менеджера плагинов");
+            final PluginManager pluginManager = new PluginManager();
 
-                try {
-                    pluginManager.initialization();
-                } catch (Exception e) {
-                    LOG.error("Ошибка при инициализации менеджера плагинов!", e);
-                    throw new RuntimeException("Ошибка при инициализации менеджера плагинов!");
-                }
-
-                for (final PluginBundle pluginBundle : pluginManager.getSearchPlugins().search()) {
-                    final ExecutorService initPluginThread = Executors.newSingleThreadExecutor();
-                    CompletableFuture.supplyAsync(() -> {
+            try {
+                pluginManager.initialization();
+            } catch (final Exception e) {
+                LOG.error("Ошибка при инициализации менеджера плагинов!", e);
+                throw new RuntimeException("Ошибка при инициализации менеджера плагинов!");
+            }
+            
+            final List<PluginBundle> plugins = pluginManager.getSearchPlugins().search();
+            
+            for (final PluginBundle pluginBundle : plugins) {
+                final ExecutorService initPluginThread = Executors.newSingleThreadExecutor();
+                CompletableFuture.supplyAsync(() -> {
+                    try {
+                    	Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
+                        LOG.info("{}: Установка плагина.", pluginBundle.getSymbolicNamePlugin());
+                        pluginManager.install(pluginBundle);
+                    } catch (final BundleException e) {
+                        LOG.error("Ошибка при установке/запуска плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
                         try {
-                        	Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
-                            LOG.info("{}: Установка плагина.", pluginBundle.getSymbolicNamePlugin());
-                            pluginManager.install(pluginBundle);
-                        } catch (final BundleException e) {
-                            LOG.error("Ошибка при установке/запуска плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
+                            pluginManager.uninstall(pluginBundle);
+                        } catch (BundleException e1) {
+                            LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
+                        }
+                        initPluginThread.shutdownNow();
+                        return null;
+                    }
+                    return pluginBundle;
+                }, initPluginThread).thenApplyAsync(plugin -> {
+                	if(plugin != null) {
+                    	LOG.info("{}: Получение USP...", plugin.getSymbolicNamePlugin());
+                        final UniformSystemPlugin uniformSystemPlugin = pluginBundle.getUniformSystemPlugin();
+                        if(uniformSystemPlugin == null) {
+                        	LOG.info("{}: USP is null!", plugin.getSymbolicNamePlugin());
+                        	initPluginThread.shutdownNow();
+                        }
+                        try {
+                        	LOG.info("{}: Инициализация USP...", plugin.getSymbolicNamePlugin());
+                            uniformSystemPlugin.initialization(UniformSystemEditorKitSingleton.getInstance());
+                        } catch (final Exception e) {
+                            LOG.error("Ошибка при инициализации плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
                             try {
                                 pluginManager.uninstall(pluginBundle);
-                            } catch (BundleException e1) {
+                            } catch (final BundleException e1) {
                                 LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
-                                return null;
                             }
-                            return null;
+                            initPluginThread.shutdownNow();
                         }
-                        return pluginBundle;
-                    }, initPluginThread).thenApplyAsync(plugin -> {
-                    	if(plugin != null) {
-	                    	LOG.info("{}: Получение USP...", plugin.getSymbolicNamePlugin());
-	                        final UniformSystemPlugin uniformSystemPlugin = pluginBundle.getUniformSystemPlugin();
-	                        if(uniformSystemPlugin == null) {
-	                        	LOG.info("{}: USP is null!", plugin.getSymbolicNamePlugin());
-	                        	return null;
-	                        }
-	                        try {
-	                        	LOG.info("{}: Инициализация USP...", plugin.getSymbolicNamePlugin());
-	                            uniformSystemPlugin.initialization(UniformSystemEditorKitSingleton.getInstance());
-	                        } catch (final Exception e) {
-	                            LOG.error("Ошибка при инициализации плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
-	                            try {
-	                                pluginManager.uninstall(pluginBundle);
-	                            } catch (final BundleException e1) {
-	                                LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
-	                            }
-	                        }
-                    	}
-                        return plugin;
-                    }, initPluginThread).thenAcceptAsync(plugin -> {
-                    	if(plugin != null) {
-	                    	LOG.info("{}: Получение служб...", plugin.getSymbolicNamePlugin());
-	                        final Collection<Service> pluginServices = plugin.getUniformSystemPlugin().getServices();
-	                        if (pluginServices != null) {
-	                            pluginServices.parallelStream().forEach(this.servicesManager::addService);
-	                        }
-	                        
-	                        final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
-	                        explorer.addTabPlugin(tabName, plugin);
-                    	}
-                        initPluginThread.shutdown();
-                    }, initPluginThread).exceptionally(t -> {
-                    	LOG.error("Ошибка!", t);
-                        return null;
-                    });
-                }
-                threadScan.shutdown();
-            }, threadScan).exceptionally(t -> {
-                LOG.error("Ошибка при сканировании плагинов!", t);
-                editorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Ошибка при сканировании плагинов!").show();
-                threadScan.shutdownNow();
-                return null;
-            });
+                	}
+                    return plugin;
+                }, initPluginThread).thenAcceptAsync(plugin -> {
+                	if(plugin != null) {
+                    	LOG.info("{}: Получение служб...", plugin.getSymbolicNamePlugin());
+                        final Collection<Service> pluginServices = plugin.getUniformSystemPlugin().getServices();
+                        if (pluginServices != null) {
+                            pluginServices.parallelStream().forEach(this.servicesManager::addService);
+                            pluginServices.clear();
+                        }
+                        
+                        final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
+                        explorer.addTabPlugin(tabName, plugin);
+                	}
+                    initPluginThread.shutdown();
+                }, initPluginThread).exceptionally(t -> {
+                	LOG.error("Ошибка!", t);
+                	initPluginThread.shutdownNow();
+                    return null;
+                });
+            }
+            
+            plugins.clear();
+            threadScan.shutdown();
+        }, threadScan).exceptionally(t -> {
+            LOG.error("Ошибка при инициализации менеджера плагинов!", t);
+            threadScan.shutdownNow();
+            return null;
         });
     }
 
@@ -185,6 +190,7 @@ public class VMMainFrameImpl extends Application {
             this.servicesManager.addService(new UserWindowsKeyListenerService());
             this.servicesManager.runAllServices();
         }
+        PARAM.clear();
     }
 
     @Override
