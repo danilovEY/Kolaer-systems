@@ -21,20 +21,20 @@ import java.util.concurrent.TimeUnit;
  */
 public class VTabImpl implements VTab {
 	/**JavaFX вкладка.*/
-	private final Tab tab;
+	private Tab tab;
 	/**Окно плагина.*/
 	private Stage stage;
 
 	private Node content;
 
 	public VTabImpl() {
-		this.tab = new Tab();
 		Tools.runOnThreadFXAndWain(() -> {
 			this.init();
 		}, 20, TimeUnit.SECONDS);
 	}
 	
 	private void init() {	
+		this.tab = new Tab();
 		this.tab.setText("Плагин");
 		this.tab.setStyle(".tab .tab:selected{-fx-background-color: #3c3c3c;} .tab.tab-label { -fx-text-fill: -fx-text-base-color; -fx-font-size: 18px;}");
 		final MenuItem openInWindow = new MenuItem("Открыть в новом окне");
@@ -43,8 +43,8 @@ public class VTabImpl implements VTab {
 				if(this.stage == null) {
 					this.stage = new Stage();				
 					this.stage.setOnCloseRequest(event -> {
-							stage.setScene(null);
-							this.tab.setContent(this.content);
+						stage.setScene(null);
+						this.tab.setContent(this.content);
 					});
 				}
 				this.tab.setContent(new Region());
@@ -92,7 +92,7 @@ public class VTabImpl implements VTab {
 			if(this.stage != null) {
 				this.stage.close();
 			}
-			this.setContent(null);
+			this.tab.setContent(null);
 			this.tab.getTabPane().getTabs().remove(this.tab);
 		});
 	}	
