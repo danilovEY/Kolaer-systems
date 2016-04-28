@@ -23,17 +23,13 @@ import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
  * @version 0.1
  */
 public class SerializationObjects {
-	private final Logger LOG = LoggerFactory.getLogger(SerializationObjects.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SerializationObjects.class);
 	
 	private final String pathDitSerializedObject = "data";
 	private final String fileNameSerializeObjects = "objects.aer";
 	private final File settingFile = new File("setting.aer");
 	private File fileSer = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
 	private List<MGroupLabels> cacheObjects;
-
-	public SerializationObjects() {
-
-	}
 	
 	public void setSerializeSetting(final SettingSingleton setting) {
 		if(!this.settingFile.exists()) {
@@ -81,7 +77,8 @@ public class SerializationObjects {
 			return this.cacheObjects;
 
 		if(!this.fileSer.exists()) {
-			return new ArrayList<>();
+			this.cacheObjects = new ArrayList<>(); 
+			return this.cacheObjects;
 		}
 		try(FileInputStream fileInput = new FileInputStream(this.fileSer); ObjectInputStream objectInput = new ObjectInputStream(fileInput)){
 			if(objectInput.available() != -1){

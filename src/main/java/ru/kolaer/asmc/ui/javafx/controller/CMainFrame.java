@@ -138,6 +138,8 @@ public class CMainFrame extends Application {
 			this.menuItemAbout.setOnAction(e -> {
 				new CAbout().show();
 			});
+			
+			this.addEditorKit(null);
 		});
 	}
 	
@@ -202,7 +204,9 @@ public class CMainFrame extends Application {
 	public void start(Stage primaryStage) {
 		Platform.runLater(() -> {
 			try{
-				final Parent root = FXMLLoader.load(Resources.V_MAIN_FRAME);
+				final FXMLLoader loader = new FXMLLoader(Resources.V_MAIN_FRAME);
+				loader.setController(this);
+				final Parent root = loader.load();
 				if(root != null) {
 						primaryStage.setScene(new Scene(root));	
 						primaryStage.centerOnScreen();
@@ -213,7 +217,7 @@ public class CMainFrame extends Application {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Ошибка!");
 				alert.setHeaderText("Ошибка при инициализации view: \""+Resources.V_MAIN_FRAME+"\"");
-				
+				alert.setContentText(e.getMessage());
 				alert.showAndWait();
 			}
 		});
@@ -241,5 +245,7 @@ public class CMainFrame extends Application {
 			}
 		});
 		thread.shutdown();
+		
+		
 	}
 }
