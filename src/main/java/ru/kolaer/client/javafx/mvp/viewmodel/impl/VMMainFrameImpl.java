@@ -76,13 +76,11 @@ public class VMMainFrameImpl extends Application {
             //Инициализация вкладочного explorer'а.
             final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
 
-
             final UISystemUSImpl uiSystemUS = new UISystemUSImpl(new StatusBarUSImpl(statusBar));
 
             final UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
             editorKit.setUISystemUS(uiSystemUS);
             editorKit.setPluginsUS(explorer);
-
 
             this.mainPane.setBottom(statusBar);
             this.mainPane.setCenter(explorer.getContent());
@@ -153,7 +151,7 @@ public class VMMainFrameImpl extends Application {
 	                        if (pluginServices != null) {
 	                            pluginServices.parallelStream().forEach(this.servicesManager::addService);
 	                        }
-	
+	                        System.out.println("----------" + plugin.getSymbolicNamePlugin());
 	                        final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
 	                        explorer.addTabPlugin(tabName, plugin);
                     	}

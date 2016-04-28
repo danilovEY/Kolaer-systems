@@ -46,7 +46,7 @@ public class PluginManager {
         }
 
         frameworkProperties.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
-        frameworkProperties.put("felix.log.level", "4");
+        frameworkProperties.put("felix.log.level", "2");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework,"+

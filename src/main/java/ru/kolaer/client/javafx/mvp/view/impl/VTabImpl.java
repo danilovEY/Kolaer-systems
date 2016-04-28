@@ -6,6 +6,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.view.VTab;
@@ -43,11 +44,11 @@ public class VTabImpl implements VTab {
 					this.stage = new Stage();				
 					this.stage.setOnCloseRequest(event -> {
 							stage.setScene(null);
-							tab.setContent(VTabImpl.this.content);
+							this.tab.setContent(this.content);
 					});
 				}
-				this.tab.setContent(null);
-				this.stage.setScene(new Scene(new BorderPane(VTabImpl.this.content), 1024, 768));
+				this.tab.setContent(new Region());
+				this.stage.setScene(new Scene(new BorderPane(this.content), 1024, 768));
 				this.stage.centerOnScreen();
 				this.stage.show();
 			});
@@ -65,7 +66,11 @@ public class VTabImpl implements VTab {
 	public void setContent(final Node parent) {
 		Tools.runOnThreadFXAndWain(() -> {
 			this.content = parent;
-			this.tab.setContent(parent);
+			if(parent == null) {
+				this.tab.setContent(new Region());
+			} else {
+				this.tab.setContent(parent);
+			}
 		},20, TimeUnit.SECONDS);
 	}
 

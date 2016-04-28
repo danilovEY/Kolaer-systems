@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
  */
 public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     private static final Logger LOG = LoggerFactory.getLogger(VMTabExplorerOSGi.class);
-    private boolean openASUP = true;
+    private boolean openASUP = false;
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
