@@ -104,7 +104,7 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
 
-    	final Integer countUsers = JsonConverterSinleton.getInstance().getEntity(this.path.path("get").path("users").path("birthday").path(property.getValue()).path("count"), Integer.class);
+    	final Integer countUsers = Integer.valueOf(this.path.path("get").path("users").path("birthday").path(property.getValue()).path("count").get(String.class));
     	return countUsers;
 	}
 

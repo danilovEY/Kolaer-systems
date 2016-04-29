@@ -1,15 +1,20 @@
 package ru.kolaer.client.javafx.system;
 
-//import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.PublicHolidays;
 import ru.kolaer.api.system.PublicHolidaysDateBase;
-import ru.kolaer.client.javafx.tools.Resources;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.sun.jersey.api.client.WebResource;
 
 public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
-	//private final RestTemplate rest = new RestTemplate();
+	private final WebResource path;
 	
+	public PublicHolidaysDateBaseImpl(final WebResource path) {
+		this.path = path;
+	}
+
 	@Override
 	public PublicHolidays[] getPublicHolidaysInThisMonth() {
 		final LocalDate date = LocalDate.now();
@@ -18,11 +23,24 @@ public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
 
 	@Override
 	public PublicHolidays[] getPublicHolidays(final int month, final int year) {
-		return new PublicHolidays[0];//rest.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/other/holidays/get/" + String.valueOf(month) + "/" + String.valueOf(year), PublicHolidays[].class);
+		final List<PublicHolidays> holidays = JsonConverterSinleton.getInstance().getEntitys(path.path("get").path(String.valueOf(month)).path(String.valueOf(year)), PublicHolidays.class);
+		
+		return listToArray(holidays);
 	}
 
 	@Override
 	public PublicHolidays[] getPublicHolidaysAll() {
-		return new PublicHolidays[0];//rest.getForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/other/holidays/get/all", PublicHolidays[].class);
+		final List<PublicHolidays> holidays = JsonConverterSinleton.getInstance().getEntitys(path.path("get").path("all"), PublicHolidays.class);
+		return listToArray(holidays);
+	}
+	
+	private PublicHolidays[] listToArray(final List<PublicHolidays> list) {
+		if(list == null || list.size() == 0) {
+			return new PublicHolidays[0];
+		} else {
+			final PublicHolidays[] array = list.toArray(new PublicHolidays[list.size()]);
+			list.clear();
+			return array;
+		}
 	}
 }

@@ -1,21 +1,10 @@
 package ru.kolaer.client.javafx.system;
 
-import java.util.Objects;
-
-import javax.ws.rs.core.MediaType;
-
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
-import ru.kolaer.api.mvp.model.DbDataAll;
-//import org.springframework.web.client.RestClientException;
-//import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.system.KolaerDataBase;
 import ru.kolaer.api.system.NetworkUS;
 import ru.kolaer.api.system.OtherPublicAPI;
@@ -41,7 +30,7 @@ public class NetworkUSImpl implements NetworkUS {
         this.client = Client.create();
         this.service = client.resource("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString());
         this.kolaerDataBase = new KolaerDataBaseRESTful(service.path("database"));
-        this.otherPublicAPI = new OtherPublicAPIImpl();
+        this.otherPublicAPI = new OtherPublicAPIImpl(service.path("other"));
 	}
 	
 	@Override

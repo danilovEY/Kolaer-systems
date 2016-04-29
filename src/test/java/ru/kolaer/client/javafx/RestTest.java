@@ -2,12 +2,14 @@ package ru.kolaer.client.javafx;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -19,19 +21,25 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 import ru.kolaer.api.mvp.model.DbBirthdayAll;
 import ru.kolaer.api.mvp.model.DbDataAll;
+import ru.kolaer.api.mvp.model.PublicHolidays;
 import ru.kolaer.client.javafx.system.JsonConverterSinleton;
 import ru.kolaer.client.javafx.system.NetworkUSImpl;
 import ru.kolaer.client.javafx.system.UserDataAllDataBaseRESTful;
+import ru.kolaer.client.javafx.tools.Resources;
 
 public class RestTest {
 	
+	@Before
+	public void before() {
+		 Resources.URL_TO_KOLAER_RESTFUL.delete(0, Resources.URL_TO_KOLAER_RESTFUL.length()).append("js:8080/ru.kolaer.server.restful");
+	}
+	
 	@Test
 	public void name() throws InterruptedException {
-        Client client = Client.create();
-		WebResource service = client.resource("http://js:8080/ru.kolaer.server.restful/database/dataAll");
-		/*for(DbDataAll d : new UserDataAllDataBaseRESTful(service).getAllUser()) {
-			System.out.println(d.getInitials());
-		}*/
+		NetworkUSImpl networkUSImpl = new NetworkUSImpl();
+		
+		Integer in = networkUSImpl.getKolaerDataBase().getUserDataAllDataBase().getCountUsersBirthday(new Date());
+		System.out.println(in);
 		
 		
 		TimeUnit.SECONDS.sleep(10);
