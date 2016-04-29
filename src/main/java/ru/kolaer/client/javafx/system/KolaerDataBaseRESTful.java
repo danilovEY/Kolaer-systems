@@ -16,10 +16,7 @@ public class KolaerDataBaseRESTful implements KolaerDataBase {
 	private final UserDataAllDataBase dataAllDataBase;
 	private final UserBirthdayAllDataBase userBirthdayAllDataBase;
 
-	private final WebResource service;
-	
 	public KolaerDataBaseRESTful(final WebResource service) {
-		this.service = service;
 		this.dataAllDataBase = new UserDataAllDataBaseRESTful(service.path("dataAll"));
 		this.userBirthdayAllDataBase = new UserBirthdayAllDataBaseImpl(service.path("birthdayAll"));
 	}

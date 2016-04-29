@@ -42,20 +42,6 @@ public class NetworkUSImpl implements NetworkUS {
         this.service = client.resource("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString());
         this.kolaerDataBase = new KolaerDataBaseRESTful(service.path("database"));
         this.otherPublicAPI = new OtherPublicAPIImpl();
-        /*WebResource service = client.resource("http://js:8080/ru.kolaer.server.restful/database");
-        // getting XML data
-
-        String dbData = service.path("dataAll/get/users/birthday/today").type(MediaType.APPLICATION_JSON).get(String.class);
-        Objects.nonNull(dbData);
-        System.out.println(dbData);
-        ObjectMapper m = new ObjectMapper();
-        JsonFactory f = new JsonFactory();
-        JsonParser jp = f.createParser(dbData);
-        jp.nextToken();
-        while (jp.nextToken() == JsonToken.START_OBJECT) {
-        	DbDataAll foobar = m.readValue(jp, DbDataAll.class);
-            System.out.println(foobar.getInitials());
-            }*/
 	}
 	
 	@Override
