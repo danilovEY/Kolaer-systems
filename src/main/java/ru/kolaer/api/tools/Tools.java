@@ -5,7 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Tools {
@@ -37,7 +40,11 @@ public class Tools {
         Objects.requireNonNull(runnable, "runnable");
 
         if(Platform.isFxApplicationThread()) {
-            runnable.run();
+        	final ExecutorService threadOnFX = Executors.newSingleThreadExecutor();
+        	CompletableFuture.runAsync(() -> {
+        		Platform.runLater(runnable);
+        		threadOnFX.shutdown();
+        	}, threadOnFX);
         } else {
             Platform.runLater(runnable);
         }
