@@ -59,6 +59,7 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
         		alert.showAndWait();
 			}
 		});
+		
 		this.loginText.setOnKeyPressed(k -> {
 			if (k.getCode().equals(KeyCode.ENTER))
 				this.okButton.getOnAction().handle(null);
@@ -75,7 +76,6 @@ public class CAuthenticationDialog extends BaseController implements Dialog {
 		this.dialog.setScene(new Scene(this));
 		this.dialog.setResizable(false);
 		this.dialog.centerOnScreen();
-
 		try {
 			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
 		} catch(final IllegalArgumentException e) {
