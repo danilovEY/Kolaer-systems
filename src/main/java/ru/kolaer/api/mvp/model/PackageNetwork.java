@@ -7,7 +7,10 @@ import java.io.Serializable;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 //@JsonIgnoreProperties("LOG")
+@XmlRootElement
 public class PackageNetwork implements Serializable {
 	private static final long serialVersionUID = -5091847070883347043L;
 	

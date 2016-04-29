@@ -8,6 +8,9 @@ package ru.kolaer.api.mvp.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class DbDataAll implements Serializable {
 
 	private static final long serialVersionUID = 8116697743480287748L;

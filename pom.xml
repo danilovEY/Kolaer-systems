@@ -23,9 +23,10 @@
 
 		<dependency>
 			<groupId>org.apache.felix</groupId>
-			<artifactId>org.apache.felix.main</artifactId>
+			<artifactId>org.apache.felix.framework</artifactId>
 			<version>5.4.0</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>

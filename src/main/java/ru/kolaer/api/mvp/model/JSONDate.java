@@ -1,5 +1,8 @@
 package ru.kolaer.api.mvp.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class JSONDate {
 	private int day;
 	private int month;

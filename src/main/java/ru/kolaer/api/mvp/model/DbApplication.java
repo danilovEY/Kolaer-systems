@@ -5,10 +5,13 @@
  */
 package ru.kolaer.api.mvp.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author Danilov
  */
+@XmlRootElement
 public class DbApplication {
     private Integer id;
     private String titleApp;

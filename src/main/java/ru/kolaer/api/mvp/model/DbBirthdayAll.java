@@ -3,7 +3,9 @@ package ru.kolaer.api.mvp.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 public class DbBirthdayAll implements Serializable {
 	private static final long serialVersionUID = -9086880039708838378L;
 
