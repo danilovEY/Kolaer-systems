@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ru.kolaer.server.dao.entities.PublicHolidays;
+import ru.kolaer.api.mvp.model.PublicHolidays;
 import ru.kolaer.server.restful.controller.OtherAPIController;
 
 @Service

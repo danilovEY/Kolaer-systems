@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.kolaer.server.dao.entities.PublicHolidays;
+import ru.kolaer.api.mvp.model.PublicHolidays;
 import ru.kolaer.server.dao.impl.PublicHolidaysDAO;
 
 @RestController
