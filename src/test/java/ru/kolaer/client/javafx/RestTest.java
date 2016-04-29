@@ -1,113 +1,69 @@
 package ru.kolaer.client.javafx;
 
-import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import ru.kolaer.api.mvp.model.DbBirthdayAll;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+
+import org.junit.Ignore;
+import org.junit.Test;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+
+import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.DbDataAll;
+import ru.kolaer.client.javafx.system.JsonConverterSinleton;
+import ru.kolaer.client.javafx.system.NetworkUSImpl;
+import ru.kolaer.client.javafx.system.UserDataAllDataBaseRESTful;
 
 public class RestTest {
-
-	public static void main(String[] args) throws InterruptedException {
-		RestTemplate restTemplate = new RestTemplate();
+	
+	@Test
+	public void name() throws InterruptedException {
+        Client client = Client.create();
+		WebResource service = client.resource("http://js:8080/ru.kolaer.server.restful/database/dataAll");
+		/*for(DbDataAll d : new UserDataAllDataBaseRESTful(service).getAllUser()) {
+			System.out.println(d.getInitials());
+		}*/
 		
-
-		/*RequestDbBirthdayAllList CO = new RequestDbBirthdayAllList(getDataFromXML("ca_list.xml", "Центральный аппарат"));
-		RequestDbBirthdayAllList bal = new RequestDbBirthdayAllList(getDataFromXML("balakovo.xml", "БалаковоАтомэнергоремонт"));
-		RequestDbBirthdayAllList vol = new RequestDbBirthdayAllList(getDataFromXML("volgodonsk.xml", "ВолгодонскАтомэнергоремонт"));
-		RequestDbBirthdayAllList udo = new RequestDbBirthdayAllList(getDataFromXML("udomlya.xml", "КалининАтомэнергоремонт"));
-		RequestDbBirthdayAllList kur = new RequestDbBirthdayAllList(getDataFromXML("kurchatov.xml", "КурскАтомэнергоремонт"));
-		RequestDbBirthdayAllList sos = new RequestDbBirthdayAllList(getDataFromXML("sosnoviyBor.xml", "ЛенАтомэнергоремонт"));
-		RequestDbBirthdayAllList nov = new RequestDbBirthdayAllList(getDataFromXML("novovoroneg.xml", "НововоронежАтомэнергоремонт"));
-		RequestDbBirthdayAllList des = new RequestDbBirthdayAllList(getDataFromXML("desnogorsk.xml", "СмоленскАтомэнергоремонт"));
-		RequestDbBirthdayAllList zar = new RequestDbBirthdayAllList(getDataFromXML("zarechny.xml", "УралАтомэнергоремонт"));
-		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", CO, RequestDbBirthdayAllList.class);
-		TimeUnit.SECONDS.sleep(5);
-		System.out.println("bal");
-		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", bal, RequestDbBirthdayAllList.class);
-		TimeUnit.SECONDS.sleep(5);
-		System.out.println("vol");
-		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", vol, RequestDbBirthdayAllList.class);
-		TimeUnit.SECONDS.sleep(5);
-		System.out.println("udo");
-		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", udo, RequestDbBirthdayAllList.class);
-		TimeUnit.SECONDS.sleep(5);
-		System.out.println("kur");
-		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", kur, RequestDbBirthdayAllList.class);
-		TimeUnit.SECONDS.sleep(5);
-		System.out.println("sos");
-		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", sos, RequestDbBirthdayAllList.class);
-		TimeUnit.SECONDS.sleep(5);
-		System.out.println("nov");
-		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", nov, RequestDbBirthdayAllList.class);
-		TimeUnit.SECONDS.sleep(5);
-		System.out.println("des");
-		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", des, RequestDbBirthdayAllList.class);
-		TimeUnit.SECONDS.sleep(5);
-		System.out.println("zar");
-		restTemplate.postForObject("http://js:8080/kolaer/database/birthdayAll/set/users/list", zar, RequestDbBirthdayAllList.class);*/
+		
+		TimeUnit.SECONDS.sleep(10);
+		
 	}
 	
-	public static List<DbBirthdayAll> getDataFromXML(String path, String organizaton) {
-		List<DbBirthdayAll> list = new ArrayList<>();
+	@Test
+	@Ignore
+	public void testTest() throws IOException, InterruptedException {
+		ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        WebResource service = client.resource(UriBuilder.fromUri("http://js:8080/ru.kolaer.server.restful/database" + "/birthdayAll/get/users/birthday/today").build());
+        // getting XML data
 
-		try{
-			final File xmlFile = new File(path);
-			final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			final DocumentBuilder db = dbf.newDocumentBuilder();
-			final Document doc = db.parse(xmlFile);
-
-			doc.getDocumentElement().normalize();
-
-			final NodeList nodeList = doc.getElementsByTagName("z:row");
-			for(int i = 0; i < nodeList.getLength(); i++){
-				final Node node = nodeList.item(i);
-				if(Node.ELEMENT_NODE == node.getNodeType()){
-					final Element element = (Element) node;
-					final String categ = element.getAttribute("ows__x041a__x0430__x0442__x0435__x04");
-					if(categ.equals("Рабочий"))
-						continue;
-					final String initial = element.getAttribute("ows_LinkTitleNoMenu");
-					final String post = element.getAttribute("ows_JobTitle");
-					final String dep = element.getAttribute("ows_Department");
-					final String phone = element.getAttribute("ows_PrimaryNumber");
-					final String mobilePhone = element.getAttribute("ows_CellPhone");
-					final String email = element.getAttribute("ows_EMail");
-					final String birthday = element.getAttribute("ows_Birthday");
-					final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					
-					final DbBirthdayAll user = new DbBirthdayAll();
-					user.setOrganization(organizaton);
-					user.setBirthday(sdf.parse(birthday));
-					user.setCategoryUnit(categ);
-					user.setDepartament(dep);
-					user.setEmail(email);
-					user.setInitials(initial);
-					user.setMobilePhone(mobilePhone);
-					user.setPhone(phone);
-					user.setPost(post);
-					list.add(user);
-				}
-			}
-		}catch(ParserConfigurationException | SAXException | IOException ex){
-			ex.printStackTrace();
-		}catch(ParseException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		return list;
+        service.path("dataAll/get/users/birthday/today").type(MediaType.APPLICATION_JSON);
+        /*System.out.println(dbData);
+        ObjectMapper m = new ObjectMapper();
+        JsonFactory f = new JsonFactory();
+        JsonParser jp = f.createParser(dbData);
+        jp.nextToken();
+        while (jp.nextToken() == JsonToken.START_OBJECT) {
+        	DbDataAll foobar = m.readValue(jp, DbDataAll.class);
+            System.out.println(foobar.getName());
+          }*/
+        
+        for(final DbBirthdayAll d : JsonConverterSinleton.getInstance().getEntitys(service, DbBirthdayAll.class)) {
+        	System.out.println(d.getInitials());
+        }
+        
+        TimeUnit.SECONDS.sleep(10);
+        // getting JSON data
+        //System.out.println(service. path("restPath").path("resourcePath").accept(MediaType.APPLICATION_XML).get(String.class));
+        //restTemplate.getForObject(, );
 	}
-
 }

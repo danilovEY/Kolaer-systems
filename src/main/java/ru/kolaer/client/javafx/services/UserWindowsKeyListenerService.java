@@ -2,9 +2,9 @@ package ru.kolaer.client.javafx.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+//import org.springframework.http.converter.StringHttpMessageConverter;
+//import org.springframework.web.client.RestClientException;
+//import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.tools.Resources;
 import ru.kolaer.client.javafx.tools.User32;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class UserWindowsKeyListenerService implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(UserWindowsKeyListenerService.class);
 	/**Объект для работы с сервером.*/
-	private final RestTemplate restTemplate = new RestTemplate();
+	//private final RestTemplate restTemplate = new RestTemplate();
 	/**Имя пользователя.*/
 	private final String username = System.getProperty("user.name");
 	/**Пул потоков.*/
@@ -41,7 +41,7 @@ public class UserWindowsKeyListenerService implements Service {
 	 * {@linkplain UserWindowsKeyListenerService}
 	 */
 	public UserWindowsKeyListenerService() {
-		this.restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+		//this.restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
 	}
 
 	@Override
@@ -140,12 +140,12 @@ public class UserWindowsKeyListenerService implements Service {
 							}
 						}
 
-						try {
+						/*try {
 							this.restTemplate.postForObject("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/key", key, String.class);
 						} catch (RestClientException ex) {
 							LOG.error("Невозможно отправить сообщение на {}!", "http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + username + "/key");
 							LOG.info("ID: {} - ({})", idTemp, key);
-						}
+						}*/
 
 					}, keysThreadPool);
 					

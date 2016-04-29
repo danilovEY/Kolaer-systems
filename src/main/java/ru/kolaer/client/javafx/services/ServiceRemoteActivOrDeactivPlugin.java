@@ -2,8 +2,8 @@ package ru.kolaer.client.javafx.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+//import org.springframework.web.client.RestClientException;
+//import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.presenter.PDialog;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObserver {
 	private final Logger LOG = LoggerFactory.getLogger(ServiceRemoteActivOrDeactivPlugin.class);
 	/**Объект для взаимодействия с REST.*/
-	private final RestTemplate restTemplate = new RestTemplate();	
+	//private final RestTemplate restTemplate = new RestTemplate();	
 	/**Имя пользователя.*/
 	private final String username = System.getProperty("user.name");
 	private final ExplorerObresvable explorer;
@@ -53,7 +53,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 		Thread.currentThread().setName("Прослушивание внутреннего эксплорера");
 		while(this.isRunning) {
 			if(plugins.size() > 0) {
-				try {
+				/*try {
 					final String[] pluginsClose = restTemplate.getForObject(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString(), String[].class);
 					for(final String tabName : pluginsClose) {
 						LOG.debug("Закрыть плагин: {}", tabName );
@@ -85,7 +85,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 					}
 				} catch(final RestClientException ex) {
 					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString());
-				}
+				}*/
 			}
 			
 			try {
@@ -121,7 +121,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 		final ExecutorService threadPush= Executors.newSingleThreadExecutor();
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - открытие окна");
-			this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/open").toString(), null);
+			//this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/open").toString(), null);
 			threadPush.shutdown();
 		}, threadPush).exceptionally(t -> {
 			LOG.error("Сервер \"{}\" не доступен!",new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/open").toString());
@@ -136,7 +136,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 		final ExecutorService threadPush= Executors.newSingleThreadExecutor();
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");	
-			this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/close").toString(), null);
+			//this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/close").toString(), null);
 			threadPush.shutdown();
 		}, threadPush).exceptionally(t -> {
 			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/close").toString());

@@ -2,8 +2,8 @@ package ru.kolaer.client.javafx.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+//import org.springframework.web.client.RestClientException;
+//import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.PackageNetwork;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.tools.Resources;
@@ -30,7 +30,7 @@ public class ServiceScreen implements Service {
 			this.isRun = false;
 			return;
 		}
-		while(this.isRun){
+		/*while(this.isRun){
 			try{
 				final Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 				final BufferedImage capture = new Robot().createScreenCapture(screenRect);
@@ -60,7 +60,7 @@ public class ServiceScreen implements Service {
 				this.isRun = false;
 				return;
 			}
-		}
+		}*/
 	}
 
 	@Override

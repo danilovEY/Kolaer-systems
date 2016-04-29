@@ -2,8 +2,8 @@ package ru.kolaer.client.javafx.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+//import org.springframework.web.client.RestClientException;
+//import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.tools.Resources;
 
@@ -23,13 +23,13 @@ public class SeviceUserIpAndHostName implements Service {
 	private final String username = System.getProperty("user.name");
 	private boolean isRun = false;
 	/**Объект для взаимодействия с сервером.*/
-	private final RestTemplate rest = new RestTemplate();
+	//private final RestTemplate rest = new RestTemplate();
 	
 	@Override
 	public void run() {
 		Thread.currentThread().setName("Передача IP и имя компьютера");
 		this.isRun = true;
-		while(this.isRun) {
+		/*while(this.isRun) {
 			
 			final String url = "http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/" + this.username;
 					
@@ -46,7 +46,7 @@ public class SeviceUserIpAndHostName implements Service {
 			} catch(InterruptedException e) {
 				LOG.error("Прерыване задержки потока!");
 			}
-		}
+		}*/
 	}
 
 	@Override

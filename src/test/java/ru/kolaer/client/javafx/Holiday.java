@@ -7,12 +7,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class Holiday {
 
-	public static void main(String[] args) throws JsonParseException, JsonMappingException, IOException, InterruptedException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		ExecutorService service = Executors.newSingleThreadExecutor();
 		ExecutorService service1 = Executors.newSingleThreadExecutor();
 		ExecutorService service2 = Executors.newSingleThreadExecutor();
