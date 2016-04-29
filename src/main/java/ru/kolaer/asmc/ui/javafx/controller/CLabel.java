@@ -113,22 +113,26 @@ public class CLabel extends BaseController implements Initializable, ObservableL
 		ToolTipManager.sharedInstance().setDismissDelay(0);
 		toolTip.setText(label.getName());
 		
-		final Optional<File> file = Optional.of(new File(label.getPathImage()));
-
-		if(file.isPresent() && (file.get().exists() && file.get().isFile())){
-			try{
-				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
+		if(label.getPathImage().equals(Resources.AER_ICON.toString())) {
+			this.image.setImage(new Image(Resources.AER_ICON.toString()));
+		} else {	
+			final Optional<File> file = Optional.of(new File(label.getPathImage()));
+	
+			if(file.isPresent() && (file.get().exists() && file.get().isFile())){
+				try{
+					this.image.setImage(new Image(file.get().toURI().toURL().toString()));
+				}
+				catch(final Exception e1){
+					final Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Ошибка!");
+					alert.setHeaderText("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath());
+					alert.setContentText(e1.toString());
+					alert.showAndWait();
+				}
 			}
-			catch(final Exception e1){
-				final Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка!");
-				alert.setHeaderText("Невозможно переконвертировать в URL файл:" +file.get().getAbsolutePath());
-				alert.setContentText(e1.toString());
-				alert.showAndWait();
+			else {
+				this.image.setImage(null);
 			}
-		}
-		else {
-			this.image.setImage(null);
 		}
 	}
 	
