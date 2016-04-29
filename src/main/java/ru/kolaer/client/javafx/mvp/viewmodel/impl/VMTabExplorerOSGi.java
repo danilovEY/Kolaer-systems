@@ -2,6 +2,7 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
@@ -94,7 +95,10 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
                     tab.deActiveTab();
                     this.notifyDeactivationPlugin(tab);
                     threadActivPlugin.shutdown();
-                }, threadActivPlugin);
+                }, threadActivPlugin).exceptionally(t -> {
+                	LOG.error("Ошибка при остановке плагина: {}", oldTab.getText(), t);
+                	return null;
+                });
             }
 
             if(newTab != null) {
@@ -104,7 +108,10 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
                     tab.activeTab();
                     this.notifyActivationPlugin(tab);
                     threadDeActivPlugin.shutdown();
-                }, threadDeActivPlugin);
+                }, threadDeActivPlugin).exceptionally(t -> {
+                	LOG.error("Ошибка при запуске плагина: {}", newTab.getText(), t);
+                	return null;
+                });
             }
         });
     }

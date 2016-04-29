@@ -91,7 +91,7 @@ public class PluginManager {
 
             final Enumeration<URL> entrs = bundle.findEntries("/", "*.class", true);
             while (entrs.hasMoreElements()) {
-                final URL url = entrs.nextElement();
+        		final URL url = entrs.nextElement();
                 final String classPath = url.getPath().substring(1,url.getPath().length() - ".class".length());
                 try {
                 	final Class<?> cls = bundle.loadClass(classPath.replace("/","."));
@@ -105,7 +105,7 @@ public class PluginManager {
                                 return true;
                             } catch (InstantiationException | IllegalAccessException e) {
                                LOG.error("Ошибка при создании объекта: {}", pluginBundle.getSymbolicNamePlugin(), e);
-                                break;
+                               break;
                             }
                         }
                     }

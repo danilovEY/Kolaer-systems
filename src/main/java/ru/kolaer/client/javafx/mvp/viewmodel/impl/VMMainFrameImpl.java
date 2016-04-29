@@ -62,8 +62,7 @@ public class VMMainFrameImpl extends Application {
     	Thread.currentThread().setName("Главный поток");
     	
         this.servicesManager = new ServiceControlManager();
-        this.initApplicationParams();
-        
+        this.initApplicationParams();       
 
         //Инициализация вкладочного explorer'а.
         final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
@@ -97,14 +96,15 @@ public class VMMainFrameImpl extends Application {
             }
             
             final List<PluginBundle> plugins = pluginManager.getSearchPlugins().search();
-            
-            for (final PluginBundle pluginBundle : plugins) {
+
+            plugins.parallelStream().forEach(pluginBundle -> {
                 final ExecutorService initPluginThread = Executors.newSingleThreadExecutor();
                 CompletableFuture.supplyAsync(() -> {
                     try {
                     	Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
                         LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
                         pluginManager.install(pluginBundle);
+                        
                     } catch (final BundleException e) {
                         LOG.error("Ошибка при установке/запуска плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
                         try {
@@ -120,6 +120,7 @@ public class VMMainFrameImpl extends Application {
                 	if(plugin != null) {
                     	LOG.info("{}: Получение USP...", plugin.getSymbolicNamePlugin());
                         final UniformSystemPlugin uniformSystemPlugin = pluginBundle.getUniformSystemPlugin();
+                        
                         if(uniformSystemPlugin == null) {
                         	LOG.info("{}: USP is null!", plugin.getSymbolicNamePlugin());
                         	initPluginThread.shutdownNow();
@@ -156,7 +157,7 @@ public class VMMainFrameImpl extends Application {
                 	initPluginThread.shutdownNow();
                     return null;
                 });
-            }
+        	});
             
             plugins.clear();
             threadScan.shutdown();
@@ -192,15 +193,21 @@ public class VMMainFrameImpl extends Application {
 
         PARAM.putAll(this.getParameters().getNamed());
 
-        Tools.runOnThreadFX(() -> {
-            try {
-                this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
-                this.stage.setMaximized(true);
-            } catch (IOException e) {
-                LOG.error("Не удалось загрузить: " + Resources.V_MAIN_FRAME, e);
-                System.exit(-9);
-            }
-        });
+        final ExecutorService threadStartFrame = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() -> {
+        	Tools.runOnThreadFX(() -> {
+                try {
+                    this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
+                    this.stage.setMaximized(true);
+                } catch (IOException e) {
+                    LOG.error("Не удалось загрузить: " + Resources.V_MAIN_FRAME, e);
+                    System.exit(-9);
+                }
+            });
+        	threadStartFrame.shutdown();
+        }, threadStartFrame);
+        
+        
 
         this.stage.getIcons().add(new Image("/css/aerIcon.png"));
         this.stage.setOnCloseRequest(e -> {
