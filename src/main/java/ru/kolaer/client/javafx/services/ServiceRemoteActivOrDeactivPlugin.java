@@ -1,18 +1,16 @@
 package ru.kolaer.client.javafx.services;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.api.client.WebResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.springframework.web.client.RestClientException;
-//import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.presenter.PDialog;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObservable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
-import ru.kolaer.client.javafx.plugins.main.MainRemoteActivDeactivPlugin;
+import ru.kolaer.client.javafx.system.JsonConverterSinleton;
 import ru.kolaer.client.javafx.tools.Resources;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -29,18 +27,19 @@ import java.util.concurrent.TimeUnit;
 public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObserver {
 	private final Logger LOG = LoggerFactory.getLogger(ServiceRemoteActivOrDeactivPlugin.class);
 	/**Объект для взаимодействия с REST.*/
-	//private final RestTemplate restTemplate = new RestTemplate();	
+	private final WebResource webResource;
 	/**Имя пользователя.*/
 	private final String username = System.getProperty("user.name");
-	private final ExplorerObresvable explorer;
-	private final UniformSystemEditorKit editorKit;
+	private final ExplorerObservable explorer;
+
 	private boolean isRunning = false;
 	/**Список активных плагинов.*/
 	private final List<RemoteActivationDeactivationPlugin> plugins = new LinkedList<>();
 	
-	public ServiceRemoteActivOrDeactivPlugin(final ExplorerObresvable explorer, final UniformSystemEditorKit editorKit) {
+	public ServiceRemoteActivOrDeactivPlugin(final ExplorerObservable explorer, final WebResource webResource) {
 		this.explorer = explorer;
-		this.editorKit = editorKit;
+
+		this.webResource = webResource;
 		this.explorer.registerObserver(this);
 	}
 	
@@ -48,16 +47,17 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 	public void run() {
 		this.isRunning = true;
 		
-		this.updateAddPlugin(new MainRemoteActivDeactivPlugin());
+		//this.updateAddPlugin(new MainRemoteActivDeactivPlugin());
 		
 		Thread.currentThread().setName("Прослушивание внутреннего эксплорера");
 		while(this.isRunning) {
-			if(plugins.size() > 0) {
-				/*try {
-					final String[] pluginsClose = restTemplate.getForObject(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString(), String[].class);
+			if(plugins.size() >= 0) {
+				try {
+					LOG.info("Получение....." );
+					final List<String> pluginsClose = JsonConverterSinleton.getInstance().getEntitys(webResource.path("user").path(username).path("app").path("close"),String.class);
 					for(final String tabName : pluginsClose) {
-						LOG.debug("Закрыть плагин: {}", tabName );
-						final Iterator<RemoteActivationDeactivationPlugin> iter = plugins.iterator();
+						LOG.info("Закрыть плагин: {}", tabName );
+						/*final Iterator<RemoteActivationDeactivationPlugin> iter = plugins.iterator();
 						while(iter.hasNext()) {
 							final RemoteActivationDeactivationPlugin plugin = iter.next();
 							if(tabName.equals(plugin.getName())) {
@@ -81,11 +81,11 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 								
 								iter.remove();
 							}
-						}	
+						}	*/
 					}
-				} catch(final RestClientException ex) {
+				} catch(final UniformInterfaceException | ClientHandlerException ex) {
 					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString());
-				}*/
+				}
 			}
 			
 			try {
@@ -121,10 +121,10 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 		final ExecutorService threadPush= Executors.newSingleThreadExecutor();
 		CompletableFuture.runAsync(() -> {
 			Thread.currentThread().setName(this.getName() + ": отправка данных - открытие окна");
-			//this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/open").toString(), null);
+			webResource.path("user").path(username).path("app").path(plugin.getName()).path("open").header("Content-Type","application/json; charset=UTF-8").post();
 			threadPush.shutdown();
 		}, threadPush).exceptionally(t -> {
-			LOG.error("Сервер \"{}\" не доступен!",new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/open").toString());
+			LOG.error("Сервер \"{}\" не доступен!",new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/open").toString(), t);
 			return null;
 		});
 	}
@@ -135,11 +135,11 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 			return;
 		final ExecutorService threadPush= Executors.newSingleThreadExecutor();
 		CompletableFuture.runAsync(() -> {
-			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");	
-			//this.restTemplate.postForLocation(new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/close").toString(), null);
+			Thread.currentThread().setName(this.getName() + ": отправка данных - закрытие окна");
+			webResource.path("user").path(username).path("app").path(plugin.getName()).path("close").header("Content-Type","application/json; charset=UTF-8").post();
 			threadPush.shutdown();
 		}, threadPush).exceptionally(t -> {
-			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/close").toString());
+			LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/").append(plugin.getName()).append("/close").toString(), t);
 			return null;
 		});
 	}

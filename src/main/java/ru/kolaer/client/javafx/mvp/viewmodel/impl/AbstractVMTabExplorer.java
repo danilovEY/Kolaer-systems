@@ -9,7 +9,7 @@ import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.PluginsUS;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.LoadFXML;
-import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObresvable;
+import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObservable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
 import ru.kolaer.client.javafx.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * Created by Danilov on 15.04.2016.
  */
-public abstract class AbstractVMTabExplorer extends LoadFXML implements PluginsUS, VTabExplorer, ExplorerObresvable {
+public abstract class AbstractVMTabExplorer extends LoadFXML implements PluginsUS, VTabExplorer, ExplorerObservable {
     private final Logger LOG = LoggerFactory.getLogger(AbstractVMTabExplorer.class);
     /**Вкладочная панель.*/
     @FXML

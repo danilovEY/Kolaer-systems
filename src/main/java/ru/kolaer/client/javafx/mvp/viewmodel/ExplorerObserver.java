@@ -2,7 +2,7 @@ package ru.kolaer.client.javafx.mvp.viewmodel;
 
 import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
 
-/**Слушатель {@linkplain ExplorerObresvable}.*/
+/**Слушатель {@linkplain ExplorerObservable}.*/
 public interface ExplorerObserver {
 	/**Оповещение: открытие вкладки.*/
 	void updateActivationPlugin(RemoteActivationDeactivationPlugin plugin);

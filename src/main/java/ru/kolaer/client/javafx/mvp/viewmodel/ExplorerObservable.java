@@ -8,7 +8,7 @@ import ru.kolaer.client.javafx.services.RemoteActivationDeactivationPlugin;
  * @author Danilov
  * @version 0.1
  */
-public interface ExplorerObresvable {
+public interface ExplorerObservable {
 	/**Оповестить обсерверы об открытии вкладки.*/
 	void notifyActivationPlugin(RemoteActivationDeactivationPlugin plugin);
 	/**Оповестить обсерверы о закрытии вкладки.*/

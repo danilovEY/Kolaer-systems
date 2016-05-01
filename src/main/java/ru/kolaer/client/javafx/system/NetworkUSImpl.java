@@ -4,7 +4,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
-
 import ru.kolaer.api.system.KolaerDataBase;
 import ru.kolaer.api.system.NetworkUS;
 import ru.kolaer.api.system.OtherPublicAPI;
@@ -22,8 +21,9 @@ public class NetworkUSImpl implements NetworkUS {
 	private KolaerDataBase kolaerDataBase;
 	/**БД через RESTful.*/
 	private OtherPublicAPI otherPublicAPI;
-	
+
 	private final Client client;
+
 	private WebResource service;
 	
 	public NetworkUSImpl() {
@@ -54,6 +54,10 @@ public class NetworkUSImpl implements NetworkUS {
 		} catch(final UniformInterfaceException | ClientHandlerException ex) {
 			return ServerStatus.NOT_AVAILABLE;
 		}
+	}
+
+	public WebResource getService() {
+		return service;
 	}
 
 	@Override

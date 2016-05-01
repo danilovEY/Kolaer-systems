@@ -2,24 +2,20 @@ package ru.kolaer.client.javafx.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugins.services.Service;
+
+import java.util.concurrent.TimeUnit;
+
 //import org.springframework.web.client.RestClientException;
 //import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.PackageNetwork;
-import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.client.javafx.tools.Resources;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 public class ServiceScreen implements Service {
 	private Logger LOG = LoggerFactory.getLogger(ServiceScreen.class);
 	private boolean isRun = false;
 	/** Имя пользователя. */
 	private final String username = System.getProperty("user.name");
+
+
 
 	@Override
 	public void run() {

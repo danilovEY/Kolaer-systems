@@ -26,7 +26,7 @@ public class UniformSystemEditorKitSingleton implements UniformSystemEditorKit {
 	private PluginsUS pluginsUS;
 
 	private UniformSystemEditorKitSingleton() {
-		this.network = new NetworkUSImpl();
+
 	}
 
 	@Override

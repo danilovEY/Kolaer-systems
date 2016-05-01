@@ -18,6 +18,7 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.services.*;
+import ru.kolaer.client.javafx.system.NetworkUSImpl;
 import ru.kolaer.client.javafx.system.UISystemUSImpl;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.tools.Resources;
@@ -68,8 +69,9 @@ public class VMMainFrameImpl extends Application {
         final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
 
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
-
+        final NetworkUSImpl network = new NetworkUSImpl();
         final UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
+        editorKit.setUSNetwork(network);
         editorKit.setUISystemUS(uiSystemUS);
         editorKit.setPluginsUS(explorer);
 
@@ -78,8 +80,8 @@ public class VMMainFrameImpl extends Application {
         final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             Thread.currentThread().setName("Добавление системны служб");
-            this.servicesManager.addService(new UserPingService(), true);
-            this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, editorKit), true);
+            this.servicesManager.addService(new UserPingService(network.getService().path("system")), true);
+            this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, network.getService().path("system")), true);
             threadStartService.shutdown();
         }, threadStartService);
 
