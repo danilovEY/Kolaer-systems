@@ -34,19 +34,17 @@ public class PluginManager {
     }
 
     public void initialization() throws Exception {
-        final File frameworkDir = new File(System.getProperty("java.io.tmpdir"), "KolaerCache");
+        final File frameworkDir = new File(System.getProperty("java.io.tmpdir"), "KolaerCache-" + UUID.randomUUID());
 
         final Map<String, String> frameworkProperties = new HashMap<>();
-
         try {
             frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
         } catch (final IOException e) {
             LOG.error("Не удалось создать каталог для кэша OSGi!");
             throw e;
         }
-
         frameworkProperties.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
-        frameworkProperties.put("felix.log.level", "2");
+        frameworkProperties.put("felix.log.level", "4");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework,"+
@@ -69,7 +67,7 @@ public class PluginManager {
             framework.start();
 
             this.context = framework.getBundleContext();
-        }  catch (Exception e) {
+        }  catch (final Throwable e) {
             LOG.error("Ошибка при инициализации или старта OSGi-framework!", e);
             throw e;
         }

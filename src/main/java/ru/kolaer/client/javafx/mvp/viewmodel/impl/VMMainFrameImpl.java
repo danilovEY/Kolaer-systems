@@ -104,7 +104,6 @@ public class VMMainFrameImpl extends Application {
                     	Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
                         LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
                         pluginManager.install(pluginBundle);
-                        
                     } catch (final BundleException e) {
                         LOG.error("Ошибка при установке/запуска плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
                         try {
@@ -112,7 +111,6 @@ public class VMMainFrameImpl extends Application {
                         } catch (final BundleException e1) {
                             LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
                         }
-                        initPluginThread.shutdownNow();
                         return null;
                     }
                     return pluginBundle;
@@ -135,7 +133,7 @@ public class VMMainFrameImpl extends Application {
                             } catch (final BundleException e1) {
                                 LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
                             }
-                            initPluginThread.shutdownNow();
+                            return null;
                         }
                 	}
                     return plugin;
