@@ -1,13 +1,5 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -21,8 +13,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  *
@@ -258,7 +257,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 				this.rbNoneIcon.setSelected(true);
 				this.image.setImage(null);
 				this.pathIconText.setText("");
-			} else if (this.result.getPathImage().equals(Resources.AER_ICON)) {
+			} else if (this.result.getPathImage().contains("bundle")) {
 				this.image.setImage(new Image(Resources.AER_ICON.toString()));
 				this.pathIconText.setText(Resources.AER_ICON.toString());
 				this.rbDefaultIcon.setSelected(true);
