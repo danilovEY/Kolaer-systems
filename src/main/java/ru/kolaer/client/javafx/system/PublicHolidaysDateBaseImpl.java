@@ -1,12 +1,11 @@
 package ru.kolaer.client.javafx.system;
 
+import com.sun.jersey.api.client.WebResource;
 import ru.kolaer.api.mvp.model.PublicHolidays;
 import ru.kolaer.api.system.PublicHolidaysDateBase;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import com.sun.jersey.api.client.WebResource;
 
 public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
 	private final WebResource path;
@@ -23,14 +22,14 @@ public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
 
 	@Override
 	public PublicHolidays[] getPublicHolidays(final int month, final int year) {
-		final List<PublicHolidays> holidays = JsonConverterSinleton.getInstance().getEntitys(path.path("get").path(String.valueOf(month)).path(String.valueOf(year)), PublicHolidays.class);
+		final List<PublicHolidays> holidays = JsonConverterSingleton.getInstance().getEntities(path.path("get").path(String.valueOf(month)).path(String.valueOf(year)), PublicHolidays.class);
 		
 		return listToArray(holidays);
 	}
 
 	@Override
 	public PublicHolidays[] getPublicHolidaysAll() {
-		final List<PublicHolidays> holidays = JsonConverterSinleton.getInstance().getEntitys(path.path("get").path("all"), PublicHolidays.class);
+		final List<PublicHolidays> holidays = JsonConverterSingleton.getInstance().getEntities(path.path("get").path("all"), PublicHolidays.class);
 		return listToArray(holidays);
 	}
 	

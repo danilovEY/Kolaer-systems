@@ -1,31 +1,22 @@
 package ru.kolaer.client.javafx;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.fasterxml.jackson.core.JsonParseException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
-
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import ru.kolaer.api.mvp.model.DbBirthdayAll;
-import ru.kolaer.api.mvp.model.DbDataAll;
-import ru.kolaer.api.mvp.model.PublicHolidays;
-import ru.kolaer.client.javafx.system.JsonConverterSinleton;
+import ru.kolaer.client.javafx.system.JsonConverterSingleton;
 import ru.kolaer.client.javafx.system.NetworkUSImpl;
-import ru.kolaer.client.javafx.system.UserDataAllDataBaseRESTful;
 import ru.kolaer.client.javafx.tools.Resources;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+import java.io.IOException;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class RestTest {
 	
@@ -65,7 +56,7 @@ public class RestTest {
             System.out.println(foobar.getName());
           }*/
         
-        for(final DbBirthdayAll d : JsonConverterSinleton.getInstance().getEntitys(service, DbBirthdayAll.class)) {
+        for(final DbBirthdayAll d : JsonConverterSingleton.getInstance().getEntities(service, DbBirthdayAll.class)) {
         	System.out.println(d.getInitials());
         }
         

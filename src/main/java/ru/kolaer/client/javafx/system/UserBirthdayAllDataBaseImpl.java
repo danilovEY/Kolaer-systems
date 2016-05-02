@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.system;
 
+import com.sun.jersey.api.client.WebResource;
 import javafx.beans.property.SimpleStringProperty;
 import ru.kolaer.api.mvp.model.DbBirthdayAll;
 import ru.kolaer.api.system.UserBirthdayAllDataBase;
@@ -8,8 +9,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import com.sun.jersey.api.client.WebResource;
 
 /**
  * Реализация работы с таблицой через RESTful.
@@ -30,7 +29,7 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
     	
-    	final List<DbBirthdayAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path(organization).path("birthday").path(property.getValue()), DbBirthdayAll.class);
+    	final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path(organization).path("birthday").path(property.getValue()), DbBirthdayAll.class);
     	return this.listToArray(users);
 	}
 	
@@ -39,19 +38,19 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
 
-    	final Integer countUsers = JsonConverterSinleton.getInstance().getEntity(this.path.path("get").path("users").path(organization).path("birthday").path(property.getValue()).path("count"), Integer.class);
+    	final Integer countUsers = JsonConverterSingleton.getInstance().getEntity(this.path.path("get").path("users").path(organization).path("birthday").path(property.getValue()).path("count"), Integer.class);
     	return countUsers;
 	}
 	
 	@Override
 	public DbBirthdayAll[] getAllUser() {
-		final List<DbBirthdayAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("max"), DbBirthdayAll.class);
+		final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("max"), DbBirthdayAll.class);
 		return this.listToArray(users);
 	}
 
 	@Override
 	public DbBirthdayAll[] getUsersMax(final int maxCount) {
-		final List<DbBirthdayAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("max").path(String.valueOf(maxCount)), DbBirthdayAll.class);
+		final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("max").path(String.valueOf(maxCount)), DbBirthdayAll.class);
 		return this.listToArray(users);
 	}
 
@@ -60,7 +59,7 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
     	
-    	final List<DbBirthdayAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("birthday").path(property.getValue()), DbBirthdayAll.class);
+    	final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("birthday").path(property.getValue()), DbBirthdayAll.class);
     	return this.listToArray(users);
 	}
 
@@ -71,13 +70,13 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	propertyBegin.setValue(dateFormat.format(dateBegin));
     	propertyEnd.setValue(dateFormat.format(dateEnd));
     	
-    	final List<DbBirthdayAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("birthday").path(propertyBegin.getValue()).path(propertyEnd.getValue()), DbBirthdayAll.class);
+    	final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("birthday").path(propertyBegin.getValue()).path(propertyEnd.getValue()), DbBirthdayAll.class);
     	return this.listToArray(users);
 	}
 
 	@Override
 	public DbBirthdayAll[] getUsersBirthdayToday() {
-    	final List<DbBirthdayAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("birthday").path("today"), DbBirthdayAll.class);
+    	final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("birthday").path("today"), DbBirthdayAll.class);
     	return this.listToArray(users);
 	}
 
@@ -85,7 +84,7 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
 	public DbBirthdayAll[] getUsersByInitials(final String initials) {
 		if(initials == null || initials.isEmpty())
 			throw new NullPointerException("Initials is null!");
-		final List<DbBirthdayAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("by").path("initials").path(initials), DbBirthdayAll.class);
+		final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("by").path("initials").path(initials), DbBirthdayAll.class);
 		return this.listToArray(users);
 	}
 	

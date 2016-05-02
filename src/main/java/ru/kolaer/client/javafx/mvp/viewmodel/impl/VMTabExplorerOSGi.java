@@ -2,7 +2,6 @@ package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
@@ -69,6 +68,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
                 	 this.pluginsTabPane.getTabs().add(tab.getView().getContent());
                 }
             });
+            this.notifyAddPlugin(tab);
             initPluginContentThread.shutdown();
         }, initPluginContentThread).exceptionally(t -> {
             LOG.error("Ошибка!", t);

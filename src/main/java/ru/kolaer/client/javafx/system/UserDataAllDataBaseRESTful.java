@@ -1,15 +1,14 @@
 package ru.kolaer.client.javafx.system;
 
+import com.sun.jersey.api.client.WebResource;
+import javafx.beans.property.SimpleStringProperty;
+import ru.kolaer.api.mvp.model.DbDataAll;
+import ru.kolaer.api.system.UserDataAllDataBase;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import com.sun.jersey.api.client.WebResource;
-
-import javafx.beans.property.SimpleStringProperty;
-import ru.kolaer.api.mvp.model.DbDataAll;
-import ru.kolaer.api.system.UserDataAllDataBase;
 
 /**
  * Реализация работы с таблицой через RESTful.
@@ -28,13 +27,13 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase {
 
 	@Override
 	public DbDataAll[] getAllUser() {
-		final List<DbDataAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("max"), DbDataAll.class);
+		final List<DbDataAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("max"), DbDataAll.class);
 		return this.listToArray(users);
 	}
 
 	@Override
 	public DbDataAll[] getUsersMax(final int maxCount) {
-		final List<DbDataAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("max").path(String.valueOf(maxCount)), DbDataAll.class);
+		final List<DbDataAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("max").path(String.valueOf(maxCount)), DbDataAll.class);
 		return this.listToArray(users);
 	}
 
@@ -43,7 +42,7 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
     	
-    	final List<DbDataAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("birthday").path(property.getValue()), DbDataAll.class);
+    	final List<DbDataAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("birthday").path(property.getValue()), DbDataAll.class);
     	return this.listToArray(users);
 	}
 
@@ -54,13 +53,13 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase {
     	propertyBegin.setValue(dateFormat.format(dateBegin));
     	propertyEnd.setValue(dateFormat.format(dateEnd));
     	
-    	final List<DbDataAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("birthday").path(propertyBegin.getValue()).path(propertyEnd.getValue()), DbDataAll.class);
+    	final List<DbDataAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("birthday").path(propertyBegin.getValue()).path(propertyEnd.getValue()), DbDataAll.class);
     	return this.listToArray(users);
 	}
 
 	@Override
 	public DbDataAll[] getUsersBirthdayToday() {
-    	final List<DbDataAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("birthday").path("today"), DbDataAll.class);
+    	final List<DbDataAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("birthday").path("today"), DbDataAll.class);
     	return this.listToArray(users);
 	}
 
@@ -68,7 +67,7 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase {
 	public int getCountUsersBirthday(final Date date) {	
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
-    	final Integer countUsers = Integer.valueOf(this.path.path("get").path("users").path("birthday").path(property.getValue()).path("count").get(String.class));//JsonConverterSinleton.getInstance().getEntity(this.path.path("get").path("users").path("birthday").path(property.getValue()).path("count"), String.class);
+    	final Integer countUsers = Integer.valueOf(this.path.path("get").path("users").path("birthday").path(property.getValue()).path("count").get(String.class));
     	return countUsers;
 	}
 
@@ -76,7 +75,7 @@ public class UserDataAllDataBaseRESTful implements UserDataAllDataBase {
 	public DbDataAll[] getUsersByInitials(final String initials) {
 		if(initials == null || initials.isEmpty())
 			throw new NullPointerException("Initials is null!");
-		final List<DbDataAll> users = JsonConverterSinleton.getInstance().getEntitys(this.path.path("get").path("users").path("by").path("initials").path(initials), DbDataAll.class);
+		final List<DbDataAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("by").path("initials").path(initials), DbDataAll.class);
 		return this.listToArray(users);
 	}
 	

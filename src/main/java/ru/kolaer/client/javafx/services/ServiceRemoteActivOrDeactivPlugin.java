@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObservable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
-import ru.kolaer.client.javafx.system.JsonConverterSinleton;
+import ru.kolaer.client.javafx.system.JsonConverterSingleton;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import java.util.LinkedList;
@@ -53,8 +53,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 		while(this.isRunning) {
 			if(plugins.size() >= 0) {
 				try {
-					LOG.info("Получение....." );
-					final List<String> pluginsClose = JsonConverterSinleton.getInstance().getEntitys(webResource.path("user").path(username).path("app").path("close"),String.class);
+					final List<String> pluginsClose = JsonConverterSingleton.getInstance().getEntities(webResource.path("user").path(username).path("app").path("close"),String.class);
 					for(final String tabName : pluginsClose) {
 						LOG.info("Закрыть плагин: {}", tabName );
 						/*final Iterator<RemoteActivationDeactivationPlugin> iter = plugins.iterator();
