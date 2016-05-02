@@ -19,7 +19,7 @@ import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
-import ru.kolaer.client.javafx.services.SeviceUserIpAndHostName;
+import ru.kolaer.client.javafx.services.ServiceUserIpAndHostName;
 import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.system.NetworkUSImpl;
 import ru.kolaer.client.javafx.system.UISystemUSImpl;
@@ -85,6 +85,7 @@ public class VMMainFrameImpl extends Application {
             Thread.currentThread().setName("Добавление системны служб");
             this.servicesManager.addService(new UserPingService(network.getService().path("system")), true);
             this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, network.getService().path("system")), true);
+            this.servicesManager.addService(new ServiceUserIpAndHostName(network.getService().path("system")), true);
             threadStartService.shutdown();
         }, threadStartService);
 
@@ -180,7 +181,6 @@ public class VMMainFrameImpl extends Application {
         final String service = PARAM.get("service");
         if (service == null || !service.equals("false")) {
             this.servicesManager.setAutoRun(true);
-            this.servicesManager.addService(new SeviceUserIpAndHostName());
             this.servicesManager.runAllServices();
         }
         PARAM.clear();
