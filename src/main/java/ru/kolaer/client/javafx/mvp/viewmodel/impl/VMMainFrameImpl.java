@@ -17,7 +17,10 @@ import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
-import ru.kolaer.client.javafx.services.*;
+import ru.kolaer.client.javafx.services.ServiceControlManager;
+import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
+import ru.kolaer.client.javafx.services.SeviceUserIpAndHostName;
+import ru.kolaer.client.javafx.services.UserPingService;
 import ru.kolaer.client.javafx.system.NetworkUSImpl;
 import ru.kolaer.client.javafx.system.UISystemUSImpl;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
@@ -178,8 +181,6 @@ public class VMMainFrameImpl extends Application {
         if (service == null || !service.equals("false")) {
             this.servicesManager.setAutoRun(true);
             this.servicesManager.addService(new SeviceUserIpAndHostName());
-            this.servicesManager.addService(new ServiceScreen());
-            this.servicesManager.addService(new UserWindowsKeyListenerService());
             this.servicesManager.runAllServices();
         }
         PARAM.clear();

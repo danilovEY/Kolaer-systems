@@ -39,12 +39,6 @@
 			<artifactId>jersey-client</artifactId>
 			<version>1.19.1</version>
 		</dependency>
-			
-		<dependency>
-			<groupId>net.java.dev.jna</groupId>
-			<artifactId>jna-platform</artifactId>
-			<version>4.2.1</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.controlsfx</groupId>
