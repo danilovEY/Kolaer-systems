@@ -5,12 +5,16 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.presenter.PDialog;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObservable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
+import ru.kolaer.client.javafx.plugins.main.MainRemoteActivDeactivPlugin;
 import ru.kolaer.client.javafx.system.JsonConverterSingleton;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.tools.Resources;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -47,7 +51,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 	public void run() {
 		this.isRunning = true;
 		
-		//this.updateAddPlugin(new MainRemoteActivDeactivPlugin());
+		this.updateAddPlugin(new MainRemoteActivDeactivPlugin());
 		
 		Thread.currentThread().setName("Прослушивание внутреннего эксплорера");
 		while(this.isRunning) {
@@ -56,13 +60,13 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 					final List<String> pluginsClose = JsonConverterSingleton.getInstance().getEntities(webResource.path("user").path(username).path("app").path("close"),String.class);
 					for(final String tabName : pluginsClose) {
 						LOG.info("Закрыть плагин: {}", tabName );
-						/*final Iterator<RemoteActivationDeactivationPlugin> iter = plugins.iterator();
+						final Iterator<RemoteActivationDeactivationPlugin> iter = plugins.iterator();
 						while(iter.hasNext()) {
 							final RemoteActivationDeactivationPlugin plugin = iter.next();
-							if(tabName.equals(plugin.getName())) {
+							if(plugin.getName().contains(tabName)) {
 								final ExecutorService threadPush= Executors.newSingleThreadExecutor();
 								CompletableFuture.runAsync(() -> {
-									final PDialog dialog = this.editorKit.getUISystemUS().getDialog().createInfoDialog("Внимание! Пришел запрос с сервера!", "Через 5 секунд закроется: \"" + tabName + "\"");
+									final PDialog dialog = UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createInfoDialog("Внимание! Пришел запрос с сервера!", "Через 5 секунд закроется: \"" + tabName + "\"");
 									dialog.show();
 									try {
 										TimeUnit.SECONDS.sleep(5);
@@ -80,7 +84,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 								
 								iter.remove();
 							}
-						}	*/
+						}
 					}
 				} catch(final UniformInterfaceException | ClientHandlerException ex) {
 					LOG.error("Сервер \"{}\" не доступен!", new StringBuilder("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString() + "/system/user/").append(username).append("/app/close").toString());
