@@ -94,11 +94,15 @@ public class Application implements Runnable {
 			new URL(url);
 			return true;
 		} catch (final MalformedURLException e) {
-    		switch(url.substring(url.lastIndexOf('.'))) {
-    			case ".html" : return true;
-    			case ".php" : return true;
-    			default : return false;
-    		}
+			if(url.length()>4) {
+				switch(url.substring(url.length() - 3)) {
+	    			case ".html" : return true;
+	    			case ".php" : return true;
+	    			default : return false;
+	    		}
+			} else {
+				return false;
+			}
 		}
 	}
 
