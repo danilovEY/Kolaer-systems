@@ -1,6 +1,6 @@
 package ru.kolaer.client.javafx.plugins;
 
-import org.apache.felix.framework.FrameworkFactory;
+import org.apache.felix.framework.Felix;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -59,11 +59,8 @@ public class PluginManager {
                 "javafx.scene.text, javafx.stage, javax.swing, com.sun.javafx.scene.control.skin, javafx.scene.control.cell, org.slf4j;version=1.7.7");
 
         try {
-            final FrameworkFactory factory = new FrameworkFactory();
+            final Framework framework = new Felix(frameworkProperties);
 
-            final Framework framework = factory.newFramework(frameworkProperties);
-
-            framework.init();
             framework.start();
 
             this.context = framework.getBundleContext();
