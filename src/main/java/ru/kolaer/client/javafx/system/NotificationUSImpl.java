@@ -4,10 +4,13 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+
+import java.util.concurrent.TimeUnit;
+
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.action.Action;
 import ru.kolaer.api.system.NotificationUS;
-import ru.kolaer.api.system.NotifyAction;
+import ru.kolaer.api.system.NotifiAction;
 import ru.kolaer.api.tools.Tools;
 
 /**
@@ -19,122 +22,124 @@ import ru.kolaer.api.tools.Tools;
 public class NotificationUSImpl implements NotificationUS {
 
 	@Override
-	public void showSimpleNotify(final String title, final String text) {
-		this.showSimpleNotify(title, text, Duration.seconds(5));
+	public void showSimpleNotifi(final String title, final String text) {
+		this.showSimpleNotifi(title, text, Duration.seconds(5));
 	}
 
 	@Override
-	public void showSimpleNotify(final String title, final String text, Duration duration) {
-		this.showSimpleNotify(title, text, duration, new NotifyAction[0]);
+	public void showSimpleNotifi(final String title, final String text, Duration duration) {
+		this.showSimpleNotifi(title, text, duration, new NotifiAction[0]);
 	}
 	
 	@Override
-	public void showSimpleNotify(final String title, final String text, Duration duration, final NotifyAction... actions) {
-		this.showSimpleNotify(title, text, duration, Pos.BOTTOM_RIGHT, actions);
+	public void showSimpleNotifi(final String title, final String text, Duration duration, final NotifiAction... actions) {
+		this.showSimpleNotifi(title, text, duration, Pos.BOTTOM_RIGHT, actions);
 	}
 
 	@Override
-	public void showErrorNotify(final String title, final String text) {	
-		this.showErrorNotify(title, text, new NotifyAction[0]);
+	public void showErrorNotifi(final String title, final String text) {	
+		this.showErrorNotifi(title, text, new NotifiAction[0]);
 	}
 	
 	@Override
-	public void showErrorNotify(final String title, final String text, final NotifyAction... actions) {	
+	public void showErrorNotifi(final String title, final String text, final NotifiAction... actions) {	
 		Tools.runOnThreadFX(() -> {
-			final Notifications notify = this.addActions(Notifications.create(), actions);
-			notify.hideAfter(Duration.seconds(15));
-			notify.position(Pos.BOTTOM_CENTER);
+			final Notifications Notifi = this.addActions(Notifications.create(), actions);
+			Notifi.hideAfter(Duration.seconds(15));
+			Notifi.position(Pos.BOTTOM_CENTER);
 			if(title != null)
-				notify.title(title);
+				Notifi.title(title);
 			if(text != null) {
-				notify.text(text);
+				Notifi.text(text);
 			} 
-			notify.showError();
+			Notifi.showError();
 		});
 	}
 
 	@Override
-	public void showWarningNotify(final String title, final String text) {		
-		this.showWarningNotify(title, text, new NotifyAction[0]);
+	public void showWarningNotifi(final String title, final String text) {		
+		this.showWarningNotifi(title, text, new NotifiAction[0]);
 	}
 	
 	@Override
-	public void showWarningNotify(final String title, final String text, final NotifyAction... actions) {		
+	public void showWarningNotifi(final String title, final String text, final NotifiAction... actions) {		
 		Tools.runOnThreadFX(() -> {
-			final Notifications notify = this.addActions(Notifications.create(), actions);
-			notify.hideAfter(Duration.seconds(10));
-			notify.position(Pos.BOTTOM_CENTER);
+			final Notifications Notifi = this.addActions(Notifications.create(), actions);
+			Notifi.hideAfter(Duration.seconds(10));
+			Notifi.position(Pos.BOTTOM_CENTER);
 			if(title != null)
-				notify.title(title);
+				Notifi.title(title);
 			if(text != null) {
-				notify.text(text);
+				Notifi.text(text);
 			} 
-			notify.showWarning();
+			Notifi.showWarning();
 		});
 	}
 
 	@Override
-	public void showInformationNotify(final String title, final String text) {
-		this.showInformationNotify(title, text, Duration.seconds(5));
+	public void showInformationNotifi(final String title, final String text) {
+		this.showInformationNotifi(title, text, Duration.seconds(5));
 	}
 
 	@Override
-	public void showInformationNotify(final String title, final String text, final Duration duration) {
-		this.showInformationNotify(title, text, duration, new NotifyAction[0]);
+	public void showInformationNotifi(final String title, final String text, final Duration duration) {
+		this.showInformationNotifi(title, text, duration, new NotifiAction[0]);
 	}
 	
 	@Override
-	public void showInformationNotify(final String title, final String text, final Duration duration, final NotifyAction... actions) {
-		this.showInformationNotify(title, text, duration, Pos.BOTTOM_RIGHT, actions);
+	public void showInformationNotifi(final String title, final String text, final Duration duration, final NotifiAction... actions) {
+		this.showInformationNotifi(title, text, duration, Pos.BOTTOM_RIGHT, actions);
 	}
 	
-	private synchronized Notifications addActions(final Notifications notify, final NotifyAction... actions) {
-		if(actions != null && actions.length != 0) {
-			final Action[] actionsObj = new Action[actions.length];	
-			final VBox vBox = new VBox();
-			
-			for(int i = 0; i < actions.length; i++) {
-				final NotifyAction notifyAction = actions[i];
-				actionsObj[i] = new Action(notifyAction.getText(), notifyAction.getConsumer());
-				final Button action = new Button(notifyAction.getText());
-				action.setMaxWidth(Double.MAX_VALUE);
-				action.setOnAction(e -> {
-					notifyAction.getConsumer().accept(e);
-				});
-				vBox.getChildren().add(action);
-			}
-			notify.graphic(vBox);
-		}	
-		return notify;
+	private Notifications addActions(final Notifications Notifi, final NotifiAction... actions) {
+		Tools.runOnThreadFXAndWain(() -> {
+			if(actions != null && actions.length != 0) {
+				final Action[] actionsObj = new Action[actions.length];	
+				final VBox vBox = new VBox();
+				
+				for(int i = 0; i < actions.length; i++) {
+					final NotifiAction NotifiAction = actions[i];
+					actionsObj[i] = new Action(NotifiAction.getText(), NotifiAction.getConsumer());
+					final Button action = new Button(NotifiAction.getText());
+					action.setMaxWidth(Double.MAX_VALUE);
+					action.setOnAction(e -> {
+						NotifiAction.getConsumer().accept(e);
+					});
+					vBox.getChildren().add(action);
+				}
+				Notifi.graphic(vBox);
+			}	
+		}, 20, TimeUnit.SECONDS);
+		return Notifi;
 	}
 
 	@Override
-	public void showSimpleNotify(final String title, final  String text, final Duration duration, final Pos pos, final NotifyAction... actions) {
+	public void showSimpleNotifi(final String title, final  String text, final Duration duration, final Pos pos, final NotifiAction... actions) {
 		Tools.runOnThreadFX(() -> {
-			final Notifications notify = this.addActions(Notifications.create(), actions);
-			notify.hideAfter(duration);	
-			notify.position(pos);
+			final Notifications Notifi = this.addActions(Notifications.create(), actions);
+			Notifi.hideAfter(duration);	
+			Notifi.position(pos);
 			if(title != null)
-				notify.title(title);
+				Notifi.title(title);
 			if(text != null) {
-				notify.text(text);
+				Notifi.text(text);
 			} 	
-			notify.show();
+			Notifi.show();
 		});
 	}
 
 	@Override
-	public void showInformationNotify(final String title, final String text, final Duration duration, final Pos pos, final NotifyAction... actions) {
+	public void showInformationNotifi(final String title, final String text, final Duration duration, final Pos pos, final NotifiAction... actions) {
 		Tools.runOnThreadFX(() -> {
-			final Notifications notify = this.addActions(Notifications.create(), actions);
-			notify.hideAfter(duration);
-			notify.position(pos);
+			final Notifications Notifi = this.addActions(Notifications.create(), actions);
+			Notifi.hideAfter(duration);
+			Notifi.position(pos);
 			if(title != null)
-				notify.title(title);
+				Notifi.title(title);
 			if(text != null) {
-				notify.text(text);
+				Notifi.text(text);
 			}
-			notify.showInformation();
+			Notifi.showInformation();
 		});
 	}
 }
