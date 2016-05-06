@@ -6,7 +6,7 @@ import ru.kolaer.api.mvp.model.DbBirthdayAll;
 import ru.kolaer.api.mvp.model.DbDataAll;
 import ru.kolaer.api.mvp.model.PublicHolidays;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.NotifyAction;
+import ru.kolaer.api.system.NotifiAction;
 import ru.kolaer.api.system.ServerStatus;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
@@ -32,40 +32,40 @@ public class BirthdayOnHoliday implements Service {
 			final LocalDate date = LocalDate.now();
 			if(date.getDayOfWeek().getValue() == 5 ) {
 				if(!this.tomorrow) {
-					this.showNotify("В субботу ", date.plusDays(1), new PublicHolidays(null, "выходной", "holiday", null));
+					this.showNotifi("В субботу ", date.plusDays(1), new PublicHolidays(null, "выходной", "holiday", null));
 				} 
 				if(!this.arterTomorrow) {
-					this.showNotify("В воскресенье ", date.plusDays(2), new PublicHolidays(null, "выходной", "holiday", null));
+					this.showNotifi("В воскресенье ", date.plusDays(2), new PublicHolidays(null, "выходной", "holiday", null));
 				}
 			}
 			
 			for(final PublicHolidays holiday : holidays) {
 				if(date.getDayOfMonth() == holiday.getDate().getDay()) {
-					this.showNotify("Сегодня ", date, holiday);
+					this.showNotifi("Сегодня ", date, holiday);
 				} else if(date.getDayOfMonth() + 1 == holiday.getDate().getDay()) {
 					this.tomorrow = true;
-					this.showNotify("Завтра ", date.plusDays(1), holiday);
+					this.showNotifi("Завтра ", date.plusDays(1), holiday);
 				} else if(date.getDayOfMonth() + 2 == holiday.getDate().getDay()) {
 					this.arterTomorrow = true;
-					this.showNotify("После завтра ", date.plusDays(2), holiday);
+					this.showNotifi("После завтра ", date.plusDays(2), holiday);
 				} if(date.getDayOfMonth() + 3 == holiday.getDate().getDay()) {
-					this.showNotify("Через 3 дня ", date.plusDays(3), holiday);
+					this.showNotifi("Через 3 дня ", date.plusDays(3), holiday);
 				} if(date.getDayOfMonth() + 4 == holiday.getDate().getDay()) {
-					this.showNotify("Через 4 дня ", date.plusDays(4), holiday);
+					this.showNotifi("Через 4 дня ", date.plusDays(4), holiday);
 				}
 			}
 		}
 	}
 
-	private void showNotify(final String title, final LocalDate date, final PublicHolidays holiday) {
+	private void showNotifi(final String title, final LocalDate date, final PublicHolidays holiday) {
 		final DbDataAll[] users = this.editorKit.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
 		final DbBirthdayAll[] usersBirthday = editorKit.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
 		
-		final NotifyAction[] actions = new NotifyAction[users.length + usersBirthday.length];
+		final NotifiAction[] actions = new NotifiAction[users.length + usersBirthday.length];
 		int i = 0;
 
 		for(final DbDataAll user : users) {
-			actions[i] = new NotifyAction(user.getInitials() + " (КолАЭР) " + user.getDepartamentAbbreviated(), e -> {
+			actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartamentAbbreviated(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				
 				Platform.runLater(() -> {
@@ -75,7 +75,7 @@ public class BirthdayOnHoliday implements Service {
 			i++;
 		}
 		for(final DbBirthdayAll user : usersBirthday) {
-			actions[i] = new NotifyAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
+			actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
 				Platform.runLater(() -> {
@@ -93,7 +93,7 @@ public class BirthdayOnHoliday implements Service {
 		
 		Platform.runLater(() -> {
 			
-			this.editorKit.getUISystemUS().getNotification().showSimpleNotify(title + holiday.getLocalName() + ". День рождения в этот день празднуют:", null, Duration.hours(24), actions);
+			this.editorKit.getUISystemUS().getNotification().showSimpleNotifi(title + holiday.getLocalName() + ". День рождения в этот день празднуют:", null, Duration.hours(24), actions);
 		});
 	}
 

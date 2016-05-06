@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.DbBirthdayAll;
 import ru.kolaer.api.mvp.model.DbDataAll;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.NotifyAction;
+import ru.kolaer.api.system.NotifiAction;
 import ru.kolaer.api.system.ServerStatus;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
@@ -34,11 +34,11 @@ public class BirthdayService implements Service {
 			final DbDataAll[] users = this.editorKit.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
 			final DbBirthdayAll[] usersBirthday = editorKit.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
 			
-			final NotifyAction[] actions = new NotifyAction[users.length + usersBirthday.length];
+			final NotifiAction[] actions = new NotifiAction[users.length + usersBirthday.length];
 			int i = 0;
 
 			for(final DbDataAll user : users) {
-				actions[i] = new NotifyAction(user.getInitials() + " (КолАЭР) " + user.getDepartamentAbbreviated(), e -> {
+				actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartamentAbbreviated(), e -> {
 					final UserModel userModel = new UserModelImpl(user);
 					
 					Platform.runLater(() -> {
@@ -48,7 +48,7 @@ public class BirthdayService implements Service {
 				i++;
 			}
 			for(final DbBirthdayAll user : usersBirthday) {
-				actions[i] = new NotifyAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
+				actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
 					final UserModel userModel = new UserModelImpl(user);
 					userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
 					Platform.runLater(() -> {
@@ -67,7 +67,7 @@ public class BirthdayService implements Service {
 			}
 			
 			Platform.runLater(() -> {
-				this.editorKit.getUISystemUS().getNotification().showSimpleNotify(title.toString(), null, Duration.hours(24),Pos.BOTTOM_CENTER, actions);
+				this.editorKit.getUISystemUS().getNotification().showSimpleNotifi(title.toString(), null, Duration.hours(24),Pos.BOTTOM_CENTER, actions);
 			});
 		}
 	}
