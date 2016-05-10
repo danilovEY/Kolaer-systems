@@ -1,16 +1,18 @@
 package ru.kolaer.api.system;
 
 import javafx.concurrent.Service;
-import ru.kolaer.api.mvp.presenter.PDialog;
+import javafx.scene.control.Dialog;
 
 /**Интерфейс для вызова диалоговых окон.*/
 public interface DialogUS {
 	/**Показать простой диалоговое окно.*/
-	PDialog createSimpleDialog(String title, String text);
+	Dialog<?> createSimpleDialog(String title, String text);
 	/**Показать диалоговое окно информирующая об ошибке.*/
-	PDialog createErrorDialog(String title, String text);
+	Dialog<?> createErrorDialog(String title, String text);
 	/**Показать диалоговое информирующее окно.*/
-	PDialog createInfoDialog(String title, String text);
+	Dialog<?> createInfoDialog(String title, String text);
 	/**Показать диалоговое окно в progress bar'ом.*/
-	PDialog createLoadingDialog(Service<?> service);
+	Dialog<?> createLoadingDialog(Service<?> service);
+	/**Показать диалоговое окно с вводом логина и пароля.*/
+	Dialog<?> createLoginDialog();
 }
