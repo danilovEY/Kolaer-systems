@@ -3,9 +3,11 @@ package ru.kolaer.client.javafx.services;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
+
+import javafx.scene.control.Dialog;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.presenter.PDialog;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObservable;
 import ru.kolaer.client.javafx.mvp.viewmodel.ExplorerObserver;
@@ -66,7 +68,7 @@ public class ServiceRemoteActivOrDeactivPlugin implements Service, ExplorerObser
 							if(plugin.getName().contains(tabName)) {
 								final ExecutorService threadPush= Executors.newSingleThreadExecutor();
 								CompletableFuture.runAsync(() -> {
-									final PDialog dialog = UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createInfoDialog("Внимание! Пришел запрос с сервера!", "Через 5 секунд закроется: \"" + tabName + "\"");
+									final Dialog<?>  dialog = UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createInfoDialog("Внимание! Пришел запрос с сервера!", "Через 5 секунд закроется: \"" + tabName + "\"");
 									dialog.show();
 									try {
 										TimeUnit.SECONDS.sleep(5);
