@@ -204,8 +204,10 @@ public class VMMainFrameImpl extends Application {
                 System.exit(-9);
             }
         });
+        Tools.runOnThreadFX(() -> {
+            this.stage.getIcons().add(new Image("/css/aerIcon.png"));
+        });
 
-        this.stage.getIcons().add(new Image("/css/aerIcon.png", true));
         this.stage.setOnCloseRequest(e -> {
             System.exit(0);
         });

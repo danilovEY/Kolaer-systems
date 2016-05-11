@@ -72,7 +72,7 @@ public class PTabImpl implements PTab {
 				return null;
 			});
 
-			this.isActive = true;	
+			this.isActive = true;
 		}
 	}
 
