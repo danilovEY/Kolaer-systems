@@ -17,6 +17,7 @@ import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
+import ru.kolaer.client.javafx.plugins.SearchPlugins;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
 import ru.kolaer.client.javafx.services.ServiceUserIpAndHostName;
@@ -27,10 +28,7 @@ import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -89,10 +87,17 @@ public class VMMainFrameImpl extends Application {
             threadStartService.shutdown();
         }, threadStartService);
 
+        final SearchPlugins searchPlugins = new SearchPlugins();
+        final PluginManager pluginManager = new PluginManager(searchPlugins);
+
         final ExecutorService threadScan = Executors.newSingleThreadExecutor();
+        CompletableFuture<List<PluginBundle>> resultSearch = CompletableFuture.supplyAsync(() -> {
+            return searchPlugins.search();
+        }, threadScan);
+
+        final ExecutorService threadInstall = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             Thread.currentThread().setName("Инициализация менеджера плагинов");
-            final PluginManager pluginManager = new PluginManager();
 
             try {
                 pluginManager.initialization();
@@ -100,8 +105,13 @@ public class VMMainFrameImpl extends Application {
                 LOG.error("Ошибка при инициализации менеджера плагинов!", e);
                 throw new RuntimeException("Ошибка при инициализации менеджера плагинов!");
             }
-            
-            final List<PluginBundle> plugins = pluginManager.getSearchPlugins().search();
+
+            List<PluginBundle> plugins = Collections.emptyList();
+            try {
+                plugins = resultSearch.get();
+            } catch (Exception e) {
+                LOG.error("Ошибка при получении плагинов!", e);
+            }
 
             plugins.parallelStream().forEach(pluginBundle -> {
                 final ExecutorService initPluginThread = Executors.newSingleThreadExecutor();
@@ -164,10 +174,10 @@ public class VMMainFrameImpl extends Application {
         	});
             
             plugins.clear();
-            threadScan.shutdown();
-        }, threadScan).exceptionally(t -> {
+            threadInstall.shutdown();
+        }, threadInstall).exceptionally(t -> {
             LOG.error("Ошибка при инициализации менеджера плагинов!", t);
-            threadScan.shutdownNow();
+            threadInstall.shutdownNow();
             return null;
         });
     }
