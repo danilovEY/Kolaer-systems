@@ -114,65 +114,56 @@ public class VMMainFrameImpl extends Application {
             }
 
             plugins.parallelStream().forEach(pluginBundle -> {
-                final ExecutorService initPluginThread = Executors.newSingleThreadExecutor();
-                CompletableFuture.supplyAsync(() -> {
+                try {
+                    Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
+                    LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
+                    pluginManager.install(pluginBundle);
+                } catch (final BundleException e) {
+                    LOG.error("Ошибка при установке/запуска плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
                     try {
-                    	Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
-                        LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
-                        pluginManager.install(pluginBundle);
-                    } catch (final BundleException e) {
-                        LOG.error("Ошибка при установке/запуска плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
-                        try {
-                            pluginManager.uninstall(pluginBundle);
-                        } catch (final BundleException e1) {
-                            LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
-                        }
-                        return null;
+                        pluginManager.uninstall(pluginBundle);
+                    } catch (final BundleException e1) {
+                        LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
                     }
-                    return pluginBundle;
-                }, initPluginThread).thenApplyAsync(plugin -> {
-                	if(plugin != null) {
-                    	LOG.info("{}: Получение USP...", plugin.getSymbolicNamePlugin());
-                        final UniformSystemPlugin uniformSystemPlugin = pluginBundle.getUniformSystemPlugin();
-                        
-                        if(uniformSystemPlugin == null) {
-                        	LOG.info("{}: USP is null!", plugin.getSymbolicNamePlugin());
-                        	initPluginThread.shutdownNow();
-                        }
-                        try {
-                        	LOG.info("{}: Инициализация USP...", plugin.getSymbolicNamePlugin());
-                            uniformSystemPlugin.initialization(UniformSystemEditorKitSingleton.getInstance());
-                        } catch (final Exception e) {
-                            LOG.error("Ошибка при инициализации плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
-                            try {
-                                pluginManager.uninstall(pluginBundle);
-                            } catch (final BundleException e1) {
-                                LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
-                            }
-                            return null;
-                        }
-                	}
-                    return plugin;
-                }, initPluginThread).thenAcceptAsync(plugin -> {
-                	if(plugin != null) {
-                    	LOG.info("{}: Получение служб...", plugin.getSymbolicNamePlugin());
-                        final Collection<Service> pluginServices = plugin.getUniformSystemPlugin().getServices();
-                        if (pluginServices != null) {
-                            pluginServices.parallelStream().forEach(this.servicesManager::addService);
-                            pluginServices.clear();
-                        }
-                        
-                        final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
-                        explorer.addTabPlugin(tabName, plugin);
-                	}
-                    initPluginThread.shutdown();
-                }, initPluginThread).exceptionally(t -> {
-                	LOG.error("Ошибка!", t);
-                	initPluginThread.shutdownNow();
-                    return null;
-                });
+                    return;
+                }
+
+                LOG.info("{}: Получение USP...", pluginBundle.getSymbolicNamePlugin());
+                final UniformSystemPlugin uniformSystemPlugin = pluginBundle.getUniformSystemPlugin();
+
+                if(uniformSystemPlugin == null) {
+                    LOG.info("{}: USP is null!", pluginBundle.getSymbolicNamePlugin());
+                    try {
+                        pluginManager.uninstall(pluginBundle);
+                    } catch (final BundleException e1) {
+                        LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
+                    }
+                    return;
+                }
+
+                try {
+                    LOG.info("{}: Инициализация USP...", pluginBundle.getSymbolicNamePlugin());
+                    uniformSystemPlugin.initialization(UniformSystemEditorKitSingleton.getInstance());
+                } catch (final Exception e) {
+                    LOG.error("Ошибка при инициализации плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
+                    try {
+                        pluginManager.uninstall(pluginBundle);
+                    } catch (final BundleException e1) {
+                        LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
+                    }
+                    return;
+                }
+
+                LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
+                final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
+                if (pluginServices != null) {
+                    pluginServices.parallelStream().forEach(this.servicesManager::addService);
+                }
+
+                final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
+                explorer.addTabPlugin(tabName, pluginBundle);
         	});
-            
+
             plugins.clear();
             threadInstall.shutdown();
         }, threadInstall).exceptionally(t -> {
@@ -204,23 +195,17 @@ public class VMMainFrameImpl extends Application {
 
         PARAM.putAll(this.getParameters().getNamed());
 
-        final ExecutorService threadStartFrame = Executors.newSingleThreadExecutor();
-        CompletableFuture.runAsync(() -> {
-        	Tools.runOnThreadFX(() -> {
-                try {
-                    this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
-                    this.stage.setMaximized(true);
-                } catch (IOException e) {
-                    LOG.error("Не удалось загрузить: " + Resources.V_MAIN_FRAME, e);
-                    System.exit(-9);
-                }
-            });
-        	threadStartFrame.shutdown();
-        }, threadStartFrame);
-        
-        
+        Tools.runOnThreadFX(() -> {
+            try {
+                this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
+                this.stage.setMaximized(true);
+            } catch (IOException e) {
+                LOG.error("Не удалось загрузить: " + Resources.V_MAIN_FRAME, e);
+                System.exit(-9);
+            }
+        });
 
-        this.stage.getIcons().add(new Image("/css/aerIcon.png"));
+        this.stage.getIcons().add(new Image("/css/aerIcon.png", true));
         this.stage.setOnCloseRequest(e -> {
             System.exit(0);
         });
