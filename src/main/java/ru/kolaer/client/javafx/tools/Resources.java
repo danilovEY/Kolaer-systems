@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 public interface Resources {
-	public static final String VERSION = "1.0";
+	public static final String VERSION = "1.1";
 	
 	public static final String PATH_TO_DIR_WITH_PLUGINS = "plugins";
 	public static final StringBuilder URL_TO_KOLAER_RESTFUL = new StringBuilder("localhost:8080/ru.kolaer.server.restful");
