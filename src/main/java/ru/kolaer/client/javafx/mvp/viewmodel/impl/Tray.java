@@ -1,9 +1,11 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
-import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
+import ru.kolaer.client.javafx.services.ServiceControlManager;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -20,20 +22,24 @@ public class Tray {
     private boolean firstTime = true;
     private TrayIcon trayIcon;
 
-    public void createTrayIcon(final Stage stage) {
+    public void createTrayIcon(final Stage stage, final ServiceControlManager servicesManager, final VMExplorer explorer) {
+        stage.setOnCloseRequest(event -> {
+            if (trayIcon != null) {
+                Tools.runOnThreadFX(() -> {
+                    stage.hide();
+                });
+                this.showProgramIsMinimizedMsg();
+            } else {
+                servicesManager.removeAllServices();
+                explorer.removeAll();
+                System.exit(0);
+            }
+        });
+
         if (SystemTray.isSupported()) {
             this.mainStage = stage;
 
             final SystemTray tray = SystemTray.getSystemTray();
-
-            this.mainStage.setOnCloseRequest(event -> {
-                if (trayIcon != null) {
-                    stage.hide();
-                    showProgramIsMinimizedMsg();
-                } else {
-                    System.exit(0);
-                }
-            });
 
             final PopupMenu popup = new PopupMenu();
 
@@ -41,7 +47,7 @@ public class Tray {
             final MenuItem closeItem = new MenuItem("Закрыть");
 
             final ActionListener showStage = e1 -> {
-                Platform.runLater(() -> {
+                Tools.runOnThreadFX(() -> {
                     stage.show();
                 });
             };
@@ -49,6 +55,8 @@ public class Tray {
             showItem.addActionListener(showStage);
 
             closeItem.addActionListener(e -> {
+                servicesManager.removeAllServices();
+                explorer.removeAll();
                 System.exit(0);
             });
 
@@ -65,10 +73,6 @@ public class Tray {
             } catch (IOException e) {
                 LOG.error("Ошибка при чтении иконки для трея!", e);
             }
-        } else {
-            stage.setOnCloseRequest(e -> {
-                System.exit(0);
-            });
         }
     }
 

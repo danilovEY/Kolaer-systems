@@ -18,10 +18,7 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.plugins.SearchPlugins;
-import ru.kolaer.client.javafx.services.ServiceControlManager;
-import ru.kolaer.client.javafx.services.ServiceRemoteActivOrDeactivPlugin;
-import ru.kolaer.client.javafx.services.ServiceUserIpAndHostName;
-import ru.kolaer.client.javafx.services.UserPingService;
+import ru.kolaer.client.javafx.services.*;
 import ru.kolaer.client.javafx.system.NetworkUSImpl;
 import ru.kolaer.client.javafx.system.UISystemUSImpl;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
@@ -57,7 +54,7 @@ public class VMMainFrameImpl extends Application {
     /**
      * Главное окно приложения.
      */
-    private Stage stage;
+    private static Stage stage;
 
     @FXML
     public void initialize() {
@@ -68,6 +65,11 @@ public class VMMainFrameImpl extends Application {
 
         //Инициализация вкладочного explorer'а.
         final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
+
+        final ExecutorService threadOnCreateTray = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() -> {
+            new Tray().createTrayIcon(this.stage, this.servicesManager, explorer);
+        }, threadOnCreateTray);
 
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         final NetworkUSImpl network = new NetworkUSImpl();
@@ -81,6 +83,7 @@ public class VMMainFrameImpl extends Application {
         final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             Thread.currentThread().setName("Добавление системны служб");
+            this.servicesManager.addService(new HideShowMainStage(this.stage), true);
             this.servicesManager.addService(new UserPingService(network.getService().path("system")), true);
             this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, network.getService().path("system")), true);
             this.servicesManager.addService(new ServiceUserIpAndHostName(network.getService().path("system")), true);
@@ -191,8 +194,6 @@ public class VMMainFrameImpl extends Application {
     public void start(final Stage stage) throws InterruptedException {
         this.stage = stage;
 
-        new Tray().createTrayIcon(this.stage);
-
         this.stage.setMinHeight(650);
         this.stage.setMinWidth(850);
 
@@ -217,6 +218,8 @@ public class VMMainFrameImpl extends Application {
             if (e.getCode() == KeyCode.F11)
                 this.stage.setFullScreen(true);
         });
+
+
         this.stage.setTitle("Единая система КолАЭР");
 
         this.stage.centerOnScreen();
