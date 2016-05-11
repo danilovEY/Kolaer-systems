@@ -188,8 +188,11 @@ public class VMMainFrameImpl extends Application {
     }
 
     @Override
-    public void start(final Stage stage) {
+    public void start(final Stage stage) throws InterruptedException {
         this.stage = stage;
+
+        new Tray().createTrayIcon(this.stage);
+
         this.stage.setMinHeight(650);
         this.stage.setMinWidth(850);
 
@@ -204,12 +207,9 @@ public class VMMainFrameImpl extends Application {
                 System.exit(-9);
             }
         });
+
         Tools.runOnThreadFX(() -> {
             this.stage.getIcons().add(new Image("/css/aerIcon.png"));
-        });
-
-        this.stage.setOnCloseRequest(e -> {
-            System.exit(0);
         });
 
         this.stage.setFullScreen(false);
@@ -222,4 +222,6 @@ public class VMMainFrameImpl extends Application {
         this.stage.centerOnScreen();
         this.stage.show();
     }
+
+
 }
