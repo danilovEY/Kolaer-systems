@@ -44,7 +44,9 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public void removeAll() {
-
+        this.pluginTabMap.values().parallelStream().forEach(tab -> {
+            tab.closeTab();
+        });
     }
 
 

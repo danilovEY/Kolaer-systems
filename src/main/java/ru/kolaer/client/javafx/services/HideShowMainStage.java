@@ -41,7 +41,7 @@ public class HideShowMainStage implements Service {
 
     @Override
     public void stop() {
-
+        pathToFile.delete();
     }
 
     @Override

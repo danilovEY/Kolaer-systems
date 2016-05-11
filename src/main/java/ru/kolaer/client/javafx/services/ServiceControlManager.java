@@ -89,17 +89,15 @@ public class ServiceControlManager {
 			}
 		}
 	}
-	
+
 	/**Удалить все службы.*/
 	public void removeAllServices() {
-		this.runnableService.entrySet().forEach(entity -> {
+		this.runnableService.entrySet().parallelStream().forEach(entity -> {
 			final Service service = entity.getKey();
 			service.stop();
-			try {
-				entity.getValue().get(10, TimeUnit.SECONDS);
-			} catch(final Exception ex) {
+
+			if(!entity.getValue().isDone())
 				entity.getValue().cancel(true);
-			}
 		});
 
 		this.runnableService.clear();
