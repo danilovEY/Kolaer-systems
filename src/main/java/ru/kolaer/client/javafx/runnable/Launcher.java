@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMMainFrameImpl;
 
 import java.io.*;
+import java.util.concurrent.TimeUnit;
 
 public class Launcher {
 	private static final Logger LOG = LoggerFactory.getLogger(Launcher.class);
@@ -32,28 +33,18 @@ public class Launcher {
 		final File pathToFile = new File(pathToRunFile);
 
 		if(pathToFile.exists()) {
-			int status = 0;
-			try(FileInputStream fileOutputStream = new FileInputStream(pathToFile)) {
-				status = fileOutputStream.read();
-			}catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			pathToFile.delete();
+			
+			try{
+				TimeUnit.MILLISECONDS.sleep(300);
+			}catch(InterruptedException e1){
+				LOG.error("Прерывание операции!");
+				return true;
 			}
-
-			if(status == 1) {
-				pathToFile.delete();
-				return false;
+			
+			if(pathToFile.exists()) {
+				return true;
 			}
-
-			try (FileOutputStream fileOutputStream = new FileOutputStream(pathToFile)) {
-				fileOutputStream.write(1);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return true;
 		}
 
 		return false;

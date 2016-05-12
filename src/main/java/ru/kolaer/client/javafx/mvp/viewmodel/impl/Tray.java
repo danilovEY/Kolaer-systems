@@ -1,16 +1,26 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
-import javafx.stage.Stage;
+import java.awt.AWTException;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import javax.imageio.ImageIO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javafx.stage.Stage;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 
 /**
  * Created by Danilov on 11.05.2016.
@@ -37,7 +47,7 @@ public class Tray {
         });
 
         if (SystemTray.isSupported()) {
-            this.mainStage = stage;
+        	this.mainStage = stage;
 
             final SystemTray tray = SystemTray.getSystemTray();
 
@@ -48,23 +58,42 @@ public class Tray {
 
             final ActionListener showStage = e1 -> {
                 Tools.runOnThreadFX(() -> {
-                    stage.show();
+                	this.mainStage.show();
                 });
             };
 
             showItem.addActionListener(showStage);
 
             closeItem.addActionListener(e -> {
-                servicesManager.removeAllServices();
-                explorer.removeAll();
-                System.exit(0);
+            	final ExecutorService serviceThread = Executors.newSingleThreadExecutor();
+            	final Future<?> serviceRes = serviceThread.submit(() -> {
+            		servicesManager.removeAllServices();
+            	});
+            	
+            	final ExecutorService explorerThread = Executors.newSingleThreadExecutor();
+    			final Future<?> explorerRes = explorerThread.submit(() -> {
+            		 explorer.removeAll();
+            	});
+            	
+            	Executors.newSingleThreadExecutor().submit(() -> {
+            		try{
+						serviceRes.get(5, TimeUnit.SECONDS);
+						explorerRes.get(1, TimeUnit.MINUTES);
+					}catch(Exception e2){
+						LOG.error("Ошибка ожидания");
+						serviceThread.shutdownNow();
+						explorerThread.shutdownNow();
+					}
+            		
+            		System.exit(0);
+            	});
             });
 
             popup.add(showItem);
             popup.add(closeItem);
 
             try {
-                this.trayIcon = new TrayIcon(ImageIO.read(this.getClass().getResource("/css/aerIcon.gif")), "Title", popup);
+                this.trayIcon = new TrayIcon(ImageIO.read(this.getClass().getResource("/css/aerIcon.gif")), "Единая система приложений", popup);
                 this.trayIcon.addActionListener(showStage);
 
                 tray.add(this.trayIcon);

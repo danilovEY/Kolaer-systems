@@ -68,7 +68,7 @@ public class VMMainFrameImpl extends Application {
 
         final ExecutorService threadOnCreateTray = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
-            new Tray().createTrayIcon(this.stage, this.servicesManager, explorer);
+            new Tray().createTrayIcon(stage, this.servicesManager, explorer);
         }, threadOnCreateTray);
 
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
@@ -83,7 +83,7 @@ public class VMMainFrameImpl extends Application {
         final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             Thread.currentThread().setName("Добавление системны служб");
-            this.servicesManager.addService(new HideShowMainStage(this.stage), true);
+            this.servicesManager.addService(new HideShowMainStage(stage), true);
             this.servicesManager.addService(new UserPingService(network.getService().path("system")), true);
             this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, network.getService().path("system")), true);
             this.servicesManager.addService(new ServiceUserIpAndHostName(network.getService().path("system")), true);
@@ -192,17 +192,17 @@ public class VMMainFrameImpl extends Application {
 
     @Override
     public void start(final Stage stage) throws InterruptedException {
-        this.stage = stage;
+    	VMMainFrameImpl.stage = stage;
 
-        this.stage.setMinHeight(650);
-        this.stage.setMinWidth(850);
+        stage.setMinHeight(650);
+        stage.setMinWidth(850);
 
         PARAM.putAll(this.getParameters().getNamed());
 
         Tools.runOnThreadFX(() -> {
             try {
-                this.stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
-                this.stage.setMaximized(true);
+                stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
+                stage.setMaximized(true);
             } catch (IOException e) {
                 LOG.error("Не удалось загрузить: " + Resources.V_MAIN_FRAME, e);
                 System.exit(-9);
@@ -210,20 +210,20 @@ public class VMMainFrameImpl extends Application {
         });
 
         Tools.runOnThreadFX(() -> {
-            this.stage.getIcons().add(new Image("/css/aerIcon.png"));
+            stage.getIcons().add(new Image("/css/aerIcon.png"));
         });
 
-        this.stage.setFullScreen(false);
-        this.stage.addEventHandler(KeyEvent.KEY_PRESSED, (e) -> {
+        stage.setFullScreen(false);
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, (e) -> {
             if (e.getCode() == KeyCode.F11)
-                this.stage.setFullScreen(true);
+                stage.setFullScreen(true);
         });
 
 
-        this.stage.setTitle("Единая система КолАЭР");
+        stage.setTitle("Единая система КолАЭР");
 
-        this.stage.centerOnScreen();
-        this.stage.show();
+        stage.centerOnScreen();
+        stage.show();
     }
 
 
