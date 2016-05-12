@@ -107,7 +107,7 @@ public class Tray {
 
     public void showProgramIsMinimizedMsg() {
         if (firstTime) {
-            trayIcon.displayMessage("Внимание!.", "Приложение свернулось и находится в трее.", TrayIcon.MessageType.INFO);
+            trayIcon.displayMessage("Внимание!", "Приложение свернулось и находится в трее.", TrayIcon.MessageType.INFO);
             firstTime = false;
         }
     }
