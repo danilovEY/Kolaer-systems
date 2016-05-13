@@ -85,13 +85,19 @@ public class UserLog {
 			return;
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H_m_s");
 		final String text = LocalTime.now().format(formatter);
-		final File file = new File(this.userLogDir + "/screen/" + text + "_screen.jpg");
-		try{
-			file.createNewFile();
-		}catch(final IOException e1){
-			e1.printStackTrace();
+		final File dir = new File(this.userLogDir + "/screen");
+		if(!dir.exists()) {
+			dir.mkdirs();
 		}
-		try(final FileOutputStream fos = new FileOutputStream(file)){
+		final File file = new File(this.userLogDir + "/screen/" + text + "_screen.jpg");
+		if(!file.exists()) {
+			try{
+				file.createNewFile();
+			}catch(final IOException e1){
+				e1.printStackTrace();
+			}
+		}
+		try(final FileOutputStream fos = new FileOutputStream(file, false)){
 			fos.write(image);
 			fos.flush();
 		}catch(final IOException e){
