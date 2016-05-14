@@ -3,6 +3,7 @@ package ru.kolaer.asmc.ui.javafx.controller;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -100,7 +101,14 @@ public class CMainFrame implements UniformSystemPlugin {
 		// =====Events======
 		getRootMenuItem.setOnAction(e -> {
 			Tools.runOnThreadFX(() -> {
-				new CAuthenticationDialog().showAndWait().get();
+				final Dialog<?> loginDialog = this.uniformSystemEditorKit.getUISystemUS().getDialog().createLoginDialog();
+				loginDialog.showAndWait();
+				final String[] logAndPass = loginDialog.getResult().toString().split("=");
+				if(logAndPass.length == 2 && logAndPass[0].equals("root") && logAndPass[1].equals(SettingSingleton.getInstance().getRootPass())) {
+					SettingSingleton.getInstance().setRoot(true);
+				} else {
+					this.uniformSystemEditorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Неправельный логин или пароль!").show();
+				}
 			});
 		});
 

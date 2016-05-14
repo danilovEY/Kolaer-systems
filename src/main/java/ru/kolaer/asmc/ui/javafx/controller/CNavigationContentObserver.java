@@ -13,11 +13,11 @@ import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
 
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -92,11 +92,6 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		this.selectedGroup = null;
 
 		final List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups(true);
-		/*groupsList.forEach(mGroupLabels -> {
-			if(!this.cache.containsKey(mGroupLabels)) {
-
-			}
-		});*/
 
 		this.groupsViewMap.values().parallelStream().forEach(group -> {
 			group.removeObserver(this);
@@ -146,26 +141,23 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	}
 
-	private void sortGroup() {
-		final ObservableList<Node> nodes = this.panelWithGroups.getChildren();
+	private void sortIntInUserObject(final Pane pane) {
+		final ObservableList<Node> nodes = pane.getChildren();
 		Tools.runOnThreadFX(() -> {
-			this.panelWithGroups.getChildren().setAll(nodes.parallelStream().sorted((n1, n2) -> {
-				final int pN1 = (int)n1.getUserData();
-				final int pN2 = (int)n2.getUserData();
+			pane.getChildren().setAll(nodes.parallelStream().sorted((n1, n2) -> {
+				final int pN1 = (int)Optional.ofNullable(n1.getUserData()).orElse(0);
+				final int pN2 = (int)Optional.ofNullable(n2.getUserData()).orElse(0);
 				return Integer.compare(pN1, pN2);
 			}).collect(Collectors.toList()));
 		});
 	}
 
+	private void sortGroup() {
+		this.sortIntInUserObject(this.panelWithGroups);
+	}
+
 	private void sortLabel() {
-		final ObservableList<Node> nodes = this.panelWithLabels.getChildren();
-		Tools.runOnThreadFX(() -> {
-			this.panelWithLabels.getChildren().setAll(nodes.parallelStream().sorted((n1, n2) -> {
-				final int pN1 = (int)n1.getUserData();
-				final int pN2 = (int)n2.getUserData();
-				return Integer.compare(pN1, pN2);
-			}).collect(Collectors.toList()));
-		});
+		this.sortIntInUserObject(this.panelWithLabels);
 	}
 
 	@Override
@@ -180,14 +172,34 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 		this.selectedGroup = mGroup;
 
-		mGroup.getLabelList().parallelStream().sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority())).forEach(label -> {
-			final CLabel cLabel = new CLabel(label);
-			Tools.runOnThreadFX(() -> {
-				this.panelWithLabels.getChildren().add(cLabel);
+		final CountDownLatch countDownLatch = new CountDownLatch(mGroup.getLabelList().size());
+		final ExecutorService threadAddData = Executors.newSingleThreadExecutor();
+		threadAddData.submit(() -> {
+			mGroup.getLabelList().stream().forEach(label -> {
+				final CLabel cLabel = new CLabel(label);
+
+				Tools.runOnThreadFX(() -> {
+					this.panelWithLabels.getChildren().add(cLabel);
+					countDownLatch.countDown();
+				});
+
+				this.labelsViewMap.put(label, cLabel);
+				cLabel.registerOberver(this);
 			});
-			this.labelsViewMap.put(label, cLabel);
-			cLabel.registerOberver(this);
+			threadAddData.shutdown();
 		});
+
+		final ExecutorService sort = Executors.newSingleThreadExecutor();
+		sort.submit(() -> {
+			try {
+				countDownLatch.await();
+				this.sortLabel();
+				sort.shutdown();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
+
 	}
 
 	@Override
