@@ -1,5 +1,6 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -56,6 +57,7 @@ public class CMainFrame implements UniformSystemPlugin {
 		final VBox groupsPanel = new VBox();
 
 		Tools.runOnThreadFX(() -> {
+			labelsPanel.setAlignment(Pos.TOP_CENTER);
 			labelsPanel.setStyle("-fx-background-image: url('" + Resources.BACKGROUND_IMAGE.toString() + "');");
 		});
 

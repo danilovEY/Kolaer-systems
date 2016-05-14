@@ -13,10 +13,7 @@ import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -36,8 +33,9 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	private final Pane panelWithLabels;
 	private MGroupLabels selectedGroup;
 	private final UniformSystemEditorKit editorKit;
-	
-	private final Map<CGroupLabels, List<CLabel>> cache = new HashMap<>();
+
+	private final Map<MGroupLabels, CGroupLabels> groupsViewMap = new HashMap<>();
+	private final Map<MLabel, CLabel> labelsViewMap = new HashMap<>();
 
 	/**
 	 * {@linkplain CNavigationContentObserver}
@@ -51,28 +49,37 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	public void addGroupLabels(final MGroupLabels group) {
 		SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups().add(group);
 		SettingSingleton.getInstance().saveGroups();
-		
-		Platform.runLater(() -> {
+
+		Tools.runOnThreadFX(() -> {
 			final CGroupLabels cGroup = new CGroupLabels(group);
 			cGroup.registerOberver(this);
 			this.panelWithGroups.getChildren().add(cGroup);
-			this.panelWithGroups.getChildren().setAll(this.panelWithGroups.getChildren().sorted((a, b) -> Integer.compare(((CGroupLabels) a).getModel().getPriority(), ((CGroupLabels) b).getModel().getPriority())));
-			this.addCache(cGroup, new ArrayList<>());
+			final ExecutorService sort = Executors.newSingleThreadExecutor();
+			sort.submit(() -> {
+				this.sortGroup();
+				sort.shutdown();
+			});
 		});
 	}
 
 	public void addLabel(MLabel label) {
 		if(this.selectedGroup == null)
 			return;
+
 		this.selectedGroup.addLabel(label);
+
 		SettingSingleton.getInstance().saveGroups();
 		
-		Platform.runLater(() -> {
-		final CLabel cLabel = new CLabel(label);
+		Tools.runOnThreadFX(() -> {
+			final CLabel cLabel = new CLabel(label);
 			cLabel.registerOberver(this);
 			this.panelWithLabels.getChildren().add(cLabel);
-			this.panelWithLabels.getChildren().setAll(this.panelWithLabels.getChildren().sorted((a, b) -> Integer.compare(((CLabel) a).getModel().getPriority(), ((CLabel) b).getModel().getPriority())));
-			this.cache.get(this.getCGroupLabelCache(this.selectedGroup)).add(cLabel);
+
+			final ExecutorService sort = Executors.newSingleThreadExecutor();
+			sort.submit(() -> {
+				this.sortLabel();
+				sort.shutdown();
+			});
 		});
 	}
 
@@ -91,12 +98,16 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 			}
 		});*/
 
-		this.cache.keySet().parallelStream().forEach(group -> {
-			this.cache.get(group).parallelStream().forEach(label -> label.removeObserver(this));
+		this.groupsViewMap.values().parallelStream().forEach(group -> {
 			group.removeObserver(this);
 		});
 
-		this.cache.clear();
+		this.labelsViewMap.values().parallelStream().forEach(label -> {
+			label.registerOberver(this);
+		});
+
+		this.groupsViewMap.clear();
+
 		Platform.runLater(() -> {
 			this.panelWithGroups.getChildren().clear();
 			this.panelWithLabels.getChildren().clear();
@@ -106,24 +117,16 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 		final ExecutorService threadAddData = Executors.newSingleThreadExecutor();
 		threadAddData.submit(() -> {
-			groupsList.stream().forEach((final MGroupLabels group) -> {
-					final CGroupLabels cGroup = new CGroupLabels(group);
-					Tools.runOnThreadFX(() -> {
-						this.panelWithGroups.getChildren().add(cGroup);
-						countNodes.countDown();
-					});
+			groupsList.stream().forEach(group -> {
+				final CGroupLabels cGroup = new CGroupLabels(group);
 
-					final ExecutorService threads = Executors.newSingleThreadExecutor();
-					threads.submit(() -> {
-						final List<CLabel> cacheList = new ArrayList<>();
-						cGroup.getModel().getLabelList().parallelStream().forEach(label -> {
-							cacheList.add(new CLabel(label));
-						});
+				Tools.runOnThreadFX(() -> {
+					this.panelWithGroups.getChildren().add(cGroup);
+					countNodes.countDown();
+				});
 
-						this.addCache(cGroup, cacheList);
-					});
-					threads.shutdown();
-					cGroup.registerOberver(this);
+				groupsViewMap.put(group, cGroup);
+				cGroup.registerOberver(this);
 			});
 		});
 
@@ -131,15 +134,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		CompletableFuture.runAsync(() -> {
 			try {
 				countNodes.await();
-				ObservableList<Node> nodes = this.panelWithGroups.getChildren();
-				Tools.runOnThreadFX(() -> {
-					this.panelWithGroups.getChildren().setAll(nodes.parallelStream().sorted((n1, n2) -> {
-						final int pN1 = (int)n1.getUserData();
-						final int pN2 = (int)n2.getUserData();
-						return Integer.compare(pN1, pN2);
-					}).collect(Collectors.toList()));
-				});
-
+				this.sortGroup();
 			} catch (final Exception e) {
 				LOG.error("Ошибка при ожидании результата!", e);
 			}
@@ -151,55 +146,48 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 	}
 
-	/**
-	 * Получить группу из кэша.
-	 * 
-	 * @param group
-	 * @return
-	 */
-	private CGroupLabels getCGroupLabelCache(final MGroupLabels group) {
-		for(CGroupLabels gr : this.cache.keySet()){
-			if(gr.getModel() == group)
-				return gr;
-		}
-		return null;
+	private void sortGroup() {
+		final ObservableList<Node> nodes = this.panelWithGroups.getChildren();
+		Tools.runOnThreadFX(() -> {
+			this.panelWithGroups.getChildren().setAll(nodes.parallelStream().sorted((n1, n2) -> {
+				final int pN1 = (int)n1.getUserData();
+				final int pN2 = (int)n2.getUserData();
+				return Integer.compare(pN1, pN2);
+			}).collect(Collectors.toList()));
+		});
 	}
 
-	/** Добавить группу и ярлыки в кэш. */
-	private void addCache(final CGroupLabels group, final List<CLabel> labels) {
-		this.cache.put(group, labels);
+	private void sortLabel() {
+		final ObservableList<Node> nodes = this.panelWithLabels.getChildren();
+		Tools.runOnThreadFX(() -> {
+			this.panelWithLabels.getChildren().setAll(nodes.parallelStream().sorted((n1, n2) -> {
+				final int pN1 = (int)n1.getUserData();
+				final int pN2 = (int)n2.getUserData();
+				return Integer.compare(pN1, pN2);
+			}).collect(Collectors.toList()));
+		});
 	}
 
 	@Override
 	public void updateClick(final MGroupLabels mGroup) {
-		final CGroupLabels group = this.getCGroupLabelCache(this.selectedGroup);
-		if(group != null)
-			this.cache.get(group).forEach(label -> {
-				label.removeObserver(this);
-			});
+		this.labelsViewMap.values().parallelStream().forEach(label -> {
+			label.registerOberver(this);
+		});
+
+		this.labelsViewMap.clear();
 
 		this.panelWithLabels.getChildren().clear();
 
 		this.selectedGroup = mGroup;
 
-		final CGroupLabels newGroup = this.getCGroupLabelCache(mGroup);
-		// Если в кэше нет группы с ярлыками, то загружаем вручную
-		if(newGroup != null){
-			this.cache.get(newGroup).parallelStream().sorted((a, b) -> Integer.compare(a.getModel().getPriority(), b.getModel().getPriority())).forEach(label -> {
-				Platform.runLater(() -> {
-					this.panelWithLabels.getChildren().add(label);
-					label.registerOberver(this);
-				});
+		mGroup.getLabelList().parallelStream().sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority())).forEach(label -> {
+			final CLabel cLabel = new CLabel(label);
+			Tools.runOnThreadFX(() -> {
+				this.panelWithLabels.getChildren().add(cLabel);
 			});
-		}else{
-			mGroup.getLabelList().parallelStream().sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority())).forEach((g) -> {
-				Platform.runLater(() -> {
-					final CLabel label = new CLabel(g);
-					this.panelWithLabels.getChildren().add(label);
-					label.registerOberver(this);
-				});
-			});
-		}
+			this.labelsViewMap.put(label, cLabel);
+			cLabel.registerOberver(this);
+		});
 	}
 
 	@Override
@@ -207,12 +195,14 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			SettingSingleton.getInstance().saveGroups();
+			thread.shutdown();
 		});
-		thread.shutdown();
 
-		this.panelWithGroups.getChildren().setAll(this.panelWithGroups.getChildren().stream().map(g -> {
-			return((CGroupLabels) g);
-		}).sorted((a, b) -> Integer.compare(a.getModel().getPriority(), b.getModel().getPriority())).collect(Collectors.toList()));
+		final ExecutorService sort = Executors.newSingleThreadExecutor();
+		sort.submit(() -> {
+			this.sortGroup();
+			sort.shutdown();
+		});
 	}
 
 	@Override
@@ -221,22 +211,26 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		thread.submit(() -> {
 			SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups().remove(model);
 			SettingSingleton.getInstance().saveGroups();
+			thread.shutdown();
 		});
-		thread.shutdown();
 
-		final CGroupLabels del = this.getCGroupLabelCache(model);
 		if(model == this.selectedGroup){
 			this.selectedGroup = null;
 
-			this.panelWithLabels.getChildren().clear();
+			Tools.runOnThreadFX(() -> {
+				this.panelWithLabels.getChildren().clear();
+			});
+
+			this.labelsViewMap.values().parallelStream().forEach(label -> {
+				label.removeObserver(this);
+			});
+
+			this.labelsViewMap.clear();
 		}
 
-		this.cache.get(del).forEach(label -> {
-			label.removeObserver(this);
+		Tools.runOnThreadFX(() -> {
+			this.panelWithGroups.getChildren().remove(this.groupsViewMap.get(model));
 		});
-
-		this.panelWithGroups.getChildren().remove(del);
-		this.cache.remove(del);
 	}
 
 	@Override
@@ -254,35 +248,31 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			SettingSingleton.getInstance().saveGroups();
+			this.sortLabel();
 		});
 		thread.shutdown();
-
-		this.panelWithLabels.getChildren().setAll(this.panelWithLabels.getChildren().stream().map(l -> {
-			return((CLabel) l);
-		}).sorted((a, b) -> Integer.compare(a.getModel().getPriority(), b.getModel().getPriority())).collect(Collectors.toList()));
 	}
 
 	@Override
 	public void updateDelete(final MLabel model) {
-
 		if(this.selectedGroup == null)
 			return;
-
-		this.selectedGroup.getLabelList().remove(model);
 
 		final ExecutorService thread = Executors.newSingleThreadExecutor();
 		thread.submit(() -> {
 			SettingSingleton.getInstance().saveGroups();
 		});
 		thread.shutdown();
-		
-		final CGroupLabels del = this.getCGroupLabelCache(this.selectedGroup);
 
-		for(final CLabel l : this.cache.get(del).stream().filter(label -> {
-			return label.getModel() == model;
-		}).collect(Collectors.toList())){
-			this.panelWithLabels.getChildren().remove(l);
-			this.cache.get(del).remove(l);
-		}
+		this.selectedGroup.getLabelList().remove(model);
+
+		final CLabel cLabel = this.labelsViewMap.get(model);
+		cLabel.removeObserver(this);
+
+		Tools.runOnThreadFX(() -> {
+			this.panelWithLabels.getChildren().remove(cLabel);
+		});
+
+		this.labelsViewMap.remove(model, cLabel);
 	}
 }
