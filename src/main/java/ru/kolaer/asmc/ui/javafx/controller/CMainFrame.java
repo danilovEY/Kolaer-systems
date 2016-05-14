@@ -1,26 +1,18 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
@@ -28,7 +20,8 @@ import ru.kolaer.asmc.ui.javafx.model.MLabel;
 import ru.kolaer.asmc.ui.javafx.view.ImageViewPane;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.URL;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -40,107 +33,125 @@ import java.util.concurrent.Executors;
  * @author Danilov
  * @version 0.2
  */
-public class CMainFrame extends Application {
+public class CMainFrame implements UniformSystemPlugin {
 	private final Logger LOG = LoggerFactory.getLogger(CMainFrame.class);
 
 	/** Панель с ярлыками. */
-	@FXML
 	private BorderPane mainPanel;
-	@FXML
-	private FlowPane contentPanel;
-	/** Элемент в меню для получения админ. прав. */
-	@FXML
-	private MenuItem rootMenuItem;
-	/** Элемент в меню для настроек. */
-	@FXML
-	private MenuItem settingMenuItem;
-	/** Элемент в менюо о программе. */
-	@FXML
-	private MenuItem menuItemAbout;
-	/** Панель с группами ярлыков. */
-	@FXML
-	private VBox navigatePanel;
-	@FXML
-	private ScrollPane navigateScrollPanel;
-	@FXML
-	private ScrollPane contentScrollPanel;
+	private BorderPane contentPanel;
 	
 	private CNavigationContentObserver observer;
-	
-	@FXML
+	private UniformSystemEditorKit uniformSystemEditorKit;
+
 	public void initialize() {
+		this.contentPanel = new BorderPane();
+
 		final ExecutorService threadForBanner = Executors.newSingleThreadExecutor();
-		
 		CompletableFuture.runAsync(() -> {
 			this.updateBanner();
+			threadForBanner.shutdown();
 		}, threadForBanner);
-		threadForBanner.shutdown();
-		
-		Platform.runLater(() -> {
-			
-			Platform.runLater(() -> {
-				this.contentPanel.setStyle("-fx-background-image: url('" + Resources.BACKGROUND_IMAGE.toString() + "'); ");
+
+		final FlowPane labelsPanel = new FlowPane();
+		final VBox groupsPanel = new VBox();
+
+		Tools.runOnThreadFX(() -> {
+			LOG.info(Resources.BACKGROUND_IMAGE.toString());
+			labelsPanel.setStyle("-fx-background-image: url('" + Resources.BACKGROUND_IMAGE.toString() + "');");
+		});
+
+		final ScrollPane groupsScrollPanel = new ScrollPane();
+		final ScrollPane labelsScrollPanel = new ScrollPane();
+
+		Tools.runOnThreadFX(() -> {
+			groupsScrollPanel.setContent(groupsPanel);
+			groupsScrollPanel.setFitToHeight(true);
+			groupsScrollPanel.setFitToWidth(true);
+
+			labelsScrollPanel.setContent(labelsPanel);
+			labelsScrollPanel.setFitToHeight(true);
+			labelsScrollPanel.setFitToWidth(true);
+
+			final SplitPane splitPane = new SplitPane(groupsScrollPanel, labelsScrollPanel);
+
+			this.contentPanel.setCenter(splitPane);
+		});
+
+		this.observer = new CNavigationContentObserver(groupsPanel, labelsPanel, uniformSystemEditorKit);
+		this.updateData();
+
+		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);
+		final MenuItem addLabel = new MenuItem(Resources.MENU_ITEM_ADD_LABEL);
+		final MenuItem settingMenuItem = new MenuItem("Настройки");
+		final MenuItem getRootMenuItem = new MenuItem("Админ");
+
+		final Menu fileMenu = new Menu("Файл");
+
+		Tools.runOnThreadFX(() -> {
+			fileMenu.getItems().addAll(getRootMenuItem, settingMenuItem);
+			groupsScrollPanel.setContextMenu(new ContextMenu(addGroupLabels));
+			labelsScrollPanel.setContextMenu(new ContextMenu(addLabel));
+
+			this.mainPanel.setTop(new MenuBar(fileMenu));
+			this.mainPanel.setCenter(this.contentPanel);
+		});
+		// =====Events======
+		getRootMenuItem.setOnAction(e -> {
+			Tools.runOnThreadFX(() -> {
+				new CAuthenticationDialog().showAndWait().get();
 			});
-			
-			final ContextMenu contextNavigationPanel = new ContextMenu();
-			final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);	
-	
-			final ContextMenu contextContentPanel = new ContextMenu();
-			final MenuItem addLabel = new MenuItem(Resources.MENU_ITEM_ADD_LABEL);
-	
-			contextContentPanel.getItems().add(addLabel);
-			contextNavigationPanel.getItems().add(addGroupLabels);
-			
-			this.navigateScrollPanel.setContextMenu(contextNavigationPanel);
-			this.contentScrollPanel.setContextMenu(contextContentPanel);
-	
-			// =====Events======
-			this.settingMenuItem.getParentMenu().setOnShowing(e -> {
-				if(SettingSingleton.getInstance().isRoot()) {
-					this.settingMenuItem.setDisable(false);
-				} else {
-					this.settingMenuItem.setDisable(true);
-				}
+		});
+
+		Tools.runOnThreadFX(() -> {
+			settingMenuItem.getParentMenu().setOnShowing(e -> {
+				Tools.runOnThreadFX(() -> {
+					if (SettingSingleton.getInstance().isRoot()) {
+						settingMenuItem.setDisable(false);
+					} else {
+						settingMenuItem.setDisable(true);
+					}
+				});
 			});
-			
-			this.navigateScrollPanel.setOnContextMenuRequested((event) -> {
-				if(!SettingSingleton.getInstance().isRoot()) {
-					this.navigateScrollPanel.getContextMenu().hide();
-				}
-			});
-	
-			this.contentScrollPanel.setOnContextMenuRequested((event) -> {
-				if(observer.getSelectedItem() == null 
-						|| !SettingSingleton.getInstance().isRoot()) {
-					this.contentScrollPanel.getContextMenu().hide();
-				}
-			});
-			
-			addGroupLabels.setOnAction(e -> {
-				final CAddingGroupLabelsDialog addingGroup = new CAddingGroupLabelsDialog();
-				final Optional<MGroupLabels> result = addingGroup.showAndWait();
-				if(result.isPresent()){
-					final MGroupLabels res = result.get();
-					observer.addGroupLabels(res);
-				}
-			});
-			
-			addLabel.setOnAction(e -> {
-				final CAddingLabelDialog addingLabel = new CAddingLabelDialog();
-				final Optional<MLabel> result = addingLabel.showAndWait();
-				if(result.isPresent()){
-					observer.addLabel(result.get());
-				}
-			});
-			
-			this.settingMenuItem.setOnAction(e -> {
+		});
+		settingMenuItem.setOnAction(e -> {
+			Tools.runOnThreadFX(() -> {
 				final CSetting setting = new CSetting();
 				setting.showAndWait();
 				this.updateBanner();
 			});
-			
-			this.menuItemAbout.setOnAction(e -> {
-				new CAbout().show();
+		});
+
+		groupsScrollPanel.setOnContextMenuRequested((event) -> {
+			if(!SettingSingleton.getInstance().isRoot()) {
+				groupsScrollPanel.getContextMenu().hide();
+			}
+		});
+
+		labelsScrollPanel.setOnContextMenuRequested((event) -> {
+			if(observer.getSelectedItem() == null
+					|| !SettingSingleton.getInstance().isRoot()) {
+				labelsScrollPanel.getContextMenu().hide();
+			}
+		});
+
+		addGroupLabels.setOnAction(e -> {
+			Tools.runOnThreadFX(() -> {
+				final CAddingGroupLabelsDialog addingGroup = new CAddingGroupLabelsDialog();
+				final Optional<MGroupLabels> result = addingGroup.showAndWait();
+				if (result.isPresent()) {
+					final MGroupLabels res = result.get();
+					observer.addGroupLabels(res);
+				}
+			});
+		});
+
+		addLabel.setOnAction(e -> {
+			Tools.runOnThreadFX(() -> {
+				final CAddingLabelDialog addingLabel = new CAddingLabelDialog();
+				final Optional<MLabel> result = addingLabel.showAndWait();
+				if (result.isPresent()) {
+					observer.addLabel(result.get());
+				}
 			});
 		});
 	}
@@ -149,14 +160,15 @@ public class CMainFrame extends Application {
 		final File imgCenter = new File(SettingSingleton.getInstance().getPathBanner());
 		final File imgLeft = new File(SettingSingleton.getInstance().getPathBannerLeft());
 		final File imgRight = new File(SettingSingleton.getInstance().getPathBannerRigth());
-		
-		Platform.runLater(() -> {
-			final BorderPane imagePane = new BorderPane();
+
+		final BorderPane imagePane = new BorderPane();
+
+		Tools.runOnThreadFX(() -> {
 			imagePane.setStyle("-fx-background-color: #FFFFFF"); //,linear-gradient(#f8f8f8, #e7e7e7);
 			imagePane.setMaxHeight(300);
 			imagePane.setMaxWidth(Double.MAX_VALUE);
 			
-			this.mainPanel.setTop(imagePane);
+			this.contentPanel.setTop(imagePane);
 			
 			if(imgLeft.exists() && imgLeft.isFile()) {
 				ImageView left = new ImageView(new Image("file:" + imgLeft.getAbsolutePath(), true));
@@ -178,69 +190,6 @@ public class CMainFrame extends Application {
 			}
 		});
 	}
-	
-	@FXML
-	public void actionExitMenuItem(ActionEvent event) {
-		System.exit(0);
-	}
-	
-	@FXML
-	public void actionGettingRootMenuItem(ActionEvent event) {
-		new CAuthenticationDialog().showAndWait().get();
-	}
-	
-	public void setEditorKit(final UniformSystemEditorKit editorKit) {
-		this.observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel, editorKit);
-		
-		this.updateData();
-	}
-	
-	@Override
-	public void start(Stage primaryStage) {
-		Platform.runLater(() -> {
-			try{
-				final FXMLLoader loader = new FXMLLoader(Resources.V_MAIN_FRAME);
-				loader.setController(this);
-				final Parent root = loader.load();
-				this.setEditorKit(null);
-				if(root != null) {
-					primaryStage.setScene(new Scene(root));	
-					primaryStage.centerOnScreen();
-					primaryStage.show();
-				}
-			}catch(IOException e){
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка!");
-				alert.setHeaderText("Ошибка при инициализации view: \""+Resources.V_MAIN_FRAME+"\"");
-				alert.setContentText(e.getMessage());
-				alert.showAndWait();
-			}
-		});
-		
-		primaryStage.setTitle(Resources.MAIN_FRAME_TITLE);
-		primaryStage.setOnCloseRequest(e -> {
-			System.exit(0);
-		});
-		
-		try {
-			primaryStage.getIcons().add(new Image(Resources.AER_LOGO.toString()));
-		} catch(IllegalArgumentException e) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Ошибка!");
-			alert.setHeaderText("Не найден файл: \""+Resources.AER_LOGO+"\"");
-			alert.showAndWait();
-		}
-		final ExecutorService thread = Executors.newSingleThreadExecutor();
-		thread.submit(() -> {
-			if(!this.getParameters().getNamed().isEmpty()) {
-				String passRoot = this.getParameters().getNamed().get("root_set");
-				if(SettingSingleton.getInstance().getRootPass().equals(passRoot)){
-					SettingSingleton.getInstance().setRoot(true);
-				}
-			}
-		});
-		thread.shutdown();
-	}
 
 	public void updateData() {
 		final ExecutorService threadForLoadGroup = Executors.newSingleThreadExecutor();
@@ -252,5 +201,51 @@ public class CMainFrame extends Application {
 			LOG.error("Ошибка при обновлении объектов!", t);
 			return null;
 		});
+	}
+
+	@Override
+	public void initialization(UniformSystemEditorKit uniformSystemEditorKit) throws Exception {
+		this.uniformSystemEditorKit = uniformSystemEditorKit;
+		SettingSingleton.initialization();
+		this.mainPanel = new BorderPane();
+	}
+
+	@Override
+	public URL getIcon() {
+		return null;
+	}
+
+	@Override
+	public Collection<Service> getServices() {
+		return null;
+	}
+
+	@Override
+	public void start() throws Exception {
+		/*final URL inputStreamUrl = this.getClass().getResource("/CSS/Default/Default.css");
+		if(inputStreamUrl != null)
+			this.mainPanel.getStylesheets().addAll(inputStreamUrl.toExternalForm());
+*/
+		this.initialize();
+	}
+
+	@Override
+	public void stop() throws Exception {
+
+	}
+
+	@Override
+	public void updatePluginObjects(String s, Object o) {
+
+	}
+
+	@Override
+	public void setContent(Parent parent) {
+
+	}
+
+	@Override
+	public Parent getContent() {
+		return this.mainPanel;
 	}
 }

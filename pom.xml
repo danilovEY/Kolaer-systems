@@ -4,7 +4,7 @@
 
 	<groupId>ru.kolaer</groupId>
 	<artifactId>ru.kolaer.asmc</artifactId>
-	<version>3.4</version>
+	<version>4.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>ASMC</name>
