@@ -56,7 +56,6 @@ public class CMainFrame implements UniformSystemPlugin {
 		final VBox groupsPanel = new VBox();
 
 		Tools.runOnThreadFX(() -> {
-			LOG.info(Resources.BACKGROUND_IMAGE.toString());
 			labelsPanel.setStyle("-fx-background-image: url('" + Resources.BACKGROUND_IMAGE.toString() + "');");
 		});
 
@@ -95,6 +94,7 @@ public class CMainFrame implements UniformSystemPlugin {
 			this.mainPanel.setTop(new MenuBar(fileMenu));
 			this.mainPanel.setCenter(this.contentPanel);
 		});
+
 		// =====Events======
 		getRootMenuItem.setOnAction(e -> {
 			Tools.runOnThreadFX(() -> {
@@ -222,10 +222,10 @@ public class CMainFrame implements UniformSystemPlugin {
 
 	@Override
 	public void start() throws Exception {
-		/*final URL inputStreamUrl = this.getClass().getResource("/CSS/Default/Default.css");
+		final URL inputStreamUrl = this.getClass().getResource("/CSS/Default/Default.css");
 		if(inputStreamUrl != null)
 			this.mainPanel.getStylesheets().addAll(inputStreamUrl.toExternalForm());
-*/
+
 		this.initialize();
 	}
 

@@ -55,17 +55,6 @@ public class SettingSingleton implements Serializable {
 			serializationObjects.setSerializeSetting(SettingSingleton.inctance);			
 		}
 		SettingSingleton.inctance.setSerializationObjects(serializationObjects);
-		
-		/*final ExecutorService service = Executors.newSingleThreadExecutor();
-		CompletableFuture.runAsync(() -> {
-			//Вызов метода, для добавления в кэш.
-			serializationObjects.getSerializeGroups();
-			service.shutdown();
-		}, service).exceptionally(t -> {
-			return null;
-		});*/
-		
-		
 	}
 	
 	public static synchronized boolean isInitialized() {

@@ -84,8 +84,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	public void loadAndRegGroups() {
 		this.selectedGroup = null;
 
-		final List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().readGroups();
-		SettingSingleton.getInstance().getSerializationObjects().setCacheObjects(groupsList);
+		final List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups(true);
 		/*groupsList.forEach(mGroupLabels -> {
 			if(!this.cache.containsKey(mGroupLabels)) {
 

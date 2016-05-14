@@ -68,6 +68,9 @@ public class SerializationObjects {
 	}
 
 	public List<MGroupLabels> readGroups() {
+		if(!this.fileSer.exists())
+			return new ArrayList<>();
+
 		try(FileInputStream fileInput = new FileInputStream(this.fileSer); ObjectInputStream objectInput = new ObjectInputStream(fileInput)){
 			if(objectInput.available() != -1){
 				return (List<MGroupLabels>) objectInput.readObject();
@@ -82,25 +85,26 @@ public class SerializationObjects {
 			return Collections.emptyList();
 		}
 	}
+	public synchronized List<MGroupLabels> getSerializeGroups(boolean fromFile) {
+		if(fromFile) {
+			if(this.cacheObjects != null)
+				this.cacheObjects.clear();
 
-	public void setCacheObjects(final List<MGroupLabels> list) {
-		this.cacheObjects.clear();
-		this.cacheObjects = list;
+			this.cacheObjects = this.readGroups();
+			return this.cacheObjects;
+		} else {
+			if(this.cacheObjects != null)
+				return this.cacheObjects;
+			else {
+				return new ArrayList<>();
+			}
+		}
 	}
-	
+
 	/**Получить сериализованные группы.*/
 	@SuppressWarnings("unchecked")
 	public synchronized List<MGroupLabels> getSerializeGroups() {
-		if(this.cacheObjects != null)
-			return this.cacheObjects;
-
-		if(!this.fileSer.exists()) {
-			this.cacheObjects = new ArrayList<>(); 
-			return this.cacheObjects;
-		}
-
-		this.cacheObjects = this.readGroups();
-		return this.cacheObjects;
+		return this.getSerializeGroups(false);
 	}
 
 	/**Сериализовать список групп.*/
