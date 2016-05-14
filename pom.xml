@@ -4,7 +4,7 @@
 
 	<groupId>ru.kolaer</groupId>
 	<artifactId>ru.kolaer.asmc</artifactId>
-	<version>3.3.1</version>
+	<version>3.4</version>
 	<packaging>jar</packaging>
 
 	<name>ASMC</name>
@@ -99,7 +99,6 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Main-Class>ru.kolaer.asmc.runnable.JavaFXLauncher</Main-Class>
 						<Bundle-ClassPath>.</Bundle-ClassPath>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Name>АСУП</Bundle-Name>

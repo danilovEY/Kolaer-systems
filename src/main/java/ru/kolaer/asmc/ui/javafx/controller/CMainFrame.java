@@ -1,12 +1,5 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -25,12 +18,21 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
 import ru.kolaer.asmc.ui.javafx.view.ImageViewPane;
-import ru.kolaer.api.system.UniformSystemEditorKit;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Контроллер главного окна приложения.
@@ -39,6 +41,8 @@ import ru.kolaer.api.system.UniformSystemEditorKit;
  * @version 0.2
  */
 public class CMainFrame extends Application {
+	private final Logger LOG = LoggerFactory.getLogger(CMainFrame.class);
+
 	/** Панель с ярлыками. */
 	@FXML
 	private BorderPane mainPanel;
@@ -138,15 +142,13 @@ public class CMainFrame extends Application {
 			this.menuItemAbout.setOnAction(e -> {
 				new CAbout().show();
 			});
-			
-			
 		});
 	}
 	
 	private void updateBanner() {
 		final File imgCenter = new File(SettingSingleton.getInstance().getPathBanner());
 		final File imgLeft = new File(SettingSingleton.getInstance().getPathBannerLeft());
-		final File imgRigth = new File(SettingSingleton.getInstance().getPathBannerRigth());
+		final File imgRight = new File(SettingSingleton.getInstance().getPathBannerRigth());
 		
 		Platform.runLater(() -> {
 			final BorderPane imagePane = new BorderPane();
@@ -163,11 +165,11 @@ public class CMainFrame extends Application {
 				imagePane.setLeft(left);
 			} 
 			
-			if(imgRigth.exists() && imgRigth.isFile()) {
-				ImageView rigth = new ImageView(new Image("file:" + imgRigth.getAbsolutePath(), true));
-				rigth.setPreserveRatio(false);
+			if(imgRight.exists() && imgRight.isFile()) {
+				ImageView right = new ImageView(new Image("file:" + imgRight.getAbsolutePath(), true));
+				right.setPreserveRatio(false);
 				
-				imagePane.setRight(rigth);
+				imagePane.setRight(right);
 			}
 			
 			if(imgCenter.exists() && imgCenter.isFile()) {
@@ -187,17 +189,10 @@ public class CMainFrame extends Application {
 		new CAuthenticationDialog().showAndWait().get();
 	}
 	
-	public void addEditorKit(final UniformSystemEditorKit editorKit) {
+	public void setEditorKit(final UniformSystemEditorKit editorKit) {
 		this.observer = new CNavigationContentObserver(this.navigatePanel, this.contentPanel, editorKit);
 		
-		final ExecutorService threadForLoadGroup = Executors.newSingleThreadExecutor();
-		CompletableFuture.runAsync(() -> {
-			Thread.currentThread().setName("Загрузка и добавление групп");
-			observer.loadAndRegGroups();
-		}, threadForLoadGroup).exceptionally(t -> {
-			return null;
-		});
-		threadForLoadGroup.shutdown();
+		this.updateData();
 	}
 	
 	@Override
@@ -207,7 +202,7 @@ public class CMainFrame extends Application {
 				final FXMLLoader loader = new FXMLLoader(Resources.V_MAIN_FRAME);
 				loader.setController(this);
 				final Parent root = loader.load();
-				this.addEditorKit(null);
+				this.setEditorKit(null);
 				if(root != null) {
 					primaryStage.setScene(new Scene(root));	
 					primaryStage.centerOnScreen();
@@ -245,5 +240,17 @@ public class CMainFrame extends Application {
 			}
 		});
 		thread.shutdown();
+	}
+
+	public void updateData() {
+		final ExecutorService threadForLoadGroup = Executors.newSingleThreadExecutor();
+		CompletableFuture.runAsync(() -> {
+			Thread.currentThread().setName("Загрузка и добавление групп");
+			observer.loadAndRegGroups();
+			threadForLoadGroup.shutdown();
+		}, threadForLoadGroup).exceptionally(t -> {
+			LOG.error("Ошибка при обновлении объектов!", t);
+			return null;
+		});
 	}
 }

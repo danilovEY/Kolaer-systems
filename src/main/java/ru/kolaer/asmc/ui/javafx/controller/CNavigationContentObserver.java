@@ -1,24 +1,27 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javafx.application.Platform;
-import javafx.scene.layout.Pane;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.asmc.tools.Application;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 import ru.kolaer.asmc.ui.javafx.model.MLabel;
-import ru.kolaer.api.system.UniformSystemEditorKit;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Контроллер-слушатель действий групп и ярлыков.
@@ -81,8 +84,16 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 	public void loadAndRegGroups() {
 		this.selectedGroup = null;
 
-		this.cache.keySet().forEach(group -> {
-			this.cache.get(group).forEach(label -> label.removeObserver(this));
+		final List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().readGroups();
+		SettingSingleton.getInstance().getSerializationObjects().setCacheObjects(groupsList);
+		/*groupsList.forEach(mGroupLabels -> {
+			if(!this.cache.containsKey(mGroupLabels)) {
+
+			}
+		});*/
+
+		this.cache.keySet().parallelStream().forEach(group -> {
+			this.cache.get(group).parallelStream().forEach(label -> label.removeObserver(this));
 			group.removeObserver(this);
 		});
 
@@ -92,40 +103,53 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 			this.panelWithLabels.getChildren().clear();
 		});
 
-		final List<MGroupLabels> groupsList = SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups();
+		final CountDownLatch countNodes = new CountDownLatch(groupsList.size());
 
-		groupsList.sort((a, b) -> {
-			return Integer.compare(a.getPriority(), b.getPriority());
-		});
-			
-		Platform.runLater(() -> {
-			groupsList.forEach((group) -> {
-				final CGroupLabels cGroup = new CGroupLabels(group);			
-				this.panelWithGroups.getChildren().add(cGroup);
-			
-				final ExecutorService threads = Executors.newSingleThreadExecutor();
-				threads.submit(() -> {
-					final List<CLabel> cacheList = new ArrayList<>();
-					cGroup.getModel().getLabelList().forEach(label -> {
-						final CountDownLatch block = new CountDownLatch(1);	
-						Platform.runLater(() -> {
-							cacheList.add(new CLabel(label));
-							block.countDown();
-						});
-						
-						try{
-							block.await();
-						}catch(final Exception e){
-							LOG.error("Ошибка!", e);
-						}
+		final ExecutorService threadAddData = Executors.newSingleThreadExecutor();
+		threadAddData.submit(() -> {
+			groupsList.stream().forEach((final MGroupLabels group) -> {
+					final CGroupLabels cGroup = new CGroupLabels(group);
+					Tools.runOnThreadFX(() -> {
+						this.panelWithGroups.getChildren().add(cGroup);
+						countNodes.countDown();
 					});
-					
-					this.addCache(cGroup, cacheList);
-				});
-				threads.shutdown();
-				cGroup.registerOberver(this);				
+
+					final ExecutorService threads = Executors.newSingleThreadExecutor();
+					threads.submit(() -> {
+						final List<CLabel> cacheList = new ArrayList<>();
+						cGroup.getModel().getLabelList().parallelStream().forEach(label -> {
+							cacheList.add(new CLabel(label));
+						});
+
+						this.addCache(cGroup, cacheList);
+					});
+					threads.shutdown();
+					cGroup.registerOberver(this);
 			});
 		});
+
+		final ExecutorService threadSort = Executors.newSingleThreadExecutor();
+		CompletableFuture.runAsync(() -> {
+			try {
+				countNodes.await();
+				ObservableList<Node> nodes = this.panelWithGroups.getChildren();
+				Tools.runOnThreadFX(() -> {
+					this.panelWithGroups.getChildren().setAll(nodes.parallelStream().sorted((n1, n2) -> {
+						final int pN1 = (int)n1.getUserData();
+						final int pN2 = (int)n2.getUserData();
+						return Integer.compare(pN1, pN2);
+					}).collect(Collectors.toList()));
+				});
+
+			} catch (final Exception e) {
+				LOG.error("Ошибка при ожидании результата!", e);
+			}
+			threadSort.shutdown();
+		}, threadSort).exceptionally(t -> {
+			LOG.error("Ошибка при сортировки!", t);
+			return null;
+		});
+
 	}
 
 	/**

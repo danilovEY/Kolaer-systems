@@ -1,21 +1,14 @@
 package ru.kolaer.asmc.tools.serializations;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.asmc.tools.SettingSingleton;
+import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ru.kolaer.asmc.tools.SettingSingleton;
-import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
 
 /**
  * (Де)сериализация объектов.
@@ -58,10 +51,14 @@ public class SerializationObjects {
 		if(SettingSingleton.getInstance() != null) {
 			return SettingSingleton.getInstance();
 		}
-		
+
+		return readSettings();
+	}
+
+	public SettingSingleton readSettings() {
 		try (final FileInputStream fileInput = new FileInputStream(this.settingFile);
-				final ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
-			return (SettingSingleton) objectInput.readObject();			
+			 final ObjectInputStream objectInput = new ObjectInputStream(fileInput)) {
+				return (SettingSingleton) objectInput.readObject();
 		} catch (final ClassNotFoundException e) {
 			LOG.error("Класс не найден!", e);
 		} catch (final IOException e1) {
@@ -69,21 +66,11 @@ public class SerializationObjects {
 		}
 		return SettingSingleton.getInstance();
 	}
-	
-	/**Получить сериализованные группы.*/
-	@SuppressWarnings("unchecked")
-	public synchronized List<MGroupLabels> getSerializeGroups() {
-		if(this.cacheObjects != null)
-			return this.cacheObjects;
 
-		if(!this.fileSer.exists()) {
-			this.cacheObjects = new ArrayList<>(); 
-			return this.cacheObjects;
-		}
+	public List<MGroupLabels> readGroups() {
 		try(FileInputStream fileInput = new FileInputStream(this.fileSer); ObjectInputStream objectInput = new ObjectInputStream(fileInput)){
 			if(objectInput.available() != -1){
-				final List<MGroupLabels> groupList = (List<MGroupLabels>) objectInput.readObject();
-				this.cacheObjects = new ArrayList<>(groupList);
+				return (List<MGroupLabels>) objectInput.readObject();
 			}
 			return this.cacheObjects;
 		}catch(final ClassNotFoundException e){
@@ -96,6 +83,26 @@ public class SerializationObjects {
 		}
 	}
 
+	public void setCacheObjects(final List<MGroupLabels> list) {
+		this.cacheObjects.clear();
+		this.cacheObjects = list;
+	}
+	
+	/**Получить сериализованные группы.*/
+	@SuppressWarnings("unchecked")
+	public synchronized List<MGroupLabels> getSerializeGroups() {
+		if(this.cacheObjects != null)
+			return this.cacheObjects;
+
+		if(!this.fileSer.exists()) {
+			this.cacheObjects = new ArrayList<>(); 
+			return this.cacheObjects;
+		}
+
+		this.cacheObjects = this.readGroups();
+		return this.cacheObjects;
+	}
+
 	/**Сериализовать список групп.*/
 	public void setSerializeGroups(final List<MGroupLabels> groupModels) {
 		final File newSerObj = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
@@ -104,11 +111,19 @@ public class SerializationObjects {
 		}
 
 		newSerObj.getParentFile().mkdirs();
-		
-		try (final FileOutputStream fileOutSer = new FileOutputStream(newSerObj, true);
+		try {
+			newSerObj.createNewFile();
+		} catch (IOException e) {
+			LOG.error("Невозможно создать файл: {}", newSerObj.getAbsoluteFile());
+			return;
+		}
+		if(groupModels.size() == 0) {
+			return;
+		}
+		try (final FileOutputStream fileOutSer = new FileOutputStream(newSerObj, false);
 				final ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutSer)) {
 			objectOutputStream.writeObject(groupModels);
-
+			objectOutputStream.flush();
 		} catch (final FileNotFoundException e) {
 			LOG.error("Не найден файл: {}", newSerObj.getAbsolutePath());
 		} catch (IOException e1) {

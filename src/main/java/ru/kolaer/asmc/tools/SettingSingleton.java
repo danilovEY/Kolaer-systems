@@ -1,11 +1,8 @@
 package ru.kolaer.asmc.tools;
 
-import java.io.Serializable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import ru.kolaer.asmc.tools.serializations.SerializationObjects;
+
+import java.io.Serializable;
 
 /**
  * Sigleton-настроек.
@@ -59,14 +56,14 @@ public class SettingSingleton implements Serializable {
 		}
 		SettingSingleton.inctance.setSerializationObjects(serializationObjects);
 		
-		final ExecutorService service = Executors.newSingleThreadExecutor();
+		/*final ExecutorService service = Executors.newSingleThreadExecutor();
 		CompletableFuture.runAsync(() -> {
 			//Вызов метода, для добавления в кэш.
 			serializationObjects.getSerializeGroups();
 			service.shutdown();
 		}, service).exceptionally(t -> {
 			return null;
-		});
+		});*/
 		
 		
 	}

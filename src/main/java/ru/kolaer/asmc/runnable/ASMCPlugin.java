@@ -8,6 +8,7 @@ import javafx.scene.layout.BorderPane;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.asmc.service.AutoCheckDataService;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.controller.CMainFrame;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,10 +31,15 @@ public class ASMCPlugin implements UniformSystemPlugin {
 	/**Панель с .fxml-контента главного окна.*/
 	private AnchorPane pane;
 	private UniformSystemEditorKit editorKit;
+	private List<Service> services;
+	private AutoCheckDataService autoCheckDataService;
+	private CMainFrame cMainFrame;
 	
 	@Override
 	public void initialization(final UniformSystemEditorKit editorKit) throws Exception {
 		this.editorKit = editorKit;
+		this.autoCheckDataService = new AutoCheckDataService();
+		this.services = Arrays.asList(this.autoCheckDataService);
 		this.root = new BorderPane();
 	}
 
@@ -47,9 +54,11 @@ public class ASMCPlugin implements UniformSystemPlugin {
 			SettingSingleton.initialization();
 			try(final InputStream stream = Resources.V_MAIN_FRAME.openStream()){
 				final FXMLLoader loader = new FXMLLoader();
-				loader.setController(new CMainFrame());
+				this.cMainFrame = new CMainFrame();
+				loader.setController(this.cMainFrame);
 				pane = loader.load(stream);
-				((CMainFrame)loader.getController()).addEditorKit(this.editorKit);
+				this.cMainFrame.setEditorKit(this.editorKit);
+				this.autoCheckDataService.setcMainFrame(this.cMainFrame);
 				final InputStream inputStream = this.getClass().getResourceAsStream("/CSS/Default/Default.css");
 				final URL inputStreamUrl = this.getClass().getResource("/CSS/Default/Default.css");
 				if(inputStreamUrl != null)
@@ -74,7 +83,7 @@ public class ASMCPlugin implements UniformSystemPlugin {
 
 	@Override
 	public List<Service> getServices() {
-		return null;
+		return this.services;
 	}
 
 	@Override
@@ -84,7 +93,6 @@ public class ASMCPlugin implements UniformSystemPlugin {
 
 	@Override
 	public void setContent(Parent parent) {
-
 	}
 
 	@Override
