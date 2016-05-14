@@ -52,7 +52,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 		Tools.runOnThreadFX(() -> {
 			final CGroupLabels cGroup = new CGroupLabels(group);
-			cGroup.registerOberver(this);
+			cGroup.registerObserver(this);
 			this.panelWithGroups.getChildren().add(cGroup);
 			final ExecutorService sort = Executors.newSingleThreadExecutor();
 			sort.submit(() -> {
@@ -121,7 +121,7 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 				});
 
 				groupsViewMap.put(group, cGroup);
-				cGroup.registerOberver(this);
+				cGroup.registerObserver(this);
 			});
 		});
 

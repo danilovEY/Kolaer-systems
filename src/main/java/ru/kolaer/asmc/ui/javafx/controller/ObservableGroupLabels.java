@@ -14,6 +14,6 @@ public interface ObservableGroupLabels {
 	/**Оповестить слушателей о удалении элемета {@linkplain CGroupLabels}.*/
 	void notifyObserverDelete();
 	
-	void registerOberver(ObserverGroupLabels observer);
+	void registerObserver(ObserverGroupLabels observer);
 	void removeObserver(ObserverGroupLabels observer);
 }
