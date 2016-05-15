@@ -64,7 +64,8 @@ public class CMainFrame implements UniformSystemPlugin {
 			groupsPanel.setFillWidth(true);
 
 			labelsPanel.setAlignment(Pos.TOP_CENTER);
-			labelsPanel.setStyle("-fx-background-image: url('" + Resources.BACKGROUND_IMAGE.toString() + "');");
+			labelsPanel.setStyle("-fx-background-image: url('" + this.getClass().getResource("/label-background.png").toString() /*Resources.BACKGROUND_IMAGE.toString()*/ + "');");
+			groupsPanel.setStyle("-fx-background-image: url('" + this.getClass().getResource("/groups-background.jpg").toString() /*Resources.BACKGROUND_IMAGE.toString()*/ + "');");
 		});
 
 		final ScrollPane groupsScrollPanel = new ScrollPane();
@@ -74,13 +75,14 @@ public class CMainFrame implements UniformSystemPlugin {
 			groupsScrollPanel.setContent(groupsPanel);
 			groupsScrollPanel.setFitToHeight(true);
 			groupsScrollPanel.setFitToWidth(true);
-			groupsScrollPanel.setMaxWidth(500);
+			//groupsScrollPanel.setMaxWidth(500);
 
 			labelsScrollPanel.setContent(labelsPanel);
 			labelsScrollPanel.setFitToHeight(true);
 			labelsScrollPanel.setFitToWidth(true);
 
 			final SplitPane splitPane = new SplitPane(groupsScrollPanel, labelsScrollPanel);
+			splitPane.setDividerPosition(0, 0.3);
 			splitPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 			this.contentPanel.setCenter(splitPane);
 		});
