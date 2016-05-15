@@ -74,13 +74,14 @@ public class CMainFrame implements UniformSystemPlugin {
 			groupsScrollPanel.setContent(groupsPanel);
 			groupsScrollPanel.setFitToHeight(true);
 			groupsScrollPanel.setFitToWidth(true);
+			groupsScrollPanel.setMaxWidth(500);
 
 			labelsScrollPanel.setContent(labelsPanel);
 			labelsScrollPanel.setFitToHeight(true);
 			labelsScrollPanel.setFitToWidth(true);
 
 			final SplitPane splitPane = new SplitPane(groupsScrollPanel, labelsScrollPanel);
-
+			splitPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 			this.contentPanel.setCenter(splitPane);
 		});
 
