@@ -76,7 +76,6 @@ public class CMainFrame implements UniformSystemPlugin {
 			groupsScrollPanel.setContent(groupsPanel);
 			groupsScrollPanel.setFitToHeight(true);
 			groupsScrollPanel.setFitToWidth(true);
-			//groupsScrollPanel.setMaxWidth(500);
 
 			labelsScrollPanel.setContent(labelsPanel);
 			labelsScrollPanel.setFitToHeight(true);
