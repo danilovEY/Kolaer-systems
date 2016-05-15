@@ -180,7 +180,7 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			return;
 		}
 		
-		int prior = this.textPriority.getText().equals("") ? 0 : Integer.valueOf(textPriority.getText());
+		int prior = this.textPriority.getText().isEmpty() ? 0 : Integer.valueOf(textPriority.getText());
 		
 		if (this.result == null) {
 			this.result = new MLabel(this.nameLabelText.getText(), this.infoLabelText.getText(),
