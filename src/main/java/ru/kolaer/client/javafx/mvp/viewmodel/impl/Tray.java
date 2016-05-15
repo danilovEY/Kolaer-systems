@@ -1,26 +1,21 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
-import java.awt.AWTException;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
+import ru.kolaer.client.javafx.services.ServiceControlManager;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
-import javax.imageio.ImageIO;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javafx.stage.Stage;
-import ru.kolaer.api.tools.Tools;
-import ru.kolaer.client.javafx.mvp.viewmodel.VMExplorer;
-import ru.kolaer.client.javafx.services.ServiceControlManager;
 
 /**
  * Created by Danilov on 11.05.2016.
@@ -74,7 +69,7 @@ public class Tray {
     			final Future<?> explorerRes = explorerThread.submit(() -> {
             		 explorer.removeAll();
             	});
-            	
+
             	Executors.newSingleThreadExecutor().submit(() -> {
             		try{
 						serviceRes.get(5, TimeUnit.SECONDS);
@@ -84,8 +79,12 @@ public class Tray {
 						serviceThread.shutdownNow();
 						explorerThread.shutdownNow();
 					}
-            		
-            		System.exit(0);
+                    Tools.runOnThreadFX(() -> {
+                        stage.close();
+                        Platform.exit();
+                        System.exit(0);
+                    });
+
             	});
             });
 
