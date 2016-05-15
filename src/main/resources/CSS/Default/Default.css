@@ -22,18 +22,50 @@
     -fx-font-size: 15px;
 }
 
-.rich-blue:hover {
-    -fx-background-color: 
-        #000000,
-        linear-gradient(#aad3f1, #3c5fb5),
-        linear-gradient(#6586c7, #33529b),
-        linear-gradient(#4167c0, #223768);
+.rich-blue-select {
+    -fx-background-color:
+            #000000,
+            linear-gradient(#ea7977, #8f2323),
+            linear-gradient(#b76262, #751b1f),
+            linear-gradient(#ab5656, #68232a);
     -fx-background-insets: 0,1,2,3;
     -fx-background-radius: 3,2,2,2;
-    -fx-padding: 1 30 12 30;
+    -fx-padding: 12 30 12 30;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+
+.rich-blue-select {
+    -fx-background-color:
+            #000000,
+            linear-gradient(#ea7977, #8f2323),
+            linear-gradient(#b76262, #751b1f),
+            linear-gradient(#ab5656, #68232a);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 12 30 12 30;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+
+
+.rich-blue:hover {
+    -fx-background-color:
+            #000000,
+            linear-gradient(#ea514d, #8f0404),
+            linear-gradient(#b73535, #75060a),
+            linear-gradient(#ab302d, #680308);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 12 30 12 30;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
 }
 
 .rich-blue Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , 1);
+}
+.rich-blue-select Text {
     -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , 1);
 }
 
@@ -41,7 +73,7 @@
     -fx-padding: 8 15 15 15;
     -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
     -fx-background-radius: 8;
-    -fx-background-color: 
+    -fx-background-color:
         linear-gradient(from 0% 93% to 0% 100%, rgb(64,103,143) 0%, rgb(64,103,143) 100%),
         rgb(64,103,143),
         rgb(94,133,173),
@@ -55,7 +87,7 @@
     -fx-padding: 8 15 15 15;
     -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
     -fx-background-radius: 8;
-    -fx-background-color: 
+    -fx-background-color:
         linear-gradient(from 0% 93% to 0% 100%, rgb(64,103,143) 0%, rgb(64,103,143) 100%),
         rgb(64,103,143),
         rgb(94,133,173),

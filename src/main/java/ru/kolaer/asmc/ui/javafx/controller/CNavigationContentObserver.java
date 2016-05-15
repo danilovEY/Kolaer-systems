@@ -170,6 +170,10 @@ public class CNavigationContentObserver implements ObserverGroupLabels, Observer
 
 		this.panelWithLabels.getChildren().clear();
 
+		if(this.selectedGroup != null) {
+			this.groupsViewMap.get(this.selectedGroup).notifyObserverUnClick();
+		}
+
 		this.selectedGroup = mGroup;
 
 		final CountDownLatch countDownLatch = new CountDownLatch(mGroup.getLabelList().size());

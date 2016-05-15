@@ -22,12 +22,6 @@ public class CGroupLabels extends BorderPane implements ObservableGroupLabels{
 	private ObserverGroupLabels observer;
 
 	private final Button button;
-	/**
-	 * {@linkplain CGroupLabels}
-	 */
-	public CGroupLabels(){
-		this(null);
-	}
 
 	/**
 	 * 
@@ -59,12 +53,22 @@ public class CGroupLabels extends BorderPane implements ObservableGroupLabels{
 		final MenuItem deleteGroupLabels = new MenuItem(Resources.MENU_ITEM_DELETE_GROUP);
 
 		Tools.runOnThreadFX(() -> {
+			this.button.getStyleClass().add("rich-blue");
 			contextGroupPanel.getItems().addAll(editGroupLabels, deleteGroupLabels);
 
 			this.button.setContextMenu(contextGroupPanel);
+
+			this.button.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
+			this.button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+			this.button.setPrefSize(120,0);
+
+			this.setPrefSize(120,50);
+			this.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
+			this.setMaxWidth(Double.MAX_VALUE);
+			this.setMaxHeight(USE_PREF_SIZE);
+
+			this.setCenter(this.button);
 		});
-
-
 		
 		this.button.setOnContextMenuRequested(event -> {
 			Tools.runOnThreadFX(() -> {
@@ -98,6 +102,18 @@ public class CGroupLabels extends BorderPane implements ObservableGroupLabels{
 	public void notifyObserverClick() {
 		if(observer != null)
 			observer.updateClick(this.model);
+		Tools.runOnThreadFX(() -> {
+			this.button.getStyleClass().remove("rich-blue");
+			this.button.getStyleClass().add("rich-blue-select");
+		});
+	}
+
+	@Override
+	public void notifyObserverUnClick() {
+		Tools.runOnThreadFX(() -> {
+			this.button.getStyleClass().remove("rich-blue-select");
+			this.button.getStyleClass().add("rich-blue");
+		});
 	}
 
 	@Override
