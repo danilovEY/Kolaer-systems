@@ -122,6 +122,7 @@ public class CLabel extends BorderPane implements ObservableLabel {
 		Tools.runOnThreadFX(() -> {
 			this.nameLabel.setFont(Font.font(18 - label.getName().length() * 0.15));
 			this.nameLabel.setText(label.getName());
+
 			this.button.setFont(Font.font(18 - label.getName().length() * 0.15));
 			this.button.setText(label.getInfo());
 

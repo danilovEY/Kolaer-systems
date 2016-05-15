@@ -59,12 +59,12 @@ public class CGroupLabels extends BorderPane implements ObservableGroupLabels{
 			this.button.setContextMenu(contextGroupPanel);
 
 			this.button.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
-			this.button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-			this.button.setPrefSize(120,0);
+			this.button.setMaxSize(500, Double.MAX_VALUE);
+			//this.button.setPrefSize(120,0);
 
-			this.setPrefSize(120,50);
+			//this.setPrefSize(120,50);
 			this.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
-			this.setMaxWidth(Double.MAX_VALUE);
+			this.setMaxWidth(500);
 			this.setMaxHeight(USE_PREF_SIZE);
 
 			this.setCenter(this.button);
