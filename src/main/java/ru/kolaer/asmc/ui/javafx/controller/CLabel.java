@@ -1,5 +1,6 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -64,18 +65,21 @@ public class CLabel extends BorderPane implements ObservableLabel {
 
 			final BorderPane borderPane = new BorderPane(this.button);
 			borderPane.setTop(this.nameLabel);
-			borderPane.setLeft(this.image);
+			//borderPane.setLeft(this.image);
+			borderPane.getStyleClass().add("lableSecontPanel");
 
 			this.button.setMaxWidth(Double.MAX_VALUE);
+			this.button.setPrefHeight(60);
 			this.button.getStyleClass().add("record-sales");
 
 			this.nameLabel.setTextAlignment(TextAlignment.CENTER);
 			this.nameLabel.setAlignment(Pos.CENTER);
 			this.nameLabel.setMaxWidth(Double.MAX_VALUE);
+			//this.nameLabel.setStyle("-fx-background-color:  rgba(255, 255, 255, 0.3);");
 
 			this.image.setSmooth(true);
-			this.image.setFitHeight(70);
-			this.image.setFitWidth(70);
+			this.image.setFitHeight(100);
+			this.image.setFitWidth(100);
 
 			this.scrollBackPanel.setFitToWidth(true);
 			this.scrollBackPanel.setFitToHeight(true);
@@ -84,9 +88,15 @@ public class CLabel extends BorderPane implements ObservableLabel {
 			this.scrollBackPanel.getStyleClass().add("lableTherdPanel");
 			this.scrollBackPanel.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
 
-			this.setPrefWidth(300);
+			final BorderPane icon  = new BorderPane(this.image);
+			//icon.setStyle("-fx-background-color:  rgba(255, 255, 255, 0.3);");
+
+			this.setPrefWidth(600);
 			this.getStyleClass().add("lableMainPane");
 			this.setCenter(this.scrollBackPanel);
+
+			this.setLeft(icon);
+			BorderPane.setMargin(this.image, new Insets(5,5,5,5));
 		});
 
 		//=====Event====

@@ -102,6 +102,7 @@
 						<Bundle-ClassPath>.</Bundle-ClassPath>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Name>АСУП</Bundle-Name>
+						<Export-Package>javafx.scene.effect</Export-Package>
 					</instructions>
 				</configuration>
 				<executions>

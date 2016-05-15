@@ -65,7 +65,7 @@ public class CMainFrame implements UniformSystemPlugin {
 			groupsPanel.setAlignment(Pos.TOP_CENTER);
 
 			labelsPanel.setAlignment(Pos.TOP_CENTER);
-			labelsPanel.setStyle("-fx-background-image: url('" + this.getClass().getResource("/label-background.png").toString() /*Resources.BACKGROUND_IMAGE.toString()*/ + "');");
+			labelsPanel.setStyle("-fx-background-image: url('" + this.getClass().getResource("/0-75.png").toString() /*Resources.BACKGROUND_IMAGE.toString()*/ + "');");
 			groupsPanel.setStyle("-fx-background-image: url('" + this.getClass().getResource("/groups-background.jpg").toString() /*Resources.BACKGROUND_IMAGE.toString()*/ + "');");
 		});
 
