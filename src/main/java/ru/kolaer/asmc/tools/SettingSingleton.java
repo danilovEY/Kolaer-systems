@@ -16,6 +16,7 @@ public class SettingSingleton implements Serializable {
 	private static boolean init = false;
 	
 	private transient boolean isRoot = false;
+	private transient boolean isSave = false;
 	private final String ROOT_LOGIN_NAME = "root";
 	private String rootPass = "root";
 	/**Правило запуска для всех ярлыков.*/
@@ -89,9 +90,18 @@ public class SettingSingleton implements Serializable {
 	}
 	
 	public void saveGroups() {
+		this.isSave = true;
 		this.serializationObjects.setSerializeGroups(this.serializationObjects.getSerializeGroups());
 	}
-	
+
+	public boolean isSave() {
+		return this.isSave;
+	}
+
+	public void setSave(boolean save) {
+		this.isSave = save;
+	}
+
 	public void saveSetting() {
 		this.serializationObjects.setSerializeSetting(this);
 	}

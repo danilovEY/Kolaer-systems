@@ -95,7 +95,7 @@
 }
 
 .lableMainPane{
-    -fx-background-color: rgba(57, 146, 208, 0.6);
+    -fx-background-color: rgba(57, 146, 208, 0.3);
     -fx-background-radius: 30.0;
 	/*-fx-background-color: rgb(0, 101, 173);*/
     /*-fx-background-radius: 30.0; */
@@ -104,7 +104,7 @@
 }
 
 .lableMainPane:hover{
-    -fx-background-color: rgba(58, 188, 255, 0.8);
+    -fx-background-color: rgba(58, 188, 255, 0.6);
     -fx-background-radius: 30.0;
     /*-fx-background-color: rgb(0, 101, 173);*/
     /*-fx-background-radius: 30.0; */

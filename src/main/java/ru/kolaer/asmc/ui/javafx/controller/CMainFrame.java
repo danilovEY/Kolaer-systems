@@ -1,5 +1,6 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -66,9 +67,12 @@ public class CMainFrame implements UniformSystemPlugin {
 			groupsPanel.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 			groupsPanel.setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 			groupsPanel.setFillWidth(true);
+			groupsPanel.setSpacing(5);
+			groupsPanel.setPadding(new Insets(5,5,5,5));
 			groupsPanel.setAlignment(Pos.TOP_CENTER);
 
 			labelsPanel.setAlignment(Pos.TOP_CENTER);
+			labelsPanel.setPadding(new Insets(5,5,5,5));
 			labelsPanel.setVgap(5);
 			labelsPanel.setHgap(5);
 			labelsPanel.setStyle("-fx-background-image: url('" + this.getClass().getResource("/label-background.jpg").toString() /*Resources.BACKGROUND_IMAGE.toString()*/ + "');");
@@ -232,7 +236,7 @@ public class CMainFrame implements UniformSystemPlugin {
 		this.uniformSystemEditorKit = uniformSystemEditorKit;
 		SettingSingleton.initialization();
 		this.mainPanel = new BorderPane();
-		this.autoCheckDataService = new AutoCheckDataService();
+		this.autoCheckDataService = new AutoCheckDataService(uniformSystemEditorKit);
 		this.autoCheckDataService.setcMainFrame(this);
 		this.services = Arrays.asList(this.autoCheckDataService);
 	}

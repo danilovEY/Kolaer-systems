@@ -3,6 +3,8 @@ package ru.kolaer.asmc.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.controller.CMainFrame;
 
 import java.io.File;
@@ -20,6 +22,11 @@ public class AutoCheckDataService implements Service {
     private CMainFrame cMainFrame;
     private long lastMod = 0;
     private boolean isRun = false;
+    private final UniformSystemEditorKit editorKit;
+
+    public AutoCheckDataService(final UniformSystemEditorKit editorKit) {
+        this.editorKit = editorKit;
+    }
 
     public void setcMainFrame(final CMainFrame cMainFrame) {
         this.cMainFrame = cMainFrame;
@@ -46,7 +53,7 @@ public class AutoCheckDataService implements Service {
 
         while(this.isRun) {
             try {
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {
                 LOG.error("Время ошидание прервано!");
                 this.isRun = false;
@@ -63,14 +70,13 @@ public class AutoCheckDataService implements Service {
             }
 
             if(this.fileSer.lastModified() != this.lastMod) {
-                LOG.info("Новый файл!");
-                if(this.cMainFrame != null) {
-                    LOG.info("Обновление!");
+                LOG.info("isSave: {}", SettingSingleton.getInstance().isSave());
+                if(this.cMainFrame != null && !SettingSingleton.getInstance().isSave()) {
+                    this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Обновление!","Обновление данных в АСУП...");
                     this.cMainFrame.updateData();
-                    this.lastMod = this.fileSer.lastModified();
                 }
-            } else {
-                LOG.info("Старый файл!");
+                this.lastMod = this.fileSer.lastModified();
+                SettingSingleton.getInstance().setSave(false);
             }
         }
 
