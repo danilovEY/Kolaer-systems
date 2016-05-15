@@ -94,7 +94,6 @@ public class CLabel extends BorderPane implements ObservableLabel {
 			this.setPrefWidth(600);
 			this.getStyleClass().add("lableMainPane");
 			this.setCenter(this.scrollBackPanel);
-
 			this.setLeft(icon);
 			BorderPane.setMargin(this.image, new Insets(5,5,5,5));
 		});
@@ -135,9 +134,10 @@ public class CLabel extends BorderPane implements ObservableLabel {
 
 			this.button.setFont(Font.font(18 - label.getName().length() * 0.15));
 			this.button.setText(label.getInfo());
-
 			ToolTipManager.sharedInstance().setDismissDelay(0);
 			toolTip.setText(label.getName());
+			this.button.setTooltip(this.toolTip);
+
 
 			if(label.getPathImage().equals(Resources.AER_ICON.toString())) {
 				this.image.setImage(new Image(Resources.AER_ICON.toString(), true));
@@ -158,6 +158,7 @@ public class CLabel extends BorderPane implements ObservableLabel {
 				}
 				else {
 					this.image.setImage(null);
+					this.image.setVisible(false);
 				}
 			}
 		});

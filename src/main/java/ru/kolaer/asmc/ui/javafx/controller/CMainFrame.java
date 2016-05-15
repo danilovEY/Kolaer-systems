@@ -16,6 +16,7 @@ import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
+import ru.kolaer.asmc.service.AutoCheckDataService;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
@@ -24,7 +25,9 @@ import ru.kolaer.asmc.ui.javafx.view.ImageViewPane;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -42,8 +45,9 @@ public class CMainFrame implements UniformSystemPlugin {
 	/** Панель с ярлыками. */
 	private BorderPane mainPanel;
 	private BorderPane contentPanel;
-	
+	private List<Service> services;
 	private CNavigationContentObserver observer;
+	private AutoCheckDataService autoCheckDataService;
 	private UniformSystemEditorKit uniformSystemEditorKit;
 
 	public void initialize() {
@@ -65,7 +69,9 @@ public class CMainFrame implements UniformSystemPlugin {
 			groupsPanel.setAlignment(Pos.TOP_CENTER);
 
 			labelsPanel.setAlignment(Pos.TOP_CENTER);
-			labelsPanel.setStyle("-fx-background-image: url('" + this.getClass().getResource("/label-background.png").toString() /*Resources.BACKGROUND_IMAGE.toString()*/ + "');");
+			labelsPanel.setVgap(5);
+			labelsPanel.setHgap(5);
+			labelsPanel.setStyle("-fx-background-image: url('" + this.getClass().getResource("/label-background.jpg").toString() /*Resources.BACKGROUND_IMAGE.toString()*/ + "');");
 			groupsPanel.setStyle("-fx-background-image: url('" + this.getClass().getResource("/groups-background.jpg").toString() /*Resources.BACKGROUND_IMAGE.toString()*/ + "');");
 		});
 
@@ -226,6 +232,9 @@ public class CMainFrame implements UniformSystemPlugin {
 		this.uniformSystemEditorKit = uniformSystemEditorKit;
 		SettingSingleton.initialization();
 		this.mainPanel = new BorderPane();
+		this.autoCheckDataService = new AutoCheckDataService();
+		this.autoCheckDataService.setcMainFrame(this);
+		this.services = Arrays.asList(this.autoCheckDataService);
 	}
 
 	@Override
@@ -235,7 +244,7 @@ public class CMainFrame implements UniformSystemPlugin {
 
 	@Override
 	public Collection<Service> getServices() {
-		return null;
+		return this.services;
 	}
 
 	@Override
