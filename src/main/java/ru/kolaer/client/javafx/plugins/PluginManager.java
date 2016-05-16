@@ -23,7 +23,7 @@ import java.util.*;
 public class PluginManager {
     private final Logger LOG = LoggerFactory.getLogger(PluginManager.class);
     private SearchPlugins searchPlugins;
-    private final Map<PluginBundle, Bundle> infoToBundle = new HashMap<>();
+    private final List<PluginBundle> installPlugins = new ArrayList<>();
     private BundleContext context;
 
     public PluginManager() {
@@ -81,15 +81,19 @@ public class PluginManager {
 
         if (pluginBundle.getUriPlugin() != null) {
         	try {
+        		LOG.info("{} установка...", pluginBundle.getSymbolicNamePlugin());
 	            final Bundle bundle = this.context.installBundle(pluginBundle.getUriPlugin().toString());
 	            pluginBundle.setBundle(bundle);
 	            pluginBundle.setBundleContext(this.context);
 	            pluginBundle.setInstall(true);
+	            LOG.info("{} установка завершена...", pluginBundle.getSymbolicNamePlugin());
         	} catch(BundleException ex) {
         		LOG.error("Ошибка при установке плагина: {}", pluginBundle.getSymbolicNamePlugin(), ex);
         		return false;
         	}
-
+        	
+        	installPlugins.add(pluginBundle);
+        	
             if(this.scanClassesForUSP(pluginBundle)) {
             	if(this.initialize(pluginBundle)) {
             		return true;
@@ -174,16 +178,19 @@ public class PluginManager {
         	LOG.info("Удаление плагина: {}...", pluginBundle.getSymbolicNamePlugin());
         	try {
 	            bundle.uninstall();
-	            pluginBundle.setBundle(null);
-	            pluginBundle.setBundleContext(null);
-	            pluginBundle.setInstall(false);
-	            pluginBundle.setUniformSystemPlugin(null);
 	            LOG.info("Плагин: {} удален!", pluginBundle.getSymbolicNamePlugin());
         	} catch (final BundleException e1) {
                 LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
+                return false;
             }
+        	
+        	pluginBundle.setBundle(null);
+            pluginBundle.setBundleContext(null);
+            pluginBundle.setInstall(false);
+            pluginBundle.setUniformSystemPlugin(null);
+            
+            this.installPlugins.remove(pluginBundle);
         }
-
         return true;
     }
 
@@ -191,15 +198,9 @@ public class PluginManager {
         this.searchPlugins = searchPlugins;
     }
 
-    public Map<PluginBundle, Bundle> getInfoToBundle() {
-        return infoToBundle;
+    public List<PluginBundle> getInstallPlugins() {
+        return this.installPlugins;
     }
-
-
-    public Collection<PluginBundle> getAllPlugins() {
-        return this.infoToBundle.keySet();
-    }
-
 
     public SearchPlugins getSearchPlugins() {
         return searchPlugins;

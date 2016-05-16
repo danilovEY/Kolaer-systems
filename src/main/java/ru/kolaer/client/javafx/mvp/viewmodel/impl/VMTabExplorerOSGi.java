@@ -52,6 +52,11 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public void addTabPlugin(final String tabName, final PluginBundle uniformSystemPlugin) {
+    	if(uniformSystemPlugin.getUniformSystemPlugin().getContent() == null) {
+    		LOG.warn("{}: content == null!", uniformSystemPlugin.getSymbolicNamePlugin());
+    		return;
+    	}
+    	
         final ExecutorService initPluginContentThread = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             final PTab tab = new PTabImpl(uniformSystemPlugin);

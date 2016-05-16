@@ -63,7 +63,8 @@ public class VMMainFrameImpl extends Application {
 
         //Инициализация вкладочного explorer'а.
         final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
-
+        this.mainPane.setCenter(explorer.getContent());
+        
         final ExecutorService threadOnCreateTray = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             new Tray().createTrayIcon(stage, this.servicesManager, explorer);
@@ -74,22 +75,21 @@ public class VMMainFrameImpl extends Application {
         final UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
         editorKit.setUSNetwork(network);
         editorKit.setUISystemUS(uiSystemUS);
-        editorKit.setPluginsUS(explorer);
+        editorKit.setPluginsUS(explorer);      
 
-        this.mainPane.setCenter(explorer.getContent());
-
+        final SearchPlugins searchPlugins = new SearchPlugins();
+        final PluginManager pluginManager = new PluginManager(searchPlugins);
+        
         final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             Thread.currentThread().setName("Добавление системны служб");
             this.servicesManager.addService(new HideShowMainStage(stage), true);
+            this.servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, this.servicesManager), true);
             this.servicesManager.addService(new UserPingService(network.getService().path("system")), true);
             this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, network.getService().path("system")), true);
             this.servicesManager.addService(new ServiceUserIpAndHostName(network.getService().path("system")), true);
             threadStartService.shutdown();
         }, threadStartService);
-
-        final SearchPlugins searchPlugins = new SearchPlugins();
-        final PluginManager pluginManager = new PluginManager(searchPlugins);
 
         final ExecutorService threadScan = Executors.newSingleThreadExecutor();
         CompletableFuture<List<PluginBundle>> resultSearch = CompletableFuture.supplyAsync(() -> {
@@ -118,17 +118,18 @@ public class VMMainFrameImpl extends Application {
             plugins.parallelStream().forEach(pluginBundle -> {
                 Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
                 LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
-                pluginManager.install(pluginBundle);
-
-
-                LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
-                final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
-                if (pluginServices != null) {
-                    pluginServices.parallelStream().forEach(this.servicesManager::addService);
-                }
-
-                final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
-                explorer.addTabPlugin(tabName, pluginBundle);
+                
+                if(pluginManager.install(pluginBundle)) {
+                	LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
+                    final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
+                    explorer.addTabPlugin(tabName, pluginBundle);
+                    
+                    LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
+                    final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
+                    if (pluginServices != null) {
+                        pluginServices.parallelStream().forEach(this.servicesManager::addService);
+                    }     
+                }                          
         	});
 
             plugins.clear();
