@@ -95,7 +95,7 @@ public class VMMainFrameImpl extends Application {
 
         final ExecutorService threadScan = Executors.newSingleThreadExecutor();
         CompletableFuture<List<PluginBundle>> resultSearch = CompletableFuture.supplyAsync(() -> {
-            return searchPlugins.getPlugins();
+            return searchPlugins.search();
         }, threadScan);
 
         final ExecutorService threadInstall = Executors.newSingleThreadExecutor();
