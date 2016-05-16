@@ -1,9 +1,5 @@
 package ru.kolaer.client.javafx.plugins;
 
-import org.osgi.framework.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,15 +9,20 @@ import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
+import org.osgi.framework.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by Danilov on 10.04.2016.
  */
 public class PluginBundleJar extends PluginBundle {
     private static final Logger LOG = LoggerFactory.getLogger(PluginBundleJar.class);
     private final File jarPlugin;
-
+    private final long firstModified;
     private PluginBundleJar(final File jarPlugin) {
         this.jarPlugin = jarPlugin;
+        this.firstModified = jarPlugin.lastModified();
     }
 
     public static PluginBundleJar getInstance(final File plugin) {
@@ -71,4 +72,14 @@ public class PluginBundleJar extends PluginBundle {
     public File getJarPlugin() {
         return jarPlugin;
     }
+
+	@Override
+	public long getLastModified() {
+		return this.jarPlugin.lastModified();
+	}
+
+	@Override
+	public long getFirstModified() {
+		return this.firstModified;
+	}
 }

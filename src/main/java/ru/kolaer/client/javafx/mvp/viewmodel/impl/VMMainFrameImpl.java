@@ -9,10 +9,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
@@ -118,45 +116,10 @@ public class VMMainFrameImpl extends Application {
             }
 
             plugins.parallelStream().forEach(pluginBundle -> {
-                try {
-                    Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
-                    LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
-                    pluginManager.install(pluginBundle);
-                } catch (final BundleException e) {
-                    LOG.error("Ошибка при установке/запуска плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
-                    try {
-                        pluginManager.uninstall(pluginBundle);
-                    } catch (final BundleException e1) {
-                        LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
-                    }
-                    return;
-                }
+                Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
+                LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
+                pluginManager.install(pluginBundle);
 
-                LOG.info("{}: Получение USP...", pluginBundle.getSymbolicNamePlugin());
-                final UniformSystemPlugin uniformSystemPlugin = pluginBundle.getUniformSystemPlugin();
-
-                if(uniformSystemPlugin == null) {
-                    LOG.info("{}: USP is null!", pluginBundle.getSymbolicNamePlugin());
-                    try {
-                        pluginManager.uninstall(pluginBundle);
-                    } catch (final BundleException e1) {
-                        LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
-                    }
-                    return;
-                }
-
-                try {
-                    LOG.info("{}: Инициализация USP...", pluginBundle.getSymbolicNamePlugin());
-                    uniformSystemPlugin.initialization(UniformSystemEditorKitSingleton.getInstance());
-                } catch (final Exception e) {
-                    LOG.error("Ошибка при инициализации плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
-                    try {
-                        pluginManager.uninstall(pluginBundle);
-                    } catch (final BundleException e1) {
-                        LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
-                    }
-                    return;
-                }
 
                 LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
                 final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();

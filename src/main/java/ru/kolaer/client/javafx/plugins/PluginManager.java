@@ -9,6 +9,7 @@ import org.osgi.framework.launch.Framework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class PluginManager {
     }
 
     public void initialization() throws Exception {
-        final File frameworkDir = new File(System.getProperty("java.io.tmpdir"), "KolaerCache-" + UUID.randomUUID());
+        final File frameworkDir = new File(System.getProperty("java.io.tmpdir"), "KolaerCache");
 
         final Map<String, String> frameworkProperties = new HashMap<>();
         try {
@@ -71,55 +72,94 @@ public class PluginManager {
 
         LOG.info("OSGi framework успешно запущен!");
     }
-
-    public boolean install(final PluginBundle pluginBundle) throws BundleException {
+    
+    public boolean install(final PluginBundle pluginBundle) {
         if(pluginBundle.isInstall()) {
             LOG.warn("{} уже установлен", pluginBundle.getSymbolicNamePlugin());
             return true;
         }
 
         if (pluginBundle.getUriPlugin() != null) {
-            final Bundle bundle = this.context.installBundle(pluginBundle.getUriPlugin().toString());
-            pluginBundle.setBundle(bundle);
-            pluginBundle.setBundleContext(this.context);
-            pluginBundle.setInstall(true);
+        	try {
+	            final Bundle bundle = this.context.installBundle(pluginBundle.getUriPlugin().toString());
+	            pluginBundle.setBundle(bundle);
+	            pluginBundle.setBundleContext(this.context);
+	            pluginBundle.setInstall(true);
+        	} catch(BundleException ex) {
+        		LOG.error("Ошибка при установке плагина: {}", pluginBundle.getSymbolicNamePlugin(), ex);
+        		return false;
+        	}
 
-            final Enumeration<URL> entrs = bundle.findEntries("/", "*.class", true);
-            while (entrs.hasMoreElements()) {
-        		final URL url = entrs.nextElement();
-        		if(url.getPath().contains("$")){
-        			continue;
-        		}
-                final String classPath = url.getPath().substring(1,url.getPath().length() - 6).replace("/",".");
-                try {
-                	final Class<?> cls = bundle.loadClass(classPath);
-
-                    for(Class<?> inter : cls.getInterfaces()) {
-                        if(inter == UniformSystemPlugin.class) {
-                            try {
-                                LOG.info("Class is USP: {}", cls);
-                                final UniformSystemPlugin plugin = (UniformSystemPlugin) cls.newInstance();
-                                pluginBundle.setUniformSystemPlugin(plugin);
-                                return true;
-                            } catch (InstantiationException | IllegalAccessException e) {
-                               LOG.error("Ошибка при создании объекта: {}", pluginBundle.getSymbolicNamePlugin(), e);
-                               break;
-                            }
-                        }
-                    }
-                } catch (ClassNotFoundException | NoClassDefFoundError e) {
-                    LOG.error("Ошибка при чтении класса: {}", classPath, e);
-                }
+            if(this.scanClassesForUSP(pluginBundle)) {
+            	if(this.initialize(pluginBundle)) {
+            		return true;
+            	}
             }
+        	
+            this.unInstall(pluginBundle);
         } else {
             LOG.error("URL plugin: {} is null!", pluginBundle.getSymbolicNamePlugin());
             return false;
         }
 
-        return true;
+        return false;
     }
+    
+    private boolean scanClassesForUSP(final PluginBundle pluginBundle) {
+    	final Enumeration<URL> entrs = pluginBundle.getBundle().findEntries("/", "*.class", true);
+        while (entrs.hasMoreElements()) {
+    		final URL url = entrs.nextElement();
+    		if(url.getPath().contains("$")){
+    			continue;
+    		}
+            final String classPath = url.getPath().substring(1,url.getPath().length() - 6).replace("/",".");
+            try {
+            	final Class<?> cls = pluginBundle.getBundle().loadClass(classPath);
 
-    public boolean uninstall(final PluginBundle pluginBundle) throws BundleException {
+                for(Class<?> inter : cls.getInterfaces()) {
+                    if(inter == UniformSystemPlugin.class) {
+                        try {
+	                        LOG.info("Class is USP: {}", cls);
+	                        final UniformSystemPlugin plugin = (UniformSystemPlugin) cls.newInstance();
+	                        pluginBundle.setUniformSystemPlugin(plugin);
+	                        return true;
+                        } catch (InstantiationException | IllegalAccessException e) {
+                           LOG.error("Ошибка при создании объекта: {}", pluginBundle.getSymbolicNamePlugin(), e);
+                           break;
+                        }
+                    }
+                }
+            } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                LOG.error("Ошибка при чтении класса: {} ClassNotFound:{}", classPath, e.getMessage());
+            }
+        }
+        
+        return false;
+    }
+    
+    private boolean initialize(final PluginBundle pluginBundle) {
+        LOG.info("{}: Получение USP...", pluginBundle.getSymbolicNamePlugin());
+        final UniformSystemPlugin uniformSystemPlugin = pluginBundle.getUniformSystemPlugin();
+
+        if(uniformSystemPlugin == null) {
+            LOG.info("{}: USP is null!", pluginBundle.getSymbolicNamePlugin());
+            
+            return false;
+        }
+
+        try {
+            LOG.info("{}: Инициализация USP...", pluginBundle.getSymbolicNamePlugin());
+            uniformSystemPlugin.initialization(UniformSystemEditorKitSingleton.getInstance());
+            return true;
+        } catch (final Exception e) {
+            LOG.error("Ошибка при инициализации плагина: {}", pluginBundle.getSymbolicNamePlugin(), e);
+        }
+        
+        return false;
+    }
+    
+
+    public boolean unInstall(final PluginBundle pluginBundle) {
         if(!pluginBundle.isInstall()) {
             LOG.warn("{} не установлен!", pluginBundle.getSymbolicNamePlugin());
             return true;
@@ -131,11 +171,17 @@ public class PluginManager {
             LOG.error("Bundle плагина: {} == null!", pluginBundle.getSymbolicNamePlugin());
             return false;
         } else {
-            bundle.uninstall();
-            pluginBundle.setBundle(null);
-            pluginBundle.setBundleContext(null);
-            pluginBundle.setInstall(false);
-            pluginBundle.setUniformSystemPlugin(null);
+        	LOG.info("Удаление плагина: {}...", pluginBundle.getSymbolicNamePlugin());
+        	try {
+	            bundle.uninstall();
+	            pluginBundle.setBundle(null);
+	            pluginBundle.setBundleContext(null);
+	            pluginBundle.setInstall(false);
+	            pluginBundle.setUniformSystemPlugin(null);
+	            LOG.info("Плагин: {} удален!", pluginBundle.getSymbolicNamePlugin());
+        	} catch (final BundleException e1) {
+                LOG.error("Ошибка при удалении плагина: {}", pluginBundle.getSymbolicNamePlugin(), e1);
+            }
         }
 
         return true;

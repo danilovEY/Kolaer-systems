@@ -24,7 +24,9 @@ public abstract class PluginBundle {
     private boolean isInstall = false;
     private UniformSystemPlugin uniformSystemPlugin;
 
-
+    public abstract long getLastModified();
+    public abstract long getFirstModified();
+    
     public UniformSystemPlugin getUniformSystemPlugin() {
         if(!this.isInstall) {
             LOG.warn("Плагин: {} не установлен!", this.symbolicNamePlugin);
