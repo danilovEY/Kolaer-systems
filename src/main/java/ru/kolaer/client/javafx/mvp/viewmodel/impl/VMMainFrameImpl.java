@@ -95,7 +95,7 @@ public class VMMainFrameImpl extends Application {
 
         final ExecutorService threadScan = Executors.newSingleThreadExecutor();
         CompletableFuture<List<PluginBundle>> resultSearch = CompletableFuture.supplyAsync(() -> {
-            return searchPlugins.search();
+            return searchPlugins.getPlugins();
         }, threadScan);
 
         final ExecutorService threadInstall = Executors.newSingleThreadExecutor();
@@ -109,11 +109,12 @@ public class VMMainFrameImpl extends Application {
                 throw new RuntimeException("Ошибка при инициализации менеджера плагинов!");
             }
 
-            List<PluginBundle> plugins = Collections.emptyList();
+            List<PluginBundle> plugins = null;
             try {
                 plugins = resultSearch.get();
             } catch (Exception e) {
                 LOG.error("Ошибка при получении плагинов!", e);
+                plugins = Collections.emptyList();
             }
 
             plugins.parallelStream().forEach(pluginBundle -> {

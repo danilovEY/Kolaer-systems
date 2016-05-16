@@ -10,7 +10,8 @@ import java.util.List;
 public class SearchPlugins {
     private static final String DEFAULT_PATH_DOR_PLUGINS = "plugins";
     private final List<String> pathsDirPlugins = new ArrayList<>();
-
+    private List<PluginBundle> plugins;
+    
     public SearchPlugins(final String pathDirPlugins) {
         this.pathsDirPlugins.add(pathDirPlugins);
     }
@@ -29,6 +30,14 @@ public class SearchPlugins {
             this.pathsDirPlugins.remove(dir);
     }
 
+    public List<PluginBundle> getPlugins() {
+    	if(this.plugins == null) {
+    		this.plugins = this.search();
+    	}
+    	
+    	return this.plugins;
+    }
+    
     public List<PluginBundle> search() {
         final List<PluginBundle> plugins = new ArrayList<>();
 
@@ -41,6 +50,7 @@ public class SearchPlugins {
 
                 for(final File fileOnDir : filesToDit) {
                     final PluginBundle bundle = PluginBundleJar.getInstance(fileOnDir);
+                    
                     if(bundle != null)
                         plugins.add(bundle);
                 }
