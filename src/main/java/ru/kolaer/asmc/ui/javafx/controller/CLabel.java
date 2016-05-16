@@ -91,7 +91,7 @@ public class CLabel extends BorderPane implements ObservableLabel {
 			final BorderPane icon  = new BorderPane(this.image);
 			//icon.setStyle("-fx-background-color:  rgba(255, 255, 255, 0.3);");
 
-			this.setPrefWidth(600);
+			this.setPrefWidth(500);
 			this.getStyleClass().add("lableMainPane");
 			this.setCenter(this.scrollBackPanel);
 			this.setLeft(icon);

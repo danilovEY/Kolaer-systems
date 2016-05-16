@@ -92,7 +92,7 @@ public class CMainFrame implements UniformSystemPlugin {
 			labelsScrollPanel.setFitToWidth(true);
 
 			final SplitPane splitPane = new SplitPane(groupsScrollPanel, labelsScrollPanel);
-			splitPane.setDividerPosition(0, 0.3);
+			splitPane.setDividerPosition(0, 0.35);
 			splitPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 			this.contentPanel.setCenter(splitPane);
 		});
