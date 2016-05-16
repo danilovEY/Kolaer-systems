@@ -87,7 +87,9 @@ public class PluginManager {
             final Enumeration<URL> entrs = bundle.findEntries("/", "*.class", true);
             while (entrs.hasMoreElements()) {
         		final URL url = entrs.nextElement();
-
+        		if(url.getPath().contains("$")){
+        			continue;
+        		}
                 final String classPath = url.getPath().substring(1,url.getPath().length() - 6).replace("/",".");
                 try {
                 	final Class<?> cls = bundle.loadClass(classPath);
