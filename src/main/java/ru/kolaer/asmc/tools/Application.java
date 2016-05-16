@@ -48,12 +48,7 @@ public class Application implements Runnable {
 			});
 			this.threadForRunApp.shutdown();
 		} else {
-			Platform.runLater(() -> {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка!");
-				alert.setHeaderText("Не указан файл или ссылка!");
-				alert.show();
-			});
+			this.editorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Не указан файл или ссылка!").show();
 		}
 	}
 

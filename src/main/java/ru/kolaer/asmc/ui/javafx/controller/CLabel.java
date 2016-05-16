@@ -65,7 +65,6 @@ public class CLabel extends BorderPane implements ObservableLabel {
 
 			final BorderPane borderPane = new BorderPane(this.button);
 			borderPane.setTop(this.nameLabel);
-			//borderPane.setLeft(this.image);
 			borderPane.getStyleClass().add("lableSecontPanel");
 
 			this.button.setMaxWidth(Double.MAX_VALUE);
@@ -75,7 +74,6 @@ public class CLabel extends BorderPane implements ObservableLabel {
 			this.nameLabel.setTextAlignment(TextAlignment.CENTER);
 			this.nameLabel.setAlignment(Pos.CENTER);
 			this.nameLabel.setMaxWidth(Double.MAX_VALUE);
-			//this.nameLabel.setStyle("-fx-background-color:  rgba(255, 255, 255, 0.3);");
 
 			this.image.setSmooth(true);
 			this.image.setFitHeight(100);
@@ -89,7 +87,6 @@ public class CLabel extends BorderPane implements ObservableLabel {
 			this.scrollBackPanel.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
 
 			final BorderPane icon  = new BorderPane(this.image);
-			//icon.setStyle("-fx-background-color:  rgba(255, 255, 255, 0.3);");
 
 			this.setPrefWidth(500);
 			this.getStyleClass().add("lableMainPane");

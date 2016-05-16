@@ -159,11 +159,6 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 					this.image.setImage(new Image(file.get().toURI().toURL().toString()));
 				} catch (final Exception e) {
 					LOG.error("Невозможно переконвертировать в URL файл: {}", file.get().getAbsolutePath());
-					final Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Ошибка!");
-					alert.setHeaderText("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath());
-					alert.setContentText(e.toString());
-					alert.showAndWait();
 				}
 				fileChooser.setInitialDirectory(file.get());
 			}
@@ -235,11 +230,6 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
 			} catch (final Exception e) {
 				LOG.error("Невозможно переконвертировать в URL файл: {}", file.get().getAbsolutePath());
-				final Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка!");
-				alert.setHeaderText("Невозможно переконвертировать в URL файл:" + file.get().getAbsolutePath());
-				alert.setContentText(e.toString());
-				alert.showAndWait();
 			}
 			fileChooser.setInitialDirectory(file.get());
 		}
@@ -273,11 +263,6 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 						this.image.setImage(new Image(file.toURI().toURL().toString()));
 					} catch (final Exception e) {
 						LOG.error("Невозможно переконвертировать в URL файл: {}", file.getAbsolutePath());
-						final Alert alert = new Alert(AlertType.ERROR);
-						alert.setTitle("Ошибка!");
-						alert.setHeaderText("Невозможно переконвертировать в URL файл:" + file.getAbsolutePath());
-						alert.setContentText(e.toString());
-						alert.showAndWait();
 					}
 				}
 			}
@@ -293,10 +278,6 @@ public class CAddingLabelDialog extends BaseController implements Dialog {
 			this.dialog.getIcons().add(new Image("file:" + Resources.AER_LOGO.toString()));
 		} catch (final IllegalArgumentException e) {
 			LOG.error("Не найден файл: {}",Resources.AER_LOGO);
-			final Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Ошибка!");
-			alert.setHeaderText("Не найден файл: \"" + Resources.AER_LOGO + "\"");
-			alert.showAndWait();
 		}
 
 		this.dialog.showAndWait();
