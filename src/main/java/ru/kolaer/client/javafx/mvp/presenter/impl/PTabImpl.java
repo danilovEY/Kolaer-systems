@@ -94,10 +94,8 @@ public class PTabImpl implements PTab {
 					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createErrorDialog(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!").show();
 				}
 
-				this.view.setContent(null);
 				this.isActive = false;
 
-				this.view.closeTab();
 				threadStopPlugin.shutdown();
 			}, threadStopPlugin).exceptionally(t -> {
 				LOG.error("Ошибка при остановке плагина: {}", this.plugin.getSymbolicNamePlugin(), t);
@@ -105,6 +103,7 @@ public class PTabImpl implements PTab {
 				return null;
 			});
 		}
+		this.view.closeTab();
 	}
 
 	@Override

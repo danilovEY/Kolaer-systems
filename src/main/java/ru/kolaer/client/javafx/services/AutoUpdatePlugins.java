@@ -43,14 +43,11 @@ public class AutoUpdatePlugins implements Service {
 			final List<PluginBundle> installPlugins = new ArrayList<>(this.pluginManager.getInstallPlugins());
 			final List<PluginBundle> pluginsInFoldes = this.pluginManager.getSearchPlugins().search();
 			
-			pluginsInFoldes.stream().forEach(plugin -> {
-				installPlugins.stream().forEach(pluginInstalls -> {	
+			pluginsInFoldes.parallelStream().forEach(plugin -> {
+				installPlugins.parallelStream().forEach(pluginInstalls -> {	
 					if(plugin.getSymbolicNamePlugin().equals(pluginInstalls.getSymbolicNamePlugin())) {
 						if(plugin.getVersion().equals(pluginInstalls.getVersion())) {
-							LOG.info("{} - {}",plugin.getSymbolicNamePlugin(), plugin.getFirstModified());
-							LOG.info("{} - {}",pluginInstalls.getSymbolicNamePlugin(), pluginInstalls.getFirstModified());
 							if(plugin.getFirstModified() != pluginInstalls.getFirstModified()) {
-								LOG.info("Разные файлы! {}", plugin.getSymbolicNamePlugin());
 								this.unInstallPlugin(pluginInstalls);
 								this.installPlugin(plugin);
 							} 
@@ -74,12 +71,8 @@ public class AutoUpdatePlugins implements Service {
 				}
 			}	
 			
-			LOG.info("{}",installPlugins.size());
-			LOG.info("{}",pluginsInFoldes.size());
-			
 			installPlugins.parallelStream().forEach(this::unInstallPlugin);
 			pluginsInFoldes.parallelStream().forEach(this::installPlugin);
-			
 		}
 	}
 	
