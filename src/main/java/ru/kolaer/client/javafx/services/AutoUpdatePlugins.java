@@ -34,7 +34,7 @@ public class AutoUpdatePlugins implements Service {
 		
 		while(this.isRun) {
 			try{
-				TimeUnit.SECONDS.sleep(5);
+				TimeUnit.MINUTES.sleep(5);
 			}catch(InterruptedException e){
 				LOG.error("Прервано ожидание!");
 				this.isRun = false;
