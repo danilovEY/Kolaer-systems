@@ -134,7 +134,7 @@ public class PluginManager {
                     }
                 }
             } catch (ClassNotFoundException | NoClassDefFoundError e) {
-                LOG.error("Ошибка при чтении класса: {} ClassNotFound:{}", classPath, e.getMessage());
+                LOG.error("Ошибка при чтении класса: {} ClassNotFound:{}", classPath, e);
             }
         }
         
