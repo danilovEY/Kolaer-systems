@@ -7,4 +7,8 @@ include 'client:birthday'
 findProject(':client:birthday')?.name = 'ru.kolaer.client.birthday'
 include 'server'
 findProject(':server')?.name = 'ru.kolaer.server'
+include 'admin'
+findProject(':admin')?.name = 'ru.kolaer.admin'
+include 'client:admin'
+findProject(':client:admin')?.name = 'ru.kolaer.admin'
 
