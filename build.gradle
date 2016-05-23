@@ -1,3 +1,5 @@
+group = "ru.kolaer"
+
 subprojects {
     apply plugin: 'java'
 

@@ -1,2 +1,4 @@
 rootProject.name = 'ru.kolaer'
+include 'api'
+findProject(':api')?.name = 'ru.kolaer.api'
 
