@@ -2,6 +2,7 @@
 !/api
 !/client
 !*.md
+!gradlew*
 !build.gradle
 !settings.gradle
 !.gitignore

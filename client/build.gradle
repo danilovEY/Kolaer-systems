@@ -1,0 +1,7 @@
+group = "ru.kolaer"
+
+subprojects {
+    dependencies {
+        compile "ru.kolaer:ru.kolaer.api:1.1"
+    }
+}
