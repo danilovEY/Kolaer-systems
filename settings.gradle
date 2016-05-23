@@ -1,4 +1,6 @@
 rootProject.name = 'ru.kolaer'
 include 'api'
 findProject(':api')?.name = 'ru.kolaer.api'
+include 'client:usa'
+findProject(':client:usa')?.name = 'ru.kolaer.client.usa'
 

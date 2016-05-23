@@ -1,5 +1,6 @@
 /*
-!/api
+!/api/
+!/client/usa/
 !*.md
 !build.gradle
 !settings.gradle
