@@ -5,4 +5,6 @@ include 'client:usa'
 findProject(':client:usa')?.name = 'ru.kolaer.client.usa'
 include 'client:birthday'
 findProject(':client:birthday')?.name = 'ru.kolaer.client.birthday'
+include 'server'
+findProject(':server')?.name = 'ru.kolaer.server'
 

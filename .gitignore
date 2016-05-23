@@ -1,6 +1,7 @@
 /*
 !/api
 !/client
+!/server
 !*.md
 !gradlew*
 !build.gradle
