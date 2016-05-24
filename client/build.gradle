@@ -1,7 +1,15 @@
 group = "ru.kolaer"
 
 subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+
     dependencies {
         compile "ru.kolaer:ru.kolaer.api:1.1"
+    }
+
+    task wrapper(type: Wrapper) {
+        gradleVersion = 1.11
     }
 }

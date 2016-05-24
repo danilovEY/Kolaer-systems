@@ -1,0 +1,10 @@
+rootProject.name = 'ru.kolaer'
+include 'usa'
+findProject(':usa')?.name = 'ru.kolaer.client.usa'
+include 'birthday'
+findProject(':birthday')?.name = 'ru.kolaer.client.birthday'
+include 'admin'
+findProject(':admin')?.name = 'ru.kolaer.client.admin'
+include 'browser'
+findProject(':browser')?.name = 'ru.kolaer.client.browser'
+

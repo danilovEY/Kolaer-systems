@@ -1,16 +1,8 @@
 group = "ru.kolaer"
 
 subprojects {
-    apply plugin: 'java'
-
-    sourceCompatibility = 1.8
-
     repositories {
         mavenCentral()
         mavenLocal()
-    }
-
-    task wrapper(type: Wrapper) {
-        gradleVersion = 1.11
     }
 }
