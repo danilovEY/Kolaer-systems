@@ -1,4 +1,4 @@
-rootProject.name = 'ru.kolaer'
+rootProject.name = 'ru.kolaer.client'
 include 'usa'
 findProject(':usa')?.name = 'ru.kolaer.client.usa'
 include 'birthday'
