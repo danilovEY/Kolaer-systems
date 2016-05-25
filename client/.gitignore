@@ -1,6 +1,1 @@
-/*
-!pom.xml
-!*.md
-!build.gradle
-!/src
-!.gitignore
+.gradle
