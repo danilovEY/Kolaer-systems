@@ -5,8 +5,14 @@ subprojects {
 
     sourceCompatibility = 1.8
 
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
     dependencies {
         compile "ru.kolaer:ru.kolaer.api:1.1"
+        testCompile "junit:junit:4.11"
     }
 
     task wrapper(type: Wrapper) {
