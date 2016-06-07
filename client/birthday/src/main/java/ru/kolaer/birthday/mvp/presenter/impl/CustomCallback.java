@@ -1,21 +1,20 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import java.time.LocalDate;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.util.Callback;
-import ru.kolaer.birthday.tools.Tools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.UserBirthdayAllDataBase;
 import ru.kolaer.api.system.UserDataBase;
+import ru.kolaer.birthday.tools.Tools;
+
+import java.time.LocalDate;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 

@@ -1,9 +1,9 @@
 package ru.kolaer.birthday.mvp.presenter;
 
+import ru.kolaer.birthday.mvp.model.UserModel;
+
 import java.time.LocalDate;
 import java.util.List;
-
-import ru.kolaer.birthday.mvp.model.UserModel;
 
 /**Слушатель календаря.*/
 public interface ObserverCalendar {

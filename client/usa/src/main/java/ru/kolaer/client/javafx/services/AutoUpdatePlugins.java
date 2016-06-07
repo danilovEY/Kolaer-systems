@@ -1,18 +1,17 @@
 package ru.kolaer.client.javafx.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugins.services.Service;
+import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMTabExplorerOSGi;
+import ru.kolaer.client.javafx.plugins.PluginBundle;
+import ru.kolaer.client.javafx.plugins.PluginManager;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMTabExplorerOSGi;
-import ru.kolaer.client.javafx.plugins.PluginBundle;
-import ru.kolaer.client.javafx.plugins.PluginManager;
 
 public class AutoUpdatePlugins implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(AutoUpdatePlugins.class);

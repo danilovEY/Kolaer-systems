@@ -1,13 +1,9 @@
 package com.teamdev.jxbrowser.chromium.demo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.events.FinishLoadingEvent;
 import com.teamdev.jxbrowser.chromium.events.LoadAdapter;
 import com.teamdev.jxbrowser.chromium.events.StartLoadingEvent;
-
 import javafx.application.Platform;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
@@ -19,6 +15,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NavigationPanel extends BorderPane {
 	private final Logger LOG = LoggerFactory.getLogger(NavigationPanel.class);

@@ -1,9 +1,6 @@
 package ru.kolaer.birthday.mvp.view.impl;
 
-import java.time.LocalDate;
-
 import com.sun.javafx.scene.control.skin.DatePickerSkin;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,6 +12,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import ru.kolaer.birthday.mvp.view.VCalendar;
+
+import java.time.LocalDate;
 
 @SuppressWarnings("restriction")
 /**

@@ -1,10 +1,10 @@
 package ru.kolaer.birthday.mvp.view;
 
-import java.util.List;
-
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import ru.kolaer.birthday.mvp.model.UserModel;
+
+import java.util.List;
 /**
  * View - таблици с данными о днях рождения сотрудников.
  *

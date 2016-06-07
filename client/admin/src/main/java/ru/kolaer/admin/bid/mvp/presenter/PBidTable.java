@@ -1,5 +1,17 @@
 package ru.kolaer.admin.bid.mvp.presenter;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.admin.bid.mvp.model.BidModelManager;
+import ru.kolaer.admin.bid.mvp.model.MBid;
+import ru.kolaer.admin.bid.mvp.view.VBidTabContent;
+import ru.kolaer.admin.bid.mvp.view.VTabContent;
+import ru.kolaer.api.tools.Tools;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -16,19 +28,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ru.kolaer.admin.bid.mvp.model.BidModelManager;
-import ru.kolaer.admin.bid.mvp.model.MBid;
-import ru.kolaer.admin.bid.mvp.view.VBidTabContent;
-import ru.kolaer.admin.bid.mvp.view.VTabContent;
-import ru.kolaer.api.tools.Tools;
 
 public class PBidTable {
 	private final Logger LOG = LoggerFactory.getLogger(PBidTable.class);

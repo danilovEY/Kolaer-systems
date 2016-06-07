@@ -1,16 +1,5 @@
 package ru.kolaer.birthday.mvp.viewmodel.impl;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.ResourceBundle;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -23,8 +12,18 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.viewmodel.VMDetailedInformationStage;
+
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.ResourceBundle;
 
 public class VMDetailedInformationStageImpl extends BorderPane implements Initializable, VMDetailedInformationStage {
 	private final Logger LOG = LoggerFactory.getLogger(VMDetailedInformationStageImpl.class);

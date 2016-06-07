@@ -4,14 +4,13 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-
-import java.util.concurrent.TimeUnit;
-
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.action.Action;
-import ru.kolaer.api.system.NotificationUS;
 import ru.kolaer.api.system.NotifiAction;
+import ru.kolaer.api.system.NotificationUS;
 import ru.kolaer.api.tools.Tools;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Реализация интерфейса для работы с оповещением.

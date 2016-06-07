@@ -1,7 +1,6 @@
 package ru.kolaer.client.javafx.system;
 
 import com.sun.jersey.api.client.WebResource;
-
 import ru.kolaer.api.system.OtherPublicAPI;
 import ru.kolaer.api.system.PublicHolidaysDateBase;
 

@@ -1,15 +1,14 @@
 package ru.kolaer.asmc.ui.javafx.controller;
 
-import java.io.IOException;
-import java.net.URL;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.asmc.tools.Resources;
+
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * Базовый контроллер для FX компонентов.

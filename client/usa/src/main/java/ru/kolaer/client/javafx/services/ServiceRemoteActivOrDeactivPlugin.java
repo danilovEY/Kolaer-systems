@@ -3,9 +3,7 @@ package ru.kolaer.client.javafx.services;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
-
 import javafx.scene.control.Dialog;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;

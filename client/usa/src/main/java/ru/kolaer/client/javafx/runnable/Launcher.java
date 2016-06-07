@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMMainFrameImpl;
 
-import java.io.*;
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class Launcher {

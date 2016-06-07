@@ -1,14 +1,13 @@
 package ru.kolaer.client.javafx.system;
 
-import org.controlsfx.dialog.LoginDialog;
-import org.controlsfx.dialog.ProgressDialog;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.concurrent.Service;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Dialog;
+import org.controlsfx.dialog.LoginDialog;
+import org.controlsfx.dialog.ProgressDialog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.DialogUS;
 
 /**
