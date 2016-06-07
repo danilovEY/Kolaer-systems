@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<DesktopLables>
+  <GroupLabel name="Телефонный справочник">
+    <DesktopLable
+      appPath="http://asupkolaer/app_ie8/application/phone_dir/index.php"
+      imagePaph="\\kolaer.local\asup$\ico\Phone-icon2.png"
+      info=" Колатомэнергоремонт" titleName="Телефонный справочник"/>
+  </GroupLabel>
+  <GroupLabel name="АСКИД">
+    <DesktopLable
+      appPath="http://asupkolaer/app_ie8/application/ASKID/login.php"
+      imagePaph="\\kolaer.local\asup$\ico\ASKIDnew3-icon.png"
+      info="Новая версия" titleName="АСКИД"/>
+    <DesktopLable appPath="\\kolaer.local\asup$\File\АСКИД v2.mp4"
+      imagePaph="\\kolaer.local\asup$\ico\askidinfo-icon.png"
+      info="по АСКИД" titleName="Справка"/>
+  </GroupLabel>
+  <GroupLabel name="Система учета электронных заявок">
+    <DesktopLable
+      appPath="http://asupkolaer/app_ie8/application/auto/login.php"
+      imagePaph="\\kolaer.local\asup$\ico\auto.png"
+      info="на автотранспорт" titleName="Электронные заявки "/>
+    <DesktopLable
+      appPath="http://asupkolaer/app_ie8/application/welding_area/index.php?content=user"
+      imagePaph="\\kolaer.local\asup$\ico\Svar-icon.png"
+      info=" в участок сварки" titleName="Электронные заявки  "/>
+    <DesktopLable appPath="http://webaer:8080///zit/index.php"
+      imagePaph="\\kolaer.local\asup$\ico\Oit-icon.png"
+      info=" в отдел информационных технологий" titleName="Заявки"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\lnk\Авторизация Ремонт электрооборудования.url"
+      imagePaph="\\kolaer.local\asup$\ico\Energetic-icon.png"
+      info="на ремонт эл. оборудования, ГВС, освещения, эл. инструмента" titleName="Электронный журнал заявок"/>
+    <DesktopLable
+      appPath="http://asupkolaer/app_ie8/application/bookkeeping/user/index.php"
+      imagePaph="\\kolaer.local\asup$\ico\Buhzaayvky-icon.png"
+      info=" на предоставление справок из бухгалтерии" titleName="Электронные заявки в Бухгалтерию"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Указание РММ после ЦРТО.docx"
+      imagePaph="\\kolaer.local\asup$\ico\Word-icon.png"
+      info=" на изготовление деталей в ЦРТО" titleName="О порядке подачи заявок"/>
+  </GroupLabel>
+  <GroupLabel name="Информационные ресурсы КолАЭР">
+    <DesktopLable appPath="http://webkolaer/"
+      imagePaph="\\kolaer.local\asup$\ico\Sait-icon.png"
+      info="Сайт КолАЭР" titleName="Сайт КолАЭР"/>
+    <DesktopLable appPath="http://mailaerhost/"
+      imagePaph="\\kolaer.local\asup$\ico\Mail-icon.png"
+      info="Почта КолАЭР" titleName="Почта КолАЭР"/>
+    <DesktopLable
+      appPath="http://asupkolaer/app_ie8/application/aermedia/index.php"
+      imagePaph="\\kolaer.local\asup$\ico\Videoarhiv-icon.png"
+      info="Видео и  Фото архив" titleName="Видео и Фото КолАэр"/>
+    <DesktopLable
+      appPath="http://asupkolaer/app_ie8/application/replacement_post/index.php"
+      imagePaph="\\kolaer.local\asup$\ico\Zamesheniedolg-icon.png"
+      info="должностей" titleName="Замещение "/>
+    <DesktopLable appPath="\\aermedia\D$\Видеофайлы\Исходник.mp4"
+      imagePaph="\\kolaer.local\asup$\ico\info.png"
+      info="Информационная панель КолАЭР" titleName="Информационная панель"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\lnk\Совет директоров 30.10.15 - Ярлык.lnk"
+      imagePaph="\\kolaer.local\asup$\ico\Prezent-icon.png"
+      info="30.10.15" titleName="Совет директоров "/>
+  </GroupLabel>
+  <GroupLabel name="Графики">
+    <DesktopLable appPath="\\kolaer.local\asup$\lnk\grapfik.lnk"
+      imagePaph="\\kolaer.local\asup$\ico\Otpysk-icon.png"
+      info="отпусков" titleName="График отпусков"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\График ремонта АЭС на 2015.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\Remont-icon.png"
+      info=" АЭС на 2015 год" titleName="График ремонта "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Билеты\График внеочередной проверки знаний.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\PDFIcon.png"
+      info="График внеочередной проверки знаний" titleName="График внеочередной проверки знаний"/>
+    <DesktopLable appPath="http://asupkolaer/"
+      imagePaph="\\kolaer.local\asup$\ico\Turbin-icon.png"
+      info="Удаленный мониторинг ПТК &quot;Вибробит&quot;" titleName="Виброконтроль турбин"/>
+    <DesktopLable
+      appPath="http://asupkolaer/app_ie8/application/holiday/login.php"
+      imagePaph="\\kolaer.local\asup$\ico\Otpyskg-icon.png"
+      info="(новая версия)" titleName="График отпусков"/>
+  </GroupLabel>
+  <GroupLabel name="Электронные журналы ">
+    <DesktopLable appPath="http://webaer:8080/access_control/login.php"
+      imagePaph="\\kolaer.local\asup$\ico\Propysknoi-icon.png"
+      info="Электронный журнал фиксации нарушений по режиму рабочего времени." titleName="Журнал нарушений пропускного режима"/>
+    <DesktopLable
+      appPath="http://asupkolaer/app_ie8/application/walking/login.php"
+      imagePaph="\\kolaer.local\asup$\ico\ORMnew2-icon.png"
+      info="обхода рабочих мест (новая версия)" titleName="Электронный журнал"/>
+  </GroupLabel>
+  <GroupLabel name="Вовлеченность персонала 2015">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Информация об исследовании вовлеченности в 2015 г\Metodicheskie rekomendatsii po vovlechennosti 2015.docx"
+      imagePaph="\\kolaer.local\asup$\ico\Word-icon.png"
+      info="проведению опроса вовлеченности в 2015 году&#xa;" titleName="Методические рекомендации по"/>
+  </GroupLabel>
+  <GroupLabel name="Вопросы по разуплотненному оборудованию">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Вопросы по разуплотненному оборудованию\Памятка наблюдателю- контролёру.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\PDFIcon.png"
+      info="Памятка наблюдателя-контролёра" titleName="Памятка наблюдателя-контролёра"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Вопросы по разуплотненному оборудованию\Билеты по разуплотненному оборудованию для рабочих.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\PDFIcon.png"
+      info=" знаний рабочих Работа на вскрытом оборудовании" titleName="Экзаменационные билеты  для проверки"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\\File\Вопросы по разуплотненному оборудованию\Билеты для специалистов по разуплотненному оборудованию.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\PDFIcon.png"
+      info="знаний у руководителей и специалистов Работа на вскрытом оборудовании" titleName="Экзаменационные билеты для проверки "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Вопросы по разуплотненному оборудованию\Памятка производителю работ.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\PDFIcon.png"
+      info=" производителю работ" titleName="Памятка "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Вопросы по разуплотненному оборудованию\Памятка самоконтроля.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\PDFIcon.png"
+      info="Памятка самоконтроля" titleName="Памятка "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Вопросы по разуплотненному оборудованию\Памятка руководителю работ.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\PDFIcon.png"
+      info="руководителю работ" titleName="Памятка "/>
+  </GroupLabel>
+  <GroupLabel name="Нарушения в работе АЭС">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Нарушения в работе АЭС\Информационное сообщение №8326.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\Narusheniay-icon.png"
+      info="Нарушения в работе АЭС" titleName="Нарушения в работе АЭС"/>
+  </GroupLabel>
+  <GroupLabel name="Безопасные маршруты передвижения">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Маршрут передвижения.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\Peredvigenie-icon.png"
+      info="маршруты передвижения" titleName="Безопасные "/>
+  </GroupLabel>
+  <GroupLabel name="Расписание автобуса">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Расписание автобуса.docx"
+      imagePaph="\\kolaer.local\asup$\ico\Bass-icon.png"
+      info="Маршруты передвижения от II проходной до &quot;Рубикона&quot; и ЦМ" titleName="Расписание автобуса"/>
+  </GroupLabel>
+  <GroupLabel name="Презентация филиала по жилью">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Презентация филиала по жилью.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\Home-icon.png"
+      info="Порядок оказания помощи в приобретении " titleName="Презентация филиала по жилью"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\lnk\Квартиры в Африканде.lnk"
+      imagePaph="\\kolaer.local\asup$\ico\Home-icon.png"
+      info="в Африканде" titleName="Квартиры"/>
+  </GroupLabel>
+  <GroupLabel name="Политики АЭР">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Политики АЭР\Заявление в области культуры безопасности.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\Politics-icon.png"
+      info="культуры безопасности" titleName="Заявление в области "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Политики АЭР\Заявление об экологической политике АЭР.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\Politics-icon.png"
+      info="политике АЭР" titleName="Заявление об экологической "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Политики АЭР\Заявление о политике в области охраны труда.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\Politics-icon.png"
+      info="в области охраны труда" titleName="Заявление о политике "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Политики АЭР\Заявление о политике в области Ядерной безопасности.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\Politics-icon.png"
+      info=" в области Ядерной безопасности" titleName="Заявление о политике"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Политики АЭР\Заявление о Политике в области качества действует с 28.10.2013.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\Politics-icon.png"
+      info=" в области качества действует с 28.10.2013" titleName="Заявление о политике"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Политики АЭР\Заявление о единой технической политике.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\Politics-icon.png"
+      info="технической политике АО &quot;АЭР&quot;" titleName="Заявление о единой"/>
+  </GroupLabel>
+  <GroupLabel name="Техническая документация">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\lnk\Техническая документация.lnk"
+      imagePaph="\\kolaer.local\asup$\ico\Texarhi-icon.png"
+      info=" технической документации КолАЭР" titleName="Электронный архив"/>
+  </GroupLabel>
+  <GroupLabel name="Консультант Плюс">
+    <DesktopLable appPath="\\kolaer.local\asup$\lnk\ConsultantPlus.lnk"
+      imagePaph="\\kolaer.local\asup$\ico\Konsultant-icon.png"
+      info="Плюс" titleName="Консультант "/>
+  </GroupLabel>
+  <GroupLabel name="ПЕНСИОННОЕ ОБЕСПЕЧЕНИЕ">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\ПЕНСИОННОЕ ОБЕСПЕЧЕНИЕ\Prezentatsiya 2014-15 godyi A.ppt"
+      imagePaph="\\kolaer.local\asup$\ico\Pension-icon.png"
+      info=" обеспечение  работников &#xa;АО «атомэнергоремонт»&#xa;" titleName="Негосударственное пенсионное"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Пенсионное Обеспечение\Kalkul_2014_12_01.exe"
+      imagePaph="\\kolaer.local\asup$\ico\Pension2-icon.png"
+      info="расчета пенсии" titleName="Калькулятор"/>
+  </GroupLabel>
+  <GroupLabel name="Категорированные помещения">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Категорированные помещения\Перечень категорированных помещений.doc"
+      imagePaph="\\kolaer.local\asup$\ico\Rooms-icon.png"
+      info="Перечень категорированных помещений" titleName="Категорированные помещения"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Категорированные помещения\ПЖ о внутриобъектовом режиме 0-41-16П-10.doc"
+      imagePaph="\\kolaer.local\asup$\ico\Word-icon.png"
+      info="0-41-16П-10" titleName="ПЖ о внутриобъектовом режиме "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Категорированные помещения\Бланк заявки на право прохода в охраняемые зоны и категорированные помещения.docx"
+      imagePaph="\\kolaer.local\asup$\ico\Word-icon.png"
+      info=" в охраняемые зоны и категорированные помещения" titleName="Бланк заявки на право прохода"/>
+  </GroupLabel>
+  <GroupLabel name="Антитеррор">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Антитеррор\Памятка антитеррористическая.doc"
+      imagePaph="\\kolaer.local\asup$\ico\Terrorism-icon2.png"
+      info="Антитеррористическая Памятка " titleName="Антитеррор"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Антитеррор\Инструкция по действиям персонала при ЧС.docx"
+      imagePaph="\\kolaer.local\asup$\ico\Terrorism-icon2.png"
+      info="Инструкция по действиям персонала при ЧС" titleName="Антитеррор"/>
+  </GroupLabel>
+  <GroupLabel name="Специальная оценка условий труда">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\lnk\Специальная оценка условий труда - Ярлык.lnk"
+      imagePaph="\\kolaer.local\asup$\ico\Oxranatruda-icon.png"
+      info="оценка условий труда" titleName="Специальная "/>
+  </GroupLabel>
+  <GroupLabel name="Руководство КолАЭР">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\\images\Руководство Колатомэнергоремонт.jpg"
+      imagePaph="\\kolaer.local\asup$\ico\Boss-icon.png"
+      info="Руководство КолАЭР" titleName="Руководство КолАЭР"/>
+  </GroupLabel>
+  <GroupLabel name="Спорт">
+    <DesktopLable appPath="\\kolaer.local\asup$\lnk\Спорт.lnk"
+      imagePaph="\\kolaer.local\asup$\ico\Sport-icon.png"
+      info="работников" titleName="Информация для "/>
+  </GroupLabel>
+  <GroupLabel name="Профсоюз">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\Что такое профсоюз.doc"
+      imagePaph="\\kolaer.local\asup$\ico\vopros-icon.png"
+      info="профсоюз" titleName="Что такое "/>
+    <DesktopLable appPath="\\kolaer.local\asup$\lnk\Профсоюз.lnk"
+      imagePaph="\\kolaer.local\asup$\ico\PROFSOYZ-icon.png"
+      info="документация " titleName="Различная"/>
+  </GroupLabel>
+  <GroupLabel name="Отдел кадров">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\День Информирования\ok\"
+      imagePaph="\\kolaer.local\asup$\ico\Word-icon.png" info="Бланки" titleName="Бланки"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\День Информирования\den_info_sent_2015_svk.mp4"
+      imagePaph="\\kolaer.local\asup$\ico\video-icon.png"
+      info="ГК &quot;РОСАТОМ&quot;" titleName="Обращение генерального директора "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\День Информирования\catalog_вопросов и ответов энергетический2di_2015_svod.xlsx"
+      imagePaph="\\kolaer.local\asup$\ico\Excel-icon.png"
+      info=" энергетический день информирования" titleName="Каталог вопросов и ответов"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\День Информирования\forma_otcheta.xls"
+      imagePaph="\\kolaer.local\asup$\ico\Excel-icon.png" info="отчета" titleName="Форма "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\День Информирования\plakat_anons__1.doc"
+      imagePaph="\\kolaer.local\asup$\ico\Word-icon.png"
+      info="День информирования" titleName="Плакат-анонс"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\День Информирования\Неизвестен - ГИМН АЭР.mp3"
+      imagePaph="\\kolaer.local\asup$\ico\sound-icon.png" info="АЭР" titleName="ГИМН "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\День Информирования\Презентация награждение.pptx"
+      imagePaph="\\kolaer.local\asup$\ico\medal-icon.png"
+      info="награждение" titleName="Презентация "/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\День Информирования\Стенгазета для ДИ2.pdf"
+      imagePaph="\\kolaer.local\asup$\ico\PDFIcon.png"
+      info=" Дня информирования" titleName="Стенгазета для"/>
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\File\День Информирования\Сценарий ДИ-2 2015.doc"
+      imagePaph="\\kolaer.local\asup$\ico\Word-icon.png" info="2015" titleName="Сценарий ДИ2015"/>
+  </GroupLabel>
+  <GroupLabel name="Декларация о доходах ">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\lnk\декларация о доходах - Ярлык.lnk"
+      imagePaph="\\kolaer.local\asup$\ico\declorac-icon.png"
+      info="доходах" titleName="Декларация о  "/>
+  </GroupLabel>
+  <GroupLabel name="Билеты для проверки знаний">
+    <DesktopLable
+      appPath="\\kolaer.local\asup$\lnk\Билеты для проверки знаний - Ярлык.lnk"
+      imagePaph="\\kolaer.local\asup$\ico\ekzamen-icon.png"
+      info="знаний" titleName="Билеты для проверки "/>
+  </GroupLabel>
+</DesktopLables>

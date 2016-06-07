@@ -1,0 +1,203 @@
+.tooltip {
+    -fx-background: rgba(30,30,30);
+    -fx-text-fill: white;
+    -fx-background-color: rgba(30,30,30,0.8);
+    -fx-background-radius: 6px;
+    -fx-background-insets: 0;
+    -fx-padding: 0.667em 0.75em 0.667em 0.75em; /* 10px */
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 10, 0.0 , 0 , 3 );
+    -fx-font-size: 0.85em;
+}
+
+.rich-blue {
+    -fx-background-color: 
+        #000000,
+        linear-gradient(#7ebcea, #2f4b8f),
+        linear-gradient(#426ab7, #263e75),
+        linear-gradient(#395cab, #223768);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 12 30 12 30;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+
+.rich-blue-select {
+    -fx-background-color:
+            #000000,
+            linear-gradient(#d0dee9, #8fafe9),
+            linear-gradient(#a9c2e9, #7499e9),
+            linear-gradient(#89a8e9, #526ee9);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 12 30 12 30;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+
+.rich-blue:hover {
+    -fx-background-color:
+            #000000,
+            linear-gradient(#69a0e9, #3e78e9),
+            linear-gradient(#5996e9, #2265e9),
+            linear-gradient(#417be9, #2151e9);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 12 30 12 30;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+
+.rich-blue Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , 1);
+}
+.rich-blue-select Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , 1);
+}
+
+.record-sales {
+    -fx-padding: 8 15 15 15;
+    -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+    -fx-background-radius: 8;
+    -fx-background-color:
+        linear-gradient(from 0% 93% to 0% 100%, rgb(64,103,143) 0%, rgb(64,103,143) 100%),
+        rgb(64,103,143),
+        rgb(94,133,173),
+        radial-gradient(center 50% 50%, radius 100%, rgb(94,133,173), rgb(94,133,173));
+    -fx-effect: dropshadow( gaussian , #868686  , 4,0,0,1 );
+    -fx-font-weight: bold;
+    -fx-font-size: 1.1em;
+}
+
+.record-sales:hover {
+    -fx-padding: 8 15 15 15;
+    -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+    -fx-background-radius: 8;
+    -fx-background-color:
+            linear-gradient(from 0% 93% to 0% 100%, rgb(66, 145, 186) 0%, rgb(81, 137, 188) 100%),
+            rgb(84, 138, 190),
+            rgb(114, 161, 209),
+            radial-gradient(center 50% 50%, radius 100%, rgb(118, 167, 217), rgb(122, 173, 225));
+    -fx-effect: dropshadow( gaussian , #868686  , 4,0,0,1 );
+    -fx-font-weight: bold;
+    -fx-font-size: 1.1em;
+}
+
+.record-sales:pressed, .record-sales:default:hover:pressed {
+     -fx-padding: 8 15 8 15;
+    -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+    -fx-background-radius: 8;
+    -fx-background-color: 
+        radial-gradient(center 50% 50%, radius 100%, rgb(73, 158, 221), rgb(96, 160, 225));
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );
+    -fx-font-weight: bold;
+    -fx-font-size: 1.1em;
+}
+
+.lableMainPane{
+    -fx-background-color: rgba(57, 146, 208, 0.3);
+    -fx-background-radius: 30.0;
+	/*-fx-background-color: rgb(0, 101, 173);*/
+    /*-fx-background-radius: 30.0; */
+    -fx-effect: dropshadow( gaussian , #868686  , 4,0,0,1 );
+    -fx-padding: 3;
+}
+
+.lableMainPane:hover{
+    -fx-background-color: rgba(58, 188, 255, 0.6);
+    -fx-background-radius: 30.0;
+    /*-fx-background-color: rgb(0, 101, 173);*/
+    /*-fx-background-radius: 30.0; */
+    -fx-effect: dropshadow( gaussian , #868686  , 4,0,0,1 );
+    -fx-padding: 3;
+}
+
+.lableSecontPanel{
+    -fx-background-radius: 30.0;
+   /* -fx-background-radius: 30.0;
+    -fx-padding: 8;*/
+}
+
+.lableTherdPanel{
+    -fx-background-radius: 30.0;
+   /* -fx-background-radius: 30.0;*/
+    -fx-padding: 10;
+}
+
+/****************************************************************
+ 
+  ScrollBar Skin  
+ 
+****************************************************************/
+.scroll-bar{
+ -fx-background-color: rgb(96,96,96);
+ -fx-background-radius: 2em;
+}
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
+ -fx-background-color: transparent;
+ -fx-border-color:transparent;
+ -fx-background-radius: 2em;
+}
+.scroll-bar:vertical .track-background,
+.scroll-bar:horizontal .track-background {
+ -fx-background-color: transparent;
+ -fx-background-insets: 0;
+ -fx-background-radius: 2em;
+}
+.scroll-bar:horizontal .thumb {
+ -fx-background-color: rgb(211,211,211);
+ -fx-background-insets: 4 0 4 0;
+ -fx-background-radius: 2em;
+}
+.scroll-bar:vertical .thumb {
+ -fx-background-color: rgb(211,211,211);
+ -fx-background-insets: 0 4 0 4;
+ -fx-background-radius: 2em;
+}
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+ -fx-background-color: rgb(231,231,231);
+}
+.scroll-bar:horizontal .thumb:pressed,
+.scroll-bar:vertical .thumb:pressed {
+ -fx-background-color: rgb(255,255,255);
+}
+.scroll-bar:vertical .increment-button, .scroll-bar:vertical .decrement-button {
+ -fx-background-color:transparent;
+ -fx-background-radius: 2em;
+ -fx-padding: 5;
+}
+.scroll-bar:horizontal .increment-button, .scroll-bar:horizontal .decrement-button {
+ -fx-background-color:transparent;
+ -fx-background-radius: 2em;
+ -fx-padding: 5;
+}
+.scroll-bar:horizontal .increment-arrow {
+ -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+ -fx-background-color: rgb(211,211,211);
+ -fx-padding: 0.25em;
+ -fx-rotate: -90;
+}
+.scroll-bar:vertical .increment-arrow {
+ -fx-background-color: rgb(211,211,211);
+ -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+ -fx-padding: 0.25em;
+ -fx-rotate: 0;
+}
+.scroll-bar:horizontal .decrement-arrow {
+ -fx-background-color: rgb(211,211,211);
+ -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+ -fx-padding: 0.25em;
+ -fx-rotate: 90;
+}
+.scroll-bar:vertical .decrement-arrow {
+ -fx-background-color: rgb(211,211,211);
+ -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+ -fx-padding: 0.25em;
+ -fx-rotate: -180;
+}
+.scroll-bar:vertical:focused,
+.scroll-bar:horizontal:focused {
+ -fx-background-color: transparent,rgb(96,96,96),rgb(96,96,96);
+}
