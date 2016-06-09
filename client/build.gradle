@@ -19,3 +19,5 @@ subprojects {
         gradleVersion = 1.11
     }
 }
+
+task buildMainClient (dependsOn: ':usa:buildApp')

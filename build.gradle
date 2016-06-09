@@ -3,7 +3,7 @@ group = "ru.kolaer"
 subprojects {
     repositories {
         mavenCentral()
+        jcenter()
         mavenLocal()
     }
 }
-

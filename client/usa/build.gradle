@@ -13,7 +13,7 @@ dependencies {
 }
 
 task createJar(type: Jar) {
-    archiveName = "1.jar"
+    archiveName = projectJarName
     baseName = project.name
     manifest {
         attributes 'Main-Class': 'ru.kolaer.client.javafx.runnable.Launcher'
@@ -22,16 +22,13 @@ task createJar(type: Jar) {
     with jar
 }
 
-task copyJarToBin {
+task copyJarToBin(dependsOn: createJar) {
     doLast {
         copy {
-            from('build/libs/'){
-                include "1.jar"
-
-            }
-            into "D:\\"
+            from 'build/libs/' + projectJarName
+            into 'D:\\'
         }
     }
 }
 
-task buildApp (dependsOn: [clean, createJar, copyJarToBin])
+task buildApp (dependsOn: [clean, copyJarToBin])
