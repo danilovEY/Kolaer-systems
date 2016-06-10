@@ -11,7 +11,7 @@ subprojects {
     }
 
     dependencies {
-        compile "ru.kolaer:ru.kolaer.api:1.1"
+        compile project(':api')//"ru.kolaer:ru.kolaer.api:1.1"
         testCompile "junit:junit:4.11"
     }
 
@@ -19,5 +19,3 @@ subprojects {
         gradleVersion = 1.11
     }
 }
-
-task buildMainClient (dependsOn: ':usa:buildApp')

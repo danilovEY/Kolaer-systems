@@ -22,12 +22,10 @@ task createJar(type: Jar) {
     with jar
 }
 
-task copyJarToBin(dependsOn: createJar) {
-    doLast {
-        copy {
-            from 'build/libs/' + projectJarName
-            into 'D:\\'
-        }
+task copyJarToBin(dependsOn: createJar) << {
+    copy {
+        from 'build/libs/' + projectJarName
+        into 'D:\\'
     }
 }
 
