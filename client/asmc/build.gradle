@@ -2,5 +2,6 @@ group 'ru.kolaer'
 version '4.0.0'
 
 dependencies {
+    compile project(':api')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
