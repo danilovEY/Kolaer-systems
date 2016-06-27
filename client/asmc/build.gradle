@@ -1,7 +1,18 @@
 group 'ru.kolaer'
 version '4.0.0'
 
+def projectName = "ru.kolaer.client.asmc"
+def projectNameWithVersion = projectName + "-" + version
+def projectJarName = projectNameWithVersion + ".jar"
+
 dependencies {
     compile project(':api')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
+task createJar(type: Jar) {
+    archiveName = projectJarName
+    baseName = project.name
+}
+
+task buildApp(dependsOn : [clean, createJar])
