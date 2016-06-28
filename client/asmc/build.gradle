@@ -1,24 +1,29 @@
 group 'ru.kolaer'
 version '4.0.0'
 
-def projectName = "ru.kolaer.client.asmc"
+def projectName = "ru.kolaer.asmc"
 def projectNameWithVersion = projectName + "-" + version
 def projectJarName = projectNameWithVersion + ".jar"
+
+apply plugin: 'osgi'
 
 dependencies {
     compile project(':api')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-task createJar(type: Jar) {
+jar {
     archiveName = projectJarName
     baseName = project.name
-
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+    manifest {
+        name = 'АСУП'
+        symbolicName = projectName
+        instruction "Bundle-ClassPath", "."
+        instruction "Export-Package", "javafx.scene.effect"
+    }
 }
 
-task copyJarToBin(dependsOn: createJar) {
+task copyJarToBin(dependsOn: jar) {
     doLast {
         copy {
             from 'build/libs/' + projectJarName
