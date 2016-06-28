@@ -38,8 +38,9 @@ task makeProjectDirTask (dependsOn: makePretty) {
 
 
 task buildMainClient (dependsOn: ':client:usa:buildApp')
-task buildPlugins (dependsOn: [':client:asmc:buildApp', ':client:admin:buildApp',':client:birthday:buildApp'])
-                               // ':client:browser:buildApp'] )
+
+task buildPlugins (dependsOn: [':client:asmc:buildApp', ':client:admin:buildApp',':client:birthday:buildApp', ':client:browser:buildApp'])
+
 task buildClient (dependsOn: [buildMainClient, buildPlugins])
 
 task buildKolaerSystem(dependsOn: [makeProjectDirTask, buildClient])
