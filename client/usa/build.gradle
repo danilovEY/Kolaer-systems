@@ -5,7 +5,6 @@ def projectName = "ru.kolaer.client.usa"
 def projectNameWithVersion = projectName + "-" + version
 def projectJarName = projectNameWithVersion + ".jar"
 
-
 dependencies {
     compile project(':api')
     compile "com.fasterxml.jackson.core:jackson-databind:2.7.3"
@@ -28,7 +27,7 @@ task copyJarToBin(dependsOn: createJar) {
     doLast {
         copy {
             from 'build/libs/' + projectJarName
-            into 'D:\\'
+            into pathToProjectDir
         }
     }
 }

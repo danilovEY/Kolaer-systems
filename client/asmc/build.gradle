@@ -13,6 +13,18 @@ dependencies {
 task createJar(type: Jar) {
     archiveName = projectJarName
     baseName = project.name
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
-task buildApp(dependsOn : [clean, createJar])
+task copyJarToBin(dependsOn: createJar) {
+    doLast {
+        copy {
+            from 'build/libs/' + projectJarName
+            into pathToProjectDirWithPlugins
+        }
+    }
+}
+
+task buildApp(dependsOn : [clean, copyJarToBin])

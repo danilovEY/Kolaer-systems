@@ -1,5 +1,12 @@
 group = "ru.kolaer"
 
+allprojects {
+    ext {
+        pathToProjectDir = "D:\\KolAER-system"
+        pathToProjectDirWithPlugins = pathToProjectDir + "\\plugins"
+    }
+}
+
 subprojects {
     apply plugin: 'java'
 
@@ -17,9 +24,16 @@ subprojects {
     }
 }
 
-//project(':client:usa').dependsOn(':client:usa:buildApp')
+task makeProjectDirTask () {
+    doLast {
+        mkdir(pathToProjectDir)
+        mkdir(pathToProjectDirWithPlugins)
+    }
+}
 
 task buildMainClient (dependsOn: ':client:usa:buildApp')
 task buildPlugins (dependsOn: [':client:asmc:buildApp' ])
                                //, ':client:asmc:buildApp', ':client:birthday:buildApp', ':client:browser:buildApp'] )
 task buildClient (dependsOn: [buildMainClient, buildPlugins])
+
+task buildKolaerSystem(dependsOn: [makeProjectDirTask, buildClient])
