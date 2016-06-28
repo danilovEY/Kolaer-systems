@@ -5,20 +5,20 @@ allprojects {
         pathToProjectDir = "D:\\KolAER-system"
         pathToProjectDirWithPlugins = pathToProjectDir + "\\plugins"
     }
-}
 
-subprojects {
     apply plugin: 'java'
 
-    sourceCompatibility = 1.8
     compileJava.options.encoding = 'UTF-8'
+    sourceCompatibility = 1.8
 
     repositories {
         mavenCentral()
         jcenter()
         mavenLocal()
     }
+}
 
+subprojects {
     task wrapper(type: Wrapper) {
         gradleVersion = 1.11
     }
@@ -31,9 +31,14 @@ task makeProjectDirTask () {
     }
 }
 
+task makePretty(type: Delete) {
+    delete pathToProjectDirWithPlugins, 'uglyFile'
+}
+
+
 task buildMainClient (dependsOn: ':client:usa:buildApp')
-task buildPlugins (dependsOn: [':client:asmc:buildApp' ])
-                               //, ':client:asmc:buildApp', ':client:birthday:buildApp', ':client:browser:buildApp'] )
+task buildPlugins (dependsOn: [':client:asmc:buildApp', ':client:admin:buildApp' ])
+                               //':client:birthday:buildApp', ':client:browser:buildApp'] )
 task buildClient (dependsOn: [buildMainClient, buildPlugins])
 
-task buildKolaerSystem(dependsOn: [makeProjectDirTask, buildClient])
+task buildKolaerSystem(dependsOn: [makePretty,makeProjectDirTask, buildClient])
