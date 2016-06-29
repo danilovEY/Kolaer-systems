@@ -1,0 +1,18 @@
+group = "ru.kolaer"
+version '0.0.1'
+
+apply plugin: 'war'
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind:2.5.3"
+    compile "com.fasterxml.jackson.core:jackson-annotations:2.6.4"
+    compile project(':api')
+    compile "javax.servlet:servlet-api:2.5"
+    compile "org.springframework:spring-context:4.2.3.RELEASE"
+    compile "org.springframework:spring-core:4.2.3.RELEASE"
+    compile "org.springframework:spring-beans:4.2.3.RELEASE"
+    compile "org.springframework:spring-webmvc:4.2.3.RELEASE"
+    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '1.10.1.RELEASE'
+    compile "org.hibernate:hibernate-entitymanager:4.2.5.Final"
+    compile "mysql:mysql-connector-java:5.1.38"
+}
