@@ -253,9 +253,7 @@ public class CMainFrame implements UniformSystemPlugin {
 
 	@Override
 	public void start() throws Exception {
-		final URL inputStreamUrl = this.getClass().getResource("/CSS/Default/Default.css");
-		if(inputStreamUrl != null)
-			this.mainPanel.getStylesheets().addAll(inputStreamUrl.toExternalForm());
+		this.mainPanel.getStylesheets().add(this.getClass().getResource("/CSS/Default/Default.css").toExternalForm());
 
 		this.initialize();
 	}

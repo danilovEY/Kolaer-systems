@@ -3,6 +3,7 @@ package com.teamdev.jxbrowser.chromium.demo;
 import com.teamdev.jxbrowser.chromium.BrowserPreferences;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
@@ -30,7 +31,13 @@ public class JxBrowserDemo implements UniformSystemPlugin {
 	
 	private void initUI() {		
 		this.tabPane = new TabPanel();
-		this.mainPane = new BorderPane(this.tabPane);	
+		this.mainPane = new BorderPane(this.tabPane);
+		final Button createTabBut = new Button("Создать вкладку");
+		createTabBut.setOnAction(e -> {
+			this.loadURL("google.ru");
+		});
+
+		this.mainPane.setTop(createTabBut);
 	}
 
 	@Override
@@ -42,7 +49,6 @@ public class JxBrowserDemo implements UniformSystemPlugin {
 
 			Tools.runOnThreadFXAndWain(() -> {
 				this.initUI();
-				this.loadURL("google.ru");
 			},20, TimeUnit.SECONDS);
 		}
 	}
@@ -55,7 +61,9 @@ public class JxBrowserDemo implements UniformSystemPlugin {
 				e.printStackTrace();
 			}
 		}
-		this.tabPane.addTab(new TabWithBrowser(this.tabPane, url));
+		Tools.runOnThreadFXAndWain(() -> {
+			this.tabPane.addTab(new TabWithBrowser(this.tabPane, url));
+		},20, TimeUnit.SECONDS);
 	}
 
 	@Override
