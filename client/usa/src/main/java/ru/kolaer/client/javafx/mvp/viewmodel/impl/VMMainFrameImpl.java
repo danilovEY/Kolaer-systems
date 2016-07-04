@@ -68,6 +68,7 @@ public class VMMainFrameImpl extends Application {
         final ExecutorService threadOnCreateTray = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             new Tray().createTrayIcon(stage, this.servicesManager, explorer);
+            threadOnCreateTray.shutdown();
         }, threadOnCreateTray);
 
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
@@ -85,16 +86,11 @@ public class VMMainFrameImpl extends Application {
             Thread.currentThread().setName("Добавление системны служб");
             this.servicesManager.addService(new HideShowMainStage(stage), true);
             this.servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, this.servicesManager), true);
-            this.servicesManager.addService(new UserPingService(network.getService().path("system")), true);
-            this.servicesManager.addService(new ServiceRemoteActivOrDeactivPlugin(explorer, network.getService().path("system")), true);
-            this.servicesManager.addService(new ServiceUserIpAndHostName(network.getService().path("system")), true);
             threadStartService.shutdown();
         }, threadStartService);
 
         final ExecutorService threadScan = Executors.newSingleThreadExecutor();
-        CompletableFuture<List<PluginBundle>> resultSearch = CompletableFuture.supplyAsync(() -> {
-            return searchPlugins.search();
-        }, threadScan);
+        CompletableFuture<List<PluginBundle>> resultSearch = CompletableFuture.supplyAsync(() -> searchPlugins.search(), threadScan);
 
         final ExecutorService threadInstall = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {

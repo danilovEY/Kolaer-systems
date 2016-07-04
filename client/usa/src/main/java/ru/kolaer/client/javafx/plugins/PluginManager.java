@@ -25,6 +25,7 @@ public class PluginManager {
     private SearchPlugins searchPlugins;
     private final List<PluginBundle> installPlugins = new ArrayList<>();
     private BundleContext context;
+    private boolean isInit = false;
 
     public PluginManager() {
         this(new SearchPlugins());
@@ -65,6 +66,7 @@ public class PluginManager {
             framework.start();
 
             this.context = framework.getBundleContext();
+            this.isInit = true;
         }  catch (final Throwable e) {
             LOG.error("Ошибка при инициализации или старта OSGi-framework!", e);
             throw e;
@@ -72,7 +74,11 @@ public class PluginManager {
 
         LOG.info("OSGi framework успешно запущен!");
     }
-    
+
+    public boolean isInitialization() {
+        return this.isInit;
+    }
+
     public boolean install(final PluginBundle pluginBundle) {
         if(pluginBundle.isInstall()) {
             LOG.warn("{} уже установлен", pluginBundle.getSymbolicNamePlugin());
