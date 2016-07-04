@@ -20,7 +20,6 @@ import java.util.concurrent.Executors;
  */
 public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerOSGi.class);
-    private boolean openASUP = false;
     
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -56,7 +55,10 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
 
     @Override
-    public void addTabPlugin(final String tabName, final PluginBundle uniformSystemPlugin) {    	
+    public void addTabPlugin(final String tabName, final PluginBundle uniformSystemPlugin) {
+        if(uniformSystemPlugin == null || !uniformSystemPlugin.isInstall()) {
+            throw new IllegalArgumentException(uniformSystemPlugin.getSymbolicNamePlugin() + " - is null or not install!");
+        }
         final ExecutorService initPluginContentThread = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             final PTab tab = new PTabImpl(uniformSystemPlugin);
@@ -67,13 +69,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
             
             Tools.runOnThreadFX(() -> {
             	LOG.info("{}: Добавление вкладки...", uniformSystemPlugin.getSymbolicNamePlugin());
-                if(uniformSystemPlugin.getSymbolicNamePlugin().equals("ru.kolaer.asmc")) {
-                    this.openASUP = true;
-                    this.pluginsTabPane.getTabs().add(0,tab.getView().getContent());
-                    this.pluginsTabPane.getSelectionModel().select(0);
-                } else {
-                	 this.pluginsTabPane.getTabs().add(tab.getView().getContent());
-                }
+                this.pluginsTabPane.getTabs().add(tab.getView().getContent());
             });
             this.notifyAddPlugin(tab);
             initPluginContentThread.shutdown();
@@ -92,8 +88,6 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     /**Инициализация модели выбора вкладки.*/
     private void initSelectionModel() {
         this.pluginsTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldTab, newTab)  -> {
-            if(!this.openASUP)
-                return;
 
             if(oldTab != null) {
                 final ExecutorService threadActivPlugin= Executors.newSingleThreadExecutor();

@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '0.0.2'
+version '0.0.3'
 
 def projectName = "ru.kolaer.browser"
 def projectNameWithVersion = projectName + "-" + version
@@ -17,7 +17,6 @@ repositories {
 dependencies {
     compile project(':api')
     compile "com.teamdev.jxbrowser:jxbrowser:5.4.3"
-    testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
 jar {
@@ -27,11 +26,16 @@ jar {
         name = 'Браузер'
         symbolicName = projectName
         instruction "Bundle-ClassPath", "."
-        instruction "Export-Package", "com.teamdev.jxbrowser.chromium", "com.teamdev.jxbrowser.chromium.events", "com.teamdev.jxbrowser.chromium.javafx"
-        instruction "Import-Package", "javafx.scene.canvas", "javafx.beans.value,javafx.beans.property", "*"
+        instruction "Export-Package", "com.teamdev.jxbrowser.chromium.events","com.teamdev.jxbrowser.chromium.javafx",
+                "com.teamdev.jxbrowser.chromium"
+        instruction "Import-Package", "com.teamdev.jxbrowser.chromium","com.teamdev.jxbrowser.chromium.events",
+                "com.teamdev.jxbrowser.chromium.javafx","javafx.application","javafx.collections","javafx.event",
+                "javafx.geometry","javafx.scene","javafx.scene.control","javafx.scene.image","javafx.scene.input",
+                "javafx.scene.layout","javafx.stage","javafx.util","javax.swing","org.slf4j","ru.kolaer.api.plugins",
+                "ru.kolaer.api.plugins.services","ru.kolaer.api.system","ru.kolaer.api.tools","javafx.beans.property",
+                "javafx.beans.value","javafx.scene.canvas"
     }
 }
-
 
 task createJar(type: Jar) {
     archiveName = projectJarName

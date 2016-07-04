@@ -2,7 +2,7 @@ group = "ru.kolaer"
 
 allprojects {
     ext {
-        pathToProjectDir = "D:\\KolAER-system"
+        pathToProjectDir = "D:\\workspace\\Kolaer-systems"
         pathToProjectDirWithPlugins = pathToProjectDir + "\\plugins"
     }
 

@@ -38,13 +38,12 @@ public class JxBrowserDemo implements UniformSystemPlugin {
 		if(!isRun) {
 			isRun = true;
 
+			this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Внимание!", "Инсталяция браузера, подождите...", Duration.seconds(3), Pos.CENTER);
+
 			Tools.runOnThreadFXAndWain(() -> {
 				this.initUI();
-
+				this.loadURL("google.ru");
 			},20, TimeUnit.SECONDS);
-
-
-			this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Внимание!", "Инсталяция браузера, подождите...", Duration.seconds(3), Pos.CENTER);
 		}
 	}
 
@@ -64,7 +63,6 @@ public class JxBrowserDemo implements UniformSystemPlugin {
 
 	}
 
-	
 	@Override
 	public void initialization(UniformSystemEditorKit editorKit) throws Exception {
 		this.editorKit = editorKit;
