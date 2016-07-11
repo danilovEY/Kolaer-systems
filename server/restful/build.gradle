@@ -1,11 +1,10 @@
 group = "ru.kolaer"
 version '0.0.1'
 
-def name = "ru.kolaer.server.restful.war"
+def name = "ru.kolaer.server.restful"
 def nameWarFile = name + "-" + version + ".war"
 
 def deployServerPath = "D:\\server\\jetty\\webapps"
-
 
 apply plugin: 'war'
 
@@ -18,9 +17,8 @@ dependencies {
     compile "org.springframework:spring-core:4.2.3.RELEASE"
     compile "org.springframework:spring-beans:4.2.3.RELEASE"
     compile "org.springframework:spring-webmvc:4.2.3.RELEASE"
-    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '1.10.1.RELEASE'
+    compile "org.springframework.data:spring-data-jpa:1.10.1.RELEASE"
     compile "org.hibernate:hibernate-core:5.2.1.Final"
-
     compile "mysql:mysql-connector-java:5.1.38"
 }
 
@@ -29,7 +27,6 @@ war {
     archiveName = nameWarFile
     baseName = project.name
 }
-
 
 task buildApp(dependsOn: [clean, war]) {
     doLast {
