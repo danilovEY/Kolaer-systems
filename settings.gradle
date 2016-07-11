@@ -3,7 +3,7 @@ include 'api'
 //findProject(':api')?.name = 'ru.kolaer.api'
 //include ':client'
 //findProject(':client')?.name = 'ru.kolaer.client'
-include ':server'
+include ':server:restful'
 //findProject(':server')?.name = 'ru.kolaer.server'
 
 
