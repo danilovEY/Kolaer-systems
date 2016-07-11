@@ -2,7 +2,7 @@ group = "ru.kolaer"
 version '0.0.1'
 
 def name = "ru.kolaer.server.restful"
-def nameWarFile = name + "-" + version + ".war"
+def nameWarFile = name + ".war"
 
 def deployServerPath = "D:\\server\\jetty\\webapps"
 
