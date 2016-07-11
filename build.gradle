@@ -1,46 +1,62 @@
 group = "ru.kolaer"
 
 allprojects {
-    ext {
-        pathToProjectDir = "D:\\workspace\\Kolaer-systems"
-        pathToProjectDirWithPlugins = pathToProjectDir + "\\plugins"
-    }
-
-    apply plugin: 'java'
-
-    compileJava.options.encoding = 'UTF-8'
-    sourceCompatibility = 1.8
 
     repositories {
         mavenCentral()
         jcenter()
         mavenLocal()
     }
-}
 
-subprojects {
     task wrapper(type: Wrapper) {
         gradleVersion = 1.11
     }
 }
 
-task makePretty() {
-    delete pathToProjectDirWithPlugins
+project(":api") {
+    apply plugin: 'java'
+
+    compileJava.options.encoding = 'UTF-8'
+    sourceCompatibility = 1.8
 }
 
-task makeProjectDirTask (dependsOn: makePretty) {
-    doLast {
-        mkdir(pathToProjectDir)
-        mkdir(pathToProjectDirWithPlugins)
+project(":client") {
+    allprojects {
+        ext {
+            pathToProjectDir = "D:\\workspace\\Kolaer-systems"
+            pathToProjectDirWithPlugins = pathToProjectDir + "\\plugins"
+        }
+
+        apply plugin: 'java'
+
+        compileJava.options.encoding = 'UTF-8'
+        sourceCompatibility = 1.8
+    }
+
+    task makePretty() {
+        delete pathToProjectDirWithPlugins
+    }
+
+    task makeProjectDirTask (dependsOn: makePretty) {
+        doLast {
+            mkdir(pathToProjectDir)
+            mkdir(pathToProjectDirWithPlugins)
+        }
     }
 }
 
-
-
+//================================Clients================================//
 task buildMainClient (dependsOn: ':client:usa:buildApp')
-
-task buildPlugins (dependsOn: [':client:asmc:buildApp', ':client:admin:buildApp',':client:birthday:buildApp', ':client:browser:buildApp'])
-
+task buildPlugins (dependsOn: [':client:asmc:buildApp',
+                               ':client:admin:buildApp',
+                               ':client:birthday:buildApp',
+                               ':client:browser:buildApp'])
 task buildClient (dependsOn: [buildMainClient, buildPlugins])
 
-task buildKolaerSystem(dependsOn: [makeProjectDirTask, buildClient])
+//================================Servers================================//
+task buildRestFul (dependsOn: ":server:restful:buildApp")
+task buildServer (dependsOn: [buildRestFul])
+
+//================================Globals================================//
+task preparePreBuild(dependsOn: ":client:makeProjectDirTask")
+task buildKolaerSystem(dependsOn: [preparePreBuild, buildServer, buildClient])

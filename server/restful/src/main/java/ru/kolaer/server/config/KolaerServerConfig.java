@@ -18,6 +18,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import ru.kolaer.server.dao.DbBirthdayAllDAO;
 import ru.kolaer.server.dao.DbDataAllDAO;
 import ru.kolaer.server.dao.impl.DbBirthdayAllDAOImpl;
@@ -31,7 +32,7 @@ import ru.kolaer.server.restful.tools.UsersManager;
 @ComponentScan("ru.kolaer.server")
 @PropertySource("classpath:app.properties")
 @EnableJpaRepositories("ru.kolaer.server.dao.entities")
-public class KolaerServerConfig {
+public class KolaerServerConfig extends WebMvcConfigurerAdapter {
  
     private static final String PROP_DATABASE_DRIVER = "db.driver";
     private static final String PROP_DATABASE_PASSWORD = "db.password";
@@ -43,7 +44,7 @@ public class KolaerServerConfig {
  
     @Resource
     private Environment env;
- 
+
     @Bean
     public DataSource dataSource() {
     	final DriverManagerDataSource dataSource = new DriverManagerDataSource();
