@@ -1,4 +1,5 @@
 /*
+/src/main/resources/app.properties
 !build.gradle
 !settings.gradle
 !/WebContent
