@@ -1,7 +1,6 @@
 group = "ru.kolaer"
 
 allprojects {
-
     repositories {
         mavenCentral()
         jcenter()
@@ -26,7 +25,9 @@ project(":client") {
             pathToProjectDir = "D:\\workspace\\Kolaer-systems"
             pathToProjectDirWithPlugins = pathToProjectDir + "\\plugins"
         }
+    }
 
+    subprojects {
         apply plugin: 'java'
 
         compileJava.options.encoding = 'UTF-8'
@@ -42,6 +43,16 @@ project(":client") {
             mkdir(pathToProjectDir)
             mkdir(pathToProjectDirWithPlugins)
         }
+    }
+}
+
+project(":server") {
+    subprojects {
+        apply plugin: 'java'
+        apply plugin: 'war'
+
+        compileJava.options.encoding = 'UTF-8'
+        sourceCompatibility = 1.8
     }
 }
 

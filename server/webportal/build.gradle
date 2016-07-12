@@ -1,0 +1,14 @@
+group 'ru.kolaer'
+version '0.0.1'
+
+def name = "ru.kolaer.server.webportal"
+def nameWarFile = name + ".war"
+
+dependencies {
+    testCompile "junit:junit:+"
+}
+
+war {
+    archiveName = nameWarFile
+    baseName = name
+}

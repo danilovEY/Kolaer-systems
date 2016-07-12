@@ -2,7 +2,6 @@
 /src/main/resources/app.properties
 !build.gradle
 !settings.gradle
-!/WebContent
 !/pom.xml
 !/src/
 !*.md

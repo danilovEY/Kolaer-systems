@@ -1,19 +1,12 @@
 rootProject.name = 'ru.kolaer'
 include 'api'
-//findProject(':api')?.name = 'ru.kolaer.api'
-//include ':client'
-//findProject(':client')?.name = 'ru.kolaer.client'
-include ':server:restful'
-//findProject(':server')?.name = 'ru.kolaer.server'
 
+include ':server:restful'
+include ':server:webportal'
 
 include ':client:usa'
-//findProject(':client:usa')?.name = 'ru.kolaer.client.usa'
 include ':client:birthday'
-//findProject(':birthday')?.name = 'ru.kolaer.client.birthday'
 include ':client:admin'
-//findProject(':admin')?.name = 'ru.kolaer.client.admin'
 include ':client:browser'
-//findProject(':browser')?.name = 'ru.kolaer.client.browser'
 include ':client:asmc'
-//findProject(':asmc')?.name = 'ru.kolaer.client.asmc'
+

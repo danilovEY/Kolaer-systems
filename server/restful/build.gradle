@@ -4,10 +4,6 @@ version '0.0.1'
 def name = "ru.kolaer.server.restful"
 def nameWarFile = name + ".war"
 
-def deployServerPath = "D:\\server\\jetty\\webapps"
-
-apply plugin: 'war'
-
 dependencies {
     compile project(':api')
     compile "com.fasterxml.jackson.core:jackson-databind:2.5.3"
@@ -23,7 +19,6 @@ dependencies {
 }
 
 war {
-
     archiveName = nameWarFile
     baseName = project.name
 }
