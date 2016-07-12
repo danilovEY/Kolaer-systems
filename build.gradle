@@ -51,6 +51,10 @@ project(":server") {
         apply plugin: 'java'
         apply plugin: 'war'
 
+        ext {
+            deployServerPath = "D:\\Server\\jetty\\webapps"
+        }
+
         compileJava.options.encoding = 'UTF-8'
         sourceCompatibility = 1.8
     }
@@ -66,7 +70,8 @@ task buildClient (dependsOn: [buildMainClient, buildPlugins])
 
 //================================Servers================================//
 task buildRestFul (dependsOn: ":server:restful:buildApp")
-task buildServer (dependsOn: [buildRestFul])
+task buildWebPortal (dependsOn: ":server:webportal:buildApp")
+task buildServer (dependsOn: [buildRestFul, buildWebPortal])
 
 //================================Globals================================//
 task preparePreBuild(dependsOn: ":client:makeProjectDirTask")
