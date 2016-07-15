@@ -11,6 +11,6 @@
     <title>Title</title>
 </head>
 <body>
-    <h1>${mes}</h1>
+    <h1>${welcomeMassage}</h1>
 </body>
 </html>
