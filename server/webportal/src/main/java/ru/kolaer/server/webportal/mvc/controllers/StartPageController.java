@@ -1,10 +1,9 @@
-package ru.kolaer.server.webportal.controllers;
+package ru.kolaer.server.webportal.mvc.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Created by danilovey on 15.07.2016.
@@ -12,9 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class StartPageController {
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
     public String getIndexPage(Model model) {
         model.addAttribute("welcomeMassage", "Привет!");
-        return "index";
+        return "login";
     }
 }
