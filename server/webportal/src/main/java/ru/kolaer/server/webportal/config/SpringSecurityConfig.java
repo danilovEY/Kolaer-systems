@@ -6,6 +6,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -22,6 +25,8 @@ import org.springframework.security.web.context.AbstractSecurityWebApplicationIn
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import ru.kolaer.server.webportal.security.MyFilterSecurityMetadataSource;
 
+import javax.servlet.Filter;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
@@ -50,9 +55,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                //.addFilterBefore(filter(),)
-                .authorizeRequests();
+        http.csrf().disable().authorizeRequests().and()
+                .formLogin()
+                    .loginPage("/portal/login.html")
+                    .loginProcessingUrl("/portal/j_spring_security_check")
+                    .defaultSuccessUrl("/portal/homepage.html")
+                    .failureUrl("/portal/login.html?error=true")
+                    .successHandler(myAuthenticationSuccessHandler)
+                    .usernameParameter("j_username")
+                    .passwordParameter("j_password")
+                .permitAll();
+        http.addFilter(filter());
     }
 
     @Bean
@@ -65,12 +78,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public FilterSecurityInterceptor filter() throws Exception {
         FilterSecurityInterceptor filter = new FilterSecurityInterceptor();
         filter.setAuthenticationManager(authenticationManagerBean());
-        //filter.setAccessDecisionManager(new CustomAccessDecisionManager());
+        filter.setAccessDecisionManager(new AffirmativeBased(Arrays.asList(new RoleVoter(), new AuthenticatedVoter())));
         filter.setSecurityMetadataSource(new MyFilterSecurityMetadataSource());
-
-        //SecurityExpressionHandler<FilterInvocation> securityExpressionHandler = new DefaultWebSecurityExpressionHandler();
-        //LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> map = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
-        //map.put(new AntPathRequestMatcher("/test"), Arrays.<ConfigAttribute>asList(new SecurityConfig("permitAll")));
 
         return filter;
     }

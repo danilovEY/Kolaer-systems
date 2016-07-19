@@ -31,6 +31,7 @@ public class SprintContext extends WebMvcConfigurerAdapter {
         super.addViewControllers(registry);
         registry.addViewController("/login.html");
         registry.addViewController("/homepage.html");
+        registry.addViewController("/test.html");
     }
 
     @Bean

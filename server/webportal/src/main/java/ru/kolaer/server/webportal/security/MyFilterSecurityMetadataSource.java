@@ -24,10 +24,8 @@ import java.util.List;
  * Created by danilovey on 18.07.2016.
  */
 @Service
-public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityMetadataSource, InitializingBean {
+public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
     private static final Logger logger = LoggerFactory.getLogger(MyFilterSecurityMetadataSource.class);
-
-    private HashMap<String, List<String>> urlRoles;
 
     public Collection<ConfigAttribute> getAttributes(Object object)
             throws IllegalArgumentException {
@@ -35,16 +33,10 @@ public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityM
         String url=fi.getRequestUrl();
         logger.debug("Request Url====>"+url);
 
-        //List<String> roles_=urlRoles.get(url);
-        //logger.debug("Url Associated Roles :"+roles_);
-        /*if(roles_==null){
-            return null;
-        }
-        logger.debug("------------------");
-        String[] stockArr = new String[roles_.size()];
-        stockArr = roles_.toArray(stockArr);*/
+        if(url.contains("homepage"))
+            return SecurityConfig.createList("ROLE_USER");
 
-        return SecurityConfig.createList("ROLE_USER");
+        return SecurityConfig.createList();
     }
 
     @Override
@@ -54,12 +46,7 @@ public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityM
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return false;
+        return FilterInvocation.class.isAssignableFrom(clazz);
     }
 
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
 }
