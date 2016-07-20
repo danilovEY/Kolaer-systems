@@ -55,7 +55,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().and()
+        /*http.csrf().disable().authorizeRequests().and()
                 .formLogin()
                     .loginPage("/portal/login.html")
                     .loginProcessingUrl("/portal/j_spring_security_check")
@@ -64,8 +64,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     .successHandler(myAuthenticationSuccessHandler)
                     .usernameParameter("j_username")
                     .passwordParameter("j_password")
-                .permitAll();
-        http.addFilter(filter());
+                .permitAll();*/
+        //http.addFilter(filter());
     }
 
     @Bean
