@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.config;
 
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -12,6 +13,10 @@ public class InitializationMVC extends AbstractAnnotationConfigDispatcherServlet
     public void onStartup(ServletContext servletContext) throws ServletException {
         servletContext
                 .addFilter("securityFilter", new DelegatingFilterProxy("springSecurityFilterChain"))
+                .addMappingForUrlPatterns(null, false, "/*");
+
+        servletContext
+                .addFilter("encodingFilter", new CharacterEncodingFilter("UTF-8",true))
                 .addMappingForUrlPatterns(null, false, "/*");
 
         super.onStartup(servletContext);
