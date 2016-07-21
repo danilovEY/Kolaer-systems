@@ -21,41 +21,8 @@
         <![endif]-->
     </head>
     <body class="page-body">
-        <div class="container">
-            <form role="form" name="form" action="/j_spring_security_check" method="post" class="form-inline">
-                <div class="form-group">
-                    <label for="personalNumberInput">Введите персональный номер:</label>
-                    <input id="personalNumberInput" class="form-control" name="j_username" />
-                </div>
-                <div class="form-group">
-                    <label for="passwordInput">Введите пароль:</label>
-                    <input id="passwordInput" type="password" class="form-control" name="j_password" />
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" id="remember" name="_spring_security_remember_me"/>Запомнить меня
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-
             <!-- Marketing Icons Section -->
             <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">
-                        AAAAAAA
-                    </h1>
-                </div>
-                <div class="col-lg-12">
-                    <h1 class="page-header">
-                        BBBB
-                    </h1>
-                </div>
-                <div class="col-lg-12">
-                    <h1 class="page-header">
-                        CCCC
-                    </h1>
-                </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">

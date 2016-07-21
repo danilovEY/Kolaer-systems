@@ -1,5 +1,6 @@
 /*
 /src/main/resources/app.properties
+/src/main/resources/database.properties
 !build.gradle
 !settings.gradle
 !/pom.xml
