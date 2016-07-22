@@ -27,10 +27,10 @@ war {
 }
 
 task buildApp(dependsOn: [clean, war]) {
-    doLast {
+    /*doLast {
         copy {
             from 'build/libs/' + nameWarFile
             into deployServerPath
         }
-    }
+    }*/
 }
