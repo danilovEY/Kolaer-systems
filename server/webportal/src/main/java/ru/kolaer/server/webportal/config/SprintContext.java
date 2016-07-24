@@ -1,12 +1,18 @@
 package ru.kolaer.server.webportal.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -15,13 +21,15 @@ import org.springframework.web.servlet.view.JstlView;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.List;
 
 /**
  * Created by danilovey on 14.07.2016.
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan("ru.kolaer.server.webportal.mvc.controllers")
+@EnableTransactionManagement
+@ComponentScan({"ru.kolaer.server.webportal.mvc.dao.impl", "ru.kolaer.server.webportal.mvc.controllers"})
 @PropertySource("classpath:database.properties")
 @ImportResource(value = "/WEB-INF/spring-config/spring-context.groovy")
 public class SprintContext extends WebMvcConfigurerAdapter {
@@ -57,7 +65,7 @@ public class SprintContext extends WebMvcConfigurerAdapter {
     @Bean(name = "sessionFactory")
     public SessionFactory sessionFactoryBean(final DataSource dataSource) {
         final LocalSessionFactoryBuilder sessionFactoryBean = new LocalSessionFactoryBuilder(dataSource);
-        sessionFactoryBean.scanPackages(env.getRequiredProperty("db.entitymanager.packages.to.scan"));
+        sessionFactoryBean.scanPackages("ru.kolaer.server.webportal.mvc.model");
         sessionFactoryBean.setProperty("db.hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         sessionFactoryBean.setProperty("hibernate.show_sql", "true");
         sessionFactoryBean.setProperty("db.hibernate.max_fetch_depth", String.valueOf(3));

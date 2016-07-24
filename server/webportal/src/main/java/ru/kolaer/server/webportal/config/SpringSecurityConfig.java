@@ -17,12 +17,16 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import ru.kolaer.server.webportal.security.AuthenticationTokenProcessingFilter;
 import ru.kolaer.server.webportal.security.MyFilterSecurityMetadataSource;
 
 import javax.servlet.Filter;
@@ -41,8 +45,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
-    private AuthenticationSuccessHandler myAuthenticationSuccessHandler;
+    //@Autowired
+    //private AuthenticationSuccessHandler myAuthenticationSuccessHandler;
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -55,17 +59,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        /*http.csrf().disable().authorizeRequests().and()
-                .formLogin()
-                    .loginPage("/portal/login.html")
-                    .loginProcessingUrl("/portal/j_spring_security_check")
-                    .defaultSuccessUrl("/portal/homepage.html")
-                    .failureUrl("/portal/login.html?error=true")
-                    .successHandler(myAuthenticationSuccessHandler)
-                    .usernameParameter("j_username")
-                    .passwordParameter("j_password")
-                .permitAll();*/
-        //http.addFilter(filter());
+        http.csrf().disable();
+        http.addFilterBefore(new AuthenticationTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilter(filter());
     }
 
     @Bean
@@ -84,10 +80,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-    @Bean
-    public DaoAuthenticationProvider authProvider() {
+    private DaoAuthenticationProvider authProvider() {
         final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(new StandardPasswordEncoder("my_pass"));
         return authProvider;
     }
 }
