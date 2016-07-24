@@ -21,7 +21,7 @@ import java.util.Collection;
 /**
  * Created by danilovey on 18.07.2016.
  */
-@Component("myAuthenticationSuccessHandler")
+//@Component("myAuthenticationSuccessHandler")
 public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

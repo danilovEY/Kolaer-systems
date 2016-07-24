@@ -23,7 +23,6 @@ import java.util.List;
 /**
  * Created by danilovey on 18.07.2016.
  */
-@Service
 public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
     private static final Logger logger = LoggerFactory.getLogger(MyFilterSecurityMetadataSource.class);
 
@@ -33,8 +32,8 @@ public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityM
         String url=fi.getRequestUrl();
         logger.debug("Request Url====>"+url);
 
-        if(url.contains("homepage"))
-            return SecurityConfig.createList("ROLE_USER");
+        //if(url.contains("homepage"))
+        //    return SecurityConfig.createList("ROLE_USER");
 
         return SecurityConfig.createList();
     }
