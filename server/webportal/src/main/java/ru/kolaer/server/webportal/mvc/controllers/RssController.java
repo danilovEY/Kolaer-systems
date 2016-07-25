@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.webportal.mvc.model.dao.RssDao;
 import ru.kolaer.server.webportal.mvc.model.entities.rss.WebPortalRssEntity;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
