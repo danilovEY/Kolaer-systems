@@ -52,7 +52,7 @@ project(":server") {
         apply plugin: 'war'
 
         ext {
-            deployServerPath = "D:\\Server\\jetty\\webapps"
+            deployServerPath = "\\\\js\\c\$\\apache-tomcat-8.5.4\\webapps"
         }
 
         compileJava.options.encoding = 'UTF-8'

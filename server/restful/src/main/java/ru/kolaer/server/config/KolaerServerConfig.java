@@ -10,7 +10,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -31,7 +30,7 @@ import ru.kolaer.server.restful.tools.UsersManager;
 @EnableTransactionManagement
 @ComponentScan("ru.kolaer.server")
 @PropertySource("classpath:app.properties")
-@EnableJpaRepositories("ru.kolaer.server.dao.entities")
+//@EnableJpaRepositories("ru.kolaer.server.dao.entities")
 public class KolaerServerConfig extends WebMvcConfigurerAdapter {
  
     private static final String PROP_DATABASE_DRIVER = "db.driver";
