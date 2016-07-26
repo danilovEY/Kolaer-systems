@@ -2,6 +2,7 @@ group 'ru.kolaer'
 version '0.0.1'
 
 def name = "ru.kolaer.server.webportal"
+def testName = "webportal.test.war"
 def nameWarFile = name + ".war"
 
 apply plugin: 'groovy'
@@ -31,6 +32,26 @@ task buildApp(dependsOn: [clean, war]) {
     doLast {
         copy {
             from 'build/libs/' + nameWarFile
+            into deployServerPath
+        }
+    }
+}
+
+task renameProject(type: Copy) {
+    war.setArchiveName(testName)
+}
+
+task renameResources(dependsOn: processResources) {
+    doLast{
+        file("build/resources/main/database.properties").delete()
+        file("build/resources/main/test_database.properties").renameTo("build/resources/main/database.properties")
+    }
+}
+
+task buildAppForTest(dependsOn: [clean, renameResources, war, renameProject]) {
+    doLast {
+        copy {
+            from 'build/libs/' + testName
             into deployServerPath
         }
     }
