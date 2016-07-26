@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.rss;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralUsersEntity;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.sql.Date;
  * Created by Danilov on 24.07.2016.
  */
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "webportal_rss", schema = "application_db", catalog = "")
 public class WebPortalRssEntity {
     private short id;
