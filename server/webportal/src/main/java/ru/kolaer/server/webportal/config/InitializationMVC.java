@@ -34,7 +34,7 @@ public class InitializationMVC extends AbstractAnnotationConfigDispatcherServlet
   
     @Override
     protected String[] getServletMappings() {
-        return new String[] { "/portal/*" };
+        return new String[] { "/rest/*" };
     }
  
 }
