@@ -34,12 +34,12 @@ public class RssController {
     }
 
     @RequestMapping( value = PathMapping.PATH_TO_GET_RSS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    WebPortalRssEntity getRssById(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) {
+    WebPortalRssEntity getRssById(@RequestParam("id") String id) {
         if(id == null || id.trim().isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            throw new IllegalArgumentException("ID in NULL!");
         } else {
             if(!id.matches("\\d+"))
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                throw new IllegalArgumentException("ID in not integer!");
         }
 
         return rssDao.findByID(Short.valueOf(id));
