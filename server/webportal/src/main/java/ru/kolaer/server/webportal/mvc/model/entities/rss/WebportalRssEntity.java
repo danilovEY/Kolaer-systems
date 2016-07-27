@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.rss;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralUsersEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntity;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -10,39 +9,37 @@ import java.sql.Date;
  * Created by Danilov on 24.07.2016.
  */
 @Entity
-@JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "webportal_rss", catalog = "")
+@Table(name = "webportal_rss")
 public class WebPortalRssEntity {
-    private short id;
-    private GeneralUsersEntity user;
+    private int id;
     private String title;
-    private String contentRss;
-    private Date rssTime;
-    private boolean rssHide;
+    private String content;
+    private Date date;
+    private boolean isHide;
     private int priority;
+    private GeneralAccountsEntity user;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    public short getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(short id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    @Basic
     @OneToOne(cascade = CascadeType.ALL)
-    public GeneralUsersEntity getUser() {
+    @JoinColumn(name = "id_account")
+    public GeneralAccountsEntity getUser() {
         return user;
     }
 
-    public void setUser(GeneralUsersEntity user) {
+    public void setUser(GeneralAccountsEntity user) {
         this.user = user;
     }
 
-    @Basic
     @Column(name = "title")
     public String getTitle() {
         return title;
@@ -52,34 +49,33 @@ public class WebPortalRssEntity {
         this.title = title;
     }
 
-    @Basic
-    @Column(name = "content_rss")
-    public String getContentRss() {
-        return contentRss;
+    @Column(name = "content")
+    public String getContent() {
+        return content;
     }
 
-    public void setContentRss(String contentRss) {
-        this.contentRss = contentRss;
-    }
-
-    @Basic
-    @Column(name = "rss_time")
-    public Date getRssTime() {
-        return rssTime;
-    }
-
-    public void setRssTime(Date rssTime) {
-        this.rssTime = rssTime;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Basic
-    @Column(name = "rss_hide")
-    public boolean isRssHide() {
-        return rssHide;
+    @Column(name = "date")
+    public Date getDate() {
+        return date;
     }
 
-    public void setRssHide(boolean rssHide) {
-        this.rssHide = rssHide;
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    @Basic
+    @Column(name = "hide")
+    public boolean isHide() {
+        return isHide;
+    }
+
+    public void setHide(boolean hide) {
+        this.isHide = hide;
     }
 
     @Basic
@@ -101,11 +97,11 @@ public class WebPortalRssEntity {
 
         if (id != that.id) return false;
         if (user != that.user) return false;
-        if (rssHide != that.rssHide) return false;
+        if (isHide != that.isHide) return false;
         if (priority != that.priority) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (contentRss != null ? !contentRss.equals(that.contentRss) : that.contentRss != null) return false;
-        if (rssTime != null ? !rssTime.equals(that.rssTime) : that.rssTime != null) return false;
+        if (content != null ? !content.equals(that.content) : that.content != null) return false;
+        if (date != null ? !date.equals(that.date) : that.date != null) return false;
 
         return true;
     }
@@ -115,9 +111,9 @@ public class WebPortalRssEntity {
         int result = (int) id;
         //result = 31 * result + (int) user;
         result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (contentRss != null ? contentRss.hashCode() : 0);
-        result = 31 * result + (rssTime != null ? rssTime.hashCode() : 0);
-        result = 31 * result + (rssHide ? 1 : 0);
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (isHide ? 1 : 0);
         result = 31 * result + priority;
         return result;
     }

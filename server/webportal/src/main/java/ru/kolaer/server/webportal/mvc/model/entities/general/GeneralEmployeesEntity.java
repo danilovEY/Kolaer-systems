@@ -6,27 +6,37 @@ import java.util.List;
 /**
  * Created by Danilov on 24.07.2016.
  */
-//@Entity
-//@Table(name = "general_employees", catalog = "")
+@Entity
+@Table(name = "general_employees")
 public class GeneralEmployeesEntity {
-    private short pnumber;
+    private int pnumber;
     private String initials;
-    private String gender;
+    private EnumGender gender;
     private String departament;
     private String post;
+    private GeneralAccountsEntity accountsEntity;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pnumber")
-    public short getPnumber() {
+    public int getPnumber() {
         return pnumber;
     }
 
-    public void setPnumber(short pnumber) {
+    public void setPnumber(int pnumber) {
         this.pnumber = pnumber;
     }
 
-    @Basic
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_account", nullable = true)
+    public GeneralAccountsEntity getAccountsEntity() {
+        return accountsEntity;
+    }
+
+    public void setAccountsEntity(GeneralAccountsEntity accountsEntity) {
+        this.accountsEntity = accountsEntity;
+    }
+
     @Column(name = "initials")
     public String getInitials() {
         return initials;
@@ -36,18 +46,17 @@ public class GeneralEmployeesEntity {
         this.initials = initials;
     }
 
-    @Basic
     @Column(name = "gender")
-    public String getGender() {
+    @Enumerated(EnumType.STRING)
+    public EnumGender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(EnumGender gender) {
         this.gender = gender;
     }
 
 
-    @Basic
     @Column(name = "departament")
     public String getDepartament() {
         return departament;
@@ -57,7 +66,6 @@ public class GeneralEmployeesEntity {
         this.departament = departament;
     }
 
-    @Basic
     @Column(name = "post")
     public String getPost() {
         return post;

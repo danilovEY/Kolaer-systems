@@ -27,13 +27,7 @@ public class RssController {
     @RequestMapping( value = PathMapping.PATH_TO_GET_RSS + PathMapping.PATH_TO_GET_ALL_RSS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     List<WebPortalRssEntity> getAllRss() {
         List<WebPortalRssEntity> list = rssDao.findAll();
-        list.forEach(rss -> {
-            LOG.info("Title: {} User: {}", rss.getTitle(), rss.getUser().getUsername());
-            rss.getUser().getRoles().forEach(role -> {
-                LOG.info("Role: {}", role);
-            });
-        });
-        return rssDao.findAll();
+        return list;
     }
 
     @RequestMapping( value = PathMapping.PATH_TO_GET_RSS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
