@@ -1,0 +1,48 @@
+<ul class="header-inner clearfix">
+
+
+    <li class="logo">
+        <a href="index.html" class="m-l-10" data-ng-click="mactrl.sidebarStat($event)"><img src="img/logo.png" alt=""></a>
+    </li>
+
+    <li class="pull-right">
+        <ul class="top-menu">
+            <li id="top-search">
+                <a href="" data-ng-click="hctrl.openSearch()"><i class="tm-icon zmdi zmdi-search"></i></a>
+            </li>
+
+            <li class="dropdown" uib-dropdown>
+                <a uib-dropdown-toggle href="">
+                    <i class="tm-icon zmdi zmdi-more-vert"></i>
+                </a>
+                <ul class="dropdown-menu dm-icon pull-right">
+                    <li class="skin-switch hidden-xs">
+                        <span ng-repeat="w in mactrl.skinList | limitTo : 6" class="ss-skin bgm-{{ w }}" data-ng-click="mactrl.skinSwitch(w)"></span>
+                    </li>
+                    <li class="divider hidden-xs"></li>
+                    <li class="hidden-xs">
+                        <a data-ng-click="hctrl.fullScreen()" href=""><i class="zmdi zmdi-fullscreen"></i> Полноэкранный вид</a>
+                    </li>
+                    <li>
+                        <a data-ng-click="hctrl.clearLocalStorage()" href=""><i class="zmdi zmdi-delete"></i> Удалить настройки</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="zmdi zmdi-face"></i> Test 1</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="zmdi zmdi-settings"></i> Test 2</a>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+    </li>
+</ul>
+
+<!-- Top Search Content -->
+<div id="top-search-wrap">
+    <div class="tsw-inner">
+        <i id="top-search-close" class="zmdi zmdi-arrow-left" data-ng-click="hctrl.closeSearch()"></i>
+        <input type="text">
+    </div>
+</div>

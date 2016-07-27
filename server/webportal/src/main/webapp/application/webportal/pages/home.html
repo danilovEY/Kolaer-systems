@@ -1,0 +1,211 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+
+    <aside id="sidebar" data-ng-include="'template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <section id="content">
+
+        <div class="container">
+
+            <div class="block-header">
+                <h2>breadcrumbs <small>Тут находится навигационная цепочка</small></h2>
+                <a data-ui-sref="testlink" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-link"></i> Тестовая ссылка</a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card wall-posting">
+                        <div class="card-body card-padding">
+                            <textarea class="wp-text" data-auto-size placeholder="Начните ввод информации..."></textarea>
+
+                            <div class="wp-media" data-ng-if="mactrl.wallImage">
+                                Images - Coming soon...
+                            </div>
+
+                            <div class="wp-media" data-ng-if="mactrl.wallVideo">
+                                Video Links - Coming soon...
+                            </div>
+
+                            <div class="wp-media" data-ng-if="mactrl.wallLink">
+                                Links - Coming soon...
+                            </div>
+                        </div>
+
+                        <ul class="list-unstyled clearfix wpb-actions">
+                            <li class="wpba-attrs">
+                                <ul class="list-unstyled list-inline m-l-0 m-t-5">
+                                    <li><a data-wpba="image" href="" data-ng-class="{ 'active': mactrl.wallImage }" data-ng-click="mactrl.wallImage = true; mactrl.wallVideo = false; mactrl.wallLink = false"><i class="zmdi zmdi-image"></i></a></li>
+                                    <li><a data-wpba="video" href="" data-ng-class="{ 'active': mactrl.wallVideo }" data-ng-click="mactrl.wallVideo= true; mactrl.wallImage = false; mactrl.wallLink = false"><i class="zmdi zmdi-play-circle"></i></a></li>
+                                    <li><a data-wpba="link" href="" data-ng-class="{ 'active': mactrl.wallLink }" data-ng-click="mactrl.wallLink = true; mactrl.wallImage = false; mactrl.wallVideo = false"><i class="zmdi zmdi-link"></i></a></li>
+                                </ul>
+                            </li>
+                            <li class="pull-right"><button class="btn btn-primary btn-sm">Отправить</button></li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <!-- Шапка поста -->
+                        <div class="card-header">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <!-- Аватар автора -->
+                                    <img class="lv-img" src="../../AngularJS/img/profile-pics/test.jpg" alt="">
+                                </div>
+
+                                <div class="media-body m-t-5">
+                                    <!-- Автор + время создания поста -->
+                                    <h2>Автор <small>Пост создан 27.07.2016 в 08:00</small></h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Тело поста -->
+                        <div class="card-body card-padding">
+
+                            <!-- Контент поста -->
+                            <p>Контент</p>
+
+                            <!-- Аттачи -->
+                            <div class="wall-img-preview lightbox clearfix">
+                                <div class="wip-item" data-src="img/file-post/test.jpg" style="background-image: url(img/file-post/test.jpg);">
+                                    <div class="lightbox-item"></div>
+                                </div>
+                            </div>
+
+                            <!-- Атрибуты поста (лайки, кол-во комментов) -->
+                            <ul class="wall-attrs clearfix list-inline list-unstyled">
+                                <li class="wa-stats">
+                                    <span><i class="zmdi zmdi-comments"></i> 2</span>
+                                    <span class="active"><i class="zmdi zmdi-favorite"></i> 666</span>
+                                </li>
+
+                                <!-- Пользователи, поставившие лайк ТС'у -->
+                                <li class="wa-users">
+                                    <a href=""><img src="../../AngularJS/img/profile-pics/test.jpg" alt=""></a>
+                                    <a href=""><img src="../../AngularJS/img/profile-pics/test.jpg" alt=""></a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Лист комментариев -->
+                        <div class="wall-comment-list">
+
+                            <div class="wcl-list">
+                                <div class="media">
+                                    <a href="" class="pull-left">
+                                        <img src="../../AngularJS/img/profile-pics/test.jpg" alt="" class="lv-img-sm">
+                                    </a>
+
+                                    <div class="pull-right p-0">
+                                        <ul class="actions">
+                                            <li class="dropdown" uib-dropdown>
+                                                <a href="" uib-dropdown-toggle aria-haspopup="true" aria-expanded="false">
+                                                    <i class="zmdi zmdi-more-vert"></i>
+                                                </a>
+
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li>
+                                                        <a href="">Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="media-body">
+                                        <a href="" class="a-title">Mr. Bean</a> <small class="c-gray m-l-10">3 mins ago...</small>
+                                        <p class="m-t-5 m-b-0">Йа Оби Ван Биноби!</p>
+                                    </div>
+                                </div>
+
+                                <div class="media">
+                                    <a href="" class="pull-left">
+                                        <img src="../../AngularJS/img/profile-pics/test.jpg" alt="" class="lv-img-sm">
+                                    </a>
+
+                                    <div class="media-body">
+                                        <a href="" class="a-title">Mr. Bean</a> <small class="c-gray m-l-10">10 mins ago...</small>
+                                        <p class="m-t-5 m-b-0">Лолка</p>
+                                    </div>
+
+                                    <ul class="actions">
+                                        <li class="dropdown" uib-dropdown>
+                                            <a href="" uib-dropdown-toggle aria-haspopup="true" aria-expanded="false">
+                                                <i class="zmdi zmdi-more-vert"></i>
+                                            </a>
+
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li>
+                                                    <a href="">Report</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Comment form -->
+                            <div class="wcl-form">
+                                <div class="wc-comment" data-ng-if="!mactrl.wallCommenting[1]" data-ng-click="mactrl.wallCommenting[1] = true">
+                                    <div class="wcc-inner">
+                                        Write Something...
+                                    </div>
+                                </div>
+
+                                <div class="wc-comment" data-ng-if="mactrl.wallCommenting[1]">
+                                    <div class="wcc-inner">
+                                        <textarea class="wcci-text" data-auto-size placeholder="Write Something..."></textarea>
+                                    </div>
+
+                                    <div class="m-t-15">
+                                        <button class="btn btn-sm btn-primary">Post</button>
+                                        <button class="btn btn-sm btn-link" data-ng-click="mactrl.wallCommenting[1] = false">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 hidden-sm">
+                    <div class="card" data-ng-controller="recentpostCtrl as rpctrl">
+                        <div class="card-header">
+                            <h2>Все разделы <small>Поиск по тегам на инфопортале</small></h2>
+                        </div>
+                        <div class="listview">
+                            <div class="lv-body">
+
+                                <a class="lv-item" href="" data-ng-repeat="w in rpctrl.rpResult.list">
+                                    <div class="media">
+                                        <div class="pull-left">
+                                            <img class="lv-img-sm" data-ng-src="img/profile-pics/{{ w.img }}" alt="">
+                                        </div>
+                                        <div class="media-body">
+                                            <div class="lv-title">{{ w.user }}</div>
+                                            <small class="lv-small">{{ w.text }}</small>
+                                        </div>
+                                    </div>
+                                </a>
+
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <a class="lv-footer" href="">Открыть все</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'template/footer.html'"></footer>
