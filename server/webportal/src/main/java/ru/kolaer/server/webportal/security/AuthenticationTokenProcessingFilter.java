@@ -21,13 +21,12 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = this.getAsHttpRequest(request);
-        LOG.debug("Date: {}", httpRequest.getHeaderNames().nextElement());
 
+        request.setCharacterEncoding("UTF-8");
         chain.doFilter(request, response);
     }
 
-    private HttpServletRequest getAsHttpRequest(ServletRequest request)
-    {
+    private HttpServletRequest getAsHttpRequest(ServletRequest request) {
         if (!(request instanceof HttpServletRequest)) {
             throw new RuntimeException("Expecting an HTTP request");
         }

@@ -1,12 +1,13 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Danilov on 24.07.2016.
  */
 @Entity
-@Table(name = "general_employees", schema = "application_db", catalog = "")
+@Table(name = "general_employees", catalog = "")
 public class GeneralEmployeesEntity {
     private short pnumber;
     private String initials;
@@ -44,6 +45,7 @@ public class GeneralEmployeesEntity {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
 
     @Basic
     @Column(name = "departament")

@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Danilov on 24.07.2016.
  */
 @Entity
-@Table(name = "general_users", schema = "application_db", catalog = "")
+@Table(name = "general_users", catalog = "")
 public class GeneralUsersEntity {
     private short id;
     private String login;
@@ -26,8 +26,9 @@ public class GeneralUsersEntity {
         this.id = id;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    public List<GeneralRolesEntity> gerRoles() {
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id")
+    public List<GeneralRolesEntity> getRoles() {
         return this.roles;
     }
 

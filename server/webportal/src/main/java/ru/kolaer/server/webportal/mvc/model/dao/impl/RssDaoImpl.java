@@ -1,8 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.mvc.model.dao.RssDao;
 import ru.kolaer.server.webportal.mvc.model.entities.rss.WebPortalRssEntity;
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  * Created by Danilov on 24.07.2016.
  */
-@Repository(value = "myRssDao")
+@Repository(value = "rssDao")
 public class RssDaoImpl implements RssDao {
 
     @Autowired
@@ -25,8 +27,14 @@ public class RssDaoImpl implements RssDao {
     }
 
     @Override
-    public WebPortalRssEntity findByID(Long id) {
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public WebPortalRssEntity findByID(short id) {
+        final  WebPortalRssEntity webPortalRssEntity = sessionFactory.getCurrentSession().get(WebPortalRssEntity.class,id);
+        return webPortalRssEntity;
+    }
 
-        return null;
+    @Override
+    public void save(WebPortalRssEntity obj) {
+
     }
 }

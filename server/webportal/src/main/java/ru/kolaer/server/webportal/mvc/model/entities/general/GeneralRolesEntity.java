@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by Danilov on 24.07.2016.
  */
 @Entity
-@Table(name = "general_roles", schema = "application_db", catalog = "")
+@Table(name = "general_roles", catalog = "")
 public class GeneralRolesEntity {
     private short id;
     private EnumRole type;

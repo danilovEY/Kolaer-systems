@@ -29,8 +29,8 @@ public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityM
     public Collection<ConfigAttribute> getAttributes(Object object)
             throws IllegalArgumentException {
         FilterInvocation fi=(FilterInvocation)object;
-        String url=fi.getRequestUrl();
-        logger.debug("Request Url====>"+url);
+        //String url=fi.getRequestUrl();
+        //logger.debug("Request Url====>"+url);
 
         //if(url.contains("homepage"))
         //    return SecurityConfig.createList("ROLE_USER");

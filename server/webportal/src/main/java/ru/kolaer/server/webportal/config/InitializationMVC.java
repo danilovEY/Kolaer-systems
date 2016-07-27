@@ -16,8 +16,8 @@ public class InitializationMVC extends AbstractAnnotationConfigDispatcherServlet
                 .addMappingForUrlPatterns(null, false, "/*");
 
         servletContext
-                .addFilter("encodingFilter", new CharacterEncodingFilter("UTF-8",true))
-                .addMappingForUrlPatterns(null, false, "/*");
+                .addFilter("encoding-filter", new CharacterEncodingFilter("UTF-8",true))
+                .addMappingForUrlPatterns(null, true, "/*");
 
         super.onStartup(servletContext);
     }
@@ -34,7 +34,7 @@ public class InitializationMVC extends AbstractAnnotationConfigDispatcherServlet
   
     @Override
     protected String[] getServletMappings() {
-        return new String[] { "/rest/*" };
+        return new String[] { PathMapping.DISPATCHER_SERVLET + "/*" };
     }
  
 }
