@@ -6,23 +6,22 @@ import javax.persistence.*;
  * Created by Danilov on 24.07.2016.
  */
 @Entity
-@Table(name = "general_roles", catalog = "")
+@Table(name = "general_roles")
 public class GeneralRolesEntity {
-    private short id;
+    private int id;
     private EnumRole type;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    public short getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(short id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    @Basic
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     public EnumRole getType() {

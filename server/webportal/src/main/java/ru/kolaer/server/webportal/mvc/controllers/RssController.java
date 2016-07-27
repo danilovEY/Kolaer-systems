@@ -4,16 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.server.webportal.config.PathMapping;
 import ru.kolaer.server.webportal.mvc.model.dao.RssDao;
 import ru.kolaer.server.webportal.mvc.model.entities.rss.WebPortalRssEntity;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -32,7 +28,7 @@ public class RssController {
     List<WebPortalRssEntity> getAllRss() {
         List<WebPortalRssEntity> list = rssDao.findAll();
         list.forEach(rss -> {
-            LOG.info("Title: {} User: {}", rss.getTitle(), rss.getUser().getLogin());
+            LOG.info("Title: {} User: {}", rss.getTitle(), rss.getUser().getUsername());
             rss.getUser().getRoles().forEach(role -> {
                 LOG.info("Role: {}", role);
             });

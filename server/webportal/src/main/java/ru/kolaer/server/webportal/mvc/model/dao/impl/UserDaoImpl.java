@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.mvc.model.dao.UserDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralUsersEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntity;
 
 import java.util.List;
 
@@ -20,18 +20,18 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GeneralUsersEntity> findAll() {
-        return sessionFactory.getCurrentSession().createCriteria(GeneralUsersEntity.class).list();
+    public List<GeneralAccountsEntity> findAll() {
+        return sessionFactory.getCurrentSession().createCriteria(GeneralAccountsEntity.class).list();
     }
 
     @Override
-    public GeneralUsersEntity findByID(short id) {
+    public GeneralAccountsEntity findByID(short id) {
         return null;
     }
 
     @Override
     @Transactional
-    public void save(GeneralUsersEntity obj) {
+    public void save(GeneralAccountsEntity obj) {
         if(obj != null) {
             this.sessionFactory.getCurrentSession().save(obj);
         }

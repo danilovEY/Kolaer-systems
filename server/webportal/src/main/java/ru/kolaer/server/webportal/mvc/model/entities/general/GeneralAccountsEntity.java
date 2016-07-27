@@ -7,10 +7,10 @@ import java.util.List;
  * Created by Danilov on 24.07.2016.
  */
 @Entity
-@Table(name = "general_users", catalog = "")
-public class GeneralUsersEntity {
-    private short id;
-    private String login;
+@Table(name = "general_accounts")
+public class GeneralAccountsEntity {
+    private int id;
+    private String username;
     private String password;
     private String email;
     private List<GeneralRolesEntity> roles;
@@ -18,16 +18,17 @@ public class GeneralUsersEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    public short getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(short id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "general_account_role", joinColumns = {@JoinColumn(name = "id_account")},
+            inverseJoinColumns = { @JoinColumn(name = "id_role")})
     public List<GeneralRolesEntity> getRoles() {
         return this.roles;
     }
@@ -36,17 +37,15 @@ public class GeneralUsersEntity {
         this.roles = roles;
     }
 
-    @Basic
-    @Column(name = "login")
-    public String getLogin() {
-        return login;
+    @Column(name = "username")
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    @Basic
     @Column(name = "password")
     public String getPassword() {
         return password;
@@ -56,7 +55,6 @@ public class GeneralUsersEntity {
         this.password = password;
     }
 
-    @Basic
     @Column(name = "email")
     public String getEmail() {
         return email;
@@ -71,10 +69,10 @@ public class GeneralUsersEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        GeneralUsersEntity that = (GeneralUsersEntity) o;
+        GeneralAccountsEntity that = (GeneralAccountsEntity) o;
 
         if (id != that.id) return false;
-        if (login != null ? !login.equals(that.login) : that.login != null) return false;
+        if (username != null ? !username.equals(that.username) : that.username != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
 
@@ -84,7 +82,7 @@ public class GeneralUsersEntity {
     @Override
     public int hashCode() {
         int result = (int) id;
-        result = 31 * result + (login != null ? login.hashCode() : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
