@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 /**
  * Created by danilovey on 28.07.2016.
+ * Структура URl из БД.
  */
 @Entity
 @Table(name = "webportal_url_paths")
@@ -11,6 +12,7 @@ public class WebPortalUrlPath {
     private int id;
     private String url;
     private String description;
+    /**Имеют ли доступ к URL все пользователи*/
     private boolean accessAll;
     private boolean accessSuperAdmin;
     private boolean accessAdmin;

@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 /**
  * Created by Danilov on 24.07.2016.
+ * Структура роли в БД.
  */
 @Entity
 @Table(name = "general_roles")

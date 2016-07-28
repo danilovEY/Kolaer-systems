@@ -1,19 +1,11 @@
 package ru.kolaer.server.webportal.security;
 
-import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntity;
@@ -23,14 +15,15 @@ import java.util.*;
 
 /**
  * Created by danilovey on 18.07.2016.
+ * Фильтер позволяющи динамически добовлять ограничения на URL.
  */
-public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
-    private static final Logger logger = LoggerFactory.getLogger(MyFilterSecurityMetadataSource.class);
+public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMetadataSource {
+    private static final Logger logger = LoggerFactory.getLogger(SecurityMetadataSourceFilter.class);
 
     private UrlPathDao urlPathDao;
     private RoleDao roleDao;
 
-    public MyFilterSecurityMetadataSource(UrlPathDao urlPathDao, RoleDao roleDao) {
+    public SecurityMetadataSourceFilter(UrlPathDao urlPathDao, RoleDao roleDao) {
         this.urlPathDao = urlPathDao;
         this.roleDao = roleDao;
     }

@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model;
 
 /**
  * Created by Danilov on 24.07.2016.
+ * Json структура для токена.
  */
 public class TokenJson {
     private String token;

@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Created by Danilov on 24.07.2016.
+ * Рест контроллер для работы с новострой лентой.
  */
 @RestController
 @RequestMapping(PathMapping.PATH_TO_RSS)
@@ -24,12 +25,14 @@ public class RssController {
     @Qualifier("rssDao")
     private RssDao rssDao;
 
+    /**Получить все новости.*/
     @RequestMapping( value = PathMapping.PATH_TO_GET_RSS + PathMapping.PATH_TO_GET_ALL_RSS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     List<WebPortalRssEntity> getAllRss() {
         List<WebPortalRssEntity> list = rssDao.findAll();
         return list;
     }
 
+    /**Получить новость по id.*/
     @RequestMapping( value = PathMapping.PATH_TO_GET_RSS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     WebPortalRssEntity getRssById(@RequestParam("id") String id) {
         if(id == null || id.trim().isEmpty()) {

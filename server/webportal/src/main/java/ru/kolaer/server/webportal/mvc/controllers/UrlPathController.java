@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Created by danilovey on 28.07.2016.
+ * Рест контроллер для работы с url в БД.
  */
 @RestController
 @RequestMapping("/api")
@@ -20,6 +21,7 @@ public class UrlPathController {
     @Autowired
     private UrlPathDao urlPathDao;
 
+    /**Получить все URL.*/
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<WebPortalUrlPath> getAllUrl() {
         return urlPathDao.findAll();

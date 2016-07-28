@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model;
 
 /**
  * Created by danilovey on 28.07.2016.
+ * Json структура для логина и пароля.
  */
 public class UserAndPassJson {
     private String username;

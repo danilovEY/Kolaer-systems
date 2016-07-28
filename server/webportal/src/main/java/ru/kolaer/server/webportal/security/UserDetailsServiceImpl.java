@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 18.07.2016.
+ * Сервис позволяющий проверить пользолвателя на наличии в БД.
  */
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {

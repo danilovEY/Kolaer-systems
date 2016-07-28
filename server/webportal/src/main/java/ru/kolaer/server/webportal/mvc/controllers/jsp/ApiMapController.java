@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.mvc.controllers;
+package ru.kolaer.server.webportal.mvc.controllers.jsp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,6 +10,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 
 /**
  * Created by danilovey on 26.07.2016.
+ * JSP-контроллер. Позволяет получить страницу с таблицов из url|описание|разрешения для ролей.
  */
 @Controller
 @RequestMapping("/api")

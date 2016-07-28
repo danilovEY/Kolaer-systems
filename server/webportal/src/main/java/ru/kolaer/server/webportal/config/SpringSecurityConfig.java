@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.security.AuthenticationTokenProcessingFilter;
-import ru.kolaer.server.webportal.security.MyFilterSecurityMetadataSource;
+import ru.kolaer.server.webportal.security.SecurityMetadataSourceFilter;
 
 import java.util.Arrays;
 
@@ -86,7 +86,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         FilterSecurityInterceptor filter = new FilterSecurityInterceptor();
         filter.setAuthenticationManager(authenticationManagerBean());
         filter.setAccessDecisionManager(new AffirmativeBased(Arrays.asList(new RoleVoter(), new AuthenticatedVoter())));
-        filter.setSecurityMetadataSource(new MyFilterSecurityMetadataSource(this.urlPathDao, this.roleDao));
+        filter.setSecurityMetadataSource(new SecurityMetadataSourceFilter(this.urlPathDao, this.roleDao));
 
         return filter;
     }

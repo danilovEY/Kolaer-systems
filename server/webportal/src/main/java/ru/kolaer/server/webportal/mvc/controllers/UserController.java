@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Created by danilovey on 27.07.2016.
+ * Рест контроллер для работы с аккаунтами.
  */
 @RestController
 @RequestMapping("/general/users")
@@ -22,6 +23,7 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
+    /**Получить все аккаунты.*/
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<GeneralAccountsEntity> getAllUsers() {
         List<GeneralAccountsEntity> list = userDao.findAll();

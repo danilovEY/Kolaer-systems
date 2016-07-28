@@ -20,8 +20,8 @@ import java.io.IOException;
 
 /**
  * Created by Danilov on 24.07.2016.
+ * Фильтер позволяющий динамически проверять соединения на наличие правильных токенов.
  */
-
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationTokenProcessingFilter.class);
 

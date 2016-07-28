@@ -17,6 +17,7 @@ import ru.kolaer.server.webportal.mvc.model.UserAndPassJson;
 
 /**
  * Created by danilovey on 28.07.2016.
+ * Рест контроллер для генерации токена, и пароля по строке.
  */
 @RestController
 @RequestMapping(value = "/authentication")
@@ -32,11 +33,13 @@ public class AuthenticationController {
     @Qualifier("userDetailsService")
     private UserDetailsService userDetailsService;
 
+    /**Генерация пароля по строке.*/
     @RequestMapping(value = "/genpass", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String getPass(@RequestParam("pass") String pass) {
         return new StandardPasswordEncoder(secretKey).encode(pass);
     }
 
+    /**Генерация токена по имени и паролю пользователя.*/
     @RequestMapping(value = "/token", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getToken(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password){
         UsernamePasswordAuthenticationToken authenticationToken =

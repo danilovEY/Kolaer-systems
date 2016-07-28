@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * Created by Danilov on 27.07.2016.
+ * Рест контроллер для работы с сотрудниками.
  */
 @RestController
 @RequestMapping(value = "/general/employees")
@@ -21,6 +22,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeDao employeeDao;
 
+    /**Получить всех сотродников.*/
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<GeneralEmployeesEntity> getAllEmployees() {
         return employeeDao.findAll();

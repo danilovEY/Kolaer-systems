@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Created by Danilov on 24.07.2016.
+ * Структура сотрудника в БД.
  */
 @Entity
 @Table(name = "general_employees")

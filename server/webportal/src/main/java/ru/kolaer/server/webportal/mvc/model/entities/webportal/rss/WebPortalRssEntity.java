@@ -7,6 +7,7 @@ import java.sql.Date;
 
 /**
  * Created by Danilov on 24.07.2016.
+ * Структура новости из БД.
  */
 @Entity
 @Table(name = "webportal_rss")

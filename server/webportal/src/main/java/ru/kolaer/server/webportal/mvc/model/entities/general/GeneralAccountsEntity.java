@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Created by Danilov on 24.07.2016.
+ * Структура аккаунта в БД.
  */
 @Entity
 @Table(name = "general_accounts")
@@ -26,6 +27,7 @@ public class GeneralAccountsEntity {
         this.id = id;
     }
 
+    /**Список ролей пользователя.*/
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "general_account_role", joinColumns = {@JoinColumn(name = "id_account")},
             inverseJoinColumns = { @JoinColumn(name = "id_role")})
