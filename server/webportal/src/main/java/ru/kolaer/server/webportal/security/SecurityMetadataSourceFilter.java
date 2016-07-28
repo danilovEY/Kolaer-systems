@@ -45,8 +45,9 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
     }
 
     private Collection<ConfigAttribute> getRoles(WebPortalUrlPath urlPath) {
-        if(urlPath.isAccessAll())
+        if(urlPath.isAccessAll() || urlPath.isAccessAnonymous())
             return SecurityConfig.createList();
+
 
         List<GeneralRolesEntity> dbRoles = this.roleDao.findAll();
         List<ConfigAttribute> accessRoles = new ArrayList<>();
@@ -56,8 +57,7 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
             final GeneralRolesEntity role = iterRoles.next();
             if(role.getType().equals("ROLE_USER") && urlPath.isAccessUser() ||
                     role.getType().equals("ROLE_ADMIN") && urlPath.isAccessAdmin() ||
-                    role.getType().equals("ROLE_SUPER_ADMIN") && urlPath.isAccessSuperAdmin() ||
-                    role.getType().equals("ROLE_ANONYMOUS") && urlPath.isAccessAnonymous()) {
+                    role.getType().equals("ROLE_SUPER_ADMIN") && urlPath.isAccessSuperAdmin()) {
                 accessRoles.add(new SecurityConfig(role.getType()));
             }
         }
