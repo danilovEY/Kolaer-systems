@@ -7,14 +7,19 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+/**
+ * Инициализация Spring-MVC.
+ */
 public class InitializationMVC extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
+        //Фильтр для Spring Security.
         servletContext
                 .addFilter("securityFilter", new DelegatingFilterProxy("springSecurityFilterChain"))
                 .addMappingForUrlPatterns(null, false, "/*");
 
+        //Поддержка UTF-8.
         servletContext
                 .addFilter("encoding-filter", new CharacterEncodingFilter("UTF-8",true))
                 .addMappingForUrlPatterns(null, true, "/*");

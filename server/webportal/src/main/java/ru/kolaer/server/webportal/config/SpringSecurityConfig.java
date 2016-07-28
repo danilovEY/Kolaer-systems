@@ -39,20 +39,30 @@ import java.util.LinkedHashMap;
 
 /**
  * Created by Danilov on 17.07.2016.
+ * Конфигурация spring security. Динамически считывает с БД существующие пути и их доступность для ролей,
+ * а так же динамически идет поиск пользователей из БД.
+ * Описание:
+ *      Анонимный пользователь идет по некоторой ссылке и если она защищена, то сервер выдает 403 ошибку.
+ *      Для того, чтобы авторизоваться, необходимо сгенерировать токен и прикреплять его в запросе.
  */
 @Configuration
 @ComponentScan("ru.kolaer.server.webportal.security")
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /**Сервис для проверки на наличии пользователя в системе.*/
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /**Дао для получение из БД существующие ссылки и права на них.*/
     @Autowired
     private UrlPathDao urlPathDao;
+
+    /**Дао для получение ролей из БД.*/
     @Autowired
     private RoleDao roleDao;
 
+    /**Секретный ключ для шифрования пароля.*/
     @Value("${secret_key}")
     private String secretKey;
 
@@ -67,8 +77,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //Отключаем csrf хак
         http.csrf().disable();
+        //Фильтер для проверки http request'а на наличие правильного токена
         http.addFilterBefore(new AuthenticationTokenProcessingFilter(this.userDetailsService), UsernamePasswordAuthenticationFilter.class);
+        //Фильтер для проверки URL'ов.
         http.addFilter(filter());
     }
 
@@ -78,6 +91,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    /**Фильтер для проверки URL'ов.*/
     @Bean
     public FilterSecurityInterceptor filter() throws Exception {
         FilterSecurityInterceptor filter = new FilterSecurityInterceptor();
@@ -88,6 +102,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
+    /**Создание provider для проверки пользователей из БД с шифрованием пароля.*/
     private DaoAuthenticationProvider authProvider() {
         final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(this.userDetailsService);

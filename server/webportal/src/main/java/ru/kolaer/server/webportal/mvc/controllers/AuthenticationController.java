@@ -44,10 +44,7 @@ public class AuthenticationController {
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		/*
-		 * Reload user as password of authentication principal will be null after authorization and
-		 * password is needed for token generation
-		 */
+
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
         return new TokenJson(userDetails.getUsername() + ":" + userDetails.getPassword());
