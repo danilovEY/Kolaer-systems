@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "general_roles")
 public class GeneralRolesEntity {
     private int id;
-    private EnumRole type;
+    private String type;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,12 +23,11 @@ public class GeneralRolesEntity {
     }
 
     @Column(name = "type")
-    @Enumerated(EnumType.STRING)
-    public EnumRole getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(EnumRole type) {
+    public void setType(String type) {
         this.type = type;
     }
 
