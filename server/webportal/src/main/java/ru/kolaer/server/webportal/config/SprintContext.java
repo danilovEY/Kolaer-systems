@@ -24,6 +24,8 @@ import java.util.List;
 
 /**
  * Created by danilovey on 14.07.2016.
+ * Спринговый контекст на java. Имеет в наличие бинов для работы с БД и скан для контроллеров.
+ * Так же есть импорт внешней конфигурации на груви.
  */
 @Configuration
 @EnableWebMvc
@@ -82,6 +84,7 @@ public class SprintContext extends WebMvcConfigurerAdapter {
         return transactionManager;
     }
 
+    /**Позволяет мапить объект в json даже с учетом что стоит LAZY над property в entities.*/
     public MappingJackson2HttpMessageConverter jacksonMessageConverter(){
         MappingJackson2HttpMessageConverter messageConverter = new  MappingJackson2HttpMessageConverter();
 
