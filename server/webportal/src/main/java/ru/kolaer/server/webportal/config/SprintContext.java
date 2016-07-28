@@ -67,7 +67,7 @@ public class SprintContext extends WebMvcConfigurerAdapter {
     public SessionFactory sessionFactoryBean(final DataSource dataSource) {
         final LocalSessionFactoryBuilder sessionFactoryBean = new LocalSessionFactoryBuilder(dataSource);
         sessionFactoryBean.scanPackages("ru.kolaer.server.webportal.mvc.model");
-        sessionFactoryBean.setProperty("db.hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        sessionFactoryBean.setProperty("db.hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         sessionFactoryBean.setProperty("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
         sessionFactoryBean.setProperty("db.hibernate.max_fetch_depth", String.valueOf(3));
         sessionFactoryBean.setProperty("db.hibernate.jdbc.fetch_size", String.valueOf(50));

@@ -7,6 +7,6 @@ import java.util.List;
  */
 public interface Dao<T> {
     List<T> findAll();
-    T findByID(short id);
+    T findByID(int id);
     void save(T obj);
 }

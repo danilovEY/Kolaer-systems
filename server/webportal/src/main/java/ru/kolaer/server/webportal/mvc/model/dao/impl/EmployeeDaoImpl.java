@@ -25,7 +25,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public GeneralEmployeesEntity findByID(short id) {
+    public GeneralEmployeesEntity findByID(int id) {
         return null;
     }
 

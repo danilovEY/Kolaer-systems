@@ -1,8 +1,8 @@
 group 'ru.kolaer'
 version '0.0.1'
 
-def name = "kolaer-application"
-def testName = "kolaer-application-test.war"
+def name = "kolaer-web"
+def testName = "kolaer-web-test.war"
 def nameWarFile = name + ".war"
 
 apply plugin: 'groovy'

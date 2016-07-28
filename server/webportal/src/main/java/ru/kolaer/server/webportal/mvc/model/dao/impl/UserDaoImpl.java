@@ -25,7 +25,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public GeneralAccountsEntity findByID(short id) {
+    public GeneralAccountsEntity findByID(int id) {
         return null;
     }
 

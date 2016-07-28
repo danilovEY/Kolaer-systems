@@ -28,7 +28,7 @@ public class RssDaoImpl implements RssDao {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public WebPortalRssEntity findByID(short id) {
+    public WebPortalRssEntity findByID(int id) {
         final  WebPortalRssEntity webPortalRssEntity = sessionFactory.getCurrentSession().get(WebPortalRssEntity.class,id);
         return webPortalRssEntity;
     }
