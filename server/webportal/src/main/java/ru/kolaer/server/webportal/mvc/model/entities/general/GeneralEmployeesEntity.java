@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by Danilov on 24.07.2016.

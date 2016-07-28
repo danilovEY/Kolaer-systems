@@ -11,7 +11,10 @@ import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPath;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by danilovey on 18.07.2016.
