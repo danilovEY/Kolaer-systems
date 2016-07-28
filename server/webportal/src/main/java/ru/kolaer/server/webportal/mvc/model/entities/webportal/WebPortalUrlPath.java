@@ -11,6 +11,7 @@ public class WebPortalUrlPath {
     private int id;
     private String url;
     private String description;
+    private boolean accessAll;
     private boolean accessSuperAdmin;
     private boolean accessAdmin;
     private boolean accessUser;
@@ -43,6 +44,15 @@ public class WebPortalUrlPath {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Column(name = "access_all")
+    public boolean isAccessAll() {
+        return accessAll;
+    }
+
+    public void setAccessAll(boolean accessAll) {
+        this.accessAll = accessAll;
     }
 
     @Column(name = "access_super_admin")
