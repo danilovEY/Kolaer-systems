@@ -11,11 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.kolaer.server.webportal.mvc.model.TokenJson;
+import ru.kolaer.server.webportal.mvc.model.UserAndPassJson;
 
 /**
  * Created by danilovey on 28.07.2016.
@@ -55,5 +53,9 @@ public class AuthenticationController {
         return new TokenJson(userDetails.getUsername() + ":" + userDetails.getPassword());
     }
 
+    @RequestMapping(value = "/token", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public TokenJson getTokenPost(@RequestBody UserAndPassJson userAndPassJson){
+        return this.getToken(userAndPassJson.getUsername(), userAndPassJson.getPassword());
+    }
 
 }

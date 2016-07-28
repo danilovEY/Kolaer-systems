@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.server.webportal.config.PathMapping;
 import ru.kolaer.server.webportal.mvc.model.dao.RssDao;
-import ru.kolaer.server.webportal.mvc.model.entities.rss.WebPortalRssEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.webportal.rss.WebPortalRssEntity;
 
 import java.util.List;
 

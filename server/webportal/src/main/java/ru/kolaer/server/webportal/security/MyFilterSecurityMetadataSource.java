@@ -30,7 +30,6 @@ public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityM
             throws IllegalArgumentException {
         FilterInvocation fi=(FilterInvocation)object;
         String url=fi.getRequestUrl();
-        logger.debug("Request Url====>"+url);
 
         if(url.contains("rss"))
             return SecurityConfig.createList("ROLE_USER");

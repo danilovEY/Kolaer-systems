@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.mvc.model.entities.rss;
+package ru.kolaer.server.webportal.mvc.model.entities.webportal.rss;
 
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntity;
 

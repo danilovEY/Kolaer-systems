@@ -5,5 +5,5 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEnti
 /**
  * Created by danilovey on 27.07.2016.
  */
-public interface UserDao extends Dao<GeneralAccountsEntity> {
+public interface UserDao extends DaoStandard<GeneralAccountsEntity> {
 }
