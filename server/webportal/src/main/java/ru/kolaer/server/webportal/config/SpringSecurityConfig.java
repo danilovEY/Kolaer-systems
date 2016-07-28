@@ -27,6 +27,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
+import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.security.AuthenticationTokenProcessingFilter;
 import ru.kolaer.server.webportal.security.MyFilterSecurityMetadataSource;
 
@@ -46,6 +48,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private UrlPathDao urlPathDao;
+    @Autowired
+    private RoleDao roleDao;
+
     @Value("${secret_key}")
     private String secretKey;
 
@@ -61,7 +68,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.addFilterBefore(new AuthenticationTokenProcessingFilter(userDetailsService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new AuthenticationTokenProcessingFilter(this.userDetailsService), UsernamePasswordAuthenticationFilter.class);
         http.addFilter(filter());
     }
 
@@ -76,15 +83,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         FilterSecurityInterceptor filter = new FilterSecurityInterceptor();
         filter.setAuthenticationManager(authenticationManagerBean());
         filter.setAccessDecisionManager(new AffirmativeBased(Arrays.asList(new RoleVoter(), new AuthenticatedVoter())));
-        filter.setSecurityMetadataSource(new MyFilterSecurityMetadataSource());
+        filter.setSecurityMetadataSource(new MyFilterSecurityMetadataSource(this.urlPathDao, this.roleDao));
 
         return filter;
     }
 
     private DaoAuthenticationProvider authProvider() {
         final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(new StandardPasswordEncoder(secretKey));
+        authProvider.setUserDetailsService(this.userDetailsService);
+        authProvider.setPasswordEncoder(new StandardPasswordEncoder(this.secretKey));
         return authProvider;
     }
 }
