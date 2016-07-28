@@ -63,6 +63,7 @@ project(":server") {
 //================================Clients================================//
 task buildMainClient (dependsOn: ':client:usa:buildApp')
 task buildPlugins (dependsOn: [':client:asmc:buildApp',
+                               ':client:psr:buildApp',
                                ':client:admin:buildApp',
                                ':client:birthday:buildApp',
                                ':client:browser:buildApp'])
