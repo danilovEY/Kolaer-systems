@@ -11,14 +11,12 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-import ru.kolaer.server.webportal.mvc.model.ApiMapping;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -74,15 +72,6 @@ public class SprintContext extends WebMvcConfigurerAdapter {
         sessionFactoryBean.setProperty("db.hibernate.jdbc.batch_size", String.valueOf(10));
         sessionFactoryBean.setProperty("hibernate.hbm2ddl.auto", env.getRequiredProperty("hibernate.hbm2ddl.auto"));
         return sessionFactoryBean.buildSessionFactory();
-    }
-
-    @Bean
-    public ApiMapping apiMapping() {
-        final ApiMapping apiMapping = new ApiMapping();
-        apiMapping.put(PathMapping.ABSOLUTE_PATH_TO_GET_ALL_RSS,"Получить все RSS.");
-        apiMapping.put(PathMapping.ABSOLUTE_PATH_PARAM_TO_GET_RSS_BY_ID,"Получить RSS по id: (" + PathMapping.ABSOLUTE_PATH_PATH_TO_GET_RSS + "?id=0).");
-
-        return apiMapping;
     }
 
     @Autowired

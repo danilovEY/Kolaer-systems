@@ -12,8 +12,31 @@
     <title>Title</title>
 </head>
 <br>
-    <c:forEach items="${map}" var="entry">
-        <a href="${entry.key}">${entry.key}</a> <label> - ${entry.value}</label> </br>
-    </c:forEach>
+<div align="center">
+    <table border="1">
+        <caption>Таблица URL</caption>
+        <tr>
+            <th>URL</th>
+            <th>Описание</th>
+            <th>Доступ всем</th>
+            <th>Доступ SUPER ADMIN</th>
+            <th>Доступ ADMIN</th>
+            <th>Доступ USER</th>
+            <th>Доступ ANONYMOUS</th>
+        </tr>
+
+        <c:forEach items="${listApi}" var="entry">
+            <tr>
+                <td>${entry.url}</td>
+                <td>${entry.description}</td>
+                <td>${entry.accessAll}</td>
+                <td>${entry.accessSuperAdmin}</td>
+                <td>${entry.accessAdmin}</td>
+                <td>${entry.accessUser}</td>
+                <td>${entry.accessAnonymous}</td>
+            </tr>
+        </c:forEach>
+    </table>
+    </div>
 </body>
 </html>
