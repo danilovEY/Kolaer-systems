@@ -49,7 +49,7 @@ public class NetworkUSImpl implements NetworkUS {
 			switch (status) {
 				case "available": return ServerStatus.AVAILABLE;
 				case "not available": return ServerStatus.NOT_AVAILABLE;
-				default: return ServerStatus.UNKNOW;
+				default: return ServerStatus.UNKNOWN;
 			}
 		} catch(final UniformInterfaceException | ClientHandlerException ex) {
 			return ServerStatus.NOT_AVAILABLE;

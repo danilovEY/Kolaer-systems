@@ -6,10 +6,11 @@ package ru.kolaer.api.system;
  * @version 0.1
  */
 public interface NetworkUS {
-	/**Получить объект для работы с БД.*/
-	KolaerDataBase getKolaerDataBase();
+	/**Получить RESTful сервер.*/
+	RestfulServer getRestfulServer();
+	/**Получить Kolaer-web сервер.*/
+	KolaerWebServer getKolaerWebServer();
+
 	/**Получить объект для работы со сторонними API.*/
 	OtherPublicAPI getOtherPublicAPI();
-	/**Получить статус сервера.*/
-	ServerStatus getServerStatus();
 }
