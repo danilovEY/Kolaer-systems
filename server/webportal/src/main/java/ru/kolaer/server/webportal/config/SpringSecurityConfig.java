@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -45,8 +46,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    //@Autowired
-    //private AuthenticationSuccessHandler myAuthenticationSuccessHandler;
+    @Value("${secret_key}")
+    private String secretKey;
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -83,7 +84,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private DaoAuthenticationProvider authProvider() {
         final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(new StandardPasswordEncoder("my_pass"));
+        authProvider.setPasswordEncoder(new StandardPasswordEncoder(secretKey));
         return authProvider;
     }
 }

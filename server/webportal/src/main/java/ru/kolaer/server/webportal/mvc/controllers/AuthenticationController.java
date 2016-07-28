@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,13 +27,16 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Value("${secret_key}")
+    private String secretKey;
+
     @Autowired
     @Qualifier("userDetailsService")
     private UserDetailsService userDetailsService;
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public String getPass() {
-        return new StandardPasswordEncoder("my_pass").encode("user");
+    @RequestMapping(value = "/genpass", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public String getPass(@RequestParam("pass") String pass) {
+        return new StandardPasswordEncoder(secretKey).encode(pass);
     }
 
     @RequestMapping(value = "/token", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
