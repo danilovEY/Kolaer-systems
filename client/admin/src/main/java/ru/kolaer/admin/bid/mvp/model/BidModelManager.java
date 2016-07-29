@@ -11,10 +11,10 @@ import java.util.List;
 public class BidModelManager {
 	private final Logger LOG = LoggerFactory.getLogger(BidModelManager.class);
 	
-	private final String DB_URL = "jdbc:mysql://mailkolaer:3306/zayavki?useUnicode=true&autoReconnect=false&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	private final String DB_URL = "";
 
-	private final String USER = "root";
-	private final String PASS = "PEs68gGE8";
+	private final String USER = "";
+	private final String PASS = "";
 	private boolean isConnect = false;
 	private Connection conn;
 	

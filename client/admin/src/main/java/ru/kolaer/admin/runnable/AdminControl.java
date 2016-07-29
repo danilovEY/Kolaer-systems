@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AdminControl implements UniformSystemPlugin {
-	private final String pass = "2serdce3";
+	private final String pass = "";
 	private UniformSystemEditorKit editorKid;
 	private BorderPane mainPane;
 	
@@ -35,9 +35,8 @@ public class AdminControl implements UniformSystemPlugin {
 	public void initialization(final UniformSystemEditorKit editorKid) throws Exception {
 		this.editorKid = editorKid;
 		Tools.runOnThreadFX(() -> {
-			this.mainPane = new BorderPane();
+			this.mainPane = new BorderPane(new Label("Плагин временно не работает!"));
 		});
-		
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public class AdminControl implements UniformSystemPlugin {
 
 	@Override
 	public void start() throws Exception {
-		Tools.runOnThreadFX(() -> {
+		/*Tools.runOnThreadFX(() -> {
 			final MenuItem logIn = new MenuItem("Войти");
 			final Menu fileMenu = new Menu("Файл");
 			fileMenu.getItems().addAll(logIn);
@@ -93,12 +92,8 @@ public class AdminControl implements UniformSystemPlugin {
 				}
 			});
 			
-			
-			
-			
-			
 			this.mainPane.setTop(menuBar);
-		});
+		});*/
 	}
 
 	@Override
