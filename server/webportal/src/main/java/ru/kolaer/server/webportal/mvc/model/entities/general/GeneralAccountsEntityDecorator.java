@@ -3,7 +3,6 @@ package ru.kolaer.server.webportal.mvc.model.entities.general;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
 
 import javax.persistence.*;
 import java.util.List;

@@ -1,7 +1,6 @@
 package ru.kolaer.api.mvp.model.kolaerweb.psr;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
 
 import java.sql.Date;
 import java.util.List;

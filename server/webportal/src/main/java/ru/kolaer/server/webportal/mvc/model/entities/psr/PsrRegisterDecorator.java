@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
 
 import java.sql.Date;

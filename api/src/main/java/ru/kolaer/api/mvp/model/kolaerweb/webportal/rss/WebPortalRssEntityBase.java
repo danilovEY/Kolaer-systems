@@ -1,7 +1,6 @@
 package ru.kolaer.api.mvp.model.kolaerweb.webportal.rss;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntityBase;
 
 import java.sql.Date;
 
