@@ -1,7 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,11 +14,11 @@ import java.util.List;
  */
 @Entity
 @Table(name = "general_accounts")
-public class GeneralAccountsEntityDecorator {
-    private GeneralAccountsEntity generalAccountsEntity;
+public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
+    private GeneralAccountsEntityBase generalAccountsEntity;
 
     public GeneralAccountsEntityDecorator() {
-        this.generalAccountsEntity = new GeneralAccountsEntity();
+        this.generalAccountsEntity = new GeneralAccountsEntityBase();
     }
 
     @Id
@@ -31,7 +33,7 @@ public class GeneralAccountsEntityDecorator {
     }
 
     /**Список ролей пользователя.*/
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = GeneralRolesEntityDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "general_account_role", joinColumns = {@JoinColumn(name = "id_account")},
             inverseJoinColumns = { @JoinColumn(name = "id_role")})
     public List<GeneralRolesEntity> getRoles() {

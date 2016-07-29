@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.webportal;
 
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPathBase;
 
 import javax.persistence.*;
 
@@ -10,11 +11,11 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "webportal_url_paths")
-public class WebPortalUrlPathDecorator {
+public class WebPortalUrlPathDecorator implements WebPortalUrlPath {
     private WebPortalUrlPath webPortalUrlPath;
 
     public WebPortalUrlPathDecorator() {
-        this.webPortalUrlPath = new WebPortalUrlPath();
+        this.webPortalUrlPath = new WebPortalUrlPathBase();
     }
 
     @Id

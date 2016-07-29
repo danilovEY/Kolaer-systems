@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
 
 import javax.persistence.*;
 
@@ -10,11 +11,11 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "general_roles")
-public class GeneralRolesEntityDecorator {
-    private GeneralRolesEntity generalRolesEntity;
+public class GeneralRolesEntityDecorator implements GeneralRolesEntity{
+    private GeneralRolesEntityBase generalRolesEntity;
 
     public GeneralRolesEntityDecorator() {
-        this.generalRolesEntity = new GeneralRolesEntity();
+        this.generalRolesEntity = new GeneralRolesEntityBase();
     }
 
     @Id

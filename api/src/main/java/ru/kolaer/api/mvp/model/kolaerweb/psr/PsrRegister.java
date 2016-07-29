@@ -1,6 +1,6 @@
 package ru.kolaer.api.mvp.model.kolaerweb.psr;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 
 import java.sql.Date;
 import java.util.List;
@@ -12,14 +12,14 @@ public interface PsrRegister {
      int getId();
      void setId(int id);
 
-     PsrProjectStatusBase getStatus();
-     void setStatus(PsrProjectStatusBase status);
+     PsrProjectStatus getStatus();
+     void setStatus(PsrProjectStatus status);
 
-     GeneralEmployeesEntityBase getAuthor();
-     void setAuthor(GeneralEmployeesEntityBase author);
+     GeneralEmployeesEntity getAuthor();
+     void setAuthor(GeneralEmployeesEntity author);
 
-     GeneralEmployeesEntityBase getAdmin();
-     void setAdmin(GeneralEmployeesEntityBase admin);
+     GeneralEmployeesEntity getAdmin();
+     void setAdmin(GeneralEmployeesEntity admin);
 
      String getName();
      void setName(String name);
@@ -34,9 +34,9 @@ public interface PsrRegister {
      String getComment();
      void setComment(String comment);
 
-     List<PsrProjectAttachmentBase> getAttachments();
-     void setAttachments(List<PsrProjectAttachmentBase> attachments);
+     List<PsrProjectAttachment> getAttachments();
+     void setAttachments(List<PsrProjectAttachment> attachments);
 
-     List<PsrProjectStateBase> getStateList();
-     void setStateList(List<PsrProjectStateBase> stateList);
+     List<PsrProjectState> getStateList();
+     void setStateList(List<PsrProjectState> stateList);
 }

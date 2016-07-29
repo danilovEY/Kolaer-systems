@@ -1,5 +1,6 @@
 package ru.kolaer.api.mvp.model.kolaerweb.psr;
 
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
 
 import java.sql.Date;
@@ -10,15 +11,15 @@ import java.util.List;
  */
 public class PsrRegisterBase implements PsrRegister {
     private int id;
-    private PsrProjectStatusBase status;
-    private GeneralEmployeesEntityBase author;
-    private GeneralEmployeesEntityBase admin;
+    private PsrProjectStatus status;
+    private GeneralEmployeesEntity author;
+    private GeneralEmployeesEntity admin;
     private String name;
     private Date dateOpen;
     private Date dateClose;
     private String comment;
-    private List<PsrProjectAttachmentBase> attachments;
-    private List<PsrProjectStateBase> stateList;
+    private List<PsrProjectAttachment> attachments;
+    private List<PsrProjectState> stateList;
 
     public int getId() {
         return id;
@@ -28,27 +29,27 @@ public class PsrRegisterBase implements PsrRegister {
         this.id = id;
     }
 
-    public PsrProjectStatusBase getStatus() {
+    public PsrProjectStatus getStatus() {
         return status;
     }
 
-    public void setStatus(PsrProjectStatusBase status) {
+    public void setStatus(PsrProjectStatus status) {
         this.status = status;
     }
 
-    public GeneralEmployeesEntityBase getAuthor() {
+    public GeneralEmployeesEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(GeneralEmployeesEntityBase autor) {
+    public void setAuthor(GeneralEmployeesEntity autor) {
         this.author = autor;
     }
 
-    public GeneralEmployeesEntityBase getAdmin() {
+    public GeneralEmployeesEntity getAdmin() {
         return admin;
     }
 
-    public void setAdmin(GeneralEmployeesEntityBase admin) {
+    public void setAdmin(GeneralEmployeesEntity admin) {
         this.admin = admin;
     }
 
@@ -84,19 +85,19 @@ public class PsrRegisterBase implements PsrRegister {
         this.comment = comment;
     }
 
-    public List<PsrProjectAttachmentBase> getAttachments() {
+    public List<PsrProjectAttachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<PsrProjectAttachmentBase> attachments) {
+    public void setAttachments(List<PsrProjectAttachment> attachments) {
         this.attachments = attachments;
     }
 
-    public List<PsrProjectStateBase> getStateList() {
+    public List<PsrProjectState> getStateList() {
         return stateList;
     }
 
-    public void setStateList(List<PsrProjectStateBase> stateList) {
+    public void setStateList(List<PsrProjectState> stateList) {
         this.stateList = stateList;
     }
 }

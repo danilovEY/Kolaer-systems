@@ -1,7 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.entities.webportal.rss;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.rss.WebPortalRssEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.rss.WebPortalRssEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.rss.WebPortalRssEntityBase;
+import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -12,11 +15,11 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "webportal_rss")
-public class WebPortalRssEntityDecorator {
+public class WebPortalRssEntityDecorator implements WebPortalRssEntity {
     private WebPortalRssEntity webPortalRssEntity;
 
     public WebPortalRssEntityDecorator() {
-        this.webPortalRssEntity = new WebPortalRssEntity();
+        this.webPortalRssEntity = new WebPortalRssEntityBase();
     }
 
     @Id
@@ -30,7 +33,7 @@ public class WebPortalRssEntityDecorator {
         this.webPortalRssEntity.setId(id);
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = GeneralAccountsEntityDecorator.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_account")
     public GeneralAccountsEntity getUser() {
         return this.webPortalRssEntity.getUser();
@@ -58,7 +61,6 @@ public class WebPortalRssEntityDecorator {
         this.webPortalRssEntity.setContent(content);
     }
 
-    @Basic
     @Column(name = "date")
     public Date getDate() {
         return this.webPortalRssEntity.getDate();
@@ -68,7 +70,6 @@ public class WebPortalRssEntityDecorator {
         this.webPortalRssEntity.setDate(date);
     }
 
-    @Basic
     @Column(name = "hide")
     public boolean isHide() {
         return this.webPortalRssEntity.isHide();
@@ -78,7 +79,6 @@ public class WebPortalRssEntityDecorator {
         this.webPortalRssEntity.setHide(hide);
     }
 
-    @Basic
     @Column(name = "priority")
     public int getPriority() {
         return this.webPortalRssEntity.getPriority();

@@ -1,8 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.*;
 
 import javax.persistence.*;
 
@@ -12,11 +10,11 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "general_employees")
-public class GeneralEmployeesEntityDecorator {
-    private GeneralEmployeesEntity generalEmployeesEntity;
+public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
+    private GeneralEmployeesEntityBase generalEmployeesEntity;
 
     public GeneralEmployeesEntityDecorator() {
-        this.generalEmployeesEntity = new GeneralEmployeesEntity();
+        this.generalEmployeesEntity = new GeneralEmployeesEntityBase();
     }
 
     @Id
@@ -30,7 +28,7 @@ public class GeneralEmployeesEntityDecorator {
         this.generalEmployeesEntity.setPnumber(pnumber);
     }
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = GeneralAccountsEntityDecorator.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_account", nullable = true)
     public GeneralAccountsEntity getAccountsEntity() {
         return this.generalEmployeesEntity.getAccountsEntity();
