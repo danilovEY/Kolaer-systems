@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class EmployeeController {
 
     /**Получить всех сотродников.*/
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<GeneralEmployeesEntity> getAllEmployees() {
+    public List<GeneralEmployeesEntityDecorator> getAllEmployees() {
         return employeeDao.findAll();
     }
 

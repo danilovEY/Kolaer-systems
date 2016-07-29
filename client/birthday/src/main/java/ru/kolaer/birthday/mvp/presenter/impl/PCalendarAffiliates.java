@@ -1,6 +1,6 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
 import ru.kolaer.api.system.DefaultProgressBar;
 import ru.kolaer.api.system.ProgressBarObservable;
 import ru.kolaer.api.system.UniformSystemEditorKit;

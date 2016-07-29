@@ -1,4 +1,4 @@
-package ru.kolaer.api.mvp.model;
+package ru.kolaer.api.mvp.model.restful;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

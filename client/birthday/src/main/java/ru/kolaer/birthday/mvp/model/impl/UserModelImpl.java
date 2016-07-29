@@ -1,7 +1,7 @@
 package ru.kolaer.birthday.mvp.model.impl;
 
-import ru.kolaer.api.mvp.model.DbBirthdayAll;
-import ru.kolaer.api.mvp.model.DbDataAll;
+import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.birthday.mvp.model.UserModel;
 
 import java.util.Date;

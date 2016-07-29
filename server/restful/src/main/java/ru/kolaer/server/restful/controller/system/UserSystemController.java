@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.kolaer.api.mvp.model.PackageNetwork;
+import ru.kolaer.api.mvp.model.restful.PackageNetwork;
 import ru.kolaer.server.dao.entities.DbKolaerUser;
 import ru.kolaer.server.restful.tools.UsersManager;
 

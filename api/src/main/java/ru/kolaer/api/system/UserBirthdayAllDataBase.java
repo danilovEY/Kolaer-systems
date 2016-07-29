@@ -3,7 +3,7 @@ package ru.kolaer.api.system;
 import java.util.Date;
 import java.util.List;
 
-import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
 
 public interface UserBirthdayAllDataBase extends UserDataBase<DbBirthdayAll> {
 	void insertUserList(List<DbBirthdayAll> userList);

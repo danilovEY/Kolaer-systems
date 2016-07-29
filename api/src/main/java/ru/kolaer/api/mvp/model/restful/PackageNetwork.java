@@ -1,4 +1,4 @@
-package ru.kolaer.api.mvp.model;
+package ru.kolaer.api.mvp.model.restful;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

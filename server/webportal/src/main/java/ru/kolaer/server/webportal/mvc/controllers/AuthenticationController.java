@@ -12,8 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.server.webportal.mvc.model.TokenJson;
-import ru.kolaer.server.webportal.mvc.model.UserAndPassJson;
+import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
+import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 
 /**
  * Created by danilovey on 28.07.2016.

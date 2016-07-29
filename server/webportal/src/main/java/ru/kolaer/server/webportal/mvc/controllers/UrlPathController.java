@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
-import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPath;
+import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class UrlPathController {
 
     /**Получить все URL.*/
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<WebPortalUrlPath> getAllUrl() {
+    public List<WebPortalUrlPathDecorator> getAllUrl() {
         return urlPathDao.findAll();
     }
 

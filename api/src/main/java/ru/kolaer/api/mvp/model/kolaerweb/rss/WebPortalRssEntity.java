@@ -1,16 +1,13 @@
-package ru.kolaer.server.webportal.mvc.model.entities.webportal.rss;
+package ru.kolaer.api.mvp.model.kolaerweb.rss;
 
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 
-import javax.persistence.*;
 import java.sql.Date;
 
 /**
  * Created by Danilov on 24.07.2016.
  * Структура новости из БД.
  */
-@Entity
-@Table(name = "webportal_rss")
 public class WebPortalRssEntity {
     private int id;
     private String title;
@@ -20,9 +17,6 @@ public class WebPortalRssEntity {
     private int priority;
     private GeneralAccountsEntity user;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     public int getId() {
         return id;
     }
@@ -31,8 +25,6 @@ public class WebPortalRssEntity {
         this.id = id;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_account")
     public GeneralAccountsEntity getUser() {
         return user;
     }
@@ -41,7 +33,6 @@ public class WebPortalRssEntity {
         this.user = user;
     }
 
-    @Column(name = "title")
     public String getTitle() {
         return title;
     }
@@ -50,7 +41,6 @@ public class WebPortalRssEntity {
         this.title = title;
     }
 
-    @Column(name = "content")
     public String getContent() {
         return content;
     }
@@ -59,8 +49,6 @@ public class WebPortalRssEntity {
         this.content = content;
     }
 
-    @Basic
-    @Column(name = "date")
     public Date getDate() {
         return date;
     }
@@ -69,8 +57,6 @@ public class WebPortalRssEntity {
         this.date = date;
     }
 
-    @Basic
-    @Column(name = "hide")
     public boolean isHide() {
         return isHide;
     }
@@ -79,8 +65,6 @@ public class WebPortalRssEntity {
         this.isHide = hide;
     }
 
-    @Basic
-    @Column(name = "priority")
     public int getPriority() {
         return priority;
     }

@@ -1,7 +1,7 @@
 package ru.kolaer.client.javafx.system;
 
 import com.sun.jersey.api.client.WebResource;
-import ru.kolaer.api.mvp.model.PublicHolidays;
+import ru.kolaer.api.mvp.model.restful.PublicHolidays;
 import ru.kolaer.api.system.PublicHolidaysDateBase;
 
 import java.time.LocalDate;

@@ -1,5 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -9,22 +12,22 @@ import java.util.List;
  */
 @Entity
 @Table(name = "general_accounts")
-public class GeneralAccountsEntity {
-    private int id;
-    private String username;
-    private String password;
-    private String email;
-    private List<GeneralRolesEntity> roles;
+public class GeneralAccountsEntityDecorator {
+    private GeneralAccountsEntity generalAccountsEntity;
+
+    public GeneralAccountsEntityDecorator() {
+        this.generalAccountsEntity = new GeneralAccountsEntity();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     public int getId() {
-        return id;
+        return this.generalAccountsEntity.getId();
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.generalAccountsEntity.setId(id);
     }
 
     /**Список ролей пользователя.*/
@@ -32,61 +35,47 @@ public class GeneralAccountsEntity {
     @JoinTable(name = "general_account_role", joinColumns = {@JoinColumn(name = "id_account")},
             inverseJoinColumns = { @JoinColumn(name = "id_role")})
     public List<GeneralRolesEntity> getRoles() {
-        return this.roles;
+        return this.generalAccountsEntity.getRoles();
     }
 
     public void setRoles(List<GeneralRolesEntity> roles) {
-        this.roles = roles;
+        this.generalAccountsEntity.setRoles(roles);
     }
 
     @Column(name = "username")
     public String getUsername() {
-        return username;
+        return this.generalAccountsEntity.getUsername();
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.generalAccountsEntity.setUsername(username);
     }
 
     @Column(name = "password")
     public String getPassword() {
-        return password;
+        return this.generalAccountsEntity.getPassword();
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.generalAccountsEntity.setPassword(password);
     }
 
     @Column(name = "email")
     public String getEmail() {
-        return email;
+        return this.generalAccountsEntity.getEmail();
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.generalAccountsEntity.setEmail(email);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        GeneralAccountsEntity that = (GeneralAccountsEntity) o;
-
-        if (id != that.id) return false;
-        if (username != null ? !username.equals(that.username) : that.username != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (email != null ? !email.equals(that.email) : that.email != null) return false;
-
-        return true;
+        return this.generalAccountsEntity.equals(o);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) id;
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        return result;
+        return this.generalAccountsEntity.hashCode();
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntityDecorator;
 
 import java.util.List;
 
@@ -20,19 +20,19 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GeneralRolesEntity> findAll() {
-        return sessionFactory.getCurrentSession().createCriteria(GeneralRolesEntity.class).list();
+    public List<GeneralRolesEntityDecorator> findAll() {
+        return sessionFactory.getCurrentSession().createCriteria(GeneralRolesEntityDecorator.class).list();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public GeneralRolesEntity findByID(int id) {
-        return this.sessionFactory.getCurrentSession().get(GeneralRolesEntity.class, id);
+    public GeneralRolesEntityDecorator findByID(int id) {
+        return this.sessionFactory.getCurrentSession().get(GeneralRolesEntityDecorator.class, id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public void save(GeneralRolesEntity obj) {
+    public void save(GeneralRolesEntityDecorator obj) {
 
     }
 }

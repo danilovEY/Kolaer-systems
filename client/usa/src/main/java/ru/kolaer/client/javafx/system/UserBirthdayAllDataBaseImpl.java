@@ -2,7 +2,7 @@ package ru.kolaer.client.javafx.system;
 
 import com.sun.jersey.api.client.WebResource;
 import javafx.beans.property.SimpleStringProperty;
-import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
 import ru.kolaer.api.system.UserBirthdayAllDataBase;
 
 import java.text.DateFormat;

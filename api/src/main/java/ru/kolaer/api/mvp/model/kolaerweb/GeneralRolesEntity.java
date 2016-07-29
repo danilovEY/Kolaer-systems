@@ -1,20 +1,13 @@
-package ru.kolaer.server.webportal.mvc.model.entities.general;
-
-import javax.persistence.*;
+package ru.kolaer.api.mvp.model.kolaerweb;
 
 /**
  * Created by Danilov on 24.07.2016.
  * Структура роли в БД.
  */
-@Entity
-@Table(name = "general_roles")
 public class GeneralRolesEntity {
     private int id;
     private String type;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     public int getId() {
         return id;
     }
@@ -23,7 +16,6 @@ public class GeneralRolesEntity {
         this.id = id;
     }
 
-    @Column(name = "type")
     public String getType() {
         return type;
     }

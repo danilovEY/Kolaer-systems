@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.mvc.model.entities.general;
+package ru.kolaer.api.mvp.model.kolaerweb;
 
 /**
  * Created by Danilov on 27.07.2016.

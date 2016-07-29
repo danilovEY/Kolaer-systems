@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.webportal;
 
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
+
 import javax.persistence.*;
 
 /**
@@ -8,88 +10,84 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "webportal_url_paths")
-public class WebPortalUrlPath {
-    private int id;
-    private String url;
-    private String description;
-    /**Имеют ли доступ к URL все пользователи*/
-    private boolean accessAll;
-    private boolean accessSuperAdmin;
-    private boolean accessAdmin;
-    private boolean accessUser;
-    private boolean accessAnonymous;
+public class WebPortalUrlPathDecorator {
+    private WebPortalUrlPath webPortalUrlPath;
+
+    public WebPortalUrlPathDecorator() {
+        this.webPortalUrlPath = new WebPortalUrlPath();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     public int getId() {
-        return id;
+        return this.webPortalUrlPath.getId();
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.webPortalUrlPath.setId(id);
     }
 
     @Column(name = "url")
     public String getUrl() {
-        return url;
+        return this.webPortalUrlPath.getUrl();
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.webPortalUrlPath.setUrl(url);
     }
 
     @Column(name = "description")
     public String getDescription() {
-        return description;
+        return this.webPortalUrlPath.getDescription();
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.webPortalUrlPath.setDescription(description);
     }
 
     @Column(name = "access_all")
     public boolean isAccessAll() {
-        return accessAll;
+        return this.webPortalUrlPath.isAccessAll();
     }
 
     public void setAccessAll(boolean accessAll) {
-        this.accessAll = accessAll;
+        this.webPortalUrlPath.setAccessAll(accessAll);
     }
 
     @Column(name = "access_super_admin")
     public boolean isAccessSuperAdmin() {
-        return accessSuperAdmin;
+        return this.webPortalUrlPath.isAccessSuperAdmin();
     }
 
     public void setAccessSuperAdmin(boolean accessSuperAdmin) {
-        this.accessSuperAdmin = accessSuperAdmin;
+        this.webPortalUrlPath.setAccessSuperAdmin(accessSuperAdmin);
     }
 
     @Column(name = "access_admin")
     public boolean isAccessAdmin() {
-        return accessAdmin;
+        return this.webPortalUrlPath.isAccessAdmin();
     }
 
     public void setAccessAdmin(boolean accessAdmin) {
-        this.accessAdmin = accessAdmin;
+        this.webPortalUrlPath.setAccessAdmin(accessAdmin);
     }
 
     @Column(name = "access_user")
     public boolean isAccessUser() {
-        return accessUser;
+        return this.webPortalUrlPath.isAccessUser();
     }
 
     public void setAccessUser(boolean accessUser) {
-        this.accessUser = accessUser;
+        this.webPortalUrlPath.setAccessUser(accessUser);
     }
 
     @Column(name = "access_anonymous")
     public boolean isAccessAnonymous() {
-        return accessAnonymous;
+        return this.webPortalUrlPath.isAccessAnonymous();
     }
 
     public void setAccessAnonymous(boolean accessAnonymous) {
-        this.accessAnonymous = accessAnonymous;
+        this.webPortalUrlPath.setAccessAnonymous(accessAnonymous);
     }
 }

@@ -2,8 +2,8 @@ package ru.kolaer.birthday.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.DbBirthdayAll;
-import ru.kolaer.api.mvp.model.DbDataAll;
+import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;

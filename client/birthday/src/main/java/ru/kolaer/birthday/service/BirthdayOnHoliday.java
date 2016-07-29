@@ -2,9 +2,9 @@ package ru.kolaer.birthday.service;
 
 import javafx.application.Platform;
 import javafx.util.Duration;
-import ru.kolaer.api.mvp.model.DbBirthdayAll;
-import ru.kolaer.api.mvp.model.DbDataAll;
-import ru.kolaer.api.mvp.model.PublicHolidays;
+import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.DbDataAll;
+import ru.kolaer.api.mvp.model.restful.PublicHolidays;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.NotifiAction;
 import ru.kolaer.api.system.ServerStatus;

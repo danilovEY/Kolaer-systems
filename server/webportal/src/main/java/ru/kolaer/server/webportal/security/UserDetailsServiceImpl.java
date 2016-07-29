@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.kolaer.server.webportal.mvc.model.dao.UserDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
 
 import java.util.stream.Collectors;
 
@@ -27,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         User userResult = null;
 
-        for(GeneralAccountsEntity acc : userDao.findAll()) {
+        for(GeneralAccountsEntityDecorator acc : userDao.findAll()) {
            if(acc.getUsername().equals(username)){
                userResult = new User(username, acc.getPassword(), true,true,true,true, acc.getRoles().stream().map(role -> {
                    return new SimpleGrantedAuthority(role.getType().toString());

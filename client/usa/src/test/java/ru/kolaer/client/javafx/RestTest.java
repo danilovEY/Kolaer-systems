@@ -7,7 +7,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import ru.kolaer.api.mvp.model.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
 import ru.kolaer.client.javafx.system.JsonConverterSingleton;
 import ru.kolaer.client.javafx.system.NetworkUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;

@@ -1,13 +1,9 @@
-package ru.kolaer.server.webportal.mvc.model.entities.general;
-
-import javax.persistence.*;
+package ru.kolaer.api.mvp.model.kolaerweb;
 
 /**
  * Created by Danilov on 24.07.2016.
  * Структура сотрудника в БД.
  */
-@Entity
-@Table(name = "general_employees")
 public class GeneralEmployeesEntity {
     private int pnumber;
     private String initials;
@@ -16,9 +12,6 @@ public class GeneralEmployeesEntity {
     private String post;
     private GeneralAccountsEntity accountsEntity;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pnumber")
     public int getPnumber() {
         return pnumber;
     }
@@ -27,8 +20,6 @@ public class GeneralEmployeesEntity {
         this.pnumber = pnumber;
     }
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_account", nullable = true)
     public GeneralAccountsEntity getAccountsEntity() {
         return accountsEntity;
     }
@@ -37,7 +28,6 @@ public class GeneralEmployeesEntity {
         this.accountsEntity = accountsEntity;
     }
 
-    @Column(name = "initials")
     public String getInitials() {
         return initials;
     }
@@ -46,8 +36,6 @@ public class GeneralEmployeesEntity {
         this.initials = initials;
     }
 
-    @Column(name = "gender")
-    @Enumerated(EnumType.STRING)
     public EnumGender getGender() {
         return gender;
     }
@@ -56,8 +44,6 @@ public class GeneralEmployeesEntity {
         this.gender = gender;
     }
 
-
-    @Column(name = "departament")
     public String getDepartament() {
         return departament;
     }
@@ -66,7 +52,6 @@ public class GeneralEmployeesEntity {
         this.departament = departament;
     }
 
-    @Column(name = "post")
     public String getPost() {
         return post;
     }
