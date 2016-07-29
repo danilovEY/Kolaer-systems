@@ -1,6 +1,7 @@
-package ru.kolaer.api.mvp.model.kolaerweb.rss;
+package ru.kolaer.api.mvp.model.kolaerweb.webportal.rss;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntityBase;
 
 import java.sql.Date;
 
@@ -8,7 +9,7 @@ import java.sql.Date;
  * Created by Danilov on 24.07.2016.
  * Структура новости из БД.
  */
-public class WebPortalRssEntity {
+public class WebPortalRssEntityBase implements WebPortalRssEntity {
     private int id;
     private String title;
     private String content;
@@ -78,7 +79,7 @@ public class WebPortalRssEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        WebPortalRssEntity that = (WebPortalRssEntity) o;
+        WebPortalRssEntityBase that = (WebPortalRssEntityBase) o;
 
         if (id != that.id) return false;
         if (user != that.user) return false;

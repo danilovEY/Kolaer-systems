@@ -1,81 +1,30 @@
 package ru.kolaer.api.mvp.model.kolaerweb.webportal;
 
 /**
- * Created by danilovey on 28.07.2016.
- * Структура URl из БД.
+ * Created by danilovey on 29.07.2016.
  */
-public class WebPortalUrlPath {
-    private int id;
-    private String url;
-    private String description;
-    /**Имеют ли доступ к URL все пользователи*/
-    private boolean accessAll;
-    private boolean accessSuperAdmin;
-    private boolean accessAdmin;
-    private boolean accessUser;
-    private boolean accessAnonymous;
+public interface WebPortalUrlPath {
+     int getId();
+     void setId(int id);
 
-    public int getId() {
-        return id;
-    }
+     String getUrl();
+     void setUrl(String url);
 
-    public void setId(int id) {
-        this.id = id;
-    }
+     String getDescription();
+     void setDescription(String description);
 
-    public String getUrl() {
-        return url;
-    }
+     boolean isAccessAll();
+     void setAccessAll(boolean accessAll);
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+     boolean isAccessSuperAdmin();
+     void setAccessSuperAdmin(boolean accessSuperAdmin);
 
-    public String getDescription() {
-        return description;
-    }
+     boolean isAccessAdmin();
+     void setAccessAdmin(boolean accessAdmin);
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+     boolean isAccessUser();
+     void setAccessUser(boolean accessUser);
 
-    public boolean isAccessAll() {
-        return accessAll;
-    }
-
-    public void setAccessAll(boolean accessAll) {
-        this.accessAll = accessAll;
-    }
-
-    public boolean isAccessSuperAdmin() {
-        return accessSuperAdmin;
-    }
-
-    public void setAccessSuperAdmin(boolean accessSuperAdmin) {
-        this.accessSuperAdmin = accessSuperAdmin;
-    }
-
-    public boolean isAccessAdmin() {
-        return accessAdmin;
-    }
-
-    public void setAccessAdmin(boolean accessAdmin) {
-        this.accessAdmin = accessAdmin;
-    }
-
-    public boolean isAccessUser() {
-        return accessUser;
-    }
-
-    public void setAccessUser(boolean accessUser) {
-        this.accessUser = accessUser;
-    }
-
-    public boolean isAccessAnonymous() {
-        return accessAnonymous;
-    }
-
-    public void setAccessAnonymous(boolean accessAnonymous) {
-        this.accessAnonymous = accessAnonymous;
-    }
+     boolean isAccessAnonymous();
+     void setAccessAnonymous(boolean accessAnonymous);
 }

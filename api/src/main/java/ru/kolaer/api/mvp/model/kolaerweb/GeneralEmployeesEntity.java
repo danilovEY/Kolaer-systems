@@ -1,88 +1,24 @@
 package ru.kolaer.api.mvp.model.kolaerweb;
 
 /**
- * Created by Danilov on 24.07.2016.
- * Структура сотрудника в БД.
+ * Created by danilovey on 29.07.2016.
  */
-public class GeneralEmployeesEntity {
-    private int pnumber;
-    private String initials;
-    private EnumGender gender;
-    private String departament;
-    private String post;
-    private GeneralAccountsEntity accountsEntity;
+public interface GeneralEmployeesEntity {
+     int getPnumber();
+     void setPnumber(int pnumber);
 
-    public int getPnumber() {
-        return pnumber;
-    }
+     GeneralAccountsEntity getAccountsEntity();
+     void setAccountsEntity(GeneralAccountsEntity accountsEntity);
 
-    public void setPnumber(int pnumber) {
-        this.pnumber = pnumber;
-    }
+     String getInitials();
+     void setInitials(String initials);
 
-    public GeneralAccountsEntity getAccountsEntity() {
-        return accountsEntity;
-    }
+     EnumGender getGender();
+     void setGender(EnumGender gender);
 
-    public void setAccountsEntity(GeneralAccountsEntity accountsEntity) {
-        this.accountsEntity = accountsEntity;
-    }
+     String getDepartament();
+     void setDepartament(String departament);
 
-    public String getInitials() {
-        return initials;
-    }
-
-    public void setInitials(String initials) {
-        this.initials = initials;
-    }
-
-    public EnumGender getGender() {
-        return gender;
-    }
-
-    public void setGender(EnumGender gender) {
-        this.gender = gender;
-    }
-
-    public String getDepartament() {
-        return departament;
-    }
-
-    public void setDepartament(String departament) {
-        this.departament = departament;
-    }
-
-    public String getPost() {
-        return post;
-    }
-
-    public void setPost(String post) {
-        this.post = post;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        GeneralEmployeesEntity that = (GeneralEmployeesEntity) o;
-
-        if (pnumber != that.pnumber) return false;
-        if (initials != null ? !initials.equals(that.initials) : that.initials != null) return false;
-        if (gender != null ? !gender.equals(that.gender) : that.gender != null) return false;
-        if (departament != null ? !departament.equals(that.departament) : that.departament != null) return false;
-        if (post != null ? !post.equals(that.post) : that.post != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) pnumber;
-        result = 31 * result + (initials != null ? initials.hashCode() : 0);
-        result = 31 * result + (gender != null ? gender.hashCode() : 0);
-        result = 31 * result + (departament != null ? departament.hashCode() : 0);
-        result = 31 * result + (post != null ? post.hashCode() : 0);
-        return result;
-    }
+     String getPost();
+     void setPost(String post);
 }
