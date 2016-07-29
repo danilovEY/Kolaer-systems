@@ -6,4 +6,7 @@ package ru.kolaer.api.system;
 public interface RestfulServer extends Server {
     /**Получить объект для работы с БД.*/
     KolaerDataBase getKolaerDataBase();
+
+    /**Получить объект для работы со сторонними API.*/
+    OtherPublicAPI getOtherPublicAPI();
 }

@@ -10,7 +10,4 @@ public interface NetworkUS {
 	RestfulServer getRestfulServer();
 	/**Получить Kolaer-web сервер.*/
 	KolaerWebServer getKolaerWebServer();
-
-	/**Получить объект для работы со сторонними API.*/
-	OtherPublicAPI getOtherPublicAPI();
 }

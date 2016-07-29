@@ -4,18 +4,19 @@ import java.io.InputStream;
 import java.net.URL;
 
 public interface Resources {
-	public static final String VERSION = "1.1";
+	String VERSION = "1.2";
 	
-	public static final String PATH_TO_DIR_WITH_PLUGINS = "plugins";
-	public static final StringBuilder URL_TO_KOLAER_RESTFUL = new StringBuilder("localhost:8080/ru.kolaer.server.restful");
+	String PATH_TO_DIR_WITH_PLUGINS = "plugins";
+	StringBuilder URL_TO_KOLAER_RESTFUL = new StringBuilder("localhost:8080/ru.kolaer.server.restful");
+	StringBuilder URL_TO_KOLAER_WEB = new StringBuilder("localhost:8080/kolaer-web");
+
+	URL V_MAIN_FRAME = Resources.class.getResource("/viewFX/VMainFrame.fxml");
+	URL V_TAB_EXPLORER = Resources.class.getResource("/viewFX/VTabExplorer.fxml");
 	
-	public static final URL V_MAIN_FRAME = Resources.class.getResource("/viewFX/VMainFrame.fxml");
-	public static final URL V_TAB_EXPLORER = Resources.class.getResource("/viewFX/VTabExplorer.fxml");
+	URL ICON_START_BUTTON = Resources.class.getResource("/css/aerIcon.png");
+	InputStream ICON_MAIN_FRAME = Resources.class.getResourceAsStream("/css/favicon.ico");
 	
-	public static final URL ICON_START_BUTTON = Resources.class.getResource("/css/aerIcon.png");
-	public static final InputStream ICON_MAIN_FRAME = Resources.class.getResourceAsStream("/css/favicon.ico");
-	
-	public static final String L_MENU_FILE = "Файл";
-	public static final String L_MENU_HELP = "Помощь";
+	String L_MENU_FILE = "Файл";
+	String L_MENU_HELP = "Помощь";
 	
 }	
