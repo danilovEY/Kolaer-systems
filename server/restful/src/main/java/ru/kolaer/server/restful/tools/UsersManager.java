@@ -1,13 +1,13 @@
 package ru.kolaer.server.restful.tools;
 
+import ru.kolaer.server.dao.entities.DbKolaerUser;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-import ru.kolaer.server.dao.entities.DbKolaerUser;
 
 /**
  *

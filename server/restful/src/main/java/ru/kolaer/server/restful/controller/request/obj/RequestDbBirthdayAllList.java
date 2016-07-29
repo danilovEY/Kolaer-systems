@@ -1,9 +1,9 @@
 package ru.kolaer.server.restful.controller.request.obj;
 
+import ru.kolaer.server.dao.entities.DbBirthdayAll;
+
 import java.util.Collections;
 import java.util.List;
-
-import ru.kolaer.server.dao.entities.DbBirthdayAll;
 
 public class RequestDbBirthdayAllList {
 	private List<DbBirthdayAll> birthdayList;

@@ -1,13 +1,12 @@
 package ru.kolaer.api.mvp.model.restful;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-import javax.xml.bind.annotation.XmlRootElement;
 
 //@JsonIgnoreProperties("LOG")
 @XmlRootElement

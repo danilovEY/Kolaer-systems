@@ -3,7 +3,10 @@ package ru.kolaer.client.javafx.system;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
-import ru.kolaer.api.system.*;
+import ru.kolaer.api.system.KolaerDataBase;
+import ru.kolaer.api.system.OtherPublicAPI;
+import ru.kolaer.api.system.RestfulServer;
+import ru.kolaer.api.system.ServerStatus;
 
 /**
  * Created by danilovey on 29.07.2016.

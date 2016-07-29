@@ -1,9 +1,8 @@
 package ru.kolaer.api.mvp.model.restful;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
-
-import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class DbBirthdayAll implements Serializable {

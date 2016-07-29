@@ -1,18 +1,16 @@
 package ru.kolaer.server.dao.impl;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.kolaer.server.dao.DbDataAllDAO;
+import ru.kolaer.server.dao.entities.DbDataAll;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TemporalType;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import ru.kolaer.server.dao.DbDataAllDAO;
-import ru.kolaer.server.dao.entities.DbDataAll;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional

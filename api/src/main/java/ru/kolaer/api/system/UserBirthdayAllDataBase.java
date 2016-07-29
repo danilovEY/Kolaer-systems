@@ -1,9 +1,9 @@
 package ru.kolaer.api.system;
 
+import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
+
 import java.util.Date;
 import java.util.List;
-
-import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
 
 public interface UserBirthdayAllDataBase extends UserDataBase<DbBirthdayAll> {
 	void insertUserList(List<DbBirthdayAll> userList);

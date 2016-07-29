@@ -1,11 +1,11 @@
 package ru.kolaer.server.dao.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import ru.kolaer.server.restful.tools.UserLog;
+
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import ru.kolaer.server.restful.tools.UserLog;
 
 @JsonIgnoreProperties("log")
 public class DbKolaerUser implements Serializable {

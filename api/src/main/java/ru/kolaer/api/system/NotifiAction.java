@@ -1,8 +1,8 @@
 package ru.kolaer.api.system;
 
-import java.util.function.Consumer;
-
 import javafx.event.ActionEvent;
+
+import java.util.function.Consumer;
 
 public class NotifiAction {
 	private final String text;

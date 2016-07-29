@@ -1,10 +1,5 @@
 package ru.kolaer.server.config;
 
-import java.util.Properties;
-
-import javax.annotation.Resource;
-import javax.sql.DataSource;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +11,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import ru.kolaer.server.dao.DbBirthdayAllDAO;
 import ru.kolaer.server.dao.DbDataAllDAO;
@@ -24,6 +18,10 @@ import ru.kolaer.server.dao.impl.DbBirthdayAllDAOImpl;
 import ru.kolaer.server.dao.impl.DbDataAllDAOImpl;
 import ru.kolaer.server.dao.impl.PublicHolidaysDAO;
 import ru.kolaer.server.restful.tools.UsersManager;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.util.Properties;
  
 @Configuration
 @EnableWebMvc

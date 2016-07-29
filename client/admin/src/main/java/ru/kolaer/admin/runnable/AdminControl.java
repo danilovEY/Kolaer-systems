@@ -1,10 +1,8 @@
 package ru.kolaer.admin.runnable;
 
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import ru.kolaer.admin.bid.mvp.model.BidModelManager;
-import ru.kolaer.admin.bid.mvp.presenter.PBidTable;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -12,9 +10,6 @@ import ru.kolaer.api.tools.Tools;
 
 import java.net.URL;
 import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class AdminControl implements UniformSystemPlugin {
 	private final String pass = "";
