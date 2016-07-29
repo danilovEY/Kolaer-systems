@@ -3,24 +3,10 @@ package ru.kolaer.api.mvp.model.kolaerweb.psr;
 /**
  * Created by danilovey on 29.07.2016.
  */
-public class PsrProjectStatus {
-    private int id;
-    private String type;
+public interface PsrProjectStatus {
+    int getId();
+    void setId(int id);
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    String getType();
+    void setType(String type);
 }
