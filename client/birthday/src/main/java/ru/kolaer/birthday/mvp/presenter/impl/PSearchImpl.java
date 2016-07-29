@@ -23,9 +23,9 @@ public class PSearchImpl implements PSearchUsers {
 		this.editorKid = editorKid;
 		
 		this.view.setSearchAction(e -> {
-			if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.AVAILABLE) {
-				final DbDataAll[] dbDataAllArray = this.editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersByInitials(this.view.getSearchText());
-				final DbBirthdayAll[] dbBirthdayAllArray = this.editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersByInitials(this.view.getSearchText());
+			if(this.editorKid.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
+				final DbDataAll[] dbDataAllArray = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByInitials(this.view.getSearchText());
+				final DbBirthdayAll[] dbBirthdayAllArray = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersByInitials(this.view.getSearchText());
 				
 				final List<UserModel> users = new ArrayList<>();
 				

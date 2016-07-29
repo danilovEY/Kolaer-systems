@@ -27,11 +27,11 @@ public class PCalendarAll extends PCalendarBase {
 				final ProgressBarObservable obs = new DefaultProgressBar();
 				this.editorKid.getUISystemUS().getStatusBar().addProgressBar(obs);
 				
-				final DbBirthdayAll[] usersBirthdayAll = this.editorKid.getUSNetwork().getKolaerDataBase()
+				final DbBirthdayAll[] usersBirthdayAll = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase()
 						.getUserBirthdayAllDataBase()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				
-				final DbDataAll[] usersDataAll = this.editorKid.getUSNetwork().getKolaerDataBase()
+				final DbDataAll[] usersDataAll = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase()
 						.getUserDataAllDataBase()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				
@@ -64,7 +64,7 @@ public class PCalendarAll extends PCalendarBase {
 	@Override
 	public void initDayCellFactory() {
 		if(!this.isInitDayCellFactory) {
-			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase(), editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase()));	
+			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase(), editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase()));
 			this.isInitDayCellFactory = true;
 		}
 	}

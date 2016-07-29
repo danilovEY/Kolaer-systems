@@ -73,13 +73,13 @@ public class PTableWithUsersBirthdayObserverImpl implements PTableWithUsersBirth
 	@Override
 	public void showTodayBirthday() {
 		CompletableFuture.runAsync(() -> {
-			final DbDataAll[] usersKolaer = editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+			final DbDataAll[] usersKolaer = editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
 			for(final DbDataAll user : usersKolaer) {
 				final UserModel userModel = new UserModelImpl(user);
 				table.addData(userModel);
 			}
 
-			final DbBirthdayAll[] usersOther = editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
+			final DbBirthdayAll[] usersOther = editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
 			for(final DbBirthdayAll user : usersOther) {
 				final UserModel userModel = new UserModelImpl(user);
 				userModel.setOrganization(user.getOrganization());

@@ -33,7 +33,7 @@ public class PCalendarKAER extends PCalendarBase implements PCalendar {
 			if (this.editorKid != null) {
 				final ProgressBarObservable obs = new DefaultProgressBar();
 				this.editorKid.getUISystemUS().getStatusBar().addProgressBar(obs);
-				final DbDataAll[] usersDataAll = this.editorKid.getUSNetwork().getKolaerDataBase()
+				final DbDataAll[] usersDataAll = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase()
 						.getUserDataAllDataBase()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				obs.setValue(-1);
@@ -57,7 +57,7 @@ public class PCalendarKAER extends PCalendarBase implements PCalendar {
 	@Override
 	public void initDayCellFactory() {
 		if(!this.isInitDayCellFactory) {
-			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase()));
+			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase()));
 			this.isInitDayCellFactory = true;
 		}
 	}

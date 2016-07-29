@@ -32,7 +32,7 @@ public class PCalendarAffiliates extends PCalendarBase  {
 			if (this.editorKid != null) {
 				final ProgressBarObservable obs = new DefaultProgressBar();
 				this.editorKid.getUISystemUS().getStatusBar().addProgressBar(obs);
-				final DbBirthdayAll[] usersDataAll = this.editorKid.getUSNetwork().getKolaerDataBase()
+				final DbBirthdayAll[] usersDataAll = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase()
 						.getUserBirthdayAllDataBase()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()), ORGANIZATION);
 				obs.setValue(-1);
@@ -57,7 +57,7 @@ public class PCalendarAffiliates extends PCalendarBase  {
 	@Override
 	public void initDayCellFactory() {
 		if(!this.isInitDayCellFactory) {
-			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase(), ORGANIZATION));	
+			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase(), ORGANIZATION));
 			this.isInitDayCellFactory = true;
 		}
 	}	

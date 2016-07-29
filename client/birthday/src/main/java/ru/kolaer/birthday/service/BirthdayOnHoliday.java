@@ -27,8 +27,8 @@ public class BirthdayOnHoliday implements Service {
 	
 	@Override
 	public void run() {
-		if(this.editorKit.getUSNetwork().getServerStatus() == ServerStatus.AVAILABLE) {
-			final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
+		if(this.editorKit.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
+			final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getRestfulServer().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
 			final LocalDate date = LocalDate.now();
 			if(date.getDayOfWeek().getValue() == 5 ) {
 				if(!this.tomorrow) {
@@ -58,8 +58,8 @@ public class BirthdayOnHoliday implements Service {
 	}
 
 	private void showNotifi(final String title, final LocalDate date, final PublicHolidays holiday) {
-		final DbDataAll[] users = this.editorKit.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
-		final DbBirthdayAll[] usersBirthday = editorKit.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
+		final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
+		final DbBirthdayAll[] usersBirthday = editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
 		
 		final NotifiAction[] actions = new NotifiAction[users.length + usersBirthday.length];
 		int i = 0;

@@ -29,7 +29,7 @@ public class RestTest {
 	public void name() throws InterruptedException {
 		NetworkUSImpl networkUSImpl = new NetworkUSImpl();
 		
-		Integer in = networkUSImpl.getKolaerDataBase().getUserDataAllDataBase().getCountUsersBirthday(new Date());
+		Integer in = networkUSImpl.getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getCountUsersBirthday(new Date());
 		System.out.println(in);
 		
 		

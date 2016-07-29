@@ -30,9 +30,9 @@ public class BirthdayService implements Service {
 	
 	@Override
 	public void run() {
-		if(this.editorKit.getUSNetwork().getServerStatus() == ServerStatus.AVAILABLE) {
-			final DbDataAll[] users = this.editorKit.getUSNetwork().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
-			final DbBirthdayAll[] usersBirthday = editorKit.getUSNetwork().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
+		if(this.editorKit.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
+			final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+			final DbBirthdayAll[] usersBirthday = editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
 			
 			final NotifiAction[] actions = new NotifiAction[users.length + usersBirthday.length];
 			int i = 0;

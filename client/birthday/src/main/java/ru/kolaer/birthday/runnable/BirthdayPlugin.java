@@ -63,7 +63,7 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 
 	@Override
 	public void start() throws Exception {
-		if(this.editorKid.getUSNetwork().getServerStatus() == ServerStatus.NOT_AVAILABLE){
+		if(this.editorKid.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.NOT_AVAILABLE){
 			this.editorKid.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.").show();
 			return;
 		}
