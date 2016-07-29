@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -8,9 +10,12 @@ import java.util.List;
  */
 public interface DaoStandard<T> {
     /**Получить все объекты.*/
+    @Transactional(readOnly = true)
     List<T> findAll();
     /**Получить объект по ID.*/
+    @Transactional(readOnly = true)
     T findByID(int id);
     /**Добавить объект в БД.*/
+    @Transactional
     void save(T obj);
 }

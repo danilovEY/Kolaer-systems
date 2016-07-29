@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name = "psr_state")
 public class PsrStateDecorator implements PsrState {
-    private PsrStateBase psrProjectState;
+    private PsrState psrProjectState;
 
     public PsrStateDecorator() {
         this.psrProjectState = new PsrStateBase();
@@ -29,6 +29,7 @@ public class PsrStateDecorator implements PsrState {
     public void setId(int id) {
         this.psrProjectState.setId(id);
     }
+
     @Column(name = "comment")
     public String getComment() {
         return this.psrProjectState.getComment();

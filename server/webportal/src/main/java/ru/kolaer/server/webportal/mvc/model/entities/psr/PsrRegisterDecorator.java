@@ -2,7 +2,6 @@ package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -105,24 +104,28 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setComment(comment);
     }
 
-    @OneToMany(targetEntity = PsrAttachmentDecorator.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "psr_project_attachment", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_attachment"))
-    public List<PsrAttachment> getAttachments() {
-        return this.psrRegister.getAttachments();
-    }
-
-    //
-    public void setAttachments(List<PsrAttachment> attachments) {
-        this.psrRegister.setAttachments(attachments);
-    }
-
-    @Transient
+    //@LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(targetEntity = PsrStateDecorator.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "psr_project_state", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_state"))
+    @OrderColumn(name = "id")
     public List<PsrState> getStateList() {
         return this.psrRegister.getStateList();
     }
 
-    //@OneToMany(targetEntity = PsrAttachmentDecorator.class, fetch = FetchType.EAGER, mappedBy = "id_project")
     public void setStateList(List<PsrState> stateList) {
         this.psrRegister.setStateList(stateList);
     }
+
+    @OneToMany(targetEntity = PsrAttachmentDecorator.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "psr_project_attachment", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_attachment"))
+    //@OrderColumn(name = "id")
+    public List<PsrAttachment> getAttachments() {
+        return this.psrRegister.getAttachments();
+    }
+
+    public void setAttachments(List<PsrAttachment> attachments) {
+        this.psrRegister.setAttachments(attachments);
+    }
+
+
 }
