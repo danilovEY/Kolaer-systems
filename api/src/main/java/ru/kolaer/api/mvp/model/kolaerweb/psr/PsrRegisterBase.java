@@ -2,7 +2,7 @@ package ru.kolaer.api.mvp.model.kolaerweb.psr;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,8 +17,8 @@ public class PsrRegisterBase implements PsrRegister {
     private Date dateOpen;
     private Date dateClose;
     private String comment;
-    private List<PsrProjectAttachment> attachments;
-    private List<PsrProjectState> stateList;
+    private List<PsrAttachment> attachments;
+    private List<PsrState> stateList;
 
     public int getId() {
         return id;
@@ -84,19 +84,19 @@ public class PsrRegisterBase implements PsrRegister {
         this.comment = comment;
     }
 
-    public List<PsrProjectAttachment> getAttachments() {
+    public List<PsrAttachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<PsrProjectAttachment> attachments) {
+    public void setAttachments(List<PsrAttachment> attachments) {
         this.attachments = attachments;
     }
 
-    public List<PsrProjectState> getStateList() {
+    public List<PsrState> getStateList() {
         return stateList;
     }
 
-    public void setStateList(List<PsrProjectState> stateList) {
+    public void setStateList(List<PsrState> stateList) {
         this.stateList = stateList;
     }
 }

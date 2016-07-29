@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.security;
+package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         for(GeneralAccountsEntityDecorator acc : userDao.findAll()) {
            if(acc.getUsername().equals(username)){
                userResult = new User(username, acc.getPassword(), true,true,true,true, acc.getRoles().stream().map(role -> {
-                   return new SimpleGrantedAuthority(role.getType().toString());
+                   return new SimpleGrantedAuthority(role.getType());
                }).collect(Collectors.toList()));
                break;
            }

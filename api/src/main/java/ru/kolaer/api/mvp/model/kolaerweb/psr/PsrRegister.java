@@ -2,7 +2,7 @@ package ru.kolaer.api.mvp.model.kolaerweb.psr;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,9 +34,9 @@ public interface PsrRegister {
      String getComment();
      void setComment(String comment);
 
-     List<PsrProjectAttachment> getAttachments();
-     void setAttachments(List<PsrProjectAttachment> attachments);
+     List<PsrAttachment> getAttachments();
+     void setAttachments(List<PsrAttachment> attachments);
 
-     List<PsrProjectState> getStateList();
-     void setStateList(List<PsrProjectState> stateList);
+     List<PsrState> getStateList();
+     void setStateList(List<PsrState> stateList);
 }
