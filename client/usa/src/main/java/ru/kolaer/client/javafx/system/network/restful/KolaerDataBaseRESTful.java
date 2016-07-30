@@ -1,4 +1,4 @@
-package ru.kolaer.client.javafx.system.network.kolaerweb;
+package ru.kolaer.client.javafx.system.network.restful;
 
 import com.sun.jersey.api.client.WebResource;
 import ru.kolaer.api.system.network.restful.KolaerDataBase;

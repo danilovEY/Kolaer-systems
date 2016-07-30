@@ -13,6 +13,7 @@ public class KolaerWebServerImpl implements KolaerWebServer {
     private WebResource serviceWeb;
 
     public KolaerWebServerImpl(WebResource resource) {
+
     }
 
     @Override

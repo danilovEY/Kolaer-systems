@@ -6,7 +6,6 @@ import com.sun.jersey.api.client.WebResource;
 import ru.kolaer.api.system.network.restful.KolaerDataBase;
 import ru.kolaer.api.system.network.restful.RestfulServer;
 import ru.kolaer.api.system.network.ServerStatus;
-import ru.kolaer.client.javafx.system.network.kolaerweb.KolaerDataBaseRESTful;
 
 /**
  * Created by danilovey on 29.07.2016.
