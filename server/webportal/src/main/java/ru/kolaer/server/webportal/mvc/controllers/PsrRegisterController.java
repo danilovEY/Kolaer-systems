@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -26,7 +27,7 @@ public class PsrRegisterController {
     public List<PsrRegister> getAllRegister() {
         List<PsrRegister> list = this.psrRegisterDao.findAll();
         list.forEach(psr -> {
-            //System.out.println(psr.getAttachments().size());
+            System.out.println(psr.getStateList().size());
         });
         return list;
     }

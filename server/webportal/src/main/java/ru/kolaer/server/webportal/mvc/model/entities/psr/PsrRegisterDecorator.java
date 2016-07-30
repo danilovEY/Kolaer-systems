@@ -107,7 +107,7 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setComment(comment);
     }
 
-    @OneToMany(targetEntity = PsrStateDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = PsrStateDecorator.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_psr_project")
     public List<PsrState> getStateList() {
         return this.psrRegister.getStateList();
