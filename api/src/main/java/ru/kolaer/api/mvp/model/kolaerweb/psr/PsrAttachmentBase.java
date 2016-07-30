@@ -7,6 +7,7 @@ public class PsrAttachmentBase implements PsrAttachment {
     private int id;
     private String pathFile;
     private String name;
+    private PsrRegister psrRegister;
 
     public int getId() {
         return id;
@@ -33,4 +34,5 @@ public class PsrAttachmentBase implements PsrAttachment {
     public void setPathFile(String pathFile) {
         this.pathFile = pathFile;
     }
+
 }

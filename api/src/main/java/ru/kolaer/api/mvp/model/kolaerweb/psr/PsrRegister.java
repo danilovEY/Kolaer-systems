@@ -12,8 +12,8 @@ public interface PsrRegister {
      int getId();
      void setId(int id);
 
-     PsrProjectStatus getStatus();
-     void setStatus(PsrProjectStatus status);
+     PsrStatus getStatus();
+     void setStatus(PsrStatus status);
 
      GeneralEmployeesEntity getAuthor();
      void setAuthor(GeneralEmployeesEntity author);

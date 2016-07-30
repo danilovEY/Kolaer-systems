@@ -3,7 +3,7 @@ package ru.kolaer.api.mvp.model.kolaerweb.psr;
 /**
  * Created by danilovey on 29.07.2016.
  */
-public class PsrProjectStatusBase implements PsrProjectStatus {
+public class PsrStatusBase implements PsrStatus {
     private int id;
     private String type;
 

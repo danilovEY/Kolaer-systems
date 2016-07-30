@@ -26,7 +26,7 @@ public class PsrRegisterController {
     public List<PsrRegister> getAllRegister() {
         List<PsrRegister> list = this.psrRegisterDao.findAll();
         list.forEach(psr -> {
-            System.out.println(psr.getName());
+            //System.out.println(psr.getAttachments().size());
         });
         return list;
     }

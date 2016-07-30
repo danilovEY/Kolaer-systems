@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
+import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -32,34 +33,32 @@ public class PsrRegisterDecorator implements PsrRegister {
     }
 
 
-    @Transient
-    public PsrProjectStatus getStatus() {
+    @OneToOne(targetEntity = PsrStatusDecorator.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_status")
+    public PsrStatus getStatus() {
         return this.psrRegister.getStatus();
     }
 
-
-    //@OneToOne(targetEntity = PsrProjectStatusDecorator.class, fetch = FetchType.EAGER, mappedBy = "id_project")
-    //@JoinTable(name = "psr_project_status", joinColumns = @JoinColumn(name = "id"))
-    public void setStatus(PsrProjectStatus status) {
+    public void setStatus(PsrStatus status) {
         this.psrRegister.setStatus(status);
     }
 
-    @Transient
+    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_author")
     public GeneralEmployeesEntity getAuthor() {
         return this.psrRegister.getAuthor();
     }
 
-    //@OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER)
     public void setAuthor(GeneralEmployeesEntity author) {
         this.psrRegister.setAuthor(author);
     }
 
-    @Transient
+    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_project_admin")
     public GeneralEmployeesEntity getAdmin() {
         return this.psrRegister.getAdmin();
     }
 
-    //@OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER, mappedBy = "pnumber")
     public void setAdmin(GeneralEmployeesEntity admin) {
         this.psrRegister.setAdmin(admin);
     }
@@ -104,10 +103,8 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setComment(comment);
     }
 
-    //@LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(targetEntity = PsrStateDecorator.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "psr_project_state", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_state"))
-    @OrderColumn(name = "id")
+    @OneToMany(targetEntity = PsrStateDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_psr_project")
     public List<PsrState> getStateList() {
         return this.psrRegister.getStateList();
     }
@@ -116,9 +113,9 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setStateList(stateList);
     }
 
-    @OneToMany(targetEntity = PsrAttachmentDecorator.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "psr_project_attachment", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_attachment"))
-    //@OrderColumn(name = "id")
+
+    @OneToMany(targetEntity = PsrAttachmentDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_psr_project")
     public List<PsrAttachment> getAttachments() {
         return this.psrRegister.getAttachments();
     }

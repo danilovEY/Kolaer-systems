@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import org.hibernate.annotations.Immutable;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "general_roles")
+@Immutable
 public class GeneralRolesEntityDecorator implements GeneralRolesEntity{
     private GeneralRolesEntityBase generalRolesEntity;
 
@@ -19,7 +21,7 @@ public class GeneralRolesEntityDecorator implements GeneralRolesEntity{
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     public int getId() {
         return generalRolesEntity.getId();

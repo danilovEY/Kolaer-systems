@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class PsrRegisterBase implements PsrRegister {
     private int id;
-    private PsrProjectStatus status;
+    private PsrStatus status;
     private GeneralEmployeesEntity author;
     private GeneralEmployeesEntity admin;
     private String name;
@@ -28,11 +28,11 @@ public class PsrRegisterBase implements PsrRegister {
         this.id = id;
     }
 
-    public PsrProjectStatus getStatus() {
+    public PsrStatus getStatus() {
         return status;
     }
 
-    public void setStatus(PsrProjectStatus status) {
+    public void setStatus(PsrStatus status) {
         this.status = status;
     }
 

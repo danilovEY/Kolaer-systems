@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.mvc.model.dao.impl;
+package ru.kolaer.server.webportal.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

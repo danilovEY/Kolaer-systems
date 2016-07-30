@@ -85,7 +85,7 @@ public class SprintContext extends WebMvcConfigurerAdapter {
     }
 
     /**Позволяет мапить объект в json даже с учетом что стоит LAZY над property в entities.*/
-    public MappingJackson2HttpMessageConverter jacksonMessageConverter(){
+    /*public MappingJackson2HttpMessageConverter jacksonMessageConverter(){
         MappingJackson2HttpMessageConverter messageConverter = new  MappingJackson2HttpMessageConverter();
 
         ObjectMapper mapper = new ObjectMapper();
@@ -100,6 +100,6 @@ public class SprintContext extends WebMvcConfigurerAdapter {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(jacksonMessageConverter());
         super.configureMessageConverters(converters);
-    }
+    }*/
 
 }

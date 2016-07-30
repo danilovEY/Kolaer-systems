@@ -46,4 +46,5 @@ public class PsrStateBase implements PsrState {
     public void setPlan(boolean plan) {
         isPlan = plan;
     }
+
 }
