@@ -2,7 +2,7 @@ package ru.kolaer.birthday.mvp.presenter.impl;
 
 import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
-import ru.kolaer.api.system.ServerStatus;
+import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;

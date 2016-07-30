@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.ServerStatus;
+import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.presenter.PCalendar;
 import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;

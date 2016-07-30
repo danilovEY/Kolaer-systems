@@ -6,8 +6,8 @@ import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.mvp.model.restful.PublicHolidays;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.NotifiAction;
-import ru.kolaer.api.system.ServerStatus;
+import ru.kolaer.api.system.ui.NotifiAction;
+import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
@@ -28,7 +28,7 @@ public class BirthdayOnHoliday implements Service {
 	@Override
 	public void run() {
 		if(this.editorKit.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
-			final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getRestfulServer().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
+			final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
 			final LocalDate date = LocalDate.now();
 			if(date.getDayOfWeek().getValue() == 5 ) {
 				if(!this.tomorrow) {
