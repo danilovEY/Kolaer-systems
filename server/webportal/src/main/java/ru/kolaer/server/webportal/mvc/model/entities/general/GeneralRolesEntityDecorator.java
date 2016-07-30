@@ -14,10 +14,14 @@ import javax.persistence.*;
 @Table(name = "general_roles")
 @Immutable
 public class GeneralRolesEntityDecorator implements GeneralRolesEntity{
-    private GeneralRolesEntityBase generalRolesEntity;
+    private GeneralRolesEntity generalRolesEntity;
 
     public GeneralRolesEntityDecorator() {
         this.generalRolesEntity = new GeneralRolesEntityBase();
+    }
+
+    public GeneralRolesEntityDecorator(GeneralRolesEntity generalRolesEntity) {
+        this.generalRolesEntity = generalRolesEntity;
     }
 
     @Id

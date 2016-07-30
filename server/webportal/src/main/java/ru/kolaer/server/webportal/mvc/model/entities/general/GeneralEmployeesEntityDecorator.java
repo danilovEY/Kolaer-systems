@@ -14,10 +14,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "general_employees")
 public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
-    private GeneralEmployeesEntityBase generalEmployeesEntity;
+    private GeneralEmployeesEntity generalEmployeesEntity;
 
     public GeneralEmployeesEntityDecorator() {
         this.generalEmployeesEntity = new GeneralEmployeesEntityBase();
+    }
+
+    public GeneralEmployeesEntityDecorator(GeneralEmployeesEntity generalEmployeesEntity) {
+        this.generalEmployeesEntity = generalEmployeesEntity;
     }
 
     @Id

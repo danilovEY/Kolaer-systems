@@ -18,6 +18,10 @@ public class PsrStateDecorator implements PsrState {
         this.psrProjectState = new PsrStateBase();
     }
 
+    public PsrStateDecorator(PsrState psrState) {
+        this.psrProjectState = psrState;
+    }
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)

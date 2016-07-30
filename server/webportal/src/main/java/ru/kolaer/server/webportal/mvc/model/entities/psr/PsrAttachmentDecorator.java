@@ -17,6 +17,10 @@ public class PsrAttachmentDecorator implements PsrAttachment {
         this.psrAttachment = new PsrAttachmentBase();
     }
 
+    public PsrAttachmentDecorator(PsrAttachment psrAttachment) {
+        this.psrAttachment = psrAttachment;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

@@ -20,6 +20,10 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister = new PsrRegisterBase();
     }
 
+    public PsrRegisterDecorator(PsrRegister psrRegister) {
+        this.psrRegister = psrRegister;
+    }
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)

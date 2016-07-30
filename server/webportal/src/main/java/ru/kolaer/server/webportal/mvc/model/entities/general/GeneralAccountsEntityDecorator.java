@@ -14,10 +14,14 @@ import java.util.List;
 @Entity
 @Table(name = "general_accounts")
 public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
-    private GeneralAccountsEntityBase generalAccountsEntity;
+    private GeneralAccountsEntity generalAccountsEntity;
 
     public GeneralAccountsEntityDecorator() {
         this.generalAccountsEntity = new GeneralAccountsEntityBase();
+    }
+
+    public GeneralAccountsEntityDecorator(GeneralAccountsEntity generalAccountsEntity) {
+        this.generalAccountsEntity = generalAccountsEntity;
     }
 
     @Id
