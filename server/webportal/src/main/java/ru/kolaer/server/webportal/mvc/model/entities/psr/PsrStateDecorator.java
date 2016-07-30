@@ -1,7 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStateBase;
 

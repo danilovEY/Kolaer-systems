@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.hibernate.SessionFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
