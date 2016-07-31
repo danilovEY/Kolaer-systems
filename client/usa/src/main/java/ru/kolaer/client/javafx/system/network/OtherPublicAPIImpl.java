@@ -7,7 +7,7 @@ public class OtherPublicAPIImpl implements OtherPublicAPI {
 	private final PublicHolidaysDateBase publicHolidaysDateBase;
 	
 	public OtherPublicAPIImpl(final StringBuilder path) {
-		this.publicHolidaysDateBase = new PublicHolidaysDateBaseImpl(path.append("holidays").toString());
+		this.publicHolidaysDateBase = new PublicHolidaysDateBaseImpl(path.append("/holidays").toString());
 	}
 
 	@Override
