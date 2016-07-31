@@ -9,20 +9,19 @@ import ru.kolaer.api.system.network.ServerStatus;
  * Created by Danilov on 28.07.2016.
  */
 public class KolaerWebServerImpl implements KolaerWebServer {
-
-    private WebResource serviceWeb;
+    private ApplicationDataBase applicationDataBase;
 
     public KolaerWebServerImpl(WebResource resource) {
-
+        this.applicationDataBase = new ApplicationDataBaseImpl(resource.path("rest"));
     }
 
     @Override
     public ServerStatus getServerStatus() {
-        return null;
+        return ServerStatus.NOT_AVAILABLE;
     }
 
     @Override
     public ApplicationDataBase getApplicationDataBase() {
-        return null;
+        return this.applicationDataBase;
     }
 }

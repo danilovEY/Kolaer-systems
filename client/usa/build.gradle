@@ -7,8 +7,14 @@ def projectJarName = projectNameWithVersion + ".jar"
 
 dependencies {
     compile project(':api')
-    compile "com.fasterxml.jackson.core:jackson-databind:2.7.3"
     compile "com.sun.jersey:jersey-client:1.19.1"
+
+    compile("org.springframework:spring-web:4.3.2.RELEASE") {
+        exclude module: 'spring-aop'
+        exclude module: 'spring-beans'
+        exclude module: 'spring-context'
+    }
+
     compile "org.controlsfx:controlsfx:8.40.10"
     testCompile "junit:junit:4.11"
 }

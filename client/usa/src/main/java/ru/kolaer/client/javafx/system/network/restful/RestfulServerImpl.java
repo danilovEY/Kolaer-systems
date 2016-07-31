@@ -17,7 +17,8 @@ public class RestfulServerImpl implements RestfulServer {
     private WebResource serviceRest;
 
     public RestfulServerImpl(WebResource resource) {
-        this.kolaerDataBase = new KolaerDataBaseRESTful(serviceRest.path("database"));
+        this.serviceRest = resource;
+        this.kolaerDataBase = new KolaerDataBaseRESTful(resource.path("database"));
     }
 
     @Override
