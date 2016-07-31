@@ -1,6 +1,5 @@
 package ru.kolaer.client.javafx.system.network;
 
-import com.sun.jersey.api.client.Client;
 import ru.kolaer.api.system.network.kolaerweb.KolaerWebServer;
 import ru.kolaer.api.system.network.OtherPublicAPI;
 import ru.kolaer.api.system.network.NetworkUS;
@@ -21,14 +20,10 @@ public class NetworkUSImpl implements NetworkUS {
 	/**БД через RESTful.*/
 	private OtherPublicAPI otherPublicAPI;
 
-	private final Client client;
-
 	public NetworkUSImpl() {
-        this.client = Client.create();
-
-		this.restfulServer = new RestfulServerImpl(client.resource("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString()));
-		this.kolaerWebServer = new KolaerWebServerImpl(client.resource("http://" + Resources.URL_TO_KOLAER_WEB.toString()));
-		this.otherPublicAPI = new OtherPublicAPIImpl(client.resource("http://" + Resources.URL_TO_KOLAER_RESTFUL.toString()).path("other"));
+		this.restfulServer = new RestfulServerImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL));
+		this.kolaerWebServer = new KolaerWebServerImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_WEB));
+		this.otherPublicAPI = new OtherPublicAPIImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL).append("other"));
 	}
 
 	@Override

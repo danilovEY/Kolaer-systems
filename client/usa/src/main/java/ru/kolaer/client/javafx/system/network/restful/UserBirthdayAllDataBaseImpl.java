@@ -1,10 +1,9 @@
 package ru.kolaer.client.javafx.system.network.restful;
 
-import com.sun.jersey.api.client.WebResource;
 import javafx.beans.property.SimpleStringProperty;
+import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
 import ru.kolaer.api.system.network.restful.UserBirthdayAllDataBase;
-import ru.kolaer.client.javafx.system.JsonConverterSingleton;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,11 +17,23 @@ import java.util.List;
  * @version 0.1
  */
 public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
-	private final WebResource path;
+	private final String URL_GET_USERS_MAX;
+	private final String URL_GET_USERS_BY_INITIALS;
+	private final String URL_GET_USERS_BIRTHDAY;
+	private final String URL_GET_USERS_BIRTHDAY_TODAY;
 	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private final RestTemplate restTemplate = new RestTemplate();
 	
-	public UserBirthdayAllDataBaseImpl(final WebResource path) {
-		this.path = path;
+	public UserBirthdayAllDataBaseImpl(final String path) {
+		this.URL_GET_USERS_MAX = path + "/get/users/max";
+		this.URL_GET_USERS_BIRTHDAY = path + "/get/users/birthday";
+		this.URL_GET_USERS_BIRTHDAY_TODAY = path + "/get/users/birthday/today";
+		this.URL_GET_USERS_BY_INITIALS = path + "/get/users/by/initials";
+	}
+
+	@Override
+	public void insertUserList(List<DbBirthdayAll> userList) {
+
 	}
 
 	@Override
@@ -30,8 +41,8 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
     	
-    	final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path(organization).path("birthday").path(property.getValue()), DbBirthdayAll.class);
-    	return this.listToArray(users);
+    	final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), DbBirthdayAll[].class);
+    	return users;
 	}
 	
 	@Override
@@ -39,20 +50,20 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
 
-    	final Integer countUsers = JsonConverterSingleton.getInstance().getEntity(this.path.path("get").path("users").path(organization).path("birthday").path(property.getValue()).path("count"), Integer.class);
+    	final Integer countUsers = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "/count", Integer.class);
     	return countUsers;
 	}
 	
 	@Override
 	public DbBirthdayAll[] getAllUser() {
-		final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("max"), DbBirthdayAll.class);
-		return this.listToArray(users);
+		final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX, DbBirthdayAll[].class);
+		return users;
 	}
 
 	@Override
 	public DbBirthdayAll[] getUsersMax(final int maxCount) {
-		final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("max").path(String.valueOf(maxCount)), DbBirthdayAll.class);
-		return this.listToArray(users);
+		final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount), DbBirthdayAll[].class);
+		return users;
 	}
 
 	@Override
@@ -60,43 +71,33 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
     	
-    	final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("birthday").path(property.getValue()), DbBirthdayAll.class);
-    	return this.listToArray(users);
+    	final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), DbBirthdayAll[].class);
+    	return users;
 	}
 
 	@Override
-	public DbBirthdayAll[] getUsersByRengeBirthday(final Date dateBegin, final Date dateEnd) {
+	public DbBirthdayAll[] getUsersByRangeBirthday(final Date dateBegin, final Date dateEnd) {
 		final SimpleStringProperty propertyBegin = new SimpleStringProperty();
     	final SimpleStringProperty propertyEnd = new SimpleStringProperty();
     	propertyBegin.setValue(dateFormat.format(dateBegin));
     	propertyEnd.setValue(dateFormat.format(dateEnd));
     	
-    	final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("birthday").path(propertyBegin.getValue()).path(propertyEnd.getValue()), DbBirthdayAll.class);
-    	return this.listToArray(users);
+    	final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), DbBirthdayAll[].class);
+    	return users;
 	}
 
 	@Override
 	public DbBirthdayAll[] getUsersBirthdayToday() {
-    	final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("birthday").path("today"), DbBirthdayAll.class);
-    	return this.listToArray(users);
+    	final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY_TODAY, DbBirthdayAll[].class);
+    	return users;
 	}
 
 	@Override
 	public DbBirthdayAll[] getUsersByInitials(final String initials) {
 		if(initials == null || initials.isEmpty())
 			throw new NullPointerException("Initials is null!");
-		final List<DbBirthdayAll> users = JsonConverterSingleton.getInstance().getEntities(this.path.path("get").path("users").path("by").path("initials").path(initials), DbBirthdayAll.class);
-		return this.listToArray(users);
-	}
-	
-	private DbBirthdayAll[] listToArray(final List<DbBirthdayAll> list) {
-		if(list == null || list.size() == 0) {
-			return new DbBirthdayAll[0];
-		} else {
-			final DbBirthdayAll[] array = list.toArray(new DbBirthdayAll[list.size()]);
-			list.clear();
-			return array;
-		}
+		final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_BY_INITIALS + "/" + initials, DbBirthdayAll[].class);
+		return users;
 	}
 
 	@Override
@@ -104,12 +105,7 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
 
-    	final Integer countUsers = Integer.valueOf(this.path.path("get").path("users").path("birthday").path(property.getValue()).path("count").get(String.class));
+    	final Integer countUsers = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "count", Integer.class);
     	return countUsers;
-	}
-
-	@Override
-	public void insertUserList(List<DbBirthdayAll> userList) {
-		
 	}
 }

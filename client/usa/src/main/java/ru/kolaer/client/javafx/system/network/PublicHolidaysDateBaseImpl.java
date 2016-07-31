@@ -1,18 +1,17 @@
 package ru.kolaer.client.javafx.system.network;
 
-import com.sun.jersey.api.client.WebResource;
+import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.restful.PublicHolidays;
 import ru.kolaer.api.system.network.PublicHolidaysDateBase;
-import ru.kolaer.client.javafx.system.JsonConverterSingleton;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
-	private final WebResource path;
-	
-	public PublicHolidaysDateBaseImpl(final WebResource path) {
-		this.path = path;
+	private final StringBuilder append;
+	private final RestTemplate restTemplate = new RestTemplate();
+
+	public PublicHolidaysDateBaseImpl(StringBuilder append) {
+		this.append = append;
 	}
 
 	@Override
@@ -23,24 +22,14 @@ public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
 
 	@Override
 	public PublicHolidays[] getPublicHolidays(final int month, final int year) {
-		final List<PublicHolidays> holidays = JsonConverterSingleton.getInstance().getEntities(path.path("get").path(String.valueOf(month)).path(String.valueOf(year)), PublicHolidays.class);
+		final PublicHolidays[] holidays = restTemplate.getForObject(append.append("get").append(String.valueOf(month)).append(String.valueOf(year)).toString(), PublicHolidays[].class);
 		
-		return listToArray(holidays);
+		return holidays;
 	}
 
 	@Override
 	public PublicHolidays[] getPublicHolidaysAll() {
-		final List<PublicHolidays> holidays = JsonConverterSingleton.getInstance().getEntities(path.path("get").path("all"), PublicHolidays.class);
-		return listToArray(holidays);
-	}
-	
-	private PublicHolidays[] listToArray(final List<PublicHolidays> list) {
-		if(list == null || list.size() == 0) {
-			return new PublicHolidays[0];
-		} else {
-			final PublicHolidays[] array = list.toArray(new PublicHolidays[list.size()]);
-			list.clear();
-			return array;
-		}
+		final PublicHolidays[] holidays = restTemplate.getForObject(append.append("get").append("all").toString(), PublicHolidays[].class);
+		return holidays;
 	}
 }

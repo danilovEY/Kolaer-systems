@@ -1,28 +1,27 @@
 package ru.kolaer.client.javafx.system.network.kolaerweb;
 
-import com.sun.jersey.api.client.WebResource;
+import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
 import ru.kolaer.api.system.network.kolaerweb.GeneralEmployeesTable;
-import ru.kolaer.client.javafx.system.JsonConverterSingleton;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Danilov on 31.07.2016.
  */
 public class GeneralEmployeesTableImpl implements GeneralEmployeesTable {
-    private WebResource webResource;
+    private String URL_GET_ALL;
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    public GeneralEmployeesTableImpl(WebResource general) {
-        this.webResource = general;
+
+    public GeneralEmployeesTableImpl(String path) {
+        this.URL_GET_ALL = path + "/get/all";
     }
 
     @Override
     public GeneralEmployeesEntity[] getAllUser() {
-        List<GeneralEmployeesEntity> list = JsonConverterSingleton.getInstance().getEntities(this.webResource.path("get").path("all"), GeneralEmployeesEntity.class);
-        return listToArray(list);
+        GeneralEmployeesEntity[] list = restTemplate.getForObject(this.URL_GET_ALL, GeneralEmployeesEntity[].class);
+        return list;
     }
 
     @Override
@@ -36,7 +35,7 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable {
     }
 
     @Override
-    public GeneralEmployeesEntity[] getUsersByRengeBirthday(Date dateBegin, Date dateEnd) {
+    public GeneralEmployeesEntity[] getUsersByRangeBirthday(Date dateBegin, Date dateEnd) {
         return new GeneralEmployeesEntity[0];
     }
 
@@ -55,13 +54,4 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable {
         return 0;
     }
 
-    private GeneralEmployeesEntity[] listToArray(final List<GeneralEmployeesEntity> list) {
-        if(list == null || list.size() == 0) {
-            return new GeneralEmployeesEntity[0];
-        } else {
-            final GeneralEmployeesEntity[] array = list.toArray(new GeneralEmployeesEntity[list.size()]);
-            list.clear();
-            return array;
-        }
-    }
 }

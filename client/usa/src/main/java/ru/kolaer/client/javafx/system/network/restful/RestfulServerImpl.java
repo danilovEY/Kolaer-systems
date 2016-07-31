@@ -1,8 +1,7 @@
 package ru.kolaer.client.javafx.system.network.restful;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.system.network.restful.KolaerDataBase;
 import ru.kolaer.api.system.network.restful.RestfulServer;
 import ru.kolaer.api.system.network.ServerStatus;
@@ -13,20 +12,21 @@ import ru.kolaer.api.system.network.ServerStatus;
 public class RestfulServerImpl implements RestfulServer {
     /**БД через RESTful.*/
     private KolaerDataBase kolaerDataBase;
+    private StringBuilder url;
+    private final String urlToStatus;
 
-    private WebResource serviceRest;
-
-    public RestfulServerImpl(WebResource resource) {
-        this.serviceRest = resource;
-        this.kolaerDataBase = new KolaerDataBaseRESTful(resource.path("database"));
+    public RestfulServerImpl(StringBuilder url) {
+        this.url = url;
+        this.urlToStatus = url.toString() + "/system/server/status";
+        this.kolaerDataBase = new KolaerDataBaseRESTful(url.toString() + "/database");
     }
 
     @Override
     public ServerStatus getServerStatus() {
         try {
-            final WebResource webRes = serviceRest.path("system").path("server").path("status");
+            final RestTemplate webRes = new RestTemplate();
 
-            final String status = webRes.get(String.class);
+            final String status = webRes.getForObject(this.urlToStatus, String.class);
             if(status == null)
                 return ServerStatus.NOT_AVAILABLE;
             switch (status) {
@@ -34,7 +34,7 @@ public class RestfulServerImpl implements RestfulServer {
                 case "not available": return ServerStatus.NOT_AVAILABLE;
                 default: return ServerStatus.UNKNOWN;
             }
-        } catch(final UniformInterfaceException | ClientHandlerException ex) {
+        } catch(final RestClientException ex) {
             return ServerStatus.NOT_AVAILABLE;
         }
     }

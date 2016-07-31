@@ -1,6 +1,5 @@
 package ru.kolaer.client.javafx.system.network.restful;
 
-import com.sun.jersey.api.client.WebResource;
 import ru.kolaer.api.system.network.restful.KolaerDataBase;
 import ru.kolaer.api.system.network.restful.UserBirthdayAllDataBase;
 import ru.kolaer.api.system.network.restful.UserDataAllDataBase;
@@ -17,9 +16,10 @@ public class KolaerDataBaseRESTful implements KolaerDataBase {
 	private final UserDataAllDataBase dataAllDataBase;
 	private final UserBirthdayAllDataBase userBirthdayAllDataBase;
 
-	public KolaerDataBaseRESTful(final WebResource service) {
-		this.dataAllDataBase = new UserDataAllDataBaseRESTful(service.path("dataAll"));
-		this.userBirthdayAllDataBase = new UserBirthdayAllDataBaseImpl(service.path("birthdayAll"));
+
+	public KolaerDataBaseRESTful(final String path) {
+		this.dataAllDataBase = new UserDataAllDataBaseRESTful(path + "/dataAll");
+		this.userBirthdayAllDataBase = new UserBirthdayAllDataBaseImpl(path + "/birthdayAll");
 	}
 	
 	@Override

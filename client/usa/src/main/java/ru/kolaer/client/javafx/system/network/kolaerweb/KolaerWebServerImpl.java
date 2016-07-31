@@ -1,6 +1,5 @@
 package ru.kolaer.client.javafx.system.network.kolaerweb;
 
-import com.sun.jersey.api.client.WebResource;
 import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.api.system.network.kolaerweb.KolaerWebServer;
 import ru.kolaer.api.system.network.ServerStatus;
@@ -11,8 +10,8 @@ import ru.kolaer.api.system.network.ServerStatus;
 public class KolaerWebServerImpl implements KolaerWebServer {
     private ApplicationDataBase applicationDataBase;
 
-    public KolaerWebServerImpl(WebResource resource) {
-        this.applicationDataBase = new ApplicationDataBaseImpl(resource.path("rest"));
+    public KolaerWebServerImpl(StringBuilder path) {
+        this.applicationDataBase = new ApplicationDataBaseImpl(path.append("/rest").toString());
     }
 
     @Override
