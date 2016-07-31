@@ -49,9 +49,24 @@ public class PluginManager {
         frameworkProperties.put("felix.log.level", "2");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
-        frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework,"+
-        		"ru.kolaer.api.plugins, ru.kolaer.api.plugins.services, ru.kolaer.api.system, ru.kolaer.api.mvp.model," +
-                "ru.kolaer.api.mvp.presenter, ru.kolaer.api.tools" );
+        frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework, "+
+                        "ru.kolaer.api.mvp.model.kolaerweb, "+
+                "ru.kolaer.api.mvp.model.kolaerweb.psr, "+
+                "ru.kolaer.api.mvp.model.kolaerweb.webportal, "+
+                "ru.kolaer.api.mvp.model.kolaerweb.webportal.rss, "+
+                "ru.kolaer.api.mvp.model.restful, "+
+                "ru.kolaer.api.mvp.presenter, "+
+                "ru.kolaer.api.mvp.view, "+
+                "ru.kolaer.api.plugins, "+
+                "ru.kolaer.api.plugins.services, "+
+                "ru.kolaer.api.system, "+
+                "ru.kolaer.api.system.network, "+
+                "ru.kolaer.api.system.network.kolaerweb, "+
+                "ru.kolaer.api.system.network.restful, "+
+                "ru.kolaer.api.system.ui, "+
+                "ru.kolaer.api.tools");
+
+
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
                 "javafx.application, javafx.beans.property, " +
