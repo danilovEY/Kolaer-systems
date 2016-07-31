@@ -1,11 +1,15 @@
 package ru.kolaer.server.config;
 
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -52,7 +56,7 @@ public class KolaerServerConfig extends WebMvcConfigurerAdapter {
         return dataSource;
     }
  
-    @Bean(name = "entityManagerFactory")
+    /*@Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
     	final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
@@ -60,14 +64,31 @@ public class KolaerServerConfig extends WebMvcConfigurerAdapter {
         entityManagerFactoryBean.setJpaProperties(getHibernateProperties());
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter());
         return entityManagerFactoryBean;
-    }
-    
+    }*/
+
     @Bean
+    public SessionFactory sessionFactory() {
+        LocalSessionFactoryBuilder localSessionFactoryBuilder = new LocalSessionFactoryBuilder(dataSource());
+        localSessionFactoryBuilder.scanPackages(env.getRequiredProperty(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN));
+        localSessionFactoryBuilder.setProperty("db.hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        localSessionFactoryBuilder.setProperty("hibernate.show_sql", env.getRequiredProperty("db.hibernate.show_sql"));
+        localSessionFactoryBuilder.setProperty("hibernate.hbm2ddl.auto", "none");
+        return localSessionFactoryBuilder.buildSessionFactory();
+    }
+
+    @Bean
+    public HibernateTransactionManager transactionManager() {
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(sessionFactory());
+        return transactionManager;
+    }
+
+    /*@Bean
     public JpaTransactionManager transactionManager() {
     	final JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
-    }
+    }*/
     
     @Bean(name = "publicHolidaysDAO")
     public PublicHolidaysDAO getPublicHolidaysDAO() {
@@ -95,14 +116,14 @@ public class KolaerServerConfig extends WebMvcConfigurerAdapter {
     	return dbUser1сDAO;
     }
     
-    private HibernateJpaVendorAdapter jpaVendorAdapter() {
+    /*private HibernateJpaVendorAdapter jpaVendorAdapter() {
     	final HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
     	jpaVendorAdapter.setShowSql(true);
     	jpaVendorAdapter.setGenerateDdl(false);
     	return jpaVendorAdapter;
-    }
+    }*/
     
-    private Properties getHibernateProperties() {
+    /*private Properties getHibernateProperties() {
     	final Properties properties = new Properties();
         properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
         properties.put(PROP_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
@@ -111,5 +132,5 @@ public class KolaerServerConfig extends WebMvcConfigurerAdapter {
         properties.put("db.hibernate.jdbc.batch_size", 10);
         properties.put("hibernate.hbm2ddl.auto", "none");
         return properties;
-    }
+    }*/
 }
