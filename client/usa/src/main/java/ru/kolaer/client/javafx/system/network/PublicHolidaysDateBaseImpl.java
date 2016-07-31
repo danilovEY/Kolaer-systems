@@ -7,11 +7,13 @@ import ru.kolaer.api.system.network.PublicHolidaysDateBase;
 import java.time.LocalDate;
 
 public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
-	private final StringBuilder append;
 	private final RestTemplate restTemplate = new RestTemplate();
+	private final String URL_GET;
+	private final String URL_GET_ALL;
 
-	public PublicHolidaysDateBaseImpl(StringBuilder append) {
-		this.append = append;
+	public PublicHolidaysDateBaseImpl(String path) {
+		this.URL_GET = path + "/get";
+		this.URL_GET_ALL = this.URL_GET + "/all";
 	}
 
 	@Override
@@ -22,14 +24,14 @@ public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
 
 	@Override
 	public PublicHolidays[] getPublicHolidays(final int month, final int year) {
-		final PublicHolidays[] holidays = restTemplate.getForObject(append.append("get").append(String.valueOf(month)).append(String.valueOf(year)).toString(), PublicHolidays[].class);
+		final PublicHolidays[] holidays = restTemplate.getForObject(this.URL_GET + "/" + String.valueOf(month) + "/" + String.valueOf(year), PublicHolidays[].class);
 		
 		return holidays;
 	}
 
 	@Override
 	public PublicHolidays[] getPublicHolidaysAll() {
-		final PublicHolidays[] holidays = restTemplate.getForObject(append.append("get").append("all").toString(), PublicHolidays[].class);
+		final PublicHolidays[] holidays = restTemplate.getForObject(this.URL_GET_ALL, PublicHolidays[].class);
 		return holidays;
 	}
 }
