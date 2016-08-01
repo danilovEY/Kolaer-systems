@@ -9,7 +9,6 @@ def projectJarName = projectNameWithVersion + ".jar"
 apply plugin: 'osgi'
 
 dependencies {
-    compile project(':api')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 

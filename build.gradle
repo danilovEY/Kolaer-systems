@@ -22,13 +22,19 @@ project(":api") {
 project(":client") {
     allprojects {
         ext {
-            pathToProjectDir = "D:\\workspace\\Kolaer-systems"
+            pathToProjectDir = "D:\\Kolaer-systems"
             pathToProjectDirWithPlugins = pathToProjectDir + "\\plugins"
         }
     }
 
     subprojects {
         apply plugin: 'java'
+
+        dependencies {
+            compile(project(':api')) {
+                exclude group: 'com.fasterxml.jackson.core'
+            }
+        }
 
         compileJava.options.encoding = 'UTF-8'
         sourceCompatibility = 1.8

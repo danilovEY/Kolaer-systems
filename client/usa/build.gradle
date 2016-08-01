@@ -6,9 +6,6 @@ def projectNameWithVersion = projectName + "-" + version
 def projectJarName = projectNameWithVersion + ".jar"
 
 dependencies {
-    compile project(':api')
-    //compile "com.sun.jersey:jersey-client:1.19.1"
-
     compile("org.springframework:spring-web:4.3.2.RELEASE") {
         exclude module: 'spring-aop'
         exclude module: 'spring-context'

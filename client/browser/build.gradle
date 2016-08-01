@@ -15,7 +15,6 @@ repositories {
 }
 
 dependencies {
-    compile project(':api')
     compile "com.teamdev.jxbrowser:jxbrowser:5.4.3"
 }
 
