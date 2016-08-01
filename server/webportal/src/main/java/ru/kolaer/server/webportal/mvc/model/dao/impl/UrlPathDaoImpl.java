@@ -38,7 +38,7 @@ public class UrlPathDaoImpl implements UrlPathDao {
     @Override
     @Transactional(readOnly = true)
     public WebPortalUrlPathDecorator getPathByUrl(String url) {
-        final Query query = this.sessionFactory.getCurrentSession().createQuery("from WebPortalUrlPath u where u.url=:url");
+        final Query query = this.sessionFactory.getCurrentSession().createQuery("from WebPortalUrlPathDecorator u where u.url=:url");
         query.setParameter("url", url).uniqueResult();
         return null;
     }
