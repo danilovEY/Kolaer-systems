@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
-import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.transform.Transformers;
