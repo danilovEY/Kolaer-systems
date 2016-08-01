@@ -10,8 +10,6 @@ import ru.kolaer.client.psr.mvp.presenter.PPsrRegisterTable;
 import ru.kolaer.client.psr.mvp.view.VPsrRegisterTable;
 import ru.kolaer.client.psr.mvp.view.impl.VPsrRegisterTableImpl;
 
-import java.util.List;
-
 /**
  * Created by danilovey on 01.08.2016.
  */
@@ -39,6 +37,8 @@ public class PPsrRegisterTableImpl implements PPsrRegisterTable {
 
     @Override
     public void updateTableData() {
-        this.view.addPsrProjectAll(this.model.getAllPstRegister());
+        for(PsrRegister psr : this.model.getAllPstRegister()) {
+            this.view.addPsrProject(psr);
+        }
     }
 }

@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface VPsrRegisterTable extends VComponentUI {
     void addPsrProjectAll(List<PsrRegister> psrRegisters);
+    void addPsrProject(PsrRegister psrRegister);
 }
