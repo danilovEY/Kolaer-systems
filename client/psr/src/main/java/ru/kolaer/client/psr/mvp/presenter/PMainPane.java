@@ -7,4 +7,5 @@ import ru.kolaer.client.psr.mvp.view.VMainPane;
  */
 public interface PMainPane {
     VMainPane getView();
+    void updatePluginPage();
 }

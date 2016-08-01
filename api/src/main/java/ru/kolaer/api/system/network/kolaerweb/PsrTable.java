@@ -8,5 +8,5 @@ import java.util.List;
  * Created by Danilov on 31.07.2016.
  */
 public interface PsrTable {
-    List<PsrRegister> getAllPsrRegister();
+    PsrRegister[] getAllPsrRegister();
 }

@@ -4,11 +4,13 @@ import javafx.scene.Parent;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.presenter.PMainPane;
 import ru.kolaer.client.psr.mvp.presenter.impl.PMainPaneImpl;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Danilov on 28.07.2016.
@@ -35,7 +37,14 @@ public class PluginPage implements UniformSystemPlugin {
 
     @Override
     public void start() throws Exception {
-
+        Tools.runOnThreadFX(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            this.mainPane.updatePluginPage();
+        });
     }
 
     @Override
