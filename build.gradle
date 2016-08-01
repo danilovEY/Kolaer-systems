@@ -30,9 +30,15 @@ project(":client") {
     subprojects {
         apply plugin: 'java'
 
-        dependencies {
-            compile(project(':api')) {
-                exclude group: 'com.fasterxml.jackson.core'
+        if(name.equals("usa")) {
+            dependencies {
+                compile(project(':api'))
+            }
+        } else {
+            dependencies {
+                compile(project(':api')) {
+                    exclude group: 'com.fasterxml.jackson.core'
+                }
             }
         }
 
