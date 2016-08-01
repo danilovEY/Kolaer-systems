@@ -25,9 +25,6 @@ public class PsrRegisterController {
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<PsrRegister> getAllRegister() {
         List<PsrRegister> list = this.psrRegisterDao.findAll();
-        list.forEach(psr -> {
-            System.out.println(psr.getStateList().size());
-        });
         return list;
     }
 

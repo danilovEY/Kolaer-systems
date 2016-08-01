@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.Immutable;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "general_roles")
 @Immutable
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GeneralRolesEntityDecorator implements GeneralRolesEntity{
     private GeneralRolesEntity generalRolesEntity;
 

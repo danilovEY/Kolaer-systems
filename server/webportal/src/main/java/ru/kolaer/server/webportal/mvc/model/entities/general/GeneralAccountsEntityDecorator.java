@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
@@ -13,6 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "general_accounts")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
     private GeneralAccountsEntity generalAccountsEntity;
 

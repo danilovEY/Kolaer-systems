@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
@@ -13,6 +14,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "general_employees")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     private GeneralEmployeesEntity generalEmployeesEntity;
 
