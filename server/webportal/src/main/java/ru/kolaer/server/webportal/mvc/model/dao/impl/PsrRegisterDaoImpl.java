@@ -20,9 +20,6 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     @Override
     public List<PsrRegister> findAll() {
         List<PsrRegister> list = this.sessionFactory.getCurrentSession().createQuery("from PsrRegisterDecorator").list();
-        list.forEach(psr -> {
-            System.out.println(psr.getAttachments().size());
-        });
         return list;
     }
 
