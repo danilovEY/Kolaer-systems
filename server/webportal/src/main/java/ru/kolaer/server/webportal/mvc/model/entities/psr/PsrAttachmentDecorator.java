@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachment;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachmentBase;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "psr_attachment")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PsrAttachmentDecorator implements PsrAttachment {
     private PsrAttachment psrAttachment;
 
@@ -22,7 +24,7 @@ public class PsrAttachmentDecorator implements PsrAttachment {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return this.psrAttachment.getId();

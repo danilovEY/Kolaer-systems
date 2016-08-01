@@ -25,7 +25,7 @@ public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return this.generalAccountsEntity.getId();
@@ -36,7 +36,7 @@ public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
     }
 
     /**Список ролей пользователя.*/
-    @OneToMany(targetEntity = GeneralRolesEntityDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = GeneralRolesEntityDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "general_account_role", joinColumns = {@JoinColumn(name = "id_account")},
             inverseJoinColumns = { @JoinColumn(name = "id_role")})
     public List<GeneralRolesEntity> getRoles() {

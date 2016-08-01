@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStateBase;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "psr_state")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PsrStateDecorator implements PsrState {
     private PsrState psrProjectState;
 
@@ -24,7 +26,7 @@ public class PsrStateDecorator implements PsrState {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return this.psrProjectState.getId();
     }

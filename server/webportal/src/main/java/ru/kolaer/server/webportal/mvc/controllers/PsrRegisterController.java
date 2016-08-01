@@ -30,4 +30,10 @@ public class PsrRegisterController {
         });
         return list;
     }
+
+    @RequestMapping(value = "/get/all/id-name", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<PsrRegister> getAllRegisterWithIdAndName() {
+        List<PsrRegister> list = this.psrRegisterDao.getIdAndNamePsrRegister();
+        return list;
+    }
 }

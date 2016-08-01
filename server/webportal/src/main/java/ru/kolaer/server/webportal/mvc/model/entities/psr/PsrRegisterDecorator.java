@@ -1,5 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
@@ -13,6 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "psr_register")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PsrRegisterDecorator implements PsrRegister {
     private PsrRegister psrRegister;
 
@@ -26,11 +30,10 @@ public class PsrRegisterDecorator implements PsrRegister {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return this.psrRegister.getId();
     }
-
 
     public void setId(int id) {
         this.psrRegister.setId(id);
@@ -38,7 +41,7 @@ public class PsrRegisterDecorator implements PsrRegister {
 
 
     @OneToOne(targetEntity = PsrStatusDecorator.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_status")
+    @JoinColumn(name = "id_status", nullable = false)
     public PsrStatus getStatus() {
         return this.psrRegister.getStatus();
     }
@@ -48,7 +51,7 @@ public class PsrRegisterDecorator implements PsrRegister {
     }
 
     @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_author")
+    @JoinColumn(name = "id_author", nullable = false)
     public GeneralEmployeesEntity getAuthor() {
         return this.psrRegister.getAuthor();
     }
@@ -57,7 +60,7 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setAuthor(author);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_project_admin")
     public GeneralEmployeesEntity getAdmin() {
         return this.psrRegister.getAdmin();
@@ -67,7 +70,7 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setAdmin(admin);
     }
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     public String getName() {
         return this.psrRegister.getName();
     }
@@ -77,7 +80,7 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setName(name);
     }
 
-    @Column(name = "date_open")
+    @Column(name = "date_open", nullable = false)
     @Temporal(TemporalType.DATE)
     public Date getDateOpen() {
         return this.psrRegister.getDateOpen();
@@ -107,7 +110,7 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setComment(comment);
     }
 
-    @OneToMany(targetEntity = PsrStateDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = PsrStateDecorator.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_psr_project")
     public List<PsrState> getStateList() {
         return this.psrRegister.getStateList();
@@ -118,8 +121,9 @@ public class PsrRegisterDecorator implements PsrRegister {
     }
 
 
-    @OneToMany(targetEntity = PsrAttachmentDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = PsrAttachmentDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_psr_project")
+    @Fetch(FetchMode.SELECT)
     public List<PsrAttachment> getAttachments() {
         return this.psrRegister.getAttachments();
     }

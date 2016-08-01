@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.Immutable;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatusBase;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "psr_status")
 @Immutable
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PsrStatusDecorator implements PsrStatus {
     private PsrStatus psrProjectStatus;
 
