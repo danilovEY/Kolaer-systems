@@ -50,7 +50,7 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setStatus(status);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_author", nullable = false)
     public GeneralEmployeesEntity getAuthor() {
         return this.psrRegister.getAuthor();
