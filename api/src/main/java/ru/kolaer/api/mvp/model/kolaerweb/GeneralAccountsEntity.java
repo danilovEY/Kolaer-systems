@@ -1,7 +1,5 @@
 package ru.kolaer.api.mvp.model.kolaerweb;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.List;

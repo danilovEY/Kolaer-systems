@@ -7,9 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.dao.DbBirthdayAllDAO;
 import ru.kolaer.server.dao.entities.DbBirthdayAll;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TemporalType;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;

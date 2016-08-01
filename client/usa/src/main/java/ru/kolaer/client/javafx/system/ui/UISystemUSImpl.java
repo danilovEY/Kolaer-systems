@@ -4,9 +4,6 @@ import ru.kolaer.api.system.ui.DialogUS;
 import ru.kolaer.api.system.ui.NotificationUS;
 import ru.kolaer.api.system.ui.StatusBarUS;
 import ru.kolaer.api.system.ui.UISystemUS;
-import ru.kolaer.client.javafx.system.ui.DialogUSImpl;
-import ru.kolaer.client.javafx.system.ui.NotificationUSImpl;
-import ru.kolaer.client.javafx.system.ui.StatusBarUSAdapter;
 
 /**
  * Реализация системных (приложения) объектов.

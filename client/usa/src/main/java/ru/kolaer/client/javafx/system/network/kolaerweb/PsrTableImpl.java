@@ -4,8 +4,6 @@ import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.network.kolaerweb.PsrTable;
 
-import java.util.List;
-
 /**
  * Created by Danilov on 31.07.2016.
  */

@@ -3,18 +3,11 @@ package ru.kolaer.client.javafx;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.system.network.NetworkUS;
 import ru.kolaer.client.javafx.system.network.NetworkUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;
-
-import java.nio.charset.Charset;
-import java.util.Date;
 
 /**
  * Created by Danilov on 31.07.2016.

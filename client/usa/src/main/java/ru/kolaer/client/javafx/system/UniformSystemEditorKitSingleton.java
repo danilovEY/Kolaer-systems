@@ -1,9 +1,9 @@
 package ru.kolaer.client.javafx.system;
 
-import ru.kolaer.api.system.network.NetworkUS;
 import ru.kolaer.api.system.PluginsUS;
-import ru.kolaer.api.system.ui.UISystemUS;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.system.network.NetworkUS;
+import ru.kolaer.api.system.ui.UISystemUS;
 
 /**
  * Реализация комплекта инструментов.

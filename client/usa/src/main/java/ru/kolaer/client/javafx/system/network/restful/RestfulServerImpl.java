@@ -2,9 +2,9 @@ package ru.kolaer.client.javafx.system.network.restful;
 
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.network.restful.KolaerDataBase;
 import ru.kolaer.api.system.network.restful.RestfulServer;
-import ru.kolaer.api.system.network.ServerStatus;
 
 /**
  * Created by danilovey on 29.07.2016.

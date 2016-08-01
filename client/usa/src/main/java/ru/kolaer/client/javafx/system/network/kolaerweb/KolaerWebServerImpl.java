@@ -1,8 +1,8 @@
 package ru.kolaer.client.javafx.system.network.kolaerweb;
 
+import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.api.system.network.kolaerweb.KolaerWebServer;
-import ru.kolaer.api.system.network.ServerStatus;
 
 /**
  * Created by Danilov on 28.07.2016.

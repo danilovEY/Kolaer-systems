@@ -1,6 +1,5 @@
 package ru.kolaer.client.psr.mvp.view.impl;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;

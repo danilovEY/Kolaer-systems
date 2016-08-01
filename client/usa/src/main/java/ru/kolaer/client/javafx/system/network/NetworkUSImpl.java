@@ -1,8 +1,8 @@
 package ru.kolaer.client.javafx.system.network;
 
-import ru.kolaer.api.system.network.kolaerweb.KolaerWebServer;
-import ru.kolaer.api.system.network.OtherPublicAPI;
 import ru.kolaer.api.system.network.NetworkUS;
+import ru.kolaer.api.system.network.OtherPublicAPI;
+import ru.kolaer.api.system.network.kolaerweb.KolaerWebServer;
 import ru.kolaer.api.system.network.restful.RestfulServer;
 import ru.kolaer.client.javafx.system.network.kolaerweb.KolaerWebServerImpl;
 import ru.kolaer.client.javafx.system.network.restful.RestfulServerImpl;

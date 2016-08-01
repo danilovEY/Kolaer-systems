@@ -19,9 +19,9 @@ import ru.kolaer.client.javafx.plugins.SearchPlugins;
 import ru.kolaer.client.javafx.services.AutoUpdatePlugins;
 import ru.kolaer.client.javafx.services.HideShowMainStage;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.system.network.NetworkUSImpl;
 import ru.kolaer.client.javafx.system.ui.UISystemUSImpl;
-import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import java.io.IOException;
