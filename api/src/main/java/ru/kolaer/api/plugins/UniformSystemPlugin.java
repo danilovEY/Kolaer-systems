@@ -16,7 +16,7 @@ import java.util.Collection;
 public interface UniformSystemPlugin extends VComponentUI {
 
 	/**Инициализация плагина */
-	void initialization(UniformSystemEditorKit editorKid) throws Exception;
+	void initialization(UniformSystemEditorKit editorKit) throws Exception;
 
 	/**Получить путь к ресурсу иконки.*/
 	URL getIcon();

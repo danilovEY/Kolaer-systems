@@ -1,11 +1,11 @@
 package ru.kolaer.client.psr.runnable;
 
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.client.psr.mvp.presenter.PMainPane;
+import ru.kolaer.client.psr.mvp.presenter.impl.PMainPaneImpl;
 
 import java.net.URL;
 import java.util.Collection;
@@ -15,12 +15,12 @@ import java.util.Collection;
  */
 public class PluginPage implements UniformSystemPlugin {
     private UniformSystemEditorKit editorKit;
-    private BorderPane mainPane;
+    private PMainPane mainPane;
 
     @Override
-    public void initialization(UniformSystemEditorKit editorKid) throws Exception {
-        this.editorKit = editorKid;
-        this.mainPane = new BorderPane(new Button("ПСР!!"));
+    public void initialization(UniformSystemEditorKit editorKit) throws Exception {
+        this.editorKit = editorKit;
+        this.mainPane = new PMainPaneImpl(editorKit);
     }
 
     @Override
@@ -50,11 +50,11 @@ public class PluginPage implements UniformSystemPlugin {
 
     @Override
     public void setContent(Parent content) {
-
+        this.mainPane.getView().setContent(content);
     }
 
     @Override
     public Parent getContent() {
-        return this.mainPane;
+        return this.mainPane.getView().getContent();
     }
 }
