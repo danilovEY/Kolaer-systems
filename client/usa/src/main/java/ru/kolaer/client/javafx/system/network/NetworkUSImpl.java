@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.system.network;
 
+import ru.kolaer.api.system.network.Authentication;
 import ru.kolaer.api.system.network.NetworkUS;
 import ru.kolaer.api.system.network.OtherPublicAPI;
 import ru.kolaer.api.system.network.kolaerweb.KolaerWebServer;
@@ -19,11 +20,13 @@ public class NetworkUSImpl implements NetworkUS {
 	private KolaerWebServer kolaerWebServer;
 	/**БД через RESTful.*/
 	private OtherPublicAPI otherPublicAPI;
+	private Authentication authentication;
 
 	public NetworkUSImpl() {
 		this.restfulServer = new RestfulServerImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL));
 		this.kolaerWebServer = new KolaerWebServerImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_WEB));
 		this.otherPublicAPI = new OtherPublicAPIImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL).append("/other"));
+		this.authentication = new AuthenticationImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_WEB));
 	}
 
 	@Override
@@ -39,5 +42,10 @@ public class NetworkUSImpl implements NetworkUS {
 	@Override
 	public OtherPublicAPI getOtherPublicAPI() {
 		return this.otherPublicAPI;
+	}
+
+	@Override
+	public Authentication getAuthentication() {
+		return this.authentication;
 	}
 }

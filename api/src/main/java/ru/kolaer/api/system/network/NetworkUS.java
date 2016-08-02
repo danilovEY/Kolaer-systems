@@ -15,4 +15,6 @@ public interface NetworkUS {
 	KolaerWebServer getKolaerWebServer();
 	/**Получить объект для работы со сторонними API.*/
 	OtherPublicAPI getOtherPublicAPI();
+
+	Authentication getAuthentication();
 }
