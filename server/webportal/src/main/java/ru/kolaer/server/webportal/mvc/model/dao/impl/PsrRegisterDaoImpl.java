@@ -23,6 +23,10 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     @Override
     public List<PsrRegister> findAll() {
         List<PsrRegister> list = this.sessionFactory.getCurrentSession().createQuery("FROM PsrRegisterDecorator reg JOIN FETCH reg.author").list();
+        list.parallelStream().forEach(psr -> {
+            psr.getAttachments().size();
+            psr.getStateList().size();
+        });
         return list;
     }
 

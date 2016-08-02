@@ -38,7 +38,7 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setPnumber(pnumber);
     }
 
-    @OneToMany(targetEntity = GeneralAccountsEntityDecorator.class, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = GeneralAccountsEntityDecorator.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_account", nullable = true)
     public List<GeneralAccountsEntity> getAccountsEntity() {
         return this.generalEmployeesEntity.getAccountsEntity();

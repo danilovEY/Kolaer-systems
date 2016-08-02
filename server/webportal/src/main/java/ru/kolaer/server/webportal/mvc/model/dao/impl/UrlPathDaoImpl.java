@@ -20,7 +20,7 @@ public class UrlPathDaoImpl implements UrlPathDao {
     @Override
     @Transactional(readOnly = true)
     public List<WebPortalUrlPathDecorator> findAll() {
-        return this.sessionFactory.getCurrentSession().createCriteria(WebPortalUrlPathDecorator.class).list();
+        return this.sessionFactory.getCurrentSession().createQuery("FROM WebPortalUrlPathDecorator ORDER BY url").list();
     }
 
     @Override
