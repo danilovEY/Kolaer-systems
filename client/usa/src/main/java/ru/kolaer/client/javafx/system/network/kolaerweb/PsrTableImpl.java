@@ -1,6 +1,8 @@
 package ru.kolaer.client.javafx.system.network.kolaerweb;
 
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.exeptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.network.kolaerweb.PsrTable;
 
@@ -16,7 +18,11 @@ public class PsrTableImpl implements PsrTable {
     }
 
     @Override
-    public PsrRegister[] getAllPsrRegister() {
-        return this.restTemplate.getForObject(this.URL_GET_ALL, PsrRegister[].class);
+    public PsrRegister[] getAllPsrRegister() throws ServerException {
+        try {
+            return this.restTemplate.getForObject(this.URL_GET_ALL, PsrRegister[].class);
+        } catch (RestClientException ex) {
+            throw new ServerException(ex);
+        }
     }
 }

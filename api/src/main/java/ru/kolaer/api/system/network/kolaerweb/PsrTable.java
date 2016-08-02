@@ -1,10 +1,11 @@
 package ru.kolaer.api.system.network.kolaerweb;
 
+import ru.kolaer.api.exeptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 
 /**
  * Created by Danilov on 31.07.2016.
  */
 public interface PsrTable {
-    PsrRegister[] getAllPsrRegister();
+    PsrRegister[] getAllPsrRegister() throws ServerException;
 }
