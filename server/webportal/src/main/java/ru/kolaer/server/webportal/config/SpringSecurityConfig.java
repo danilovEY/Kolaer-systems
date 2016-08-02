@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
@@ -23,6 +24,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.security.AuthenticationTokenProcessingFilter;
 import ru.kolaer.server.webportal.security.SecurityMetadataSourceFilter;
+import ru.kolaer.server.webportal.security.UnauthorizedEntryPoint;
 
 import java.util.Arrays;
 
@@ -67,11 +69,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //Отключаем csrf хак
-        http.csrf().disable();
+        http.csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+
+        .httpBasic()
+                .authenticationEntryPoint(new UnauthorizedEntryPoint())
+                .and()
         //Фильтер для проверки http request'а на наличие правильного токена
-        http.addFilterBefore(new AuthenticationTokenProcessingFilter(this.userDetailsService), UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(new AuthenticationTokenProcessingFilter(this.userDetailsService), UsernamePasswordAuthenticationFilter.class)
         //Фильтер для проверки URL'ов.
-        http.addFilter(filter());
+        .addFilter(filter());
     }
 
     @Bean

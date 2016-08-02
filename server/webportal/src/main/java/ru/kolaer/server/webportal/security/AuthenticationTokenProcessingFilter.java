@@ -32,23 +32,18 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = this.getAsHttpRequest(request);
 
-        String authToken = httpRequest.getParameter("token");
-        if(authToken != null) {
-            String userName = authToken.split(":")[0];
-            LOG.info(authToken);
-            if (userName != null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
-                if(userDetails != null) {
-                    LOG.info(userDetails.getPassword());
-                    if (authToken.split(":")[1].equals(userDetails.getPassword())) {
-                        UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                    }
+        String authToken = this.extractAuthTokenFromRequest(httpRequest);
+        String userName = TokenUtils.getUserNameFromToken(authToken);
+        if (userName != null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
+            if(userDetails != null) {
+                if (TokenUtils.validateToken(authToken, userDetails)) {
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         }
-
 
         request.setCharacterEncoding("UTF-8");
         chain.doFilter(request, response);
@@ -60,5 +55,15 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
         }
 
         return (HttpServletRequest) request;
+    }
+
+    private String extractAuthTokenFromRequest(HttpServletRequest httpRequest) {
+        String authToken = httpRequest.getHeader("x-token");
+
+        if (authToken == null) {
+            authToken = httpRequest.getParameter("token");
+        }
+
+        return authToken;
     }
 }

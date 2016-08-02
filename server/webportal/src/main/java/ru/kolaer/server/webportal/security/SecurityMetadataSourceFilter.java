@@ -36,6 +36,9 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
         FilterInvocation fi=(FilterInvocation)object;
         String url=fi.getRequestUrl();
 
+        if(url.indexOf("?") != -1) {
+            url = url.substring(0, url.indexOf("?"));
+        }
         final WebPortalUrlPathDecorator urlPth = urlPathDao.getPathByUrl(url);
         if(urlPth != null) {
             return getRoles(urlPth);
@@ -45,8 +48,9 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
     }
 
     private Collection<ConfigAttribute> getRoles(WebPortalUrlPathDecorator urlPath) {
-        if(urlPath.isAccessAll() || urlPath.isAccessAnonymous())
+        if(urlPath.isAccessAll() || urlPath.isAccessAnonymous()) {
             return SecurityConfig.createList();
+        }
 
 
         List<GeneralRolesEntityDecorator> dbRoles = this.roleDao.findAll();
