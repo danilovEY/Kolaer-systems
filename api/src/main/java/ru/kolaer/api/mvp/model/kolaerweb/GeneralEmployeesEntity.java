@@ -2,6 +2,8 @@ package ru.kolaer.api.mvp.model.kolaerweb;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.util.List;
+
 /**
  * Created by danilovey on 29.07.2016.
  */
@@ -10,8 +12,8 @@ public interface GeneralEmployeesEntity {
      int getPnumber();
      void setPnumber(int pnumber);
 
-     GeneralAccountsEntity getAccountsEntity();
-     void setAccountsEntity(GeneralAccountsEntity accountsEntity);
+     List<GeneralAccountsEntity> getAccountsEntity();
+     void setAccountsEntity(List<GeneralAccountsEntity> accountsEntity);
 
      String getInitials();
      void setInitials(String initials);

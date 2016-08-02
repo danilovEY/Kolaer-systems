@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.UserDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
 
@@ -25,8 +26,8 @@ public class UserController {
 
     /**Получить все аккаунты.*/
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<GeneralAccountsEntityDecorator> getAllUsers() {
-        List<GeneralAccountsEntityDecorator> list = userDao.findAll();
+    public List<GeneralAccountsEntity> getAllUsers() {
+        List<GeneralAccountsEntity> list = userDao.findAll();
         return list;
     }
 

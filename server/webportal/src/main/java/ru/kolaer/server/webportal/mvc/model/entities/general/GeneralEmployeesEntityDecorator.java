@@ -7,6 +7,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Danilov on 24.07.2016.
@@ -37,13 +38,13 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setPnumber(pnumber);
     }
 
-    @OneToOne(targetEntity = GeneralAccountsEntityDecorator.class, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = GeneralAccountsEntityDecorator.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_account", nullable = true)
-    public GeneralAccountsEntity getAccountsEntity() {
+    public List<GeneralAccountsEntity> getAccountsEntity() {
         return this.generalEmployeesEntity.getAccountsEntity();
     }
 
-    public void setAccountsEntity(GeneralAccountsEntity accountsEntity) {
+    public void setAccountsEntity(List<GeneralAccountsEntity> accountsEntity) {
         this.generalEmployeesEntity.setAccountsEntity(accountsEntity);
     }
 

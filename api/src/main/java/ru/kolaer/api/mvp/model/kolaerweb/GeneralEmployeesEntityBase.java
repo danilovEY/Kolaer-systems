@@ -1,5 +1,7 @@
 package ru.kolaer.api.mvp.model.kolaerweb;
 
+import java.util.List;
+
 /**
  * Created by Danilov on 24.07.2016.
  * Структура сотрудника в БД.
@@ -10,7 +12,7 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
     private EnumGender gender;
     private String departament;
     private String post;
-    private GeneralAccountsEntity accountsEntity;
+    private List<GeneralAccountsEntity> accountsEntity;
 
     public int getPnumber() {
         return pnumber;
@@ -20,11 +22,11 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
         this.pnumber = pnumber;
     }
 
-    public GeneralAccountsEntity getAccountsEntity() {
+    public List<GeneralAccountsEntity> getAccountsEntity() {
         return accountsEntity;
     }
 
-    public void setAccountsEntity(GeneralAccountsEntity accountsEntity) {
+    public void setAccountsEntity(List<GeneralAccountsEntity> accountsEntity) {
         this.accountsEntity = accountsEntity;
     }
 

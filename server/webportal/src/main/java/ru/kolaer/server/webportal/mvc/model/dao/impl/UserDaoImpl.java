@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.UserDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
 
@@ -20,7 +21,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GeneralAccountsEntityDecorator> findAll() {
+    public List<GeneralAccountsEntity> findAll() {
         return sessionFactory.getCurrentSession().createCriteria(GeneralAccountsEntityDecorator.class).list();
     }
 
@@ -31,9 +32,16 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public void save(GeneralAccountsEntityDecorator obj) {
+    public void save(GeneralAccountsEntity obj) {
         if(obj != null) {
             this.sessionFactory.getCurrentSession().save(obj);
         }
+    }
+
+    @Override
+    public GeneralAccountsEntity findName(String username) {
+        return (GeneralAccountsEntity) this.sessionFactory.getCurrentSession()
+                .createQuery("from GeneralAccountsEntityDecorator ac where ac.username=:username")
+                .setParameter("username", username).uniqueResult();
     }
 }

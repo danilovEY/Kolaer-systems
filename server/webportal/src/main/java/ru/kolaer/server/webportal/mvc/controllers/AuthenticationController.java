@@ -16,9 +16,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
+import ru.kolaer.server.webportal.mvc.model.dao.UserDao;
 import ru.kolaer.server.webportal.security.TokenUtils;
+
+import java.util.List;
 
 /**
  * Created by danilovey on 28.07.2016.
@@ -38,6 +42,25 @@ public class AuthenticationController {
     @Autowired
     @Qualifier("userDetailsService")
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserDao userDao;
+
+    @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public GeneralAccountsEntity getUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof String && ((String) principal).equals("anonymousUser")) {
+            throw new UsernameNotFoundException("Bad");
+        }
+
+        UserDetails userDetails = (UserDetails) principal;
+
+
+        return userDao.findName(userDetails.getUsername());
+    }
+
 
     /**Генерация пароля по строке.*/
     @RequestMapping(value = "/genpass", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
