@@ -65,9 +65,15 @@ public class AuthenticationController {
         return new StandardPasswordEncoder(secretKey).encode(pass);
     }
 
+    @RequestMapping(value = "/token", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public TokenJson getTokenPost(@RequestBody UserAndPassJson userAndPassJson){
+        return this.getToken(userAndPassJson.getUsername(), userAndPassJson.getPassword());
+    }
+
     /**Генерация токена по имени и паролю пользователя.*/
     @RequestMapping(value = "/token", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public TokenJson getToken(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password){
+    public TokenJson getToken(@RequestParam(value = "username", defaultValue = "anonymous") String username,
+                              @RequestParam(value = "password", defaultValue = "anonymous") String password){
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
@@ -76,11 +82,6 @@ public class AuthenticationController {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
         return new TokenJson(TokenUtils.createToken(userDetails));
-    }
-
-    @RequestMapping(value = "/token", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public TokenJson getTokenPost(@RequestBody UserAndPassJson userAndPassJson){
-        return this.getToken(userAndPassJson.getUsername(), userAndPassJson.getPassword());
     }
 
 }
