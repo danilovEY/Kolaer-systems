@@ -2,7 +2,7 @@ package ru.kolaer.client.javafx.system.network.kolaerweb;
 
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.exeptions.ServerException;
+import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.network.kolaerweb.PsrTable;
 

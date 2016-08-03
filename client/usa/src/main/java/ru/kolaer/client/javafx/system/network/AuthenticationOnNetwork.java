@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.exeptions.ServerException;
+import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;

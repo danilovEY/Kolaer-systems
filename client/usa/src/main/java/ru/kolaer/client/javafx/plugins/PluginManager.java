@@ -57,6 +57,7 @@ public class PluginManager {
                 "ru.kolaer.api.mvp.model.restful, "+
                 "ru.kolaer.api.mvp.presenter, "+
                 "ru.kolaer.api.mvp.view, "+
+                "ru.kolaer.api.observers, "+
                 "ru.kolaer.api.plugins, "+
                 "ru.kolaer.api.plugins.services, "+
                 "ru.kolaer.api.system, "+
