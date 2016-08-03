@@ -8,18 +8,19 @@ import ru.kolaer.api.exeptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
-import ru.kolaer.api.system.network.Authentication;
+import ru.kolaer.api.observers.AuthenticationObserver;
+import ru.kolaer.api.system.Authentication;
 import ru.kolaer.client.javafx.tools.Resources;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by danilovey on 02.08.2016.
  */
-public class AuthenticationImpl implements Authentication {
-    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationImpl.class);
-
+public class AuthenticationOnNetwork implements Authentication {
+    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationOnNetwork.class);
+    private final List<AuthenticationObserver> authenticationObserverList;
     private final RestTemplate restTemplate;
     private final String pathToServer;
     private GeneralAccountsEntity accountsEntity;
@@ -28,9 +29,10 @@ public class AuthenticationImpl implements Authentication {
     private final String URL_TO_GET_TOKEN;
     private final String URL_TO_GET_USER;
 
-    public AuthenticationImpl(StringBuilder path) {
+    public AuthenticationOnNetwork() {
         this.restTemplate = new RestTemplate();
-        this.pathToServer = path.append("/rest").toString() + "/authentication";
+        this.authenticationObserverList = new ArrayList<>();
+        this.pathToServer = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/authentication";
         this.URL_TO_GET_TOKEN = this.pathToServer + "/token";
         this.URL_TO_GET_USER = this.pathToServer + "/user";
     }
@@ -46,6 +48,9 @@ public class AuthenticationImpl implements Authentication {
             this.tokenJson  = this.restTemplate.postForObject(this.URL_TO_GET_TOKEN, userAndPassJson, TokenJson.class);
             this.accountsEntity = this.restTemplate.getForObject(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken(), GeneralAccountsEntity.class);
             this.isAuth = true;
+
+            this.notifyObserversLogin();
+
             return true;
         } catch (RestClientException ex) {
             LOG.error("Не удалось авторизоваться!", ex);
@@ -65,6 +70,35 @@ public class AuthenticationImpl implements Authentication {
         this.isAuth = false;
         this.accountsEntity = null;
         this.tokenJson = null;
+
+        this.notifyObserversLogout();
+
         return true;
+    }
+
+    private void notifyObserversLogin() {
+        this.authenticationObserverList.parallelStream().forEach(obs -> {
+            obs.login(this.accountsEntity);
+        });
+    }
+
+    private void notifyObserversLogout() {
+        this.authenticationObserverList.parallelStream().forEach(obs -> {
+            obs.logout(this.accountsEntity);
+        });
+    }
+
+
+
+    @Override
+    public void registerObserver(AuthenticationObserver observer) {
+        if(observer != null)
+            this.authenticationObserverList.add(observer);
+    }
+
+    @Override
+    public void removeObserver(AuthenticationObserver observer) {
+        if(observer != null)
+            this.authenticationObserverList.remove(observer);
     }
 }

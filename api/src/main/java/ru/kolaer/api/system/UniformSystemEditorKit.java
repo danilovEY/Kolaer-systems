@@ -7,4 +7,6 @@ public interface UniformSystemEditorKit {
 	NetworkUS getUSNetwork();
 	UISystemUS getUISystemUS();
 	PluginsUS getPluginsUS();
+
+	Authentication getAuthentication();
 }

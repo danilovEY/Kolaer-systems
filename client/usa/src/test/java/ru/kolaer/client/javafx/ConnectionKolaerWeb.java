@@ -4,15 +4,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exeptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
-import ru.kolaer.api.system.network.Authentication;
+import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.network.NetworkUS;
+import ru.kolaer.client.javafx.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.javafx.system.network.NetworkUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
@@ -40,8 +40,7 @@ public class ConnectionKolaerWeb {
 
     @Test
     public void testAuth() {
-        NetworkUS networkUS = new NetworkUSImpl();
-        Authentication authentication = networkUS.getAuthentication();
+        Authentication authentication = new AuthenticationOnNetwork();
         if(authentication.login(new UserAndPassJson("user", "user"))) {
             System.out.println("УРААА");
             if(authentication.isAuthentication()) {
