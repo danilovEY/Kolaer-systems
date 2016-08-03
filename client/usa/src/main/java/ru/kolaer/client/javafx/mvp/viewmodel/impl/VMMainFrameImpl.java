@@ -165,17 +165,20 @@ public class VMMainFrameImpl extends Application {
         final String pathServerRest = PARAM.get("server-rest");
         if (pathServerRest != null) {
             Resources.URL_TO_KOLAER_RESTFUL.delete(0, Resources.URL_TO_KOLAER_RESTFUL.length()).append(pathServerRest);
+            LOG.info("RESTful server: {}", Resources.URL_TO_KOLAER_RESTFUL.toString());
         }
 
         final String pathServerWeb = PARAM.get("server-web");
         if (pathServerWeb != null) {
             Resources.URL_TO_KOLAER_WEB.delete(0, Resources.URL_TO_KOLAER_WEB.length()).append(pathServerWeb);
+            LOG.info("Web server: {}", Resources.URL_TO_KOLAER_WEB.toString());
         }
 
         final String service = PARAM.get("service");
         if (service == null || !service.equals("false")) {
             this.servicesManager.setAutoRun(true);
             this.servicesManager.runAllServices();
+            LOG.info("Service ON");
         }
         PARAM.clear();
     }
