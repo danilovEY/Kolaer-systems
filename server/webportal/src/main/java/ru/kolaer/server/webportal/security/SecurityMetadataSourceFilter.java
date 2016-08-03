@@ -50,7 +50,7 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
     }
 
     private Collection<ConfigAttribute> getRoles(WebPortalUrlPathDecorator urlPath) {
-        if(urlPath.isAccessAll() || urlPath.isAccessAnonymous()) {
+        if(urlPath.isAccessAll()) {
             return SecurityConfig.createList();
         }
 
@@ -64,6 +64,7 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
 
             if(role.getType() == EnumRole.USER && urlPath.isAccessUser() ||
                     role.getType() == EnumRole.ADMIN && urlPath.isAccessAdmin() ||
+                    role.getType() == EnumRole.ANONYMOUS && urlPath.isAccessAnonymous() ||
                     role.getType() == EnumRole.SUPER_ADMIN && urlPath.isAccessSuperAdmin()) {
                 accessRoles.add(new SecurityConfig(role.getType().toString()));
             }
