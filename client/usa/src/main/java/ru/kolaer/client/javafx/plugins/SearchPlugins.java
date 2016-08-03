@@ -1,6 +1,7 @@
 package ru.kolaer.client.javafx.plugins;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,8 @@ public class SearchPlugins {
     }
 
     public SearchPlugins() {
-        this(DEFAULT_PATH_DOR_PLUGINS);
+        new File(DEFAULT_PATH_DOR_PLUGINS).mkdir();
+        this.addDir(DEFAULT_PATH_DOR_PLUGINS);
     }
 
     public void addDir(final String dir) {
