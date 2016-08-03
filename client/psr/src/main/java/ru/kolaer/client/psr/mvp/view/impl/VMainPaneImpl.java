@@ -37,11 +37,23 @@ public class VMainPaneImpl implements VMainPane {
 
         fileMenu.getItems().addAll(this.loginMenu);
         menuBar.getMenus().addAll(fileMenu, psrMenu);
-    }
 
+        this.mainPane.setTop(menuBar);
+    }
 
     @Override
     public void loginAction(final EventHandler<ActionEvent> event) {
         this.loginMenu.setOnAction(event);
     }
+
+    @Override
+    public void logoutAction(EventHandler<ActionEvent> event) {
+        this.loginMenu.setOnAction(event);
+    }
+
+    @Override
+    public void setUserName(String userName) {
+        this.loginMenu.setText(userName);
+    }
+
 }

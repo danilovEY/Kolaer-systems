@@ -9,4 +9,6 @@ import ru.kolaer.api.mvp.view.VComponentUI;
  */
 public interface VMainPane extends VComponentUI, InitializationView {
     void loginAction(EventHandler<ActionEvent> event);
+    void logoutAction(EventHandler<ActionEvent> event);
+    void setUserName(String userName);
 }

@@ -24,6 +24,7 @@ jar {
 
 task copyJarToBin(dependsOn: jar) {
     doLast {
+        pathToProjectDirWithPlugins = "d:\\workspace\\Kolaer-systems\\plugins"
         copy {
             from 'build/libs/' + projectJarName
             into pathToProjectDirWithPlugins
