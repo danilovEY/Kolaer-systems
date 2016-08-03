@@ -115,7 +115,8 @@ public class VMMainFrameImpl extends Application {
 
             final Iterator<PluginBundle> iterPlugins = plugins.iterator();
 
-            for (PluginBundle pluginBundle = iterPlugins.next(); iterPlugins.hasNext(); pluginBundle = iterPlugins.next()) {
+            while (iterPlugins.hasNext()) {
+                PluginBundle pluginBundle = iterPlugins.next();
                 if(pluginBundle.getSymbolicNamePlugin().equals("ru.kolaer.asmc")) {
                     this.installPlugin(explorer,pluginManager,pluginBundle);
                     iterPlugins.remove();
