@@ -51,6 +51,7 @@ public class PluginManager {
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework, "+
                         "ru.kolaer.api.mvp.model.kolaerweb, "+
+                        "ru.kolaer.api.exceptions, "+
                 "ru.kolaer.api.mvp.model.kolaerweb.psr, "+
                 "ru.kolaer.api.mvp.model.kolaerweb.webportal, "+
                 "ru.kolaer.api.mvp.model.kolaerweb.webportal.rss, "+
