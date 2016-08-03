@@ -1,5 +1,7 @@
 package ru.kolaer.client.psr.mvp.presenter.impl;
 
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.psr.mvp.presenter.PMainPane;
 import ru.kolaer.client.psr.mvp.presenter.PPsrRegisterTable;
@@ -18,7 +20,7 @@ public class PMainPaneImpl implements PMainPane {
         this.editorKit = editorKit;
         this.pPsrRegisterTable = new PPsrRegisterTableImpl(editorKit);
         this.view = new VMainPaneImpl();
-        this.view.setContent(pPsrRegisterTable.getView().getContent());
+
     }
 
     @Override
@@ -28,6 +30,18 @@ public class PMainPaneImpl implements PMainPane {
 
     @Override
     public void updatePluginPage() {
+        this.view.initializationView();
         pPsrRegisterTable.updateTableData();
+        this.view.setContent(pPsrRegisterTable.getView().getContent());
+    }
+
+    @Override
+    public void login(GeneralAccountsEntity account) {
+
+    }
+
+    @Override
+    public void logout(GeneralAccountsEntity account) {
+
     }
 }

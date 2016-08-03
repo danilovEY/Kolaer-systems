@@ -49,10 +49,9 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
             new TableCell<PsrRegister, GeneralEmployeesEntity>() {
                 @Override
                 protected void updateItem(GeneralEmployeesEntity item, boolean empty) {
-                    Tools.runOnThreadFX(() -> {
-                        super.updateItem(item, empty);
+                    super.updateItem(item, empty);
+                    if(!empty)
                         this.setText(item.getInitials());
-                    });
                 }
             }
         );
@@ -63,11 +62,9 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
             new TableCell<PsrRegister, Date>() {
                 @Override
                 protected void updateItem(Date item, boolean empty) {
-                    Tools.runOnThreadFX(() -> {
-                        super.updateItem(item, empty);
-                        if(!empty)
-                            this.setText(dateFormat.format(item));
-                    });
+                    super.updateItem(item, empty);
+                    if(!empty)
+                        this.setText(dateFormat.format(item));
                 }
             }
         );
@@ -123,6 +120,8 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
 
     @Override
     public void addPsrProject(PsrRegister psrRegister) {
-        this.tableData.add(psrRegister);
+        Tools.runOnThreadFX(() -> {
+            this.tableData.add(psrRegister);
+        });
     }
 }

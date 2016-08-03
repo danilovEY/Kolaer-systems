@@ -1,6 +1,11 @@
 package ru.kolaer.client.psr.mvp.view.impl;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import ru.kolaer.client.psr.mvp.view.VMainPane;
 
@@ -9,11 +14,7 @@ import ru.kolaer.client.psr.mvp.view.VMainPane;
  */
 public class VMainPaneImpl implements VMainPane {
     private BorderPane mainPane;
-
-    public VMainPaneImpl() {
-        this.mainPane = new BorderPane();
-    }
-
+    private MenuItem loginMenu;
     @Override
     public void setContent(Parent content) {
         this.mainPane.setCenter(content);
@@ -22,5 +23,25 @@ public class VMainPaneImpl implements VMainPane {
     @Override
     public Parent getContent() {
         return this.mainPane;
+    }
+
+    @Override
+    public void initializationView() {
+        this.mainPane = new BorderPane();
+        final MenuBar menuBar = new MenuBar();
+
+        final Menu fileMenu = new Menu("Файл");
+        final Menu psrMenu = new Menu("ПСР");
+
+        this.loginMenu = new MenuItem("Вход");
+
+        fileMenu.getItems().addAll(this.loginMenu);
+        menuBar.getMenus().addAll(fileMenu, psrMenu);
+    }
+
+
+    @Override
+    public void loginAction(final EventHandler<ActionEvent> event) {
+        this.loginMenu.setOnAction(event);
     }
 }

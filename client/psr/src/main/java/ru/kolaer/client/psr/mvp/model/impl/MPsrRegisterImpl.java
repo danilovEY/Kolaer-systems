@@ -1,7 +1,9 @@
 package ru.kolaer.client.psr.mvp.model.impl;
 
+import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.client.psr.mvp.model.MPsrRegister;
 
 /**
@@ -16,6 +18,20 @@ public class MPsrRegisterImpl implements MPsrRegister{
 
     @Override
     public PsrRegister[] getAllPstRegister() {
-        return this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().getAllPsrRegister();
+        if(this.editorKit.getUSNetwork().getKolaerWebServer().getServerStatus() == ServerStatus.AVAILABLE) {
+            if(this.editorKit.getAuthentication().isAuthentication()) {
+                try {
+                    return this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().getAllPsrRegister();
+                } catch (ServerException e) {
+                    this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Ошибка на сервере!");
+                }
+            } else {
+                this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Вы не авторизовались или нет доступа!");
+            }
+        } else {
+            this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Сервер не доступен!");
+        }
+
+        return null;
     }
 }

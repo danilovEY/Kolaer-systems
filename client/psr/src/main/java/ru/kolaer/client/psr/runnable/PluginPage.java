@@ -1,6 +1,17 @@
 package ru.kolaer.client.psr.runnable;
 
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -16,13 +27,20 @@ import java.util.concurrent.TimeUnit;
  * Created by Danilov on 28.07.2016.
  */
 public class PluginPage implements UniformSystemPlugin {
+    private static final Logger LOG = LoggerFactory.getLogger(PluginPage.class);
     private UniformSystemEditorKit editorKit;
     private PMainPane mainPane;
 
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
         this.editorKit = editorKit;
+        this.editorKit.getAuthentication().login(new UserAndPassJson("anonymous", "anonymous"));
         this.mainPane = new PMainPaneImpl(editorKit);
+        Tools.runOnThreadFX(() -> {
+            this.mainPane.updatePluginPage();
+        });
+        this.editorKit.getAuthentication().registerObserver(this.mainPane);
+
     }
 
     @Override
@@ -37,14 +55,7 @@ public class PluginPage implements UniformSystemPlugin {
 
     @Override
     public void start() throws Exception {
-        Tools.runOnThreadFX(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(2);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            this.mainPane.updatePluginPage();
-        });
+
     }
 
     @Override
