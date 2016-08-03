@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.system;
 
+import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.system.PluginsUS;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.Authentication;
@@ -7,6 +8,10 @@ import ru.kolaer.api.system.network.NetworkUS;
 import ru.kolaer.api.system.ui.UISystemUS;
 import ru.kolaer.client.javafx.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.javafx.tools.Resources;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Реализация комплекта инструментов.
@@ -31,6 +36,12 @@ public class UniformSystemEditorKitSingleton implements UniformSystemEditorKit {
 
 	private UniformSystemEditorKitSingleton() {
 		this.authentication = new AuthenticationOnNetwork();
+		ExecutorService loginOnServerThread = Executors.newSingleThreadExecutor();
+		CompletableFuture.runAsync(() -> {
+			Thread.currentThread().setName("Авторизация");
+			this.authentication.login(new UserAndPassJson("anonymous", "anonymous"));
+			loginOnServerThread.shutdownNow();
+		}, loginOnServerThread);
 	}
 
 	@Override

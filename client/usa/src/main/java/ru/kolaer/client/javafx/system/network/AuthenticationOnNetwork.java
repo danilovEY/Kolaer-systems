@@ -43,13 +43,19 @@ public class AuthenticationOnNetwork implements Authentication {
         } else if (this.isAuth) {
             this.logout();
         }
-
+        LOG.info("Авторизация для: {}", userAndPassJson.getUsername());
         try {
             this.tokenJson  = this.restTemplate.postForObject(this.URL_TO_GET_TOKEN, userAndPassJson, TokenJson.class);
+            if(this.tokenJson != null)
+                LOG.info("Токен получен...");
             this.accountsEntity = this.restTemplate.getForObject(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken(), GeneralAccountsEntity.class);
+            if(this.accountsEntity != null)
+                LOG.info("Пользователь получен...");
             this.isAuth = true;
 
             this.notifyObserversLogin();
+
+            LOG.info("Авторизация прошла успешно!");
 
             return true;
         } catch (RestClientException ex) {
@@ -60,6 +66,11 @@ public class AuthenticationOnNetwork implements Authentication {
 
     public GeneralAccountsEntity getAuthorizedUser() {
         return this.accountsEntity;
+    }
+
+    @Override
+    public TokenJson getToken() {
+        return this.tokenJson;
     }
 
     public boolean isAuthentication() {
