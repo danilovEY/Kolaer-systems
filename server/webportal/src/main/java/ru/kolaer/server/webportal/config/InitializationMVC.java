@@ -17,7 +17,7 @@ public class InitializationMVC extends AbstractAnnotationConfigDispatcherServlet
         //Фильтр для Spring Security.
         servletContext
                 .addFilter("securityFilter", new DelegatingFilterProxy("springSecurityFilterChain"))
-                .addMappingForUrlPatterns(null, false, "/*");
+                .addMappingForUrlPatterns(null, false, PathMapping.DISPATCHER_SERVLET + "/*");
 
         //Поддержка UTF-8.
         servletContext
