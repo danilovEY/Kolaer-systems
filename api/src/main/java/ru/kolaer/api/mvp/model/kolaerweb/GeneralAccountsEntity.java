@@ -24,4 +24,7 @@ public interface GeneralAccountsEntity {
 
      String getEmail();
      void setEmail(String email);
+
+    GeneralEmployeesEntity getGeneralEmployeesEntity();
+    void setGeneralEmployeesEntity(GeneralEmployeesEntity generalAccountsEntity);
 }

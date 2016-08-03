@@ -8,6 +8,10 @@ public class UserAndPassJson {
     private String username;
     private String password;
 
+    public UserAndPassJson(){
+
+    }
+
     public UserAndPassJson(String username, String password) {
         this.username = username;
         this.password = password;

@@ -13,6 +13,7 @@ public class GeneralAccountsEntityBase implements GeneralAccountsEntity {
     private String password;
     private String email;
     private List<GeneralRolesEntity> roles;
+    private GeneralEmployeesEntity account;
 
 
     public int getId() {
@@ -54,6 +55,16 @@ public class GeneralAccountsEntityBase implements GeneralAccountsEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public GeneralEmployeesEntity getGeneralEmployeesEntity() {
+        return this.account;
+    }
+
+    @Override
+    public void setGeneralEmployeesEntity(GeneralEmployeesEntity generalAccountsEntity) {
+        this.account = generalAccountsEntity;
     }
 
     @Override

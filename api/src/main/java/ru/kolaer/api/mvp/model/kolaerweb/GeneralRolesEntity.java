@@ -10,6 +10,6 @@ public interface GeneralRolesEntity {
      int getId();
      void setId(int id);
 
-     String getType();
-     void setType(String type);
+     EnumRole getType();
+     void setType(EnumRole type);
 }
