@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
@@ -20,6 +21,7 @@ import ru.kolaer.client.javafx.services.AutoUpdatePlugins;
 import ru.kolaer.client.javafx.services.HideShowMainStage;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.javafx.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.javafx.system.network.NetworkUSImpl;
 import ru.kolaer.client.javafx.system.ui.UISystemUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;
@@ -75,10 +77,20 @@ public class VMMainFrameImpl extends Application {
 
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         final NetworkUSImpl network = new NetworkUSImpl();
+        final AuthenticationOnNetwork authentication = new AuthenticationOnNetwork();
         final UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
         editorKit.setUSNetwork(network);
         editorKit.setUISystemUS(uiSystemUS);
-        editorKit.setPluginsUS(explorer);      
+        editorKit.setPluginsUS(explorer);
+        editorKit.setAuthentication(authentication);
+
+        //Авторизация пользователя по-умолчанию.
+        ExecutorService loginOnServerThread = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() -> {
+            Thread.currentThread().setName("Авторизация");
+            authentication.login(new UserAndPassJson("anonymous", "anonymous"));
+            loginOnServerThread.shutdownNow();
+        }, loginOnServerThread);
 
         final SearchPlugins searchPlugins = new SearchPlugins();
         final PluginManager pluginManager = new PluginManager(searchPlugins);
@@ -92,7 +104,7 @@ public class VMMainFrameImpl extends Application {
         }, threadStartService);
 
         final ExecutorService threadScan = Executors.newSingleThreadExecutor();
-        CompletableFuture<List<PluginBundle>> resultSearch = CompletableFuture.supplyAsync(() -> searchPlugins.search(), threadScan);
+        CompletableFuture<List<PluginBundle>> resultSearch = CompletableFuture.supplyAsync(searchPlugins::search, threadScan);
 
         final ExecutorService threadInstall = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {

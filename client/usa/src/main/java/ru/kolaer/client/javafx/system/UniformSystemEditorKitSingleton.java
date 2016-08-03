@@ -34,13 +34,7 @@ public class UniformSystemEditorKitSingleton implements UniformSystemEditorKit {
 	private Authentication authentication;
 
 	private UniformSystemEditorKitSingleton() {
-		this.authentication = new AuthenticationOnNetwork();
-		ExecutorService loginOnServerThread = Executors.newSingleThreadExecutor();
-		CompletableFuture.runAsync(() -> {
-			Thread.currentThread().setName("Авторизация");
-			this.authentication.login(new UserAndPassJson("anonymous", "anonymous"));
-			loginOnServerThread.shutdownNow();
-		}, loginOnServerThread);
+
 	}
 
 	@Override
@@ -73,5 +67,9 @@ public class UniformSystemEditorKitSingleton implements UniformSystemEditorKit {
 
 	public void setUISystemUS(final UISystemUS uiSystemUS) {
 		this.uiSystem = uiSystemUS;
-	}	
+	}
+
+	public void setAuthentication(Authentication authentication) {
+		this.authentication = authentication;
+	}
 }
