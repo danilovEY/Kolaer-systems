@@ -27,7 +27,7 @@ public class PsrStatusDecorator implements PsrStatus {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return this.psrProjectStatus.getId();
     }

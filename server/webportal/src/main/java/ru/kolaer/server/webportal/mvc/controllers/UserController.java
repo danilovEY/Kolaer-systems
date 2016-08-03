@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.server.webportal.mvc.model.dao.UserDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 
 import java.util.List;
 
@@ -22,12 +21,12 @@ import java.util.List;
 public class UserController {
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
     @Autowired
-    private UserDao userDao;
+    private AccountDao accountDao;
 
     /**Получить все аккаунты.*/
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<GeneralAccountsEntity> getAllUsers() {
-        List<GeneralAccountsEntity> list = userDao.findAll();
+        List<GeneralAccountsEntity> list = accountDao.findAll();
         return list;
     }
 

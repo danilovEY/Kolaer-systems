@@ -8,8 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.server.webportal.mvc.model.dao.UserDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 
 import java.util.stream.Collectors;
 
@@ -21,17 +20,17 @@ import java.util.stream.Collectors;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserDao userDao;
+    private AccountDao accountDao;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User userResult = null;
 
-        for(GeneralAccountsEntity acc : userDao.findAll()) {
+        for(GeneralAccountsEntity acc : accountDao.findAll()) {
            if(acc.getUsername().equals(username)){
                userResult = new User(username, acc.getPassword(), true,true,true,true, acc.getRoles().stream().map(role -> {
-                   return new SimpleGrantedAuthority(role.getType());
+                   return new SimpleGrantedAuthority(role.getType().toString());
                }).collect(Collectors.toList()));
                break;
            }

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.expression.AccessException;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,10 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
-import ru.kolaer.server.webportal.mvc.model.dao.UserDao;
+import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.security.TokenUtils;
-
-import java.util.List;
 
 /**
  * Created by danilovey on 28.07.2016.
@@ -44,7 +41,7 @@ public class AuthenticationController {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private UserDao userDao;
+    private AccountDao accountDao;
 
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public GeneralAccountsEntity getUser() {
@@ -58,7 +55,7 @@ public class AuthenticationController {
         UserDetails userDetails = (UserDetails) principal;
 
 
-        return userDao.findName(userDetails.getUsername());
+        return accountDao.findName(userDetails.getUsername());
     }
 
 

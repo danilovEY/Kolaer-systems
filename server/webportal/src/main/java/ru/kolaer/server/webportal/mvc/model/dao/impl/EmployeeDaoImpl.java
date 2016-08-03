@@ -30,7 +30,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public void save(GeneralEmployeesEntityDecorator obj) {
+    public void persist(GeneralEmployeesEntityDecorator obj) {
 
     }
 }

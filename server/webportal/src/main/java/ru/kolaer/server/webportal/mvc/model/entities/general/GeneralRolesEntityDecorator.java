@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.Immutable;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
 
@@ -38,11 +39,12 @@ public class GeneralRolesEntityDecorator implements GeneralRolesEntity{
     }
 
     @Column(name = "type")
-    public String getType() {
+    @Enumerated(value = EnumType.STRING)
+    public EnumRole getType() {
         return this.generalRolesEntity.getType();
     }
 
-    public void setType(String type) {
+    public void setType(EnumRole type) {
         this.generalRolesEntity.setType(type);
     }
 

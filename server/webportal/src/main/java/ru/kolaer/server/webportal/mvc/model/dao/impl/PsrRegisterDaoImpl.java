@@ -36,7 +36,7 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     }
 
     @Override
-    public void save(PsrRegister obj) {
+    public void persist(PsrRegister obj) {
         this.sessionFactory.getCurrentSession().persist(obj);
     }
 

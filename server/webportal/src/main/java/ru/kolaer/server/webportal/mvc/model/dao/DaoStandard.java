@@ -17,5 +17,5 @@ public interface DaoStandard<T> {
     T findByID(int id);
     /**Добавить объект в БД.*/
     @Transactional
-    void save(T obj);
+    void persist(T obj);
 }

@@ -33,7 +33,7 @@ public class RssDaoImpl implements RssDao {
     }
 
     @Override
-    public void save(WebPortalRssEntityDecorator obj) {
+    public void persist(WebPortalRssEntityDecorator obj) {
 
     }
 }

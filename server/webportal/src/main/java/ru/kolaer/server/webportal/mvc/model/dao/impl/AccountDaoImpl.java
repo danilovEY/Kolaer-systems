@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.server.webportal.mvc.model.dao.UserDao;
+import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * Created by danilovey on 27.07.2016.
  */
 @Repository(value = "userDao")
-public class UserDaoImpl implements UserDao {
+public class AccountDaoImpl implements AccountDao {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -32,9 +32,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public void save(GeneralAccountsEntity obj) {
+    public void persist(GeneralAccountsEntity obj) {
         if(obj != null) {
-            this.sessionFactory.getCurrentSession().save(obj);
+            this.sessionFactory.getCurrentSession().persist(obj);
         }
     }
 
