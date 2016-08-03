@@ -6,7 +6,6 @@ import ru.kolaer.api.system.network.kolaerweb.KolaerWebServer;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
 
 /**

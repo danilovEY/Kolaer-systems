@@ -1,7 +1,6 @@
 package ru.kolaer.client.psr.mvp.presenter.impl;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.psr.mvp.presenter.PMainPane;
 import ru.kolaer.client.psr.mvp.presenter.PPsrRegisterTable;

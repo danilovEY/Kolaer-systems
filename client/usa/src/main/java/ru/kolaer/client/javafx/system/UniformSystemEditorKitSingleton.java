@@ -1,13 +1,12 @@
 package ru.kolaer.client.javafx.system;
 
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
+import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.PluginsUS;
 import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.network.NetworkUS;
 import ru.kolaer.api.system.ui.UISystemUS;
 import ru.kolaer.client.javafx.system.network.AuthenticationOnNetwork;
-import ru.kolaer.client.javafx.tools.Resources;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
