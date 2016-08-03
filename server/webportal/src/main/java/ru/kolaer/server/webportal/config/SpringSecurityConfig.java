@@ -92,7 +92,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public FilterSecurityInterceptor filter() throws Exception {
         FilterSecurityInterceptor filter = new FilterSecurityInterceptor();
         filter.setAuthenticationManager(authenticationManagerBean());
-        filter.setAccessDecisionManager(new AffirmativeBased(Arrays.asList(new RoleVoter(), new AuthenticatedVoter())));
+        RoleVoter role = new RoleVoter();
+        role.setRolePrefix("");
+        filter.setAccessDecisionManager(new AffirmativeBased(Arrays.asList(role, new AuthenticatedVoter())));
         filter.setSecurityMetadataSource(new SecurityMetadataSourceFilter(this.urlPathDao, this.roleDao));
 
         return filter;

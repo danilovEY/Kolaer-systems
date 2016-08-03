@@ -6,6 +6,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
@@ -60,9 +61,10 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
         final Iterator<GeneralRolesEntity> iterRoles = dbRoles.iterator();
         while (iterRoles.hasNext()) {
             final GeneralRolesEntity role = iterRoles.next();
-            if(role.getType().equals("ROLE_USER") && urlPath.isAccessUser() ||
-                    role.getType().equals("ROLE_ADMIN") && urlPath.isAccessAdmin() ||
-                    role.getType().equals("ROLE_SUPER_ADMIN") && urlPath.isAccessSuperAdmin()) {
+
+            if(role.getType() == EnumRole.USER && urlPath.isAccessUser() ||
+                    role.getType() == EnumRole.ADMIN && urlPath.isAccessAdmin() ||
+                    role.getType() == EnumRole.SUPER_ADMIN && urlPath.isAccessSuperAdmin()) {
                 accessRoles.add(new SecurityConfig(role.getType().toString()));
             }
         }
