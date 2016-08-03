@@ -1,4 +1,4 @@
-package ru.kolaer.api.exeptions;
+package ru.kolaer.api.exceptions;
 
 /**
  * Created by danilovey on 02.08.2016.

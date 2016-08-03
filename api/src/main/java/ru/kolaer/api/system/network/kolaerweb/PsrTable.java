@@ -1,6 +1,6 @@
 package ru.kolaer.api.system.network.kolaerweb;
 
-import ru.kolaer.api.exeptions.ServerException;
+import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 
 /**
