@@ -15,6 +15,11 @@ import ru.kolaer.client.psr.mvp.view.VMainPane;
 public class VMainPaneImpl implements VMainPane {
     private BorderPane mainPane;
     private MenuItem loginMenu;
+
+    public VMainPaneImpl() {
+        this.mainPane = new BorderPane();
+    }
+
     @Override
     public void setContent(Parent content) {
         this.mainPane.setCenter(content);
@@ -27,7 +32,6 @@ public class VMainPaneImpl implements VMainPane {
 
     @Override
     public void initializationView() {
-        this.mainPane = new BorderPane();
         final MenuBar menuBar = new MenuBar();
 
         final Menu fileMenu = new Menu("Файл");

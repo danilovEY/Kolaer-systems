@@ -15,11 +15,10 @@ import ru.kolaer.client.psr.mvp.view.impl.VMainPaneImpl;
 public class PMainPaneImpl implements PMainPane {
     private final VMainPane view;
     private final UniformSystemEditorKit editorKit;
-    private final PPsrRegisterTable pPsrRegisterTable;
+    private PPsrRegisterTable pPsrRegisterTable;
 
     public PMainPaneImpl(UniformSystemEditorKit editorKit) {
         this.editorKit = editorKit;
-        this.pPsrRegisterTable = new PPsrRegisterTableImpl(editorKit);
         this.view = new VMainPaneImpl();
 
     }
@@ -32,7 +31,10 @@ public class PMainPaneImpl implements PMainPane {
     @Override
     public void updatePluginPage() {
         this.view.initializationView();
-        pPsrRegisterTable.updateTableData();
+
+        this.pPsrRegisterTable = new PPsrRegisterTableImpl(editorKit);
+        this.pPsrRegisterTable.updateTableData();
+
         this.view.setContent(pPsrRegisterTable.getView().getContent());
 
         if(this.editorKit.getAuthentication().isAuthentication()) {

@@ -25,11 +25,8 @@ public class PluginPage implements UniformSystemPlugin {
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
         this.editorKit = editorKit;
-        this.editorKit.getAuthentication().login(new UserAndPassJson("anonymous", "anonymous"));
         this.mainPane = new PMainPaneImpl(editorKit);
-        Tools.runOnThreadFX(() -> {
-            this.mainPane.updatePluginPage();
-        });
+
         this.editorKit.getAuthentication().registerObserver(this.mainPane);
 
     }
@@ -46,7 +43,7 @@ public class PluginPage implements UniformSystemPlugin {
 
     @Override
     public void start() throws Exception {
-
+        Tools.runOnThreadFX(this.mainPane::updatePluginPage);
     }
 
     @Override
