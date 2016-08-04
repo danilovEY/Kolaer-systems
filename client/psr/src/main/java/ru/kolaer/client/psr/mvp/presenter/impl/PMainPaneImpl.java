@@ -1,18 +1,23 @@
 package ru.kolaer.client.psr.mvp.presenter.impl;
 
+import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
+import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.presenter.PDetailsOrEditPsrRegister;
 import ru.kolaer.client.psr.mvp.presenter.PMainPane;
 import ru.kolaer.client.psr.mvp.presenter.PPsrRegisterTable;
 import ru.kolaer.client.psr.mvp.view.VMainPane;
 import ru.kolaer.client.psr.mvp.view.impl.VMainPaneImpl;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by danilovey on 01.08.2016.
@@ -71,7 +76,7 @@ public class PMainPaneImpl implements PMainPane {
                 this.view.createPsrAction(e -> {
                     Alert warningAlert = new Alert(Alert.AlertType.ERROR);
                     warningAlert.setTitle("Ошибка");
-                    warningAlert.setContentText("Авторизируйтесь!");
+                    warningAlert.setHeaderText("Авторизируйтесь!");
                     warningAlert.show();
                 });
                 return;
@@ -87,7 +92,26 @@ public class PMainPaneImpl implements PMainPane {
             final Dialog loginDialog = this.editorKit.getUISystemUS().getDialog().createLoginDialog();
             loginDialog.showAndWait();
             String[] logPassArray = loginDialog.getResult().toString().split("=");
-            this.editorKit.getAuthentication().login(new UserAndPassJson(logPassArray[0], logPassArray[1]));
+            Task<Object> worker = new Task<Object>() {
+                @Override
+                protected Object call() throws Exception {
+                    updateMessage("Connect...");
+
+                    editorKit.getAuthentication().login(new UserAndPassJson(logPassArray[0], logPassArray[1]));
+                    updateProgress(100,100);
+                    return null;
+                }
+            };
+
+            Tools.runOnThreadFX(() -> {
+                ProgressDialog dlg = new ProgressDialog(worker);
+                dlg.showAndWait();
+            });
+
+            Thread th = new Thread(worker);
+            th.setDaemon(true);
+            th.start();
+
         });
 
     }
