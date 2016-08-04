@@ -12,6 +12,7 @@ import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -39,14 +40,9 @@ public class PluginManager {
         final File frameworkDir = new File(System.getProperty("java.io.tmpdir"), "KolaerCache");
 
         final Map<String, String> frameworkProperties = new HashMap<>();
-        try {
-            frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
-        } catch (final IOException e) {
-            LOG.error("Не удалось создать каталог для кэша OSGi!");
-            throw e;
-        }
+        frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
         frameworkProperties.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
-        frameworkProperties.put("felix.log.level", "2");
+        frameworkProperties.put("felix.log.level", "3");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework, "+
@@ -68,11 +64,9 @@ public class PluginManager {
                 "ru.kolaer.api.system.ui, "+
                 "ru.kolaer.api.tools");
 
-
-
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
                 "javafx.application, javafx.beans.property, " +
-                "javafx.beans.value, javafx.collections, javafx.collections.transformation, javafx.event, " +
+                "javafx.beans.value,  javafx.collections, javafx.collections.transformation, javafx.event, " +
                 "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.canvas, javafx.scene.image, " +
                 "javafx.scene.input , javafx.scene.layout, javafx.util, javafx.concurrent," +
                 "javafx.scene.text, javafx.stage, javax.swing, com.sun.javafx.scene.control.skin, javafx.scene.control.cell, org.slf4j;version=1.7.7");
@@ -84,7 +78,7 @@ public class PluginManager {
 
             this.context = framework.getBundleContext();
             this.isInit = true;
-        }  catch (final Throwable e) {
+        }  catch (final Exception e) {
             LOG.error("Ошибка при инициализации или старта OSGi-framework!", e);
             throw e;
         }
