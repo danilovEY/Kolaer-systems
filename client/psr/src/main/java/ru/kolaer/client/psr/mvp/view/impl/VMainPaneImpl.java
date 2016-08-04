@@ -7,6 +7,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.view.VMainPane;
 
 /**
@@ -57,7 +58,8 @@ public class VMainPaneImpl implements VMainPane {
 
     @Override
     public void setUserName(String userName) {
-        this.loginMenu.setText(userName);
+        if(userName != null)
+            Tools.runOnThreadFX(() -> this.loginMenu.setText(userName));
     }
 
 }

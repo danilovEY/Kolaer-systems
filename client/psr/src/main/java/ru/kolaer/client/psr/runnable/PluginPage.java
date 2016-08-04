@@ -1,6 +1,12 @@
 package ru.kolaer.client.psr.runnable;
 
+import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
@@ -26,9 +32,6 @@ public class PluginPage implements UniformSystemPlugin {
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
         this.editorKit = editorKit;
         this.mainPane = new PMainPaneImpl(editorKit);
-
-        this.editorKit.getAuthentication().registerObserver(this.mainPane);
-
     }
 
     @Override
@@ -43,7 +46,11 @@ public class PluginPage implements UniformSystemPlugin {
 
     @Override
     public void start() throws Exception {
+        if(!this.editorKit.getAuthentication().isAuthentication())
+            this.editorKit.getAuthentication().login(new UserAndPassJson("anonymous", "anonymous"));
+
         Tools.runOnThreadFX(this.mainPane::updatePluginPage);
+        this.editorKit.getAuthentication().registerObserver(this.mainPane);
     }
 
     @Override

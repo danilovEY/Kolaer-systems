@@ -45,10 +45,8 @@ public class PMainPaneImpl implements PMainPane {
 
     @Override
     public void login(GeneralAccountsEntity account) {
-        this.view.setUserName(account.getUsername());
-        this.view.logoutAction(e -> {
-            this.editorKit.getAuthentication().logout();
-        });
+        this.view.setUserName("Вошли как: (" + account.getUsername() + ")");
+        this.view.logoutAction(e -> this.editorKit.getAuthentication().logout());
     }
 
     @Override

@@ -84,14 +84,6 @@ public class VMMainFrameImpl extends Application {
         editorKit.setPluginsUS(explorer);
         editorKit.setAuthentication(authentication);
 
-        //Авторизация пользователя по-умолчанию.
-        ExecutorService loginOnServerThread = Executors.newSingleThreadExecutor();
-        CompletableFuture.runAsync(() -> {
-            Thread.currentThread().setName("Авторизация");
-            authentication.login(new UserAndPassJson("anonymous", "anonymous"));
-            loginOnServerThread.shutdownNow();
-        }, loginOnServerThread);
-
         final SearchPlugins searchPlugins = new SearchPlugins();
         final PluginManager pluginManager = new PluginManager(searchPlugins);
         
