@@ -11,7 +11,7 @@ dependencies {
         exclude module: 'spring-context'
     }
 
-    compile "org.controlsfx:controlsfx:8.40.10"
+    compile "org.controlsfx:controlsfx:8.40.11"
     testCompile "junit:junit:4.11"
 }
 
