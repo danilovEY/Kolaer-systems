@@ -16,6 +16,8 @@ import ru.kolaer.client.psr.mvp.view.VMainPane;
 public class VMainPaneImpl implements VMainPane {
     private BorderPane mainPane;
     private MenuItem loginMenu;
+    private MenuItem createPsrProjectMenu;
+    private boolean isInit = false;
 
     public VMainPaneImpl() {
         this.mainPane = new BorderPane();
@@ -38,12 +40,23 @@ public class VMainPaneImpl implements VMainPane {
         final Menu fileMenu = new Menu("Файл");
         final Menu psrMenu = new Menu("ПСР");
 
+        this.createPsrProjectMenu = new MenuItem("Создать ПСР проект");
+
         this.loginMenu = new MenuItem("Вход");
 
         fileMenu.getItems().addAll(this.loginMenu);
+        psrMenu.getItems().addAll(this.createPsrProjectMenu);
+
         menuBar.getMenus().addAll(fileMenu, psrMenu);
 
         this.mainPane.setTop(menuBar);
+
+        this.isInit = true;
+    }
+
+    @Override
+    public boolean isInitializationView() {
+        return this.isInit;
     }
 
     @Override
@@ -57,9 +70,19 @@ public class VMainPaneImpl implements VMainPane {
     }
 
     @Override
+    public void createPsrAction(EventHandler<ActionEvent> event) {
+        this.createPsrProjectMenu.setOnAction(event);
+    }
+
+    @Override
     public void setUserName(String userName) {
         if(userName != null)
             Tools.runOnThreadFX(() -> this.loginMenu.setText(userName));
+    }
+
+    @Override
+    public void setEnableCreatePstMenuItem(boolean enable) {
+        this.createPsrProjectMenu.setDisable(enable);
     }
 
 }

@@ -5,4 +5,5 @@ package ru.kolaer.client.psr.mvp.view;
  */
 public interface InitializationView {
     void initializationView();
+    boolean isInitializationView();
 }

@@ -62,10 +62,11 @@ public class PluginManager {
                 "ru.kolaer.api.system.network.kolaerweb, "+
                 "ru.kolaer.api.system.network.restful, "+
                 "ru.kolaer.api.system.ui, "+
-                "ru.kolaer.api.tools");
+                "ru.kolaer.api.tools" +
+                ",org.controlsfx.control.textfield, org.controlsfx.dialog, org.controlsfx.dialog, org.controlsfx.validation, javafx.scene.web");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
-                "javafx.application, javafx.beans.property, " +
+                "javafx.application, javafx.beans.property, " + "javafx.beans.value.ObservableValue," +
                 "javafx.beans.value,  javafx.collections, javafx.collections.transformation, javafx.event, " +
                 "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.canvas, javafx.scene.image, " +
                 "javafx.scene.input , javafx.scene.layout, javafx.util, javafx.concurrent," +
