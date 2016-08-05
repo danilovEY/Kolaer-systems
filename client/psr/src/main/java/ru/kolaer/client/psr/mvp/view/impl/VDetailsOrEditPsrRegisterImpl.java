@@ -1,15 +1,12 @@
 package ru.kolaer.client.psr.mvp.view.impl;
 
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
-import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;

@@ -12,8 +12,6 @@ import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 

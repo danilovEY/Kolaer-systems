@@ -22,7 +22,6 @@ import ru.kolaer.client.psr.mvp.view.impl.VMainPaneImpl;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by danilovey on 01.08.2016.
