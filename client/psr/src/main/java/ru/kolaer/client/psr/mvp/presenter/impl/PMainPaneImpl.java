@@ -6,10 +6,12 @@ import javafx.scene.control.Dialog;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.presenter.PDetailsOrEditPsrRegister;
 import ru.kolaer.client.psr.mvp.presenter.PMainPane;
@@ -17,6 +19,9 @@ import ru.kolaer.client.psr.mvp.presenter.PPsrRegisterTable;
 import ru.kolaer.client.psr.mvp.view.VMainPane;
 import ru.kolaer.client.psr.mvp.view.impl.VMainPaneImpl;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,10 +58,6 @@ public class PMainPaneImpl implements PMainPane {
                 this.login(this.editorKit.getAuthentication().getAuthorizedUser());
             }
         }
-
-
-
-
     }
 
     @Override
@@ -95,9 +96,17 @@ public class PMainPaneImpl implements PMainPane {
             Task<Object> worker = new Task<Object>() {
                 @Override
                 protected Object call() throws Exception {
-                    updateMessage("Connect...");
-
-                    editorKit.getAuthentication().login(new UserAndPassJson(logPassArray[0], logPassArray[1]));
+                    updateTitle("Подключение к серверу");
+                    updateMessage("Проверка доступности сервера...");
+                    if(editorKit.getUSNetwork().getKolaerWebServer().getServerStatus() == ServerStatus.AVAILABLE) {
+                        updateMessage("Авторизация...");
+                        try {
+                            editorKit.getAuthentication().login(new UserAndPassJson(logPassArray[0], logPassArray[1]));
+                        } catch (ServerException ex) {
+                            updateMessage("Не удалось авторизоваться!");
+                            this.setException(ex);
+                        }
+                    }
                     updateProgress(100,100);
                     return null;
                 }
@@ -108,10 +117,11 @@ public class PMainPaneImpl implements PMainPane {
                 dlg.showAndWait();
             });
 
-            Thread th = new Thread(worker);
-            th.setDaemon(true);
-            th.start();
-
+            ExecutorService authThread = Executors.newSingleThreadExecutor();
+            CompletableFuture.runAsync(worker, authThread).exceptionally(t -> {
+                LOG.error("Не удалось авторизоватся!", t);
+                return null;
+            });
         });
 
     }
