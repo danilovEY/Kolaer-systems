@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 
@@ -20,17 +21,20 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GeneralEmployeesEntityDecorator> findAll() {
-        return sessionFactory.getCurrentSession().createCriteria(GeneralEmployeesEntityDecorator.class).list();
+    public List<GeneralEmployeesEntity> findAll() {
+        final List<GeneralEmployeesEntity> list = sessionFactory.getCurrentSession().createCriteria(GeneralEmployeesEntityDecorator.class).list();
+        list.forEach(emp -> emp.getAccountsEntity().size());
+        return list;
     }
 
     @Override
-    public GeneralEmployeesEntityDecorator findByID(int id) {
+    public GeneralEmployeesEntity findByID(int id) {
         return null;
     }
 
     @Override
-    public void persist(GeneralEmployeesEntityDecorator obj) {
-
+    public void persist(GeneralEmployeesEntity obj) {
+        if(obj != null)
+            this.sessionFactory.getCurrentSession().persist(obj);
     }
 }

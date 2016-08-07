@@ -38,7 +38,7 @@ public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
         this.generalAccountsEntity.setId(id);
     }
 
-    @ManyToOne(targetEntity = GeneralEmployeesEntityDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = GeneralEmployeesEntityDecorator.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_employee")
     public GeneralEmployeesEntity getGeneralEmployeesEntity() {
         return this.generalAccountsEntity.getGeneralEmployeesEntity();

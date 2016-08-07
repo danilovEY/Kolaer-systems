@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.network.ServerStatus;
@@ -99,7 +100,16 @@ public class PMainPaneImpl implements PMainPane {
                     if(editorKit.getUSNetwork().getKolaerWebServer().getServerStatus() == ServerStatus.AVAILABLE) {
                         updateMessage("Авторизация...");
                         try {
-                            editorKit.getAuthentication().login(new UserAndPassJson(logPassArray[0], logPassArray[1]));
+                            if(editorKit.getAuthentication().login(new UserAndPassJson(logPassArray[0], logPassArray[1]))) {
+                                GeneralEmployeesEntity entity = editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity();
+                                if(entity == null) {
+                                    editorKit.getAuthentication().logout();
+                                    Tools.runOnThreadFX(() ->{
+                                        editorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "К аккаунту не привязан сотрудник!").show();
+                                    });
+                                }
+                            }
+
                         } catch (ServerException ex) {
                             updateMessage("Не удалось авторизоваться!!");
                             this.setException(ex);
