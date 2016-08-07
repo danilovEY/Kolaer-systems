@@ -2,6 +2,7 @@ package ru.kolaer.client.javafx.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.mvp.presenter.PTab;
 import ru.kolaer.client.javafx.mvp.view.VTab;
 import ru.kolaer.client.javafx.mvp.view.impl.VTabImpl;
@@ -63,7 +64,9 @@ public class PTabImpl implements PTab {
 					this.view.setContent(plugin.getUniformSystemPlugin().getContent());
 				} catch (final Exception e) {
 					LOG.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), e);
-					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createErrorDialog(this.plugin.getNamePlugin(), "Ошибка при запуске плагина!").show();
+					Tools.runOnThreadFX(() -> {
+						UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createErrorDialog(this.plugin.getNamePlugin(), "Ошибка при запуске плагина!").show();
+					});
 				}
 				threadRunPlugin.shutdown();
 			}, threadRunPlugin).exceptionally(t -> {

@@ -82,7 +82,6 @@ public class PMainPaneImpl implements PMainPane {
                 return;
             }
         });
-
     }
 
     @Override
@@ -102,8 +101,11 @@ public class PMainPaneImpl implements PMainPane {
                         try {
                             editorKit.getAuthentication().login(new UserAndPassJson(logPassArray[0], logPassArray[1]));
                         } catch (ServerException ex) {
-                            updateMessage("Не удалось авторизоваться!");
+                            updateMessage("Не удалось авторизоваться!!");
                             this.setException(ex);
+                            Tools.runOnThreadFX(() ->{
+                                editorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Неудалось авторизоватся!").show();
+                            });
                         }
                     }
                     updateProgress(100,100);

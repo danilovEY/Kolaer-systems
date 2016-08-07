@@ -51,7 +51,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
                 vs.initInitialDecoration();
 
                 namePsr = TextFields.createClearableTextField();
-                vs.registerValidator(namePsr, Validator.createEmptyValidator("EMPTY!"));
+                vs.registerValidator(namePsr, Validator.createEmptyValidator("Поле не может быть пустым!"));
                 setContent(new VBox(namePsrLabel, namePsr));
             }
 
