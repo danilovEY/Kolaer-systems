@@ -41,6 +41,7 @@ public class AuthenticationController {
     private UserDetailsService userDetailsService;
 
     @Autowired
+    @Qualifier("accountDao")
     private AccountDao accountDao;
 
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -54,8 +55,7 @@ public class AuthenticationController {
 
         UserDetails userDetails = (UserDetails) principal;
 
-
-        return accountDao.findName(userDetails.getUsername());
+        return  accountDao.getAccountByNameWithEmployee(userDetails.getUsername());
     }
 
 

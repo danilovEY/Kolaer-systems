@@ -11,4 +11,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 public interface AccountDao extends DaoStandard<GeneralAccountsEntity> {
     @Transactional(readOnly = true)
     GeneralAccountsEntity findName(String username);
+    @Transactional(readOnly = true)
+    GeneralAccountsEntity getAccountByNameWithEmployee(String username);
 }

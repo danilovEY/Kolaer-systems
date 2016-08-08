@@ -23,7 +23,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Transactional(readOnly = true)
     public List<GeneralEmployeesEntity> findAll() {
         final List<GeneralEmployeesEntity> list = sessionFactory.getCurrentSession().createCriteria(GeneralEmployeesEntityDecorator.class).list();
-        list.forEach(emp -> emp.getAccountsEntity().size());
         return list;
     }
 

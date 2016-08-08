@@ -77,7 +77,7 @@ public class DataBaseInitialization {
             superAdminEmployee.setPnumber(0);
             superAdminEmployee.setGender(EnumGender.MALE);
             superAdminEmployee.setInitials("Администратор");
-            superAdminEmployee.setAccountsEntity(Arrays.asList(superAdminAccount));
+            //superAdminEmployee.setAccountsEntity(Arrays.asList(superAdminAccount));
 
             superAdminAccount.setGeneralEmployeesEntity(superAdminEmployee);
             //==============PSR=====================
@@ -94,7 +94,7 @@ public class DataBaseInitialization {
 
             this.employeeDao.persist(superAdminEmployee);
 
-            //this.accountDao.persist(superAdminAccount);
+            this.accountDao.persist(superAdminAccount);
             this.accountDao.persist(anonymousAccount);
 
 
