@@ -11,8 +11,8 @@ import java.util.List;
  */
 @JsonDeserialize(as = PsrRegisterBase.class)
 public interface PsrRegister {
-     int getId();
-     void setId(int id);
+     Integer getId();
+     void setId(Integer id);
 
      PsrStatus getStatus();
      void setStatus(PsrStatus status);

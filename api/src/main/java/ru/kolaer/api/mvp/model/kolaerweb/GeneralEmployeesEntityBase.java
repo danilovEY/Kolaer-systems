@@ -7,18 +7,18 @@ import java.util.List;
  * Структура сотрудника в БД.
  */
 public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
-    private int pnumber;
+    private Integer pnumber;
     private String initials;
     private EnumGender gender;
     private String departament;
     private String post;
     private List<GeneralAccountsEntity> accountsEntity;
 
-    public int getPnumber() {
+    public Integer getPnumber() {
         return pnumber;
     }
 
-    public void setPnumber(int pnumber) {
+    public void setPnumber(Integer pnumber) {
         this.pnumber = pnumber;
     }
 

@@ -30,11 +30,11 @@ public class GeneralRolesEntityDecorator implements GeneralRolesEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public int getId() {
+    public Integer getId() {
         return generalRolesEntity.getId();
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.generalRolesEntity.setId(id);
     }
 

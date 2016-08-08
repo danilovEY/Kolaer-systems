@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  */
 @JsonDeserialize(as = PsrAttachmentBase.class)
 public interface PsrAttachment {
-    int getId();
-    void setId(int id);
+    Integer getId();
+    void setId(Integer id);
 
     String getName();
     void setName(String name);

@@ -5,14 +5,14 @@ package ru.kolaer.api.mvp.model.kolaerweb;
  * Структура роли в БД.
  */
 public class GeneralRolesEntityBase implements GeneralRolesEntity{
-    private int id;
+    private Integer id;
     private EnumRole type;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

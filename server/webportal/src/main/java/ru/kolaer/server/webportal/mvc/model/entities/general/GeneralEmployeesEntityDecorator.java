@@ -30,16 +30,16 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pnumber")
-    public int getPnumber() {
+    public Integer getPnumber() {
         return this.generalEmployeesEntity.getPnumber();
     }
 
-    public void setPnumber(int pnumber) {
+    public void setPnumber(Integer pnumber) {
         this.generalEmployeesEntity.setPnumber(pnumber);
     }
 
     @Transient
-    @OneToMany(targetEntity = GeneralAccountsEntityDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = GeneralAccountsEntityDecorator.class, fetch = FetchType.LAZY)
     @JoinTable(name = "general_employee_account", joinColumns = {@JoinColumn(name = "id_employee")},
             inverseJoinColumns = { @JoinColumn(name = "id_account")})
     public List<GeneralAccountsEntity> getAccountsEntity() {

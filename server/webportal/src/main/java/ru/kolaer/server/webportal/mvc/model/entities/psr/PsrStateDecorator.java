@@ -27,12 +27,12 @@ public class PsrStateDecorator implements PsrState {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() {
+    public Integer getId() {
         return this.psrProjectState.getId();
     }
 
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.psrProjectState.setId(id);
     }
 

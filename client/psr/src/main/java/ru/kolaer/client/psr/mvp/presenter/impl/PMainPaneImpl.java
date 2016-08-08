@@ -1,6 +1,7 @@
 package ru.kolaer.client.psr.mvp.presenter.impl;
 
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
 import org.controlsfx.dialog.ProgressDialog;
@@ -74,11 +75,18 @@ public class PMainPaneImpl implements PMainPane {
             detailsOrEditPsrRegister.getView().initializationView();
 
             detailsOrEditPsrRegister.showAndWait();
-            PsrRegister psrRegister = detailsOrEditPsrRegister.getPsrRegister();
-            psrRegister.setAuthor(this.editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity());
-            this.model.addPsrProject(detailsOrEditPsrRegister.getPsrRegister());
+            try {
+                LOG.info("Отправка....");
+                PsrRegister psrRegister = detailsOrEditPsrRegister.getPsrRegister();
+                psrRegister.setAuthor(this.editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity());
+                psrRegister.setId(1);
+                psrRegister = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().persistPsrRegister(psrRegister);
+                this.model.addPsrProject(psrRegister);
 
-            this.pPsrRegisterTable.updateTableData();
+                this.pPsrRegisterTable.updateTableData();
+            } catch (ServerException ex) {
+                LOG.error("Ошибка!");
+            }
         });
 
         account.getRoles().forEach(role -> {
@@ -100,6 +108,8 @@ public class PMainPaneImpl implements PMainPane {
         this.view.loginAction(e -> {
             final Dialog loginDialog = this.editorKit.getUISystemUS().getDialog().createLoginDialog();
             loginDialog.showAndWait();
+            if(loginDialog.getResult() == null)
+                return;
             String[] logPassArray = loginDialog.getResult().toString().split("=");
             Task<Object> worker = new Task<Object>() {
                 @Override
@@ -143,6 +153,7 @@ public class PMainPaneImpl implements PMainPane {
                 return null;
             });
         });
+        this.view.getLoginAction().handle(new ActionEvent());
 
     }
 }

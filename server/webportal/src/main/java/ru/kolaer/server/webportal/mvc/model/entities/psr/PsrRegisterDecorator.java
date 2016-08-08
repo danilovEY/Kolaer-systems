@@ -31,17 +31,17 @@ public class PsrRegisterDecorator implements PsrRegister {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() {
+    public Integer getId() {
         return this.psrRegister.getId();
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.psrRegister.setId(id);
     }
 
 
-    @OneToOne(targetEntity = PsrStatusDecorator.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_status", nullable = false)
+    @OneToOne(targetEntity = PsrStatusDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "id_status", nullable = true)
     public PsrStatus getStatus() {
         return this.psrRegister.getStatus();
     }
@@ -50,8 +50,8 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setStatus(status);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_author", nullable = false)
+    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "id_author", nullable = true)
     public GeneralEmployeesEntity getAuthor() {
         return this.psrRegister.getAuthor();
     }
@@ -60,7 +60,7 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setAuthor(author);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_project_admin")
     public GeneralEmployeesEntity getAdmin() {
         return this.psrRegister.getAdmin();
@@ -70,7 +70,7 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setAdmin(admin);
     }
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = true)
     public String getName() {
         return this.psrRegister.getName();
     }
@@ -80,7 +80,7 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setName(name);
     }
 
-    @Column(name = "date_open", nullable = false)
+    @Column(name = "date_open", nullable = true)
     @Temporal(TemporalType.DATE)
     public Date getDateOpen() {
         return this.psrRegister.getDateOpen();

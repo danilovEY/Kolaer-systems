@@ -9,7 +9,7 @@ import java.util.List;
  * Created by danilovey on 29.07.2016.
  */
 public class PsrRegisterBase implements PsrRegister {
-    private int id;
+    private Integer id = null;
     private PsrStatus status;
     private GeneralEmployeesEntity author;
     private GeneralEmployeesEntity admin;
@@ -20,11 +20,11 @@ public class PsrRegisterBase implements PsrRegister {
     private List<PsrAttachment> attachments;
     private List<PsrState> stateList;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

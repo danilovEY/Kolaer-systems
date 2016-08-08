@@ -48,4 +48,9 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
                         .add(Projections.property("name"), "name"))
                 .setResultTransformer(Transformers.aliasToBean(PsrRegisterDecorator.class)).list();
     }
+
+    @Override
+    public PsrRegister getPsrRegisterByName(String name) {
+        return (PsrRegister) this.sessionFactory.getCurrentSession().createQuery("FROM PsrRegisterDecorator psr WHERE psr.name = :name").setParameter("name", name).uniqueResult();
+    }
 }

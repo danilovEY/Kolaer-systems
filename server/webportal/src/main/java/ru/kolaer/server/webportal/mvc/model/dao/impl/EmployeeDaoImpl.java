@@ -28,7 +28,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     public GeneralEmployeesEntity findByID(int id) {
-        return null;
+        return this.sessionFactory.getCurrentSession().get(GeneralEmployeesEntityDecorator.class, id);
     }
 
     @Override
@@ -36,4 +36,5 @@ public class EmployeeDaoImpl implements EmployeeDao {
         if(obj != null)
             this.sessionFactory.getCurrentSession().persist(obj);
     }
+
 }

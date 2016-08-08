@@ -65,6 +65,11 @@ public class VMainPaneImpl implements VMainPane {
     }
 
     @Override
+    public EventHandler<ActionEvent> getLoginAction() {
+        return this.loginMenu.getOnAction();
+    }
+
+    @Override
     public void logoutAction(EventHandler<ActionEvent> event) {
         this.loginMenu.setOnAction(event);
     }

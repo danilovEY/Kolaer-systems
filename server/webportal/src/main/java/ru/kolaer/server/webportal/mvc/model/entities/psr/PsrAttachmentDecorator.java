@@ -26,12 +26,12 @@ public class PsrAttachmentDecorator implements PsrAttachment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public int getId() {
+    public Integer getId() {
         return this.psrAttachment.getId();
     }
 
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.psrAttachment.setId(id);
     }
 

@@ -6,17 +6,17 @@ import java.util.Date;
  * Created by danilovey on 29.07.2016.
  */
 public class PsrStateBase implements PsrState {
-    private int idProject;
+    private Integer idProject = null;
     private String comment;
     private Date date;
     private boolean isPlan = false;
 
 
-    public int getId() {
+    public Integer getId() {
         return idProject;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.idProject = id;
     }
 

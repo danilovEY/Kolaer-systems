@@ -8,4 +8,5 @@ import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
  */
 public interface PsrTable {
     PsrRegister[] getAllPsrRegister() throws ServerException;
+    PsrRegister persistPsrRegister(PsrRegister psrRegister) throws ServerException;
 }

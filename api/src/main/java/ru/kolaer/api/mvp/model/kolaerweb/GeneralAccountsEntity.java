@@ -9,8 +9,8 @@ import java.util.List;
  */
 @JsonDeserialize(as = GeneralAccountsEntityBase.class)
 public interface GeneralAccountsEntity {
-     int getId();
-     void setId(int id);
+    Integer getId();
+     void setId(Integer id);
 
     /**Список ролей пользователя.*/
      List<GeneralRolesEntity> getRoles();

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  */
 @JsonDeserialize(as = PsrStatusBase.class)
 public interface PsrStatus {
-    int getId();
-    void setId(int id);
+    Integer getId();
+    void setId(Integer id);
 
     String getType();
     void setType(String type);

@@ -9,8 +9,8 @@ import java.util.Date;
  */
 @JsonDeserialize(as = PsrStateBase.class)
 public interface PsrState {
-    int getId();
-    void setId(int id);
+    Integer getId();
+    void setId(Integer id);
 
     String getComment();
     void setComment(String comment);

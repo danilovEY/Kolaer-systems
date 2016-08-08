@@ -46,25 +46,29 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         psrRegisterIdColumn.setResizable(false);
         psrRegisterIdColumn.setMinWidth(50);
         psrRegisterIdColumn.setMaxWidth(50);
+        psrRegisterIdColumn.setStyle("-fx-alignment: CENTER;");
         psrRegisterIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         final TableColumn<PsrRegister, String> psrRegisterNameColumn = new TableColumn<>("Наименование проекта");
+        psrRegisterNameColumn.setStyle("-fx-alignment: CENTER;");
         psrRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
         final TableColumn<PsrRegister, GeneralEmployeesEntity> psrRegisterAuthorColumn = new TableColumn<>("Руководитель проекта");
+        psrRegisterAuthorColumn.setStyle("-fx-alignment: CENTER;");
         psrRegisterAuthorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         psrRegisterAuthorColumn.setCellFactory(column ->
             new TableCell<PsrRegister, GeneralEmployeesEntity>() {
                 @Override
                 protected void updateItem(GeneralEmployeesEntity item, boolean empty) {
                     super.updateItem(item, empty);
-                    if(!empty)
+                    if(!empty && item != null)
                         this.setText(item.getInitials());
                 }
             }
         );
 
         final TableColumn<PsrRegister, Date> psrRegisterDateOpenColumn = new TableColumn<>("Дата открытия");
+        psrRegisterDateOpenColumn.setStyle("-fx-alignment: CENTER;");
         psrRegisterDateOpenColumn.setCellValueFactory(new PropertyValueFactory<>("dateOpen"));
         psrRegisterDateOpenColumn.setCellFactory(column ->
             new TableCell<PsrRegister, Date>() {
@@ -78,6 +82,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         );
 
         final TableColumn<PsrRegister, Date> psrRegisterDateCloseColumn = new TableColumn<>("Дата закрытия");
+        psrRegisterDateCloseColumn.setStyle("-fx-alignment: CENTER;");
         psrRegisterDateCloseColumn.setCellValueFactory(new PropertyValueFactory<>("dateClose"));
         psrRegisterDateCloseColumn.setCellFactory(psrRegisterDateOpenColumn.getCellFactory());
 
@@ -95,6 +100,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                     if(!empty && item != null) {
                         Tools.runOnThreadFX(() -> {
                             final HTMLEditor htmlEditor = new HTMLEditor();
+                            htmlEditor.setDisable(true);
                             htmlEditor.setHtmlText(item);
                             htmlEditor.setPrefSize(600,100);
                             Node[] nodes = htmlEditor.lookupAll(".tool-bar").toArray(new Node[0]);
@@ -110,6 +116,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         );
 
         final TableColumn<PsrRegister, List<PsrAttachment>> psrRegisterAttachmentColumn = new TableColumn<>("Вложения");
+        psrRegisterAttachmentColumn.setStyle("-fx-alignment: CENTER;");
         psrRegisterAttachmentColumn.setCellValueFactory(new PropertyValueFactory<>("attachments"));
         psrRegisterAttachmentColumn.setCellFactory(column ->
             new TableCell<PsrRegister, List<PsrAttachment>>(){

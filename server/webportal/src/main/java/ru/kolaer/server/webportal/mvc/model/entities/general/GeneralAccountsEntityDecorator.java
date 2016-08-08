@@ -30,15 +30,15 @@ public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public int getId() {
+    public Integer getId() {
         return this.generalAccountsEntity.getId();
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.generalAccountsEntity.setId(id);
     }
 
-    @ManyToOne(targetEntity = GeneralEmployeesEntityDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = GeneralEmployeesEntityDecorator.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "general_employee_account", joinColumns = {@JoinColumn(name = "id_account")},
             inverseJoinColumns = { @JoinColumn(name = "id_employee")})
     public GeneralEmployeesEntity getGeneralEmployeesEntity() {

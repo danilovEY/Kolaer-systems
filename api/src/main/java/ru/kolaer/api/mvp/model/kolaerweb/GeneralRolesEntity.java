@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  */
 @JsonDeserialize(as = GeneralRolesEntityBase.class)
 public interface GeneralRolesEntity {
-     int getId();
-     void setId(int id);
+     Integer getId();
+     void setId(Integer id);
 
      EnumRole getType();
      void setType(EnumRole type);

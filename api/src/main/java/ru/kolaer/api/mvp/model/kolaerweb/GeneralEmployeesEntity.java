@@ -9,8 +9,8 @@ import java.util.List;
  */
 @JsonDeserialize(as = GeneralEmployeesEntityBase.class)
 public interface GeneralEmployeesEntity {
-     int getPnumber();
-     void setPnumber(int pnumber);
+     Integer getPnumber();
+     void setPnumber(Integer pnumber);
 
      List<GeneralAccountsEntity> getAccountsEntity();
      void setAccountsEntity(List<GeneralAccountsEntity> accountsEntity);
