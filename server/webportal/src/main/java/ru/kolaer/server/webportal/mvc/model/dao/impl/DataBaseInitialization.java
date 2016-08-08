@@ -20,7 +20,6 @@ import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 
 /**

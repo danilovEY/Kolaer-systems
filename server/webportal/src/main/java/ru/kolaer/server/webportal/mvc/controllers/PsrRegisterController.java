@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegisterBase;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
@@ -21,9 +19,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStateDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 29.07.2016.

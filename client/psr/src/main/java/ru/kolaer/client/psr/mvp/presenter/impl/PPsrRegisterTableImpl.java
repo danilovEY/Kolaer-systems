@@ -2,10 +2,8 @@ package ru.kolaer.client.psr.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.psr.mvp.model.MPsrRegister;
-import ru.kolaer.client.psr.mvp.model.impl.MPsrRegisterImpl;
 import ru.kolaer.client.psr.mvp.presenter.PPsrRegisterTable;
 import ru.kolaer.client.psr.mvp.view.VPsrRegisterTable;
 import ru.kolaer.client.psr.mvp.view.impl.VPsrRegisterTableImpl;
