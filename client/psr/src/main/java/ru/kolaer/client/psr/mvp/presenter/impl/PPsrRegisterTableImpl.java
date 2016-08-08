@@ -16,18 +16,22 @@ import ru.kolaer.client.psr.mvp.view.impl.VPsrRegisterTableImpl;
 public class PPsrRegisterTableImpl implements PPsrRegisterTable {
     private static final Logger LOG = LoggerFactory.getLogger(PPsrRegisterTableImpl.class);
     private final VPsrRegisterTable view;
-    private final MPsrRegister model;
     private final UniformSystemEditorKit editorKit;
+    private MPsrRegister model;
 
     public PPsrRegisterTableImpl(UniformSystemEditorKit editorKit) {
         this.editorKit = editorKit;
         this.view = new VPsrRegisterTableImpl();
-        this.model = new MPsrRegisterImpl(editorKit);
     }
 
     @Override
     public MPsrRegister getModel() {
         return this.model;
+    }
+
+    @Override
+    public void setModel(MPsrRegister model) {
+        this.model = model;
     }
 
     @Override
@@ -37,11 +41,6 @@ public class PPsrRegisterTableImpl implements PPsrRegisterTable {
 
     @Override
     public void updateTableData() {
-        final PsrRegister[] psrRegisters = this.model.getAllPstRegister();
-        if(psrRegisters != null) {
-            for (PsrRegister psr : psrRegisters) {
-                this.view.addPsrProject(psr);
-            }
-        }
+        this.view.addPsrProjectAll(this.model.getAllPstRegister());
     }
 }

@@ -70,17 +70,17 @@ public class PluginManager {
                 "javafx.scene.input , javafx.scene.layout, javafx.util, javafx.concurrent," +
                 "javafx.scene.text, javafx.stage, javax.swing, com.sun.javafx.scene.control.skin, javafx.scene.control.cell, org.slf4j;version=1.7.7");
 
-        try {
-            final Framework framework = new Felix(frameworkProperties);
+        //try {
+        final Framework framework = new Felix(frameworkProperties);
 
-            framework.start();
+        framework.start();
 
-            this.context = framework.getBundleContext();
-            this.isInit = true;
-        }  catch (final Exception e) {
-            LOG.error("Ошибка при инициализации или старта OSGi-framework!", e);
-            throw e;
-        }
+        this.context = framework.getBundleContext();
+        this.isInit = true;
+        //}  catch (final Exception e) {
+        //    LOG.error("Ошибка при инициализации или старта OSGi-framework!", e);
+        //    throw e;
+        //}
 
         LOG.info("OSGi framework успешно запущен!");
     }

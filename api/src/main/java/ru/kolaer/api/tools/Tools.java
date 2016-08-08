@@ -14,6 +14,8 @@ public class Tools {
     private static final Logger LOG = LoggerFactory.getLogger(Tools.class);
 
     public static Date convertToDate(final LocalDate date) {
+        if(date == null)
+            throw new IllegalArgumentException("Date is null!");
         return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 

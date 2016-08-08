@@ -8,6 +8,7 @@ import ru.kolaer.client.psr.mvp.view.VPsrRegisterTable;
  */
 public interface PPsrRegisterTable {
     MPsrRegister getModel();
+    void setModel(MPsrRegister model);
     VPsrRegisterTable getView();
 
     void updateTableData();

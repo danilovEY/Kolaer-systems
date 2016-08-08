@@ -22,7 +22,7 @@ project(":api") {
 project(":client") {
     allprojects {
         ext {
-            pathToProjectDir = "D:\\Kolaer-systems"
+            pathToProjectDir = "D:\\workspace\\Kolaer-systems"
             pathToProjectDirWithPlugins = pathToProjectDir + "\\plugins"
         }
     }

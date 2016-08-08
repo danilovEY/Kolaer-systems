@@ -1,10 +1,11 @@
 package ru.kolaer.client.psr.mvp.view.impl;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.DataFormat;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
 import org.controlsfx.control.textfield.TextFields;
@@ -14,9 +15,14 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegisterBase;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStateBase;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.view.VDetailsOrEditPsrRegister;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,6 +34,10 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
     private boolean isInit = false;
     private TextField namePsr;
     private HTMLEditor htmlEditor;
+    private DatePicker datePickerState;
+    private TextArea stateComment;
+    private DatePicker datePickerPlan;
+    private TextArea planComment;
 
     public VDetailsOrEditPsrRegisterImpl(final PsrRegister psrRegister) {
         this.psrRegister = psrRegister;
@@ -70,6 +80,38 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
         final WizardPane psrDescripPane = new WizardPane();
         psrDescripPane.setContent(descPanel);
 
+        //============3============
+        /*final FlowPane statePane = new FlowPane();
+        final Button addState = new Button("Добавить состояние реализации...");
+        addState.setOnAction(e -> {
+
+            final HBox pane = new HBox()
+        });*/
+        final BorderPane mainStatePane = new BorderPane();
+        this.datePickerState = new DatePicker();
+        this.stateComment = new TextArea();
+
+        mainStatePane.setTop(new HBox(new Label("Состояние реализации на дату: "), this.datePickerState));
+        mainStatePane.setCenter(this.stateComment);
+
+        final WizardPane psrStatePane = new WizardPane();
+        psrStatePane.setContent(mainStatePane);
+
+        //=============4==============
+        final BorderPane mainPlanPane = new BorderPane();
+        this.datePickerPlan = new DatePicker();
+        this.planComment = new TextArea();
+
+        mainPlanPane.setTop(new HBox(new Label("План реализации на дату: "), this.datePickerPlan));
+        mainPlanPane.setCenter(this.planComment);
+
+        final WizardPane psrPlanPane = new WizardPane();
+        psrPlanPane.setContent(mainPlanPane);
+
+        //=============5==================
+        final WizardPane psrFinishPane = new WizardPane();
+        psrFinishPane.setContent(new BorderPane(new Label("Завершена настройка ПСР проекта!")));
+
         if(this.psrRegister != null) {
             namePsr.setText(this.psrRegister.getName());
             wizard = new Wizard(null, "Редактирование проекта");
@@ -84,6 +126,9 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
 
         wizardPaneList.add(psrNamedPane);
         wizardPaneList.add(psrDescripPane);
+        wizardPaneList.add(psrStatePane);
+        wizardPaneList.add(psrPlanPane);
+        wizardPaneList.add(psrFinishPane);
 
         wizard.setFlow(new Wizard.LinearFlow(wizardPaneList));
 
@@ -105,6 +150,19 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
 
                 this.psrRegister.setName(this.namePsr.getText());
                 this.psrRegister.setComment(this.htmlEditor.getHtmlText());
+
+                final PsrState psrState = new PsrStateBase();
+                psrState.setComment(this.stateComment.getText());
+                psrState.setDate(Tools.convertToDate(this.datePickerState.getValue()));
+                psrState.setPlan(false);
+
+                final PsrState psrStatePlan = new PsrStateBase();
+                psrStatePlan.setComment(this.stateComment.getText());
+                psrStatePlan.setDate(Tools.convertToDate(this.datePickerState.getValue()));
+                psrStatePlan.setPlan(true);
+
+                this.psrRegister.setStateList(Arrays.asList(psrStatePlan, psrState));
+                this.psrRegister.setAttachments(Collections.emptyList());
             }
         });
     }

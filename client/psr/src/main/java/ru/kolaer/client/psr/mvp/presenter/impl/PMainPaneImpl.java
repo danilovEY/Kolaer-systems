@@ -11,9 +11,11 @@ import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.psr.mvp.model.impl.MPsrRegisterImpl;
 import ru.kolaer.client.psr.mvp.presenter.PDetailsOrEditPsrRegister;
 import ru.kolaer.client.psr.mvp.presenter.PMainPane;
 import ru.kolaer.client.psr.mvp.presenter.PPsrRegisterTable;
@@ -32,11 +34,12 @@ public class PMainPaneImpl implements PMainPane {
     private final VMainPane view;
     private final UniformSystemEditorKit editorKit;
     private PPsrRegisterTable pPsrRegisterTable;
+    private MPsrRegisterImpl model;
 
     public PMainPaneImpl(UniformSystemEditorKit editorKit) {
         this.editorKit = editorKit;
         this.view = new VMainPaneImpl();
-
+        this.model = new MPsrRegisterImpl(editorKit);
     }
 
     @Override
@@ -50,6 +53,7 @@ public class PMainPaneImpl implements PMainPane {
             this.view.initializationView();
 
             this.pPsrRegisterTable = new PPsrRegisterTableImpl(editorKit);
+            this.pPsrRegisterTable.setModel(this.model);
             this.pPsrRegisterTable.updateTableData();
 
             this.view.setContent(pPsrRegisterTable.getView().getContent());
@@ -69,7 +73,12 @@ public class PMainPaneImpl implements PMainPane {
             final PDetailsOrEditPsrRegister detailsOrEditPsrRegister = new PDetailsOrEditPsrRegisterImpl();
             detailsOrEditPsrRegister.getView().initializationView();
 
-            detailsOrEditPsrRegister.getView().showAndWait();
+            detailsOrEditPsrRegister.showAndWait();
+            PsrRegister psrRegister = detailsOrEditPsrRegister.getPsrRegister();
+            psrRegister.setAuthor(this.editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity());
+            this.model.addPsrProject(detailsOrEditPsrRegister.getPsrRegister());
+
+            this.pPsrRegisterTable.updateTableData();
         });
 
         account.getRoles().forEach(role -> {

@@ -2,12 +2,15 @@ package ru.kolaer.client.psr.mvp.view.impl;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.web.HTMLEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
@@ -35,9 +38,14 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         this.tablePane = new BorderPane();
 
         this.table = new TableView<>();
+        this.table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         this.table.setItems(this.tableData);
 
+
         final TableColumn<PsrRegister, Integer> psrRegisterIdColumn = new TableColumn<>("ID");
+        psrRegisterIdColumn.setResizable(false);
+        psrRegisterIdColumn.setMinWidth(50);
+        psrRegisterIdColumn.setMaxWidth(50);
         psrRegisterIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         final TableColumn<PsrRegister, String> psrRegisterNameColumn = new TableColumn<>("Наименование проекта");
@@ -63,7 +71,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                 @Override
                 protected void updateItem(Date item, boolean empty) {
                     super.updateItem(item, empty);
-                    if(!empty)
+                    if(!empty && item != null)
                         this.setText(dateFormat.format(item));
                 }
             }
@@ -77,7 +85,29 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         psrRegisterDatesColumn.getColumns().addAll(psrRegisterDateOpenColumn, psrRegisterDateCloseColumn);
 
         final TableColumn<PsrRegister, String> psrRegisterCommentColumn = new TableColumn<>("Описание");
+        psrRegisterCommentColumn.setMinWidth(500);
         psrRegisterCommentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
+        psrRegisterCommentColumn.setCellFactory(column ->
+            new TableCell<PsrRegister, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if(!empty && item != null) {
+                        Tools.runOnThreadFX(() -> {
+                            final HTMLEditor htmlEditor = new HTMLEditor();
+                            htmlEditor.setHtmlText(item);
+                            htmlEditor.setPrefSize(600,100);
+                            Node[] nodes = htmlEditor.lookupAll(".tool-bar").toArray(new Node[0]);
+                            for(Node node : nodes) {
+                                node.setVisible(false);
+                                node.setManaged(false);
+                            }
+                            this.setGraphic(new BorderPane(htmlEditor));
+                        });
+                    }
+                }
+            }
+        );
 
         final TableColumn<PsrRegister, List<PsrAttachment>> psrRegisterAttachmentColumn = new TableColumn<>("Вложения");
         psrRegisterAttachmentColumn.setCellValueFactory(new PropertyValueFactory<>("attachments"));

@@ -1,5 +1,6 @@
 package ru.kolaer.client.psr.mvp.presenter;
 
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.client.psr.mvp.view.VDetailsOrEditPsrRegister;
 
 /**
@@ -8,4 +9,7 @@ import ru.kolaer.client.psr.mvp.view.VDetailsOrEditPsrRegister;
 public interface PDetailsOrEditPsrRegister {
     void showAndWait();
     VDetailsOrEditPsrRegister getView();
+
+    PsrRegister getPsrRegister();
+    void setPsrRegister(PsrRegister psrRegister);
 }
