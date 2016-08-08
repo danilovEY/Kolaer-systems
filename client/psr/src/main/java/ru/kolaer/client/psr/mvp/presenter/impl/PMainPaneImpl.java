@@ -79,7 +79,6 @@ public class PMainPaneImpl implements PMainPane {
                 LOG.info("Отправка....");
                 PsrRegister psrRegister = detailsOrEditPsrRegister.getPsrRegister();
                 psrRegister.setAuthor(this.editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity());
-                psrRegister.setId(1);
                 psrRegister = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().persistPsrRegister(psrRegister);
                 this.model.addPsrProject(psrRegister);
 

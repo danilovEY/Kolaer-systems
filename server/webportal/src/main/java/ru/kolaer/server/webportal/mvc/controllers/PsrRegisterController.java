@@ -20,6 +20,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 29.07.2016.
@@ -45,16 +46,8 @@ public class PsrRegisterController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister addPsrRegister(@RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
-        List<PsrState> states = new ArrayList<>();
-        register.getStateList().forEach(state -> {
-            state.setId(null);
-            states.add(new PsrStateDecorator(state));
-        });
-        registerDto.setStateList(states);
-        registerDto.setId(null);
-        //List<PsrState> states = registerDto.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList());
-        //registerDto.setAuthor(null);
-        //registerDto.setStateList(new ArrayList<>());
+        registerDto.setStateList(registerDto.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList()));
+
         final PsrStatus psrStatus = new PsrStatusDecorator();
         psrStatus.setId(1);
         psrStatus.setType("Новый");
