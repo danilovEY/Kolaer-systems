@@ -17,9 +17,9 @@ import java.util.List;
  * Рест контроллер для работы с аккаунтами.
  */
 @RestController
-@RequestMapping("/general/users")
-public class UserController {
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+@RequestMapping("/general/accounts")
+public class AccountsController {
+    private static final Logger LOG = LoggerFactory.getLogger(AccountsController.class);
     @Autowired
     private AccountDao accountDao;
 

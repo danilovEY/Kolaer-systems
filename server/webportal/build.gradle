@@ -30,10 +30,6 @@ war {
     webXml = file('src/main/webapp/WEB-INF/web.xml')
 }
 
-task renameProject(type: Copy) {
-    war.setArchiveName(testName)
-}
-
 task renameResources(dependsOn: processResources) {
     doLast{
         file("build/resources/main/database.properties").delete()
@@ -50,6 +46,10 @@ task buildApp(dependsOn: [clean, renameResources, war]) {
     }
 }
 
+task renameProject(type: Copy) {
+    //war.setArchiveName(testName)
+}
+
 task buildAppForTest(dependsOn: [clean, war, renameProject]) {
     doLast {
         copy {
@@ -58,3 +58,4 @@ task buildAppForTest(dependsOn: [clean, war, renameProject]) {
         }
     }
 }
+

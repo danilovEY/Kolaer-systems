@@ -55,7 +55,6 @@ public class PsrRegisterController {
 
         registerDto.setAuthor(this.employeeDao.findByID(register.getAuthor().getPnumber()));
 
-        //return registerDto;
         this.psrRegisterDao.persist(registerDto);
         return this.psrRegisterDao.getPsrRegisterByName(registerDto.getName());
     }
