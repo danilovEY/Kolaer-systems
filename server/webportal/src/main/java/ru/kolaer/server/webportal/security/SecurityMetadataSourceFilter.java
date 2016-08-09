@@ -8,6 +8,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
@@ -40,7 +41,7 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
         if(url.indexOf("?") != -1) {
             url = url.substring(0, url.indexOf("?"));
         }
-        final WebPortalUrlPathDecorator urlPth = urlPathDao.getPathByUrl(url);
+        final WebPortalUrlPath urlPth = urlPathDao.getPathByUrl(url);
         if(urlPth != null) {
             return getRoles(urlPth);
         }
@@ -48,7 +49,7 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
         return SecurityConfig.createList();
     }
 
-    private Collection<ConfigAttribute> getRoles(WebPortalUrlPathDecorator urlPath) {
+    private Collection<ConfigAttribute> getRoles(WebPortalUrlPath urlPath) {
         if(urlPath.isAccessAll()) {
             return SecurityConfig.createList();
         }
