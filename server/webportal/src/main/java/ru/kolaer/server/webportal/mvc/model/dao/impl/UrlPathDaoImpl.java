@@ -32,7 +32,7 @@ public class UrlPathDaoImpl implements UrlPathDao {
     @Override
     @Transactional
     public void persist(WebPortalUrlPath obj) {
-        this.sessionFactory.getCurrentSession().save(obj);
+        this.sessionFactory.getCurrentSession().persist(obj);
     }
 
     @Override
