@@ -47,7 +47,7 @@ task buildApp(dependsOn: [clean, renameResources, war]) {
 }
 
 task renameProject(type: Copy) {
-    //war.setArchiveName(testName)
+    war.setArchiveName(testName)
 }
 
 task buildAppForTest(dependsOn: [clean, war, renameProject]) {

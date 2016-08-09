@@ -14,12 +14,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.security.TokenUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by danilovey on 28.07.2016.
@@ -49,13 +53,22 @@ public class AuthenticationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
 
-        if (principal instanceof String && ((String) principal).equals("anonymousUser")) {
+        if (principal instanceof String && principal.equals("anonymousUser")) {
             throw new UsernameNotFoundException("Bad");
         }
 
         UserDetails userDetails = (UserDetails) principal;
 
         return  accountDao.getAccountByNameWithEmployee(userDetails.getUsername());
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public String logout(HttpServletResponse response, HttpServletRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return "redirect:/";
     }
 
 
@@ -65,13 +78,13 @@ public class AuthenticationController {
         return new StandardPasswordEncoder(secretKey).encode(pass);
     }
 
-    @RequestMapping(value = "/token", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getTokenPost(@RequestBody UserAndPassJson userAndPassJson){
         return this.getToken(userAndPassJson.getUsername(), userAndPassJson.getPassword());
     }
 
     /**Генерация токена по имени и паролю пользователя.*/
-    @RequestMapping(value = "/token", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getToken(@RequestParam(value = "username", defaultValue = "anonymous") String username,
                               @RequestParam(value = "password", defaultValue = "anonymous") String password){
         UsernamePasswordAuthenticationToken authenticationToken =

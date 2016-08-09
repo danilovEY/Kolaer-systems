@@ -31,8 +31,7 @@ public class TokenUtils {
     }
 
 
-    public static String computeSignature(String username, String password, long expires)
-    {
+    public static String computeSignature(String username, String password, long expires) {
         StringBuilder signatureBuilder = new StringBuilder();
         signatureBuilder.append(username);
         signatureBuilder.append(":");
@@ -53,8 +52,7 @@ public class TokenUtils {
     }
 
 
-    public static String getUserNameFromToken(String authToken)
-    {
+    public static String getUserNameFromToken(String authToken) {
         if (null == authToken) {
             return null;
         }

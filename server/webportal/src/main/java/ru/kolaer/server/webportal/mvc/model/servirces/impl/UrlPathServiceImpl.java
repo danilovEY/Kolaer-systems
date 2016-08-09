@@ -29,8 +29,15 @@ public class UrlPathServiceImpl implements UrlPathService {
     private RoleService roleService;
 
     @Override
-    public WebPortalUrlPath getPathByUrl(String url) {
-        return this.urlPathDao.getPathByUrl(url);
+    public WebPortalUrlPath getPathByUrl(String userUrl) {
+        String url = userUrl;
+        if(userUrl.contains("?")) {
+            url = userUrl.substring(0, userUrl.indexOf("?"));
+        }
+
+        WebPortalUrlPath result = this.urlPathDao.getPathByUrl(url);
+        //if(result.getUrl().contains("*"))
+        return result;
     }
 
     @Override

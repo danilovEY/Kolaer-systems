@@ -38,9 +38,6 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
         FilterInvocation fi=(FilterInvocation)object;
         String url=fi.getRequestUrl();
 
-        if(url.contains("?")) {
-            url = url.substring(0, url.indexOf("?"));
-        }
         final WebPortalUrlPath urlPth = urlPathService.getPathByUrl(url);
         if(urlPth != null) {
             return this.getRoles(urlPth);
