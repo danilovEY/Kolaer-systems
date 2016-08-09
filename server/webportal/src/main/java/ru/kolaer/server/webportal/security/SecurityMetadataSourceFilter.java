@@ -12,11 +12,13 @@ import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
+import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 18.07.2016.
@@ -25,12 +27,10 @@ import java.util.List;
 public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMetadataSource {
     private static final Logger logger = LoggerFactory.getLogger(SecurityMetadataSourceFilter.class);
 
-    private UrlPathDao urlPathDao;
-    private RoleDao roleDao;
+    private UrlPathService urlPathService;
 
-    public SecurityMetadataSourceFilter(UrlPathDao urlPathDao, RoleDao roleDao) {
-        this.urlPathDao = urlPathDao;
-        this.roleDao = roleDao;
+    public SecurityMetadataSourceFilter(UrlPathService urlPathService) {
+        this.urlPathService = urlPathService;
     }
 
     public Collection<ConfigAttribute> getAttributes(Object object)
@@ -38,39 +38,19 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
         FilterInvocation fi=(FilterInvocation)object;
         String url=fi.getRequestUrl();
 
-        if(url.indexOf("?") != -1) {
+        if(url.contains("?")) {
             url = url.substring(0, url.indexOf("?"));
         }
-        final WebPortalUrlPath urlPth = urlPathDao.getPathByUrl(url);
+        final WebPortalUrlPath urlPth = urlPathService.getPathByUrl(url);
         if(urlPth != null) {
-            return getRoles(urlPth);
+            return this.getRoles(urlPth);
         }
 
         return SecurityConfig.createList();
     }
 
     private Collection<ConfigAttribute> getRoles(WebPortalUrlPath urlPath) {
-        if(urlPath.isAccessAll()) {
-            return SecurityConfig.createList();
-        }
-
-
-        List<GeneralRolesEntity> dbRoles = this.roleDao.findAll();
-        List<ConfigAttribute> accessRoles = new ArrayList<>();
-
-        final Iterator<GeneralRolesEntity> iterRoles = dbRoles.iterator();
-        while (iterRoles.hasNext()) {
-            final GeneralRolesEntity role = iterRoles.next();
-
-            if(role.getType() == EnumRole.USER && urlPath.isAccessUser() ||
-                    role.getType() == EnumRole.ADMIN && urlPath.isAccessAdmin() ||
-                    role.getType() == EnumRole.ANONYMOUS && urlPath.isAccessAnonymous() ||
-                    role.getType() == EnumRole.SUPER_ADMIN && urlPath.isAccessSuperAdmin()) {
-                accessRoles.add(new SecurityConfig(role.getType().toString()));
-            }
-        }
-
-        return accessRoles;
+        return this.urlPathService.getRoles(urlPath).stream().map(role -> new SecurityConfig(role.getType().toString())).collect(Collectors.toList());
     }
 
     @Override

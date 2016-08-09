@@ -5,8 +5,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
+import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
 import java.util.List;
 
@@ -19,12 +21,12 @@ import java.util.List;
 public class UrlPathController {
 
     @Autowired
-    private UrlPathDao urlPathDao;
+    private UrlPathService urlPathService;
 
     /**Получить все URL.*/
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<WebPortalUrlPathDecorator> getAllUrl() {
-        return urlPathDao.findAll();
+    public List<WebPortalUrlPath> getAllUrl() {
+        return urlPathService.getAll();
     }
 
 }

@@ -22,6 +22,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
+import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 import ru.kolaer.server.webportal.security.AuthenticationTokenProcessingFilter;
 import ru.kolaer.server.webportal.security.SecurityMetadataSourceFilter;
 import ru.kolaer.server.webportal.security.UnauthorizedEntryPoint;
@@ -44,6 +45,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     /**Сервис для проверки на наличии пользователя в системе.*/
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UrlPathService urlPathService;
 
     /**Дао для получение из БД существующие ссылки и права на них.*/
     @Autowired
@@ -95,7 +99,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         RoleVoter role = new RoleVoter();
         role.setRolePrefix("");
         filter.setAccessDecisionManager(new AffirmativeBased(Arrays.asList(role, new AuthenticatedVoter())));
-        filter.setSecurityMetadataSource(new SecurityMetadataSourceFilter(this.urlPathDao, this.roleDao));
+        filter.setSecurityMetadataSource(new SecurityMetadataSourceFilter(this.urlPathService));
 
         return filter;
     }

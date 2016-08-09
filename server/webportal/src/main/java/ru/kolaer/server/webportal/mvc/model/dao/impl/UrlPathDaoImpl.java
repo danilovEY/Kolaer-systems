@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
 
@@ -18,7 +19,7 @@ public class UrlPathDaoImpl implements UrlPathDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<WebPortalUrlPathDecorator> findAll() {
+    public List<WebPortalUrlPath> findAll() {
         return this.sessionFactory.getCurrentSession().createQuery("FROM WebPortalUrlPathDecorator ORDER BY url").list();
     }
 
@@ -30,14 +31,14 @@ public class UrlPathDaoImpl implements UrlPathDao {
 
     @Override
     @Transactional
-    public void persist(WebPortalUrlPathDecorator obj) {
+    public void persist(WebPortalUrlPath obj) {
         this.sessionFactory.getCurrentSession().save(obj);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public WebPortalUrlPathDecorator getPathByUrl(String url) {
-        return (WebPortalUrlPathDecorator) this.sessionFactory.getCurrentSession()
+    public WebPortalUrlPath getPathByUrl(String url) {
+        return (WebPortalUrlPath) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM WebPortalUrlPathDecorator u WHERE u.url=:url").setParameter("url", url).uniqueResult();
     }
 }
