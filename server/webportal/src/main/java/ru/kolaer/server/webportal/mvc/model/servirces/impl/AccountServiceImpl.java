@@ -26,7 +26,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public GeneralAccountsEntity getAccountByLogin(String login) {
+    public GeneralAccountsEntity getByLogin(String login) {
         if(login != null &&!login.isEmpty())
             return this.accountDao.findName(login);
 
@@ -35,7 +35,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public GeneralAccountsEntity getAccountById(Integer id) {
+    public GeneralAccountsEntity getById(Integer id) {
         if(id != null && id >= 0)
             return this.accountDao.findByID(id);
 
@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void addAccount(GeneralAccountsEntity accountsEntity) {
+    public void add(GeneralAccountsEntity accountsEntity) {
         if(accountsEntity == null) {
             LOG.error("Account is NULL!");
             return;
