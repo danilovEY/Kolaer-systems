@@ -8,5 +8,5 @@ import java.util.List;
 public interface ServiceBase<T> {
     List<T> getAll();
     T getById(Integer id);
-    void add(T entuty);
+    void add(T entity);
 }

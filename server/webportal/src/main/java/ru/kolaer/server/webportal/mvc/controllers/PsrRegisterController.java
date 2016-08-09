@@ -17,6 +17,8 @@ import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStateDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
+import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
+import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,15 +33,14 @@ public class PsrRegisterController {
     private static final Logger LOG = LoggerFactory.getLogger(PsrRegisterController.class);
 
     @Autowired
-    @Qualifier("psrRegisterDao")
-    private PsrRegisterDao psrRegisterDao;
+    private PsrRegisterService psrRegisterService;
 
     @Autowired
-    private EmployeeDao employeeDao;
+    private EmployeeService employeeService;
 
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<PsrRegister> getAllRegister() {
-        List<PsrRegister> list = this.psrRegisterDao.findAll();
+        List<PsrRegister> list = this.psrRegisterService.getAll();
         return list;
     }
 
@@ -53,15 +54,15 @@ public class PsrRegisterController {
         psrStatus.setType("Новый");
         registerDto.setStatus(psrStatus);
 
-        registerDto.setAuthor(this.employeeDao.findByID(register.getAuthor().getPnumber()));
+        registerDto.setAuthor(this.employeeService.getById(register.getAuthor().getPnumber()));
 
-        this.psrRegisterDao.persist(registerDto);
-        return this.psrRegisterDao.getPsrRegisterByName(registerDto.getName());
+        this.psrRegisterService.add(registerDto);
+        return this.psrRegisterService.getPsrRegisterByName(registerDto.getName());
     }
 
     @RequestMapping(value = "/get/all/id-name", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<PsrRegister> getAllRegisterWithIdAndName() {
-        List<PsrRegister> list = this.psrRegisterDao.getIdAndNamePsrRegister();
+        List<PsrRegister> list = this.psrRegisterService.getIdAndNamePsrRegisters();
         return list;
     }
 }
