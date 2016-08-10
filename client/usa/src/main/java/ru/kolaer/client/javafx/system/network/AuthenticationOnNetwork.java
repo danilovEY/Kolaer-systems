@@ -33,7 +33,7 @@ public class AuthenticationOnNetwork implements Authentication {
         this.restTemplate = new RestTemplate();
         this.authenticationObserverList = new ArrayList<>();
         this.pathToServer = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/authentication";
-        this.URL_TO_GET_TOKEN = this.pathToServer + "/token";
+        this.URL_TO_GET_TOKEN = this.pathToServer + "/login";
         this.URL_TO_GET_USER = this.pathToServer + "/user";
     }
 
