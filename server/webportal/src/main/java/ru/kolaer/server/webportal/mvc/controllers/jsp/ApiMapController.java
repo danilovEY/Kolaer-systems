@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import ru.kolaer.server.webportal.annotations.UrlSecurity;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
@@ -20,6 +21,7 @@ public class ApiMapController {
     @Autowired
     private UrlPathService urlPathService;
 
+    @UrlSecurity(url = "/api/mapping", description = "Получить все ссылки.")
     @RequestMapping(value = "/mapping", method = RequestMethod.GET)
     public ModelAndView getMapControllers() {
         final ModelAndView view = new ModelAndView("api-mapping");

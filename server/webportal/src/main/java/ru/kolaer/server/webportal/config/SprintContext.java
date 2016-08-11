@@ -33,7 +33,10 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan({"ru.kolaer.server.webportal.mvc.model.dao.impl", "ru.kolaer.server.webportal.mvc.model.servirces.impl", "ru.kolaer.server.webportal.mvc.controllers"})
+@ComponentScan({"ru.kolaer.server.webportal.spring",
+        "ru.kolaer.server.webportal.mvc.model.dao.impl",
+        "ru.kolaer.server.webportal.mvc.model.servirces.impl",
+        "ru.kolaer.server.webportal.mvc.controllers"})
 @PropertySource("classpath:database.properties")
 //@ImportResource({"/WEB-INF/spring-config/spring-context.groovy"})
 public class SprintContext extends WebMvcConfigurerAdapter {
