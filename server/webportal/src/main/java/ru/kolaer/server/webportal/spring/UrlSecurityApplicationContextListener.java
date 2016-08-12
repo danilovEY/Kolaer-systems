@@ -36,7 +36,6 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
             if(beanClassName == null) {
                 continue;
             }
-            LOG.info("Bean: {}", beanClassName);
             Method[] methods = new Method[0];
 
             try {
