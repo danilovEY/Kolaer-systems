@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
+import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.RoleService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
@@ -61,6 +62,23 @@ public class UrlPathServiceImpl implements UrlPathService {
         }
 
         return accessRoles;
+    }
+
+    @Override
+    public void updateOrCreate(WebPortalUrlPath urlPath) {
+        if(urlPath != null) {
+            final WebPortalUrlPath path = this.urlPathDao.getPathByUrl(urlPath.getUrl());
+            if(path != null) {
+                path.setDescription(urlPath.getUrl());
+                path.setAccessSuperAdmin(urlPath.isAccessSuperAdmin());
+                path.setAccessAll(urlPath.isAccessAll());
+                path.setAccessUser(urlPath.isAccessUser());
+                path.setAccessAnonymous(urlPath.isAccessAnonymous());
+                this.urlPathDao.update(path);
+            } else {
+                this.urlPathDao.persist(new WebPortalUrlPathDecorator(urlPath));
+            }
+        }
     }
 
     @Override

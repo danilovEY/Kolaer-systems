@@ -41,4 +41,10 @@ public class UrlPathDaoImpl implements UrlPathDao {
         return (WebPortalUrlPath) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM WebPortalUrlPathDecorator u WHERE u.url LIKE :url").setParameter("url", "%"+ url +"%").uniqueResult();
     }
+
+    @Override
+    @Transactional
+    public void update(WebPortalUrlPath webPortalUrlPath) {
+        this.sessionFactory.getCurrentSession().update(webPortalUrlPath);
+    }
 }

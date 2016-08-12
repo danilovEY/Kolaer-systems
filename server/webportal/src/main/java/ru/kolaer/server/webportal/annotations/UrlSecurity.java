@@ -16,5 +16,5 @@ public @interface UrlSecurity {
     boolean isAccessAll() default false;
     boolean isAccessSuperAdmin() default true;
     boolean isAccessUser() default false;
-    boolean isAccessAnonumoys() default false;
+    boolean isAccessAnonymous() default false;
 }

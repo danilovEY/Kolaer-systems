@@ -18,6 +18,10 @@ public class WebPortalUrlPathDecorator implements WebPortalUrlPath {
         this.webPortalUrlPath = new WebPortalUrlPathBase();
     }
 
+    public WebPortalUrlPathDecorator(WebPortalUrlPath webPortalUrlPath) {
+        this.webPortalUrlPath = webPortalUrlPath;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
