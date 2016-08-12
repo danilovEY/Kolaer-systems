@@ -49,7 +49,7 @@ public class AuthenticationController {
     @Qualifier("accountDao")
     private AccountDao accountDao;
 
-    @UrlDeclaration(url = "/general/accounts/get/all", description = "Получить все аккаунты.", isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(url = "/authentication/user", description = "Получить все аккаунты.", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public GeneralAccountsEntity getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -64,7 +64,7 @@ public class AuthenticationController {
         return  accountDao.getAccountByNameWithEmployee(userDetails.getUsername());
     }
 
-    @UrlDeclaration(url = "/general/accounts/logout", description = "Выйти.", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(url = "/authentication/logout", description = "Выйти.", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String logout(HttpServletResponse response, HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -76,14 +76,14 @@ public class AuthenticationController {
 
 
     /**Генерация пароля по строке.*/
-    @UrlDeclaration(url = "/general/accounts/genpass", description = "Генерация пароля по строке. (?pass={pass})", isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(url = "/authentication/genpass", description = "Генерация пароля по строке. (?pass={pass})", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/genpass", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String getPass(@RequestParam("pass") String pass) {
         return new StandardPasswordEncoder(secretKey).encode(pass);
     }
 
     /**Авторизация.*/
-    @UrlDeclaration(url = "/general/accounts/login", description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(url = "/authentication/login", description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getTokenPost(@RequestBody UserAndPassJson userAndPassJson){
         return this.getToken(userAndPassJson.getUsername(), userAndPassJson.getPassword());
@@ -91,7 +91,7 @@ public class AuthenticationController {
 
 
     /**Генерация токена по имени и паролю пользователя.*/
-    @UrlDeclaration(url = "/general/accounts/login", description = "Авторизация. (Генерация токена по имени и паролю пользователя) (?username={login}&password={pass})", isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(url = "/authentication/login", description = "Авторизация. (Генерация токена по имени и паролю пользователя) (?username={login}&password={pass})", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getToken(@RequestParam(value = "username", defaultValue = "anonymous") String username,
                               @RequestParam(value = "password", defaultValue = "anonymous") String password){
