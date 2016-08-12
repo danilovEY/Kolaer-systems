@@ -42,6 +42,16 @@ public class WebPortalUrlPathDecorator implements WebPortalUrlPath {
         this.webPortalUrlPath.setUrl(url);
     }
 
+    @Column(name = "request_method", nullable = false)
+    public String getRequestMethod() {
+        return this.webPortalUrlPath.getRequestMethod();
+    }
+
+    @Override
+    public void setRequestMethod(String method) {
+        this.webPortalUrlPath.setRequestMethod(method);
+    }
+
     @Column(name = "description")
     public String getDescription() {
         return this.webPortalUrlPath.getDescription();

@@ -65,17 +65,10 @@ public class UrlPathServiceImpl implements UrlPathService {
     }
 
     @Override
-    public void updateOrCreate(WebPortalUrlPath urlPath) {
+    public void createIsNone(WebPortalUrlPath urlPath) {
         if(urlPath != null) {
             final WebPortalUrlPath path = this.urlPathDao.getPathByUrl(urlPath.getUrl());
-            if(path != null) {
-                path.setDescription(urlPath.getUrl());
-                path.setAccessSuperAdmin(urlPath.isAccessSuperAdmin());
-                path.setAccessAll(urlPath.isAccessAll());
-                path.setAccessUser(urlPath.isAccessUser());
-                path.setAccessAnonymous(urlPath.isAccessAnonymous());
-                this.urlPathDao.update(path);
-            } else {
+            if(path == null) {
                 this.urlPathDao.persist(new WebPortalUrlPathDecorator(urlPath));
             }
         }

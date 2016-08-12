@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 
@@ -26,6 +27,7 @@ public class AccountsController {
     private AccountService accountService;
 
     /**Получить все аккаунты.*/
+    @UrlDeclaration(url = "/general/accounts/get/all", description = "Получить все аккаунты.")
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<GeneralAccountsEntity> getAllUsers() {
         return accountService.getAll();

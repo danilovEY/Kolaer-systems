@@ -8,6 +8,7 @@ public class WebPortalUrlPathBase implements WebPortalUrlPath {
     private int id;
     private String url;
     private String description;
+    private String requestMethod;
     /**Имеют ли доступ к URL все пользователи*/
     private boolean accessAll;
     private boolean accessSuperAdmin;
@@ -29,6 +30,16 @@ public class WebPortalUrlPathBase implements WebPortalUrlPath {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public String getRequestMethod() {
+        return this.requestMethod;
+    }
+
+    @Override
+    public void setRequestMethod(String method) {
+        this.requestMethod = method;
     }
 
     public String getDescription() {

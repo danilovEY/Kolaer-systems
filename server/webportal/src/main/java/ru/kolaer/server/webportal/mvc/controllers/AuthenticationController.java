@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
+import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.security.TokenUtils;
 
@@ -48,6 +49,7 @@ public class AuthenticationController {
     @Qualifier("accountDao")
     private AccountDao accountDao;
 
+    @UrlDeclaration(url = "/general/accounts/get/all", description = "Получить все аккаунты.", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public GeneralAccountsEntity getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -62,6 +64,7 @@ public class AuthenticationController {
         return  accountDao.getAccountByNameWithEmployee(userDetails.getUsername());
     }
 
+    @UrlDeclaration(url = "/general/accounts/logout", description = "Выйти.", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String logout(HttpServletResponse response, HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -73,6 +76,7 @@ public class AuthenticationController {
 
 
     /**Генерация пароля по строке.*/
+    @UrlDeclaration(url = "/general/accounts/genpass", description = "Генерация пароля по строке. (?pass={pass})", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/genpass", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String getPass(@RequestParam("pass") String pass) {
         return new StandardPasswordEncoder(secretKey).encode(pass);

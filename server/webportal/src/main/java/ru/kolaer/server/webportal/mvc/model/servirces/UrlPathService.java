@@ -12,5 +12,5 @@ public interface UrlPathService extends ServiceBase<WebPortalUrlPath> {
     WebPortalUrlPath getPathByUrl(String url);
     List<GeneralRolesEntity> getRoles(WebPortalUrlPath urlPath);
 
-    void updateOrCreate(WebPortalUrlPath urlPath);
+    void createIsNone(WebPortalUrlPath urlPath);
 }

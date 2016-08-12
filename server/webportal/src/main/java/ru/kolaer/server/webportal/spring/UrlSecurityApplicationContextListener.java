@@ -58,12 +58,13 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     final WebPortalUrlPath urlPath = new WebPortalUrlPathBase();
                     urlPath.setUrl(url);
                     urlPath.setDescription(description);
+                    urlPath.setRequestMethod(urlDeclaration.requestMethod().name());
                     urlPath.setAccessAll(isAll);
                     urlPath.setAccessSuperAdmin(isSuperAdmin);
                     urlPath.setAccessUser(isUser);
                     urlPath.setAccessAnonymous(isAnonymous);
 
-                    this.urlPathService.updateOrCreate(urlPath);
+                    this.urlPathService.createIsNone(urlPath);
                 }
             }
         }
