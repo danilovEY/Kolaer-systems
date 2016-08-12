@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
+ * Фильтер позволяющий динамически проверять соединения и предостовлять доступ к url
+ * по наличию токена.
+ *
  * Created by Danilov on 24.07.2016.
- * Фильтер позволяющий динамически проверять соединения на наличие правильных токенов.
  */
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationTokenProcessingFilter.class);
@@ -57,6 +59,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
         return (HttpServletRequest) request;
     }
 
+    /**Получить токен из http-запроса.*/
     private String extractAuthTokenFromRequest(HttpServletRequest httpRequest) {
         String authToken = httpRequest.getHeader("x-token");
 
