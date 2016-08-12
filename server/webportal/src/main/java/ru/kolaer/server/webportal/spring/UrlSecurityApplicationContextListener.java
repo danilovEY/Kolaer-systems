@@ -17,6 +17,9 @@ import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 import java.lang.reflect.Method;
 
 /**
+ * Считывание всех методов у бинов для поиска аннотации {@link UrlDeclaration}.
+ * После добовляет информацию из аннотации в БД.
+ *
  * Created by danilovey on 11.08.2016.
  */
 @Component
@@ -24,9 +27,11 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
     private static final Logger LOG = LoggerFactory.getLogger(UrlSecurityApplicationContextListener.class);
 
     @Autowired
+    /***Фабрика бинов для получение имени оригинального класса бина.*/
     private ConfigurableListableBeanFactory beanFactory;
 
     @Autowired
+    /***Сервис для работы с url.*/
     private UrlPathService urlPathService;
 
     @Override
@@ -37,12 +42,13 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
             if(beanClassName == null) {
                 continue;
             }
-            Method[] methods = new Method[0];
+            Method[] methods;
 
             try {
                 methods = Class.forName(beanClassName).getMethods();
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                LOG.error("Ошибка при чтении бина: {}", beanName, e);
+                continue;
             }
 
             for(Method method : methods) {
