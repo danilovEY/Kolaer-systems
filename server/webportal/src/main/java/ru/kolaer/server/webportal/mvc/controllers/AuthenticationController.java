@@ -82,12 +82,16 @@ public class AuthenticationController {
         return new StandardPasswordEncoder(secretKey).encode(pass);
     }
 
+    /**Авторизация.*/
+    @UrlDeclaration(url = "/general/accounts/login", description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getTokenPost(@RequestBody UserAndPassJson userAndPassJson){
         return this.getToken(userAndPassJson.getUsername(), userAndPassJson.getPassword());
     }
 
+
     /**Генерация токена по имени и паролю пользователя.*/
+    @UrlDeclaration(url = "/general/accounts/login", description = "Авторизация. (Генерация токена по имени и паролю пользователя) (?username={login}&password={pass})", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getToken(@RequestParam(value = "username", defaultValue = "anonymous") String username,
                               @RequestParam(value = "password", defaultValue = "anonymous") String password){

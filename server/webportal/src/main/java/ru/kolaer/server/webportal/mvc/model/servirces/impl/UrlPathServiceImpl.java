@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
@@ -67,7 +68,7 @@ public class UrlPathServiceImpl implements UrlPathService {
     @Override
     public void createIsNone(WebPortalUrlPath urlPath) {
         if(urlPath != null) {
-            final WebPortalUrlPath path = this.urlPathDao.getPathByUrl(urlPath.getUrl());
+            final WebPortalUrlPath path = this.urlPathDao.getPathByUrlAndMethod(urlPath.getUrl(), urlPath.getRequestMethod());
             if(path == null) {
                 this.urlPathDao.persist(new WebPortalUrlPathDecorator(urlPath));
             }

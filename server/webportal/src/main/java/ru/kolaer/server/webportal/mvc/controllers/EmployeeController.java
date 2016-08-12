@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     /**Получить всех сотродников.*/
+    @UrlDeclaration(url = "/general/employees/get/all", description = "Получить всех сотродников.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<GeneralEmployeesEntity> getAllEmployees() {
         return this.employeeService.getAll();

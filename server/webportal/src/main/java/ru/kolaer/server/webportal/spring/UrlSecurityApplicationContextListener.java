@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPathBase;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.config.PathMapping;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
 import java.lang.reflect.Method;
@@ -55,7 +56,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     final boolean isAll = urlDeclaration.isAccessAll();
 
                     final WebPortalUrlPath urlPath = new WebPortalUrlPathBase();
-                    urlPath.setUrl(url);
+                    urlPath.setUrl(PathMapping.DISPATCHER_SERVLET + url);
                     urlPath.setDescription(description);
                     urlPath.setRequestMethod(urlDeclaration.requestMethod().name());
                     urlPath.setAccessAll(isAll);

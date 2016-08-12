@@ -17,6 +17,7 @@
         <caption>Таблица URL</caption>
         <tr>
             <th>URL</th>
+            <th>Метод запроса</th>
             <th>Описание</th>
             <th>Доступ всем</th>
             <th>Доступ SUPER ADMIN</th>
@@ -28,6 +29,7 @@
         <c:forEach items="${listApi}" var="entry">
             <tr>
                 <td>${entry.url}</td>
+                <td>${entry.requestMethod}</td>
                 <td>${entry.description}</td>
                 <td>${entry.accessAll}</td>
                 <td>${entry.accessSuperAdmin}</td>

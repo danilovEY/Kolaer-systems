@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.config.PathMapping;
 import ru.kolaer.server.webportal.mvc.model.dao.RssDao;
 import ru.kolaer.server.webportal.mvc.model.entities.webportal.rss.WebPortalRssEntityDecorator;
@@ -29,15 +30,17 @@ public class RssController {
     private RssDao rssDao;
 
     /**Получить все новости.*/
+    @UrlDeclaration(url = PathMapping.PATH_TO_RSS + PathMapping.PATH_TO_GET_RSS + PathMapping.PATH_TO_GET_ALL_RSS, description = "Получить все новости.", isAccessAll = true)
     @RequestMapping( value = PathMapping.PATH_TO_GET_RSS + PathMapping.PATH_TO_GET_ALL_RSS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    List<WebPortalRssEntityDecorator> getAllRss() {
+    public List<WebPortalRssEntityDecorator> getAllRss() {
         List<WebPortalRssEntityDecorator> list = rssDao.findAll();
         return list;
     }
 
     /**Получить новость по id.*/
+    @UrlDeclaration(url = PathMapping.PATH_TO_RSS + PathMapping.PATH_TO_GET_RSS, description = "Получить новость по id.(?id={id})", isAccessAll = true)
     @RequestMapping( value = PathMapping.PATH_TO_GET_RSS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    WebPortalRssEntityDecorator getRssById(@RequestParam("id") String id) {
+    public WebPortalRssEntityDecorator getRssById(@RequestParam("id") String id) {
         if(id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("ID in NULL!");
         } else {

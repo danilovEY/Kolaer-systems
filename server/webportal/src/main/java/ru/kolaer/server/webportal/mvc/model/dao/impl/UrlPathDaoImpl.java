@@ -47,4 +47,14 @@ public class UrlPathDaoImpl implements UrlPathDao {
     public void update(WebPortalUrlPath webPortalUrlPath) {
         this.sessionFactory.getCurrentSession().update(webPortalUrlPath);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public WebPortalUrlPath getPathByUrlAndMethod(String url, String requestMethod) {
+        return (WebPortalUrlPath) this.sessionFactory.getCurrentSession()
+                .createQuery("FROM WebPortalUrlPathDecorator path WHERE path.url = :url AND path.requestMethod = :requestMethod")
+                .setParameter("url", url)
+                .setParameter("requestMethod", requestMethod)
+                .uniqueResult();
+    }
 }

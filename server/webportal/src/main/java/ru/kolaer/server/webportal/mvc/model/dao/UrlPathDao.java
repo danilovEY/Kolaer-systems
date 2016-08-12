@@ -9,4 +9,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 public interface UrlPathDao extends DaoStandard<WebPortalUrlPath> {
     WebPortalUrlPath getPathByUrl(String url);
     void update(WebPortalUrlPath webPortalUrlPath);
+
+    WebPortalUrlPath getPathByUrlAndMethod(String url, String requestMethod);
 }
