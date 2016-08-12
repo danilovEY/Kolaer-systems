@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UrlSecurity {
+public @interface UrlDeclaration {
     String url();
     String description();
     boolean isAccessAll() default false;

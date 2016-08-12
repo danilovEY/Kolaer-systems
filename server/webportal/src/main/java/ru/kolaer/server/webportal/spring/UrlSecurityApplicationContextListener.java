@@ -10,7 +10,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPathBase;
-import ru.kolaer.server.webportal.annotations.UrlSecurity;
+import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
 import java.lang.reflect.Method;
@@ -46,14 +46,14 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
             }
 
             for(Method method : methods) {
-                final UrlSecurity urlSecurity = method.getAnnotation(UrlSecurity.class);
-                if(urlSecurity != null) {
-                    final String url = urlSecurity.url();
-                    final String description = urlSecurity.description();
-                    final boolean isSuperAdmin = urlSecurity.isAccessSuperAdmin();
-                    final boolean isUser = urlSecurity.isAccessUser();
-                    final boolean isAnonymous = urlSecurity.isAccessAnonymous();
-                    final boolean isAll = urlSecurity.isAccessAll();
+                final UrlDeclaration urlDeclaration = method.getAnnotation(UrlDeclaration.class);
+                if(urlDeclaration != null) {
+                    final String url = urlDeclaration.url();
+                    final String description = urlDeclaration.description();
+                    final boolean isSuperAdmin = urlDeclaration.isAccessSuperAdmin();
+                    final boolean isUser = urlDeclaration.isAccessUser();
+                    final boolean isAnonymous = urlDeclaration.isAccessAnonymous();
+                    final boolean isAll = urlDeclaration.isAccessAll();
 
                     final WebPortalUrlPath urlPath = new WebPortalUrlPathBase();
                     urlPath.setUrl(url);
