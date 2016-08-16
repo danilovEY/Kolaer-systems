@@ -19,7 +19,7 @@ public class ApiMapController {
     @Autowired
     private UrlPathService urlPathService;
 
-    @UrlDeclaration(url = "/api/mapping", description = "Получить все ссылки.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить все ссылки.", isAccessAll = true)
     @RequestMapping(value = "/mapping", method = RequestMethod.GET)
     public ModelAndView getMapControllers() {
         final ModelAndView view = new ModelAndView("api-mapping");

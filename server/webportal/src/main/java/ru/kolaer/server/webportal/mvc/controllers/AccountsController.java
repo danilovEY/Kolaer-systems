@@ -27,7 +27,7 @@ public class AccountsController {
     private AccountService accountService;
 
     /**Получить все аккаунты.*/
-    @UrlDeclaration(url = "/general/accounts/get/all", description = "Получить все аккаунты.")
+    @UrlDeclaration(description = "Получить все аккаунты.")
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<GeneralAccountsEntity> getAllUsers() {
         return accountService.getAll();

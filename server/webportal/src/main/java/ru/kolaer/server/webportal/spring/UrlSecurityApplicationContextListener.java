@@ -8,6 +8,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPathBase;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
@@ -15,6 +16,7 @@ import ru.kolaer.server.webportal.config.PathMapping;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
 import java.lang.reflect.Method;
+import java.util.StringJoiner;
 
 /**
  * Считывание всех методов у бинов для поиска аннотации {@link UrlDeclaration}.
@@ -42,10 +44,12 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
             if(beanClassName == null) {
                 continue;
             }
+            Class beanClass;
             Method[] methods;
 
             try {
-                methods = Class.forName(beanClassName).getMethods();
+                beanClass = Class.forName(beanClassName);
+                methods = beanClass.getMethods();
             } catch (ClassNotFoundException e) {
                 LOG.error("Ошибка при чтении бина: {}", beanName, e);
                 continue;
@@ -54,7 +58,18 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
             for(Method method : methods) {
                 final UrlDeclaration urlDeclaration = method.getAnnotation(UrlDeclaration.class);
                 if(urlDeclaration != null) {
-                    final String url = urlDeclaration.url();
+                    final StringBuilder urlBuilder = new StringBuilder(PathMapping.DISPATCHER_SERVLET);
+                    final RequestMapping classMappingAnnotation = (RequestMapping) beanClass.getAnnotation(RequestMapping.class);
+
+                    if(classMappingAnnotation != null) {
+                        urlBuilder.append(classMappingAnnotation.value()[0]);
+                    }
+
+                    final RequestMapping methodMappingAnnotation = method.getAnnotation(RequestMapping.class);
+
+                    urlBuilder.append(methodMappingAnnotation.value()[0]);
+
+                    final String url = urlBuilder.toString();
                     final String description = urlDeclaration.description();
                     final boolean isSuperAdmin = urlDeclaration.isAccessSuperAdmin();
                     final boolean isUser = urlDeclaration.isAccessUser();
@@ -62,14 +77,13 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     final boolean isAll = urlDeclaration.isAccessAll();
 
                     final WebPortalUrlPath urlPath = new WebPortalUrlPathBase();
-                    urlPath.setUrl(PathMapping.DISPATCHER_SERVLET + url);
+                    urlPath.setUrl(url);
                     urlPath.setDescription(description);
                     urlPath.setRequestMethod(urlDeclaration.requestMethod().name());
                     urlPath.setAccessAll(isAll);
                     urlPath.setAccessSuperAdmin(isSuperAdmin);
                     urlPath.setAccessUser(isUser);
                     urlPath.setAccessAnonymous(isAnonymous);
-
                     this.urlPathService.createIsNone(urlPath);
                 }
             }

@@ -23,7 +23,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     /**Получить всех сотродников.*/
-    @UrlDeclaration(url = "/general/employees/get/all", description = "Получить всех сотродников.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить всех сотродников.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<GeneralEmployeesEntity> getAllEmployees() {
         return this.employeeService.getAll();

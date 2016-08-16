@@ -30,7 +30,7 @@ public class RssController {
     private RssDao rssDao;
 
     /**Получить все новости.*/
-    @UrlDeclaration(url = PathMapping.PATH_TO_RSS + PathMapping.PATH_TO_GET_RSS + PathMapping.PATH_TO_GET_ALL_RSS, description = "Получить все новости.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить все новости.", isAccessAll = true)
     @RequestMapping( value = PathMapping.PATH_TO_GET_RSS + PathMapping.PATH_TO_GET_ALL_RSS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<WebPortalRssEntityDecorator> getAllRss() {
         List<WebPortalRssEntityDecorator> list = rssDao.findAll();
@@ -38,7 +38,7 @@ public class RssController {
     }
 
     /**Получить новость по id.*/
-    @UrlDeclaration(url = PathMapping.PATH_TO_RSS + PathMapping.PATH_TO_GET_RSS, description = "Получить новость по id.(?id={id})", isAccessAll = true)
+    @UrlDeclaration(description = "Получить новость по id.(?id={id})", isAccessAll = true)
     @RequestMapping( value = PathMapping.PATH_TO_GET_RSS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public WebPortalRssEntityDecorator getRssById(@RequestParam("id") String id) {
         if(id == null || id.trim().isEmpty()) {

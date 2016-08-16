@@ -26,7 +26,7 @@ public class UrlPathController {
     private UrlPathService urlPathService;
 
     /**Получить все URL.*/
-    @UrlDeclaration(url = "/api/get/all", description = "Получить все URL.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить все URL.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<WebPortalUrlPath> getAllUrl() {
         return urlPathService.getAll();

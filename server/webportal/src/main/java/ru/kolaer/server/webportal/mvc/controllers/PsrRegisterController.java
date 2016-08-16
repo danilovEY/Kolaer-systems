@@ -40,7 +40,7 @@ public class PsrRegisterController {
     private EmployeeService employeeService;
 
     /**Получить все ПСР-проекты.*/
-    @UrlDeclaration(url = "/psr/get/all", description = "Получить все ПСР-проекты.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить все ПСР-проекты.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<PsrRegister> getAllRegister() {
         List<PsrRegister> list = this.psrRegisterService.getAll();
@@ -48,7 +48,7 @@ public class PsrRegisterController {
     }
 
     /**Добавить ПСР-проект.*/
-    @UrlDeclaration(url = "/psr/add", description = "Добавить ПСР-проект.", isAccessAll = true)
+    @UrlDeclaration(description = "Добавить ПСР-проект.", isAccessAll = true)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister addPsrRegister(@RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
@@ -66,7 +66,7 @@ public class PsrRegisterController {
     }
 
     /**Получить все ПСР-проект. (только id и имя).*/
-    @UrlDeclaration(url = "/psr/get/all/id-name", description = "Получить все ПСР-проект. (только id и имя).", isAccessAll = true)
+    @UrlDeclaration(description = "Получить все ПСР-проект. (только id и имя).", isAccessAll = true)
     @RequestMapping(value = "/get/all/id-name", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<PsrRegister> getAllRegisterWithIdAndName() {
         List<PsrRegister> list = this.psrRegisterService.getIdAndNamePsrRegisters();

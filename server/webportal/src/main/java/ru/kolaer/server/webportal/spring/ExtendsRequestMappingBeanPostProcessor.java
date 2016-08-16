@@ -20,8 +20,8 @@ import java.util.Map;
 /**
  * Created by danilovey on 12.08.2016.
  */
-@Component
-@Order(1)
+//@Component
+//@Order(1)
 public class ExtendsRequestMappingBeanPostProcessor implements BeanFactoryPostProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(ExtendsRequestMappingBeanPostProcessor.class);
 
