@@ -83,7 +83,7 @@ public class AuthenticationController {
     }
 
     /**Авторизация.*/
-    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getTokenPost(@RequestBody UserAndPassJson userAndPassJson){
         return this.getToken(userAndPassJson.getUsername(), userAndPassJson.getPassword());
@@ -91,7 +91,7 @@ public class AuthenticationController {
 
 
     /**Генерация токена по имени и паролю пользователя.*/
-    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя) (?username={login}&password={pass})", isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя) (?username={login}&password={pass})", isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getToken(@RequestParam(value = "username", defaultValue = "anonymous") String username,
                               @RequestParam(value = "password", defaultValue = "anonymous") String password){
