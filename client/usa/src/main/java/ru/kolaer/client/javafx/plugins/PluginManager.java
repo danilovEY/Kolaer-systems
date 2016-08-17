@@ -25,6 +25,8 @@ public class PluginManager {
     private final List<PluginBundle> installPlugins = new ArrayList<>();
     private BundleContext context;
     private boolean isInit = false;
+    private String defaultPathCache = "KolaerCache";
+    private Framework framework;
 
     public PluginManager() {
         this(new SearchPlugins());
@@ -35,7 +37,7 @@ public class PluginManager {
     }
 
     public void initialization() throws Exception {
-        final File frameworkDir = new File(System.getProperty("java.io.tmpdir"), "KolaerCache");
+        final File frameworkDir = new File(System.getProperty("java.io.tmpdir"), defaultPathCache);
 
         final Map<String, String> frameworkProperties = new HashMap<>();
         frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
@@ -71,11 +73,11 @@ public class PluginManager {
                 "javafx.scene.text, javafx.stage, javax.swing, com.sun.javafx.scene.control.skin, javafx.scene.control.cell, org.slf4j;version=1.7.7");
 
         //try {
-        final Framework framework = new Felix(frameworkProperties);
+        this.framework = new Felix(frameworkProperties);
 
-        framework.start();
+        this.framework.start();
 
-        this.context = framework.getBundleContext();
+        this.context = this.framework.getBundleContext();
         this.isInit = true;
         //}  catch (final Exception e) {
         //    LOG.error("Ошибка при инициализации или старта OSGi-framework!", e);
@@ -84,6 +86,16 @@ public class PluginManager {
 
         LOG.info("OSGi framework успешно запущен!");
     }
+
+    public void refreshOsgi() {
+        try {
+            this.framework.stop();
+        } catch (BundleException e) {
+            LOG.error("Ошибка при перезапуске OSGi", e);
+            System.exit(-9);
+        }
+    }
+
 
     public boolean isInitialization() {
         return this.isInit;
@@ -105,6 +117,8 @@ public class PluginManager {
 	            LOG.info("{} установка завершена...", pluginBundle.getSymbolicNamePlugin());
         	} catch(BundleException ex) {
         		LOG.error("Ошибка при установке плагина: {}", pluginBundle.getSymbolicNamePlugin(), ex);
+                this.defaultPathCache = UUID.randomUUID().toString();
+                this.refreshOsgi();
         		return false;
         	}
         	
