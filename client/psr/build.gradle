@@ -43,4 +43,4 @@ task copyJarToBin(dependsOn: createJar) {
     }
 }
 
-task buildApp(dependsOn : [clean, copyJarToBin])
+task buildApp(dependsOn : [copyJarToBin])

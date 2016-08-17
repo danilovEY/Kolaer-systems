@@ -39,6 +39,7 @@ public class PPsrRegisterTableImpl implements PPsrRegisterTable {
 
     @Override
     public void updateTableData() {
+        this.view.clear();
         this.view.addPsrProjectAll(this.model.getAllPstRegister());
     }
 }

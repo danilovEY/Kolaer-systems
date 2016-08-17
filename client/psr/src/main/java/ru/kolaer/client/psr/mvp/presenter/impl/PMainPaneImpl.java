@@ -51,17 +51,24 @@ public class PMainPaneImpl implements PMainPane {
     @Override
     public void updatePluginPage() {
         if(!this.view.isInitializationView()) {
-            this.view.initializationView();
+            Tools.runOnThreadFX(() -> {
+                this.view.initializationView();
+                this.pPsrRegisterTable = new PPsrRegisterTableImpl(editorKit);
+                this.pPsrRegisterTable.setModel(this.model);
+                this.view.setContent(pPsrRegisterTable.getView().getContent());
 
-            this.pPsrRegisterTable = new PPsrRegisterTableImpl(editorKit);
-            this.pPsrRegisterTable.setModel(this.model);
-            this.pPsrRegisterTable.updateTableData();
+                this.pPsrRegisterTable.updateTableData();
 
-            this.view.setContent(pPsrRegisterTable.getView().getContent());
+                CompletableFuture.runAsync(() -> {
+                    if(this.editorKit.getAuthentication().isAuthentication()) {
+                        this.login(this.editorKit.getAuthentication().getAuthorizedUser());
+                    }
+                }).exceptionally(t -> {
+                    LOG.error("Ошибка!", t);
+                    return null;
+                });
+            });
 
-            if(this.editorKit.getAuthentication().isAuthentication()) {
-                this.login(this.editorKit.getAuthentication().getAuthorizedUser());
-            }
         }
     }
 
@@ -71,21 +78,24 @@ public class PMainPaneImpl implements PMainPane {
         this.view.logoutAction(e -> this.editorKit.getAuthentication().logout());
 
         this.view.createPsrAction(e -> {
-            final PDetailsOrEditPsrRegister detailsOrEditPsrRegister = new PDetailsOrEditPsrRegisterImpl();
-            detailsOrEditPsrRegister.getView().initializationView();
+            Tools.runOnThreadFX(() -> {
+                final PDetailsOrEditPsrRegister detailsOrEditPsrRegister = new PDetailsOrEditPsrRegisterImpl();
+                detailsOrEditPsrRegister.getView().initializationView();
 
-            detailsOrEditPsrRegister.showAndWait();
-            try {
-                LOG.info("Отправка....");
-                PsrRegister psrRegister = detailsOrEditPsrRegister.getPsrRegister();
-                psrRegister.setAuthor(this.editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity());
-                psrRegister = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().persistPsrRegister(psrRegister);
-                this.model.addPsrProject(psrRegister);
+                detailsOrEditPsrRegister.showAndWait();
+                try {
+                    LOG.info("Отправка....");
+                    PsrRegister psrRegister = detailsOrEditPsrRegister.getPsrRegister();
+                    psrRegister.setAuthor(this.editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity());
+                    psrRegister = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().persistPsrRegister(psrRegister);
+                    LOG.info("Отправка прошла успешно!");
+                    //this.model.addPsrProject(psrRegister);
 
-                this.pPsrRegisterTable.updateTableData();
-            } catch (ServerException ex) {
-                LOG.error("Ошибка!");
-            }
+                    this.pPsrRegisterTable.updateTableData();
+                } catch (ServerException ex) {
+                    LOG.error("Ошибка!");
+                }
+            });
         });
 
         account.getRoles().forEach(role -> {

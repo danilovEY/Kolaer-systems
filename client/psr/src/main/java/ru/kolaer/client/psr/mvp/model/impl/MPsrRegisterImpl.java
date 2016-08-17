@@ -21,7 +21,8 @@ public class MPsrRegisterImpl implements MPsrRegister{
 
     @Override
     public List<PsrRegister> getAllPstRegister() {
-        if(registers.size() == 0) {
+        registers.clear();
+        //if(registers.size() == 0) {
             if (this.editorKit.getUSNetwork().getKolaerWebServer().getServerStatus() == ServerStatus.AVAILABLE) {
                 if (this.editorKit.getAuthentication().isAuthentication()) {
                     try {
@@ -37,7 +38,7 @@ public class MPsrRegisterImpl implements MPsrRegister{
             } else {
                 this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Сервер не доступен!");
             }
-        }
+        //}
 
         return this.registers;
     }

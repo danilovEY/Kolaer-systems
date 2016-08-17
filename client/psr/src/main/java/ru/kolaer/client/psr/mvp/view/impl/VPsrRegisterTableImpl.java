@@ -123,7 +123,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                 protected void updateItem(List<PsrAttachment> item, boolean empty) {
                     super.updateItem(item, empty);
                     if(!empty) {
-                        if(item.size() > 0) {
+                        if(item != null && item.size() > 0) {
                             this.setText("Есть (" + item.size() + ")");
                         } else {
                             this.setText("Пусто");
@@ -135,7 +135,6 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
 
         this.table.getColumns().addAll(psrRegisterIdColumn, psrRegisterAuthorColumn,
                 psrRegisterNameColumn, psrRegisterDatesColumn, psrRegisterCommentColumn, psrRegisterAttachmentColumn);
-
         this.tablePane.setCenter(this.table);
     }
 
@@ -151,7 +150,10 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
 
     @Override
     public void addPsrProjectAll(List<PsrRegister> psrRegisters) {
-        this.tableData.addAll(psrRegisters);
+        Tools.runOnThreadFX(() -> {
+            psrRegisters.stream().forEach(this.tableData::add);
+            this.table.getSortOrder().add(this.table.getColumns().get(0));
+        });
     }
 
     @Override
@@ -159,5 +161,10 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         Tools.runOnThreadFX(() -> {
             this.tableData.add(psrRegister);
         });
+    }
+
+    @Override
+    public void clear() {
+        Tools.runOnThreadFX(this.tableData::clear);
     }
 }
