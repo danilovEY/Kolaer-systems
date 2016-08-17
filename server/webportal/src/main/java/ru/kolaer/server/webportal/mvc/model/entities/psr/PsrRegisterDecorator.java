@@ -10,6 +10,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEnt
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 29.07.2016.
@@ -26,6 +27,10 @@ public class PsrRegisterDecorator implements PsrRegister {
 
     public PsrRegisterDecorator(PsrRegister psrRegister) {
         this.psrRegister = psrRegister;
+        this.setStateList(psrRegister.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList()));
+        this.setAuthor(new GeneralEmployeesEntityDecorator(psrRegister.getAuthor()));
+        this.setStatus(new PsrStatusDecorator(psrRegister.getStatus()));
+        this.setStateList(psrRegister.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList()));
     }
 
     @Id

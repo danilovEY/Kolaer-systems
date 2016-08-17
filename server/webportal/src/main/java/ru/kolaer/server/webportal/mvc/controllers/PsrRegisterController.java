@@ -55,7 +55,6 @@ public class PsrRegisterController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister addPsrRegister(@RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
-        registerDto.setStateList(registerDto.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList()));
 
         final PsrStatus psrStatus = new PsrStatusDecorator();
         psrStatus.setId(1);
@@ -73,9 +72,6 @@ public class PsrRegisterController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void removePsrRegister(@RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
-        registerDto.setAuthor(new GeneralEmployeesEntityDecorator(registerDto.getAuthor()));
-        registerDto.setStatus(new PsrStatusDecorator(registerDto.getStatus()));
-        //registerDto.setAuthor(null);
         this.psrRegisterService.delete(registerDto);
     }
 

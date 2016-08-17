@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -17,6 +18,12 @@ public class Tools {
         if(date == null)
             throw new IllegalArgumentException("Date is null!");
         return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static LocalDate convertToLocalDate(final Date date) {
+        if(date == null)
+            throw new IllegalArgumentException("LocalDate is null!");
+        return LocalDate.parse( new SimpleDateFormat("yyyy-MM-dd").format(date));
     }
 
     public static void runOnThreadFXAndWain(final Runnable runnable, final long time, final TimeUnit timeUnit) {

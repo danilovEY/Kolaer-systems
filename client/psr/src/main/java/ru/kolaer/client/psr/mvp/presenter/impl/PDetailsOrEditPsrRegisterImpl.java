@@ -24,6 +24,10 @@ public class PDetailsOrEditPsrRegisterImpl implements PDetailsOrEditPsrRegister 
         this.view = new VDetailsOrEditPsrRegisterImpl();
     }
 
+    public PDetailsOrEditPsrRegisterImpl(PsrRegister selectRegister) {
+        this.view = new VDetailsOrEditPsrRegisterImpl(selectRegister);
+    }
+
     public VDetailsOrEditPsrRegister getView() {
         return this.view;
     }

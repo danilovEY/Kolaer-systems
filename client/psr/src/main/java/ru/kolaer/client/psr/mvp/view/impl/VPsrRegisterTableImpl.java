@@ -18,6 +18,8 @@ import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachment;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.psr.mvp.presenter.PDetailsOrEditPsrRegister;
+import ru.kolaer.client.psr.mvp.presenter.impl.PDetailsOrEditPsrRegisterImpl;
 import ru.kolaer.client.psr.mvp.view.VPsrRegisterTable;
 
 import java.text.DateFormat;
@@ -48,13 +50,25 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         final ContextMenu contextMenu = new ContextMenu();
 
         final MenuItem removeMenuItem = new MenuItem("Удалить");
+        final MenuItem editMenuItem = new MenuItem("Редактировать");
+        editMenuItem.setOnAction(e -> {
+            Tools.runOnThreadFX(() -> {
+                final PsrRegister selectRegister = table.getSelectionModel().getSelectedItem();
+
+                final PDetailsOrEditPsrRegister detailsOrEditPsrRegister = new PDetailsOrEditPsrRegisterImpl(selectRegister);
+                detailsOrEditPsrRegister.getView().initializationView();
+                detailsOrEditPsrRegister.showAndWait();
+                tableData.remove(selectRegister);
+                this.addPsrProject(selectRegister);
+                editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().updatePsrRegister(selectRegister);
+            });
+        });
         removeMenuItem.setOnAction(e -> {
             final PsrRegister selectRegister = table.getSelectionModel().getSelectedItem();
-            LOG.info("Remove: {}", selectRegister.getId());
             table.getItems().remove(selectRegister);
             editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().deletePsrRegister(selectRegister);
         });
-        contextMenu.getItems().add(removeMenuItem);
+        contextMenu.getItems().addAll(editMenuItem, removeMenuItem);
 
         table.setContextMenu(contextMenu);
         table.setOnContextMenuRequested(e -> {
@@ -95,6 +109,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                 @Override
                 protected void updateItem(GeneralEmployeesEntity item, boolean empty) {
                     super.updateItem(item, empty);
+                    this.setText("");
                     if(!empty && item != null)
                         this.setText(item.getInitials());
                 }
@@ -144,6 +159,8 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                             }
                             this.setGraphic(new BorderPane(htmlEditor));
                         });
+                    } else {
+                        this.setGraphic(new Label());
                     }
                 }
             }

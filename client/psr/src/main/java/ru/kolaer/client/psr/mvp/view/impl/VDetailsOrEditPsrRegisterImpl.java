@@ -18,6 +18,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStateBase;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.view.VDetailsOrEditPsrRegister;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -111,8 +112,17 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
         psrFinishPane.setContent(new BorderPane(new Label("Завершена настройка ПСР проекта!")));
 
         if(this.psrRegister != null) {
-            namePsr.setText(this.psrRegister.getName());
-            wizard = new Wizard(null, "Редактирование проекта");
+            this.namePsr.setText(this.psrRegister.getName());
+            this.htmlEditor.setHtmlText(this.psrRegister.getComment());
+
+            this.datePickerState.setValue(Tools.convertToLocalDate(this.psrRegister.getStateList().get(0).getDate()));
+            this.stateComment.setText(this.psrRegister.getStateList().get(0).getComment());
+
+            this.datePickerPlan.setValue(Tools.convertToLocalDate(this.psrRegister.getStateList().get(1).getDate()));
+            this.planComment.setText(this.psrRegister.getStateList().get(1).getComment());
+
+            this.wizard = new Wizard(null, "Редактирование проекта");
+
         } else {
             final WizardPane welcomePane = new WizardPane();
             welcomePane.setContent(new BorderPane(new Label("Добро пожаловать в меню создания ПСР проекта!")));
@@ -149,22 +159,35 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
                 this.psrRegister.setName(this.namePsr.getText());
                 this.psrRegister.setComment(this.htmlEditor.getHtmlText());
 
-                final List<PsrState> states = new ArrayList<>();
+                final List<PsrState> states = new ArrayList<>(this.psrRegister.getStateList());
 
                 if(!this.stateComment.getText().isEmpty() && this.datePickerState.getValue() != null) {
-                    final PsrState psrState = new PsrStateBase();
+                    PsrState psrState;
+                    if(states.size() == 0) {
+                        psrState = new PsrStateBase();
+                        states.add(psrState);
+
+                    } else {
+                        psrState = states.get(0);
+                    }
+
                     psrState.setComment(this.stateComment.getText());
                     psrState.setDate(Tools.convertToDate(this.datePickerState.getValue()));
                     psrState.setPlan(false);
-                    states.add(psrState);
                 }
 
                 if(!this.planComment.getText().isEmpty() && this.datePickerPlan.getValue() != null) {
-                    final PsrState psrStatePlan = new PsrStateBase();
+                    PsrState psrStatePlan;
+                    if(this.psrRegister.getStateList().size() < 2) {
+                        psrStatePlan = new PsrStateBase();
+                        states.add(psrStatePlan);
+
+                    } else {
+                        psrStatePlan = states.get(1);
+                    }
                     psrStatePlan.setComment(this.planComment.getText());
                     psrStatePlan.setDate(Tools.convertToDate(this.datePickerPlan.getValue()));
                     psrStatePlan.setPlan(true);
-                    states.add(psrStatePlan);
                 }
 
                 this.psrRegister.setStateList(states);
