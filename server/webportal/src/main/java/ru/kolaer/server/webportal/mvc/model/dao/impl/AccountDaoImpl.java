@@ -42,6 +42,16 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
+    public void delete(GeneralAccountsEntity obj) {
+
+    }
+
+    @Override
+    public void update(GeneralAccountsEntity entity) {
+
+    }
+
+    @Override
     public GeneralAccountsEntity findName(String username) {
         return (GeneralAccountsEntity) this.sessionFactory.getCurrentSession()
                 .createQuery("from GeneralAccountsEntityDecorator ac where ac.username=:username ")

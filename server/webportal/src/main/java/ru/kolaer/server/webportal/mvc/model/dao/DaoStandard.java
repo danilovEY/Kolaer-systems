@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
 import org.springframework.transaction.annotation.Transactional;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 
 import java.util.List;
 
@@ -18,4 +19,10 @@ public interface DaoStandard<T> {
     /**Добавить объект в БД.*/
     @Transactional
     void persist(T obj);
+    /**Удалить объект в БД.*/
+    @Transactional
+    void delete(T obj);
+
+    @Transactional
+    void update(T entity);
 }

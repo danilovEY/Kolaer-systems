@@ -41,6 +41,16 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     }
 
     @Override
+    public void delete(PsrRegister obj) {
+        this.sessionFactory.getCurrentSession().delete(obj);
+    }
+
+    @Override
+    public void update(PsrRegister entity) {
+        this.sessionFactory.getCurrentSession().update(entity);
+    }
+
+    @Override
     public List<PsrRegister> getIdAndNamePsrRegister() {
         return this.sessionFactory.getCurrentSession().createCriteria(PsrRegisterDecorator.class)
                 .setProjection(Projections.projectionList()

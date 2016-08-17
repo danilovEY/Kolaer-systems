@@ -43,4 +43,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         this.employeeDao.persist(accountsEntity);
     }
+
+    @Override
+    public void delete(GeneralEmployeesEntity entity) {
+
+    }
+
+    @Override
+    public void update(GeneralEmployeesEntity entity) {
+
+    }
 }

@@ -37,4 +37,14 @@ public class EmployeeDaoImpl implements EmployeeDao {
             this.sessionFactory.getCurrentSession().persist(obj);
     }
 
+    @Override
+    public void delete(GeneralEmployeesEntity obj) {
+
+    }
+
+    @Override
+    public void update(GeneralEmployeesEntity entity) {
+
+    }
+
 }

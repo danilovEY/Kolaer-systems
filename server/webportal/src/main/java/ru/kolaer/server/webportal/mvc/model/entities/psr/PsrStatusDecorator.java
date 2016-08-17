@@ -22,7 +22,7 @@ public class PsrStatusDecorator implements PsrStatus {
     }
 
     public PsrStatusDecorator(PsrStatus psrStatus) {
-        this.psrProjectStatus = new PsrStatusBase();
+        this.psrProjectStatus = psrStatus;
     }
 
     @Id

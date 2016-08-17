@@ -89,4 +89,14 @@ public class UrlPathServiceImpl implements UrlPathService {
     public void add(WebPortalUrlPath entity) {
         this.urlPathDao.persist(entity);
     }
+
+    @Override
+    public void delete(WebPortalUrlPath entity) {
+
+    }
+
+    @Override
+    public void update(WebPortalUrlPath entity) {
+
+    }
 }

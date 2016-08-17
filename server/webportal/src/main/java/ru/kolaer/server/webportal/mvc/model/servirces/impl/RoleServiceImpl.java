@@ -31,4 +31,14 @@ public class RoleServiceImpl implements RoleService {
     public void add(GeneralRolesEntity entity) {
         this.roleDao.persist(entity);
     }
+
+    @Override
+    public void delete(GeneralRolesEntity entity) {
+
+    }
+
+    @Override
+    public void update(GeneralRolesEntity entity) {
+
+    }
 }

@@ -33,4 +33,14 @@ public class PsrStatusDaoImpl implements PsrStatusDao {
         if(obj != null)
             this.sessionFactory.getCurrentSession().persist(obj);
     }
+
+    @Override
+    public void delete(PsrStatus obj) {
+
+    }
+
+    @Override
+    public void update(PsrStatus entity) {
+
+    }
 }

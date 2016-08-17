@@ -36,4 +36,14 @@ public class RssDaoImpl implements RssDao {
     public void persist(WebPortalRssEntityDecorator obj) {
 
     }
+
+    @Override
+    public void delete(WebPortalRssEntityDecorator obj) {
+
+    }
+
+    @Override
+    public void update(WebPortalRssEntityDecorator entity) {
+
+    }
 }

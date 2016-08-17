@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import com.sun.deploy.net.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,14 @@ import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
+import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStateDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 
+import javax.xml.ws.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,6 +66,25 @@ public class PsrRegisterController {
 
         this.psrRegisterService.add(registerDto);
         return this.psrRegisterService.getPsrRegisterByName(registerDto.getName());
+    }
+
+    /**Добавить ПСР-проект.*/
+    @UrlDeclaration(description = "Удалить ПСР-проект.", isAccessAll = true)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void removePsrRegister(@RequestBody PsrRegister register) {
+        PsrRegister registerDto = new PsrRegisterDecorator(register);
+        registerDto.setAuthor(new GeneralEmployeesEntityDecorator(registerDto.getAuthor()));
+        registerDto.setStatus(new PsrStatusDecorator(registerDto.getStatus()));
+        //registerDto.setAuthor(null);
+        this.psrRegisterService.delete(registerDto);
+    }
+
+    /**Обновить ПСР-проект.*/
+    @UrlDeclaration(description = "Обновить ПСР-проект.", isAccessAll = true)
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void updatePsrRegister(@RequestBody PsrRegister register) {
+        PsrRegister registerDto = new PsrRegisterDecorator(register);
+        this.psrRegisterService.update(registerDto);
     }
 
     /**Получить все ПСР-проект. (только id и имя).*/

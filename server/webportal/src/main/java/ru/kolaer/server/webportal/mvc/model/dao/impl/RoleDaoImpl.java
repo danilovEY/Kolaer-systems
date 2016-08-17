@@ -37,4 +37,14 @@ public class RoleDaoImpl implements RoleDao {
         if(obj != null)
             this.sessionFactory.getCurrentSession().persist(obj);
     }
+
+    @Override
+    public void delete(GeneralRolesEntity obj) {
+
+    }
+
+    @Override
+    public void update(GeneralRolesEntity entity) {
+
+    }
 }

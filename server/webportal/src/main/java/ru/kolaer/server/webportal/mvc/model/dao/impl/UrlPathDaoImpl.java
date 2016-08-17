@@ -36,6 +36,11 @@ public class UrlPathDaoImpl implements UrlPathDao {
     }
 
     @Override
+    public void delete(WebPortalUrlPath obj) {
+
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public WebPortalUrlPath getPathByUrl(String url) {
         return (WebPortalUrlPath) this.sessionFactory.getCurrentSession()

@@ -53,4 +53,14 @@ public class AccountServiceImpl implements AccountService{
         this.accountDao.persist(accountsEntity);
 
     }
+
+    @Override
+    public void delete(GeneralAccountsEntity entity) {
+
+    }
+
+    @Override
+    public void update(GeneralAccountsEntity entity) {
+
+    }
 }
