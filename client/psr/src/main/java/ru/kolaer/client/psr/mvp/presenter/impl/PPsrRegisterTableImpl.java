@@ -19,7 +19,7 @@ public class PPsrRegisterTableImpl implements PPsrRegisterTable {
 
     public PPsrRegisterTableImpl(UniformSystemEditorKit editorKit) {
         this.editorKit = editorKit;
-        this.view = new VPsrRegisterTableImpl();
+        this.view = new VPsrRegisterTableImpl(editorKit);
     }
 
     @Override

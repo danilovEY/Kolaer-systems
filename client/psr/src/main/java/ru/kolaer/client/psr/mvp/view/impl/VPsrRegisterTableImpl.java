@@ -1,12 +1,13 @@
 package ru.kolaer.client.psr.mvp.view.impl;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.HTMLEditor;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachment;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.view.VPsrRegisterTable;
 
@@ -32,13 +34,42 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
     private TableView<PsrRegister> table;
     private ObservableList<PsrRegister> tableData = FXCollections.observableArrayList();
     private final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private final UniformSystemEditorKit editorKit;
 
-    public VPsrRegisterTableImpl() {
+    public VPsrRegisterTableImpl(UniformSystemEditorKit editorKit) {
+        this.editorKit = editorKit;
         this.tablePane = new BorderPane();
 
         this.table = new TableView<>();
         this.table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         this.table.setItems(this.tableData);
+
+
+        final ContextMenu contextMenu = new ContextMenu();
+
+        final MenuItem removeMenuItem = new MenuItem("Удалить");
+        removeMenuItem.setOnAction(e -> {
+            final PsrRegister selectRegister = table.getSelectionModel().getSelectedItem();
+            LOG.info("Remove: {}", selectRegister.getId());
+            table.getItems().remove(selectRegister);
+            editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().deletePsrRegister(selectRegister);
+        });
+        contextMenu.getItems().add(removeMenuItem);
+
+        table.setContextMenu(contextMenu);
+        table.setOnContextMenuRequested(e -> {
+            final PsrRegister selectPsr = table.getSelectionModel().getSelectedItem();
+            final GeneralEmployeesEntity selectPsrEmployee = selectPsr.getAuthor();
+
+            final GeneralEmployeesEntity authorizedEmployee = editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity();
+
+            if(authorizedEmployee == null ||
+                    selectPsrEmployee == null ||
+                    selectPsrEmployee.getPnumber() != authorizedEmployee.getPnumber()) {
+                contextMenu.hide();
+            }
+        });
+
 
 
         final TableColumn<PsrRegister, Integer> psrRegisterIdColumn = new TableColumn<>("ID");
@@ -51,6 +82,10 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         final TableColumn<PsrRegister, String> psrRegisterNameColumn = new TableColumn<>("Наименование проекта");
         psrRegisterNameColumn.setStyle("-fx-alignment: CENTER;");
         psrRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        final TableColumn<PsrRegister, String> psrRegisterStatusColumn = new TableColumn<>("Статус проекта");
+        psrRegisterStatusColumn.setStyle("-fx-alignment: CENTER;");
+        psrRegisterStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         final TableColumn<PsrRegister, GeneralEmployeesEntity> psrRegisterAuthorColumn = new TableColumn<>("Руководитель проекта");
         psrRegisterAuthorColumn.setStyle("-fx-alignment: CENTER;");
@@ -114,6 +149,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
             }
         );
 
+        //TODO: доделать!
         final TableColumn<PsrRegister, List<PsrAttachment>> psrRegisterAttachmentColumn = new TableColumn<>("Вложения");
         psrRegisterAttachmentColumn.setStyle("-fx-alignment: CENTER;");
         psrRegisterAttachmentColumn.setCellValueFactory(new PropertyValueFactory<>("attachments"));
@@ -133,8 +169,8 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
             }
         );
 
-        this.table.getColumns().addAll(psrRegisterIdColumn, psrRegisterAuthorColumn,
-                psrRegisterNameColumn, psrRegisterDatesColumn, psrRegisterCommentColumn, psrRegisterAttachmentColumn);
+        this.table.getColumns().addAll(psrRegisterIdColumn, psrRegisterStatusColumn, psrRegisterAuthorColumn,
+                psrRegisterNameColumn, psrRegisterDatesColumn, psrRegisterCommentColumn);
         this.tablePane.setCenter(this.table);
     }
 

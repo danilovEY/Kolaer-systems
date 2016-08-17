@@ -67,7 +67,7 @@ public class PluginManager {
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
                 "javafx.application, javafx.beans.property, " + "javafx.beans.value.ObservableValue," +
-                "javafx.beans.value,  javafx.collections, javafx.collections.transformation, javafx.event, " +
+                "javafx.beans.value,  javafx.collections, javafx.collections.transformation, javafx.event, " + "javafx.beans.binding," +
                 "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.canvas, javafx.scene.image, " +
                 "javafx.scene.input , javafx.scene.layout, javafx.util, javafx.concurrent," +
                 "javafx.scene.text, javafx.stage, javax.swing, com.sun.javafx.scene.control.skin, javafx.scene.control.cell, org.slf4j;version=1.7.7");

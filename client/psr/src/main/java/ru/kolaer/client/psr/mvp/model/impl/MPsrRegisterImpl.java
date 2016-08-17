@@ -47,4 +47,9 @@ public class MPsrRegisterImpl implements MPsrRegister{
     public void addPsrProject(PsrRegister psrRegister) {
         this.registers.add(psrRegister);
     }
+
+    @Override
+    public void deletePsrProject(PsrRegister psrRegister) {
+        this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().deletePsrRegister(psrRegister);
+    }
 }

@@ -149,17 +149,25 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
                 this.psrRegister.setName(this.namePsr.getText());
                 this.psrRegister.setComment(this.htmlEditor.getHtmlText());
 
-                final PsrState psrState = new PsrStateBase();
-                psrState.setComment(this.stateComment.getText());
-                psrState.setDate(Tools.convertToDate(this.datePickerState.getValue()));
-                psrState.setPlan(false);
+                final List<PsrState> states = new ArrayList<>();
 
-                final PsrState psrStatePlan = new PsrStateBase();
-                psrStatePlan.setComment(this.stateComment.getText());
-                psrStatePlan.setDate(Tools.convertToDate(this.datePickerState.getValue()));
-                psrStatePlan.setPlan(true);
+                if(!this.stateComment.getText().isEmpty() && this.datePickerState.getValue() != null) {
+                    final PsrState psrState = new PsrStateBase();
+                    psrState.setComment(this.stateComment.getText());
+                    psrState.setDate(Tools.convertToDate(this.datePickerState.getValue()));
+                    psrState.setPlan(false);
+                    states.add(psrState);
+                }
 
-                this.psrRegister.setStateList(Arrays.asList(psrStatePlan, psrState));
+                if(!this.planComment.getText().isEmpty() && this.datePickerPlan.getValue() != null) {
+                    final PsrState psrStatePlan = new PsrStateBase();
+                    psrStatePlan.setComment(this.planComment.getText());
+                    psrStatePlan.setDate(Tools.convertToDate(this.datePickerPlan.getValue()));
+                    psrStatePlan.setPlan(true);
+                    states.add(psrStatePlan);
+                }
+
+                this.psrRegister.setStateList(states);
                 this.psrRegister.setAttachments(Collections.emptyList());
             }
         });

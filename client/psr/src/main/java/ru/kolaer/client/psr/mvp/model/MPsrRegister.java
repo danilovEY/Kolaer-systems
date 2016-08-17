@@ -11,4 +11,5 @@ public interface MPsrRegister {
     List<PsrRegister> getAllPstRegister();
 
     void addPsrProject(PsrRegister psrRegister);
+    void deletePsrProject(PsrRegister psrRegister);
 }

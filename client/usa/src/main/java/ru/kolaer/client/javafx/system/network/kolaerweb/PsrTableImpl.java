@@ -16,11 +16,15 @@ public class PsrTableImpl implements PsrTable {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String URL_GET_ALL;
     private final String URL_ADD;
+    private final String URL_DELETE;
+    private final String URL_UPDATE;
     private static final Logger LOG = LoggerFactory.getLogger(PsrTableImpl.class);
 
     public PsrTableImpl(String path) {
         this.URL_GET_ALL = path + "/get/all";
         this.URL_ADD = path + "/add";
+        this.URL_DELETE = path + "/delete";
+        this.URL_UPDATE = path + "/update";
     }
 
     @Override
@@ -43,6 +47,38 @@ public class PsrTableImpl implements PsrTable {
         try {
             this.checkAuthorization();
             return this.restTemplate.postForObject(this.URL_ADD + "?token=" + UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken(),psrRegister, PsrRegister.class);
+        } catch (RestClientException ex) {
+            LOG.error(ex.getMessage());
+            throw new ServerException(ex);
+        }
+    }
+
+    @Override
+    public void deletePsrRegister(PsrRegister psrRegister) throws ServerException {
+        if(psrRegister == null) {
+            LOG.info("Psr register is NULL!");
+            return;
+        }
+
+        try {
+            this.checkAuthorization();
+            this.restTemplate.postForObject(this.URL_DELETE + "?token=" + UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken(),psrRegister, PsrRegister.class);
+        } catch (RestClientException ex) {
+            LOG.error(ex.getMessage());
+            throw new ServerException(ex);
+        }
+    }
+
+    @Override
+    public void updatePsrRegister(PsrRegister psrRegister) throws ServerException {
+        if(psrRegister == null) {
+            LOG.info("Psr register is NULL!");
+            return;
+        }
+
+        try {
+            this.checkAuthorization();
+            this.restTemplate.postForObject(this.URL_UPDATE + "?token=" + UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken(),psrRegister, PsrRegister.class);
         } catch (RestClientException ex) {
             LOG.error(ex.getMessage());
             throw new ServerException(ex);
