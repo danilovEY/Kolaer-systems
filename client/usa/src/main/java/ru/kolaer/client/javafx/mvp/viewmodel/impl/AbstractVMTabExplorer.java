@@ -97,4 +97,9 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements PluginsU
     public Collection<UniformSystemPlugin> getPlugins() {
         return this.plugins.keySet();
     }
+
+    @Override
+    public Collection<PluginBundle> getAllPlugins() {
+        return this.plugins.values();
+    }
 }

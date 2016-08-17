@@ -10,10 +10,10 @@ import java.net.URL;
 import java.util.Collection;
 
 public class UniformSystemPluginAdapter implements UniformSystemPlugin {
-
+	private UniformSystemEditorKit editorKit;
 	@Override
 	public void initialization(UniformSystemEditorKit uniformSystemEditorKit) throws Exception {
-
+		this.editorKit = uniformSystemEditorKit;
 	}
 
 	@Override

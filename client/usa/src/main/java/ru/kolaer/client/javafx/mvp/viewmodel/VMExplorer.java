@@ -15,6 +15,7 @@ public interface VMExplorer extends VComponentUI {
 	void addPlugin(PluginBundle plugin);
 	/**Добавить плагин.*/
 	void addAllPlugins(Collection<PluginBundle> plugins);
+	Collection<PluginBundle> getAllPlugins();
 	/**Удалить плагин.*/
 	void removePlugin(PluginBundle plugin);
 	/**Удалить все плагины.*/

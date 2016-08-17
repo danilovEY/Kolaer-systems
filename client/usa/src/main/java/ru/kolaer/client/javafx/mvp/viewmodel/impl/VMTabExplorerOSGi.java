@@ -59,25 +59,19 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
         if(uniformSystemPlugin == null || !uniformSystemPlugin.isInstall()) {
             throw new IllegalArgumentException(uniformSystemPlugin.getSymbolicNamePlugin() + " - is null or not install!");
         }
-        final ExecutorService initPluginContentThread = Executors.newSingleThreadExecutor();
-        CompletableFuture.runAsync(() -> {
-            final PTab tab = new PTabImpl(uniformSystemPlugin);
-            tab.getView().setTitle(tabName);
 
-            this.pluginTabMap.put(tabName, tab);
-            this.plugins.put(uniformSystemPlugin.getUniformSystemPlugin(), uniformSystemPlugin);
-            
-            Tools.runOnThreadFX(() -> {
-            	LOG.info("{}: Добавление вкладки...", uniformSystemPlugin.getSymbolicNamePlugin());
-                this.pluginsTabPane.getTabs().add(tab.getView().getContent());
-            });
-            this.notifyAddPlugin(tab);
-            initPluginContentThread.shutdown();
-        }, initPluginContentThread).exceptionally(t -> {
-            LOG.error("Ошибка!", t);
-            initPluginContentThread.shutdownNow();
-            return null;
+        final PTab tab = new PTabImpl(uniformSystemPlugin);
+        tab.getView().setTitle(tabName);
+
+        this.pluginTabMap.put(tabName, tab);
+        this.plugins.put(uniformSystemPlugin.getUniformSystemPlugin(), uniformSystemPlugin);
+
+        Tools.runOnThreadFX(() -> {
+            LOG.info("{}: Добавление вкладки...", uniformSystemPlugin.getSymbolicNamePlugin());
+            this.pluginsTabPane.getTabs().add(tab.getView().getContent());
         });
+
+        this.notifyAddPlugin(tab);
     }
 
     @Override
