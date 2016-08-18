@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
@@ -39,6 +40,7 @@ public class ConnectionKolaerWeb {
     }
 
     @Test
+    @Ignore
     public void testAuth() {
         Authentication authentication = new AuthenticationOnNetwork();
         if(authentication.login(new UserAndPassJson("user", "user"))) {
@@ -54,7 +56,6 @@ public class ConnectionKolaerWeb {
     }
 
     @Test
-    @Ignore
     public void test() {
 
         RestTemplate restTemplate = new RestTemplate();
@@ -65,11 +66,8 @@ public class ConnectionKolaerWeb {
             //PsrRegister[] array = restTemplate.getForObject("http://localhost:8080/rest/psr/get/all", PsrRegister[].class);
 
             NetworkUS networkUS = new NetworkUSImpl();
-            PsrRegister[] array = networkUS.getKolaerWebServer().getApplicationDataBase().getPsrTable().getAllPsrRegister();
-            Assert.assertNotNull(array);
-            for(PsrRegister entity : array) {
-                System.out.println(entity.getName());
-            }
+            NotifyMessage mess = networkUS.getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().getLastNotifyMessage();
+            Assert.assertNull(mess);
         } catch (ServerException ex) {
             System.out.println(ex.getMessage());
         }

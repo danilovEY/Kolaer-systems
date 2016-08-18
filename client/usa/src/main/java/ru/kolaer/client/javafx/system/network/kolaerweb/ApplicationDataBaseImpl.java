@@ -26,7 +26,7 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
 
     @Override
     public NotifyMessageTable getNotifyMessageTable() {
-        return null;
+        return this.notifyMessageTable;
     }
 
     @Override

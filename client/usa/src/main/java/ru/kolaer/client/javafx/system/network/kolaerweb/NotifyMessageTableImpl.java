@@ -18,6 +18,7 @@ public class NotifyMessageTableImpl implements NotifyMessageTable {
 
     @Override
     public NotifyMessage getLastNotifyMessage() throws ServerException {
+        System.out.println(this.URL_GET_LAST);
         return this.restTemplate.getForObject(this.URL_GET_LAST, NotifyMessage.class);
     }
 }
