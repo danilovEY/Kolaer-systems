@@ -5,5 +5,6 @@ package ru.kolaer.api.system.network.kolaerweb;
  */
 public interface ApplicationDataBase {
     GeneralEmployeesTable getGeneralEmployeesTable();
+    NotifyMessageTable getNotifyMessageTable();
     PsrTable getPsrTable();
 }

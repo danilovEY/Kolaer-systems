@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  */
 @JsonDeserialize(as = NotifyMessageBase.class)
 public interface NotifyMessage {
+    Integer getId();
+    void setId(Integer id);
+
     String getMessage();
     void setMessage(String message);
 }
