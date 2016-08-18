@@ -93,7 +93,7 @@ public class BirthdayOnHoliday implements Service {
 		
 		Platform.runLater(() -> {
 			
-			this.editorKit.getUISystemUS().getNotification().showSimpleNotifi(title + holiday.getLocalName() + ". День рождения в этот день празднуют:", null, Duration.hours(24), actions);
+			this.editorKit.getUISystemUS().getNotification().showSimpleNotifi(title + holiday.getLocalName() + ".", "День рождения в этот день празднуют:", Duration.hours(24), actions);
 		});
 	}
 

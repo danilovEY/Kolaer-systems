@@ -58,7 +58,7 @@ public class BirthdayService implements Service {
 				i++;
 			}
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\". Поздравляем с днем рождения!\n");
+			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\".");
 			
 			try{
 				TimeUnit.SECONDS.sleep(1);
@@ -67,7 +67,7 @@ public class BirthdayService implements Service {
 			}
 			
 			Platform.runLater(() -> {
-				this.editorKit.getUISystemUS().getNotification().showSimpleNotifi(title.toString(), null, Duration.hours(24),Pos.BOTTOM_CENTER, actions);
+				this.editorKit.getUISystemUS().getNotification().showSimpleNotifi(title.toString(), "Поздравляем с днем рождения!", Duration.hours(24),Pos.BOTTOM_CENTER, actions);
 			});
 		}
 	}

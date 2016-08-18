@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -16,14 +17,13 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.plugins.SearchPlugins;
-import ru.kolaer.client.javafx.plugins.main.launcher.LauncherPagePlugin;
-import ru.kolaer.client.javafx.plugins.main.launcher.LauncherPluginBundle;
 import ru.kolaer.client.javafx.services.AutoUpdatePlugins;
 import ru.kolaer.client.javafx.services.HideShowMainStage;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.javafx.system.network.NetworkUSImpl;
+import ru.kolaer.client.javafx.system.ui.NotificationPane;
 import ru.kolaer.client.javafx.system.ui.UISystemUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
@@ -68,15 +68,21 @@ public class VMMainFrameImpl extends Application {
 
         //Инициализация вкладочного explorer'а.
         final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
-        this.mainPane.setCenter(explorer.getContent());
-        
+        final SplitPane splitPane = new SplitPane();
+        splitPane.getItems().add(explorer.getContent());
+        splitPane.setDividerPositions(1);
+        this.mainPane.setCenter(splitPane);
+
         final ExecutorService threadOnCreateTray = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             new Tray().createTrayIcon(stage, this.servicesManager, explorer);
             threadOnCreateTray.shutdown();
         }, threadOnCreateTray);
 
+        final NotificationPane notify = new NotificationPane();
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
+        uiSystemUS.setNotification(notify);
+        splitPane.getItems().add(notify.getContent());
         final NetworkUSImpl network = new NetworkUSImpl();
         final AuthenticationOnNetwork authentication = new AuthenticationOnNetwork();
         final UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();

@@ -12,7 +12,7 @@ import ru.kolaer.api.system.ui.UISystemUS;
  * @version 0.1
  */
 public class UISystemUSImpl implements UISystemUS {
-	private NotificationUS notification = new NotificationUSImpl();
+	private NotificationUS notification;
 	private DialogUS dialog = new DialogUSImpl();
 	private StatusBarUS statusBar;
 

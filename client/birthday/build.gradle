@@ -18,9 +18,8 @@ jar {
     manifest {
         name = 'Дни рождения'
         symbolicName = projectName
-        instruction "Bundle-ClassPath", "."
-        instruction "Import-Package", "*"
-
+        //instruction "Bundle-ClassPath", "."
+        //instruction "Import-Package", "*"
     }
 }
 
@@ -33,4 +32,4 @@ task copyJarToBin(dependsOn: jar) {
     }
 }
 
-task buildApp(dependsOn : [clean, copyJarToBin])
+task buildApp(dependsOn : [copyJarToBin])
