@@ -30,6 +30,10 @@ import java.time.format.DateTimeFormatter;
  */
 public class NotificationPane implements NotificationUS, VComponentUI {
     private static final Logger LOG = LoggerFactory.getLogger(NotificationPane.class);
+    private final int SIMPLE_MESSAGE = 0;
+    private final int INFO_MESSAGE = 1;
+    private final int WARN_MESSAGE = 2;
+    private final int ERROR_MESSAGE = 3;
     private BorderPane mainPane;
     private VBox vBox;
 
@@ -58,72 +62,98 @@ public class NotificationPane implements NotificationUS, VComponentUI {
 
     @Override
     public void showSimpleNotifi(String title, String text) {
-        this.sendMessage(title, text);
+        this.sendMessage(SIMPLE_MESSAGE, title, text);
     }
 
     @Override
     public void showErrorNotifi(String title, String text) {
-        this.sendMessage(title, text);
+        this.sendMessage(ERROR_MESSAGE, title, text);
     }
 
     @Override
     public void showWarningNotifi(String title, String text) {
-        this.sendMessage(title, text);
+        this.sendMessage(WARN_MESSAGE, title, text);
     }
 
     @Override
     public void showInformationNotifi(String title, String text) {
-        this.sendMessage(title, text);
+        this.sendMessage(INFO_MESSAGE, title, text);
     }
 
     @Override
     public void showInformationNotifi(String title, String text, Duration duration) {
-        this.sendMessage(title, text);
+        this.sendMessage(INFO_MESSAGE, title, text);
     }
 
     @Override
     public void showSimpleNotifi(String title, String text, Duration duration) {
-        this.sendMessage(title, text);
+        this.sendMessage(SIMPLE_MESSAGE, title, text);
     }
 
     @Override
     public void showSimpleNotifi(String title, String text, Duration duration, Pos pos, NotifiAction... actions) {
-        this.sendMessage(title, text, actions);
+        this.sendMessage(SIMPLE_MESSAGE, title, text, actions);
     }
 
     @Override
     public void showSimpleNotifi(String title, String text, Duration duration, NotifiAction... actions) {
-        this.sendMessage(title, text, actions);    }
+        this.sendMessage(SIMPLE_MESSAGE, title, text, actions);
+    }
 
     @Override
     public void showErrorNotifi(String title, String text, NotifiAction... actions) {
-        this.sendMessage(title, text, actions);;
+        this.sendMessage(ERROR_MESSAGE, title, text, actions);
     }
 
     @Override
     public void showWarningNotifi(String title, String text, NotifiAction... actions) {
-        this.sendMessage(title, text, actions);
+        this.sendMessage(WARN_MESSAGE, title, text, actions);
     }
 
     @Override
     public void showInformationNotifi(String title, String text, Duration duration, Pos pos, NotifiAction... actions) {
-        this.sendMessage(title, text, actions);    }
+        this.sendMessage(INFO_MESSAGE, title, text, actions);    }
 
     @Override
     public void showInformationNotifi(String title, String text, Duration duration, NotifiAction... actions) {
-        this.sendMessage(title, text, actions);
+        this.sendMessage(INFO_MESSAGE, title, text, actions);
     }
 
-    private void sendMessage(String title, String text) {
-        this.sendMessage(title, text, null);
+    private void sendMessage(int type, String title, String text) {
+        this.sendMessage(type, title, text, null);
     }
 
-    private void sendMessage(String title, String text, NotifiAction... actions) {
+    private void sendMessage(int type, String title, String text, NotifiAction... actions) {
         Tools.runOnThreadFX(() -> {
             final VBox content = new VBox();
             content.setAlignment(Pos.CENTER);
             content.setBackground(Background.EMPTY);
-            content.setStyle("-fx-background-color: rgba(58, 188, 255, 0.6); -fx-effect: dropshadow(gaussian , #868686, 4,0,0,1 ); -fx-padding: 3;");
+            switch (type) {
+                case SIMPLE_MESSAGE: {
+                    content.setStyle("-fx-background-color: rgba(255, 255, 255, 0.6); -fx-effect: dropshadow(gaussian , #868686, 4,0,0,1 ); -fx-padding: 3;");
+                    break;
+                }
+
+                case INFO_MESSAGE: {
+                    content.setStyle("-fx-background-color: rgba(58, 188, 255, 0.6); -fx-effect: dropshadow(gaussian , #868686, 4,0,0,1 ); -fx-padding: 3;");
+                    break;
+                }
+
+                case WARN_MESSAGE: {
+                    content.setStyle("-fx-background-color: rgba(255, 255, 0, 0.6); -fx-effect: dropshadow(gaussian , #866432, 4,0,0,1 ); -fx-padding: 3;");
+                    break;
+                }
+
+                case ERROR_MESSAGE: {
+                    content.setStyle("-fx-background-color: rgba(255, 0, 0, 0.6); -fx-effect: dropshadow(gaussian , #861a3d, 4,0,0,1 ); -fx-padding: 3;");
+                    break;
+                }
+
+                default: {
+                    content.setStyle("-fx-background-color: rgba(255, 255, 255, 0.6); -fx-effect: dropshadow(gaussian , #868686, 4,0,0,1 ); -fx-padding: 3;");
+                }
+            }
+
             content.setSpacing(5);
 
             final Label timeLabel = new Label(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss | dd.MM.yyyy")));

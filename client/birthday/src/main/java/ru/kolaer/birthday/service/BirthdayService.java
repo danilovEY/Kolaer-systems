@@ -67,7 +67,7 @@ public class BirthdayService implements Service {
 			}
 			
 			Platform.runLater(() -> {
-				this.editorKit.getUISystemUS().getNotification().showSimpleNotifi(title.toString(), "Поздравляем с днем рождения!", Duration.hours(24),Pos.BOTTOM_CENTER, actions);
+				this.editorKit.getUISystemUS().getNotification().showInformationNotifi(title.toString(), "Поздравляем с днем рождения!", null, actions);
 			});
 		}
 	}
