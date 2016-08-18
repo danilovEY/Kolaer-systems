@@ -1,4 +1,4 @@
-package ru.kolaer.client.javafx.plugins.main.launcher;
+package ru.kolaer.client.javafx.plugins.launcher;
 
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.client.javafx.plugins.PluginBundle;

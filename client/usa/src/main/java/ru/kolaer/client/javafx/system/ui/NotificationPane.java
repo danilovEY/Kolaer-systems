@@ -55,32 +55,32 @@ public class NotificationPane implements NotificationUS, VComponentUI {
 
     @Override
     public void showSimpleNotifi(String title, String text) {
-        this.sendMessage(text);
+        this.sendMessage(title, text);
     }
 
     @Override
     public void showErrorNotifi(String title, String text) {
-        this.sendMessage(text);
+        this.sendMessage(title, text);
     }
 
     @Override
     public void showWarningNotifi(String title, String text) {
-        this.sendMessage(text);
+        this.sendMessage(title, text);
     }
 
     @Override
     public void showInformationNotifi(String title, String text) {
-        this.sendMessage(text);
+        this.sendMessage(title, text);
     }
 
     @Override
     public void showInformationNotifi(String title, String text, Duration duration) {
-        this.sendMessage(text);
+        this.sendMessage(title, text);
     }
 
     @Override
     public void showSimpleNotifi(String title, String text, Duration duration) {
-        this.sendMessage(text);
+        this.sendMessage(title, text);
     }
 
     @Override
@@ -111,31 +111,26 @@ public class NotificationPane implements NotificationUS, VComponentUI {
         this.sendMessage(title, text, actions);
     }
 
-    private void sendMessage(String text) {
-        if(text != null) {
-            LOG.info(text);
-            Tools.runOnThreadFX(() -> {
-                this.vBox.getChildren().add(new Label(text));
-            });
-        }
+    private void sendMessage(String title, String text) {
+        this.sendMessage(title, text, null);
     }
 
     private void sendMessage(String title, String text, NotifiAction... actions) {
-        if(actions.length > 0) {
-            Tools.runOnThreadFX(() -> {
-                final VBox content = new VBox();
-                content.setAlignment(Pos.CENTER);
-                content.setBackground(Background.EMPTY);
-                content.setStyle("-fx-background-color: rgba(58, 188, 255, 0.6); -fx-effect: dropshadow(gaussian , #868686, 4,0,0,1 ); -fx-padding: 3;");
-                content.setSpacing(5);
-                final Label titleLabel = new Label(title);
-                titleLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
+        Tools.runOnThreadFX(() -> {
+            final VBox content = new VBox();
+            content.setAlignment(Pos.CENTER);
+            content.setBackground(Background.EMPTY);
+            content.setStyle("-fx-background-color: rgba(58, 188, 255, 0.6); -fx-effect: dropshadow(gaussian , #868686, 4,0,0,1 ); -fx-padding: 3;");
+            content.setSpacing(5);
+            final Label titleLabel = new Label(title);
+            titleLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
 
-                final Label textLabel = new Label(text);
-                textLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
-                content.getChildren().add(titleLabel);
-                content.getChildren().add(textLabel);
-                for(NotifiAction action : actions) {
+            final Label textLabel = new Label(text);
+            textLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
+            content.getChildren().add(titleLabel);
+            content.getChildren().add(textLabel);
+            if(actions != null) {
+                for (NotifiAction action : actions) {
                     final Button button = new Button(action.getText());
                     button.setOnAction(action.getConsumer()::accept);
                     final Tooltip tooltip = new Tooltip();
@@ -143,18 +138,18 @@ public class NotificationPane implements NotificationUS, VComponentUI {
                     button.setTooltip(tooltip);
                     content.getChildren().add(button);
                 }
+            }
 
-                final Node border = Borders.wrap(content)
-                        .lineBorder()
-                        .thickness(5)
-                        .innerPadding(0)
-                        .radius(5, 5, 5, 5)
-                        .color(Color.color(0.114, 0.161, 0.209))
-                        .build()
-                        .build();
-                this.vBox.getChildren().add(border);
-            });
-        }
+            final Node border = Borders.wrap(content)
+                    .lineBorder()
+                    .thickness(5)
+                    .innerPadding(0)
+                    .radius(5, 5, 5, 5)
+                    .color(Color.color(0.114, 0.161, 0.209))
+                    .build()
+                    .build();
+            this.vBox.getChildren().add(border);
+        });
     }
 
     @Override
