@@ -47,13 +47,10 @@ public class NotificationPane implements NotificationUS, VComponentUI {
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
 
-        BackgroundImage myBI= new BackgroundImage(new Image(this.getClass().getResource("/1.jpg").toString()),
+        BackgroundImage myBI= new BackgroundImage(new Image(this.getClass().getResource("/notify-background.jpg").toString()),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         this.vBox.setBackground(new Background(myBI));
-        //then you set to your node
-        //this.mainPane.setBackground(new Background(myBI));
-
     }
 
     @Override
