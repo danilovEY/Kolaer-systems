@@ -96,6 +96,9 @@ public class VMMainFrameImpl extends Application {
             threadStartService.shutdown();
         }, threadStartService);
 
+        final ExecutorService threadScan = Executors.newSingleThreadExecutor();
+        CompletableFuture<List<PluginBundle>> resultSearch = CompletableFuture.supplyAsync(searchPlugins::search, threadScan);
+
         final ExecutorService threadInstall = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             Thread.currentThread().setName("Инициализация менеджера плагинов");
@@ -107,7 +110,26 @@ public class VMMainFrameImpl extends Application {
                 throw new RuntimeException("Ошибка при инициализации менеджера плагинов!");
             }
 
-            explorer.addPlugin(new LauncherPluginBundle(new LauncherPagePlugin(explorer, pluginManager, servicesManager)));
+            List<PluginBundle> plugins = Collections.emptyList();
+            try {
+                plugins = resultSearch.get();
+            } catch (Exception e) {
+                LOG.error("Ошибка при получении плагинов!", e);
+            }
+
+            final Iterator<PluginBundle> iterPlugins = plugins.iterator();
+
+            while (iterPlugins.hasNext()) {
+                PluginBundle pluginBundle = iterPlugins.next();
+                if(pluginBundle.getSymbolicNamePlugin().equals("ru.kolaer.asmc")) {
+                    this.installPlugin(explorer,pluginManager,pluginBundle);
+                    iterPlugins.remove();
+                    break;
+                }
+            }
+
+            plugins.forEach(pluginBundle -> this.installPluginInThread(explorer,pluginManager,pluginBundle));
+            plugins.clear();
 
             threadInstall.shutdown();
         }, threadInstall).exceptionally(t -> {
@@ -117,6 +139,31 @@ public class VMMainFrameImpl extends Application {
         });
     }
 
+    public void installPluginInThread(final VMTabExplorerOSGi explorer, final PluginManager pluginManager, final PluginBundle pluginBundle) {
+        final ExecutorService threadInstallPlugin = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() -> {
+            installPlugin(explorer, pluginManager, pluginBundle);
+
+            threadInstallPlugin.shutdown();
+        }, threadInstallPlugin);
+    }
+
+    public void installPlugin(final VMTabExplorerOSGi explorer, final PluginManager pluginManager, final PluginBundle pluginBundle) {
+        Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
+        LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
+
+        if (pluginManager.install(pluginBundle)) {
+            LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
+            final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
+            explorer.addTabPlugin(tabName, pluginBundle);
+
+            LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
+            final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
+            if (pluginServices != null) {
+                pluginServices.parallelStream().forEach(this.servicesManager::addService);
+            }
+        }
+    }
     private void initApplicationParams() {
         final String pathServerRest = PARAM.get("server-rest");
         if (pathServerRest != null) {
