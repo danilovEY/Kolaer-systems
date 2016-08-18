@@ -22,6 +22,9 @@ import ru.kolaer.api.system.ui.NotifiAction;
 import ru.kolaer.api.system.ui.NotificationUS;
 import ru.kolaer.api.tools.Tools;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Created by danilovey on 18.08.2016.
  */
@@ -122,13 +125,20 @@ public class NotificationPane implements NotificationUS, VComponentUI {
             content.setBackground(Background.EMPTY);
             content.setStyle("-fx-background-color: rgba(58, 188, 255, 0.6); -fx-effect: dropshadow(gaussian , #868686, 4,0,0,1 ); -fx-padding: 3;");
             content.setSpacing(5);
+
+            final Label timeLabel = new Label(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss | dd.MM.yyyy")));
+            timeLabel.setFont(Font.font(null, FontWeight.BOLD, 10));
+
             final Label titleLabel = new Label(title);
             titleLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
 
             final Label textLabel = new Label(text);
             textLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
+
+            content.getChildren().add(timeLabel);
             content.getChildren().add(titleLabel);
             content.getChildren().add(textLabel);
+
             if(actions != null) {
                 for (NotifiAction action : actions) {
                     final Button button = new Button(action.getText());
