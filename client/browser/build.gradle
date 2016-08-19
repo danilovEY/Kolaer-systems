@@ -30,9 +30,8 @@ jar {
         instruction "Import-Package", "com.teamdev.jxbrowser.chromium","com.teamdev.jxbrowser.chromium.events",
                 "com.teamdev.jxbrowser.chromium.javafx","javafx.application","javafx.collections","javafx.event",
                 "javafx.geometry","javafx.scene","javafx.scene.control","javafx.scene.image","javafx.scene.input",
-                "javafx.scene.layout","javafx.stage","javafx.util","javax.swing","org.slf4j","ru.kolaer.api.plugins",
-                "ru.kolaer.api.plugins.services","ru.kolaer.api.system","ru.kolaer.api.tools","javafx.beans.property",
-                "javafx.beans.value","javafx.scene.canvas"
+                "javafx.scene.layout","javafx.stage","javafx.util","javax.swing","org.slf4j", "javafx.beans.property",
+                "javafx.beans.value","javafx.scene.canvas", "*"
     }
 }
 
