@@ -1,6 +1,7 @@
 package ru.kolaer.api.system.ui;
 
 import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.scene.control.Dialog;
 
 /**Интерфейс для вызова диалоговых окон.*/
@@ -9,6 +10,9 @@ public interface DialogUS {
 	Dialog<?> createSimpleDialog(String title, String text);
 	/**Показать диалоговое окно информирующая об ошибке.*/
 	Dialog<?> createErrorDialog(String title, String text);
+
+	Dialog<?> createLoadingDialog(Task<?> task);
+
 	/**Показать диалоговое информирующее окно.*/
 	Dialog<?> createInfoDialog(String title, String text);
 	/**Показать диалоговое окно в progress bar'ом.*/

@@ -1,6 +1,7 @@
 package ru.kolaer.client.javafx.system.ui;
 
 import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Dialog;
@@ -40,6 +41,12 @@ public class DialogUSImpl implements DialogUS {
          final ProgressDialog dlg = new ProgressDialog(service);
 
          service.start();
+         return dlg;
+	}
+
+	@Override
+	public Dialog<?> createLoadingDialog(final Task<?> task) {
+         final ProgressDialog dlg = new ProgressDialog(task);
          return dlg;
 	}
 

@@ -28,4 +28,7 @@ public interface NotificationUS {
 	void showWarningNotifi(String title, String text, NotifiAction... actions);
 	void showInformationNotifi(String title, String text, Duration duration, Pos pos, NotifiAction... actions);
 	void showInformationNotifi(String title, String text, Duration duration, NotifiAction... actions);
+
+	void showInformationNotifiAdmin(String title, String text, NotifiAction... actions);
+	void showWarningNotifiAdmin(String title, String text, NotifiAction... actions);
 }

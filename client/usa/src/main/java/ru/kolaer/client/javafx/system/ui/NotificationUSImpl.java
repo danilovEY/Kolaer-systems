@@ -89,7 +89,17 @@ public class NotificationUSImpl implements NotificationUS {
 	public void showInformationNotifi(final String title, final String text, final Duration duration, final NotifiAction... actions) {
 		this.showInformationNotifi(title, text, duration, Pos.BOTTOM_RIGHT, actions);
 	}
-	
+
+	@Override
+	public void showInformationNotifiAdmin(String title, String text, NotifiAction... actions) {
+
+	}
+
+	@Override
+	public void showWarningNotifiAdmin(String title, String text, NotifiAction... actions) {
+
+	}
+
 	private Notifications addActions(final Notifications Notifi, final NotifiAction... actions) {
 		Tools.runOnThreadFXAndWain(() -> {
 			if(actions != null && actions.length != 0) {

@@ -8,4 +8,5 @@ import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
  */
 public interface NotifyMessageTable {
     NotifyMessage getLastNotifyMessage() throws ServerException;
+    void addNotifyMessage(NotifyMessage notifyMessage) throws ServerException;
 }

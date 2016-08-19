@@ -1,13 +1,11 @@
 package ru.kolaer.client.javafx.system.ui;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -35,29 +33,55 @@ public class NotificationPane implements NotificationUS, VComponentUI {
     private final int WARN_MESSAGE = 2;
     private final int ERROR_MESSAGE = 3;
     private BorderPane mainPane;
-    private VBox vBox;
+    private VBox vBoxUserNotify;
+    private VBox vBoxAdminNotify;
 
     public NotificationPane() {
-        this.vBox = new VBox();
-        this.vBox.setSpacing(5);
-        this.vBox.setAlignment(Pos.TOP_LEFT);
-        this.vBox.setPadding(new Insets(5,5,5,5));
-        final ScrollPane scrollPane = new ScrollPane(this.vBox);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        this.mainPane = new BorderPane(scrollPane);
+        this.vBoxUserNotify = new VBox();
+        this.vBoxUserNotify.setSpacing(5);
+        this.vBoxUserNotify.setAlignment(Pos.TOP_LEFT);
+        this.vBoxUserNotify.setPadding(new Insets(5,5,5,5));
+
+        final ScrollPane scrollPaneUserNotify = new ScrollPane(this.vBoxUserNotify);
+        scrollPaneUserNotify.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneUserNotify.setMinWidth(300);
+        scrollPaneUserNotify.setPrefWidth(300);
+        scrollPaneUserNotify.setMaxWidth(400);
+        scrollPaneUserNotify.setFitToHeight(true);
+        scrollPaneUserNotify.setFitToWidth(true);
+
+
+        this.vBoxAdminNotify = new VBox();
+        this.vBoxAdminNotify.setSpacing(5);
+        this.vBoxAdminNotify.setAlignment(Pos.TOP_LEFT);
+        this.vBoxAdminNotify.setPadding(new Insets(5,5,5,5));
+
+        final ScrollPane scrollPaneAdminNotify = new ScrollPane(this.vBoxAdminNotify);
+        scrollPaneAdminNotify.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneAdminNotify.setMinWidth(300);
+        scrollPaneAdminNotify.setMinHeight(100);
+        scrollPaneAdminNotify.setPrefWidth(300);
+        scrollPaneAdminNotify.setPrefHeight(100);
+        scrollPaneAdminNotify.setMaxWidth(400);
+        //scrollPaneAdminNotify.setMaxHeight(400);
+        scrollPaneAdminNotify.setFitToHeight(true);
+        scrollPaneAdminNotify.setFitToWidth(true);
+
+        final SplitPane splitPane = new SplitPane();
+        splitPane.getItems().addAll(scrollPaneUserNotify, scrollPaneAdminNotify);
+        splitPane.setDividerPositions(1);
+        splitPane.setOrientation(Orientation.VERTICAL);
+        this.mainPane = new BorderPane(splitPane);
         this.mainPane.setMinWidth(300);
         this.mainPane.setPrefWidth(300);
         this.mainPane.setMaxWidth(400);
-        scrollPane.setMinWidth(300);
-        scrollPane.setPrefWidth(300);
-        scrollPane.setMaxWidth(400);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(true);
+
 
         BackgroundImage myBI= new BackgroundImage(new Image(this.getClass().getResource("/notify-background.jpg").toString()),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
-        this.vBox.setBackground(new Background(myBI));
+        this.vBoxUserNotify.setBackground(new Background(myBI));
+        this.vBoxAdminNotify.setBackground(new Background(myBI));
     }
 
     @Override
@@ -119,11 +143,21 @@ public class NotificationPane implements NotificationUS, VComponentUI {
         this.sendMessage(INFO_MESSAGE, title, text, actions);
     }
 
-    private void sendMessage(int type, String title, String text) {
-        this.sendMessage(type, title, text, null);
+    @Override
+    public void showInformationNotifiAdmin(String title, String text, NotifiAction... actions) {
+        this.sendMessage(this.vBoxAdminNotify, 1, title, text, actions);
     }
 
-    private void sendMessage(int type, String title, String text, NotifiAction... actions) {
+    @Override
+    public void showWarningNotifiAdmin(String title, String text, NotifiAction... actions) {
+        this.sendMessage(this.vBoxAdminNotify, 2, title, text, actions);
+    }
+
+    private void sendMessage(int type, String title, String text) {
+        this.sendMessage(type, title, text, new NotifiAction[0]);
+    }
+
+    private void sendMessage(VBox typePane, int type, String title, String text, NotifiAction... actions) {
         Tools.runOnThreadFX(() -> {
             final VBox content = new VBox();
             content.setAlignment(Pos.CENTER);
@@ -188,8 +222,12 @@ public class NotificationPane implements NotificationUS, VComponentUI {
                     .color(Color.color(0.114, 0.161, 0.209))
                     .build()
                     .build();
-            this.vBox.getChildren().add(border);
+            typePane.getChildren().add(border);
         });
+    }
+
+    private void sendMessage(int type, String title, String text, NotifiAction... actions) {
+        this.sendMessage(this.vBoxUserNotify, type, title, text, actions);
     }
 
     @Override

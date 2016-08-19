@@ -17,6 +17,7 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.plugins.SearchPlugins;
+import ru.kolaer.client.javafx.services.AutoCeckingNotifyMessage;
 import ru.kolaer.client.javafx.services.AutoUpdatePlugins;
 import ru.kolaer.client.javafx.services.HideShowMainStage;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
@@ -99,6 +100,7 @@ public class VMMainFrameImpl extends Application {
             Thread.currentThread().setName("Добавление системны служб");
             this.servicesManager.addService(new HideShowMainStage(stage), true);
             this.servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, this.servicesManager), true);
+            this.servicesManager.addService(new AutoCeckingNotifyMessage(), true);
             threadStartService.shutdown();
         }, threadStartService);
 

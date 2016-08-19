@@ -8,11 +8,13 @@ import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
+import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageBase;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.network.NetworkUS;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.javafx.system.network.NetworkUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;
@@ -64,10 +66,16 @@ public class ConnectionKolaerWeb {
         try{
 
             //PsrRegister[] array = restTemplate.getForObject("http://localhost:8080/rest/psr/get/all", PsrRegister[].class);
-
-            NetworkUS networkUS = new NetworkUSImpl();
-            NotifyMessage mess = networkUS.getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().getLastNotifyMessage();
-            Assert.assertNull(mess);
+            UniformSystemEditorKitSingleton.getInstance().setAuthentication(new AuthenticationOnNetwork());
+            UniformSystemEditorKitSingleton.getInstance().setUSNetwork(new NetworkUSImpl());
+            UniformSystemEditorKitSingleton.getInstance().getAuthentication().login(new UserAndPassJson("kolaeradmin", "kolaeradmin"));
+            final NetworkUS networkUS = UniformSystemEditorKitSingleton.getInstance().getUSNetwork();
+            NotifyMessage mess = new NotifyMessageBase();
+            mess.setMessage("Система обновлена до версии 2.0!");
+            networkUS.getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().addNotifyMessage(mess);
+            mess = networkUS.getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().getLastNotifyMessage();
+            Assert.assertNotNull(mess);
+            System.out.println(mess.getMessage());
         } catch (ServerException ex) {
             System.out.println(ex.getMessage());
         }
