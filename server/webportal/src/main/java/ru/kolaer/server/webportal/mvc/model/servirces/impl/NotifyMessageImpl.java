@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.server.webportal.mvc.model.dao.NotifyMessageDao;
@@ -15,6 +16,7 @@ import java.util.List;
 public class NotifyMessageImpl implements NotifyMessageService {
 
     @Autowired
+    @Qualifier(value = "jdbcNotifyMessageDao")
     private NotifyMessageDao notifyMessageDao;
 
     @Override
