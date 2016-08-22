@@ -18,9 +18,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStateBase;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.view.VDetailsOrEditPsrRegister;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

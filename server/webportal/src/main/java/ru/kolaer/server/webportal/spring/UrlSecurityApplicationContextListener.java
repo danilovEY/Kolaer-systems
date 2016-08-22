@@ -16,7 +16,6 @@ import ru.kolaer.server.webportal.config.PathMapping;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
 import java.lang.reflect.Method;
-import java.util.StringJoiner;
 
 /**
  * Считывание всех методов у бинов для поиска аннотации {@link UrlDeclaration}.

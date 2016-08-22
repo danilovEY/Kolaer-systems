@@ -10,7 +10,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageBase;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.network.NetworkUS;

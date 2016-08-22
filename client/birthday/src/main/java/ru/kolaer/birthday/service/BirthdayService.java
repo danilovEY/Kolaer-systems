@@ -1,8 +1,6 @@
 package ru.kolaer.birthday.service;
 
 import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;

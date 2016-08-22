@@ -6,18 +6,10 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
-import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
-import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
-import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**

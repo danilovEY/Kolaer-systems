@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.entities.other;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageBase;
 
