@@ -27,7 +27,6 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 @ComponentScan("ru.kolaer.server")
 @PropertySource("classpath:app.properties")
-//@EnableJpaRepositories("ru.kolaer.server.dao.entities")
 public class KolaerServerConfig extends WebMvcConfigurerAdapter {
  
     private static final String PROP_DATABASE_DRIVER = "db.driver";
@@ -50,16 +49,6 @@ public class KolaerServerConfig extends WebMvcConfigurerAdapter {
         dataSource.setPassword(env.getRequiredProperty(PROP_DATABASE_PASSWORD));
         return dataSource;
     }
- 
-    /*@Bean(name = "entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-    	final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-        entityManagerFactoryBean.setDataSource(dataSource());
-        entityManagerFactoryBean.setPackagesToScan(env.getRequiredProperty(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN));
-        entityManagerFactoryBean.setJpaProperties(getHibernateProperties());
-        entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter());
-        return entityManagerFactoryBean;
-    }*/
 
     @Bean
     public SessionFactory sessionFactory() {
@@ -77,13 +66,6 @@ public class KolaerServerConfig extends WebMvcConfigurerAdapter {
         transactionManager.setSessionFactory(sessionFactory());
         return transactionManager;
     }
-
-    /*@Bean
-    public JpaTransactionManager transactionManager() {
-    	final JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-        return transactionManager;
-    }*/
     
     @Bean(name = "publicHolidaysDAO")
     public PublicHolidaysDAO getPublicHolidaysDAO() {
@@ -110,22 +92,4 @@ public class KolaerServerConfig extends WebMvcConfigurerAdapter {
     	final DbDataAllDAO dbUser1сDAO = new DbDataAllDAOImpl();
     	return dbUser1сDAO;
     }
-    
-    /*private HibernateJpaVendorAdapter jpaVendorAdapter() {
-    	final HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-    	jpaVendorAdapter.setShowSql(true);
-    	jpaVendorAdapter.setGenerateDdl(false);
-    	return jpaVendorAdapter;
-    }*/
-    
-    /*private Properties getHibernateProperties() {
-    	final Properties properties = new Properties();
-        properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
-        properties.put(PROP_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
-        properties.put("db.hibernate.max_fetch_depth", 3);
-        properties.put("db.hibernate.jdbc.fetch_size", 50);
-        properties.put("db.hibernate.jdbc.batch_size", 10);
-        properties.put("hibernate.hbm2ddl.auto", "none");
-        return properties;
-    }*/
 }
