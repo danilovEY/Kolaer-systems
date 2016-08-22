@@ -89,7 +89,7 @@ public class DataBaseBirthdayAllController {
 	}	
 	
 	@RequestMapping(value = "/get/users/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public int getCountUsersBirsday(final @PathVariable String date) {
+	public Integer getCountUsersBirsday(final @PathVariable String date) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    
 		try {

@@ -105,7 +105,7 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
 
-    	final Integer countUsers = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "count", Integer.class);
+    	final Integer countUsers = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "/count", Integer.class);
     	return countUsers;
 	}
 }

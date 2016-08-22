@@ -18,6 +18,8 @@ import ru.kolaer.client.javafx.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.javafx.system.network.NetworkUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
+import java.util.Date;
+
 /**
  * Created by Danilov on 31.07.2016.
  */
@@ -36,7 +38,7 @@ public class ConnectionKolaerWeb {
 
     @Before
     public void init() {
-        Resources.URL_TO_KOLAER_RESTFUL.delete(0, Resources.URL_TO_KOLAER_RESTFUL.length()).append("js:8080/ru.kolaer.server.restful");
+        Resources.URL_TO_KOLAER_RESTFUL.delete(0, Resources.URL_TO_KOLAER_RESTFUL.length()).append("localhost:8080");//"js:8080/ru.kolaer.server.restful");
         Resources.URL_TO_KOLAER_WEB.delete(0, Resources.URL_TO_KOLAER_WEB.length()).append("localhost:8080");
     }
 
@@ -67,14 +69,16 @@ public class ConnectionKolaerWeb {
             //PsrRegister[] array = restTemplate.getForObject("http://localhost:8080/rest/psr/get/all", PsrRegister[].class);
             UniformSystemEditorKitSingleton.getInstance().setAuthentication(new AuthenticationOnNetwork());
             UniformSystemEditorKitSingleton.getInstance().setUSNetwork(new NetworkUSImpl());
-            UniformSystemEditorKitSingleton.getInstance().getAuthentication().login(new UserAndPassJson("kolaeradmin", "kolaeradmin"));
+            //UniformSystemEditorKitSingleton.getInstance().getAuthentication().login(new UserAndPassJson("kolaeradmin", "kolaeradmin"));
             final NetworkUS networkUS = UniformSystemEditorKitSingleton.getInstance().getUSNetwork();
-            NotifyMessage mess = new NotifyMessageBase();
+            Integer i = networkUS.getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getCountUsersBirthday(new Date());
+            System.out.println(i);
+            /*NotifyMessage mess = new NotifyMessageBase();
             mess.setMessage("Система обновлена до версии 2.0!");
             networkUS.getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().addNotifyMessage(mess);
             mess = networkUS.getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().getLastNotifyMessage();
             Assert.assertNotNull(mess);
-            System.out.println(mess.getMessage());
+            System.out.println(mess.getMessage());*/
         } catch (ServerException ex) {
             System.out.println(ex.getMessage());
         }

@@ -11,6 +11,7 @@ import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.network.ServerStatus;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.birthday.mvp.presenter.PCalendar;
 import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
 import ru.kolaer.birthday.mvp.presenter.impl.PCalendarAffiliates;
@@ -64,7 +65,9 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 	@Override
 	public void start() throws Exception {
 		if(this.editorKid.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.NOT_AVAILABLE){
-			this.editorKid.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.").show();
+			Tools.runOnThreadFX(() -> {
+				this.editorKid.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.").show();
+			});
 			return;
 		}
 

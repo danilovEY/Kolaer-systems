@@ -64,7 +64,7 @@ public class DbBirthdayAllDAOImpl implements DbBirthdayAllDAO {
 
 	@Override
 	public int getCountUserBirthday(final Date date) {
-		final Number result = (Number) sessionFactory.getCurrentSession().createQuery("SELECT count(t) FROM DbBirthdayAll t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+		final Long result = (Long) sessionFactory.getCurrentSession().createQuery("SELECT count(t) FROM DbBirthdayAll t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
 				.setParameter("date", date)
 				.uniqueResult();
 		return result.intValue();
