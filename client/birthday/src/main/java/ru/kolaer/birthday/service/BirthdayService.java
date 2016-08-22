@@ -36,7 +36,7 @@ public class BirthdayService implements Service {
 			int i = 0;
 
 			for(final DbDataAll user : users) {
-				actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartamentAbbreviated(), e -> {
+				actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartament(), e -> {
 					final UserModel userModel = new UserModelImpl(user);
 					
 					Platform.runLater(() -> {
