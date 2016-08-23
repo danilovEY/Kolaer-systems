@@ -48,6 +48,8 @@ public class AccountServiceImpl implements AccountService{
         if(accountsEntity == null) {
             LOG.error("Account is NULL!");
             return;
+        } else if(accountsEntity.getGeneralEmployeesEntity() != null && accountsEntity.getGeneralEmployeesEntity().getPnumber() == null) {
+            accountsEntity.setGeneralEmployeesEntity(null);
         }
 
         this.accountDao.persist(accountsEntity);
@@ -56,11 +58,15 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public void delete(GeneralAccountsEntity entity) {
-
+        if(entity != null) {
+            this.accountDao.delete(entity);
+        }
     }
 
     @Override
     public void update(GeneralAccountsEntity entity) {
-
+        if(entity != null) {
+            this.accountDao.persist(entity);
+        }
     }
 }

@@ -32,4 +32,11 @@ public class AccountsController {
         return accountService.getAll();
     }
 
+    /**Добавить аккаунт.*/
+    @UrlDeclaration(description = "Добавить аккаунт.")
+    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void addUser(GeneralAccountsEntity generalAccountsEntity) {
+        this.accountService.add(generalAccountsEntity);
+    }
+
 }
