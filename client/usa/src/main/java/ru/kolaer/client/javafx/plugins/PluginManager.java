@@ -89,8 +89,8 @@ public class PluginManager {
 
     public void refreshOsgi() {
         try {
-            this.framework.stop();
-        } catch (BundleException e) {
+            this.initialization();
+        } catch (Exception e) {
             LOG.error("Ошибка при перезапуске OSGi", e);
             System.exit(-9);
         }
