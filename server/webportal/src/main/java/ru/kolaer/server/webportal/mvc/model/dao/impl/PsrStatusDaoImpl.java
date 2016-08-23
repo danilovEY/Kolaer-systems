@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Danilov on 07.08.2016.
  */
-@Repository("psrSrarusDao")
+@Repository("psrStatusDao")
 public class PsrStatusDaoImpl implements PsrStatusDao {
 
     @Autowired

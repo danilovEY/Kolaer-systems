@@ -15,6 +15,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
+import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 
 import java.util.List;
 
@@ -30,7 +31,18 @@ public class PsrRegisterController {
     private PsrRegisterService psrRegisterService;
 
     @Autowired
+    private PsrStatusService psrStatusService;
+
+    @Autowired
     private EmployeeService employeeService;
+
+    /**Получить все статусы.*/
+    @UrlDeclaration(description = "Получить все статусы.", isAccessAll = true)
+    @RequestMapping(value = "/status/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<PsrStatus> getAllPsrStatus() {
+        List<PsrStatus> list = this.psrStatusService.getAll();
+        return list;
+    }
 
     /**Получить все ПСР-проекты.*/
     @UrlDeclaration(description = "Получить все ПСР-проекты.", isAccessAll = true)

@@ -10,6 +10,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.HTMLEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachment;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
@@ -46,13 +48,12 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
 
         final ContextMenu contextMenu = new ContextMenu();
 
-        final MenuItem removeMenuItem = new MenuItem("Удалить");
         final MenuItem editMenuItem = new MenuItem("Редактировать");
         editMenuItem.setOnAction(e -> {
             Tools.runOnThreadFX(() -> {
                 final PsrRegister selectRegister = table.getSelectionModel().getSelectedItem();
 
-                final PDetailsOrEditPsrRegister detailsOrEditPsrRegister = new PDetailsOrEditPsrRegisterImpl(selectRegister);
+                final PDetailsOrEditPsrRegister detailsOrEditPsrRegister = new PDetailsOrEditPsrRegisterImpl(editorKit, selectRegister);
                 detailsOrEditPsrRegister.getView().initializationView();
                 detailsOrEditPsrRegister.showAndWait();
                 tableData.remove(selectRegister);
@@ -60,6 +61,8 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                 editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().updatePsrRegister(selectRegister);
             });
         });
+
+        final MenuItem removeMenuItem = new MenuItem("Удалить");
         removeMenuItem.setOnAction(e -> {
             final PsrRegister selectRegister = table.getSelectionModel().getSelectedItem();
             table.getItems().remove(selectRegister);
@@ -72,11 +75,14 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
             final PsrRegister selectPsr = table.getSelectionModel().getSelectedItem();
             final GeneralEmployeesEntity selectPsrEmployee = selectPsr.getAuthor();
 
-            final GeneralEmployeesEntity authorizedEmployee = editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity();
+            final GeneralAccountsEntity accountsEntity = editorKit.getAuthentication().getAuthorizedUser();
+            final GeneralEmployeesEntity authorizedEmployee = accountsEntity.getGeneralEmployeesEntity();
 
-            if(authorizedEmployee == null ||
-                    selectPsrEmployee == null ||
-                    selectPsrEmployee.getPnumber() != authorizedEmployee.getPnumber()) {
+            if(authorizedEmployee == null
+                    || selectPsrEmployee == null
+                    || selectPsrEmployee.getPnumber() != authorizedEmployee.getPnumber()
+                    || !accountsEntity.getRoles().contains(EnumRole.PSR_ADMIN)
+                    || !accountsEntity.getRoles().contains(EnumRole.SUPER_ADMIN)) {
                 contextMenu.hide();
             }
         });

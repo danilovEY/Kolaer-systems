@@ -3,6 +3,7 @@ package ru.kolaer.client.psr.mvp.presenter.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.psr.mvp.presenter.PDetailsOrEditPsrRegister;
 import ru.kolaer.client.psr.mvp.view.VDetailsOrEditPsrRegister;
 import ru.kolaer.client.psr.mvp.view.impl.VDetailsOrEditPsrRegisterImpl;
@@ -19,8 +20,8 @@ public class PDetailsOrEditPsrRegisterImpl implements PDetailsOrEditPsrRegister 
         this.view = new VDetailsOrEditPsrRegisterImpl();
     }
 
-    public PDetailsOrEditPsrRegisterImpl(PsrRegister selectRegister) {
-        this.view = new VDetailsOrEditPsrRegisterImpl(selectRegister);
+    public PDetailsOrEditPsrRegisterImpl(UniformSystemEditorKit editorKit, PsrRegister selectRegister) {
+        this.view = new VDetailsOrEditPsrRegisterImpl(selectRegister, editorKit);
     }
 
     public VDetailsOrEditPsrRegister getView() {

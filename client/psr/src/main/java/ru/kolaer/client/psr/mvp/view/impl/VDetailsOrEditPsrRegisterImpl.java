@@ -1,5 +1,7 @@
 package ru.kolaer.client.psr.mvp.view.impl;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -11,10 +13,10 @@ import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegisterBase;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStateBase;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.view.VDetailsOrEditPsrRegister;
 
@@ -35,6 +37,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
     private TextArea stateComment;
     private DatePicker datePickerPlan;
     private TextArea planComment;
+    private UniformSystemEditorKit editorKit;
 
     public VDetailsOrEditPsrRegisterImpl(final PsrRegister psrRegister) {
         this.psrRegister = psrRegister;
@@ -42,6 +45,11 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
 
     public VDetailsOrEditPsrRegisterImpl() {
 
+    }
+
+    public VDetailsOrEditPsrRegisterImpl(PsrRegister selectRegister, UniformSystemEditorKit editorKit) {
+        this.psrRegister = psrRegister;
+        this.editorKit = editorKit;
     }
 
     @Override
@@ -78,12 +86,6 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
         psrDescripPane.setContent(descPanel);
 
         //============3============
-        /*final FlowPane statePane = new FlowPane();
-        final Button addState = new Button("Добавить состояние реализации...");
-        addState.setOnAction(e -> {
-
-            final HBox pane = new HBox()
-        });*/
         final BorderPane mainStatePane = new BorderPane();
         this.datePickerState = new DatePicker();
         this.stateComment = new TextArea();
@@ -119,8 +121,9 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
             this.datePickerPlan.setValue(Tools.convertToLocalDate(this.psrRegister.getStateList().get(1).getDate()));
             this.planComment.setText(this.psrRegister.getStateList().get(1).getComment());
 
-            this.wizard = new Wizard(null, "Редактирование проекта");
 
+
+            this.wizard = new Wizard(null, "Редактирование проекта");
         } else {
             final WizardPane welcomePane = new WizardPane();
             welcomePane.setContent(new BorderPane(new Label("Добро пожаловать в меню создания ПСР проекта!")));
@@ -135,6 +138,21 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
         wizardPaneList.add(psrStatePane);
         wizardPaneList.add(psrPlanPane);
         wizardPaneList.add(psrFinishPane);
+
+        if(this.psrRegister != null) {
+            final GeneralAccountsEntity accountsEntity = this.editorKit.getAuthentication().getAuthorizedUser();
+
+            if(accountsEntity.getRoles().contains(EnumRole.PSR_ADMIN)) {
+                final WizardPane editStatusPage = new WizardPane();
+
+                final ObservableList<PsrStatus> status = FXCollections.observableArrayList(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().getPsrStatusTable().getAllPsrStatus());
+
+                final ComboBox<PsrStatus> comboPsrStatus = new ComboBox<>(status);
+
+                editStatusPage.setContent(new BorderPane(comboPsrStatus));
+                wizardPaneList.add(editStatusPage);
+            }
+        }
 
         wizard.setFlow(new Wizard.LinearFlow(wizardPaneList));
 
