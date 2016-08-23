@@ -41,6 +41,8 @@ public class ServiceControlManager {
 			LOG.info("Запуск службы: \"{}\"", service.getName());
 			final Future<Void> futureService = CompletableFuture.runAsync(service, readPluginsThread).exceptionally(t -> {
 				LOG.error("Ошибка в запуске службы!", t);
+				this.runnableService.get(service).cancel(true);
+				this.runnableService.remove(service);
 				return null;
 			});	
 			this.runnableService.put(service, futureService);

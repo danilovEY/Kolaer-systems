@@ -93,7 +93,8 @@ public class VTabImpl implements VTab {
 				this.stage.close();
 			}
 			this.tab.setContent(null);
-			this.tab.getTabPane().getTabs().remove(this.tab);
+			if(this.tab != null && this.tab.getTabPane() != null)
+				this.tab.getTabPane().getTabs().remove(this.tab);
 		});
 	}	
 }

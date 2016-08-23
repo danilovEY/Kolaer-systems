@@ -1,5 +1,7 @@
 package ru.kolaer.client.javafx.services;
 
+import org.springframework.web.client.HttpServerErrorException;
+import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
@@ -11,6 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class AutoCeckingNotifyMessage implements Service {
     private boolean run = false;
+    private boolean error = false;
     private NotifyMessage lastNotifyMessage;
     @Override
     public boolean isRunning() {
@@ -39,11 +42,17 @@ public class AutoCeckingNotifyMessage implements Service {
                 this.run = false;
                 return;
             }
-
-            final NotifyMessage lastNotifyMessage = UniformSystemEditorKitSingleton.getInstance().getUSNetwork().getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().getLastNotifyMessage();
-            if(this.lastNotifyMessage == null || !this.lastNotifyMessage.getMessage().equals(lastNotifyMessage.getMessage())) {
-                this.lastNotifyMessage = lastNotifyMessage;
-                UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showWarningNotifiAdmin("Сообщение!", lastNotifyMessage.getMessage());
+            try {
+                final NotifyMessage lastNotifyMessage = UniformSystemEditorKitSingleton.getInstance().getUSNetwork().getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().getLastNotifyMessage();
+                if(this.lastNotifyMessage == null || !this.lastNotifyMessage.getMessage().equals(lastNotifyMessage.getMessage())) {
+                    this.lastNotifyMessage = lastNotifyMessage;
+                    UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showWarningNotifiAdmin("Сообщение!", lastNotifyMessage.getMessage());
+                }
+            } catch (HttpServerErrorException ex) {
+                if(!this.error) {
+                    UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi("Невозможно получить сообщение с сервера!", ex.getMessage());
+                    this.error = true;
+                }
             }
         }
     }

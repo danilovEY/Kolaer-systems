@@ -62,11 +62,15 @@ public class PTabImpl implements PTab {
 					this.plugin.getUniformSystemPlugin().start();
 					
 					this.view.setContent(plugin.getUniformSystemPlugin().getContent());
+
+					this.isActive = true;
 				} catch (final Exception e) {
 					LOG.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), e);
 					Tools.runOnThreadFX(() -> {
-						UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createErrorDialog(this.plugin.getNamePlugin(), "Ошибка при запуске плагина!").show();
+						UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), "Ошибка при запуске плагина!");
+						UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), e.getMessage());
 					});
+					this.closeTab();
 				}
 				threadRunPlugin.shutdown();
 			}, threadRunPlugin).exceptionally(t -> {
@@ -75,7 +79,7 @@ public class PTabImpl implements PTab {
 				return null;
 			});
 
-			this.isActive = true;
+
 		}
 	}
 
@@ -94,7 +98,8 @@ public class PTabImpl implements PTab {
 					this.plugin.getUniformSystemPlugin().stop();
 				} catch (final Exception e) {
 					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getSymbolicNamePlugin(), e);
-					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getDialog().createErrorDialog(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!").show();
+					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!");
+					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), e.getMessage());
 				}
 
 				this.isActive = false;

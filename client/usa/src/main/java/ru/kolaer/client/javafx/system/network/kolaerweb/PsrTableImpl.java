@@ -6,6 +6,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
+import ru.kolaer.api.system.network.kolaerweb.PsrStatusTable;
 import ru.kolaer.api.system.network.kolaerweb.PsrTable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 
@@ -13,18 +14,25 @@ import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
  * Created by Danilov on 31.07.2016.
  */
 public class PsrTableImpl implements PsrTable {
+    private static final Logger LOG = LoggerFactory.getLogger(PsrTableImpl.class);
     private final RestTemplate restTemplate = new RestTemplate();
+    private final PsrStatusTable psrStatusTable;
     private final String URL_GET_ALL;
     private final String URL_ADD;
     private final String URL_DELETE;
     private final String URL_UPDATE;
-    private static final Logger LOG = LoggerFactory.getLogger(PsrTableImpl.class);
 
     public PsrTableImpl(String path) {
+        this.psrStatusTable = new PsrStatusTableImpl(path + "/status");
         this.URL_GET_ALL = path + "/get/all";
         this.URL_ADD = path + "/add";
         this.URL_DELETE = path + "/delete";
         this.URL_UPDATE = path + "/update";
+    }
+
+    @Override
+    public PsrStatusTable getPsrStatusTable() {
+        return this.psrStatusTable;
     }
 
     @Override
