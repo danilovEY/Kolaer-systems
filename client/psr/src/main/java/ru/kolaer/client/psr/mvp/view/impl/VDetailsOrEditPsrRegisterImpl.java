@@ -15,14 +15,13 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.view.VDetailsOrEditPsrRegister;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by danilovey on 04.08.2016.
@@ -48,7 +47,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
     }
 
     public VDetailsOrEditPsrRegisterImpl(PsrRegister selectRegister, UniformSystemEditorKit editorKit) {
-        this.psrRegister = psrRegister;
+        this.psrRegister = selectRegister;
         this.editorKit = editorKit;
     }
 
@@ -137,23 +136,52 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
         wizardPaneList.add(psrDescripPane);
         wizardPaneList.add(psrStatePane);
         wizardPaneList.add(psrPlanPane);
-        wizardPaneList.add(psrFinishPane);
 
         if(this.psrRegister != null) {
             final GeneralAccountsEntity accountsEntity = this.editorKit.getAuthentication().getAuthorizedUser();
 
-            if(accountsEntity.getRoles().contains(EnumRole.PSR_ADMIN)) {
-                final WizardPane editStatusPage = new WizardPane();
+            accountsEntity.getRoles().stream().map(GeneralRolesEntity::getType).forEach(role -> {
+                if(role == EnumRole.PSR_ADMIN || role == EnumRole.SUPER_ADMIN) {
+                    final WizardPane editStatusPage = new WizardPane();
 
-                final ObservableList<PsrStatus> status = FXCollections.observableArrayList(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().getPsrStatusTable().getAllPsrStatus());
+                    final ObservableList<PsrStatus> status = FXCollections.observableArrayList(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().getPsrStatusTable().getAllPsrStatus());
 
-                final ComboBox<PsrStatus> comboPsrStatus = new ComboBox<>(status);
+                    final ComboBox<PsrStatus> comboPsrStatus = new ComboBox<>(status);
+                    comboPsrStatus.setValue(this.psrRegister.getStatus());
+                    comboPsrStatus.valueProperty().addListener((observable, oldValue, newValue) -> {
+                        this.psrRegister.setStatus(newValue);
+                    });
 
-                editStatusPage.setContent(new BorderPane(comboPsrStatus));
-                wizardPaneList.add(editStatusPage);
-            }
+                    editStatusPage.setContent(new BorderPane(comboPsrStatus));
+
+                    final WizardPane editData = new WizardPane();
+
+                    final DatePicker datePickerOpen = new DatePicker();
+                    if(this.psrRegister.getDateOpen() != null) {
+                        datePickerOpen.setValue(Tools.convertToLocalDate(this.psrRegister.getDateOpen()));
+                    }
+                    datePickerOpen.valueProperty().addListener((observable, oldValue, newValue) -> {
+                        this.psrRegister.setDateOpen(Tools.convertToDate(newValue));
+                    });
+
+                    final DatePicker datePickerClose = new DatePicker();
+                    if(this.psrRegister.getDateClose() != null) {
+                        datePickerClose.setValue(Tools.convertToLocalDate(this.psrRegister.getDateClose()));
+                    }
+                    datePickerClose.valueProperty().addListener((observable, oldValue, newValue) -> {
+                        this.psrRegister.setDateClose(Tools.convertToDate(newValue));
+                    });
+                    editData.setContent(new HBox(datePickerOpen, datePickerClose));
+                    wizardPaneList.add(editData);
+
+                    wizardPaneList.add(editStatusPage);
+                    return;
+                }
+            });
         }
 
+
+        wizardPaneList.add(psrFinishPane);
         wizard.setFlow(new Wizard.LinearFlow(wizardPaneList));
 
         this.isInit = true;
@@ -169,8 +197,10 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
     public void showAndWait() {
         this.wizard.showAndWait().ifPresent(result -> {
             if (result == ButtonType.FINISH) {
-                if(this.psrRegister == null)
+                if(this.psrRegister == null) {
                     this.psrRegister = new PsrRegisterBase();
+                    this.psrRegister.setStateList(Collections.emptyList());
+                }
 
                 this.psrRegister.setName(this.namePsr.getText());
                 this.psrRegister.setComment(this.htmlEditor.getHtmlText());
@@ -208,6 +238,14 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
 
                 this.psrRegister.setStateList(states);
                 this.psrRegister.setAttachments(Collections.emptyList());
+
+                if(this.psrRegister.getStatus().getType().equals("Открыт") && this.psrRegister.getDateOpen() == null) {
+                    this.psrRegister.setDateOpen(new Date());
+                }
+
+                if(this.psrRegister.getStatus().getType().equals("Закрыт") && this.psrRegister.getDateClose() == null) {
+                    this.psrRegister.setDateClose(new Date());
+                }
             }
         });
     }

@@ -117,8 +117,7 @@ public class PluginManager {
 	            LOG.info("{} установка завершена...", pluginBundle.getSymbolicNamePlugin());
         	} catch(BundleException ex) {
         		LOG.error("Ошибка при установке плагина: {}", pluginBundle.getSymbolicNamePlugin(), ex);
-                this.defaultPathCache = UUID.randomUUID().toString();
-                this.refreshOsgi();
+                System.exit(-9);
         		return false;
         	}
         	

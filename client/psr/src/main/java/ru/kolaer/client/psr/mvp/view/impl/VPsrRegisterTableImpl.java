@@ -52,7 +52,6 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         editMenuItem.setOnAction(e -> {
             Tools.runOnThreadFX(() -> {
                 final PsrRegister selectRegister = table.getSelectionModel().getSelectedItem();
-
                 final PDetailsOrEditPsrRegister detailsOrEditPsrRegister = new PDetailsOrEditPsrRegisterImpl(editorKit, selectRegister);
                 detailsOrEditPsrRegister.getView().initializationView();
                 detailsOrEditPsrRegister.showAndWait();
@@ -77,12 +76,11 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
 
             final GeneralAccountsEntity accountsEntity = editorKit.getAuthentication().getAuthorizedUser();
             final GeneralEmployeesEntity authorizedEmployee = accountsEntity.getGeneralEmployeesEntity();
-
             if(authorizedEmployee == null
                     || selectPsrEmployee == null
-                    || selectPsrEmployee.getPnumber() != authorizedEmployee.getPnumber()
-                    || !accountsEntity.getRoles().contains(EnumRole.PSR_ADMIN)
-                    || !accountsEntity.getRoles().contains(EnumRole.SUPER_ADMIN)) {
+                    || accountsEntity.getRoles().stream().filter(role ->
+                        role.getType() == EnumRole.PSR_ADMIN || role.getType() == EnumRole.SUPER_ADMIN).count() == 0
+                    || !selectPsrEmployee.getPnumber().equals(authorizedEmployee.getPnumber())) {
                 contextMenu.hide();
             }
         });
