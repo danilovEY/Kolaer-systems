@@ -26,4 +26,10 @@ public interface GeneralEmployeesEntity {
 
      String getPost();
      void setPost(String post);
+
+     String getMobileNumber();
+     void setMobileNumber(String number);
+
+     String getPhoneNumber();
+     void setPhoneNumber(String number);
 }

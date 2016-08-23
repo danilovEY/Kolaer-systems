@@ -9,6 +9,8 @@ import java.util.List;
 public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
     private Integer pnumber;
     private String initials;
+    private String mobileNumber;
+    private String phoneNumber;
     private EnumGender gender;
     private String departament;
     private String post;
@@ -60,6 +62,26 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
 
     public void setPost(String post) {
         this.post = post;
+    }
+
+    @Override
+    public String getMobileNumber() {
+        return this.mobileNumber;
+    }
+
+    @Override
+    public void setMobileNumber(String number) {
+        this.mobileNumber = number;
+    }
+
+    @Override
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
+    @Override
+    public void setPhoneNumber(String number) {
+        this.phoneNumber = number;
     }
 
     @Override

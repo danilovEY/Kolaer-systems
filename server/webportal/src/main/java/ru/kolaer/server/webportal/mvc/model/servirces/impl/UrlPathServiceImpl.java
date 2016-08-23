@@ -52,7 +52,7 @@ public class UrlPathServiceImpl implements UrlPathService {
             final GeneralRolesEntity role = iterRoles.next();
 
             if(role.getType() == EnumRole.USER && urlPath.isAccessUser() ||
-                    role.getType() == EnumRole.ADMIN && urlPath.isAccessAdmin() ||
+                    role.getType() == EnumRole.PSR_ADMIN && urlPath.isAccessPsrAdmin() ||
                     role.getType() == EnumRole.ANONYMOUS && urlPath.isAccessAnonymous() ||
                     role.getType() == EnumRole.SUPER_ADMIN && urlPath.isAccessSuperAdmin()) {
                 accessRoles.add(role);

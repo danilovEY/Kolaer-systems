@@ -67,7 +67,7 @@ public class DataBaseInitialization {
             superAdminRole.setType(EnumRole.SUPER_ADMIN);
 
             final GeneralRolesEntity adminRole = new GeneralRolesEntityDecorator();
-            adminRole.setType(EnumRole.ADMIN);
+            adminRole.setType(EnumRole.PSR_ADMIN);
 
             final GeneralRolesEntity userRole = new GeneralRolesEntityDecorator();
             userRole.setType(EnumRole.USER);
@@ -86,30 +86,29 @@ public class DataBaseInitialization {
             //superAdminEmployee.setAccountsEntity(Arrays.asList(superAdminAccount));
 
             superAdminAccount.setGeneralEmployeesEntity(superAdminEmployee);
+
             //==============PSR=====================
-            final PsrStatus psrStatusNew = new PsrStatusDecorator();
-            psrStatusNew.setType("Новый");
+            PsrStatus psrStatus = new PsrStatusDecorator();
+            psrStatus.setType("Новый");
+            this.psrStatusDao.persist(psrStatus);
 
-            final PsrAttachment psrAttachment = new PsrAttachmentDecorator();
-            psrAttachment.setName("D:/test.txt");
+            psrStatus = new PsrStatusDecorator();
+            psrStatus.setType("Открыт");
+            this.psrStatusDao.persist(psrStatus);
 
-            final PsrState psrState = new PsrStateDecorator();
-            psrState.setPlan(true);
-            psrState.setDate(new Date());
-            psrState.setComment("Cccccccccs");
+            psrStatus = new PsrStatusDecorator();
+            psrStatus.setType("Закрыт");
+            this.psrStatusDao.persist(psrStatus);
 
-            final PsrRegister psrRegister = new PsrRegisterDecorator();
-            psrRegister.setStatus(psrStatusNew);
-            psrRegister.setAttachments(Arrays.asList(psrAttachment));
-            psrRegister.setAuthor(superAdminEmployee);
-            psrRegister.setComment("ASDASD");
-            psrRegister.setDateOpen(new Date());
-            psrRegister.setName("QQQQQQ");
-            psrRegister.setStateList(Arrays.asList(psrState));
+            psrStatus = new PsrStatusDecorator();
+            psrStatus.setType("Отклонен");
+            this.psrStatusDao.persist(psrStatus);
 
+            psrStatus = new PsrStatusDecorator();
+            psrStatus.setType("Утвержден");
+            this.psrStatusDao.persist(psrStatus);
 
             //============В БАЗУ====================
-
             this.roleDao.persist(superAdminRole);
             this.roleDao.persist(adminRole);
             this.roleDao.persist(userRole);
@@ -120,9 +119,7 @@ public class DataBaseInitialization {
             this.accountDao.persist(superAdminAccount);
             this.accountDao.persist(anonymousAccount);
 
-            this.psrStatusDao.persist(psrStatusNew);
 
-            this.psrRegisterDao.persist(psrRegister);
         }
     }
 

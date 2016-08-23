@@ -12,7 +12,7 @@ public class WebPortalUrlPathBase implements WebPortalUrlPath {
     /**Имеют ли доступ к URL все пользователи*/
     private boolean accessAll;
     private boolean accessSuperAdmin;
-    private boolean accessAdmin;
+    private boolean accessPsrAdmin;
     private boolean accessUser;
     private boolean accessAnonymous;
 
@@ -66,12 +66,12 @@ public class WebPortalUrlPathBase implements WebPortalUrlPath {
         this.accessSuperAdmin = accessSuperAdmin;
     }
 
-    public boolean isAccessAdmin() {
-        return accessAdmin;
+    public boolean isAccessPsrAdmin() {
+        return accessPsrAdmin;
     }
 
-    public void setAccessAdmin(boolean accessAdmin) {
-        this.accessAdmin = accessAdmin;
+    public void setAccessPsrAdmin(boolean accessPsrAdmin) {
+        this.accessPsrAdmin = accessPsrAdmin;
     }
 
     public boolean isAccessUser() {

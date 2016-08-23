@@ -25,8 +25,8 @@ public interface WebPortalUrlPath {
      boolean isAccessSuperAdmin();
      void setAccessSuperAdmin(boolean accessSuperAdmin);
 
-     boolean isAccessAdmin();
-     void setAccessAdmin(boolean accessAdmin);
+     boolean isAccessPsrAdmin();
+     void setAccessPsrAdmin(boolean accessPsrAdmin);
 
      boolean isAccessUser();
      void setAccessUser(boolean accessUser);

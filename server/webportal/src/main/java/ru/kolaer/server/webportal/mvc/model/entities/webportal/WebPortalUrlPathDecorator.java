@@ -79,13 +79,13 @@ public class WebPortalUrlPathDecorator implements WebPortalUrlPath {
         this.webPortalUrlPath.setAccessSuperAdmin(accessSuperAdmin);
     }
 
-    @Column(name = "access_admin")
-    public boolean isAccessAdmin() {
-        return this.webPortalUrlPath.isAccessAdmin();
+    @Column(name = "access_psr_admin")
+    public boolean isAccessPsrAdmin() {
+        return this.webPortalUrlPath.isAccessPsrAdmin();
     }
 
-    public void setAccessAdmin(boolean accessAdmin) {
-        this.webPortalUrlPath.setAccessAdmin(accessAdmin);
+    public void setAccessPsrAdmin(boolean accessPsrAdmin) {
+        this.webPortalUrlPath.setAccessPsrAdmin(accessPsrAdmin);
     }
 
     @Column(name = "access_user")

@@ -33,7 +33,7 @@
                 <td>${entry.description}</td>
                 <td>${entry.accessAll}</td>
                 <td>${entry.accessSuperAdmin}</td>
-                <td>${entry.accessAdmin}</td>
+                <td>${entry.accessPsrAdmin}</td>
                 <td>${entry.accessUser}</td>
                 <td>${entry.accessAnonymous}</td>
             </tr>

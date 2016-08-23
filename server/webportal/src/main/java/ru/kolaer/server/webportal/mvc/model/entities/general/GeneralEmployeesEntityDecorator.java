@@ -88,6 +88,26 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setPost(post);
     }
 
+    @Column(name = "mobile_number")
+    public String getMobileNumber() {
+        return this.generalEmployeesEntity.getMobileNumber();
+    }
+
+    @Override
+    public void setMobileNumber(String number) {
+        this.generalEmployeesEntity.setMobileNumber(number);
+    }
+
+    @Column(name = "phone_number")
+    public String getPhoneNumber() {
+        return this.generalEmployeesEntity.getPhoneNumber();
+    }
+
+    @Override
+    public void setPhoneNumber(String number) {
+        this.generalEmployeesEntity.setPhoneNumber(number);
+    }
+
     @Override
     public boolean equals(Object o) {
         return this.generalEmployeesEntity.equals(o);
