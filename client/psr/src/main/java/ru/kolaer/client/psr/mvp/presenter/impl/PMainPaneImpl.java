@@ -84,14 +84,16 @@ public class PMainPaneImpl implements PMainPane {
 
                 detailsOrEditPsrRegister.showAndWait();
                 try {
-                    LOG.info("Отправка....");
                     PsrRegister psrRegister = detailsOrEditPsrRegister.getPsrRegister();
-                    psrRegister.setAuthor(this.editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity());
-                    psrRegister = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().persistPsrRegister(psrRegister);
-                    LOG.info("Отправка прошла успешно!");
-                    //this.model.addPsrProject(psrRegister);
+                    if(psrRegister != null) {
+                        LOG.info("Отправка....");
+                        psrRegister.setAuthor(this.editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity());
+                        psrRegister = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().persistPsrRegister(psrRegister);
+                        LOG.info("Отправка прошла успешно!");
+                        //this.model.addPsrProject(psrRegister);
 
-                    this.pPsrRegisterTable.updateTableData();
+                        this.pPsrRegisterTable.updateTableData();
+                    }
                 } catch (ServerException ex) {
                     LOG.error("Ошибка!");
                 }
