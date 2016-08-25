@@ -83,8 +83,13 @@ public class JdbcDbDataAllDaoImpl implements DbDataAllDAO {
         dbDataAll.setPersonNumber(rs.getInt("person_number"));
         dbDataAll.setDepartament(rs.getString("departament"));
         dbDataAll.setPost(rs.getString("post"));
+        dbDataAll.setPhone(rs.getString("phone"));
+        dbDataAll.setMobilePhone(rs.getString("mobile_phone"));
         dbDataAll.setEmail(rs.getString("email"));
         dbDataAll.setVCard(rs.getString("vCard"));
+        dbDataAll.setCategoryUnit(rs.getString("category_unit"));
+        dbDataAll.setLogin(rs.getString("login"));
+        dbDataAll.setPassword(rs.getString("password"));
         return dbDataAll;
     }
 }
