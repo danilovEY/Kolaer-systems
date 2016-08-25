@@ -22,6 +22,8 @@ import ru.kolaer.api.tools.Tools;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by danilovey on 18.08.2016.
@@ -35,6 +37,7 @@ public class NotificationPane implements NotificationUS, VComponentUI {
     private BorderPane mainPane;
     private VBox vBoxUserNotify;
     private VBox vBoxAdminNotify;
+    private Map<Node, Node> notifiMap = new HashMap<>();
 
     public NotificationPane() {
         this.vBoxUserNotify = new VBox();
@@ -69,7 +72,7 @@ public class NotificationPane implements NotificationUS, VComponentUI {
 
         final SplitPane splitPane = new SplitPane();
         splitPane.getItems().addAll(scrollPaneUserNotify, scrollPaneAdminNotify);
-        splitPane.setDividerPositions(1);
+        splitPane.setDividerPositions(0.7);
         splitPane.setOrientation(Orientation.VERTICAL);
         this.mainPane = new BorderPane(splitPane);
         this.mainPane.setMinWidth(300);
@@ -101,8 +104,16 @@ public class NotificationPane implements NotificationUS, VComponentUI {
                     .color(Color.color(0.114, 0.161, 0.209))
                     .build()
                     .build();
+            notifiMap.put(pane, border);
             this.vBoxAdminNotify.getChildren().add(border);
+
         });
+    }
+
+    @Override
+    public void removeParentNotifi(Parent content) {
+        this.vBoxAdminNotify.getChildren().remove(this.notifiMap.get(content));
+        this.notifiMap.remove(content);
     }
 
     @Override

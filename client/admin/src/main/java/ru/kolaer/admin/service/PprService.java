@@ -1,7 +1,6 @@
 package ru.kolaer.admin.service;
 
 import ru.kolaer.api.mvp.model.kolaerweb.Counter;
-import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
@@ -10,7 +9,6 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by danilovey on 25.08.2016.
@@ -40,13 +38,23 @@ public class PprService implements Service {
 
     @Override
     public void run() {
+        final Counter[] counters = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getCounterTable().getAllCounters();
+
+        if(counters == null || counters.length == 0) {
+            this.isRun = false;
+            return;
+        }
+
         this.isRun = true;
 
+        final List<StaticViewPPR> pprs = new ArrayList<>();
 
-        final Counter[] counters = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getCounterTable().getAllCounters();
-        final List<PPR> pprs = new ArrayList<>();
-
+        final Date dateNow = new Date();
         for(final Counter counter : counters) {
+            if(counter.getStart() == null || counter.getEnd() == null ||
+                    counter.getEnd().before(dateNow))
+                continue;
+
             final StaticViewPPR staticViewPPR = new StaticViewPPR(counter);
             staticViewPPR.setTitle(counter.getTitle());
             staticViewPPR.setDescription(counter.getDescription());
@@ -59,39 +67,41 @@ public class PprService implements Service {
             pprs.add(staticViewPPR);
         }
 
-
         while (this.isRun) {
             Tools.runOnThreadFX(() -> {
-                pprs.forEach( ppr -> {
-                    try {
-                        final LocalDateTime dateTimeJson = editorKit.getUSNetwork().getKolaerWebServer().getServerTools().getCurrentDataTime();
-                        final Date dateEnd = ppr.getCounter().getEnd();
-                        final LocalDateTime ldt = LocalDateTime.ofInstant(dateEnd.toInstant(), ZoneId.systemDefault());
+                Iterator<StaticViewPPR> iterator = pprs.iterator();
+                while (iterator.hasNext()) {
+                    final StaticViewPPR ppr = iterator.next();
+                    final LocalDateTime dateTimeJson = editorKit.getUSNetwork().getKolaerWebServer().getServerTools().getCurrentDataTime();
+                    final Date dateEnd = ppr.getCounter().getEnd();
+                    final LocalDateTime ldt = LocalDateTime.ofInstant(dateEnd.toInstant(), ZoneId.systemDefault());
 
-                        LocalDateTime tempDateTime = LocalDateTime.from(dateTimeJson);
-                        long years = tempDateTime.until(ldt, ChronoUnit.YEARS);
-                        tempDateTime = tempDateTime.plusYears(years);
+                    LocalDateTime tempDateTime = LocalDateTime.from(dateTimeJson);
+                    long years = tempDateTime.until(ldt, ChronoUnit.YEARS);
+                    tempDateTime = tempDateTime.plusYears(years);
 
-                        long months = tempDateTime.until(ldt, ChronoUnit.MONTHS);
-                        tempDateTime = tempDateTime.plusMonths(months);
+                    long months = tempDateTime.until(ldt, ChronoUnit.MONTHS);
+                    tempDateTime = tempDateTime.plusMonths(months);
 
-                        long days = tempDateTime.until(ldt, ChronoUnit.DAYS);
-                        tempDateTime = tempDateTime.plusDays(days);
+                    long days = tempDateTime.until(ldt, ChronoUnit.DAYS);
+                    tempDateTime = tempDateTime.plusDays(days);
 
-                        long hours = tempDateTime.until(ldt, ChronoUnit.HOURS);
-                        tempDateTime = tempDateTime.plusHours(hours);
+                    long hours = tempDateTime.until(ldt, ChronoUnit.HOURS);
+                    tempDateTime = tempDateTime.plusHours(hours);
 
-                        long minutes = tempDateTime.until(ldt, ChronoUnit.MINUTES);
-                        tempDateTime = tempDateTime.plusMinutes(minutes);
+                    long minutes = tempDateTime.until(ldt, ChronoUnit.MINUTES);
+                    tempDateTime = tempDateTime.plusMinutes(minutes);
 
-                        long seconds = tempDateTime.until(ldt, ChronoUnit.SECONDS);
-                        long daysStart = Period.between(Tools.convertToLocalDate(ppr.getCounter().getStart()), dateTimeJson.toLocalDate()).get(ChronoUnit.DAYS);
-                        ppr.setFoot(String.format("Текущие сутки ремонта: %d", daysStart + 1));
-                        ppr.setTime(Math.toIntExact(months), Math.toIntExact(days), Math.toIntExact(hours), Math.toIntExact(minutes), Math.toIntExact(seconds));
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    long seconds = tempDateTime.until(ldt, ChronoUnit.SECONDS);
+                    long daysStart = Period.between(Tools.convertToLocalDate(ppr.getCounter().getStart()), dateTimeJson.toLocalDate()).get(ChronoUnit.DAYS);
+                    ppr.setFoot(String.format("Текущие сутки ремонта: %d", daysStart + 1));
+                    ppr.setTime(Math.toIntExact(months), Math.toIntExact(days), Math.toIntExact(hours), Math.toIntExact(minutes), Math.toIntExact(seconds));
+
+                    if(years == 0 && months == 0 && days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+                        ppr.setTitle(ppr.getCounter().getTitle() + " (Окончено!)");
+                        iterator.remove();
                     }
-                });
+                }
             });
 
             try {

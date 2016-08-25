@@ -13,4 +13,9 @@ public class StaricUSImpl implements StaticUS {
     public void addStaticView(StaticView staticView) {
         UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showParentNotifi(staticView.getContent());
     }
+
+    @Override
+    public void removeStaticView(StaticView staticView) {
+        UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().removeParentNotifi(staticView.getContent());
+    }
 }

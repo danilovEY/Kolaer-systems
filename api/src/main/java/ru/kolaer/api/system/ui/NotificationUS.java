@@ -14,6 +14,7 @@ public interface NotificationUS {
 	/**Показать контент нотификации.
 	 * @param pane*/
 	void showParentNotifi(Parent pane);
+	void removeParentNotifi(Parent content);
 	/**Показать простую нотификацию.*/
 	void showSimpleNotifi(String title, String text);
 	/**Показать нотификацию с ошибкой.*/
@@ -35,4 +36,6 @@ public interface NotificationUS {
 
 	void showInformationNotifiAdmin(String title, String text, NotifiAction... actions);
 	void showWarningNotifiAdmin(String title, String text, NotifiAction... actions);
+
+
 }

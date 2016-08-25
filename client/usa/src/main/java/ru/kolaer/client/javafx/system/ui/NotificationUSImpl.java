@@ -27,6 +27,11 @@ public class NotificationUSImpl implements NotificationUS {
 	}
 
 	@Override
+	public void removeParentNotifi(Parent content) {
+
+	}
+
+	@Override
 	public void showSimpleNotifi(final String title, final String text) {
 		this.showSimpleNotifi(title, text, Duration.seconds(5));
 	}

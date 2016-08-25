@@ -5,4 +5,5 @@ package ru.kolaer.api.system.ui;
  */
 public interface StaticUS {
     void addStaticView(StaticView staticView);
+    void removeStaticView(StaticView staticView);
 }
