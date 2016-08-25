@@ -7,4 +7,5 @@ import ru.kolaer.api.system.network.Server;
  */
 public interface KolaerWebServer extends Server {
     ApplicationDataBase getApplicationDataBase();
+    ServerTools getServerTools();
 }

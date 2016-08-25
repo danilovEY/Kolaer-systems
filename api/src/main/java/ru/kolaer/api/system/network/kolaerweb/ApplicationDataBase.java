@@ -7,4 +7,5 @@ public interface ApplicationDataBase {
     GeneralEmployeesTable getGeneralEmployeesTable();
     NotifyMessageTable getNotifyMessageTable();
     PsrTable getPsrTable();
+    CounterTable getCounterTable();
 }

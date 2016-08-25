@@ -1,6 +1,7 @@
 package ru.kolaer.api.system.ui;
 
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.util.Duration;
 
 /**
@@ -10,6 +11,9 @@ import javafx.util.Duration;
  * @version 0.1
  */
 public interface NotificationUS {
+	/**Показать контент нотификации.
+	 * @param pane*/
+	void showParentNotifi(Parent pane);
 	/**Показать простую нотификацию.*/
 	void showSimpleNotifi(String title, String text);
 	/**Показать нотификацию с ошибкой.*/

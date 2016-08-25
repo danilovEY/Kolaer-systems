@@ -4,4 +4,5 @@ public interface UISystemUS {
 	NotificationUS getNotification();
 	DialogUS getDialog();
 	StatusBarUS getStatusBar();
+	StaticUS getStaticUs();
 }
