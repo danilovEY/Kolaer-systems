@@ -1,9 +1,6 @@
 package ru.kolaer.client.javafx.system.ui;
 
-import ru.kolaer.api.system.ui.DialogUS;
-import ru.kolaer.api.system.ui.NotificationUS;
-import ru.kolaer.api.system.ui.StatusBarUS;
-import ru.kolaer.api.system.ui.UISystemUS;
+import ru.kolaer.api.system.ui.*;
 
 /**
  * Реализация системных (приложения) объектов.
@@ -15,9 +12,11 @@ public class UISystemUSImpl implements UISystemUS {
 	private NotificationUS notification;
 	private DialogUS dialog = new DialogUSImpl();
 	private StatusBarUS statusBar;
+	private StaticUS staticUS;
 
 	public UISystemUSImpl(final StatusBarUS statusBar) {
 		this.statusBar = statusBar;
+		this.staticUS = new StaricUSImpl();
 	}
 	
 	public UISystemUSImpl() {
@@ -37,6 +36,11 @@ public class UISystemUSImpl implements UISystemUS {
 	@Override
 	public StatusBarUS getStatusBar() {	
 		return this.statusBar;
+	}
+
+	@Override
+	public StaticUS getStaticUs() {
+		return this.staticUS;
 	}
 
 	public void setNotification(final NotificationUS notificationUS) {

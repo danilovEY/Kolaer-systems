@@ -1,6 +1,5 @@
 package ru.kolaer.client.javafx.system.network.kolaerweb;
 
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.api.system.network.kolaerweb.*;
 
 /**
@@ -10,12 +9,13 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
     private final GeneralEmployeesTable generalEmployeesTable;
     private final PsrTable psrTable;
     private final NotifyMessageTable notifyMessageTable;
+    private final CounterTable counterTable;
 
     public ApplicationDataBaseImpl(String path) {
         this.generalEmployeesTable = new GeneralEmployeesTableImpl(path + "/general" + "/employees");
         this.psrTable = new PsrTableImpl(path + "/psr");
-        this.notifyMessageTable = new NotifyMessageTableImpl(path + "/notify");
-
+        this.notifyMessageTable = new NotifyMessageTableImpl(path + "/non-security/notify");
+        this.counterTable = new CounterTableImpl(path + "/non-security/counters");
     }
 
     @Override
@@ -31,5 +31,10 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
     @Override
     public PsrTable getPsrTable() {
         return this.psrTable;
+    }
+
+    @Override
+    public CounterTable getCounterTable() {
+        return this.counterTable;
     }
 }

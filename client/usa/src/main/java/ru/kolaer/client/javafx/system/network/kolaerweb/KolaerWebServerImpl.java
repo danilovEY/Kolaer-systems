@@ -3,6 +3,7 @@ package ru.kolaer.client.javafx.system.network.kolaerweb;
 import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.api.system.network.kolaerweb.KolaerWebServer;
+import ru.kolaer.api.system.network.kolaerweb.ServerTools;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import java.net.HttpURLConnection;
@@ -13,9 +14,11 @@ import java.net.URL;
  */
 public class KolaerWebServerImpl implements KolaerWebServer {
     private ApplicationDataBase applicationDataBase;
+    private ServerTools serverTools;
 
     public KolaerWebServerImpl(StringBuilder path) {
         this.applicationDataBase = new ApplicationDataBaseImpl(path.append("/rest").toString());
+        this.serverTools = new ServerToolsImpl(path.toString());
     }
 
     @Override
@@ -38,5 +41,10 @@ public class KolaerWebServerImpl implements KolaerWebServer {
     @Override
     public ApplicationDataBase getApplicationDataBase() {
         return this.applicationDataBase;
+    }
+
+    @Override
+    public ServerTools getServerTools() {
+        return this.serverTools;
     }
 }

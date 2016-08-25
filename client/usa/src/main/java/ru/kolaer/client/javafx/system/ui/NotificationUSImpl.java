@@ -1,6 +1,7 @@
 package ru.kolaer.client.javafx.system.ui;
 
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -19,6 +20,11 @@ import java.util.concurrent.TimeUnit;
  * @version 0.1
  */
 public class NotificationUSImpl implements NotificationUS {
+
+	@Override
+	public void showParentNotifi(Parent pane) {
+
+	}
 
 	@Override
 	public void showSimpleNotifi(final String title, final String text) {

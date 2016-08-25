@@ -85,6 +85,27 @@ public class NotificationPane implements NotificationUS, VComponentUI {
     }
 
     @Override
+    public void showParentNotifi(Parent pane) {
+        Tools.runOnThreadFX(() -> {
+            final BorderPane content = new BorderPane();
+            content.setBackground(Background.EMPTY);
+            content.setStyle("-fx-background-color: rgba(255, 156, 0, 0.6); -fx-effect: dropshadow(gaussian , #866839, 4,0,0,1 ); -fx-padding: 3;");
+
+            content.setCenter(pane);
+
+            final Node border = Borders.wrap(content)
+                    .lineBorder()
+                    .thickness(5)
+                    .innerPadding(0)
+                    .radius(5, 5, 5, 5)
+                    .color(Color.color(0.114, 0.161, 0.209))
+                    .build()
+                    .build();
+            this.vBoxAdminNotify.getChildren().add(border);
+        });
+    }
+
+    @Override
     public void showSimpleNotifi(String title, String text) {
         this.sendMessage(SIMPLE_MESSAGE, title, text);
     }
