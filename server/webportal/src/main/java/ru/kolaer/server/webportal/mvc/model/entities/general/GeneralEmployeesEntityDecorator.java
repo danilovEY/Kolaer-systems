@@ -28,7 +28,6 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pnumber")
     public Integer getPnumber() {
         return this.generalEmployeesEntity.getPnumber();

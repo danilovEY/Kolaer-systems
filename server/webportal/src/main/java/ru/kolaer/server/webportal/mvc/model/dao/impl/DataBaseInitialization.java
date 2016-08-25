@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Component;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
+import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.server.webportal.mvc.model.dao.*;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
@@ -29,13 +30,7 @@ public class DataBaseInitialization {
     private RoleDao roleDao;
 
     @Autowired
-    private EmployeeDao employeeDao;
-
-    @Autowired
     private PsrStatusDao psrStatusDao;
-
-    @Autowired
-    private PsrRegisterDao psrRegisterDao;
 
     @Value("${secret_key}")
     private String secretKey;
@@ -65,37 +60,6 @@ public class DataBaseInitialization {
             anoRole.setType(EnumRole.ANONYMOUS);
 
             anonymousAccount.setRoles(Arrays.asList(anoRole));
-
-
-            /*final RestTemplate restTemplate = new RestTemplate();
-            //TODO: доделать!
-            final DbDataAll[] dbDataAlls = restTemplate.getForObject("http://js:8080/ru.kolaer.server.restful/database/dataAll/get/users/max", DbDataAll[].class);
-
-            for(DbDataAll dbDataAll : dbDataAlls) {
-                final GeneralEmployeesEntity dataBaseEmployee = new GeneralEmployeesEntityDecorator();
-                dataBaseEmployee.setPnumber(dbDataAll.getPersonNumber());
-                dataBaseEmployee.setPost(dbDataAll.getPost());
-                dataBaseEmployee.setDepartament(dbDataAll.getDepartament());
-                switch (dbDataAll.getGender()) {
-                    case "Мужской": {dataBaseEmployee.setGender(EnumGender.MALE); break;}
-                    case "Женский": {dataBaseEmployee.setGender(EnumGender.FEMALE); break;}
-                    default: {dataBaseEmployee.setGender(EnumGender.MALE); break;}
-                }
-                dataBaseEmployee.setInitials(dbDataAll.getInitials());
-                dataBaseEmployee.setPhoneNumber(dbDataAll.getPhone());
-                dataBaseEmployee.setMobileNumber(dbDataAll.getMobilePhone());
-
-                final GeneralAccountsEntity dataBaseAccount = new GeneralAccountsEntityDecorator();
-                dataBaseAccount.setUsername(dbDataAll.getLogin());
-                dataBaseAccount.setPassword(new StandardPasswordEncoder(secretKey).encode(dbDataAll.getPassword()));
-                dataBaseAccount.setEmail(dbDataAll.getEmail());
-                dataBaseAccount.setRoles(Arrays.asList(userRole));
-                dataBaseAccount.setGeneralEmployeesEntity(dataBaseEmployee);
-
-                this.employeeDao.persist(dataBaseEmployee);
-
-                this.accountDao.persist(dataBaseAccount);
-            }*/
 
             //==============PSR=====================
             PsrStatus psrStatus = new PsrStatusDecorator();
