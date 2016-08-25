@@ -7,8 +7,6 @@ import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageBase;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.system.Authentication;

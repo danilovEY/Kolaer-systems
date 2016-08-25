@@ -1,7 +1,6 @@
 package ru.kolaer.client.javafx.services;
 
 import org.springframework.web.client.HttpServerErrorException;
-import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;

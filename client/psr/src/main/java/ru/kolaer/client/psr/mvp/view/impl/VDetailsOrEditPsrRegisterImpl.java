@@ -21,7 +21,10 @@ import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.view.VDetailsOrEditPsrRegister;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by danilovey on 04.08.2016.
