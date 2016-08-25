@@ -34,22 +34,22 @@ public class JdbcDbDataAllDaoImpl implements DbDataAllDAO {
 
     @Override
     public List<DbDataAll> getUserRangeBirthday(Date startData, Date endData) {
-        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday FROM db_data_all WHERE birthday BETWEEN ? AND ?", new Object[]{startData,endData}, (rs, row) -> this.createDbDataAll(rs));
+        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday, category_unit, login, password, mobile_phone, phone FROM db_data_all WHERE birthday BETWEEN ? AND ?", new Object[]{startData,endData}, (rs, row) -> this.createDbDataAll(rs));
     }
 
     @Override
     public List<DbDataAll> getUsersByBirthday(Date date) {
-        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday FROM db_data_all WHERE day(birthday) = day(?) and month(birthday) = month(?)", new Object[]{date}, (rs, row) -> this.createDbDataAll(rs));
+        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday, category_unit, login, password, mobile_phone, phone FROM db_data_all WHERE day(birthday) = day(?) and month(birthday) = month(?)", new Object[]{date}, (rs, row) -> this.createDbDataAll(rs));
     }
 
     @Override
     public List<DbDataAll> getUserBirthdayToday() {
-        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday FROM db_data_all WHERE day(birthday) = day(CURRENT_DATE) and month(birthday) = month(CURRENT_DATE)", (rs, row) -> this.createDbDataAll(rs));
+        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday, category_unit, login, password, mobile_phone, phone FROM db_data_all WHERE day(birthday) = day(CURRENT_DATE) and month(birthday) = month(CURRENT_DATE)", (rs, row) -> this.createDbDataAll(rs));
     }
 
     @Override
     public List<DbDataAll> getUsersByInitials(String initials) {
-        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday FROM db_data_all WHERE initials = ?", new Object[]{initials}, (rs, row) -> this.createDbDataAll(rs));
+        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday, category_unit, login, password, mobile_phone, phone FROM db_data_all WHERE initials = ?", new Object[]{initials}, (rs, row) -> this.createDbDataAll(rs));
     }
 
     @Override
@@ -59,12 +59,12 @@ public class JdbcDbDataAllDaoImpl implements DbDataAllDAO {
 
     @Override
     public List<DbDataAll> getAll() {
-        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday FROM db_data_all", (rs, row) -> this.createDbDataAll(rs));
+        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday, category_unit, login, password, mobile_phone, phone FROM db_data_all", (rs, row) -> this.createDbDataAll(rs));
     }
 
     @Override
     public List<DbDataAll> getAllMaxCount(int count) {
-        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday FROM db_data_all LIMIT " + count, (rs, row) -> this.createDbDataAll(rs));
+        return this.jdbcTemplate.query("SELECT person_number, initials, departament, post, email, vCard, birthday, category_unit, login, password, mobile_phone, phone FROM db_data_all LIMIT " + count, (rs, row) -> this.createDbDataAll(rs));
     }
 
     @Override
