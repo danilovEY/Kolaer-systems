@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachment;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
+import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.server.webportal.mvc.model.dao.*;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
@@ -54,11 +56,6 @@ public class DataBaseInitialization {
     public void initDB() {
         if(hibGen.equals("create")) {
             //==============GENERAL=====================
-            final GeneralAccountsEntity superAdminAccount = new GeneralAccountsEntityDecorator();
-            superAdminAccount.setUsername("kolaeradmin");
-            superAdminAccount.setPassword(new StandardPasswordEncoder(secretKey).encode("kolaeradmin"));
-            superAdminAccount.setEmail("oit@kolaer.ru");
-
             final GeneralAccountsEntity anonymousAccount = new GeneralAccountsEntityDecorator();
             anonymousAccount.setUsername("anonymous");
             anonymousAccount.setPassword(new StandardPasswordEncoder(secretKey).encode("anonymous"));
@@ -75,17 +72,38 @@ public class DataBaseInitialization {
             final GeneralRolesEntity anoRole = new GeneralRolesEntityDecorator();
             anoRole.setType(EnumRole.ANONYMOUS);
 
-            superAdminAccount.setRoles(Arrays.asList(superAdminRole));
             anonymousAccount.setRoles(Arrays.asList(anoRole));
 
-            final GeneralEmployeesEntity superAdminEmployee = new GeneralEmployeesEntityDecorator();
-            superAdminEmployee.setPost("Администратор");
-            superAdminEmployee.setDepartament("ОИТ");
-            superAdminEmployee.setGender(EnumGender.MALE);
-            superAdminEmployee.setInitials("Администратор");
-            //superAdminEmployee.setAccountsEntity(Arrays.asList(superAdminAccount));
 
-            superAdminAccount.setGeneralEmployeesEntity(superAdminEmployee);
+            /*final RestTemplate restTemplate = new RestTemplate();
+            //TODO: доделать!
+            final DbDataAll[] dbDataAlls = restTemplate.getForObject("http://js:8080/ru.kolaer.server.restful/database/dataAll/get/users/max", DbDataAll[].class);
+
+            for(DbDataAll dbDataAll : dbDataAlls) {
+                final GeneralEmployeesEntity dataBaseEmployee = new GeneralEmployeesEntityDecorator();
+                dataBaseEmployee.setPnumber(dbDataAll.getPersonNumber());
+                dataBaseEmployee.setPost(dbDataAll.getPost());
+                dataBaseEmployee.setDepartament(dbDataAll.getDepartament());
+                switch (dbDataAll.getGender()) {
+                    case "Мужской": {dataBaseEmployee.setGender(EnumGender.MALE); break;}
+                    case "Женский": {dataBaseEmployee.setGender(EnumGender.FEMALE); break;}
+                    default: {dataBaseEmployee.setGender(EnumGender.MALE); break;}
+                }
+                dataBaseEmployee.setInitials(dbDataAll.getInitials());
+                dataBaseEmployee.setPhoneNumber(dbDataAll.getPhone());
+                dataBaseEmployee.setMobileNumber(dbDataAll.getMobilePhone());
+
+                final GeneralAccountsEntity dataBaseAccount = new GeneralAccountsEntityDecorator();
+                dataBaseAccount.setUsername(dbDataAll.getLogin());
+                dataBaseAccount.setPassword(new StandardPasswordEncoder(secretKey).encode(dbDataAll.getPassword()));
+                dataBaseAccount.setEmail(dbDataAll.getEmail());
+                dataBaseAccount.setRoles(Arrays.asList(userRole));
+                dataBaseAccount.setGeneralEmployeesEntity(dataBaseEmployee);
+
+                this.employeeDao.persist(dataBaseEmployee);
+
+                this.accountDao.persist(dataBaseAccount);
+            }*/
 
             //==============PSR=====================
             PsrStatus psrStatus = new PsrStatusDecorator();
@@ -114,9 +132,6 @@ public class DataBaseInitialization {
             this.roleDao.persist(userRole);
             this.roleDao.persist(anoRole);
 
-            this.employeeDao.persist(superAdminEmployee);
-
-            this.accountDao.persist(superAdminAccount);
             this.accountDao.persist(anonymousAccount);
 
 

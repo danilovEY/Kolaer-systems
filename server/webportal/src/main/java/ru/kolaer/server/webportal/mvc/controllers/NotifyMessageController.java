@@ -16,7 +16,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.NotifyMessageService;
  * Created by danilovey on 18.08.2016.
  */
 @RestController
-@RequestMapping("/notify")
+@RequestMapping("/non-security/notify")
 public class NotifyMessageController {
 
     @Autowired
