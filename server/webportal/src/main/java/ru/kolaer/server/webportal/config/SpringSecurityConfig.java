@@ -68,7 +68,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**").antMatchers("/launcher/**");
+        web.ignoring().antMatchers("/resources/**").antMatchers("/app/**").antMatchers("/rest/non-security/**");
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
