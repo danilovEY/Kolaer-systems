@@ -10,18 +10,13 @@ import java.util.List;
  */
 public interface DaoStandard<T> {
     /**Получить все объекты.*/
-    @Transactional(readOnly = true)
     List<T> findAll();
     /**Получить объект по ID.*/
-    @Transactional(readOnly = true)
     T findByID(int id);
     /**Добавить объект в БД.*/
-    @Transactional
     void persist(T obj);
     /**Удалить объект в БД.*/
-    @Transactional
     void delete(T obj);
 
-    @Transactional
     void update(T entity);
 }

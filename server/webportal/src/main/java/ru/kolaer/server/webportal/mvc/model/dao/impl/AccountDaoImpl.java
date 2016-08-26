@@ -19,6 +19,7 @@ import java.util.List;
 @Repository(value = "accountDao")
 public class AccountDaoImpl implements AccountDao {
     private static final Logger LOG = LoggerFactory.getLogger(AccountDaoImpl.class);
+
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -29,6 +30,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GeneralAccountsEntityDecorator findByID(int id) {
         return null;
     }
@@ -52,6 +54,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GeneralAccountsEntity findName(String username) {
         return (GeneralAccountsEntity) this.sessionFactory.getCurrentSession()
                 .createQuery("from GeneralAccountsEntityDecorator ac where ac.username=:username ")
@@ -59,6 +62,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GeneralAccountsEntity getAccountByNameWithEmployee(String username) {
         final GeneralAccountsEntity acc = this.findName(username);
         Hibernate.initialize(acc.getGeneralEmployeesEntity());

@@ -9,8 +9,6 @@ import java.util.List;
  * Created by danilovey on 29.07.2016.
  */
 public interface PsrRegisterDao extends DaoStandard<PsrRegister> {
-    @Transactional(readOnly = true)
     List<PsrRegister> getIdAndNamePsrRegister();
-    @Transactional(readOnly = true)
     PsrRegister getPsrRegisterByName(String name);
 }

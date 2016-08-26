@@ -27,22 +27,26 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GeneralEmployeesEntity findByID(int id) {
         return this.sessionFactory.getCurrentSession().get(GeneralEmployeesEntityDecorator.class, id);
     }
 
     @Override
+    @Transactional
     public void persist(GeneralEmployeesEntity obj) {
         if(obj != null)
             this.sessionFactory.getCurrentSession().persist(obj);
     }
 
     @Override
+    @Transactional
     public void delete(GeneralEmployeesEntity obj) {
 
     }
 
     @Override
+    @Transactional
     public void update(GeneralEmployeesEntity entity) {
 
     }

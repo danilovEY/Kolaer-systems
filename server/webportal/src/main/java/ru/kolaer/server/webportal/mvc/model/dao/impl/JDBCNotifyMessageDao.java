@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageBase;
 import ru.kolaer.server.webportal.mvc.model.dao.NotifyMessageDao;
@@ -28,11 +29,13 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public NotifyMessage getLastNotifyMessage() {
         return this.findByID(1);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<NotifyMessage> findAll() {
         return this.jdbcTemplate.query("SELECT id, message FROM notifications", (rs, rowNum) -> {
             final NotifyMessage notifyMessage = new NotifyMessageBase();
@@ -43,6 +46,7 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public NotifyMessage findByID(int id) {
         return this.jdbcTemplate.query("SELECT id, message FROM notifications WHERE id = " + id, (rs, rowNum) -> {
             final NotifyMessage notifyMessage = new NotifyMessageBase();
@@ -53,16 +57,19 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     }
 
     @Override
+    @Transactional
     public void persist(NotifyMessage obj) {
         this.jdbcTemplate.update("INSERT INTO notifications (message) VALUES (?)", obj.getMessage());
     }
 
     @Override
+    @Transactional
     public void delete(NotifyMessage obj) {
         this.jdbcTemplate.update("DELETE notifications WHERE id = ?", obj.getId());
     }
 
     @Override
+    @Transactional
     public void update(NotifyMessage obj) {
         this.jdbcTemplate.update("UPDATE notifications SET message = ? WHERE id = ?", obj.getMessage(), obj.getId());
     }
