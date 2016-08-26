@@ -34,7 +34,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = this.getAsHttpRequest(request);
 
-        String authToken = this.extractAuthTokenFromRequest(httpRequest);
+        /*String authToken = this.extractAuthTokenFromRequest(httpRequest);
         String userName = TokenUtils.getUserNameFromToken(authToken);
         if (userName != null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
@@ -45,7 +45,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-        }
+        }*/
 
         request.setCharacterEncoding("UTF-8");
         chain.doFilter(request, response);

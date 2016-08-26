@@ -12,10 +12,11 @@
 
     <!-- in order to debug some marshalling issues, this needs to be TRACE -->
     <logger name="org.springframework.web.servlet.mvc" level="WARN" />
+    <logger name="org.springframework.security.ldap" level="TRACE" />
 
     <logger name="org.hibernate" level="INFO"/>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT" />
     </root>
 

@@ -95,14 +95,18 @@ public class AuthenticationController {
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getToken(@RequestParam(value = "username", defaultValue = "anonymous") String username,
                               @RequestParam(value = "password", defaultValue = "anonymous") String password){
+        LOG.info("111111");
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
+        LOG.info("2222222");
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+        LOG.info("333333");
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        LOG.info("44444");
 
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-
-        return new TokenJson(TokenUtils.createToken(userDetails));
+        //UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+        LOG.info("5555555");
+        return new TokenJson(authentication.getName()+":"+authentication.getCredentials().toString());
     }
 
 }
