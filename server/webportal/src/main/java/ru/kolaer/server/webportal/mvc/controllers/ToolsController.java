@@ -13,6 +13,7 @@ import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
+import ru.kolaer.server.webportal.mvc.model.dao.impl.DataBaseInitialization;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntityDecorator;
@@ -30,15 +31,6 @@ import java.util.Optional;
 @RequestMapping("/non-security/tools")
 public class ToolsController {
 
-    @Value("${secret_key}")
-    private String secretKey;
-
-    @Autowired
-    private EmployeeDao employeeDao;
-
-    @Autowired
-    private AccountDao accountDao;
-
     @RequestMapping(value = "get/time", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public DateTimeJson getTime() {
         final DateTimeJson dateTimeJson = new DateTimeJson();
@@ -49,40 +41,4 @@ public class ToolsController {
         return dateTimeJson;
     }
 
-    @RequestMapping(value = "update", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void updateDb() {
-        //TODO: DON'T LOOK!!!!!
-        final RestTemplate restTemplate = new RestTemplate();
-        final DbDataAll[] dbDataAlls = restTemplate.getForObject("http://js:8080/ru.kolaer.server.restful/database/dataAll/get/users/max", DbDataAll[].class);
-
-        final GeneralRolesEntity userRole = new GeneralRolesEntityDecorator();
-        userRole.setId(3);
-        userRole.setType(EnumRole.USER);
-
-        for(DbDataAll dbDataAll : dbDataAlls) {
-            final GeneralEmployeesEntity dataBaseEmployee = new GeneralEmployeesEntityDecorator();
-            dataBaseEmployee.setPnumber(dbDataAll.getPersonNumber());
-            dataBaseEmployee.setPost(dbDataAll.getPost());
-            dataBaseEmployee.setDepartament(dbDataAll.getDepartament());
-            switch (dbDataAll.getGender()) {
-                case "Мужской": {dataBaseEmployee.setGender(EnumGender.MALE); break;}
-                case "Женский": {dataBaseEmployee.setGender(EnumGender.FEMALE); break;}
-                default: {dataBaseEmployee.setGender(EnumGender.MALE); break;}
-            }
-            dataBaseEmployee.setInitials(dbDataAll.getInitials());
-            dataBaseEmployee.setPhoneNumber(dbDataAll.getPhone());
-            dataBaseEmployee.setMobileNumber(dbDataAll.getMobilePhone());
-
-            final GeneralAccountsEntity dataBaseAccount = new GeneralAccountsEntityDecorator();
-            dataBaseAccount.setUsername(Optional.ofNullable(dbDataAll.getLogin()).orElse(dataBaseEmployee.getPnumber().toString()));
-            dataBaseAccount.setPassword(new StandardPasswordEncoder(secretKey).encode(Optional.ofNullable(dbDataAll.getPassword()).orElse(dataBaseAccount.getUsername())));
-            dataBaseAccount.setEmail(dbDataAll.getEmail());
-            dataBaseAccount.setRoles(Arrays.asList(userRole));
-            dataBaseAccount.setGeneralEmployeesEntity(dataBaseEmployee);
-
-            this.employeeDao.persist(dataBaseEmployee);
-
-            this.accountDao.persist(dataBaseAccount);
-        }
-    }
 }
