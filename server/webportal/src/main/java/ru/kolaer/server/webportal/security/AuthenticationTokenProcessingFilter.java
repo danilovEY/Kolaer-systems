@@ -39,10 +39,8 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
         String userName = TokenUtils.getUserNameFromToken(authToken);
         if (userName != null) {
             final UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-            LOG.info("????????");
             if(userDetails != null){
                 if (TokenUtils.validateTokenLDAP(authToken, userDetails)) {
-                    LOG.info("!!!!!!");
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
