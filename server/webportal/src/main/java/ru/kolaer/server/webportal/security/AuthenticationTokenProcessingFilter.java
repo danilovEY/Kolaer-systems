@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,18 +35,20 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = this.getAsHttpRequest(request);
 
-        /*String authToken = this.extractAuthTokenFromRequest(httpRequest);
+        String authToken = this.extractAuthTokenFromRequest(httpRequest);
         String userName = TokenUtils.getUserNameFromToken(authToken);
         if (userName != null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
-            if(userDetails != null) {
-                if (TokenUtils.validateToken(authToken, userDetails)) {
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+            LOG.info("????????");
+            if(userDetails != null){
+                if (TokenUtils.validateTokenLDAP(authToken, userDetails)) {
+                    LOG.info("!!!!!!");
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-        }*/
+        }
 
         request.setCharacterEncoding("UTF-8");
         chain.doFilter(request, response);

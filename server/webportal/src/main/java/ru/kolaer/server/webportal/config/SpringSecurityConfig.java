@@ -1,19 +1,16 @@
 package ru.kolaer.server.webportal.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,11 +18,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
-import org.springframework.security.ldap.authentication.AbstractLdapAuthenticationProvider;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
@@ -34,20 +28,11 @@ import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 import ru.kolaer.server.webportal.security.AuthenticationTokenProcessingFilter;
 import ru.kolaer.server.webportal.security.SecurityMetadataSourceFilter;
 import ru.kolaer.server.webportal.security.UnauthorizedEntryPoint;
+import ru.kolaer.server.webportal.security.UserDetailsServiceLDAP;
+import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
 
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
-import javax.naming.ldap.InitialLdapContext;
-import javax.naming.ldap.LdapName;
+import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Hashtable;
-
-import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
 
 /**
  * Created by Danilov on 17.07.2016.
@@ -59,6 +44,7 @@ import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
  */
 @Configuration
 @ComponentScan("ru.kolaer.server.webportal.security")
+@PropertySource("classpath:ldap.properties")
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -81,6 +67,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${secret_key}")
     private String secretKey;
 
+    @Resource
+    private Environment env;
+
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProviderLDAP());
@@ -100,7 +89,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
                 .and()
         //Фильтер для проверки http request'а на наличие правильного токена
-        .addFilterBefore(new AuthenticationTokenProcessingFilter(this.userDetailsService), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(new AuthenticationTokenProcessingFilter(this.userDetailsServiceLDAP()), UsernamePasswordAuthenticationFilter.class)
         //Фильтер для проверки URL'ов.
         .addFilter(filter());
     }
@@ -125,71 +114,21 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DefaultSpringSecurityContextSource ldapDataSource() {
-        DefaultSpringSecurityContextSource dataSource = new DefaultSpringSecurityContextSource("ldap://aerdc01.kolaer.local:389/dc=kolaer,dc=local");
-        dataSource.setUserDn("admindc");
-        dataSource.setPassword("2Serdce3");
-        return dataSource;
+    public UserDetailsServiceLDAP userDetailsServiceLDAP() {
+        UserDetailsServiceLDAP userDetailsServiceLDAP = new UserDetailsServiceLDAP();
+        userDetailsServiceLDAP.setDc(this.env.getProperty("ldap.dc"));
+        userDetailsServiceLDAP.setServer(this.env.getProperty("ldap.server"));
+        userDetailsServiceLDAP.setAdmin(this.env.getProperty("ldap.server.admin"));
+        userDetailsServiceLDAP.setPass(this.env.getProperty("ldap.server.pass"));
+        userDetailsServiceLDAP.setSsl(Boolean.getBoolean(this.env.getProperty("ldap.ssl")));
+        return userDetailsServiceLDAP;
     }
 
-
-    private AbstractLdapAuthenticationProvider authProviderLDAP() {
-        final AbstractLdapAuthenticationProvider authProvider = new AbstractLdapAuthenticationProvider(){
-            private final Logger LOG = LoggerFactory.getLogger(SpringSecurityConfig.class);
-
-            @Override
-            protected DirContextOperations doAuthentication(UsernamePasswordAuthenticationToken auth) {
-                LOG.info("UP: {}", auth);
-                LOG.info("UP.name: {}", auth.getName());
-
-                Hashtable props = new Hashtable();
-                String principalName = auth.getName() + "@kolaer.local";
-                System.out.println(principalName);
-                props.put(Context.SECURITY_PRINCIPAL, principalName);
-                props.put(Context.SECURITY_CREDENTIALS, auth.getCredentials().toString());
-
-
-                String ldapURL = "ldap://aerdc01.kolaer.local/";
-                props.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-                props.put(Context.PROVIDER_URL, ldapURL);
-                //props.put(Context.SECURITY_PROTOCOL, "ssl");
-                try{
-                    InitialLdapContext context = new InitialLdapContext(props, null);
-
-                    SearchControls controls = new SearchControls();
-                    controls.setSearchScope(SUBTREE_SCOPE);
-                    controls.setReturningAttributes(new String [] {
-                            "nsRole",
-                            "userpassword",
-                            "uid",
-                            "objectClass",
-                            "givenName",
-                            "sn",
-                            "cn"
-                    });
-
-                    NamingEnumeration<SearchResult> answer = context.search( "DC=kolaer,DC=local", "(& (userPrincipalName="+principalName+")(objectClass=person))", controls);
-                    DirContextAdapter dir = new DirContextAdapter(answer.next().getAttributes(), new LdapName("dn="+auth.getName()), new LdapName("userPrincipalName="+principalName));
-                    answer.close();
-                    return dir;
-                }
-                catch(NamingException e){
-                    e.printStackTrace();
-                }
-
-
-                return null;
-
-            }
-
-            @Override
-            protected Collection<? extends GrantedAuthority> loadUserAuthorities(DirContextOperations userData, String username, String password) {
-                LOG.info("Dir: {}", userData);
-                LOG.info("Dir.username: {}", username);
-                LOG.info("Dir.pass: {}", password);
-                return Collections.emptyList();
-            }
-        };
+    private CustomLdapAuthenticationProvider authProviderLDAP() {
+        final CustomLdapAuthenticationProvider authProvider = new CustomLdapAuthenticationProvider();
+        authProvider.setDc(this.env.getProperty("ldap.dc"));
+        authProvider.setServer(this.env.getProperty("ldap.server"));
+        authProvider.setSsl(Boolean.getBoolean(this.env.getProperty("ldap.ssl")));
         return authProvider;
     }
 

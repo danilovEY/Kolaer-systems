@@ -42,7 +42,7 @@ public class AuthenticationController {
     private String secretKey;
 
     @Autowired
-    @Qualifier("userDetailsService")
+    @Qualifier("userDetailsServiceLDAP")
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -103,10 +103,9 @@ public class AuthenticationController {
         LOG.info("333333");
         SecurityContextHolder.getContext().setAuthentication(authentication);
         LOG.info("44444");
-
-        //UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
         LOG.info("5555555");
-        return new TokenJson(authentication.getName()+":"+authentication.getCredentials().toString());
+        return new TokenJson(TokenUtils.createTokenLDAP(userDetails));
     }
 
 }

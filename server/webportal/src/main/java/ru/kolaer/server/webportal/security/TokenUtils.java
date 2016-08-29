@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.security;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.codec.Hex;
 
@@ -95,5 +96,21 @@ public class TokenUtils {
         }
 
         return signature.equals(TokenUtils.computeSignature(userDetails.getUsername(), userDetails.getPassword(), expires));
+    }
+
+    public static boolean validateTokenLDAP(String authToken, UserDetails userDetails) {
+        String[] parts = authToken.split(":");
+        long expires = Long.parseLong(parts[1]);
+        String signature = parts[2];
+
+        if (expires < System.currentTimeMillis()) {
+            return false;
+        }
+
+        return signature.equals(TokenUtils.computeSignature(userDetails.getUsername(), MAGIC_KEY, expires));
+    }
+
+    public static String createTokenLDAP(UserDetails userDetails) {
+        return createToken(userDetails.getUsername(), MAGIC_KEY);
     }
 }
