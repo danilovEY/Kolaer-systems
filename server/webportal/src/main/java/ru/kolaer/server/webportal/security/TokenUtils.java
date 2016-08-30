@@ -20,7 +20,7 @@ public class TokenUtils {
      * @param password пароль
      * @return токен
      */
-    public static String createToken(String username, String password) {
+    public static String createToken(String username, String password, String postfix) {
         long expires = System.currentTimeMillis() + 1000L * 60 * 60;
 
         StringBuilder tokenBuilder = new StringBuilder();
@@ -29,12 +29,14 @@ public class TokenUtils {
         tokenBuilder.append(expires);
         tokenBuilder.append(":");
         tokenBuilder.append(TokenUtils.computeSignature(username,password, expires));
+        tokenBuilder.append(":");
+        tokenBuilder.append(postfix);
 
         return tokenBuilder.toString();
     }
 
     public static String createToken(UserDetails userDetails) {
-        return TokenUtils.createToken(userDetails.getUsername(), userDetails.getPassword());
+        return TokenUtils.createToken(userDetails.getUsername(), userDetails.getPassword(), "SQL");
     }
 
     /**
@@ -80,6 +82,20 @@ public class TokenUtils {
     }
 
     /**
+     * Получить логин из токена.
+     * @param authToken токен
+     * @return логин
+     */
+    public static boolean isLDAP(String authToken) {
+        if (null == authToken) {
+            return false;
+        }
+
+        String[] parts = authToken.split(":");
+        return parts[3].equals("LDAP");
+    }
+
+    /**
      * Проверка токена на валидность.
      * @param authToken токен
      * @param userDetails пользователь
@@ -109,6 +125,6 @@ public class TokenUtils {
     }
 
     public static String createTokenLDAP(UserDetails userDetails) {
-        return createToken(userDetails.getUsername(), MAGIC_KEY);
+        return createToken(userDetails.getUsername(), MAGIC_KEY, "LDAP");
     }
 }

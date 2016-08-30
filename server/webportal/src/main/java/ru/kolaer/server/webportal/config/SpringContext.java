@@ -34,6 +34,7 @@ import java.util.List;
 @EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan({"ru.kolaer.server.webportal.spring",
+        "ru.kolaer.server.webportal.beans",
         "ru.kolaer.server.webportal.mvc.model.dao.impl",
         "ru.kolaer.server.webportal.mvc.model.servirces.impl",
         "ru.kolaer.server.webportal.mvc.controllers"})

@@ -22,10 +22,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.kolaer.api.tools.Tools;
+import ru.kolaer.server.webportal.beans.SeterProviderBean;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
-import ru.kolaer.server.webportal.security.ldap.ToolsLDAP;
+import ru.kolaer.server.webportal.beans.ToolsLDAP;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -54,12 +56,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private Environment env;
 
+    @Autowired
+    private SeterProviderBean seterProviderBean;
+
+    @Autowired
+    private ToolsLDAP toolsLDAP;
+
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        if(this.env.getProperty("ldap.enable").equals("true"))
-            auth.authenticationProvider(authProviderLDAP());
-        else
-            auth.authenticationProvider(authProviderSQL());
+        auth.authenticationProvider(this.authProviderLDAP()).authenticationProvider(this.authProviderSQL());
     }
 
     @Override
@@ -68,7 +73,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        final UserDetailsService userDetailsService = this.customUserDetailsService();
+        final UserDetailsService userDetailsService = this.userDetailsServiceLDAP();
 
         //Отключаем csrf хак
         http.csrf().disable()
@@ -78,9 +83,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
                 .and()
         //Фильтер для проверки http request'а на наличие правильного токена
-        .addFilterBefore(new AuthenticationTokenProcessingFilter(userDetailsService, this.env.getProperty("ldap.enable").equals("true")), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(authenticationTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
         //Фильтер для проверки URL'ов.
         .addFilter(filter());
+    }
+
+    @Bean
+    public AuthenticationTokenProcessingFilter authenticationTokenProcessingFilter() {
+        return new AuthenticationTokenProcessingFilter();
     }
 
     @Bean
@@ -103,30 +113,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public UserDetailsService customUserDetailsService() {
-        UserDetailsService userDetailsService;
-        if(this.env.getProperty("ldap.enable").equals("true")) {
-            UserDetailsServiceLDAP userDetailsServiceLDAP = new UserDetailsServiceLDAP();
-            userDetailsServiceLDAP.setDc(this.env.getProperty("ldap.dc"));
-            userDetailsServiceLDAP.setServer(this.env.getProperty("ldap.server"));
-            userDetailsServiceLDAP.setAdmin(this.env.getProperty("ldap.server.admin"));
-            userDetailsServiceLDAP.setPass(this.env.getProperty("ldap.server.pass"));
-            userDetailsServiceLDAP.setSsl(Boolean.getBoolean(this.env.getProperty("ldap.ssl")));
-            userDetailsService = userDetailsServiceLDAP;
-        } else {
-            userDetailsService = new UserDetailsServiceImpl();
-        }
-
-        return userDetailsService;
+    public UserDetailsService userDetailsServiceLDAP() {
+        UserDetailsServiceLDAP userDetailsServiceLDAP = new UserDetailsServiceLDAP();
+        userDetailsServiceLDAP.setDc(this.env.getProperty("ldap.dc"));
+        userDetailsServiceLDAP.setServer(this.env.getProperty("ldap.server"));
+        userDetailsServiceLDAP.setAdmin(this.env.getProperty("ldap.server.admin"));
+        userDetailsServiceLDAP.setPass(this.env.getProperty("ldap.server.pass"));
+        userDetailsServiceLDAP.setSsl(Boolean.getBoolean(this.env.getProperty("ldap.ssl")));
+        return userDetailsServiceLDAP;
     }
 
     @Bean
-    public ToolsLDAP toolsLDAP() {
-        return new ToolsLDAP();
+    public UserDetailsService userDetailsServiceSQL() {
+        return new UserDetailsServiceImpl();
     }
 
     private CustomLdapAuthenticationProvider authProviderLDAP() {
-        final CustomLdapAuthenticationProvider authProvider = new CustomLdapAuthenticationProvider(this.toolsLDAP());
+        final CustomLdapAuthenticationProvider authProvider = new CustomLdapAuthenticationProvider(this.seterProviderBean, this.toolsLDAP);
         authProvider.setDc(this.env.getProperty("ldap.dc"));
         authProvider.setServer(this.env.getProperty("ldap.server"));
         authProvider.setSsl(Boolean.getBoolean(this.env.getProperty("ldap.ssl")));
@@ -136,7 +139,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     /**Создание provider для проверки пользователей из БД с шифрованием пароля.*/
     private DaoAuthenticationProvider authProviderSQL() {
         final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(customUserDetailsService());
+        authProvider.setUserDetailsService(this.userDetailsServiceSQL());
         authProvider.setPasswordEncoder(new StandardPasswordEncoder(this.secretKey));
         return authProvider;
     }

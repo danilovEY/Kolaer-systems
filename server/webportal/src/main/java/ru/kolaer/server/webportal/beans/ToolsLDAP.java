@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.security.ldap;
+package ru.kolaer.server.webportal.beans;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * Created by danilovey on 30.08.2016.
  */
+@Component
 public class ToolsLDAP {
     private final Logger LOG = LoggerFactory.getLogger(ToolsLDAP.class);
 

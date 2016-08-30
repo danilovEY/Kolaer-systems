@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.security.ldap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.authentication.AbstractLdapAuthenticationProvider;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import ru.kolaer.server.webportal.beans.SeterProviderBean;
+import ru.kolaer.server.webportal.beans.ToolsLDAP;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -36,12 +39,14 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
             "sn","givenname","memberOf","samaccountname",
             "userPrincipalName"
     };
-    private ToolsLDAP toolsLDAP;
     private String dc;
     private String server;
     private boolean ssl;
+    private SeterProviderBean seterProviderBean;
+    private ToolsLDAP toolsLDAP;
 
-    public CustomLdapAuthenticationProvider(ToolsLDAP toolsLDAP) {
+    public CustomLdapAuthenticationProvider(SeterProviderBean seterProviderBean,  ToolsLDAP toolsLDAP){
+        this.seterProviderBean = seterProviderBean;
         this.toolsLDAP = toolsLDAP;
     }
 
@@ -67,6 +72,9 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
 
         DirContextOperations userData = doAuthentication(userToken);
 
+        if(userData == null)
+            return null;
+
         UserDetails user = this.userDetailsContextMapper.mapUserFromContext(userData,
                 authentication.getName(),
                 loadUserAuthorities(userData, authentication.getName(),
@@ -77,7 +85,7 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
 
     @Override
     protected DirContextOperations doAuthentication(UsernamePasswordAuthenticationToken auth) {
-        final Hashtable props = new Hashtable();
+        final Hashtable<String, Object> props = new Hashtable<>();
         String principalName = auth.getName() + "@" + this.dc;
         props.put(Context.SECURITY_PRINCIPAL, principalName);
         props.put(Context.SECURITY_CREDENTIALS, auth.getCredentials().toString());
@@ -106,10 +114,12 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
             final NamingEnumeration<SearchResult> answer = context.search( "DC=kolaer,DC=local", "(& (userPrincipalName="+principalName+")(objectClass=person))", controls);
             final DirContextAdapter dir = new DirContextAdapter(answer.next().getAttributes(), new LdapName("dn="+auth.getName()), new LdapName("userPrincipalName="+principalName));
             answer.close();
+
+            this.seterProviderBean.setLDAP(true);
+
             return dir;
-        }
-        catch(NamingException e){
-            LOG.error("Ошибка при парсинге атрибутов!", e);
+        }  catch(NamingException e){
+            LOG.error("Ошибка при подключении к LDAP! {}", e.getMessage());
         }
 
         return null;

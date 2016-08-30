@@ -21,6 +21,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.beans.SeterProviderBean;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.security.TokenUtils;
 
@@ -37,9 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthenticationController {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationController.class);
 
-    @Resource
-    private Environment env;
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -47,7 +45,13 @@ public class AuthenticationController {
     private String secretKey;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsServiceLDAP;
+
+    @Autowired
+    private UserDetailsService userDetailsServiceSQL;
+
+    @Autowired
+    private SeterProviderBean seterProviderBean;
 
     @Autowired
     @Qualifier("accountDao")
@@ -103,11 +107,13 @@ public class AuthenticationController {
                 new UsernamePasswordAuthenticationToken(username, password);
 
         final Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-        final String tokenJson = env.getProperty("ldap.enable").equals("true") ? TokenUtils.createTokenLDAP(userDetails) : TokenUtils.createToken(userDetails);
+        final boolean isLDAP = this.seterProviderBean.isLDAP();
+
+        final UserDetails userDetails = isLDAP ? this.userDetailsServiceLDAP.loadUserByUsername(username) : this.userDetailsServiceSQL.loadUserByUsername(username);;
+
+        final String tokenJson = isLDAP ? TokenUtils.createTokenLDAP(userDetails) : TokenUtils.createToken(userDetails);
         return new TokenJson(tokenJson);
     }
 
