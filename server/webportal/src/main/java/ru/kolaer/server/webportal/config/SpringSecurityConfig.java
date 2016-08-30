@@ -27,6 +27,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
+import ru.kolaer.server.webportal.security.ldap.ToolsLDAP;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -79,7 +80,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
                 .and()
         //Фильтер для проверки http request'а на наличие правильного токена
-        .addFilterBefore(new AuthenticationTokenProcessingFilter(userDetailsService), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(new AuthenticationTokenProcessingFilter(userDetailsService, this.env.getProperty("ldap.enable").equals("true")), UsernamePasswordAuthenticationFilter.class)
         //Фильтер для проверки URL'ов.
         .addFilter(filter());
     }
@@ -121,8 +122,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return userDetailsService;
     }
 
+    @Bean
+    public ToolsLDAP toolsLDAP() {
+        return new ToolsLDAP();
+    }
+
     private CustomLdapAuthenticationProvider authProviderLDAP() {
-        final CustomLdapAuthenticationProvider authProvider = new CustomLdapAuthenticationProvider();
+        final CustomLdapAuthenticationProvider authProvider = new CustomLdapAuthenticationProvider(this.toolsLDAP());
         authProvider.setDc(this.env.getProperty("ldap.dc"));
         authProvider.setServer(this.env.getProperty("ldap.server"));
         authProvider.setSsl(Boolean.getBoolean(this.env.getProperty("ldap.ssl")));

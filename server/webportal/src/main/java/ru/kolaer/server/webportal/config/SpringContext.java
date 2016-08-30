@@ -39,7 +39,7 @@ import java.util.List;
         "ru.kolaer.server.webportal.mvc.controllers"})
 @PropertySource("classpath:database.properties")
 //@ImportResource({"/WEB-INF/spring-config/spring-context.groovy"})
-public class SprintContext extends WebMvcConfigurerAdapter {
+public class SpringContext extends WebMvcConfigurerAdapter {
 
     @Resource
     private Environment env;

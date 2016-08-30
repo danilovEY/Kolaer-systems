@@ -2,17 +2,17 @@ package ru.kolaer.server.webportal.security.ldap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.authentication.AbstractLdapAuthenticationProvider;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import ru.kolaer.server.webportal.config.SpringSecurityConfig;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.naming.Context;
@@ -38,11 +38,44 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
             "sn","givenname","memberOf","samaccountname",
             "userPrincipalName"
     };
-
+    private ToolsLDAP toolsLDAP;
     private String dc;
     private String server;
     private boolean ssl;
 
+    public CustomLdapAuthenticationProvider(ToolsLDAP toolsLDAP) {
+        this.toolsLDAP = toolsLDAP;
+    }
+
+    @Override
+    public Authentication authenticate(Authentication authentication)
+            throws AuthenticationException {
+        Assert.isInstanceOf(UsernamePasswordAuthenticationToken.class, authentication,
+                this.messages.getMessage("LdapAuthenticationProvider.onlySupports",
+                        "Only UsernamePasswordAuthenticationToken is supported"));
+
+        final UsernamePasswordAuthenticationToken userToken = (UsernamePasswordAuthenticationToken) authentication;
+
+        String username = userToken.getName();
+
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Processing authentication request for user: " + username);
+        }
+
+        if (!StringUtils.hasLength(username)) {
+            throw new BadCredentialsException(this.messages.getMessage(
+                    "LdapAuthenticationProvider.emptyUsername", "Empty Username"));
+        }
+
+        DirContextOperations userData = doAuthentication(userToken);
+
+        UserDetails user = this.userDetailsContextMapper.mapUserFromContext(userData,
+                authentication.getName(),
+                loadUserAuthorities(userData, authentication.getName(),
+                        (String) authentication.getCredentials()));
+
+        return createSuccessfulAuthentication(userToken, user);
+    }
 
     @Override
     protected DirContextOperations doAuthentication(UsernamePasswordAuthenticationToken auth) {
@@ -50,7 +83,7 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
         String principalName = auth.getName() + "@" + this.dc;
         props.put(Context.SECURITY_PRINCIPAL, principalName);
         props.put(Context.SECURITY_CREDENTIALS, auth.getCredentials().toString());
-
+        LOG.debug("PASS: {}", auth.getCredentials().toString());
 
         String ldapURL;
         if(!this.ssl){
@@ -87,28 +120,7 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
     @Override
     protected Collection<? extends GrantedAuthority> loadUserAuthorities(DirContextOperations userData, String username, String password) {
         LOG.debug("Dir: {}", userData);
-        final List<GrantedAuthority> roles = new ArrayList<>();
-        try {
-            final Attribute cn = userData.getAttributes().get("memberOf");
-            for(int i = 0; i< cn.size(); i++) {
-                final String value = (String) cn.get(i);
-                final String group = value.substring(3, value.indexOf(','));
-                final SimpleGrantedAuthority simpleGrantedAuthority = this.getRole(group);
-                if(simpleGrantedAuthority != null)
-                    roles.add(simpleGrantedAuthority);
-            }
-        } catch (NamingException e) {
-            LOG.error("Ошибка при парсинге атрибутов!", e);
-        }
-        return roles;
-    }
-
-    private SimpleGrantedAuthority getRole(String role) {
-        switch (role) {
-            case "Domain users": return new SimpleGrantedAuthority("USER");
-            case "OIT": return new SimpleGrantedAuthority("SUPER_ADMIN");
-            default: return null;
-        }
+        return this.toolsLDAP.getRolesFromAttributes(userData.getAttributes());
     }
 
     public String getDc() {

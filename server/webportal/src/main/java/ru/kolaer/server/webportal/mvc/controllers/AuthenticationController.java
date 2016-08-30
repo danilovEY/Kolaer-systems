@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,9 +21,12 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.config.SpringContext;
+import ru.kolaer.server.webportal.config.SpringSecurityConfig;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.security.TokenUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,6 +38,9 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "/authentication")
 public class AuthenticationController {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationController.class);
+
+    @Resource
+    private Environment env;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -93,17 +100,17 @@ public class AuthenticationController {
     @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя) (?username={login}&password={pass})", isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getToken(@RequestParam(value = "username", defaultValue = "anonymous") String username,
-                              @RequestParam(value = "password", defaultValue = "anonymous") String password){
-        UsernamePasswordAuthenticationToken authenticationToken =
+                              @RequestParam(value = "password", defaultValue = "") String password){
+        final UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
 
-        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+        final Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-
-        return new TokenJson(TokenUtils.createTokenLDAP(userDetails));
+        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+        final String tokenJson = env.getProperty("ldap.enable").equals("true") ? TokenUtils.createTokenLDAP(userDetails) : TokenUtils.createToken(userDetails);
+        return new TokenJson(tokenJson);
     }
 
 }

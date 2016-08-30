@@ -94,7 +94,6 @@ public class TokenUtils {
         if (expires < System.currentTimeMillis()) {
             return false;
         }
-
         return signature.equals(TokenUtils.computeSignature(userDetails.getUsername(), userDetails.getPassword(), expires));
     }
 

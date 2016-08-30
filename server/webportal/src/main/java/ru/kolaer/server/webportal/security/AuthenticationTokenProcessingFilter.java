@@ -26,9 +26,11 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationTokenProcessingFilter.class);
 
     private UserDetailsService userDetailsService;
+    private final boolean isLDAP;
 
-    public AuthenticationTokenProcessingFilter(UserDetailsService userService) {
+    public AuthenticationTokenProcessingFilter(UserDetailsService userService, boolean isLDAP) {
         this.userDetailsService = userService;
+        this.isLDAP = isLDAP;
     }
 
     @Override
@@ -40,7 +42,8 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
         if (userName != null) {
             final UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
             if(userDetails != null){
-                if (TokenUtils.validateTokenLDAP(authToken, userDetails)) {
+                boolean tokenVal = this.isLDAP ? TokenUtils.validateTokenLDAP(authToken, userDetails) : TokenUtils.validateToken(authToken, userDetails);
+                if (tokenVal) {
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);

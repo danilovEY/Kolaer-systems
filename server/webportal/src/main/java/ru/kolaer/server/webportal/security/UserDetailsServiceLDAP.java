@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
+import ru.kolaer.server.webportal.security.ldap.ToolsLDAP;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -18,6 +20,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -28,6 +31,9 @@ import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
  */
 public class UserDetailsServiceLDAP implements UserDetailsService {
     private final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceLDAP.class);
+
+    @Autowired
+    private ToolsLDAP toolsLDAP;
 
     private String server;
     private String dc;
@@ -69,22 +75,11 @@ public class UserDetailsServiceLDAP implements UserDetailsService {
 
             final NamingEnumeration<SearchResult> answer = context.search("DC=kolaer,DC=local", "(& (userPrincipalName="+principalName+")(objectClass=person))", controls);
 
-            final List<GrantedAuthority> roles = new ArrayList<>();
-            try {
-                final Attribute cn = answer.next().getAttributes().get("memberOf");
-                for(int i = 0; i< cn.size(); i++) {
-                    final String value = (String) cn.get(i);
-                    final String group = value.substring(3, value.indexOf(','));
-                    final SimpleGrantedAuthority simpleGrantedAuthority = this.getRole(group);
-                    if(simpleGrantedAuthority != null)
-                        roles.add(simpleGrantedAuthority);
-                }
-            } catch (NamingException e) {
-                LOG.error("Ошибка при парсинге атрибутов!", e);
-            }
+            final Collection<? extends GrantedAuthority> roles;
+
+            roles = toolsLDAP.getRolesFromAttributes(answer.next().getAttributes());
 
             answer.close();
-            roles.forEach(r -> LOG.info(r.getAuthority()));
             final UserDetails userDetails = new User(username, "123", true,true,true,true, roles);
             return userDetails;
         }
@@ -93,14 +88,6 @@ public class UserDetailsServiceLDAP implements UserDetailsService {
         }
 
         return null;
-    }
-
-    private SimpleGrantedAuthority getRole(String role) {
-        switch (role) {
-            case "Domain users": return new SimpleGrantedAuthority(EnumRole.USER.toString());
-            case "OIT": return new SimpleGrantedAuthority(EnumRole.SUPER_ADMIN.toString());
-            default: return null;
-        }
     }
 
     public String getServer() {

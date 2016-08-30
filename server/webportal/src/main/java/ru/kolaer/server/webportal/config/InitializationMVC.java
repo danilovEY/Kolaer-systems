@@ -29,7 +29,7 @@ public class InitializationMVC extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] {SprintContext.class, SpringSecurityConfig.class };
+        return new Class[] {SpringContext.class, SpringSecurityConfig.class };
     }
   
     @Override
