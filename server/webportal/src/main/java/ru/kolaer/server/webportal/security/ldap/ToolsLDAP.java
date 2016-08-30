@@ -17,7 +17,6 @@ import java.util.List;
 /**
  * Created by danilovey on 30.08.2016.
  */
-@Component
 public class ToolsLDAP {
     private final Logger LOG = LoggerFactory.getLogger(ToolsLDAP.class);
 
