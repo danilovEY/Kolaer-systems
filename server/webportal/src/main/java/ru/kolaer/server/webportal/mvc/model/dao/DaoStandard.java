@@ -1,7 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 /**

@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.security;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.codec.Hex;
 
