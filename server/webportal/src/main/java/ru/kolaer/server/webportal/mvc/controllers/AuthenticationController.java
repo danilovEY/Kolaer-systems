@@ -107,6 +107,7 @@ public class AuthenticationController {
                 new UsernamePasswordAuthenticationToken(username, password);
 
         final Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         final boolean isLDAP = this.seterProviderBean.isLDAP();

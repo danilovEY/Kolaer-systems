@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * Created by danilovey on 30.08.2016.
  */
 @Component
-@Scope(scopeName = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(scopeName = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class SeterProviderBean {
     private boolean isLDAP;
 
