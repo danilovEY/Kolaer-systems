@@ -8,6 +8,7 @@ public class GeneralRolesEntityBase implements GeneralRolesEntity{
     private Integer id;
     private EnumRole type;
 
+
     public Integer getId() {
         return id;
     }

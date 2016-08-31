@@ -42,13 +42,9 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
     private String dc;
     private String server;
     private boolean ssl;
-    private SeterProviderBean seterProviderBean;
-    private ToolsLDAP toolsLDAP;
 
-    public CustomLdapAuthenticationProvider(SeterProviderBean seterProviderBean,  ToolsLDAP toolsLDAP){
-        this.seterProviderBean = seterProviderBean;
-        this.toolsLDAP = toolsLDAP;
-    }
+    @Autowired
+    private SeterProviderBean seterProviderBean;
 
     @Override
     public Authentication authenticate(Authentication authentication)
@@ -75,11 +71,12 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
         if(userData == null)
             return null;
 
+        this.seterProviderBean.setLDAP(true);
+
         UserDetails user = this.userDetailsContextMapper.mapUserFromContext(userData,
                 authentication.getName(),
                 loadUserAuthorities(userData, authentication.getName(),
                         (String) authentication.getCredentials()));
-
         return createSuccessfulAuthentication(userToken, user);
     }
 
@@ -115,8 +112,6 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
             final DirContextAdapter dir = new DirContextAdapter(answer.next().getAttributes(), new LdapName("dn="+auth.getName()), new LdapName("userPrincipalName="+principalName));
             answer.close();
 
-            this.seterProviderBean.setLDAP(true);
-
             return dir;
         }  catch(NamingException e){
             LOG.error("Ошибка при подключении к LDAP! {}", e.getMessage());
@@ -128,7 +123,7 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
     @Override
     protected Collection<? extends GrantedAuthority> loadUserAuthorities(DirContextOperations userData, String username, String password) {
         LOG.debug("Dir: {}", userData);
-        return this.toolsLDAP.getRolesFromAttributes(userData.getAttributes());
+        return ToolsLDAP.getRolesFromAttributes(userData.getAttributes());
     }
 
     public String getDc() {

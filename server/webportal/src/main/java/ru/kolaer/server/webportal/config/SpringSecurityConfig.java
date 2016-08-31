@@ -30,7 +30,11 @@ import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.ldap.InitialLdapContext;
 import java.util.Arrays;
+import java.util.Hashtable;
 
 /**
  * Created by Danilov on 17.07.2016.
@@ -55,12 +59,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
     private Environment env;
-
-    @Autowired
-    private SeterProviderBean seterProviderBean;
-
-    @Autowired
-    private ToolsLDAP toolsLDAP;
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -113,6 +111,38 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public InitialLdapContext ldapContext() {
+        final String server = this.env.getProperty("ldap.server");
+        final String dc = this.env.getProperty("ldap.dc");
+        final String admin = this.env.getProperty("ldap.server.admin");
+        final String pass = this.env.getProperty("ldap.server.pass");
+        final boolean ssl = Boolean.getBoolean(this.env.getProperty("ldap.ssl"));
+
+        final Hashtable props = new Hashtable();
+        props.put(Context.SECURITY_PRINCIPAL, admin);
+        props.put(Context.SECURITY_CREDENTIALS, pass);
+
+        String ldapURL;
+        if(!ssl){
+            ldapURL = "ldap://";
+        } else {
+            ldapURL = "ldaps://";
+            props.put(Context.SECURITY_PROTOCOL, "ssl");
+        }
+
+        ldapURL += server + "." + dc + "/" + ToolsLDAP.toDC(dc);
+
+        props.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        props.put(Context.PROVIDER_URL, ldapURL);
+
+        try {
+            return new InitialLdapContext(props, null);
+        } catch (NamingException e) {
+            return null;
+        }
+    }
+
+    @Bean
     public UserDetailsService userDetailsServiceLDAP() {
         UserDetailsServiceLDAP userDetailsServiceLDAP = new UserDetailsServiceLDAP();
         userDetailsServiceLDAP.setDc(this.env.getProperty("ldap.dc"));
@@ -128,8 +158,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return new UserDetailsServiceImpl();
     }
 
-    private CustomLdapAuthenticationProvider authProviderLDAP() {
-        final CustomLdapAuthenticationProvider authProvider = new CustomLdapAuthenticationProvider(this.seterProviderBean, this.toolsLDAP);
+    @Bean
+    public CustomLdapAuthenticationProvider authProviderLDAP() {
+        final CustomLdapAuthenticationProvider authProvider = new CustomLdapAuthenticationProvider();
         authProvider.setDc(this.env.getProperty("ldap.dc"));
         authProvider.setServer(this.env.getProperty("ldap.server"));
         authProvider.setSsl(Boolean.getBoolean(this.env.getProperty("ldap.ssl")));

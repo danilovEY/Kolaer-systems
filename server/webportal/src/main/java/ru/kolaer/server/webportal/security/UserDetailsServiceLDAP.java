@@ -28,7 +28,7 @@ public class UserDetailsServiceLDAP implements UserDetailsService {
     private final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceLDAP.class);
 
     @Autowired
-    private ToolsLDAP toolsLDAP;
+    private InitialLdapContext ldapContext;
 
     private String server;
     private String dc;
@@ -43,36 +43,18 @@ public class UserDetailsServiceLDAP implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final Hashtable props = new Hashtable();
-        String principalName = username + "@" + this.dc;
-        props.put(Context.SECURITY_PRINCIPAL, this.admin);
-        props.put(Context.SECURITY_CREDENTIALS, this.pass);
+        final String principalName = username + "@" + this.dc;
 
-        String ldapURL;
-        if(!this.ssl){
-            ldapURL = "ldap://";
-        } else {
-            ldapURL = "ldaps://";
-            props.put(Context.SECURITY_PROTOCOL, "ssl");
-        }
-
-        ldapURL += this.server + "." + this.dc;
-
-        props.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        props.put(Context.PROVIDER_URL, ldapURL);
+        final SearchControls controls = new SearchControls();
+        controls.setSearchScope(SUBTREE_SCOPE);
+        controls.setReturningAttributes(userAttributes);
 
         try{
-            final InitialLdapContext context = new InitialLdapContext(props, null);
-
-            final SearchControls controls = new SearchControls();
-            controls.setSearchScope(SUBTREE_SCOPE);
-            controls.setReturningAttributes(userAttributes);
-
-            final NamingEnumeration<SearchResult> answer = context.search("DC=kolaer,DC=local", "(& (userPrincipalName="+principalName+")(objectClass=person))", controls);
+            final NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(& (userPrincipalName="+principalName+")(objectClass=person))", controls);
 
             final Collection<? extends GrantedAuthority> roles;
 
-            roles = toolsLDAP.getRolesFromAttributes(answer.next().getAttributes());
+            roles = ToolsLDAP.getRolesFromAttributes(answer.next().getAttributes());
 
             answer.close();
             final UserDetails userDetails = new User(username, "123", true,true,true,true, roles);

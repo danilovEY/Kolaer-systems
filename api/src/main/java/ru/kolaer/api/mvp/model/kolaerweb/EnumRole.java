@@ -4,5 +4,16 @@ package ru.kolaer.api.mvp.model.kolaerweb;
  * Created by danilovey on 03.08.2016.
  */
 public enum EnumRole {
-    SUPER_ADMIN, PSR_ADMIN, USER, ANONYMOUS
+    SUPER_ADMIN, PSR_ADMIN, USER, ANONYMOUS;
+
+    public static EnumRole fromString(String parameterName) {
+        if (parameterName != null) {
+            for (EnumRole objType : EnumRole.values()) {
+                if (parameterName.toUpperCase().equalsIgnoreCase(objType.toString())) {
+                    return objType;
+                }
+            }
+        }
+        return null;
+    }
 }

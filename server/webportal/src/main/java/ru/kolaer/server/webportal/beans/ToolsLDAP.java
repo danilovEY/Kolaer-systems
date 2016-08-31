@@ -17,11 +17,10 @@ import java.util.List;
 /**
  * Created by danilovey on 30.08.2016.
  */
-@Component
 public class ToolsLDAP {
-    private final Logger LOG = LoggerFactory.getLogger(ToolsLDAP.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ToolsLDAP.class);
 
-    public Collection<? extends GrantedAuthority> getRolesFromAttributes(Attributes attributes) {
+    public static Collection<? extends GrantedAuthority> getRolesFromAttributes(Attributes attributes) {
         LOG.debug("Attributes: {}", attributes);
         final List<GrantedAuthority> roles = new ArrayList<>();
         try {
@@ -29,7 +28,7 @@ public class ToolsLDAP {
             for(int i = 0; i< cn.size(); i++) {
                 final String value = (String) cn.get(i);
                 final String group = value.substring(3, value.indexOf(','));
-                final SimpleGrantedAuthority simpleGrantedAuthority = this.getRole(group);
+                final SimpleGrantedAuthority simpleGrantedAuthority = getRole(group);
                 if(simpleGrantedAuthority != null)
                     roles.add(simpleGrantedAuthority);
             }
@@ -39,7 +38,7 @@ public class ToolsLDAP {
         return roles;
     }
 
-    private SimpleGrantedAuthority getRole(String role) {
+    private static SimpleGrantedAuthority getRole(String role) {
         LOG.debug(role);
         switch (role) {
             case "Domain users": return new SimpleGrantedAuthority(EnumRole.USER.toString());
@@ -48,6 +47,16 @@ public class ToolsLDAP {
             case "Анонимный": return new SimpleGrantedAuthority(EnumRole.ANONYMOUS.toString());
             default: return null;
         }
+    }
+
+    public static String toDC(String domainName) {
+        StringBuilder buf = new StringBuilder();
+        for (String token : domainName.split("\\.")) {
+            if(token.length()==0)   continue;   // defensive check
+            if(buf.length()>0)  buf.append(",");
+            buf.append("DC=").append(token);
+        }
+        return buf.toString();
     }
 
 }

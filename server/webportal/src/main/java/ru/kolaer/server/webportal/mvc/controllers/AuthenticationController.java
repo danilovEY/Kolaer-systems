@@ -53,24 +53,6 @@ public class AuthenticationController {
     @Autowired
     private SeterProviderBean seterProviderBean;
 
-    @Autowired
-    @Qualifier("accountDao")
-    private AccountDao accountDao;
-
-    @UrlDeclaration(description = "Получить все аккаунты.", isAccessAnonymous = true, isAccessUser = true)
-    @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public GeneralAccountsEntity getUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-
-        if (principal instanceof String && principal.equals("anonymousUser")) {
-            throw new UsernameNotFoundException("Bad");
-        }
-
-        UserDetails userDetails = (UserDetails) principal;
-
-        return  accountDao.getAccountByNameWithEmployee(userDetails.getUsername());
-    }
 
     @UrlDeclaration(description = "Выйти.", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -81,7 +63,6 @@ public class AuthenticationController {
         }
         return "redirect:/";
     }
-
 
     /**Генерация пароля по строке.*/
     @UrlDeclaration(description = "Генерация пароля по строке. (?pass={pass})", isAccessAnonymous = true, isAccessUser = true)
