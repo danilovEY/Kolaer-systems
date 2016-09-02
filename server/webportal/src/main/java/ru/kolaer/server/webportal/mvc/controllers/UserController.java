@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.SeterProviderBean;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 31.08.2016.
@@ -62,7 +64,10 @@ public class UserController {
 
         if(authentication == null)
             return Collections.emptyList();
+        final GeneralAccountsEntity generalAccountsEntity = this.seterProviderBean.isLDAP() ?
+                this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName())
+                : this.accountDao.getAccountByNameWithEmployee(authentication.getName());
 
-        return null;
+        return generalAccountsEntity.getRoles().stream().map(GeneralRolesEntity::getType).collect(Collectors.toList());
     }
 }
