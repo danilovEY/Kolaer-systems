@@ -34,7 +34,7 @@ public class AuthenticationOnNetwork implements Authentication {
         this.authenticationObserverList = new ArrayList<>();
         this.pathToServer = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/authentication";
         this.URL_TO_GET_TOKEN = this.pathToServer + "/login";
-        this.URL_TO_GET_USER = this.pathToServer + "/user";
+        this.URL_TO_GET_USER = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/user/get";
     }
 
     public boolean login(UserAndPassJson userAndPassJson) throws ServerException {
@@ -48,6 +48,7 @@ public class AuthenticationOnNetwork implements Authentication {
             this.tokenJson  = this.restTemplate.postForObject(this.URL_TO_GET_TOKEN, userAndPassJson, TokenJson.class);
             if(this.tokenJson != null)
                 LOG.info("Токен получен...");
+            LOG.info(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken());
             this.accountsEntity = this.restTemplate.getForObject(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken(), GeneralAccountsEntity.class);
             if(this.accountsEntity != null)
                 LOG.info("Пользователь получен...");
@@ -60,6 +61,7 @@ public class AuthenticationOnNetwork implements Authentication {
             return true;
         } catch (RestClientException ex) {
             LOG.error("Не удалось авторизоваться!", ex);
+            ex.printStackTrace();
             throw new ServerException(ex);
         }
     }

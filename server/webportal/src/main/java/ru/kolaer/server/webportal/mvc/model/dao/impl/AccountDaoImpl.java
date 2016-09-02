@@ -65,7 +65,8 @@ public class AccountDaoImpl implements AccountDao {
     @Transactional(readOnly = true)
     public GeneralAccountsEntity getAccountByNameWithEmployee(String username) {
         final GeneralAccountsEntity acc = this.findName(username);
-        Hibernate.initialize(acc.getGeneralEmployeesEntity());
+        if(acc != null)
+            Hibernate.initialize(acc.getGeneralEmployeesEntity());
         return acc;
     }
 }
