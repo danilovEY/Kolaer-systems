@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.GenericFilterBean;
-import ru.kolaer.server.webportal.beans.SeterProviderBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

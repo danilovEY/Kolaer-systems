@@ -10,14 +10,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
 
-import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 import java.util.Collection;
-import java.util.Hashtable;
 
 import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
 

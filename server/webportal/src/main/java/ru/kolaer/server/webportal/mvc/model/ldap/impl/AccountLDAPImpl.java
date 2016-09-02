@@ -15,7 +15,6 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
-
 import java.util.Collection;
 import java.util.stream.Collectors;
 

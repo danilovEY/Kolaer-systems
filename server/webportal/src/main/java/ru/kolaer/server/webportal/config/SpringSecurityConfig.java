@@ -22,12 +22,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.kolaer.api.tools.Tools;
-import ru.kolaer.server.webportal.beans.SeterProviderBean;
+import ru.kolaer.server.webportal.beans.ToolsLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
-import ru.kolaer.server.webportal.beans.ToolsLDAP;
 
 import javax.annotation.Resource;
 import javax.naming.Context;
