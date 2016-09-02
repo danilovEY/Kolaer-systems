@@ -44,6 +44,7 @@ public class AuthenticationOnNetwork implements Authentication {
             this.logout();
         }
         LOG.info("Авторизация для: {}", userAndPassJson.getUsername());
+        LOG.info("Pass для: {}", userAndPassJson.getPassword());
         try {
             this.tokenJson  = this.restTemplate.postForObject(this.URL_TO_GET_TOKEN, userAndPassJson, TokenJson.class);
             if(this.tokenJson != null)
