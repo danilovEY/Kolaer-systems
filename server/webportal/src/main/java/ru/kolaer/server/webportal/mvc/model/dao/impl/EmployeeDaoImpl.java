@@ -51,4 +51,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<GeneralEmployeesEntity> findEmployeeByInitials(String initials) {
+        return this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.initials LIKE :initials")
+                .setParameter("initials", "%" + initials + "%").list();
+    }
 }
