@@ -122,7 +122,6 @@ public class PMainPaneImpl implements PMainPane {
             if(loginDialog.getResult() == null)
                 return;
             String[] logPassArray = loginDialog.getResult().toString().split("=");
-            System.out.println(loginDialog.getResult().toString());
             Task<Object> worker = new Task<Object>() {
                 @Override
                 protected Object call() throws Exception {
@@ -133,9 +132,9 @@ public class PMainPaneImpl implements PMainPane {
                         try {
                             String login = "";
                             String pass = "";
-                            if(logPassArray.length > 1)
+                            if(logPassArray.length >= 1)
                                 login = logPassArray[0];
-                            if(logPassArray.length > 2)
+                            if(logPassArray.length >= 2)
                                 pass =  logPassArray[1];
                             if(editorKit.getAuthentication().login(new UserAndPassJson(login, pass))) {
                                 GeneralEmployeesEntity entity = editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity();
