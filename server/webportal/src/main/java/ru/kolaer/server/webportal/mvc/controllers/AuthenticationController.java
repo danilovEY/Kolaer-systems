@@ -22,6 +22,7 @@ import ru.kolaer.server.webportal.security.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 28.07.2016.
@@ -69,7 +70,7 @@ public class AuthenticationController {
     @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getTokenPost(@RequestBody UserAndPassJson userAndPassJson){
-        return this.getToken(userAndPassJson.getUsername(), userAndPassJson.getPassword());
+        return this.getToken(userAndPassJson.getUsername(), Optional.ofNullable(userAndPassJson.getPassword()).orElse(""));
     }
 
 

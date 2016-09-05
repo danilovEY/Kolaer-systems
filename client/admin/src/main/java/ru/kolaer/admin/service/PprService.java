@@ -1,5 +1,7 @@
 package ru.kolaer.admin.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.Counter;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  * Created by danilovey on 25.08.2016.
  */
 public class PprService implements Service {
+    private final Logger LOG = LoggerFactory.getLogger(PprService.class);
     private boolean isRun = false;
     private final UniformSystemEditorKit editorKit;
 
@@ -79,6 +82,9 @@ public class PprService implements Service {
                     final LocalDateTime ldt = LocalDateTime.ofInstant(dateEnd.toInstant(), ZoneId.of("Europe/Moscow"));
 
                     LocalDateTime tempDateTime = LocalDateTime.from(dateTimeJson);
+
+                    long daysStart = ChronoUnit.DAYS.between(Tools.convertToLocalDate(ppr.getCounter().getStart()), dateTimeJson.toLocalDate());
+
                     long years = tempDateTime.until(ldt, ChronoUnit.YEARS);
                     tempDateTime = tempDateTime.plusYears(years);
 
@@ -95,7 +101,6 @@ public class PprService implements Service {
                     tempDateTime = tempDateTime.plusMinutes(minutes);
 
                     long seconds = tempDateTime.until(ldt, ChronoUnit.SECONDS);
-                    long daysStart = Period.between(Tools.convertToLocalDate(ppr.getCounter().getStart()), dateTimeJson.toLocalDate()).get(ChronoUnit.DAYS);
                     ppr.setFoot(String.format("Текущие сутки ремонта: %d", daysStart + 1));
                     ppr.setTime(Math.toIntExact(months), Math.toIntExact(days), Math.toIntExact(hours), Math.toIntExact(minutes), Math.toIntExact(seconds));
 

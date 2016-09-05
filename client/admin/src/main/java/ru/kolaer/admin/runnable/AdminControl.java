@@ -91,10 +91,10 @@ public class AdminControl implements UniformSystemPlugin {
 					ExecutorService authThread = Executors.newSingleThreadExecutor();
 
 					CompletableFuture.runAsync(worker, authThread).thenAccept(result -> {
-						//this.sendMessage(message.getText());
+						this.sendMessage(message.getText());
 					});
 				} else {
-					//this.sendMessage(message.getText());
+					this.sendMessage(message.getText());
 				}
 
 
