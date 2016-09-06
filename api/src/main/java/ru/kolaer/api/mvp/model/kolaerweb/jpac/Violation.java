@@ -10,30 +10,31 @@ import java.util.Date;
  */
 @JsonDeserialize(contentAs = ViolationBase.class)
 interface Violation {
+    /**Получить ID.*/
     Integer getId();
     void setId(Integer id);
-    
+    /**Получить оописание нарушения.*/
     String getViolation();
     void setViolation(String violation);
-
+    /**Получить описание устранения нарушения.*/
     String getTodo();
     void setTodo(String todo);
-    
+    /**Получить дату записи нарушения.*/
     Date getStartMakingViolation();
     void setStartMakingViolation(Date startMakingViolation) ;
-
+    /**Получить срок устранения нарушения.*/
     Date getDateLimitEliminationViolation();
     void setDateLimitEliminationViolation(Date dateLimitEliminationViolation);
-
+    /**Получить даду устранения нарушения.*/
     Date getDateEndEliminationViolation();
     void setDateEndEliminationViolation(Date dateEndEliminationViolation);
-    
+    /**Получить сотрудника записавшего нарушение.*/
     GeneralEmployeesEntity getWriter();
     void setWriter(GeneralEmployeesEntity writer);
-
+    /**Получить Получить ответственного за нарушение.*/
     GeneralEmployeesEntity getExecutor();
     void setExecutor(GeneralEmployeesEntity executor);
-
+    /**Получить результативность.*/
     Boolean isEffective();
     void setEffective(Boolean effective);
 }
