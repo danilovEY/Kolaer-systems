@@ -17,6 +17,7 @@ public class ViolationBase implements Violation {
     private GeneralEmployeesEntity writer;
     private GeneralEmployeesEntity executor;
     private Boolean effective;
+    private StageEnum stage;
 
     public Integer getId() {
         return id;
@@ -90,5 +91,15 @@ public class ViolationBase implements Violation {
     @Override
     public void setEffective(Boolean effective) {
         this.effective = effective;
+    }
+
+    @Override
+    public StageEnum getStageEnum() {
+        return this.stage;
+    }
+
+    @Override
+    public void setStageEnum(StageEnum stageEnum) {
+        this.stage = stageEnum;
     }
 }

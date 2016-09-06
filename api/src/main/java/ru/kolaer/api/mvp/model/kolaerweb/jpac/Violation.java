@@ -37,4 +37,7 @@ interface Violation {
     /**Получить результативность.*/
     Boolean isEffective();
     void setEffective(Boolean effective);
+    /**Поучить степень.*/
+    StageEnum getStageEnum();
+    void setStageEnum(StageEnum stageEnum);
 }
