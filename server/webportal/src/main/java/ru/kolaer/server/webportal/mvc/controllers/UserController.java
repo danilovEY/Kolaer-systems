@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
+    private final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private SeterProviderBean seterProviderBean;
@@ -41,10 +44,9 @@ public class UserController {
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public GeneralAccountsEntity getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if(authentication == null)
             return null;
-
+        LOG.info("BOLL: {}", this.seterProviderBean.isLDAP());
         return this.seterProviderBean.isLDAP() ?
                 this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName())
                 : this.accountDao.getAccountByNameWithEmployee(authentication.getName());

@@ -102,7 +102,7 @@ public class StaticViewPPR implements StaticView, PPR {
         titleDisPane.setAlignment(Pos.CENTER);
 
         this.foot = new Label();
-        foot.setFont(labelFont);
+        foot.setFont(Font.font(null, FontWeight.BOLD, 13));
 
         this.mainPane.setTop(titleDisPane);
         this.mainPane.setCenter(flowPane);

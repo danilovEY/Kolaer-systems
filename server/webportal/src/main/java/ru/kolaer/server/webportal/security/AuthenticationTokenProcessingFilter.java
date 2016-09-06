@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.GenericFilterBean;
+import ru.kolaer.server.webportal.beans.SeterProviderBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,6 +32,9 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     @Autowired
     private UserDetailsService userDetailsServiceSQL;
 
+    @Autowired
+    private SeterProviderBean seterProviderBean;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = this.getAsHttpRequest(request);
@@ -39,6 +43,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
         String userName = TokenUtils.getUserNameFromToken(authToken);
         if (userName != null) {
             final boolean isLDAP = TokenUtils.isLDAP(authToken);
+            seterProviderBean.setLDAP(isLDAP);
             final UserDetails userDetails = isLDAP ?
                     this.userDetailsServiceLDAP.loadUserByUsername(userName) : this.userDetailsServiceSQL.loadUserByUsername(userName);
             if(userDetails != null){

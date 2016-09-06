@@ -38,7 +38,7 @@
 	</appender>
 	
      <logger name="ru.danilov.client.javafx" level="DEBUG"/>
-     
+
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />

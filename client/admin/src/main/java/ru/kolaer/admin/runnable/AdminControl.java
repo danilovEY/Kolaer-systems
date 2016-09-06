@@ -54,7 +54,8 @@ public class AdminControl implements UniformSystemPlugin {
 					loginDialog.showAndWait();
 					if(loginDialog.getResult() == null)
 						return;
-					String[] logPassArray = loginDialog.getResult().toString().split("=");
+					final String[] logPassArray = loginDialog.getResult().toString().split("=");
+
 					Task<Object> worker = new Task<Object>() {
 						@Override
 						protected Object call() throws Exception {
@@ -63,7 +64,13 @@ public class AdminControl implements UniformSystemPlugin {
 							if(editorKit.getUSNetwork().getKolaerWebServer().getServerStatus() == ServerStatus.AVAILABLE) {
 								updateMessage("Авторизация...");
 								try {
-									editorKit.getAuthentication().login(new UserAndPassJson(logPassArray[0], logPassArray[1]));
+									String login = "";
+									String pass = "";
+									if(logPassArray.length >= 1)
+										login = logPassArray[0];
+									if(logPassArray.length >= 2)
+										pass =  logPassArray[1];
+									editorKit.getAuthentication().login(new UserAndPassJson(login, pass));
 								} catch (ServerException ex) {
 									updateMessage("Не удалось авторизоваться!!");
 									this.setException(ex);
