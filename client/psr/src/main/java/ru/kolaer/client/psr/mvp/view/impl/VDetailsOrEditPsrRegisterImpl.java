@@ -202,7 +202,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
             if (result == ButtonType.FINISH) {
                 if(this.psrRegister == null) {
                     this.psrRegister = new PsrRegisterBase();
-                    this.psrRegister.setStateList(Collections.emptyList());
+                    this.psrRegister.setStateList(new ArrayList<>());
                 }
 
                 this.psrRegister.setName(this.namePsr.getText());
@@ -241,13 +241,14 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
 
                 this.psrRegister.setStateList(states);
                 this.psrRegister.setAttachments(Collections.emptyList());
+                if(this.psrRegister.getStatus() != null) {
+                    if (this.psrRegister.getStatus().getType().equals("Открыт") && this.psrRegister.getDateOpen() == null) {
+                        this.psrRegister.setDateOpen(new Date());
+                    }
 
-                if(this.psrRegister.getStatus().getType().equals("Открыт") && this.psrRegister.getDateOpen() == null) {
-                    this.psrRegister.setDateOpen(new Date());
-                }
-
-                if(this.psrRegister.getStatus().getType().equals("Закрыт") && this.psrRegister.getDateClose() == null) {
-                    this.psrRegister.setDateClose(new Date());
+                    if (this.psrRegister.getStatus().getType().equals("Закрыт") && this.psrRegister.getDateClose() == null) {
+                        this.psrRegister.setDateClose(new Date());
+                    }
                 }
             }
         });

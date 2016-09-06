@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '0.3.1'
+version '0.3.2'
 
 def projectName = "ru.kolaer.psr"
 def projectNameWithVersion = projectName + "-" + version
@@ -19,8 +19,6 @@ jar {
         name = 'Производственная система Росатома (Pre-Beta)'
         symbolicName = projectName
         instruction "Bundle-ClassPath", "."
-        //instruction "Export-Package", "ch.qos.logback.classic"
-        //instruction "Import-Package", "*"
     }
 }
 
