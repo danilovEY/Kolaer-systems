@@ -202,7 +202,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
             if (result == ButtonType.FINISH) {
                 if(this.psrRegister == null) {
                     this.psrRegister = new PsrRegisterBase();
-                    this.psrRegister.setStateList(new ArrayList<>());
+                    this.psrRegister.setStateList(Collections.emptyList());
                 }
 
                 this.psrRegister.setName(this.namePsr.getText());
