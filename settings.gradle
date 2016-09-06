@@ -10,4 +10,6 @@ include ':client:admin'
 include ':client:browser'
 include ':client:asmc'
 include ':client:psr'
+include ':client:japc'
+
 
