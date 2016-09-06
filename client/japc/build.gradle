@@ -20,8 +20,18 @@ jar {
     }
 }
 
-task copyJarToBin(dependsOn: jar) {
+task createJar(type: Jar) {
+    archiveName = projectJarName
+    baseName = project.name
+    manifest = jar.manifest
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
+task copyJarToBin(dependsOn: createJar) {
     doLast {
+        pathToProjectDirWithPlugins = "D:\\workspace\\Kolaer-systems\\plugins"
         copy {
             from 'build/libs/' + projectJarName
             into pathToProjectDirWithPlugins
@@ -29,4 +39,4 @@ task copyJarToBin(dependsOn: jar) {
     }
 }
 
-task build
+task buildApp(dependsOn : [copyJarToBin])
