@@ -22,6 +22,7 @@ public class ToolsLDAP {
     public static Collection<? extends GrantedAuthority> getRolesFromAttributes(Attributes attributes) {
         LOG.debug("Attributes: {}", attributes);
         final List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(EnumRole.USER.toString()));
         try {
             final Attribute cn = attributes.get("memberOf");
             for(int i = 0; i< cn.size(); i++) {
@@ -40,7 +41,6 @@ public class ToolsLDAP {
     private static SimpleGrantedAuthority getRole(String role) {
         LOG.debug(role);
         switch (role) {
-            case "Domain users": return new SimpleGrantedAuthority(EnumRole.USER.toString());
             case "OIT": return new SimpleGrantedAuthority(EnumRole.SUPER_ADMIN.toString());
             case "ПСР Администратор": return new SimpleGrantedAuthority(EnumRole.PSR_ADMIN.toString());
             case "Анонимный": return new SimpleGrantedAuthority(EnumRole.ANONYMOUS.toString());

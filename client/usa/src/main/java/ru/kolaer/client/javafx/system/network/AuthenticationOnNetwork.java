@@ -14,6 +14,7 @@ import ru.kolaer.client.javafx.tools.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 02.08.2016.
@@ -43,7 +44,12 @@ public class AuthenticationOnNetwork implements Authentication {
         } else if (this.isAuth) {
             this.logout();
         }
+
+        userAndPassJson.setUsername(userAndPassJson.getUsername().toLowerCase());
+        userAndPassJson.setPassword(Optional.ofNullable(userAndPassJson.getPassword()).orElse(""));
+
         LOG.info("Авторизация для: {}", userAndPassJson.getUsername());
+
         try {
             this.tokenJson  = this.restTemplate.postForObject(this.URL_TO_GET_TOKEN, userAndPassJson, TokenJson.class);
             if(this.tokenJson != null)
