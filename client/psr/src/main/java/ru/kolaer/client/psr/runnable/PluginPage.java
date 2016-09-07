@@ -3,6 +3,7 @@ package ru.kolaer.client.psr.runnable;
 import javafx.scene.Parent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
@@ -40,8 +41,14 @@ public class PluginPage implements UniformSystemPlugin {
 
     @Override
     public void start() throws Exception {
-        if(!this.editorKit.getAuthentication().isAuthentication())
-            this.editorKit.getAuthentication().login(new UserAndPassJson("anonymous", "anonymous"));
+        if(!this.editorKit.getAuthentication().isAuthentication()) {
+            try {
+                this.editorKit.getAuthentication().login(new UserAndPassJson("anonymous", "anonymous"));
+            } catch (ServerException e) {
+                LOG.info("Не удалось авторизоватся!", e);
+                this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка авторизации!", "Не удалось авторизоватся анонимным пользователем!");
+            }
+        }
 
         Tools.runOnThreadFX(this.mainPane::updatePluginPage);
         this.editorKit.getAuthentication().registerObserver(this.mainPane);

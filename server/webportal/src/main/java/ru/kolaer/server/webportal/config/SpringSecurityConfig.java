@@ -60,7 +60,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(this.authProviderLDAP()).authenticationProvider(this.authProviderSQL());
+        auth.authenticationProvider(this.authProviderLDAP());
+                //.authenticationProvider(this.authProviderSQL());
     }
 
     @Override

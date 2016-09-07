@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
@@ -41,12 +42,6 @@ public class AuthenticationController {
 
     @Autowired
     private UserDetailsService userDetailsServiceLDAP;
-
-    @Autowired
-    private UserDetailsService userDetailsServiceSQL;
-
-    @Autowired
-    private SeterProviderBean seterProviderBean;
 
 
     @UrlDeclaration(description = "Выйти.", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
@@ -86,13 +81,15 @@ public class AuthenticationController {
 
         final Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
 
+        if(authentication == null) {
+            throw new UsernameNotFoundException("Пользователь " + username + " не найден!");
+        }
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final boolean isLDAP = this.seterProviderBean.isLDAP();
+        final UserDetails userDetails = this.userDetailsServiceLDAP.loadUserByUsername(username);
 
-        final UserDetails userDetails = isLDAP ? this.userDetailsServiceLDAP.loadUserByUsername(username) : this.userDetailsServiceSQL.loadUserByUsername(username);;
-
-        final String tokenJson = isLDAP ? TokenUtils.createTokenLDAP(userDetails) : TokenUtils.createToken(userDetails);
+        final String tokenJson = TokenUtils.createTokenLDAP(userDetails);
         return new TokenJson(tokenJson);
     }
 

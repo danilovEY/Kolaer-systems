@@ -29,12 +29,6 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     @Autowired
     private UserDetailsService userDetailsServiceLDAP;
 
-    @Autowired
-    private UserDetailsService userDetailsServiceSQL;
-
-    @Autowired
-    private SeterProviderBean seterProviderBean;
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = this.getAsHttpRequest(request);
@@ -42,12 +36,9 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
         String authToken = this.extractAuthTokenFromRequest(httpRequest);
         String userName = TokenUtils.getUserNameFromToken(authToken);
         if (userName != null) {
-            final boolean isLDAP = TokenUtils.isLDAP(authToken);
-            seterProviderBean.setLDAP(isLDAP);
-            final UserDetails userDetails = isLDAP ?
-                    this.userDetailsServiceLDAP.loadUserByUsername(userName) : this.userDetailsServiceSQL.loadUserByUsername(userName);
+            final UserDetails userDetails = this.userDetailsServiceLDAP.loadUserByUsername(userName);
             if(userDetails != null){
-                boolean tokenVal = isLDAP ? TokenUtils.validateTokenLDAP(authToken, userDetails) : TokenUtils.validateToken(authToken, userDetails);
+                boolean tokenVal = TokenUtils.validateTokenLDAP(authToken, userDetails);
                 if (tokenVal) {
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

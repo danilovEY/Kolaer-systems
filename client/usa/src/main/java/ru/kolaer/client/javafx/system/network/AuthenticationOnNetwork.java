@@ -50,18 +50,21 @@ public class AuthenticationOnNetwork implements Authentication {
                 LOG.info("Токен получен...");
             LOG.info(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken());
             this.accountsEntity = this.restTemplate.getForObject(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken(), GeneralAccountsEntity.class);
-            if(this.accountsEntity != null)
+            if(this.accountsEntity != null) {
                 LOG.info("Пользователь получен...");
-            this.isAuth = true;
+                this.isAuth = true;
 
-            this.notifyObserversLogin();
+                this.notifyObserversLogin();
 
-            LOG.info("Авторизация прошла успешно!");
+                LOG.info("Авторизация прошла успешно!");
 
-            return true;
-        } catch (RestClientException ex) {
+                return true;
+            } else {
+                LOG.info("Авторизация не прошла!");
+                return false;
+            }
+        } catch (Exception ex) {
             LOG.error("Не удалось авторизоваться!", ex);
-            ex.printStackTrace();
             throw new ServerException(ex);
         }
     }

@@ -31,13 +31,6 @@ public class UserController {
     private final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    private SeterProviderBean seterProviderBean;
-
-    @Autowired
-    @Qualifier("accountDao")
-    private AccountDao accountDao;
-
-    @Autowired
     private ServiceLDAP serviceLDAP;
 
     @UrlDeclaration(description = "Получить авторизированный аккаунт.", isAccessAnonymous = true, isAccessUser = true)
@@ -46,10 +39,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null)
             return null;
-        LOG.info("BOLL: {}", this.seterProviderBean.isLDAP());
-        return this.seterProviderBean.isLDAP() ?
-                this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName())
-                : this.accountDao.getAccountByNameWithEmployee(authentication.getName());
+        return this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName());
     }
 
     @UrlDeclaration(description = "Получить роли авторизированного аккаунта.", isAccessAnonymous = true, isAccessUser = true)
@@ -59,9 +49,7 @@ public class UserController {
 
         if(authentication == null)
             return Collections.emptyList();
-        final GeneralAccountsEntity generalAccountsEntity = this.seterProviderBean.isLDAP() ?
-                this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName())
-                : this.accountDao.getAccountByNameWithEmployee(authentication.getName());
+        final GeneralAccountsEntity generalAccountsEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName());
 
         return generalAccountsEntity.getRoles().stream().map(GeneralRolesEntity::getType).collect(Collectors.toList());
     }

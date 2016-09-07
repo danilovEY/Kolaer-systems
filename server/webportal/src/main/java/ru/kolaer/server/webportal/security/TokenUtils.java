@@ -87,8 +87,8 @@ public class TokenUtils {
      * @return логин
      */
     public static boolean isLDAP(String authToken) {
-        if (null == authToken) {
-            return false;
+        if (null == authToken || authToken.trim().isEmpty()) {
+            return true;
         }
 
         String[] parts = authToken.split(":");
