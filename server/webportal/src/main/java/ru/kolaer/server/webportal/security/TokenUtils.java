@@ -21,7 +21,7 @@ public class TokenUtils {
      * @return токен
      */
     public static String createToken(String username, String password, String postfix) {
-        long expires = System.currentTimeMillis() + 1000L * 60 * 60;
+        long expires = System.currentTimeMillis() + 1000L * 60 * 60 * 24;
 
         StringBuilder tokenBuilder = new StringBuilder();
         tokenBuilder.append(username);

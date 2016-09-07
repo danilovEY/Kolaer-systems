@@ -35,6 +35,8 @@ task renameResources(dependsOn: processResources) {
     doLast{
         file("build/resources/main/database.properties").delete()
         file("build/resources/main/origin_database.properties").renameTo("build/resources/main/database.properties")
+        file("build/resources/main/logback.xml").delete()
+        file("build/resources/main/origin_logback.xml").renameTo("build/resources/main/logback.xml")
     }
 }
 
@@ -47,7 +49,7 @@ task buildApp(dependsOn: [clean, renameResources, war]) {
     }
 }
 
-task renameProject(type: Copy) {
+task renameProject() {
     war.setArchiveName(testName)
 }
 
@@ -59,4 +61,3 @@ task buildAppForTest(dependsOn: [clean, war, renameProject]) {
         }
     }
 }
-
