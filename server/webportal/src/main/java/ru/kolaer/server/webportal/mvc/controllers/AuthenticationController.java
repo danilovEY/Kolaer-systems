@@ -88,6 +88,9 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         final UserDetails userDetails = this.userDetailsServiceLDAP.loadUserByUsername(username);
+        if(userDetails == null) {
+            throw new UsernameNotFoundException("Пользователь " + username + " не найден!");
+        }
 
         final String tokenJson = TokenUtils.createTokenLDAP(userDetails);
         return new TokenJson(tokenJson);
