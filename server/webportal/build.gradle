@@ -49,13 +49,13 @@ task buildApp(dependsOn: [clean, renameResources, war]) {
     }
 }
 
-task renameProject(dependsOn: war) {
+task renameProject(dependsOn: clean) {
     doLast {
         war.setArchiveName(testName)
     }
 }
 
-task buildAppForTest(dependsOn: [clean, renameProject]) {
+task buildAppForTest(dependsOn: [war, renameProject]) {
     doLast {
         copy {
             from 'build/libs/' + testName
