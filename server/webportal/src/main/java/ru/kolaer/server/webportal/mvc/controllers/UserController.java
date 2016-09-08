@@ -78,23 +78,31 @@ public class UserController {
             throw new UsernameNotFoundException("Не авторизовались!");
 
         byte[] imgByte = this.serviceLDAP.getAccountPhoto(authentication.getName());
+
+        response.setHeader("Cache-Control", "no-store");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+        response.setContentType("image/jpeg");
+        final ServletOutputStream responseOutputStream = response.getOutputStream();
+
         if(imgByte != null) {
-            response.setHeader("Cache-Control", "no-store");
-            response.setHeader("Pragma", "no-cache");
-            response.setDateHeader("Expires", 0);
-            response.setContentType("image/jpeg");
-            final ServletOutputStream responseOutputStream = response.getOutputStream();
             responseOutputStream.write(imgByte);
             responseOutputStream.flush();
-            responseOutputStream.close();
         } else {
-            GeneralAccountsEntity accountsEntity = this.getUser();
-            if(accountsEntity != null) {
-                response.sendRedirect("http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(accountsEntity.getGeneralEmployeesEntity().getInitials(), "UTF-8").replace("+", "%20") + ".jpg");
-            } else {
-                response.sendRedirect("http://asupkolaer/app_ie8/assets/images/vCard/no_photo.jpg");
-            }
+            GeneralAccountsEntity user = this.getUser();
 
+            final String url = "http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(user.getGeneralEmployeesEntity().getInitials(), "UTF-8").replace("+", "%20") + ".jpg";
+            InputStream inputStream = URI.create(url).toURL().openStream();
+            byte[] readByte = new byte[2048];
+            int length;
+
+            while ((length = inputStream.read(readByte)) != -1) {
+                responseOutputStream.write(readByte, 0, length);
+                responseOutputStream.flush();
+            }
+            inputStream.close();
         }
+
+        responseOutputStream.close();
     }
 }
