@@ -9,7 +9,7 @@ import java.util.Date;
  * Created by danilovey on 06.09.2016.
  */
 @JsonDeserialize(contentAs = ViolationBase.class)
-interface Violation {
+public interface Violation {
     /**Получить ID.*/
     Integer getId();
     void setId(Integer id);
@@ -40,4 +40,7 @@ interface Violation {
     /**Поучить степень.*/
     StageEnum getStageEnum();
     void setStageEnum(StageEnum stageEnum);
+
+    TypeViolation getTypeViolation();
+    void setTypeViolation(TypeViolation typeViolation);
 }

@@ -18,6 +18,7 @@ public class ViolationBase implements Violation {
     private GeneralEmployeesEntity executor;
     private Boolean effective;
     private StageEnum stage;
+    private TypeViolation typeViolation;
 
     public Integer getId() {
         return id;
@@ -101,5 +102,15 @@ public class ViolationBase implements Violation {
     @Override
     public void setStageEnum(StageEnum stageEnum) {
         this.stage = stageEnum;
+    }
+
+    @Override
+    public TypeViolation getTypeViolation() {
+        return this.typeViolation;
+    }
+
+    @Override
+    public void setTypeViolation(TypeViolation typeViolation) {
+        this.typeViolation = typeViolation;
     }
 }
