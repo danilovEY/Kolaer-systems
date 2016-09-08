@@ -42,4 +42,11 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         //TODO: Доделать реализацию
         return generalAccountsEntity;
     }
+
+    @Override
+    public byte[] getAccountPhoto(String login) {
+        if(login != null)
+            return this.accountLDAP.getPhotoByLogin(login);
+        return null;
+    }
 }

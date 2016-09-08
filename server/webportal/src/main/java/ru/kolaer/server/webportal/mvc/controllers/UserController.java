@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,11 +16,25 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.SeterProviderBean;
+import ru.kolaer.server.webportal.beans.ToolsLDAP;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+import javax.naming.ldap.InitialLdapContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -52,5 +67,34 @@ public class UserController {
         final GeneralAccountsEntity generalAccountsEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName());
 
         return generalAccountsEntity.getRoles().stream().map(GeneralRolesEntity::getType).collect(Collectors.toList());
+    }
+
+    @UrlDeclaration(description = "Получить фото аккаунта.", isAccessAnonymous = true, isAccessUser = true)
+    @RequestMapping(value = "/photo/get", method = RequestMethod.GET)
+    public void showImage(HttpServletResponse response) throws Exception {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication == null)
+            throw new UsernameNotFoundException("Не авторизовались!");
+
+        byte[] imgByte = this.serviceLDAP.getAccountPhoto(authentication.getName());
+        if(imgByte != null) {
+            response.setHeader("Cache-Control", "no-store");
+            response.setHeader("Pragma", "no-cache");
+            response.setDateHeader("Expires", 0);
+            response.setContentType("image/jpeg");
+            final ServletOutputStream responseOutputStream = response.getOutputStream();
+            responseOutputStream.write(imgByte);
+            responseOutputStream.flush();
+            responseOutputStream.close();
+        } else {
+            GeneralAccountsEntity accountsEntity = this.getUser();
+            if(accountsEntity != null) {
+                response.sendRedirect("http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(accountsEntity.getGeneralEmployeesEntity().getInitials(), "UTF-8").replace("+", "%20") + ".jpg");
+            } else {
+                response.sendRedirect("http://asupkolaer/app_ie8/assets/images/vCard/no_photo.jpg");
+            }
+
+        }
     }
 }

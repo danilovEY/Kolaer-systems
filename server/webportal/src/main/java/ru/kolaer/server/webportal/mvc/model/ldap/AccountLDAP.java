@@ -7,4 +7,5 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
  */
 public interface AccountLDAP {
     GeneralAccountsEntity getAccountByLogin(String login);
+    byte[] getPhotoByLogin(String login);
 }

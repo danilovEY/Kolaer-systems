@@ -11,6 +11,7 @@ import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
@@ -56,6 +57,32 @@ public class AccountLDAPImpl implements AccountLDAP {
 
             answer.close();
             return generalEmployeesEntity;
+        } catch (NamingException e) {
+            LOG.error("Ошибка при получении аккаунта!", e);
+        }
+        return null;
+    }
+
+    @Override
+    public byte[] getPhotoByLogin(String login) {
+        final SearchControls controls = new SearchControls();
+        controls.setSearchScope(SUBTREE_SCOPE);
+        controls.setReturningAttributes(new String[]{"userprincipalname", "jpegPhoto"});
+        LOG.debug("Login: {}", login);
+        try {
+            final NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(& (userPrincipalName=" + login + "@kolaer.local" + ")(objectClass=person))", controls);
+
+            if(answer.hasMoreElements()) {
+                final Attributes attributes = answer.next().getAttributes();
+                LOG.debug("Photo: {}", attributes);
+                Attribute jpegphoto = attributes.get("jpegphoto");
+
+                if(jpegphoto != null) {
+                    LOG.debug("Photo is have!");
+                    return (byte[]) jpegphoto.get(0);
+                }
+            }
+
         } catch (NamingException e) {
             LOG.error("Ошибка при получении аккаунта!", e);
         }
