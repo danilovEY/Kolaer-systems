@@ -108,7 +108,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Scope(scopeName = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+    @Scope(scopeName = BeanDefinition.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public InitialLdapContext ldapContext() {
         final String server = this.env.getProperty("ldap.server");
         final String dc = this.env.getProperty("ldap.dc");

@@ -13,9 +13,11 @@ import java.util.List;
  * Created by Danilov on 24.07.2016.
  * Структура аккаунта в БД.
  */
-@Entity
-@Table(name = "general_accounts")
+
+//@Entity
+//@Table(name = "general_accounts")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Deprecated
 public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
     private GeneralAccountsEntity generalAccountsEntity;
 

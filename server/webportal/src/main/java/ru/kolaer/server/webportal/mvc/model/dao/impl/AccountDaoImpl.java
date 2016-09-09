@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * Created by danilovey on 27.07.2016.
  */
+@Deprecated
 @Repository(value = "accountDao")
 public class AccountDaoImpl implements AccountDao {
     private static final Logger LOG = LoggerFactory.getLogger(AccountDaoImpl.class);
