@@ -22,7 +22,7 @@ public class ToolsController {
         final DateTimeJson dateTimeJson = new DateTimeJson();
         final LocalDate localDate = LocalDate.now();
         final LocalTime localTime = LocalTime.now();
-        dateTimeJson.setData(localDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        dateTimeJson.setDate(localDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         dateTimeJson.setTime(localTime.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         return dateTimeJson;
     }

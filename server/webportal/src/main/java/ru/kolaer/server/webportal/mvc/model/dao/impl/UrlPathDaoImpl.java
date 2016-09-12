@@ -63,4 +63,10 @@ public class UrlPathDaoImpl implements UrlPathDao {
                 .setParameter("requestMethod", requestMethod)
                 .uniqueResult();
     }
+
+    @Override
+    @Transactional
+    public void clear() {
+        this.sessionFactory.getCurrentSession().createQuery("DELETE FROM WebPortalUrlPathDecorator").executeUpdate();
+    }
 }

@@ -35,7 +35,6 @@ public class UrlPathServiceImpl implements UrlPathService {
         }
 
         WebPortalUrlPath result = this.urlPathDao.getPathByUrl(url);
-        //if(result.getUrl().contains("*"))
         return result;
     }
 
@@ -70,6 +69,11 @@ public class UrlPathServiceImpl implements UrlPathService {
                 this.urlPathDao.persist(new WebPortalUrlPathDecorator(urlPath));
             }
         }
+    }
+
+    @Override
+    public void clear() {
+        this.urlPathDao.clear();
     }
 
     @Override

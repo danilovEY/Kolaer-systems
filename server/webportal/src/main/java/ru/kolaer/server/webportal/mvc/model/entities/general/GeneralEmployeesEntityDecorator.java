@@ -1,13 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.*;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Date;
 
 /**
  * Created by Danilov on 24.07.2016.
@@ -37,18 +34,6 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setPnumber(pnumber);
     }
 
-    @Transient
-    @OneToMany(targetEntity = GeneralAccountsEntityDecorator.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "general_employee_account", joinColumns = {@JoinColumn(name = "id_employee")},
-            inverseJoinColumns = { @JoinColumn(name = "id_account")})
-    public List<GeneralAccountsEntity> getAccountsEntity() {
-        return this.generalEmployeesEntity.getAccountsEntity();
-    }
-
-    public void setAccountsEntity(List<GeneralAccountsEntity> accountsEntity) {
-        this.generalEmployeesEntity.setAccountsEntity(accountsEntity);
-    }
-
     @Column(name = "initials")
     public String getInitials() {
         return this.generalEmployeesEntity.getInitials();
@@ -69,12 +54,13 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     }
 
 
-    @Column(name = "departament")
-    public String getDepartament() {
+    @OneToOne(targetEntity = GeneralDepartamentEntityDecorator.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_departament")
+    public GeneralDepartamentEntity getDepartament() {
         return this.generalEmployeesEntity.getDepartament();
     }
 
-    public void setDepartament(String departament) {
+    public void setDepartament(GeneralDepartamentEntity departament) {
         this.generalEmployeesEntity.setDepartament(departament);
     }
 
@@ -105,6 +91,17 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     @Override
     public void setPhoneNumber(String number) {
         this.generalEmployeesEntity.setPhoneNumber(number);
+    }
+
+    @Column(name = "birthday")
+    @Temporal(TemporalType.DATE)
+    public Date getBirthday() {
+        return this.generalEmployeesEntity.getBirthday();
+    }
+
+    @Override
+    public void setBirthday(Date birthday) {
+        this.generalEmployeesEntity.setBirthday(birthday);
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
@@ -24,7 +25,7 @@ import java.lang.reflect.Method;
  * Created by danilovey on 11.08.2016.
  */
 @Component
-public class UrlSecurityApplicationContextListener implements ApplicationListener<ContextRefreshedEvent> {
+public class UrlSecurityApplicationContextListener implements ApplicationListener<ContextRefreshedEvent>, Ordered {
     private static final Logger LOG = LoggerFactory.getLogger(UrlSecurityApplicationContextListener.class);
 
     @Autowired
@@ -87,5 +88,10 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                 }
             }
         }
+    }
+
+    @Override
+    public int getOrder() {
+        return LOWEST_PRECEDENCE - 10;
     }
 }

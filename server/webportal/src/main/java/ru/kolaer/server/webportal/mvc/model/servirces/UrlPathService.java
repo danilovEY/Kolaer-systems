@@ -13,4 +13,6 @@ public interface UrlPathService extends ServiceBase<WebPortalUrlPath> {
     List<GeneralRolesEntity> getRoles(WebPortalUrlPath urlPath);
 
     void createIsNone(WebPortalUrlPath urlPath);
+
+    void clear();
 }

@@ -47,7 +47,7 @@ public class JournalViolationDecorator implements JournalViolation {
     }
 
     @OneToMany(targetEntity = ViolationDecorator.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "journal_violations", joinColumns = {@JoinColumn(name = "id_journal")},
+    @JoinTable(name = "violations_journals", joinColumns = {@JoinColumn(name = "id_journal")},
             inverseJoinColumns = { @JoinColumn(name = "id_violation")})
     public List<Violation> getViolations() {
         return this.journalViolation.getViolations();
