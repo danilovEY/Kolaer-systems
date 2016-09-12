@@ -4,15 +4,15 @@ package ru.kolaer.api.mvp.model.kolaerweb;
  * Created by danilovey on 25.08.2016.
  */
 public class DateTimeJson {
-    private String data;
+    private String date;
     private String time;
 
-    public String getData() {
-        return data;
+    public String getDate() {
+        return date;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setDate(String data) {
+        this.date = data;
     }
 
     public String getTime() {
@@ -25,6 +25,6 @@ public class DateTimeJson {
 
     @Override
     public String toString() {
-        return this.data + "|" + this.time;
+        return this.date + "|" + this.time;
     }
 }
