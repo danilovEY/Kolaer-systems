@@ -1,6 +1,6 @@
 package ru.kolaer.api.mvp.model.kolaerweb;
 
-import java.util.List;
+import java.util.Date;
 
 /**
  * Created by Danilov on 24.07.2016.
@@ -12,9 +12,9 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
     private String mobileNumber;
     private String phoneNumber;
     private EnumGender gender;
-    private String departament;
+    private GeneralDepartamentEntity departament;
     private String post;
-    private List<GeneralAccountsEntity> accountsEntity;
+    private Date birthday;
 
     public Integer getPnumber() {
         return pnumber;
@@ -22,14 +22,6 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
 
     public void setPnumber(Integer pnumber) {
         this.pnumber = pnumber;
-    }
-
-    public List<GeneralAccountsEntity> getAccountsEntity() {
-        return accountsEntity;
-    }
-
-    public void setAccountsEntity(List<GeneralAccountsEntity> accountsEntity) {
-        this.accountsEntity = accountsEntity;
     }
 
     public String getInitials() {
@@ -48,11 +40,11 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
         this.gender = gender;
     }
 
-    public String getDepartament() {
+    public GeneralDepartamentEntity getDepartament() {
         return departament;
     }
 
-    public void setDepartament(String departament) {
+    public void setDepartament(GeneralDepartamentEntity departament) {
         this.departament = departament;
     }
 
@@ -82,6 +74,16 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
     @Override
     public void setPhoneNumber(String number) {
         this.phoneNumber = number;
+    }
+
+    @Override
+    public Date getBirthday() {
+        return this.birthday;
+    }
+
+    @Override
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     @Override

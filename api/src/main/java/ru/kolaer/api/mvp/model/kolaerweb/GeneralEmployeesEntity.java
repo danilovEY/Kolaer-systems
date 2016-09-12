@@ -2,7 +2,7 @@ package ru.kolaer.api.mvp.model.kolaerweb;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import java.util.List;
+import java.util.Date;
 
 /**
  * Created by danilovey on 29.07.2016.
@@ -12,17 +12,14 @@ public interface GeneralEmployeesEntity {
      Integer getPnumber();
      void setPnumber(Integer pnumber);
 
-     List<GeneralAccountsEntity> getAccountsEntity();
-     void setAccountsEntity(List<GeneralAccountsEntity> accountsEntity);
-
      String getInitials();
      void setInitials(String initials);
 
      EnumGender getGender();
      void setGender(EnumGender gender);
 
-     String getDepartament();
-     void setDepartament(String departament);
+     GeneralDepartamentEntity getDepartament();
+     void setDepartament(GeneralDepartamentEntity departament);
 
      String getPost();
      void setPost(String post);
@@ -32,4 +29,7 @@ public interface GeneralEmployeesEntity {
 
      String getPhoneNumber();
      void setPhoneNumber(String number);
+
+     Date getBirthday();
+     void setBirthday(Date birthday);
 }
