@@ -10,6 +10,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPathBase;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
@@ -49,6 +50,9 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
 
             try {
                 beanClass = Class.forName(beanClassName);
+                final RestController urlDeclaration = (RestController) beanClass.getAnnotation(RestController.class);
+                if(urlDeclaration == null)
+                    continue;
                 methods = beanClass.getMethods();
             } catch (ClassNotFoundException e) {
                 LOG.error("Ошибка при чтении бина: {}", beanName, e);
