@@ -1,6 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import ru.kolaer.api.mvp.model.kolaerweb.*;
 
 import javax.persistence.*;
@@ -13,6 +15,7 @@ import java.util.Date;
 @Entity
 @Table(name = "general_employees")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@pnumber")
 public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     private GeneralEmployeesEntity generalEmployeesEntity;
 

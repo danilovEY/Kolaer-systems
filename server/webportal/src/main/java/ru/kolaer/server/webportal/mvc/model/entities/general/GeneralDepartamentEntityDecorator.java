@@ -58,7 +58,6 @@ public class GeneralDepartamentEntityDecorator implements GeneralDepartamentEnti
 
     @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY, optional=false)
     @JoinColumn(name = "id_employee")
-    @JsonManagedReference
     public GeneralEmployeesEntity getChiefEntity() {
         return this.generalDepartamentEntity.getChiefEntity();
     }
