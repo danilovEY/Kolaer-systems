@@ -17,7 +17,7 @@ import java.util.List;
  * Created by danilovey on 27.07.2016.
  * Рест контроллер для работы с аккаунтами.
  */
-@RestController
+//@RestController
 @RequestMapping("/general/accounts")
 public class AccountsController {
     private static final Logger LOG = LoggerFactory.getLogger(AccountsController.class);
@@ -33,7 +33,7 @@ public class AccountsController {
     }
 
     /**Добавить аккаунт.*/
-    @UrlDeclaration(description = "Добавить аккаунт.")
+    @UrlDeclaration(description = "Добавить аккаунт.", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void addUser(GeneralAccountsEntity generalAccountsEntity) {
         this.accountService.add(generalAccountsEntity);
