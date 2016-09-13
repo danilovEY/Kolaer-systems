@@ -54,6 +54,12 @@ public class AuthenticationController {
         return "redirect:/";
     }
 
+    @UrlDeclaration(description = "Выйти.", requestMethod = RequestMethod.GET, isAccessAnonymous = true, isAccessUser = true)
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logoutGet(HttpServletResponse response, HttpServletRequest request) {
+        return this.logout(response, request);
+    }
+
     /**Генерация пароля по строке.*/
     @UrlDeclaration(description = "Генерация пароля по строке. (?pass={pass})", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/genpass", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

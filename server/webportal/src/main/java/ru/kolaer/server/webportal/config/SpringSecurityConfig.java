@@ -59,21 +59,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(this.authProviderLDAP());
-                //.authenticationProvider(this.authProviderSQL());
     }
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**").antMatchers("/app/**").antMatchers("/rest/non-security/**");
+        web.ignoring().antMatchers("/resources/**").antMatchers("/rest/non-security/**");
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        final UserDetailsService userDetailsService = this.userDetailsServiceLDAP();
-
         //Отключаем csrf хак
         http.csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and()
         .httpBasic()
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
                 .and()
