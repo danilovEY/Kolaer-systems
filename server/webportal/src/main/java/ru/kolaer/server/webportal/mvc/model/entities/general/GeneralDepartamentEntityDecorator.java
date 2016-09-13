@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
@@ -54,8 +56,9 @@ public class GeneralDepartamentEntityDecorator implements GeneralDepartamentEnti
         this.generalDepartamentEntity.setAbbreviatedName(abbreviatedName);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY, optional=false)
     @JoinColumn(name = "id_employee")
+    @JsonManagedReference
     public GeneralEmployeesEntity getChiefEntity() {
         return this.generalDepartamentEntity.getChiefEntity();
     }

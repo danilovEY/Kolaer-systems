@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by danilovey on 09.08.2016.
  */
-@Service
+//@Service
 public class AccountServiceImpl implements AccountService{
     private static final Logger LOG = LoggerFactory.getLogger(AccountServiceImpl.class);
 

@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,5 +53,30 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void update(GeneralEmployeesEntity entity) {
 
+    }
+
+    @Override
+    public List<GeneralEmployeesEntity> getUserRangeBirthday(Date startData, Date endData) {
+        return this.employeeDao.getUserRangeBirthday(startData, endData);
+    }
+
+    @Override
+    public List<GeneralEmployeesEntity> getUsersByBirthday(Date date) {
+        return this.employeeDao.getUsersByBirthday(date);
+    }
+
+    @Override
+    public List<GeneralEmployeesEntity> getUserBirthdayToday() {
+        return this.employeeDao.getUserBirthdayToday();
+    }
+
+    @Override
+    public List<GeneralEmployeesEntity> getUsersByInitials(String initials) {
+        return this.employeeDao.getUsersByInitials(initials);
+    }
+
+    @Override
+    public int getCountUserBirthday(Date date) {
+        return this.employeeDao.getCountUserBirthday(date);
     }
 }

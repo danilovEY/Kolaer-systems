@@ -147,7 +147,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return userDetailsServiceLDAP;
     }
 
-    @Bean
+    //@Bean
     public UserDetailsService userDetailsServiceSQL() {
         return new UserDetailsServiceImpl();
     }
