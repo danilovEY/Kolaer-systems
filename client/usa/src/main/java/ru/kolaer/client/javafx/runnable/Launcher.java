@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMMainFrameImpl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class Launcher {
@@ -14,6 +15,7 @@ public class Launcher {
 
 	public static final String pathToCache = System.getProperty("java.io.tmpdir") + "\\KolaerCache";
 	public static final String pathToRunFile = pathToCache + "\\runnable.usa";
+	public static final String pathToShowAppFile = pathToCache + "\\runnable_show.usa";
 
 	public static void main(final String[] args) {
 		if(!appIsRun()) {
@@ -33,18 +35,15 @@ public class Launcher {
 		final File pathToFile = new File(pathToRunFile);
 
 		if(pathToFile.exists()) {
-			pathToFile.delete();
-			
-			try{
-				TimeUnit.MILLISECONDS.sleep(300);
-			}catch(InterruptedException e1){
-				LOG.error("Прерывание операции!");
-				return true;
+			final File pathToShowFile = new File(pathToShowAppFile);
+			if(!pathToShowFile.exists()) {
+				try {
+					pathToShowFile.createNewFile();
+				} catch (IOException e) {
+					LOG.error("Невозможно создать файл: {}", pathToShowAppFile, e);
+				}
 			}
-			
-			if(pathToFile.exists()) {
-				return true;
-			}
+			return true;
 		}
 
 		return false;
