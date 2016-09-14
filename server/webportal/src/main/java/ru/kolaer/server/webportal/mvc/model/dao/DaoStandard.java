@@ -16,5 +16,5 @@ public interface DaoStandard<T> {
     /**Удалить объект в БД.*/
     void delete(T obj);
 
-    void update(T entity);
+    void update(T obj);
 }
