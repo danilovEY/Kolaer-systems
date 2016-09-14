@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '2.3'
+version '2.4'
 
 def projectName = "ru.kolaer.client.usa"
 def projectNameWithVersion = projectName + "-" + version

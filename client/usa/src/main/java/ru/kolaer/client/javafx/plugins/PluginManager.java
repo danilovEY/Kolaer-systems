@@ -82,6 +82,21 @@ public class PluginManager {
         LOG.info("OSGi framework успешно запущен!");
     }
 
+    public void shutdown() throws InterruptedException {
+        if(this.isInit) {
+            for (Bundle bundle : this.framework.getBundleContext().getBundles()) {
+                try {
+                    LOG.info("Завершение: {}", bundle.getSymbolicName());
+                    bundle.stop(0);
+                } catch (BundleException e) {
+                    LOG.error("Ошибка при закрытии бандла!");
+                }
+            }
+            LOG.info("Завершение фремворка...");
+            this.framework.waitForStop(0);
+        }
+    }
+
     public void refreshOsgi() {
         try {
             this.initialization();

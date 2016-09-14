@@ -74,12 +74,6 @@ public class VMMainFrameImpl extends Application {
         splitPane.setDividerPositions(1);
         this.mainPane.setCenter(splitPane);
 
-        final ExecutorService threadOnCreateTray = Executors.newSingleThreadExecutor();
-        CompletableFuture.runAsync(() -> {
-            new Tray().createTrayIcon(stage, this.servicesManager, explorer);
-            threadOnCreateTray.shutdown();
-        }, threadOnCreateTray);
-
         final NotificationPane notify = new NotificationPane();
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         uiSystemUS.setNotification(notify);
@@ -94,7 +88,13 @@ public class VMMainFrameImpl extends Application {
 
         final SearchPlugins searchPlugins = new SearchPlugins();
         final PluginManager pluginManager = new PluginManager(searchPlugins);
-        
+
+        final ExecutorService threadOnCreateTray = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() -> {
+            new Tray().createTrayIcon(stage, pluginManager, this.servicesManager, explorer);
+            threadOnCreateTray.shutdown();
+        }, threadOnCreateTray);
+
         final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             Thread.currentThread().setName("Добавление системны служб");
