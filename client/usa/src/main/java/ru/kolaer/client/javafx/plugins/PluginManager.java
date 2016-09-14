@@ -37,7 +37,7 @@ public class PluginManager {
     }
 
     public void initialization() throws Exception {
-        final File frameworkDir = new File(System.getProperty("java.io.tmpdir"), defaultPathCache);
+        final File frameworkDir = new File(System.getProperty("java.io.tmpdir") + "\\" + defaultPathCache, UUID.randomUUID().toString());
 
         final Map<String, String> frameworkProperties = new HashMap<>();
         frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
@@ -72,17 +72,12 @@ public class PluginManager {
                 "javafx.scene.input , javafx.scene.layout, javafx.util, javafx.concurrent," +
                 "javafx.scene.text, javafx.stage, javax.swing, com.sun.javafx.scene.control.skin, javafx.scene.control.cell, org.slf4j;version=1.7.7");
 
-        //try {
         this.framework = new Felix(frameworkProperties);
 
         this.framework.start();
 
         this.context = this.framework.getBundleContext();
         this.isInit = true;
-        //}  catch (final Exception e) {
-        //    LOG.error("Ошибка при инициализации или старта OSGi-framework!", e);
-        //    throw e;
-        //}
 
         LOG.info("OSGi framework успешно запущен!");
     }
