@@ -42,6 +42,17 @@ public class Launcher {
 				} catch (IOException e) {
 					LOG.error("Невозможно создать файл: {}", pathToShowAppFile, e);
 				}
+			} else {
+				try {
+					TimeUnit.SECONDS.sleep(1);
+				} catch (InterruptedException e) {
+					return true;
+				}
+				if(pathToShowFile.exists()) {
+					pathToFile.delete();
+					pathToShowFile.delete();
+					return false;
+				}
 			}
 			return true;
 		}

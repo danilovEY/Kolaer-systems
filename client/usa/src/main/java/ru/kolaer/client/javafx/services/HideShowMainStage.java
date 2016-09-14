@@ -18,6 +18,7 @@ public class HideShowMainStage implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(HideShowMainStage.class);
 
 	private final File pathToFile = new File(Launcher.pathToRunFile);
+	private final File pathToShowAppFile = new File(Launcher.pathToShowAppFile);
 	private final Stage mainStage;
 	private boolean isRun = false;
 
@@ -63,24 +64,17 @@ public class HideShowMainStage implements Service {
 				TimeUnit.MILLISECONDS.sleep(200);
 			}catch(InterruptedException e){
 				LOG.error("Прерывание операции!");
-				this.isRun = false;
+				this.stop();
 				return;
 			}
 
-			if(!this.pathToFile.exists()){
-				try{
-					this.pathToFile.createNewFile();
-
-					Tools.runOnThreadFX(() -> {
-						this.mainStage.setMaximized(true);
-						this.mainStage.requestFocus();
-						this.mainStage.show();
-					});
-				}catch(IOException e){
-					LOG.error("Невозможно создать файл!");
-					this.isRun = false;
-					return;
-				}
+			if(this.pathToShowAppFile.exists()){
+				this.pathToShowAppFile.delete();
+				Tools.runOnThreadFX(() -> {
+					this.mainStage.setMaximized(true);
+					this.mainStage.requestFocus();
+					this.mainStage.show();
+				});
 			}
 		}
 	}

@@ -127,7 +127,6 @@ public class PluginManager {
 	            LOG.info("{} установка завершена...", pluginBundle.getSymbolicNamePlugin());
         	} catch(BundleException ex) {
         		LOG.error("Ошибка при установке плагина: {}", pluginBundle.getSymbolicNamePlugin(), ex);
-                System.exit(-9);
         		return false;
         	}
         	
