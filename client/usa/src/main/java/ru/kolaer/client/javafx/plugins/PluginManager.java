@@ -37,11 +37,11 @@ public class PluginManager {
     }
 
     public void initialization() throws Exception {
-        final File frameworkDir = new File(System.getProperty("java.io.tmpdir") + "\\" + defaultPathCache, UUID.randomUUID().toString());
+        final File frameworkDir = new File(System.getProperty("java.io.tmpdir") , defaultPathCache);
 
         final Map<String, String> frameworkProperties = new HashMap<>();
         frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
-        frameworkProperties.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+        frameworkProperties.put(Constants.FRAMEWORK_STORAGE_CLEAN, "true");
         frameworkProperties.put("felix.log.level", "3");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
