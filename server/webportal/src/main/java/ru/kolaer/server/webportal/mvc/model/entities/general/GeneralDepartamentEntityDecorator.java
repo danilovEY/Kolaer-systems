@@ -56,6 +56,7 @@ public class GeneralDepartamentEntityDecorator implements GeneralDepartamentEnti
         this.generalDepartamentEntity.setAbbreviatedName(abbreviatedName);
     }
 
+    @Transient
     @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY, optional=false)
     @JoinColumn(name = "id_employee")
     public GeneralEmployeesEntity getChiefEntity() {

@@ -131,7 +131,7 @@ public class ViolationDecorator implements Violation {
         this.violation.setStageEnum(stageEnum);
     }
 
-    @OneToOne(targetEntity = TypeViolationDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = TypeViolationDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_type_violation", nullable = true)
     public TypeViolation getTypeViolation() {
         return this.violation.getTypeViolation();

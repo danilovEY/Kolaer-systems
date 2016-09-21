@@ -30,7 +30,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
             emp.getDepartament().getAbbreviatedName();
             emp.getDepartament().getName();
             emp.getDepartament().getId();
-            emp.getDepartament().getChiefEntity().getPnumber();
         });
         return result;
     }
@@ -43,7 +42,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
         result.getDepartament().getAbbreviatedName();
         result.getDepartament().getName();
         result.getDepartament().getId();
-        result.getDepartament().getChiefEntity().getPnumber();
         return result;
     }
 
@@ -75,7 +73,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
             emp.getDepartament().getAbbreviatedName();
             emp.getDepartament().getName();
             emp.getDepartament().getId();
-            emp.getDepartament().getChiefEntity().getPnumber();
         });
         return result;
     }
@@ -91,7 +88,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
             emp.getDepartament().getAbbreviatedName();
             emp.getDepartament().getName();
             emp.getDepartament().getId();
-            emp.getDepartament().getChiefEntity().getPnumber();
         });
         return result;
     }
@@ -106,7 +102,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
             emp.getDepartament().getAbbreviatedName();
             emp.getDepartament().getName();
             emp.getDepartament().getId();
-            emp.getDepartament().getChiefEntity().getPnumber();
         });
         return result;
     }
@@ -120,7 +115,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
             emp.getDepartament().getAbbreviatedName();
             emp.getDepartament().getName();
             emp.getDepartament().getId();
-            emp.getDepartament().getChiefEntity().getPnumber();
         });
         return result;
     }

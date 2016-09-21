@@ -15,7 +15,6 @@ import java.util.Date;
 @Entity
 @Table(name = "general_employees")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@pnumber")
 public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     private GeneralEmployeesEntity generalEmployeesEntity;
 
