@@ -101,7 +101,6 @@ public class VMMainFrameImpl extends Application {
         final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             Thread.currentThread().setName("Добавление системны служб");
-            this.servicesManager.addService(new HideShowMainStage(stage), true);
             this.servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, this.servicesManager), true);
             this.servicesManager.addService(new AutoCeckingNotifyMessage(), true);
             threadStartService.shutdown();

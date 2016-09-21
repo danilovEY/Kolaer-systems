@@ -2,12 +2,16 @@ package ru.kolaer.client.javafx.runnable;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.shape.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.client.javafx.mvp.viewmodel.impl.VMMainFrameImpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 public class Launcher {
@@ -19,13 +23,41 @@ public class Launcher {
 
 	public static void main(final String[] args) {
 		//if(!appIsRun()) {
-			Platform.setImplicitExit(false);
-			Application.launch(VMMainFrameImpl.class ,args);
+		delete(new File(pathToCache));
+		Platform.setImplicitExit(false);
+		Application.launch(VMMainFrameImpl.class ,args);
 		//} else {
 		//	LOG.warn("Приложение уже запущенно!");
 		//	System.exit(0);
 		//}
 	}
+
+	private static boolean delete(File pFile) {
+		boolean bResult = false;
+
+		if(pFile.exists()) {
+			if(pFile.isDirectory()) {
+				String[] strFiles = pFile.list();
+
+				for(String strFilename: strFiles) {
+					File fileToDelete = new File(pFile, strFilename);
+
+					delete(fileToDelete);
+					try {
+						Files.deleteIfExists(Paths.get(fileToDelete.getPath()));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+			} else {
+				pFile.delete();
+			}
+		}
+
+		return bResult;
+	}
+
 	private static boolean appIsRun() {
 		final File pathToDir = new File(pathToCache);
 

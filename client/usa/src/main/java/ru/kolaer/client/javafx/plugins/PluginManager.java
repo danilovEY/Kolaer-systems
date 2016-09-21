@@ -41,7 +41,6 @@ public class PluginManager {
 
         final Map<String, String> frameworkProperties = new HashMap<>();
         frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
-        frameworkProperties.put(Constants.FRAMEWORK_STORAGE_CLEAN, "true");
         frameworkProperties.put("felix.log.level", "3");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
