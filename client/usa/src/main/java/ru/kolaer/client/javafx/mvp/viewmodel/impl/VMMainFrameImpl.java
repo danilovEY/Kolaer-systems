@@ -1,6 +1,7 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -55,6 +56,8 @@ public class VMMainFrameImpl extends Application {
      * Менеджер служб.
      */
     private ServiceControlManager servicesManager;
+    private VMTabExplorerOSGi explorer;
+    private PluginManager pluginManager;
     /**
      * Главное окно приложения.
      */
@@ -68,7 +71,7 @@ public class VMMainFrameImpl extends Application {
         this.initApplicationParams();       
 
         //Инициализация вкладочного explorer'а.
-        final VMTabExplorerOSGi explorer = new VMTabExplorerOSGi();
+        this.explorer = new VMTabExplorerOSGi();
         final SplitPane splitPane = new SplitPane();
         splitPane.getItems().add(explorer.getContent());
         splitPane.setDividerPositions(1);
@@ -87,7 +90,7 @@ public class VMMainFrameImpl extends Application {
         editorKit.setAuthentication(authentication);
 
         final SearchPlugins searchPlugins = new SearchPlugins();
-        final PluginManager pluginManager = new PluginManager(searchPlugins);
+        this.pluginManager = new PluginManager(searchPlugins);
 
         final ExecutorService threadOnCreateTray = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
@@ -163,7 +166,7 @@ public class VMMainFrameImpl extends Application {
         if (pluginManager.install(pluginBundle)) {
             LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
             final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
-            explorer.addTabPlugin(tabName, pluginBundle);
+            this.explorer.addTabPlugin(tabName, pluginBundle);
 
             LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
             final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
@@ -222,7 +225,6 @@ public class VMMainFrameImpl extends Application {
             if (e.getCode() == KeyCode.F11)
                 stage.setFullScreen(true);
         });
-
 
         stage.setTitle("Единая система КолАЭР");
 

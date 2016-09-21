@@ -18,13 +18,13 @@ public class Launcher {
 	public static final String pathToShowAppFile = pathToCache + "\\runnable_show.usa";
 
 	public static void main(final String[] args) {
-		if(!appIsRun()) {
+		//if(!appIsRun()) {
 			Platform.setImplicitExit(false);
 			Application.launch(VMMainFrameImpl.class ,args);
-		} else {
-			LOG.warn("Приложение уже запущенно!");
-			System.exit(0);
-		}
+		//} else {
+		//	LOG.warn("Приложение уже запущенно!");
+		//	System.exit(0);
+		//}
 	}
 	private static boolean appIsRun() {
 		final File pathToDir = new File(pathToCache);

@@ -27,38 +27,12 @@ public class Tray {
 
     public void createTrayIcon(final Stage stage, final PluginManager pluginManager, final ServiceControlManager servicesManager, final VMExplorer explorer) {
         stage.setOnCloseRequest(event -> {
-            if (trayIcon != null) {
-                Tools.runOnThreadFX(() -> {
-                    stage.hide();
-                });
-                this.showProgramIsMinimizedMsg();
-            } else {
-                servicesManager.removeAllServices();
-                explorer.removeAll();
-                System.exit(0);
-            }
-        });
-
-        if (SystemTray.isSupported()) {
-        	this.mainStage = stage;
-
-            final SystemTray tray = SystemTray.getSystemTray();
-
-            final PopupMenu popup = new PopupMenu();
-
-            final MenuItem showItem = new MenuItem("Открыть");
-            final MenuItem closeItem = new MenuItem("Закрыть");
-
-            final ActionListener showStage = e1 -> {
-                Tools.runOnThreadFX(() -> {
-                	this.mainStage.show();
-                });
-            };
-
-            showItem.addActionListener(showStage);
-
-            closeItem.addActionListener(e -> {
-
+           // if (trayIcon != null) {
+           //     Tools.runOnThreadFX(() -> {
+           //         stage.hide();
+           //     });
+           //     this.showProgramIsMinimizedMsg();
+           // } else {
                 final ExecutorService serviceThread = Executors.newSingleThreadExecutor();
                 CompletableFuture.runAsync(() -> {
                     LOG.info("Завершение служб...");
@@ -83,13 +57,37 @@ public class Tray {
                         LOG.info("Завершение JavaFX...");
                         stage.close();
                         Platform.exit();
+                        System.exit(0);
                     });
                     LOG.info("Завершение приложения...");
-                    System.exit(0);
                 }).exceptionally(t -> {
                     LOG.error("Ошибка при завершении всего приложения!", t);
+                    System.exit(-9);
                     return null;
                 });
+            //}
+        });
+
+        if (SystemTray.isSupported()) {
+        	this.mainStage = stage;
+
+            final SystemTray tray = SystemTray.getSystemTray();
+
+            final PopupMenu popup = new PopupMenu();
+
+            final MenuItem showItem = new MenuItem("Открыть");
+            final MenuItem closeItem = new MenuItem("Закрыть");
+
+            final ActionListener showStage = e1 -> {
+                Tools.runOnThreadFX(() -> {
+                	this.mainStage.show();
+                });
+            };
+
+            showItem.addActionListener(showStage);
+
+            closeItem.addActionListener(e -> {
+                stage.getOnCloseRequest().handle(null);
             });
 
             popup.add(showItem);
