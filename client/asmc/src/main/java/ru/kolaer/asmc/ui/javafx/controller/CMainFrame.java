@@ -46,9 +46,7 @@ public class CMainFrame implements UniformSystemPlugin {
 	/** Панель с ярлыками. */
 	private BorderPane mainPanel;
 	private BorderPane contentPanel;
-	private List<Service> services;
 	private CNavigationContentObserver observer;
-	private AutoCheckDataService autoCheckDataService;
 	private UniformSystemEditorKit uniformSystemEditorKit;
 
 	public void initialize() {
@@ -236,9 +234,6 @@ public class CMainFrame implements UniformSystemPlugin {
 		this.uniformSystemEditorKit = uniformSystemEditorKit;
 		SettingSingleton.initialization();
 		this.mainPanel = new BorderPane();
-		this.autoCheckDataService = new AutoCheckDataService(uniformSystemEditorKit);
-		this.autoCheckDataService.setcMainFrame(this);
-		this.services = Arrays.asList(this.autoCheckDataService);
 	}
 
 	@Override
@@ -248,7 +243,7 @@ public class CMainFrame implements UniformSystemPlugin {
 
 	@Override
 	public Collection<Service> getServices() {
-		return this.services;
+		return null;
 	}
 
 	@Override
