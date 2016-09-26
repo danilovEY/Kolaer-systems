@@ -71,16 +71,25 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
 
         table.setContextMenu(contextMenu);
         table.setOnContextMenuRequested(e -> {
+            if(!this.editorKit.getAuthentication().isAuthentication()){
+                this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка авторизации!", "Вы не авторизовались!");
+                return;
+            }
+
+
             final PsrRegister selectPsr = table.getSelectionModel().getSelectedItem();
             final GeneralEmployeesEntity selectPsrEmployee = selectPsr.getAuthor();
 
             final GeneralAccountsEntity accountsEntity = editorKit.getAuthentication().getAuthorizedUser();
             final GeneralEmployeesEntity authorizedEmployee = accountsEntity.getGeneralEmployeesEntity();
-            if(authorizedEmployee == null
-                    || selectPsrEmployee == null
-                    || accountsEntity.getRoles().stream().filter(role ->
-                        role.getType() == EnumRole.PSR_ADMIN || role.getType() == EnumRole.SUPER_ADMIN).count() == 0
-                    || !selectPsrEmployee.getPnumber().equals(authorizedEmployee.getPnumber())) {
+            final EnumRole[] roles = this.editorKit.getAuthentication().getRoles();
+            for(EnumRole role : roles) {
+                if(role == EnumRole.PSR_ADMIN || role == EnumRole.SUPER_ADMIN) {
+                    return;
+                }
+            }
+
+            if(!selectPsrEmployee.getPnumber().equals(authorizedEmployee.getPnumber())) {
                 contextMenu.hide();
             }
         });

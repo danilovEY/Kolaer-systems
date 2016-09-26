@@ -1,9 +1,11 @@
 package ru.kolaer.client.psr.mvp.presenter.impl;
 
 import javafx.concurrent.Task;
+import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
+import javafx.scene.layout.BorderPane;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import ru.kolaer.client.psr.mvp.presenter.PPsrRegisterTable;
 import ru.kolaer.client.psr.mvp.view.VMainPane;
 import ru.kolaer.client.psr.mvp.view.impl.VMainPaneImpl;
 
+import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,7 +56,10 @@ public class PMainPaneImpl implements PMainPane {
         if(!this.view.isInitializationView()) {
             Tools.runOnThreadFX(() -> {
                 this.view.initializationView();
-                this.pPsrRegisterTable = new PPsrRegisterTableImpl(editorKit);
+                final SwingNode swingNode = new SwingNode();
+                swingNode.setContent(new JButton("AAAAAAAA"));
+                this.view.setContent(new BorderPane(swingNode));
+                /*this.pPsrRegisterTable = new PPsrRegisterTableImpl(editorKit);
                 this.pPsrRegisterTable.setModel(this.model);
                 this.view.setContent(pPsrRegisterTable.getView().getContent());
 
@@ -66,7 +72,7 @@ public class PMainPaneImpl implements PMainPane {
                 }).exceptionally(t -> {
                     LOG.error("Ошибка!", t);
                     return null;
-                });
+                });*/
             });
 
         }
