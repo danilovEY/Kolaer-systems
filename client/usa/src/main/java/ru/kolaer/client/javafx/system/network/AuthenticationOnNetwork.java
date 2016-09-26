@@ -2,9 +2,9 @@ package ru.kolaer.client.javafx.system.network;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
@@ -29,6 +29,7 @@ public class AuthenticationOnNetwork implements Authentication {
     private boolean isAuth = false;
     private final String URL_TO_GET_TOKEN;
     private final String URL_TO_GET_USER;
+    private final String URL_TO_GET_USER_ROLE;
 
     public AuthenticationOnNetwork() {
         this.restTemplate = new RestTemplate();
@@ -36,6 +37,7 @@ public class AuthenticationOnNetwork implements Authentication {
         this.pathToServer = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/authentication";
         this.URL_TO_GET_TOKEN = this.pathToServer + "/login";
         this.URL_TO_GET_USER = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/user/get";
+        this.URL_TO_GET_USER_ROLE = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/user/roles/get";
     }
 
     public boolean login(UserAndPassJson userAndPassJson) throws ServerException {
@@ -82,6 +84,15 @@ public class AuthenticationOnNetwork implements Authentication {
     @Override
     public TokenJson getToken() {
         return this.tokenJson;
+    }
+
+    @Override
+    public EnumRole[] getRoles() {
+        if(this.isAuth) {
+            final EnumRole[] roles = this.restTemplate.getForObject(this.URL_TO_GET_USER_ROLE + "?token=" + this.tokenJson.getToken(), EnumRole[].class);
+            return roles;
+        }
+        return new EnumRole[] {EnumRole.ANONYMOUS};
     }
 
     public boolean isAuthentication() {
