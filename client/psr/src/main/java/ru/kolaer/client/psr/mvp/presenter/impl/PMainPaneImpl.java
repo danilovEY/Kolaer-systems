@@ -56,10 +56,8 @@ public class PMainPaneImpl implements PMainPane {
         if(!this.view.isInitializationView()) {
             Tools.runOnThreadFX(() -> {
                 this.view.initializationView();
-                final SwingNode swingNode = new SwingNode();
-                swingNode.setContent(new JButton("AAAAAAAA"));
-                this.view.setContent(new BorderPane(swingNode));
-                /*this.pPsrRegisterTable = new PPsrRegisterTableImpl(editorKit);
+
+                this.pPsrRegisterTable = new PPsrRegisterTableImpl(editorKit);
                 this.pPsrRegisterTable.setModel(this.model);
                 this.view.setContent(pPsrRegisterTable.getView().getContent());
 
@@ -72,7 +70,7 @@ public class PMainPaneImpl implements PMainPane {
                 }).exceptionally(t -> {
                     LOG.error("Ошибка!", t);
                     return null;
-                });*/
+                });
             });
 
         }
