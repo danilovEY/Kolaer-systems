@@ -7,6 +7,15 @@ public class DateTimeJson {
     private String date;
     private String time;
 
+    public DateTimeJson(){
+
+    }
+
+    public DateTimeJson(String date, String time) {
+        this.date = date;
+        this.time = time;
+    }
+
     public String getDate() {
         return date;
     }

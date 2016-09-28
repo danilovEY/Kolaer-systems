@@ -1,6 +1,8 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,18 +59,35 @@ public class ToolsController {
 
         long seconds = tempDateTime.until(dateTime, ChronoUnit.SECONDS);
 
-        LocalDate localDate = LocalDate.of(Math.toIntExact(years),
-                Math.toIntExact(months),
-                Math.toIntExact(days));
-
-        LocalTime localTime = LocalTime.of(Math.toIntExact(hours),
-                Math.toIntExact(minutes),
-                Math.toIntExact(seconds));
-
         final DateTimeJson result = new DateTimeJson();
-        result.setDate(localDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        result.setTime(localTime.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        result.setDate(String.format("%02d-%02d-%02d",days, months, years));
+        result.setTime(String.format("%02d:%02d:%02d",hours, minutes, seconds));
         return result;
+    }
+
+    @UrlDeclaration(description = "Получить период до времени",isAccessAll = true)
+    @RequestMapping(value = "get/period/{date}/{time}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public DateTimeJson getPeriod(@PathVariable(value = "date") String date, @PathVariable(value = "time") String time) {
+        return this.getPeriod(new DateTimeJson(date, time));
+    }
+
+    @UrlDeclaration(description = "Получить колличество после даты",isAccessAll = true)
+    @RequestMapping(value = "get/period/days/{fromDate}/{toDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public long getPeriodDays(@PathVariable(value = "fromDate") String fromDate, @PathVariable(value = "toDate") String toDate) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate lDate = LocalDate.parse(fromDate,format);
+        LocalDate rDate = LocalDate.now();
+        if(toDate != null && !toDate.trim().isEmpty()) {
+            rDate = LocalDate.parse(toDate,format);
+        }
+
+        return ChronoUnit.DAYS.between(lDate, rDate) + 1;
+    }
+
+    @UrlDeclaration(description = "Получить колличество после даты",isAccessAll = true)
+    @RequestMapping(value = "get/period/days/{fromDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public long getPeriodDays(@PathVariable(value = "fromDate") String fromDate) {
+        return this.getPeriodDays(fromDate, null);
     }
 
     @UrlDeclaration(description = "Получить подробное серверное время",isAccessAll = true)
