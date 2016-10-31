@@ -22,24 +22,24 @@ public class EmployeeOtherOrganizationController {
 	private final Logger LOG = LoggerFactory.getLogger(EmployeeOtherOrganizationController.class);
 	
 	@Autowired
-	protected EmployeeOtherOrganizationDao employeeOtherOrganizationDAO;
+	protected EmployeeOtherOrganizationDao employeeOtherOrganizationDao;
 
 	@UrlDeclaration(description = "Получить всех сотрудников.", isAccessAll = true)
 	@RequestMapping(value = "/get/users/max", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsers() {
-		return employeeOtherOrganizationDAO.getAll();
+		return employeeOtherOrganizationDao.getAll();
 	}
 
 	@UrlDeclaration(description = "Получить ограниченное число сотрудников.", isAccessAll = true)
 	@RequestMapping(value = "/get/users/max/{max}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsers(final @PathVariable int max) {
-		return employeeOtherOrganizationDAO.getAllMaxCount(max);
+		return employeeOtherOrganizationDao.getAllMaxCount(max);
 	}
 
 	@UrlDeclaration(description = "Получить число строк общего колличества сотрудников.", isAccessAll = true)
 	@RequestMapping(value = "/get/users/сount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public int getRowCount() {
-		return employeeOtherOrganizationDAO.getRowCount();
+		return employeeOtherOrganizationDao.getRowCount();
 	}
 
 	@UrlDeclaration(description = "Получить сотрудников в периоде числа.", isAccessAll = true)
@@ -50,7 +50,7 @@ public class EmployeeOtherOrganizationController {
 		try {
 			final Date startDatePasre = sdf.parse(startDate);
 			final Date endDatePasre = sdf.parse(endDate);
-			return employeeOtherOrganizationDAO.getUserRangeBirthday(startDatePasre, endDatePasre);
+			return employeeOtherOrganizationDao.getUserRangeBirthday(startDatePasre, endDatePasre);
 		} catch (ParseException e) {
 			LOG.error("Ошибка! Не коректные данные: ({}, {})", startDate, endDate);
 			return Collections.emptyList();
@@ -60,7 +60,7 @@ public class EmployeeOtherOrganizationController {
 	@UrlDeclaration(description = "Получить сотрудников у кого сегодня день рождения.", isAccessAll = true)
 	@RequestMapping(value = "/get/users/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsersRangeBirthday() {
-		return employeeOtherOrganizationDAO.getUserBirthdayToday();
+		return employeeOtherOrganizationDao.getUserBirthdayToday();
 	}
 
 	@UrlDeclaration(description = "Получить сотрудников у кого день рождение в указанный день.", isAccessAll = true)
@@ -70,7 +70,7 @@ public class EmployeeOtherOrganizationController {
 	    
 		try {
 			final Date datePasre = sdf.parse(date);
-			return employeeOtherOrganizationDAO.getUsersByBirthday(datePasre);
+			return employeeOtherOrganizationDao.getUsersByBirthday(datePasre);
 		} catch (ParseException e) {
 			LOG.error("Ошибка! Не коректные данные: ({})", date);
 			return Collections.emptyList();
@@ -84,7 +84,7 @@ public class EmployeeOtherOrganizationController {
 	    
 		try {
 			final Date datePasre = sdf.parse(date);
-			return employeeOtherOrganizationDAO.getUsersByBirthdayAndOrg(datePasre, orgainzation);
+			return employeeOtherOrganizationDao.getUsersByBirthdayAndOrg(datePasre, orgainzation);
 		} catch (ParseException e) {
 			LOG.error("Ошибка! Не коректные данные: ({})", date);
 			return Collections.emptyList();
@@ -94,7 +94,7 @@ public class EmployeeOtherOrganizationController {
 	@UrlDeclaration(description = "Задать сотрудников из других организаций.", requestMethod = RequestMethod.POST)
 	@RequestMapping(value = "/set/users/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public void setUsers(final @RequestBody RequestDbBirthdayAllList usersList) {
-		this.employeeOtherOrganizationDAO.insertDataList(usersList.getBirthdayList());
+		this.employeeOtherOrganizationDao.insertDataList(usersList.getBirthdayList());
 	}
 
 	@UrlDeclaration(description = "Получить число сотрудников у кого день рождение в указанный день.", isAccessAll = true)
@@ -104,7 +104,7 @@ public class EmployeeOtherOrganizationController {
 	    
 		try {
 			final Date datePasre = sdf.parse(date);
-			return employeeOtherOrganizationDAO.getCountUserBirthday(datePasre);
+			return employeeOtherOrganizationDao.getCountUserBirthday(datePasre);
 		} catch (ParseException e) {
 			LOG.error("Ошибка! Не коректные данные: ({})", date);
 			return 0;
@@ -118,7 +118,7 @@ public class EmployeeOtherOrganizationController {
 	    
 		try {
 			final Date datePasre = sdf.parse(date);
-			return employeeOtherOrganizationDAO.getCountUserBirthdayAndOrg(datePasre, organization);
+			return employeeOtherOrganizationDao.getCountUserBirthdayAndOrg(datePasre, organization);
 		} catch (ParseException e) {
 			LOG.error("Ошибка! Не коректные данные: ({})", date);
 			return 0;
@@ -128,6 +128,6 @@ public class EmployeeOtherOrganizationController {
 	@UrlDeclaration(description = "Получить сотрудников по инициалам.", isAccessAll = true)
 	@RequestMapping(value = "/get/users/by/initials/{initials}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsersByInitials(final @PathVariable String initials) {
-			return employeeOtherOrganizationDAO.getUsersByInitials(initials);
+			return employeeOtherOrganizationDao.getUsersByInitials(initials);
 	}
 }
