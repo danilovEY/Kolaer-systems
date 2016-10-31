@@ -29,14 +29,14 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    /**Получить всех сотродников.*/
-    @UrlDeclaration(description = "Получить всех сотродников.", isAccessAll = true)
+    /**Получить всех сотрудников.*/
+    @UrlDeclaration(description = "Получить всех сотрудников.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<GeneralEmployeesEntity> getAllEmployees() {
         return this.employeeService.getAll();
     }
 
-    @UrlDeclaration(description = "Получить всех сотродников у кого день рождение между датами.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение между датами.", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/{startDate}/{endDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GeneralEmployeesEntity> getUsersRangeBirthday(final @PathVariable String startDate, final @PathVariable String endDate) throws ParseException {
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -47,13 +47,13 @@ public class EmployeeController {
 
     }
 
-    @UrlDeclaration(description = "Получить всех сотродников у кого сегодня день рождение.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить всех сотрудников у кого сегодня день рождение.", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GeneralEmployeesEntity> getUsersRangeBirthday() {
         return this.employeeService.getUserBirthdayToday();
     }
 
-    @UrlDeclaration(description = "Получить всех сотродников у кого день рождение в определенную дату.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение в определенную дату.", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GeneralEmployeesEntity> getUsersRangeBirthday(final @PathVariable String date) throws ParseException {
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -63,7 +63,7 @@ public class EmployeeController {
 
     }
 
-    @UrlDeclaration(description = "Получить колличество сотродников у кого день рождение в определенную датату.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить колличество сотрудников у кого день рождение в определенную датату.", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public int getCountUsersBirthday(final @PathVariable String date) throws ParseException {
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

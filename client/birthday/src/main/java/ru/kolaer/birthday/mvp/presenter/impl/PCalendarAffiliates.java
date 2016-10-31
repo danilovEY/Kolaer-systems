@@ -1,6 +1,6 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.ui.DefaultProgressBar;
 import ru.kolaer.api.system.ui.ProgressBarObservable;
@@ -32,14 +32,14 @@ public class PCalendarAffiliates extends PCalendarBase  {
 			if (this.editorKid != null) {
 				final ProgressBarObservable obs = new DefaultProgressBar();
 				this.editorKid.getUISystemUS().getStatusBar().addProgressBar(obs);
-				final DbBirthdayAll[] usersDataAll = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase()
+				final EmployeeOtherOrganizationBase[] usersDataAll = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase()
 						.getUserBirthdayAllDataBase()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()), ORGANIZATION);
 				obs.setValue(-1);
 				if(usersDataAll.length != 0) {
 					final double step = 100/usersDataAll.length * 0.01;
 					double value = 0;	
-					for (DbBirthdayAll user : usersDataAll) {
+					for (EmployeeOtherOrganizationBase user : usersDataAll) {
 						obs.setValue(value);
 						value += step;
 						final UserModel userModel = new UserModelImpl(user);

@@ -2,7 +2,7 @@ package ru.kolaer.birthday.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
@@ -79,8 +79,8 @@ public class PTableWithUsersBirthdayObserverImpl implements PTableWithUsersBirth
 				table.addData(userModel);
 			}
 
-			final DbBirthdayAll[] usersOther = editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
-			for(final DbBirthdayAll user : usersOther) {
+			final EmployeeOtherOrganizationBase[] usersOther = editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
+			for(final EmployeeOtherOrganizationBase user : usersOther) {
 				final UserModel userModel = new UserModelImpl(user);
 				userModel.setOrganization(user.getOrganization());
 				table.addData(userModel);

@@ -1,6 +1,6 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.network.ServerStatus;
@@ -25,7 +25,7 @@ public class PSearchImpl implements PSearchUsers {
 		this.view.setSearchAction(e -> {
 			if(this.editorKid.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
 				final DbDataAll[] dbDataAllArray = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByInitials(this.view.getSearchText());
-				final DbBirthdayAll[] dbBirthdayAllArray = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersByInitials(this.view.getSearchText());
+				final EmployeeOtherOrganizationBase[] dbBirthdayAllArray = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersByInitials(this.view.getSearchText());
 				
 				final List<UserModel> users = new ArrayList<>();
 				
@@ -33,7 +33,7 @@ public class PSearchImpl implements PSearchUsers {
 					users.add(new UserModelImpl(user));
 				}
 				
-				for(final DbBirthdayAll user : dbBirthdayAllArray) {
+				for(final EmployeeOtherOrganizationBase user : dbBirthdayAllArray) {
 					final UserModelImpl userModel = new UserModelImpl(user);
 					userModel.setOrganization(user.getOrganization());
 					users.add(userModel);

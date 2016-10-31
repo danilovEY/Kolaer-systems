@@ -1,7 +1,7 @@
 package ru.kolaer.birthday.mvp.model.impl;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.birthday.mvp.model.UserModel;
 
@@ -87,7 +87,7 @@ public class UserModelImpl implements UserModel {
 		this.setIcon(""); //TODO: http://asupkolaer/app_ie8/assets/images/vCard
 	}
 	
-	public UserModelImpl(final DbBirthdayAll user) {
+	public UserModelImpl(final EmployeeOtherOrganizationBase user) {
 		this.setOrganization(user.getOrganization());
 		this.setInitials(user.getInitials());
 		this.setBirthday(user.getBirthday());

@@ -1,11 +1,8 @@
 package ru.kolaer.api.mvp.model.restful;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 import java.util.Date;
 
-@XmlRootElement
-public class DbBirthdayAll implements Serializable {
+public class EmployeeOtherOrganizationBase implements EmployeeOtherOrganization {
 	private static final long serialVersionUID = -9086880039708838378L;
 
 	private short id;
@@ -20,7 +17,7 @@ public class DbBirthdayAll implements Serializable {
 	private String post;
 	private String vCard;
 
-	public DbBirthdayAll() {
+	public EmployeeOtherOrganizationBase() {
 	}
 
 	public short getId() {

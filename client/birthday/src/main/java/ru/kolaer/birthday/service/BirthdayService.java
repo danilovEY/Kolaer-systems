@@ -3,7 +3,7 @@ package ru.kolaer.birthday.service;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -30,7 +30,7 @@ public class BirthdayService implements Service {
 	public void run() {
 		if(this.editorKit.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
 			final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
-			final DbBirthdayAll[] usersBirthday = editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
+			final EmployeeOtherOrganizationBase[] usersBirthday = editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getUsersBirthdayToday();
 			
 			final NotifiAction[] actions = new NotifiAction[users.length + usersBirthday.length];
 			int i = 0;
@@ -45,7 +45,7 @@ public class BirthdayService implements Service {
 				});
 				i++;
 			}
-			for(final DbBirthdayAll user : usersBirthday) {
+			for(final EmployeeOtherOrganizationBase user : usersBirthday) {
 				actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
 					final UserModel userModel = new UserModelImpl(user);
 					userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));

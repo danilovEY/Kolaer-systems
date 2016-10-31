@@ -2,7 +2,7 @@ package ru.kolaer.client.javafx.system.network.restful;
 
 import javafx.beans.property.SimpleStringProperty;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.restful.DbBirthdayAll;
+import ru.kolaer.api.mvp.model.restful.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.system.network.restful.UserBirthdayAllDataBase;
 
 import java.text.DateFormat;
@@ -32,16 +32,16 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
 	}
 
 	@Override
-	public void insertUserList(List<DbBirthdayAll> userList) {
+	public void insertUserList(List<EmployeeOtherOrganizationBase> userList) {
 
 	}
 
 	@Override
-	public DbBirthdayAll[] getUsersByBirthday(Date date, String organization) {
+	public EmployeeOtherOrganizationBase[] getUsersByBirthday(Date date, String organization) {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
     	
-    	final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), DbBirthdayAll[].class);
+    	final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), EmployeeOtherOrganizationBase[].class);
     	return users;
 	}
 	
@@ -55,48 +55,48 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
 	}
 	
 	@Override
-	public DbBirthdayAll[] getAllUser() {
-		final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX, DbBirthdayAll[].class);
+	public EmployeeOtherOrganizationBase[] getAllUser() {
+		final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX, EmployeeOtherOrganizationBase[].class);
 		return users;
 	}
 
 	@Override
-	public DbBirthdayAll[] getUsersMax(final int maxCount) {
-		final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount), DbBirthdayAll[].class);
+	public EmployeeOtherOrganizationBase[] getUsersMax(final int maxCount) {
+		final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount), EmployeeOtherOrganizationBase[].class);
 		return users;
 	}
 
 	@Override
-	public DbBirthdayAll[] getUsersByBirthday(final Date date) {
+	public EmployeeOtherOrganizationBase[] getUsersByBirthday(final Date date) {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
     	
-    	final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), DbBirthdayAll[].class);
+    	final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), EmployeeOtherOrganizationBase[].class);
     	return users;
 	}
 
 	@Override
-	public DbBirthdayAll[] getUsersByRangeBirthday(final Date dateBegin, final Date dateEnd) {
+	public EmployeeOtherOrganizationBase[] getUsersByRangeBirthday(final Date dateBegin, final Date dateEnd) {
 		final SimpleStringProperty propertyBegin = new SimpleStringProperty();
     	final SimpleStringProperty propertyEnd = new SimpleStringProperty();
     	propertyBegin.setValue(dateFormat.format(dateBegin));
     	propertyEnd.setValue(dateFormat.format(dateEnd));
     	
-    	final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), DbBirthdayAll[].class);
+    	final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), EmployeeOtherOrganizationBase[].class);
     	return users;
 	}
 
 	@Override
-	public DbBirthdayAll[] getUsersBirthdayToday() {
-    	final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY_TODAY, DbBirthdayAll[].class);
+	public EmployeeOtherOrganizationBase[] getUsersBirthdayToday() {
+    	final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY_TODAY, EmployeeOtherOrganizationBase[].class);
     	return users;
 	}
 
 	@Override
-	public DbBirthdayAll[] getUsersByInitials(final String initials) {
+	public EmployeeOtherOrganizationBase[] getUsersByInitials(final String initials) {
 		if(initials == null || initials.isEmpty())
 			throw new NullPointerException("Initials is null!");
-		final DbBirthdayAll[] users = restTemplate.getForObject(this.URL_GET_USERS_BY_INITIALS + "/" + initials, DbBirthdayAll[].class);
+		final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_BY_INITIALS + "/" + initials, EmployeeOtherOrganizationBase[].class);
 		return users;
 	}
 
