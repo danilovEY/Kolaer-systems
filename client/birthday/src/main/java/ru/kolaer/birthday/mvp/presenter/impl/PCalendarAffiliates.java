@@ -1,6 +1,6 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import ru.kolaer.api.mvp.model.restful.EmployeeOtherOrganizationBase;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.ui.DefaultProgressBar;
 import ru.kolaer.api.system.ui.ProgressBarObservable;
@@ -32,8 +32,8 @@ public class PCalendarAffiliates extends PCalendarBase  {
 			if (this.editorKid != null) {
 				final ProgressBarObservable obs = new DefaultProgressBar();
 				this.editorKid.getUISystemUS().getStatusBar().addProgressBar(obs);
-				final EmployeeOtherOrganizationBase[] usersDataAll = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase()
-						.getUserBirthdayAllDataBase()
+				final EmployeeOtherOrganizationBase[] usersDataAll = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
+						.getEmployeeOtherOrganizationTable()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()), ORGANIZATION);
 				obs.setValue(-1);
 				if(usersDataAll.length != 0) {
@@ -57,7 +57,7 @@ public class PCalendarAffiliates extends PCalendarBase  {
 	@Override
 	public void initDayCellFactory() {
 		if(!this.isInitDayCellFactory) {
-			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase(), ORGANIZATION));
+			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable(), ORGANIZATION));
 			this.isInitDayCellFactory = true;
 		}
 	}	

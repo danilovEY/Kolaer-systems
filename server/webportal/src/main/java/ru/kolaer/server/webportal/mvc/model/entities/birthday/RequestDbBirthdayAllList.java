@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.birthday;
 
 
-import ru.kolaer.api.mvp.model.restful.EmployeeOtherOrganization;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 
 import java.util.Collections;
 import java.util.List;

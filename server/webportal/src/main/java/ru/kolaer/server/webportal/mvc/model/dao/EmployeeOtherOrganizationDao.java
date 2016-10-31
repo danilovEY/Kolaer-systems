@@ -1,6 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
-import ru.kolaer.api.mvp.model.restful.EmployeeOtherOrganization;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 
 import java.util.Date;
 import java.util.List;

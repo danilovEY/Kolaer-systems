@@ -1,9 +1,11 @@
-package ru.kolaer.client.javafx.system.network.restful;
+package ru.kolaer.client.javafx.system.network.kolaerweb;
 
 import javafx.beans.property.SimpleStringProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.restful.EmployeeOtherOrganizationBase;
-import ru.kolaer.api.system.network.restful.UserBirthdayAllDataBase;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
+import ru.kolaer.api.system.network.restful.EmployeeOtherOrganizationTable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,19 +18,23 @@ import java.util.List;
  * @author danilovey
  * @version 0.1
  */
-public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
+public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganizationTable {
+	private static Logger logger = LoggerFactory.getLogger(EmployeeOtherOrganizationTableImpl.class);
+
 	private final String URL_GET_USERS_MAX;
+	private final String URL_GET_USERS;
 	private final String URL_GET_USERS_BY_INITIALS;
 	private final String URL_GET_USERS_BIRTHDAY;
 	private final String URL_GET_USERS_BIRTHDAY_TODAY;
 	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private final RestTemplate restTemplate = new RestTemplate();
 	
-	public UserBirthdayAllDataBaseImpl(final String path) {
-		this.URL_GET_USERS_MAX = path + "/get/users/max";
-		this.URL_GET_USERS_BIRTHDAY = path + "/get/users/birthday";
-		this.URL_GET_USERS_BIRTHDAY_TODAY = path + "/get/users/birthday/today";
-		this.URL_GET_USERS_BY_INITIALS = path + "/get/users/by/initials";
+	public EmployeeOtherOrganizationTableImpl(final String path) {
+		this.URL_GET_USERS = path + "/get/users";
+		this.URL_GET_USERS_MAX = this.URL_GET_USERS + "/max";
+		this.URL_GET_USERS_BIRTHDAY = this.URL_GET_USERS + "/birthday";
+		this.URL_GET_USERS_BIRTHDAY_TODAY = this.URL_GET_USERS + "/birthday/today";
+		this.URL_GET_USERS_BY_INITIALS = this.URL_GET_USERS + "/by/initials";
 	}
 
 	@Override
@@ -40,8 +46,7 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
 	public EmployeeOtherOrganizationBase[] getUsersByBirthday(Date date, String organization) {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
-    	
-    	final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), EmployeeOtherOrganizationBase[].class);
+    	final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS + "/" + organization + "/birthday/" + property.getValue(), EmployeeOtherOrganizationBase[].class);
     	return users;
 	}
 	
@@ -50,7 +55,7 @@ public class UserBirthdayAllDataBaseImpl implements UserBirthdayAllDataBase {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
 
-    	final Integer countUsers = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "/count", Integer.class);
+    	final Integer countUsers = restTemplate.getForObject(this.URL_GET_USERS + "/" + organization + "/birthday/" + property.getValue() + "/count", Integer.class);
     	return countUsers;
 	}
 	

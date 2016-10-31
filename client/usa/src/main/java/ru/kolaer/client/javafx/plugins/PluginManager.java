@@ -59,6 +59,7 @@ public class PluginManager {
                 "ru.kolaer.api.system, "+
                 "ru.kolaer.api.system.network, "+
                 "ru.kolaer.api.system.network.kolaerweb, "+
+                "ru.kolaer.api.mvp.model.kolaerweb.organizations, "+
                 "ru.kolaer.api.system.network.restful, "+
                 "ru.kolaer.api.system.ui, "+
                 "ru.kolaer.api.tools" +

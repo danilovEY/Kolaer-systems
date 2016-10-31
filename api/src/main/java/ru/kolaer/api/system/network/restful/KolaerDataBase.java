@@ -8,7 +8,5 @@ package ru.kolaer.api.system.network.restful;
  */
 public interface KolaerDataBase {
 	/**Получить объект для работы с таблицой DataAll.*/
-	UserDataAllDataBase getUserDataAllDataBase(); 
-	/**Получить объект для работы с таблицой BirthdayAll.*/
-	UserBirthdayAllDataBase getUserBirthdayAllDataBase();
+	UserDataAllDataBase getUserDataAllDataBase();
 }

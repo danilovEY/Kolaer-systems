@@ -8,7 +8,7 @@ import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.network.UserDataBase;
-import ru.kolaer.api.system.network.restful.UserBirthdayAllDataBase;
+import ru.kolaer.api.system.network.restful.EmployeeOtherOrganizationTable;
 import ru.kolaer.birthday.tools.Tools;
 
 import java.time.LocalDate;
@@ -45,7 +45,7 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 		this.organization = null;
 	}
 	
-	public CustomCallback(final UserBirthdayAllDataBase userDB, final String organization) {
+	public CustomCallback(final EmployeeOtherOrganizationTable userDB, final String organization) {
 		this.usersDB = new UserDataBase<?>[]{userDB};
 		this.organization = organization;
 	}
@@ -87,7 +87,7 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 				CompletableFuture.runAsync(() -> {
 					int countUsersDataAll = 0;
 					if(organization != null) {
-						countUsersDataAll = ((UserBirthdayAllDataBase)usersDB[0]).getCountUsersBirthday(Tools.convertToDate(item), organization);
+						countUsersDataAll = ((EmployeeOtherOrganizationTable)usersDB[0]).getCountUsersBirthday(Tools.convertToDate(item), organization);
 					} else {
 						for(UserDataBase<?> base : usersDB) {
 							countUsersDataAll += base.getCountUsersBirthday(Tools.convertToDate(item));

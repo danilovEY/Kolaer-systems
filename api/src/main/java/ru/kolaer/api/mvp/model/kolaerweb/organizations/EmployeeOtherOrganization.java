@@ -1,4 +1,4 @@
-package ru.kolaer.api.mvp.model.restful;
+package ru.kolaer.api.mvp.model.kolaerweb.organizations;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 

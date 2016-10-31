@@ -1,4 +1,4 @@
-package ru.kolaer.api.mvp.model.restful;
+package ru.kolaer.api.mvp.model.kolaerweb.organizations;
 
 import java.util.Date;
 
