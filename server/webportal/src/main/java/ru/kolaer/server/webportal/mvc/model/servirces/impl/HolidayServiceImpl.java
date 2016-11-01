@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -14,13 +16,10 @@ import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
 import ru.kolaer.server.webportal.mvc.model.dao.HolidayDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.HolidayService;
 
+import javax.annotation.PostConstruct;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -29,6 +28,7 @@ import java.util.*;
  */
 @Service(value = "holidayService")
 public class HolidayServiceImpl implements HolidayService {
+    private static Logger logger = LoggerFactory.getLogger(HolidayServiceImpl.class);
     private final String CALENDAR_URL = "http://xmlcalendar.ru/data/ru/";
 
     @Autowired
@@ -54,13 +54,18 @@ public class HolidayServiceImpl implements HolidayService {
         return this.holidayDao.getHolidayByMonth(dateTimeJson);
     }
 
-    @Scheduled(cron = "0 0 0 0 * ?")
-    public void updateHoliday() throws ParserConfigurationException {
+    @PostConstruct
+    public void initHoliday() {
+        this.updateHoliday();
+    }
+
+    @Scheduled(cron = "0 0 0 1 * ?")
+    public void updateHoliday() {
         final String year = String.valueOf(LocalDate.now().getYear());
 
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         try {
+            final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             final Document document = documentBuilder.parse(this.CALENDAR_URL + year + "/calendar.xml");
             final Node holidays = document.getElementsByTagName("holidays").item(0);
             final NodeList holidaysList = holidays.getChildNodes();
@@ -84,27 +89,30 @@ public class HolidayServiceImpl implements HolidayService {
                 final Node item = daysList.item(dayIndex);
                 if(item.getNodeType() == Node.ELEMENT_NODE) {
                     final Element eElement = (Element) item;
-                    final String day = eElement.getAttribute("d");
-                    final TypeDay typeDay = this.getTypeDay(eElement.getAttribute("t"));
-                    final String nameHoliday = holidaysName.get(eElement.getAttribute("h"));
+                    final String[] dayMonth = eElement.getAttribute("d").split("\\.");
+                    final String day = dayMonth[1];
+                    final String month = dayMonth[0];
 
-                    final DateTimeJson dateTimeJson = new DateTimeJson();
-                    dateTimeJson.setTime("00:00:00");
-                    dateTimeJson.setDate(day.replace(".", "-") + "-" + year);
+                    final TypeDay typeDay = this.getTypeDay(eElement.getAttribute("t"));
+                    final String nameHoliday = Optional.ofNullable(holidaysName.get(eElement.getAttribute("h"))).orElse("Предпраздничный день");
 
                     final Holiday holiday = new Holiday();
-                    holiday.setDateTimeHoliday(dateTimeJson);
+                    holiday.setDate(day + "." + month + "." + year );
                     holiday.setName(nameHoliday);
                     holiday.setTypeDay(typeDay);
+
+                    result.add(holiday);
                 }
             }
 
-
+            if(result.size() > 0) {
+                this.holidayDao.insertHolidays(result);
+                logger.info("Holidays size: {}", result.size());
+            }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Ошибка при получении праздников!", e);
         }
-
     }
 
     private TypeDay getTypeDay(String type) {

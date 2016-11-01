@@ -34,6 +34,6 @@ public class DateTimeJson {
 
     @Override
     public String toString() {
-        return this.date + "|" + this.time;
+        return this.date + " | " + this.time;
     }
 }

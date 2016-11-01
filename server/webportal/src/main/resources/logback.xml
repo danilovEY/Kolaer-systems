@@ -9,7 +9,7 @@
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>../logs/debug_logs_%d{dd-MM-yyyy}.log</fileNamePattern>
+            <fileNamePattern>logs/debug_logs_%d{dd-MM-yyyy}.log</fileNamePattern>
         </rollingPolicy>
 
         <encoder>

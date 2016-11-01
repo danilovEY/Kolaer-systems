@@ -5,7 +5,7 @@ package ru.kolaer.api.mvp.model.kolaerweb;
  */
 public class Holiday {
     private String name;
-    private DateTimeJson dateTimeHoliday;
+    private String date;
     private TypeDay typeDay;
 
     public String getName() {
@@ -16,12 +16,12 @@ public class Holiday {
         this.name = name;
     }
 
-    public DateTimeJson getDateTimeHoliday() {
-        return dateTimeHoliday;
+    public String getDate() {
+        return this.date;
     }
 
-    public void setDateTimeHoliday(DateTimeJson dateTimeHoliday) {
-        this.dateTimeHoliday = dateTimeHoliday;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public TypeDay getTypeDay() {
