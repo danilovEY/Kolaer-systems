@@ -8,6 +8,14 @@ public class Holiday {
     private String date;
     private TypeDay typeDay;
 
+    public Holiday() {}
+
+    public Holiday(String name, String date, TypeDay typeDay) {
+        this.name = name;
+        this.date = date;
+        this.typeDay = typeDay;
+    }
+
     public String getName() {
         return name;
     }

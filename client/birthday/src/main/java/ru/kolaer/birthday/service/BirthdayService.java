@@ -3,6 +3,7 @@ package ru.kolaer.birthday.service;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.plugins.services.Service;
@@ -29,14 +30,15 @@ public class BirthdayService implements Service {
 	@Override
 	public void run() {
 		if(this.editorKit.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
-			final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+			//final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+			final GeneralEmployeesEntity[]  employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersBirthdayToday();
 			final EmployeeOtherOrganizationBase[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersBirthdayToday();
 			
-			final NotifiAction[] actions = new NotifiAction[users.length + usersBirthday.length];
+			final NotifiAction[] actions = new NotifiAction[employeesEntities.length + usersBirthday.length];
 			int i = 0;
 
-			for(final DbDataAll user : users) {
-				actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartament(), e -> {
+			for(final GeneralEmployeesEntity user : employeesEntities) {
+				actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartament().getAbbreviatedName(), e -> {
 					final UserModel userModel = new UserModelImpl(user);
 					
 					Platform.runLater(() -> {

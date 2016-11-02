@@ -2,6 +2,9 @@ package ru.kolaer.birthday.service;
 
 import javafx.application.Platform;
 import javafx.util.Duration;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
+import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.mvp.model.restful.PublicHolidays;
@@ -15,9 +18,11 @@ import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
 import ru.kolaer.birthday.tools.Tools;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 public class BirthdayOnHoliday implements Service {
+	private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	private final UniformSystemEditorKit editorKit;
 	private boolean tomorrow = false;
 	private boolean arterTomorrow = false;
@@ -28,44 +33,49 @@ public class BirthdayOnHoliday implements Service {
 	@Override
 	public void run() {
 		if(this.editorKit.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
-			final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
+			//final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
+
+			final Holiday[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
 			final LocalDate date = LocalDate.now();
+
 			if(date.getDayOfWeek().getValue() == 5 ) {
 				if(!this.tomorrow) {
-					this.showNotifi("В субботу ", date.plusDays(1), new PublicHolidays(null, "выходной", "holiday", null));
+					this.showNotifi("В субботу ", date.plusDays(1), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
 				} 
 				if(!this.arterTomorrow) {
-					this.showNotifi("В воскресенье ", date.plusDays(2), new PublicHolidays(null, "выходной", "holiday", null));
+					this.showNotifi("В воскресенье ", date.plusDays(2), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
 				}
 			}
 			
-			for(final PublicHolidays holiday : holidays) {
-				if(date.getDayOfMonth() == holiday.getDate().getDay()) {
+			for(final Holiday holiday : holidays) {
+				final LocalDate holidayLocalDate = LocalDate.parse(holiday.getDate(), dtf);
+				if(date.getDayOfMonth() == holidayLocalDate.getDayOfMonth()) {
 					this.showNotifi("Сегодня ", date, holiday);
-				} else if(date.getDayOfMonth() + 1 == holiday.getDate().getDay()) {
+				} else if(date.getDayOfMonth() + 1 == holidayLocalDate.getDayOfMonth()) {
 					this.tomorrow = true;
 					this.showNotifi("Завтра ", date.plusDays(1), holiday);
-				} else if(date.getDayOfMonth() + 2 == holiday.getDate().getDay()) {
+				} else if(date.getDayOfMonth() + 2 == holidayLocalDate.getDayOfMonth()) {
 					this.arterTomorrow = true;
 					this.showNotifi("После завтра ", date.plusDays(2), holiday);
-				} if(date.getDayOfMonth() + 3 == holiday.getDate().getDay()) {
+				} if(date.getDayOfMonth() + 3 == holidayLocalDate.getDayOfMonth()) {
 					this.showNotifi("Через 3 дня ", date.plusDays(3), holiday);
-				} if(date.getDayOfMonth() + 4 == holiday.getDate().getDay()) {
+				} if(date.getDayOfMonth() + 4 == holidayLocalDate.getDayOfMonth()) {
 					this.showNotifi("Через 4 дня ", date.plusDays(4), holiday);
 				}
 			}
 		}
 	}
 
-	private void showNotifi(final String title, final LocalDate date, final PublicHolidays holiday) {
-		final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
+	private void showNotifi(final String title, final LocalDate date, final Holiday holiday) {
+		//final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
+		final GeneralEmployeesEntity[] employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersByBirthday(Tools.convertToDate(date));
 		final EmployeeOtherOrganizationBase[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByBirthday(Tools.convertToDate(date));
 		
-		final NotifiAction[] actions = new NotifiAction[users.length + usersBirthday.length];
+		final NotifiAction[] actions = new NotifiAction[employeesEntities.length + usersBirthday.length];
 		int i = 0;
 
-		for(final DbDataAll user : users) {
-			actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartamentAbbreviated(), e -> {
+		for(final GeneralEmployeesEntity user : employeesEntities) {
+			actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartament().getAbbreviatedName(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				
 				Platform.runLater(() -> {
@@ -92,7 +102,7 @@ public class BirthdayOnHoliday implements Service {
 		}
 		
 		Platform.runLater(() -> {
-			this.editorKit.getUISystemUS().getNotification().showInformationNotifi(title + holiday.getLocalName() + ".", "День рождения в этот день празднуют:", Duration.hours(24), actions);
+			this.editorKit.getUISystemUS().getNotification().showInformationNotifi(title + holiday.getName() + ".", "День рождения в этот день празднуют:", Duration.hours(24), actions);
 		});
 	}
 

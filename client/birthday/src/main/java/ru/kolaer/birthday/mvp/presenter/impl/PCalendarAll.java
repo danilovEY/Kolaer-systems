@@ -1,5 +1,6 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -27,12 +28,13 @@ public class PCalendarAll extends PCalendarBase {
 				final ProgressBarObservable obs = new DefaultProgressBar();
 				this.editorKid.getUISystemUS().getStatusBar().addProgressBar(obs);
 				
-				final EmployeeOtherOrganizationBase[] usersBirthdayAll = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
+				final EmployeeOtherOrganizationBase[] usersBirthdayAll = this.editorKid.getUSNetwork()
+						.getKolaerWebServer().getApplicationDataBase()
 						.getEmployeeOtherOrganizationTable()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				
-				final DbDataAll[] usersDataAll = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase()
-						.getUserDataAllDataBase()
+				final GeneralEmployeesEntity[] usersDataAll = this.editorKid.getUSNetwork().getKolaerWebServer()
+						.getApplicationDataBase().getGeneralEmployeesTable()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				
 				obs.setValue(-1);
@@ -40,7 +42,7 @@ public class PCalendarAll extends PCalendarBase {
 					final double step = 100/(usersBirthdayAll.length + usersDataAll.length) * 0.01;
 					double value = 0;	
 					
-					for (DbDataAll user : usersDataAll) {
+					for (GeneralEmployeesEntity user : usersDataAll) {
 						obs.setValue(value);
 						value += step;
 						final UserModel userModel = new UserModelImpl(user);
@@ -64,7 +66,7 @@ public class PCalendarAll extends PCalendarBase {
 	@Override
 	public void initDayCellFactory() {
 		if(!this.isInitDayCellFactory) {
-			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase(), editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable()));
+			this.view.setDayCellFactory(new CustomCallback(editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable(), editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable()));
 			this.isInitDayCellFactory = true;
 		}
 	}

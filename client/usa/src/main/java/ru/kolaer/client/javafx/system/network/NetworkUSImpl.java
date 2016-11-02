@@ -23,7 +23,7 @@ public class NetworkUSImpl implements NetworkUS {
 	public NetworkUSImpl() {
 		this.restfulServer = new RestfulServerImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL));
 		this.kolaerWebServer = new KolaerWebServerImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_WEB));
-		this.otherPublicAPI = new OtherPublicAPIImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL).append("/other"));
+		this.otherPublicAPI = new OtherPublicAPIImpl();
 	}
 
 	@Override
