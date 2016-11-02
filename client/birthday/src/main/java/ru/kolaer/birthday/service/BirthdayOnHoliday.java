@@ -32,36 +32,34 @@ public class BirthdayOnHoliday implements Service {
 	
 	@Override
 	public void run() {
-		if(this.editorKit.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
-			//final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
+		//final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
 
-			final Holiday[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
-			final LocalDate date = LocalDate.now();
+		final Holiday[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
+		final LocalDate date = LocalDate.now();
 
-			if(date.getDayOfWeek().getValue() == 5 ) {
-				if(!this.tomorrow) {
-					this.showNotifi("В субботу ", date.plusDays(1), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
-				} 
-				if(!this.arterTomorrow) {
-					this.showNotifi("В воскресенье ", date.plusDays(2), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
-				}
+		if(date.getDayOfWeek().getValue() == 5 ) {
+			if(!this.tomorrow) {
+				this.showNotifi("В субботу ", date.plusDays(1), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
 			}
-			
-			for(final Holiday holiday : holidays) {
-				final LocalDate holidayLocalDate = LocalDate.parse(holiday.getDate(), dtf);
-				if(date.getDayOfMonth() == holidayLocalDate.getDayOfMonth()) {
-					this.showNotifi("Сегодня ", date, holiday);
-				} else if(date.getDayOfMonth() + 1 == holidayLocalDate.getDayOfMonth()) {
-					this.tomorrow = true;
-					this.showNotifi("Завтра ", date.plusDays(1), holiday);
-				} else if(date.getDayOfMonth() + 2 == holidayLocalDate.getDayOfMonth()) {
-					this.arterTomorrow = true;
-					this.showNotifi("После завтра ", date.plusDays(2), holiday);
-				} if(date.getDayOfMonth() + 3 == holidayLocalDate.getDayOfMonth()) {
-					this.showNotifi("Через 3 дня ", date.plusDays(3), holiday);
-				} if(date.getDayOfMonth() + 4 == holidayLocalDate.getDayOfMonth()) {
-					this.showNotifi("Через 4 дня ", date.plusDays(4), holiday);
-				}
+			if(!this.arterTomorrow) {
+				this.showNotifi("В воскресенье ", date.plusDays(2), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
+			}
+		}
+
+		for(final Holiday holiday : holidays) {
+			final LocalDate holidayLocalDate = LocalDate.parse(holiday.getDate(), dtf);
+			if(date.getDayOfMonth() == holidayLocalDate.getDayOfMonth()) {
+				this.showNotifi("Сегодня ", date, holiday);
+			} else if(date.getDayOfMonth() + 1 == holidayLocalDate.getDayOfMonth()) {
+				this.tomorrow = true;
+				this.showNotifi("Завтра ", date.plusDays(1), holiday);
+			} else if(date.getDayOfMonth() + 2 == holidayLocalDate.getDayOfMonth()) {
+				this.arterTomorrow = true;
+				this.showNotifi("После завтра ", date.plusDays(2), holiday);
+			} if(date.getDayOfMonth() + 3 == holidayLocalDate.getDayOfMonth()) {
+				this.showNotifi("Через 3 дня ", date.plusDays(3), holiday);
+			} if(date.getDayOfMonth() + 4 == holidayLocalDate.getDayOfMonth()) {
+				this.showNotifi("Через 4 дня ", date.plusDays(4), holiday);
 			}
 		}
 	}

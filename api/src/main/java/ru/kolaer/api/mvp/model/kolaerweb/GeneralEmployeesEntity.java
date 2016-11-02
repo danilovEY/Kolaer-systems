@@ -32,4 +32,10 @@ public interface GeneralEmployeesEntity {
 
      Date getBirthday();
      void setBirthday(Date birthday);
+
+     String getEmail();
+     void setEmail(String email);
+
+     String getPhoto();
+     void setPhoto(String url);
 }

@@ -65,7 +65,7 @@ project(":server") {
 
         ext {
             deployServerPath = "d:\\Server\\jetty9\\webapps"
-            //deployServerPath = "\\\\js\\c\$\\apache-tomcat-8.5.4\\webapps"
+            //deployServerPath = "\\\\js\\c\$\\jetty9\\webapps"
         }
 
         compileJava.options.encoding = 'UTF-8'

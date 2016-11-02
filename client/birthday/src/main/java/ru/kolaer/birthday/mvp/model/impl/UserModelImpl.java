@@ -5,6 +5,8 @@ import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.birthday.mvp.model.UserModel;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 
 /**
@@ -84,9 +86,9 @@ public class UserModelImpl implements UserModel {
 		this.setPost(user.getPost());
 		this.setPhoneNumber(user.getPhoneNumber());
 		this.setEmail("");
-		this.setIcon(""); //TODO: http://asupkolaer/app_ie8/assets/images/vCard
+		this.setIcon(user.getInitials() + ".jpg");
 	}
-	
+
 	public UserModelImpl(final EmployeeOtherOrganizationBase user) {
 		this.setOrganization(user.getOrganization());
 		this.setInitials(user.getInitials());

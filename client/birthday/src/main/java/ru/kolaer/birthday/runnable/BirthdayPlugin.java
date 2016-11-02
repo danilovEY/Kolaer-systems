@@ -64,15 +64,8 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 
 	@Override
 	public void start() throws Exception {
-		if(this.editorKid.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.NOT_AVAILABLE){
-			Tools.runOnThreadFX(() -> {
-				this.editorKid.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Сервер не доступен! Проверьте подключение к локальной сети.").show();
-			});
-			return;
-		}
-
 		if(this.mainPane == null){
-			try{
+			try {
 				final FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/birthdayView/VMainFrame.fxml"));
 				final VMMainFrameImpl frame = new VMMainFrameImpl();
 				loader.setController(frame);
@@ -82,9 +75,7 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 					root.setPrefSize(800, 600);
 				});
 				this.initTable(frame);
-			}catch(MalformedURLException e){
-				throw e;
-			}catch(IOException e){
+			} catch(IOException e){
 				throw e;
 			}
 		}

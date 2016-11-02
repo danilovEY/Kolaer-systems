@@ -29,47 +29,45 @@ public class BirthdayService implements Service {
 	
 	@Override
 	public void run() {
-		if(this.editorKit.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
-			//final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
-			final GeneralEmployeesEntity[]  employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersBirthdayToday();
-			final EmployeeOtherOrganizationBase[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersBirthdayToday();
-			
-			final NotifiAction[] actions = new NotifiAction[employeesEntities.length + usersBirthday.length];
-			int i = 0;
+		//final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
+		final GeneralEmployeesEntity[]  employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersBirthdayToday();
+		final EmployeeOtherOrganizationBase[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersBirthdayToday();
 
-			for(final GeneralEmployeesEntity user : employeesEntities) {
-				actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartament().getAbbreviatedName(), e -> {
-					final UserModel userModel = new UserModelImpl(user);
-					
-					Platform.runLater(() -> {
-						new VMDetailedInformationStageImpl(userModel).show();
-					});	
+		final NotifiAction[] actions = new NotifiAction[employeesEntities.length + usersBirthday.length];
+		int i = 0;
+
+		for(final GeneralEmployeesEntity user : employeesEntities) {
+			actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartament().getAbbreviatedName(), e -> {
+				final UserModel userModel = new UserModelImpl(user);
+
+				Platform.runLater(() -> {
+					new VMDetailedInformationStageImpl(userModel).show();
 				});
-				i++;
-			}
-			for(final EmployeeOtherOrganizationBase user : usersBirthday) {
-				actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
-					final UserModel userModel = new UserModelImpl(user);
-					userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
-					Platform.runLater(() -> {
-						new VMDetailedInformationStageImpl(userModel).show();
-					});					
-				});
-				i++;
-			}
-			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-			final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\".");
-			
-			try{
-				TimeUnit.SECONDS.sleep(1);
-			}catch(InterruptedException e){
-				LOG.error("Привышено ожижание", e);
-			}
-			
-			Platform.runLater(() -> {
-				this.editorKit.getUISystemUS().getNotification().showInformationNotifi(title.toString(), "Поздравляем с днем рождения!", null, actions);
 			});
+			i++;
 		}
+		for(final EmployeeOtherOrganizationBase user : usersBirthday) {
+			actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
+				final UserModel userModel = new UserModelImpl(user);
+				userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
+				Platform.runLater(() -> {
+					new VMDetailedInformationStageImpl(userModel).show();
+				});
+			});
+			i++;
+		}
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\".");
+
+		try{
+			TimeUnit.SECONDS.sleep(1);
+		}catch(InterruptedException e){
+			LOG.error("Привышено ожижание", e);
+		}
+
+		Platform.runLater(() -> {
+			this.editorKit.getUISystemUS().getNotification().showInformationNotifi(title.toString(), "Поздравляем с днем рождения!", null, actions);
+		});
 	}
 
 	@Override

@@ -15,6 +15,8 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
     private GeneralDepartamentEntity departament;
     private String post;
     private Date birthday;
+    private String email;
+    private String photo;
 
     public Integer getPnumber() {
         return pnumber;
@@ -84,6 +86,26 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
     @Override
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    @Override
+    public String getEmail() {
+        return this.email;
+    }
+
+    @Override
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String getPhoto() {
+        return this.photo;
+    }
+
+    @Override
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     @Override

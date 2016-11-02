@@ -1,8 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import ru.kolaer.api.mvp.model.kolaerweb.*;
 
 import javax.persistence.*;
@@ -104,6 +102,26 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     @Override
     public void setBirthday(Date birthday) {
         this.generalEmployeesEntity.setBirthday(birthday);
+    }
+
+    @Column(name = "email")
+    public String getEmail() {
+        return this.generalEmployeesEntity.getEmail();
+    }
+
+    @Override
+    public void setEmail(String email) {
+        this.generalEmployeesEntity.setEmail(email);
+    }
+
+    @Column(name = "photo")
+    public String getPhoto() {
+        return this.generalEmployeesEntity.getPhoto();
+    }
+
+    @Override
+    public void setPhoto(String url) {
+        this.generalEmployeesEntity.setPhoto(url);
     }
 
     @Override

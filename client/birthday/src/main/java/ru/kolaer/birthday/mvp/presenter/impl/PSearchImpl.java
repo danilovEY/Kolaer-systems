@@ -23,24 +23,22 @@ public class PSearchImpl implements PSearchUsers {
 		this.editorKid = editorKid;
 		
 		this.view.setSearchAction(e -> {
-			if(this.editorKid.getUSNetwork().getRestfulServer().getServerStatus() == ServerStatus.AVAILABLE) {
-				final DbDataAll[] dbDataAllArray = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByInitials(this.view.getSearchText());
-				final EmployeeOtherOrganizationBase[] dbBirthdayAllArray = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByInitials(this.view.getSearchText());
-				
-				final List<UserModel> users = new ArrayList<>();
-				
-				for(final DbDataAll user : dbDataAllArray) {
-					users.add(new UserModelImpl(user));
-				}
-				
-				for(final EmployeeOtherOrganizationBase user : dbBirthdayAllArray) {
-					final UserModelImpl userModel = new UserModelImpl(user);
-					userModel.setOrganization(user.getOrganization());
-					users.add(userModel);
-				}
-				
-				this.notifySearchUsers(users);
+			final DbDataAll[] dbDataAllArray = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByInitials(this.view.getSearchText());
+			final EmployeeOtherOrganizationBase[] dbBirthdayAllArray = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByInitials(this.view.getSearchText());
+
+			final List<UserModel> users = new ArrayList<>();
+
+			for(final DbDataAll user : dbDataAllArray) {
+				users.add(new UserModelImpl(user));
 			}
+
+			for(final EmployeeOtherOrganizationBase user : dbBirthdayAllArray) {
+				final UserModelImpl userModel = new UserModelImpl(user);
+				userModel.setOrganization(user.getOrganization());
+				users.add(userModel);
+			}
+
+			this.notifySearchUsers(users);
 		});
 	}
 	

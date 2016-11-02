@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -17,7 +18,11 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEnt
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 03.08.2016.
@@ -25,6 +30,9 @@ import java.util.List;
 @Repository
 public class DataBaseInitialization {
     private static final Logger LOG = LoggerFactory.getLogger(DataBaseInitialization.class);
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -77,64 +85,93 @@ public class DataBaseInitialization {
 
     @Transactional
     public void updateDataBase() {
-        final RestTemplate restTemplate = new RestTemplate();
-
-        final DbDataAll[] dbDataAlls = restTemplate.getForObject("http://js:8080/ru.kolaer.server.restful/database/dataAll/get/users/max", DbDataAll[].class);
+        final List<DbDataAll> dbDataAlls = this.jdbcTemplate.query("SELECT * FROM db_data_all", ((rs, rowNum) -> {
+            final DbDataAll dbDataAll = new DbDataAll();
+            dbDataAll.setPersonNumber(rs.getInt("person_number"));
+            dbDataAll.setInitials(rs.getString("initials"));
+            dbDataAll.setDepartament(rs.getString("departament"));
+            dbDataAll.setDepartamentAbbreviated(rs.getString("departament_abbreviated"));
+            dbDataAll.setPost(rs.getString("post"));
+            dbDataAll.setGender(rs.getString("gender"));
+            dbDataAll.setEmail(rs.getString("email"));
+            dbDataAll.setPhone(rs.getString("phone"));
+            dbDataAll.setMobilePhone(rs.getString("mobile_phone"));
+            dbDataAll.setVCard(rs.getString("vCard"));
+            dbDataAll.setBirthday(rs.getDate("birthday"));
+            return dbDataAll;
+        }));
         int i = 0;
+
+        final List<GeneralEmployeesEntity> generalEmployeesEntities = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator").list();
+        Map<Integer, GeneralEmployeesEntity> mapEmployee = new HashMap<>();
+        generalEmployeesEntities.forEach(generalEmployeesEntity -> mapEmployee.put(generalEmployeesEntity.getPnumber(), generalEmployeesEntity));
+
         for (DbDataAll dbDataAll : dbDataAlls) {
-            final GeneralEmployeesEntity dataBaseEmployee = new GeneralEmployeesEntityDecorator();
-            dataBaseEmployee.setPnumber(dbDataAll.getPersonNumber());
-            dataBaseEmployee.setPost(dbDataAll.getPost());
-            dataBaseEmployee.setInitials(dbDataAll.getInitials());
-            dataBaseEmployee.setPhoneNumber(dbDataAll.getPhone());
-            dataBaseEmployee.setMobileNumber(dbDataAll.getMobilePhone());
-            dataBaseEmployee.setBirthday(dbDataAll.getBirthday());
+            GeneralEmployeesEntity dataBaseEmployee = mapEmployee.get(dbDataAll.getPersonNumber());
 
-            switch (dbDataAll.getGender()) {
-                case "Мужской": {
-                    dataBaseEmployee.setGender(EnumGender.MALE);
-                    break;
-                }
-                case "Женский": {
-                    dataBaseEmployee.setGender(EnumGender.FEMALE);
-                    break;
-                }
-                default: {
-                    dataBaseEmployee.setGender(EnumGender.MALE);
-                    break;
-                }
-            }
-            if (dbDataAll.getDepartament() != null || !dbDataAll.getDepartament().trim().isEmpty()) {
-                List<GeneralDepartamentEntity> name = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralDepartamentEntityDecorator dep WHERE dep.name = :name").setParameter("name", dbDataAll.getDepartament()).list();
+            if(dataBaseEmployee == null) {
+                dataBaseEmployee = new GeneralEmployeesEntityDecorator();
+                dataBaseEmployee.setPnumber(dbDataAll.getPersonNumber());
+                dataBaseEmployee.setPost(dbDataAll.getPost());
+                dataBaseEmployee.setInitials(dbDataAll.getInitials());
+                dataBaseEmployee.setPhoneNumber(dbDataAll.getPhone());
+                dataBaseEmployee.setMobileNumber(dbDataAll.getMobilePhone());
+                dataBaseEmployee.setBirthday(dbDataAll.getBirthday());
+                dataBaseEmployee.setPhoto(dbDataAll.getVCard());
+                dataBaseEmployee.setEmail(dbDataAll.getEmail());
 
-                GeneralDepartamentEntity generalDepartamentEntity = null;
 
-                if (name.size() > 0) {
-                    generalDepartamentEntity = name.get(0);
-                }
-
-                if (generalDepartamentEntity == null) {
-                    generalDepartamentEntity = new GeneralDepartamentEntityDecorator();
-                    generalDepartamentEntity.setName(dbDataAll.getDepartament());
-                    final String abbrev = dbDataAll.getDepartament().substring(0, dbDataAll.getDepartament().indexOf(" ")).trim();
-                    generalDepartamentEntity.setAbbreviatedName(abbrev);
-
-                    if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")) {
-                        generalDepartamentEntity.setChiefEntity(dataBaseEmployee);
+                switch (dbDataAll.getGender()) {
+                    case "Мужской": {
+                        dataBaseEmployee.setGender(EnumGender.MALE);
+                        break;
                     }
-
-                    this.sessionFactory.getCurrentSession().persist(generalDepartamentEntity);
-                    dataBaseEmployee.setDepartament(generalDepartamentEntity);
-                    this.sessionFactory.getCurrentSession().persist(dataBaseEmployee);
-                } else {
-                    dataBaseEmployee.setDepartament(generalDepartamentEntity);
-                    this.sessionFactory.getCurrentSession().persist(dataBaseEmployee);
-
-                    if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")) {
-                        generalDepartamentEntity.setChiefEntity(dataBaseEmployee);
-                        this.sessionFactory.getCurrentSession().update(dataBaseEmployee);
+                    case "Женский": {
+                        dataBaseEmployee.setGender(EnumGender.FEMALE);
+                        break;
+                    }
+                    default: {
+                        dataBaseEmployee.setGender(EnumGender.UNKNOW);
+                        break;
                     }
                 }
+                if (dbDataAll.getDepartament() != null || !dbDataAll.getDepartament().trim().isEmpty()) {
+                    List<GeneralDepartamentEntity> name = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralDepartamentEntityDecorator dep WHERE dep.name = :name").setParameter("name", dbDataAll.getDepartament()).list();
+
+                    GeneralDepartamentEntity generalDepartamentEntity = null;
+
+                    if (name.size() > 0) {
+                        generalDepartamentEntity = name.get(0);
+                    }
+
+                    if (generalDepartamentEntity == null) {
+                        generalDepartamentEntity = new GeneralDepartamentEntityDecorator();
+                        generalDepartamentEntity.setName(dbDataAll.getDepartament());
+                        final String abbrev = dbDataAll.getDepartament().substring(0, dbDataAll.getDepartament().indexOf(" ")).trim();
+                        generalDepartamentEntity.setAbbreviatedName(abbrev);
+
+                        if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")) {
+                            generalDepartamentEntity.setChiefEntity(dataBaseEmployee);
+                        }
+
+                        this.sessionFactory.getCurrentSession().persist(generalDepartamentEntity);
+                        dataBaseEmployee.setDepartament(generalDepartamentEntity);
+                        this.sessionFactory.getCurrentSession().persist(dataBaseEmployee);
+                    } else {
+                        dataBaseEmployee.setDepartament(generalDepartamentEntity);
+                        this.sessionFactory.getCurrentSession().persist(dataBaseEmployee);
+
+                        if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")) {
+                            generalDepartamentEntity.setChiefEntity(dataBaseEmployee);
+                            this.sessionFactory.getCurrentSession().update(dataBaseEmployee);
+                        }
+                    }
+                }
+            } else {
+                dataBaseEmployee.setPhoto(dbDataAll.getVCard());
+                dataBaseEmployee.setEmail(dbDataAll.getEmail());
+                mapEmployee.remove(dataBaseEmployee.getPnumber());
+                this.sessionFactory.getCurrentSession().update(dataBaseEmployee);
             }
 
             if (i == 50) {
@@ -144,6 +181,8 @@ public class DataBaseInitialization {
                 i++;
             }
         }
+
+        mapEmployee.values().forEach(generalEmployeesEntity -> this.sessionFactory.getCurrentSession().delete(generalEmployeesEntity));
     }
 
 }

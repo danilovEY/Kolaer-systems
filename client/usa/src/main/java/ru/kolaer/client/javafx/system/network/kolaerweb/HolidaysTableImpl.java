@@ -28,7 +28,6 @@ public class HolidaysTableImpl implements HolidaysTable {
 
     @Override
     public Holiday[] getHolidays(final int month, final int year) {
-        System.out.println(this.URL_GET + "/" + String.valueOf(month) + "/" + String.valueOf(year));
         final Holiday[] holidays = restTemplate.getForObject(this.URL_GET + "/" + String.valueOf(month) + "/" + String.valueOf(year), Holiday[].class);
 
         return holidays;

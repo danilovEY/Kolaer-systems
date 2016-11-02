@@ -11,6 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
@@ -58,6 +59,22 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         viewResolver.setPrefix("/WEB-INF/views/");
         viewResolver.setSuffix(".jsp");
         return viewResolver;
+    }
+
+    @Bean
+    public DataSource dataSourceKolaerBase() {
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(env.getRequiredProperty("db.driver"));
+        dataSource.setUrl(env.getRequiredProperty("db.url_kolaer_base"));
+        dataSource.setUsername(env.getRequiredProperty("db.user"));
+        dataSource.setPassword(env.getRequiredProperty("db.pass"));
+        return dataSource;
+    }
+
+    @Bean
+    @Autowired
+    public JdbcTemplate jdbcTemplateKolaerBase(DataSource dataSourceKolaerBase) {
+        return new JdbcTemplate(dataSourceKolaerBase);
     }
 
     @Bean
