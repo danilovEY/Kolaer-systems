@@ -49,4 +49,9 @@ public class TypeViolationServiceImpl implements TypeViolationService {
             throw new IllegalArgumentException("TypeViolation is null!");
         this.typeViolationDao.update(entity);
     }
+
+    @Override
+    public void update(List<TypeViolation> entity) {
+
+    }
 }

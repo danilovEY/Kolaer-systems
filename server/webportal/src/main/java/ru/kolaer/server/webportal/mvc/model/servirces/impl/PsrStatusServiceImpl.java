@@ -41,4 +41,9 @@ public class PsrStatusServiceImpl implements PsrStatusService {
     public void update(PsrStatus entity) {
 
     }
+
+    @Override
+    public void update(List<PsrStatus> entity) {
+
+    }
 }

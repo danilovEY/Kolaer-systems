@@ -15,4 +15,6 @@ public interface EmployeeOtherOrganizationDao extends BirthdayDao<EmployeeOtherO
 
 	void insertData(EmployeeOtherOrganization data);
 	void insertDataList(List<EmployeeOtherOrganization> dataList);
+
+	void update(List<EmployeeOtherOrganization> entity);
 }

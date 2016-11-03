@@ -41,4 +41,9 @@ public class RoleServiceImpl implements RoleService {
     public void update(GeneralRolesEntity entity) {
 
     }
+
+    @Override
+    public void update(List<GeneralRolesEntity> entity) {
+
+    }
 }

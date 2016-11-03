@@ -11,4 +11,5 @@ public interface ServiceBase<T> {
     void add(T entity);
     void delete(T entity);
     void update(T entity);
+    void update(List<T> entity);
 }

@@ -19,6 +19,7 @@ import java.util.List;
  */
 //@RestController
 @RequestMapping("/general/accounts")
+@Deprecated
 public class AccountsController {
     private static final Logger LOG = LoggerFactory.getLogger(AccountsController.class);
 

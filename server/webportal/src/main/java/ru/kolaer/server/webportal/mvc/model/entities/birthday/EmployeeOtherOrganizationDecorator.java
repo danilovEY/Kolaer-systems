@@ -21,7 +21,8 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 	}
 
 	@Id
-	@Column(unique=true, nullable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	public short getId() {
 		return this.employeeOtherOrganization.getId();
 	}
@@ -31,7 +32,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(nullable=false)
+	@Column
 	public Date getBirthday() {
 		return this.employeeOtherOrganization.getBirthday();
 	}
@@ -40,7 +41,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 		this.employeeOtherOrganization.setBirthday(birthday);
 	}
 
-	@Column(name="category_unit", nullable=false, length=50)
+	@Column(name="category_unit", length=50)
 	public String getCategoryUnit() {
 		return this.employeeOtherOrganization.getCategoryUnit();
 	}
@@ -49,7 +50,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 		this.employeeOtherOrganization.setCategoryUnit(categoryUnit);
 	}
 
-	@Column(nullable=false, length=100)
+	@Column
 	public String getDepartament() {
 		return this.employeeOtherOrganization.getDepartament();
 	}
@@ -58,7 +59,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 		this.employeeOtherOrganization.setDepartament(departament);
 	}
 
-	@Column(nullable=false, length=100)
+	@Column(length=100)
 	public String getEmail() {
 		return this.employeeOtherOrganization.getEmail();
 	}
@@ -67,7 +68,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 		this.employeeOtherOrganization.setEmail(email);
 	}
 
-	@Column(nullable=false, length=70)
+	@Column(length=70)
 	public String getInitials() {
 		return this.employeeOtherOrganization.getInitials();
 	}
@@ -85,7 +86,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 		this.employeeOtherOrganization.setMobilePhone(mobilePhone);
 	}
 
-	@Column(nullable=false, length=40)
+	@Column(length=40)
 	public String getPhone() {
 		return this.employeeOtherOrganization.getPhone();
 	}
@@ -94,7 +95,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 		this.employeeOtherOrganization.setPhone(phone);
 	}
 
-	@Column(nullable=false, length=100)
+	@Column(length=100)
 	public String getPost() {
 		return this.employeeOtherOrganization.getPost();
 	}
@@ -112,7 +113,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 		this.employeeOtherOrganization.setOrganization(organization);
 	}
 
-	@Column(nullable=false, length=70)
+	@Column(length=70)
 	public String getvCard() {
 		return this.employeeOtherOrganization.getvCard();
 	}

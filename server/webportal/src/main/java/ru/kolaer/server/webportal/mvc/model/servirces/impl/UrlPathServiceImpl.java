@@ -100,4 +100,9 @@ public class UrlPathServiceImpl implements UrlPathService {
     public void update(WebPortalUrlPath entity) {
 
     }
+
+    @Override
+    public void update(List<WebPortalUrlPath> entity) {
+
+    }
 }

@@ -55,4 +55,9 @@ public class DepartamentServiceImpl implements DepartamentService {
             throw new IllegalArgumentException("entity is null!");
         this.departamentDao.update(entity);
     }
+
+    @Override
+    public void update(List<GeneralDepartamentEntity> entity) {
+
+    }
 }

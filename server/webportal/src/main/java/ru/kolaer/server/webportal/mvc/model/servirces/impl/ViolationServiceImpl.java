@@ -41,4 +41,9 @@ public class ViolationServiceImpl implements ViolationService {
     public void update(Violation entity) {
         this.violationDao.update(entity);
     }
+
+    @Override
+    public void update(List<Violation> entity) {
+
+    }
 }

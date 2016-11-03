@@ -6,11 +6,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeOtherOrganizationDao;
+import ru.kolaer.server.webportal.mvc.model.entities.birthday.EmployeeOtherOrganizationDecorator;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Repository(value = "employeeOtherOrganizationDao")
 public class EmployeeOtherOrganizationDaoImpl implements EmployeeOtherOrganizationDao {
@@ -87,13 +85,52 @@ public class EmployeeOtherOrganizationDaoImpl implements EmployeeOtherOrganizati
 	@Override
 	@Transactional
 	public void insertDataList(final List<EmployeeOtherOrganization> dataList) {
-        List<EmployeeOtherOrganization> tempEnqList = dataList;
-        for (Iterator<EmployeeOtherOrganization> it = tempEnqList.iterator(); it.hasNext();) {
+        for (Iterator<EmployeeOtherOrganization> it = dataList.iterator(); it.hasNext();) {
         	EmployeeOtherOrganization enquiry = it.next();
 			sessionFactory.getCurrentSession().persist(enquiry);
 			sessionFactory.getCurrentSession().flush();
 			sessionFactory.getCurrentSession().clear();
         }	
+	}
+
+	@Override
+	@Transactional
+	public void update(List<EmployeeOtherOrganization> entities) {
+		final List<EmployeeOtherOrganization> dbList = sessionFactory.getCurrentSession().createQuery("FROM EmployeeOtherOrganizationDecorator").list();
+		Map<String, EmployeeOtherOrganization> mapEmp = new HashMap<>();
+		dbList.forEach(emp -> mapEmp.put(emp.getInitials() + emp.getOrganization() + emp.getPost(), emp));
+
+		int i =0;
+		for(EmployeeOtherOrganization entity : entities) {
+			final String key = entity.getInitials() + entity.getOrganization() + entity.getPost();
+			EmployeeOtherOrganization dbEmp = mapEmp.get(key);
+			if(dbEmp == null) {
+				dbEmp = new EmployeeOtherOrganizationDecorator(entity);
+				this.sessionFactory.getCurrentSession().persist(dbEmp);
+			} else {
+				dbEmp.setBirthday(entity.getBirthday());
+				dbEmp.setPost(entity.getPost());
+				dbEmp.setDepartament(entity.getDepartament());
+				dbEmp.setCategoryUnit(entity.getCategoryUnit());
+				dbEmp.setEmail(entity.getEmail());
+				dbEmp.setMobilePhone(entity.getMobilePhone());
+				dbEmp.setPhone(entity.getPhone());
+				dbEmp.setInitials(entity.getInitials());
+				dbEmp.setOrganization(entity.getOrganization());
+				dbEmp.setvCard(entity.getvCard());
+				mapEmp.remove(key);
+				this.sessionFactory.getCurrentSession().update(dbEmp);
+			}
+
+			i++;
+			if(i == 50)
+				this.sessionFactory.getCurrentSession().flush();
+		}
+
+		mapEmp.values().forEach(this.sessionFactory.getCurrentSession()::delete);
+
+		this.sessionFactory.getCurrentSession().flush();
+		this.sessionFactory.getCurrentSession().clear();
 	}
 
 	@Override

@@ -51,6 +51,11 @@ public class NotifyMessageImpl implements NotifyMessageService {
     }
 
     @Override
+    public void update(List<NotifyMessage> entity) {
+
+    }
+
+    @Override
     public NotifyMessage getLastNotifyMessage() {
         return this.notifyMessageDao.getLastNotifyMessage();
     }

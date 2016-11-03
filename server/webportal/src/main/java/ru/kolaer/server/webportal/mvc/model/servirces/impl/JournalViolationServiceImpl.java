@@ -40,4 +40,9 @@ public class JournalViolationServiceImpl implements JournalViolationService {
     public void update(JournalViolation entity) {
         this.journalViolationDao.update(entity);
     }
+
+    @Override
+    public void update(List<JournalViolation> entity) {
+
+    }
 }

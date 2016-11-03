@@ -50,6 +50,11 @@ public class PsrRegisterServiceImpl implements PsrRegisterService {
     }
 
     @Override
+    public void update(List<PsrRegister> entity) {
+
+    }
+
+    @Override
     public PsrRegister getPsrRegisterByName(String name) {
         if(name != null && !name.isEmpty())
             this.psrRegisterDao.getPsrRegisterByName(name);

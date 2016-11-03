@@ -46,4 +46,9 @@ public class CounterServiceImpl implements CounterService {
         if(entity != null)
             this.counterDao.update(entity);
     }
+
+    @Override
+    public void update(List<Counter> entity) {
+
+    }
 }

@@ -56,6 +56,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public void update(List<GeneralEmployeesEntity> entity) {
+
+    }
+
+    @Override
     public List<GeneralEmployeesEntity> getUserRangeBirthday(Date startData, Date endData) {
         return this.employeeDao.getUserRangeBirthday(startData, endData);
     }
