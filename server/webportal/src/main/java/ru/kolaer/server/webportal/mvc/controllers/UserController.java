@@ -68,7 +68,7 @@ public class UserController {
         if(imgByte == null) {
             GeneralAccountsEntity user = this.getUser();
 
-            final String url = "http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(user.getGeneralEmployeesEntity().getInitials(), "UTF-8").replace("+", "%20") + ".jpg";
+            final String url = user.getGeneralEmployeesEntity().getPhoto();//"http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(user.getGeneralEmployeesEntity().getInitials(), "UTF-8").replace("+", "%20") + ".jpg";
             InputStream inputStream = URI.create(url).toURL().openStream();
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();

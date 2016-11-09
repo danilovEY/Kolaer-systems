@@ -114,7 +114,7 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setEmail(email);
     }
 
-    @Column(name = "photo")
+    @Column(name = "photo", length = 300)
     public String getPhoto() {
         return this.generalEmployeesEntity.getPhoto();
     }

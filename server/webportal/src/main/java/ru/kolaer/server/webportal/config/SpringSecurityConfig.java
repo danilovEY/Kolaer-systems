@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -47,6 +49,7 @@ import java.util.Hashtable;
 @EnableWebSecurity
 @EnableScheduling
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final Logger logger = LoggerFactory.getLogger(SpringSecurityConfig.class);
 
     @Autowired
     private UrlPathService urlPathService;
@@ -134,6 +137,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         try {
             return new InitialLdapContext(props, null);
         } catch (NamingException e) {
+            this.logger.error("Ошибка при создании LDAP конфигурации!", e);
             return null;
         }
     }
@@ -149,11 +153,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return userDetailsServiceLDAP;
     }
 
-    //@Bean
-    public UserDetailsService userDetailsServiceSQL() {
-        return new UserDetailsServiceImpl();
-    }
-
     @Bean
     public CustomLdapAuthenticationProvider authProviderLDAP() {
         final CustomLdapAuthenticationProvider authProvider = new CustomLdapAuthenticationProvider();
@@ -163,8 +162,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
+    @Deprecated
+    public UserDetailsService userDetailsServiceSQL() {
+        return new UserDetailsServiceImpl();
+    }
+
     /**Создание provider для проверки пользователей из БД с шифрованием пароля.*/
-    private DaoAuthenticationProvider authProviderSQL() {
+    @Deprecated
+    public DaoAuthenticationProvider authProviderSQL() {
         final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(this.userDetailsServiceSQL());
         authProvider.setPasswordEncoder(new StandardPasswordEncoder(this.secretKey));

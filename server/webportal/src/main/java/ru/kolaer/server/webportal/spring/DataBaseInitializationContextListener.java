@@ -44,8 +44,8 @@ public class DataBaseInitializationContextListener implements ApplicationListene
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if(!isInit) {
             urlPathService.clear();
+            dataBaseInitialization.updateDataBase();
             if (hibGen.equals("create")) {
-                dataBaseInitialization.updateDataBase();
                 dataBaseInitialization.initDB();
             }
             isInit = true;

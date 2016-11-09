@@ -18,6 +18,8 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEnt
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,6 +120,12 @@ public class DataBaseInitialization {
                 dataBaseEmployee.setMobileNumber(dbDataAll.getMobilePhone());
                 dataBaseEmployee.setBirthday(dbDataAll.getBirthday());
                 dataBaseEmployee.setPhoto(dbDataAll.getVCard());
+                try {
+                    dataBaseEmployee.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(dbDataAll.getInitials(), "UTF-8").replace("+", "%20") + ".jpg");
+                } catch (UnsupportedEncodingException e) {
+                    LOG.error("Невозможно преобразовать {} в URL!", dbDataAll.getInitials(), e);
+                    dataBaseEmployee.setPhoto(dbDataAll.getVCard());
+                }
                 dataBaseEmployee.setEmail(dbDataAll.getEmail());
 
 
@@ -168,7 +176,17 @@ public class DataBaseInitialization {
                     }
                 }
             } else {
-                dataBaseEmployee.setPhoto(dbDataAll.getVCard());
+                dataBaseEmployee.setPost(dbDataAll.getPost());
+                dataBaseEmployee.setInitials(dbDataAll.getInitials());
+                dataBaseEmployee.setPhoneNumber(dbDataAll.getPhone());
+                dataBaseEmployee.setMobileNumber(dbDataAll.getMobilePhone());
+                dataBaseEmployee.setBirthday(dbDataAll.getBirthday());
+                try {
+                    dataBaseEmployee.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(dbDataAll.getInitials(), "UTF-8").replace("+", "%20") + ".jpg");
+                } catch (UnsupportedEncodingException e) {
+                    LOG.error("Невозможно преобразовать {} в URL!", dbDataAll.getInitials(), e);
+                    dataBaseEmployee.setPhoto(dbDataAll.getVCard());
+                }
                 dataBaseEmployee.setEmail(dbDataAll.getEmail());
                 mapEmployee.remove(dataBaseEmployee.getPnumber());
                 this.sessionFactory.getCurrentSession().update(dataBaseEmployee);
