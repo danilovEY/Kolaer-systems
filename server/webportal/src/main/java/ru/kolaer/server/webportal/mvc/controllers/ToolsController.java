@@ -25,7 +25,7 @@ import java.time.temporal.ChronoUnit;
 public class ToolsController {
 
     @UrlDeclaration(description = "Получить серверное время",isAccessAll = true)
-    @RequestMapping(value = "get/time", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/get/time", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public DateTimeJson getTime() {
         final DateTimeJson dateTimeJson = new DateTimeJson();
         final LocalDate localDate = LocalDate.now();
@@ -36,43 +36,49 @@ public class ToolsController {
     }
 
     @UrlDeclaration(description = "Получить период до времени",isAccessAll = true)
-    @RequestMapping(value = "get/period", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/get/period", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public DateTimeJson getPeriod(DateTimeJson dateTimeJson) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        LocalDateTime dateTime = LocalDateTime.parse(dateTimeJson.getDate()+" "+dateTimeJson.getTime(), formatter);
-        LocalDateTime tempDateTime = LocalDateTime.now();
-
-        long years = tempDateTime.until(dateTime, ChronoUnit.YEARS);
-        tempDateTime = tempDateTime.plusYears(years);
-
-        long months = tempDateTime.until(dateTime, ChronoUnit.MONTHS);
-        tempDateTime = tempDateTime.plusMonths(months);
-
-        long days = tempDateTime.until(dateTime, ChronoUnit.DAYS);
-        tempDateTime = tempDateTime.plusDays(days);
-
-        long hours = tempDateTime.until(dateTime, ChronoUnit.HOURS);
-        tempDateTime = tempDateTime.plusHours(hours);
-
-        long minutes = tempDateTime.until(dateTime, ChronoUnit.MINUTES);
-        tempDateTime = tempDateTime.plusMinutes(minutes);
-
-        long seconds = tempDateTime.until(dateTime, ChronoUnit.SECONDS);
-
         final DateTimeJson result = new DateTimeJson();
-        result.setDate(String.format("%02d-%02d-%02d",days, months, years));
-        result.setTime(String.format("%02d:%02d:%02d",hours, minutes, seconds));
+        if(dateTimeJson != null) {
+            LocalDateTime dateTime = LocalDateTime.parse(dateTimeJson.getDate() + " " + dateTimeJson.getTime(), formatter);
+            LocalDateTime tempDateTime = LocalDateTime.now();
+
+            long years = tempDateTime.until(dateTime, ChronoUnit.YEARS);
+            tempDateTime = tempDateTime.plusYears(years);
+
+            long months = tempDateTime.until(dateTime, ChronoUnit.MONTHS);
+            tempDateTime = tempDateTime.plusMonths(months);
+
+            long days = tempDateTime.until(dateTime, ChronoUnit.DAYS);
+            tempDateTime = tempDateTime.plusDays(days);
+
+            long hours = tempDateTime.until(dateTime, ChronoUnit.HOURS);
+            tempDateTime = tempDateTime.plusHours(hours);
+
+            long minutes = tempDateTime.until(dateTime, ChronoUnit.MINUTES);
+            tempDateTime = tempDateTime.plusMinutes(minutes);
+
+            long seconds = tempDateTime.until(dateTime, ChronoUnit.SECONDS);
+
+
+            result.setDate(String.format("%02d-%02d-%02d", days, months, years));
+            result.setTime(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+        } else {
+            result.setDate("31-12-9999");
+            result.setTime("00:00:00");
+        }
         return result;
     }
 
     @UrlDeclaration(description = "Получить период до времени",isAccessAll = true)
-    @RequestMapping(value = "get/period/{date}/{time}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/get/period/{date}/{time}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public DateTimeJson getPeriod(@PathVariable(value = "date") String date, @PathVariable(value = "time") String time) {
         return this.getPeriod(new DateTimeJson(date, time));
     }
 
     @UrlDeclaration(description = "Получить колличество после даты",isAccessAll = true)
-    @RequestMapping(value = "get/period/days/{fromDate}/{toDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/get/period/days/{fromDate}/{toDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public long getPeriodDays(@PathVariable(value = "fromDate") String fromDate, @PathVariable(value = "toDate") String toDate) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate lDate = LocalDate.parse(fromDate,format);
@@ -85,13 +91,13 @@ public class ToolsController {
     }
 
     @UrlDeclaration(description = "Получить колличество после даты",isAccessAll = true)
-    @RequestMapping(value = "get/period/days/{fromDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/get/period/days/{fromDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public long getPeriodDays(@PathVariable(value = "fromDate") String fromDate) {
         return this.getPeriodDays(fromDate, null);
     }
 
     @UrlDeclaration(description = "Получить подробное серверное время",isAccessAll = true)
-    @RequestMapping(value = "get/time/default", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/get/time/default", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public LocalDateTime getDefaultTime() {
         return LocalDateTime.now();
     }
