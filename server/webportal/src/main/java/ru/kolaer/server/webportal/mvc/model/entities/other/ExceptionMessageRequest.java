@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.mvc;
+package ru.kolaer.server.webportal.mvc.model.entities.other;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
