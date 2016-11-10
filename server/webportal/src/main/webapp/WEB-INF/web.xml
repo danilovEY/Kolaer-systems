@@ -13,5 +13,15 @@
 		<location>/rest//non-security/errors/404</location>
 	</error-page>
 
+	<error-page>
+		<error-code>401</error-code>
+		<location>/rest//non-security/errors/401</location>
+	</error-page>
+
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/rest/non-security/errors/503</location>
+	</error-page>
+
 
 </web-app>
