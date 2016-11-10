@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -73,6 +74,7 @@ public class SpringContext extends WebMvcConfigurerAdapter {
     }
 
     @Bean
+    @Qualifier(value = "dataSourceKolaerBase")
     @Autowired
     public JdbcTemplate jdbcTemplateKolaerBase(DataSource dataSourceKolaerBase) {
         return new JdbcTemplate(dataSourceKolaerBase);
@@ -86,6 +88,13 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         dataSource.setUsername(env.getRequiredProperty("db.user"));
         dataSource.setPassword(env.getRequiredProperty("db.pass"));
         return dataSource;
+    }
+
+    @Bean
+    @Qualifier(value = "dataSource")
+    @Autowired
+    public JdbcTemplate jdbcTemplateOrigin(final DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
     }
 
     @Autowired
