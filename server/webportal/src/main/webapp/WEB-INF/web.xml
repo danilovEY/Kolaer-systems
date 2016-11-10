@@ -8,4 +8,10 @@
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
+	<error-page>
+		<error-code>404</error-code>
+		<location>/rest//non-security/errors/404</location>
+	</error-page>
+
+
 </web-app>
