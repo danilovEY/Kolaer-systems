@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.beans.SeterProviderBean;
+import ru.kolaer.server.webportal.beans.UserSessionInfo;
+import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 import ru.kolaer.server.webportal.security.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +45,11 @@ public class AuthenticationController {
     @Autowired
     private UserDetailsService userDetailsServiceLDAP;
 
+    @Autowired
+    private UserSessionInfo userSessionInfo;
+
+    @Autowired
+    private ServiceLDAP serviceLDAP;
 
     @UrlDeclaration(description = "Выйти.", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -50,6 +57,7 @@ public class AuthenticationController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){
             new SecurityContextLogoutHandler().logout(request, response, auth);
+            SecurityContextHolder.clearContext();
         }
         return "redirect:/";
     }
@@ -97,6 +105,8 @@ public class AuthenticationController {
         if(userDetails == null) {
             throw new UsernameNotFoundException("Пользователь " + username + " не найден!");
         }
+
+        this.userSessionInfo.setGeneralAccountsEntity(serviceLDAP.getAccountWithEmployeeByLogin(userDetails.getUsername()));
 
         final String tokenJson = TokenUtils.createTokenLDAP(userDetails);
         return new TokenJson(tokenJson);

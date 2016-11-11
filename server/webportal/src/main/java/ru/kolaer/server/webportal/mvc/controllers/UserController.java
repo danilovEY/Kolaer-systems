@@ -15,14 +15,15 @@ import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.beans.UserSessionInfo;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -36,13 +37,17 @@ public class UserController {
     @Autowired
     private ServiceLDAP serviceLDAP;
 
+    @Autowired
+    private UserSessionInfo userSessionInfo;
+
     @UrlDeclaration(description = "Получить авторизированный аккаунт.", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public GeneralAccountsEntity getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null)
             return null;
-        return this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName());
+        return Optional.ofNullable(this.userSessionInfo.getGeneralAccountsEntity())
+                .orElse(this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()));
     }
 
     @UrlDeclaration(description = "Получить роли авторизированного аккаунта.", isAccessAnonymous = true, isAccessUser = true)
@@ -52,7 +57,9 @@ public class UserController {
 
         if(authentication == null)
             return Collections.emptyList();
-        final GeneralAccountsEntity generalAccountsEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName());
+
+        final GeneralAccountsEntity generalAccountsEntity = Optional.ofNullable(this.userSessionInfo.getGeneralAccountsEntity())
+                .orElse(this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()));
 
         return generalAccountsEntity.getRoles().stream().map(GeneralRolesEntity::getType).collect(Collectors.toList());
     }
@@ -68,7 +75,7 @@ public class UserController {
         if(imgByte == null) {
             GeneralAccountsEntity user = this.getUser();
 
-            final String url = user.getGeneralEmployeesEntity().getPhoto();//"http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(user.getGeneralEmployeesEntity().getInitials(), "UTF-8").replace("+", "%20") + ".jpg";
+            final String url = user.getGeneralEmployeesEntity().getPhoto();
             InputStream inputStream = URI.create(url).toURL().openStream();
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
