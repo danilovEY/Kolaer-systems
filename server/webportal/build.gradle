@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '0.0.1'
+version '1.0.0'
 
 def name = "kolaer-web"
 def testName = "kolaer-web-test.war"
