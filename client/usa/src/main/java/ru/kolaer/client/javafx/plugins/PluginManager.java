@@ -40,7 +40,7 @@ public class PluginManager {
         final File frameworkDir = new File(System.getProperty("java.io.tmpdir") , defaultPathCache);
 
         final Map<String, String> frameworkProperties = new HashMap<>();
-        frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
+        frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath() + UUID.randomUUID());
         frameworkProperties.put("felix.log.level", "3");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 

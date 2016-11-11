@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.web.HTMLEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,11 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
 
 
             final PsrRegister selectPsr = table.getSelectionModel().getSelectedItem();
+            if(selectPsr == null) {
+                contextMenu.hide();
+                return;
+            }
+
             final GeneralEmployeesEntity selectPsrEmployee = selectPsr.getAuthor();
 
             final GeneralAccountsEntity accountsEntity = editorKit.getAuthentication().getAuthorizedUser();
@@ -93,8 +99,6 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                 contextMenu.hide();
             }
         });
-
-
 
         final TableColumn<PsrRegister, Integer> psrRegisterIdColumn = new TableColumn<>("ID");
         psrRegisterIdColumn.setResizable(false);
@@ -122,6 +126,8 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                     this.setText("");
                     if(!empty && item != null)
                         this.setText(item.getInitials());
+                    else
+                        this.setText("");
                 }
             }
         );
@@ -136,6 +142,8 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                     super.updateItem(item, empty);
                     if(!empty && item != null)
                         this.setText(dateFormat.format(item));
+                    else
+                        this.setText("");
                 }
             }
         );
@@ -155,8 +163,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
             new TableCell<PsrRegister, String>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if(!empty && item != null) {
+                    if(!empty || item != null && !item.isEmpty()) {
                         Tools.runOnThreadFX(() -> {
                             final HTMLEditor htmlEditor = new HTMLEditor();
                             htmlEditor.setDisable(true);
@@ -170,7 +177,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                             this.setGraphic(new BorderPane(htmlEditor));
                         });
                     } else {
-                        this.setGraphic(new Label());
+                        this.setGraphic(new Pane());
                     }
                 }
             }
@@ -184,13 +191,14 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
             new TableCell<PsrRegister, List<PsrAttachment>>(){
                 @Override
                 protected void updateItem(List<PsrAttachment> item, boolean empty) {
-                    super.updateItem(item, empty);
                     if(!empty) {
                         if(item != null && item.size() > 0) {
                             this.setText("Есть (" + item.size() + ")");
                         } else {
                             this.setText("Пусто");
                         }
+                    } else {
+                        this.setText("");
                     }
                 }
             }
@@ -214,7 +222,8 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
     @Override
     public void addPsrProjectAll(List<PsrRegister> psrRegisters) {
         Tools.runOnThreadFX(() -> {
-            psrRegisters.stream().forEach(this.tableData::add);
+            this.tableData.addAll(psrRegisters);
+
             this.table.getSortOrder().add(this.table.getColumns().get(0));
         });
     }

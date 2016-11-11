@@ -43,7 +43,7 @@ public class AutoCeckingNotifyMessage implements Service {
             }
             try {
                 final NotifyMessage lastNotifyMessage = UniformSystemEditorKitSingleton.getInstance().getUSNetwork().getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().getLastNotifyMessage();
-                if(this.lastNotifyMessage == null || !this.lastNotifyMessage.getMessage().equals(lastNotifyMessage.getMessage())) {
+                if((this.lastNotifyMessage == null || !this.lastNotifyMessage.getMessage().equals(lastNotifyMessage.getMessage())) && lastNotifyMessage != null) {
                     this.lastNotifyMessage = lastNotifyMessage;
                     UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showWarningNotifiAdmin("Сообщение!", lastNotifyMessage.getMessage());
                 }

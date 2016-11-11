@@ -50,12 +50,13 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     @Override
     @Transactional(readOnly = true)
     public NotifyMessage findByID(int id) {
-        return this.jdbcTemplate.query("SELECT id, message FROM notifications WHERE id = " + id, (rs, rowNum) -> {
+        List<NotifyMessage> query = this.jdbcTemplate.query("SELECT id, message FROM notifications WHERE id = " + id, (rs, rowNum) -> {
             final NotifyMessage notifyMessage = new NotifyMessageBase();
             notifyMessage.setId(rs.getInt("id"));
             notifyMessage.setMessage(rs.getString("message"));
             return notifyMessage;
-        }).get(0);
+        });
+        return query.isEmpty() ? null : query.get(0);
     }
 
     @Override

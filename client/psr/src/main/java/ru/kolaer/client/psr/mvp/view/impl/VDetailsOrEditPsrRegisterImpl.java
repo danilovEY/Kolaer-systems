@@ -116,14 +116,15 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
         if(this.psrRegister != null) {
             this.namePsr.setText(this.psrRegister.getName());
             this.htmlEditor.setHtmlText(this.psrRegister.getComment());
+            if(this.psrRegister.getStateList().size() > 0) {
+                this.datePickerState.setValue(Tools.convertToLocalDate(this.psrRegister.getStateList().get(0).getDate()));
+                this.stateComment.setText(this.psrRegister.getStateList().get(0).getComment());
+            }
 
-            this.datePickerState.setValue(Tools.convertToLocalDate(this.psrRegister.getStateList().get(0).getDate()));
-            this.stateComment.setText(this.psrRegister.getStateList().get(0).getComment());
-
-            this.datePickerPlan.setValue(Tools.convertToLocalDate(this.psrRegister.getStateList().get(1).getDate()));
-            this.planComment.setText(this.psrRegister.getStateList().get(1).getComment());
-
-
+            if(this.psrRegister.getStateList().size() > 1) {
+                this.datePickerPlan.setValue(Tools.convertToLocalDate(this.psrRegister.getStateList().get(1).getDate()));
+                this.planComment.setText(this.psrRegister.getStateList().get(1).getComment());
+            }
 
             this.wizard = new Wizard(null, "Редактирование проекта");
         } else {

@@ -99,7 +99,7 @@ public class PMainPaneImpl implements PMainPane {
                         this.pPsrRegisterTable.updateTableData();
                     }
                 } catch (ServerException ex) {
-                    LOG.error("Ошибка!");
+                    LOG.error("Ошибка!", ex);
                 }
             });
         });

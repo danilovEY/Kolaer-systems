@@ -98,6 +98,7 @@ public class SpringContext extends WebMvcConfigurerAdapter {
     }
 
     @Autowired
+    @Qualifier(value = "dataSource")
     @Bean(name = "sessionFactory")
     public SessionFactory sessionFactoryBean(final DataSource dataSource) {
         final LocalSessionFactoryBuilder sessionFactoryBean = new LocalSessionFactoryBuilder(dataSource);
