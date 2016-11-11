@@ -56,15 +56,13 @@ public class GeneralDepartamentEntityDecorator implements GeneralDepartamentEnti
         this.generalDepartamentEntity.setAbbreviatedName(abbreviatedName);
     }
 
-    @Transient
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.LAZY, optional=false)
-    @JoinColumn(name = "id_employee")
-    public GeneralEmployeesEntity getChiefEntity() {
+    @Column(name = "id_chief_employee")
+    public Integer getChiefEntity() {
         return this.generalDepartamentEntity.getChiefEntity();
     }
 
     @Override
-    public void setChiefEntity(GeneralEmployeesEntity chiefEntity) {
+    public void setChiefEntity(Integer chiefEntity) {
         this.generalDepartamentEntity.setChiefEntity(chiefEntity);
     }
 }

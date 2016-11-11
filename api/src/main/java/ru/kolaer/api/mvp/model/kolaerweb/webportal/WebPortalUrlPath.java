@@ -2,6 +2,8 @@ package ru.kolaer.api.mvp.model.kolaerweb.webportal;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.util.List;
+
 /**
  * Created by danilovey on 29.07.2016.
  */
@@ -19,18 +21,6 @@ public interface WebPortalUrlPath {
      String getDescription();
      void setDescription(String description);
 
-     boolean isAccessAll();
-     void setAccessAll(boolean accessAll);
-
-     boolean isAccessSuperAdmin();
-     void setAccessSuperAdmin(boolean accessSuperAdmin);
-
-     boolean isAccessPsrAdmin();
-     void setAccessPsrAdmin(boolean accessPsrAdmin);
-
-     boolean isAccessUser();
-     void setAccessUser(boolean accessUser);
-
-     boolean isAccessAnonymous();
-     void setAccessAnonymous(boolean accessAnonymous);
+     List<String> getAccesses();
+     void setAccesses(List<String> accesses);
 }

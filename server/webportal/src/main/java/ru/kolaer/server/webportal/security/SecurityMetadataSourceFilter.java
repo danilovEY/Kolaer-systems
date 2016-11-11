@@ -39,7 +39,7 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
     }
 
     private Collection<ConfigAttribute> getRoles(WebPortalUrlPath urlPath) {
-        return this.urlPathService.getRoles(urlPath).stream().map(role -> new SecurityConfig(role.getType().toString())).collect(Collectors.toList());
+        return this.urlPathService.getRoles(urlPath).stream().map(role -> new SecurityConfig(role.getType())).collect(Collectors.toList());
     }
 
     @Override

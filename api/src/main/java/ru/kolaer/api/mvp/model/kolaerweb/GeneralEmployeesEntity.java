@@ -15,8 +15,8 @@ public interface GeneralEmployeesEntity {
      String getInitials();
      void setInitials(String initials);
 
-     EnumGender getGender();
-     void setGender(EnumGender gender);
+     String getGender();
+     void setGender(String gender);
 
      GeneralDepartamentEntity getDepartament();
      void setDepartament(GeneralDepartamentEntity departament);

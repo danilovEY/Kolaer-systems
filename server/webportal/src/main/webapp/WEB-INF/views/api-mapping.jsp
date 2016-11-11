@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%--
   Created by IntelliJ IDEA.
   User: danilovey
@@ -19,11 +20,7 @@
             <th>URL</th>
             <th>Метод запроса</th>
             <th>Описание</th>
-            <th>Доступ всем</th>
-            <th>Доступ SUPER ADMIN</th>
-            <th>Доступ ADMIN</th>
-            <th>Доступ USER</th>
-            <th>Доступ ANONYMOUS</th>
+            <th>Доступы</th>
         </tr>
 
         <c:forEach items="${listApi}" var="entry">
@@ -31,11 +28,7 @@
                 <td>${entry.url}</td>
                 <td>${entry.requestMethod}</td>
                 <td>${entry.description}</td>
-                <td>${entry.accessAll}</td>
-                <td>${entry.accessSuperAdmin}</td>
-                <td>${entry.accessPsrAdmin}</td>
-                <td>${entry.accessUser}</td>
-                <td>${entry.accessAnonymous}</td>
+                <td>${entry.accesses}</td>
             </tr>
         </c:forEach>
     </table>

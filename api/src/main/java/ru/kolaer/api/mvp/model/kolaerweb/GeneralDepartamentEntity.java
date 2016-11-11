@@ -16,6 +16,6 @@ public interface GeneralDepartamentEntity {
     String getAbbreviatedName();
     void setAbbreviatedName(String abbreviatedName);
 
-    GeneralEmployeesEntity getChiefEntity();
-    void setChiefEntity(GeneralEmployeesEntity chiefEntity);
+    Integer getChiefEntity();
+    void setChiefEntity(Integer chiefEntity);
 }

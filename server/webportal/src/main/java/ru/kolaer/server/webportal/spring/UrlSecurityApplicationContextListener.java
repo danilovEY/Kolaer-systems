@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.spring;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationListener;
@@ -18,6 +19,8 @@ import ru.kolaer.server.webportal.config.PathMapping;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Считывание всех методов у бинов для поиска аннотации {@link UrlDeclaration}.
@@ -37,8 +40,14 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
     /***Сервис для работы с url.*/
     private UrlPathService urlPathService;
 
+    @Value("${hibernate.hbm2ddl.auto}")
+    private String hibGen;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        if (!hibGen.equals("create")) {
+            return;
+        }
         for(String beanName : event.getApplicationContext().getBeanDefinitionNames()) {
             final BeanDefinition bean = beanFactory.getBeanDefinition(beanName);
             final String beanClassName = bean.getBeanClassName();
@@ -73,21 +82,23 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
 
                     urlBuilder.append(methodMappingAnnotation.value()[0]);
 
+                    final List<String> accessList = new ArrayList<>();
+
                     final String url = urlBuilder.toString();
                     final String description = urlDeclaration.description();
-                    final boolean isSuperAdmin = urlDeclaration.isAccessSuperAdmin();
-                    final boolean isUser = urlDeclaration.isAccessUser();
-                    final boolean isAnonymous = urlDeclaration.isAccessAnonymous();
-                    final boolean isAll = urlDeclaration.isAccessAll();
+
+                    if(urlDeclaration.isAccessSuperAdmin())
+                        accessList.add("OIT");
+                    if(urlDeclaration.isAccessUser())
+                        accessList.add("Domain users");
+                    if(urlDeclaration.isAccessAll())
+                        accessList.add("ALL");
 
                     final WebPortalUrlPath urlPath = new WebPortalUrlPathBase();
                     urlPath.setUrl(url);
                     urlPath.setDescription(description);
                     urlPath.setRequestMethod(urlDeclaration.requestMethod().name());
-                    urlPath.setAccessAll(isAll);
-                    urlPath.setAccessSuperAdmin(isSuperAdmin);
-                    urlPath.setAccessUser(isUser);
-                    urlPath.setAccessAnonymous(isAnonymous);
+                    urlPath.setAccesses(accessList);
                     this.urlPathService.createIsNone(urlPath);
                 }
             }

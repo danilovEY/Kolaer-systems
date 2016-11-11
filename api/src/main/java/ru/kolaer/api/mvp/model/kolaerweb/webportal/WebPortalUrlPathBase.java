@@ -1,5 +1,7 @@
 package ru.kolaer.api.mvp.model.kolaerweb.webportal;
 
+import java.util.List;
+
 /**
  * Created by danilovey on 28.07.2016.
  * Структура URl из БД.
@@ -10,11 +12,7 @@ public class WebPortalUrlPathBase implements WebPortalUrlPath {
     private String description;
     private String requestMethod;
     /**Имеют ли доступ к URL все пользователи*/
-    private boolean accessAll;
-    private boolean accessSuperAdmin;
-    private boolean accessPsrAdmin;
-    private boolean accessUser;
-    private boolean accessAnonymous;
+    private List<String> accessed;
 
     public int getId() {
         return id;
@@ -50,43 +48,11 @@ public class WebPortalUrlPathBase implements WebPortalUrlPath {
         this.description = description;
     }
 
-    public boolean isAccessAll() {
-        return accessAll;
+    public List<String> getAccesses() {
+        return this.accessed;
     }
 
-    public void setAccessAll(boolean accessAll) {
-        this.accessAll = accessAll;
-    }
-
-    public boolean isAccessSuperAdmin() {
-        return accessSuperAdmin;
-    }
-
-    public void setAccessSuperAdmin(boolean accessSuperAdmin) {
-        this.accessSuperAdmin = accessSuperAdmin;
-    }
-
-    public boolean isAccessPsrAdmin() {
-        return accessPsrAdmin;
-    }
-
-    public void setAccessPsrAdmin(boolean accessPsrAdmin) {
-        this.accessPsrAdmin = accessPsrAdmin;
-    }
-
-    public boolean isAccessUser() {
-        return accessUser;
-    }
-
-    public void setAccessUser(boolean accessUser) {
-        this.accessUser = accessUser;
-    }
-
-    public boolean isAccessAnonymous() {
-        return accessAnonymous;
-    }
-
-    public void setAccessAnonymous(boolean accessAnonymous) {
-        this.accessAnonymous = accessAnonymous;
+    public void setAccesses(List<String> accesses) {
+        this.accessed = accesses;
     }
 }

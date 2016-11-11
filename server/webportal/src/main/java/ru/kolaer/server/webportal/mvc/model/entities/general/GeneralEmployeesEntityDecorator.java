@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.kolaer.api.mvp.model.kolaerweb.*;
 
 import javax.persistence.*;
@@ -12,7 +11,6 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "general_employees")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     private GeneralEmployeesEntity generalEmployeesEntity;
 
@@ -25,7 +23,7 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     }
 
     @Id
-    @Column(name = "pnumber")
+    @Column(name = "pnumber", length = 8)
     public Integer getPnumber() {
         return this.generalEmployeesEntity.getPnumber();
     }
@@ -34,7 +32,7 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setPnumber(pnumber);
     }
 
-    @Column(name = "initials")
+    @Column(name = "initials", length = 70)
     public String getInitials() {
         return this.generalEmployeesEntity.getInitials();
     }
@@ -43,13 +41,12 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setInitials(initials);
     }
 
-    @Column(name = "gender")
-    @Enumerated(EnumType.STRING)
-    public EnumGender getGender() {
+    @Column(name = "gender", length = 8)
+    public String getGender() {
         return this.generalEmployeesEntity.getGender();
     }
 
-    public void setGender(EnumGender gender) {
+    public void setGender(String gender) {
         this.generalEmployeesEntity.setGender(gender);
     }
 
@@ -73,7 +70,7 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setPost(post);
     }
 
-    @Column(name = "mobile_number")
+    @Column(name = "mobile_number", length = 15)
     public String getMobileNumber() {
         return this.generalEmployeesEntity.getMobileNumber();
     }
@@ -83,7 +80,7 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setMobileNumber(number);
     }
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 15)
     public String getPhoneNumber() {
         return this.generalEmployeesEntity.getPhoneNumber();
     }
@@ -104,7 +101,7 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setBirthday(birthday);
     }
 
-    @Column(name = "email")
+    @Column(name = "email", length = 30)
     public String getEmail() {
         return this.generalEmployeesEntity.getEmail();
     }

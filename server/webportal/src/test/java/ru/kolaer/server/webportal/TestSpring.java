@@ -12,9 +12,18 @@ import ru.kolaer.api.mvp.model.kolaerweb.CounterBase;
 import ru.kolaer.server.webportal.config.SpringContext;
 import ru.kolaer.server.webportal.config.SpringSecurityConfig;
 import ru.kolaer.server.webportal.mvc.model.dao.CounterDao;
+import ru.kolaer.server.webportal.mvc.model.ldap.RoleLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.CounterService;
 
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+import javax.naming.ldap.InitialLdapContext;
 import java.util.Date;
+
+import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
 
 /**
  * Created by danilovey on 10.11.2016.
@@ -25,18 +34,29 @@ import java.util.Date;
 public class TestSpring {
 
     @Autowired
-    @Qualifier(value = "counterDaoJDBC")
-    private CounterDao counterDaoJDBC;
+    private InitialLdapContext ldapContext;
 
     @Test
     public void testJDBCController() {
-        final Counter counter = new CounterBase();
-        counter.setEnd(new Date());
-        counter.setStart(new Date());
-        counter.setTitle("Title");
-        counter.setDescription("Des");
+        final SearchControls controls = new SearchControls();
+        controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        controls.setReturningAttributes(new String[]{
+                "cn", "memberOf"
+        });
 
-        this.counterDaoJDBC.persist(counter);
+        try {
+            final NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(objectclass=group)", controls);
+            while (answer.hasMoreElements()) {
+                SearchResult rslt = (SearchResult) answer.next();
+                Attributes attrs = rslt.getAttributes();
+                System.out.println(attrs.get("cn").get());
+            }
+
+            answer.close();
+            System.out.println("AAAAAAAA");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
     }
 
 }

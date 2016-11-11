@@ -11,7 +11,7 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
     private String initials;
     private String mobileNumber;
     private String phoneNumber;
-    private EnumGender gender;
+    private String gender;
     private GeneralDepartamentEntity departament;
     private String post;
     private Date birthday;
@@ -34,11 +34,11 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
         this.initials = initials;
     }
 
-    public EnumGender getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(EnumGender gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 

@@ -51,7 +51,7 @@ public class AccountLDAPImpl implements AccountLDAP {
 
             generalEmployeesEntity.setRoles(rolesFromAttributes.stream().map(role -> {
                 final GeneralRolesEntity generalRolesEntity = new GeneralRolesEntityBase();
-                generalRolesEntity.setType(EnumRole.fromString(role.getAuthority()));
+                generalRolesEntity.setType(role.getAuthority());
                 return generalRolesEntity;
             }).collect(Collectors.toList()));
 

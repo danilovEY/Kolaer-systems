@@ -7,7 +7,7 @@ public class GeneralDepartamentEntityBase implements GeneralDepartamentEntity {
     private Integer Id;
     private String name;
     private String abbreviatedName;
-    private GeneralEmployeesEntity chiefEntity;
+    private Integer idChiefEntity;
 
     public Integer getId() {
         return Id;
@@ -33,11 +33,11 @@ public class GeneralDepartamentEntityBase implements GeneralDepartamentEntity {
         this.abbreviatedName = abbreviatedName;
     }
 
-    public GeneralEmployeesEntity getChiefEntity() {
-        return chiefEntity;
+    public Integer getChiefEntity() {
+        return idChiefEntity;
     }
 
-    public void setChiefEntity(GeneralEmployeesEntity chiefEntity) {
-        this.chiefEntity = chiefEntity;
+    public void setChiefEntity(Integer chiefEntity) {
+        this.idChiefEntity = chiefEntity;
     }
 }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 09.08.2016.
@@ -34,31 +35,18 @@ public class UrlPathServiceImpl implements UrlPathService {
             url = userUrl.substring(0, userUrl.indexOf("?"));
         }
 
-        WebPortalUrlPath result = this.urlPathDao.getPathByUrl(url);
-        return result;
+        return this.urlPathDao.getPathByUrl(url);
     }
 
     @Override
     public List<GeneralRolesEntity> getRoles(WebPortalUrlPath urlPath) {
-        if(urlPath.isAccessAll()) {
+        if(urlPath.getAccesses().contains("ALL")) {
             return Collections.emptyList();
         }
 
-        List<GeneralRolesEntity> accessRoles = new ArrayList<>();
-
-        final Iterator<GeneralRolesEntity> iterRoles = this.roleService.getAll().iterator();
-        while (iterRoles.hasNext()) {
-            final GeneralRolesEntity role = iterRoles.next();
-
-            if(role.getType() == EnumRole.USER && urlPath.isAccessUser() ||
-                    role.getType() == EnumRole.PSR_ADMIN && urlPath.isAccessPsrAdmin() ||
-                    role.getType() == EnumRole.ANONYMOUS && urlPath.isAccessAnonymous() ||
-                    role.getType() == EnumRole.SUPER_ADMIN && urlPath.isAccessSuperAdmin()) {
-                accessRoles.add(role);
-            }
-        }
-
-        return accessRoles;
+        return this.roleService.getAll().stream()
+                .filter(role -> urlPath.getAccesses().contains(role.getType()))
+                .collect(Collectors.toList());
     }
 
     @Override

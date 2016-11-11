@@ -52,7 +52,7 @@ public class UserController {
 
     @UrlDeclaration(description = "Получить роли авторизированного аккаунта.", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/roles/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<EnumRole> getUserRoles() {
+    public List<GeneralRolesEntity> getUserRoles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication == null)
@@ -61,7 +61,7 @@ public class UserController {
         final GeneralAccountsEntity generalAccountsEntity = Optional.ofNullable(this.userSessionInfo.getGeneralAccountsEntity())
                 .orElse(this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()));
 
-        return generalAccountsEntity.getRoles().stream().map(GeneralRolesEntity::getType).collect(Collectors.toList());
+        return generalAccountsEntity.getRoles();
     }
 
     private byte[] getImageByte() throws IOException {

@@ -4,6 +4,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPathBase;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by danilovey on 28.07.2016.
@@ -61,48 +62,13 @@ public class WebPortalUrlPathDecorator implements WebPortalUrlPath {
         this.webPortalUrlPath.setDescription(description);
     }
 
-    @Column(name = "access_all")
-    public boolean isAccessAll() {
-        return this.webPortalUrlPath.isAccessAll();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "url_access", joinColumns=@JoinColumn(name="id"))
+    public List<String> getAccesses() {
+        return this.webPortalUrlPath.getAccesses();
     }
 
-    public void setAccessAll(boolean accessAll) {
-        this.webPortalUrlPath.setAccessAll(accessAll);
-    }
-
-    @Column(name = "access_super_admin")
-    public boolean isAccessSuperAdmin() {
-        return this.webPortalUrlPath.isAccessSuperAdmin();
-    }
-
-    public void setAccessSuperAdmin(boolean accessSuperAdmin) {
-        this.webPortalUrlPath.setAccessSuperAdmin(accessSuperAdmin);
-    }
-
-    @Column(name = "access_psr_admin")
-    public boolean isAccessPsrAdmin() {
-        return this.webPortalUrlPath.isAccessPsrAdmin();
-    }
-
-    public void setAccessPsrAdmin(boolean accessPsrAdmin) {
-        this.webPortalUrlPath.setAccessPsrAdmin(accessPsrAdmin);
-    }
-
-    @Column(name = "access_user")
-    public boolean isAccessUser() {
-        return this.webPortalUrlPath.isAccessUser();
-    }
-
-    public void setAccessUser(boolean accessUser) {
-        this.webPortalUrlPath.setAccessUser(accessUser);
-    }
-
-    @Column(name = "access_anonymous")
-    public boolean isAccessAnonymous() {
-        return this.webPortalUrlPath.isAccessAnonymous();
-    }
-
-    public void setAccessAnonymous(boolean accessAnonymous) {
-        this.webPortalUrlPath.setAccessAnonymous(accessAnonymous);
+    public void setAccesses(List<String> accesses) {
+        this.webPortalUrlPath.setAccesses(accesses);
     }
 }

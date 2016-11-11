@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
+import ru.kolaer.server.webportal.mvc.model.ldap.RoleLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.RoleService;
 
 import java.util.List;
@@ -15,21 +16,20 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    private RoleDao roleDao;
+    private RoleLDAP roleDao;
 
     @Override
     public List<GeneralRolesEntity> getAll() {
-        return this.roleDao.findAll();
+        return this.roleDao.findAllRoles();
     }
 
     @Override
     public GeneralRolesEntity getById(Integer id) {
-        return this.roleDao.findByID(id);
+        return null;
     }
 
     @Override
     public void add(GeneralRolesEntity entity) {
-        this.roleDao.persist(entity);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import org.hibernate.annotations.Immutable;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
@@ -12,10 +10,10 @@ import javax.persistence.*;
  * Created by Danilov on 24.07.2016.
  * Структура роли в БД.
  */
-@Entity
-@Table(name = "general_roles")
-@Immutable
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@Entity
+//@Table(name = "general_roles")
+//@Immutable
+@Deprecated
 public class GeneralRolesEntityDecorator implements GeneralRolesEntity{
     private GeneralRolesEntity generalRolesEntity;
 
@@ -39,12 +37,11 @@ public class GeneralRolesEntityDecorator implements GeneralRolesEntity{
     }
 
     @Column(name = "type")
-    @Enumerated(value = EnumType.STRING)
-    public EnumRole getType() {
+    public String getType() {
         return this.generalRolesEntity.getType();
     }
 
-    public void setType(EnumRole type) {
+    public void setType(String type) {
         this.generalRolesEntity.setType(type);
     }
 

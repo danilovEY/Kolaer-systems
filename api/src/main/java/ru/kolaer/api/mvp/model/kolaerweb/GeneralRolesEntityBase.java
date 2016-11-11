@@ -6,7 +6,7 @@ package ru.kolaer.api.mvp.model.kolaerweb;
  */
 public class GeneralRolesEntityBase implements GeneralRolesEntity{
     private Integer id;
-    private EnumRole type;
+    private String type;
 
 
     public Integer getId() {
@@ -17,11 +17,11 @@ public class GeneralRolesEntityBase implements GeneralRolesEntity{
         this.id = id;
     }
 
-    public EnumRole getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(EnumRole type) {
+    public void setType(String type) {
         this.type = type;
     }
 

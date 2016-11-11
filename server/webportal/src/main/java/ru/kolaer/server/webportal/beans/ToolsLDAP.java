@@ -22,15 +22,12 @@ public class ToolsLDAP {
     public static Collection<? extends GrantedAuthority> getRolesFromAttributes(Attributes attributes) {
         LOG.debug("Attributes: {}", attributes);
         final List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(EnumRole.USER.toString()));
         try {
             final Attribute cn = attributes.get("memberOf");
             for(int i = 0; i< cn.size(); i++) {
                 final String value = (String) cn.get(i);
                 final String group = value.substring(3, value.indexOf(','));
-                final SimpleGrantedAuthority simpleGrantedAuthority = getRole(group);
-                if(simpleGrantedAuthority != null)
-                    roles.add(simpleGrantedAuthority);
+                roles.add(new SimpleGrantedAuthority(group));
             }
         } catch (NamingException e) {
             LOG.error("Ошибка при парсинге атрибутов!", e);
@@ -51,7 +48,7 @@ public class ToolsLDAP {
     public static String toDC(String domainName) {
         StringBuilder buf = new StringBuilder();
         for (String token : domainName.split("\\.")) {
-            if(token.length()==0)   continue;   // defensive check
+            if(token.length()==0) continue;   // defensive check
             if(buf.length()>0)  buf.append(",");
             buf.append("DC=").append(token);
         }

@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
@@ -24,8 +22,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 03.08.2016.
@@ -46,19 +42,6 @@ public class DataBaseInitialization {
 
     @Transactional
     public void initDB() {
-        //==============GENERAL-ROLE=====================
-        final GeneralRolesEntity superAdminRole = new GeneralRolesEntityDecorator();
-        superAdminRole.setType(EnumRole.SUPER_ADMIN);
-
-        final GeneralRolesEntity adminRole = new GeneralRolesEntityDecorator();
-        adminRole.setType(EnumRole.PSR_ADMIN);
-
-        final GeneralRolesEntity userRole = new GeneralRolesEntityDecorator();
-        userRole.setType(EnumRole.USER);
-
-        final GeneralRolesEntity anoRole = new GeneralRolesEntityDecorator();
-        anoRole.setType(EnumRole.ANONYMOUS);
-
         //==============PSR=====================
         PsrStatus psrStatus = new PsrStatusDecorator();
         psrStatus.setType("Новый");
@@ -79,12 +62,6 @@ public class DataBaseInitialization {
         psrStatus = new PsrStatusDecorator();
         psrStatus.setType("Утвержден");
         this.sessionFactory.getCurrentSession().persist(psrStatus);
-
-        //============В БАЗУ====================
-        this.sessionFactory.getCurrentSession().persist(superAdminRole);
-        this.sessionFactory.getCurrentSession().persist(adminRole);
-        this.sessionFactory.getCurrentSession().persist(userRole);
-        this.sessionFactory.getCurrentSession().persist(anoRole);
     }
 
     @Transactional
@@ -129,22 +106,8 @@ public class DataBaseInitialization {
                     dataBaseEmployee.setPhoto(dbDataAll.getVCard());
                 }
                 dataBaseEmployee.setEmail(dbDataAll.getEmail());
+                dataBaseEmployee.setGender(dbDataAll.getGender());
 
-
-                switch (dbDataAll.getGender()) {
-                    case "Мужской": {
-                        dataBaseEmployee.setGender(EnumGender.MALE);
-                        break;
-                    }
-                    case "Женский": {
-                        dataBaseEmployee.setGender(EnumGender.FEMALE);
-                        break;
-                    }
-                    default: {
-                        dataBaseEmployee.setGender(EnumGender.UNKNOW);
-                        break;
-                    }
-                }
                 if (dbDataAll.getDepartament() != null || !dbDataAll.getDepartament().trim().isEmpty()) {
                     List<GeneralDepartamentEntity> name = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralDepartamentEntityDecorator dep WHERE dep.name = :name").setParameter("name", dbDataAll.getDepartament()).list();
 
@@ -161,7 +124,7 @@ public class DataBaseInitialization {
                         generalDepartamentEntity.setAbbreviatedName(abbrev);
 
                         if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")) {
-                            generalDepartamentEntity.setChiefEntity(dataBaseEmployee);
+                            generalDepartamentEntity.setChiefEntity(dataBaseEmployee.getPnumber());
                         }
 
                         this.sessionFactory.getCurrentSession().persist(generalDepartamentEntity);
@@ -172,8 +135,8 @@ public class DataBaseInitialization {
                         this.sessionFactory.getCurrentSession().persist(dataBaseEmployee);
 
                         if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")) {
-                            generalDepartamentEntity.setChiefEntity(dataBaseEmployee);
-                            this.sessionFactory.getCurrentSession().update(dataBaseEmployee);
+                            generalDepartamentEntity.setChiefEntity(dataBaseEmployee.getPnumber());
+                            this.sessionFactory.getCurrentSession().update(generalDepartamentEntity);
                         }
                     }
                 }
