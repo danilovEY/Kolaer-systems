@@ -63,7 +63,8 @@ public class WebPortalUrlPathDecorator implements WebPortalUrlPath {
     }
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "url_access", joinColumns=@JoinColumn(name="id"))
+    @CollectionTable(name = "url_access", joinColumns=@JoinColumn(name="id_url"))
+    @Column(name="access_name")
     public List<String> getAccesses() {
         return this.webPortalUrlPath.getAccesses();
     }
