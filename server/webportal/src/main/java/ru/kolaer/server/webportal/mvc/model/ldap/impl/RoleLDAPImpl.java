@@ -10,7 +10,6 @@ import ru.kolaer.server.webportal.mvc.model.ldap.RoleLDAP;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;

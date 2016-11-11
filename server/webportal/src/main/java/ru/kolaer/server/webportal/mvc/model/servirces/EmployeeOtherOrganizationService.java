@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import org.xml.sax.SAXException;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 
 import javax.xml.parsers.ParserConfigurationException;

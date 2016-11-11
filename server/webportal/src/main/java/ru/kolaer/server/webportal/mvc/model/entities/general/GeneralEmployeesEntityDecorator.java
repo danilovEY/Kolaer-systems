@@ -1,6 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import ru.kolaer.api.mvp.model.kolaerweb.*;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
 
 import javax.persistence.*;
 import java.util.Date;

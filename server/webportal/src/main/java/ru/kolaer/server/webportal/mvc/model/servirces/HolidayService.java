@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
-import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 

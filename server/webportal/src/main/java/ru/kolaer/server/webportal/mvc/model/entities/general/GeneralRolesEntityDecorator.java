@@ -1,10 +1,12 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Created by Danilov on 24.07.2016.

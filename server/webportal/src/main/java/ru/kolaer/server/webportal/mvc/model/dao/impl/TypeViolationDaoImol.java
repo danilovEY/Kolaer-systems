@@ -5,10 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.server.webportal.mvc.model.dao.TypeViolationDao;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationDecorator;
 
 import java.util.List;
 

@@ -3,7 +3,6 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
-import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
 import ru.kolaer.server.webportal.mvc.model.ldap.RoleLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.RoleService;
 

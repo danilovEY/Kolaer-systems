@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.*;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
 import java.io.UnsupportedEncodingException;

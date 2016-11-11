@@ -9,7 +9,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
@@ -19,7 +18,6 @@ import ru.kolaer.server.webportal.mvc.model.servirces.HolidayService;
 import javax.annotation.PostConstruct;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.time.LocalDate;
 import java.util.*;
 

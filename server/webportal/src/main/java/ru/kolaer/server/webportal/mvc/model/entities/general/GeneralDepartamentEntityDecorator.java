@@ -1,10 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntityBase;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 
 import javax.persistence.*;
 

@@ -1,10 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.webportal.rss;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.rss.WebPortalRssEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.rss.WebPortalRssEntityBase;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 
 import javax.persistence.*;

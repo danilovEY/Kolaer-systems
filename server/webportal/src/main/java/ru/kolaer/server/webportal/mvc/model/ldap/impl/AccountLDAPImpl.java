@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Repository;
-import ru.kolaer.api.mvp.model.kolaerweb.*;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
 import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
 

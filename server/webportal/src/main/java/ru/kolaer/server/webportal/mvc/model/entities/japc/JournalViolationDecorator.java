@@ -3,7 +3,6 @@ package ru.kolaer.server.webportal.mvc.model.entities.japc;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolationBase;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.ViolationBase;
 
 import javax.persistence.*;
 import java.util.List;

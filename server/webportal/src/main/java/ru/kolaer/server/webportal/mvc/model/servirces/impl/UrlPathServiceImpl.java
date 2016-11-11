@@ -2,7 +2,6 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
@@ -10,9 +9,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathD
 import ru.kolaer.server.webportal.mvc.model.servirces.RoleService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +49,8 @@ public class UrlPathServiceImpl implements UrlPathService {
     @Override
     public void createIsNone(WebPortalUrlPath urlPath) {
         if(urlPath != null) {
-            final WebPortalUrlPath path = this.urlPathDao.getPathByUrlAndMethod(urlPath.getUrl(), urlPath.getRequestMethod());
+            final WebPortalUrlPath path = this.urlPathDao
+                    .getPathByUrlAndMethod(urlPath.getUrl(), urlPath.getRequestMethod());
             if(path == null) {
                 this.urlPathDao.persist(new WebPortalUrlPathDecorator(urlPath));
             }
