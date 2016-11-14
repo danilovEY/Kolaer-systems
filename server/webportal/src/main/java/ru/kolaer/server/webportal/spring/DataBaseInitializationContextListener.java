@@ -21,9 +21,6 @@ public class DataBaseInitializationContextListener implements ApplicationListene
     @Autowired
     private DataBaseInitialization dataBaseInitialization;
 
-    @Autowired
-    private UrlPathService urlPathService;
-
     @Value("${hibernate.hbm2ddl.auto}")
     private String hibGen;
 
@@ -31,9 +28,8 @@ public class DataBaseInitializationContextListener implements ApplicationListene
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if(!isInit) {
-            dataBaseInitialization.updateDataBase();
             if (hibGen.equals("create")) {
-                urlPathService.clear();
+                dataBaseInitialization.updateDataBase();
                 dataBaseInitialization.initDB();
             }
             isInit = true;

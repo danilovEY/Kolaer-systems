@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository("urlPathDao")
@@ -68,5 +69,18 @@ public class UrlPathDaoImpl implements UrlPathDao {
     @Transactional
     public void clear() {
         this.sessionFactory.getCurrentSession().createQuery("DELETE FROM WebPortalUrlPathDecorator").executeUpdate();
+    }
+
+    @Override
+    @Transactional
+    public void removeAll(Collection<WebPortalUrlPath> values) {
+        for (WebPortalUrlPath value : values) {
+            this.sessionFactory.getCurrentSession()
+                    .createQuery("DELETE FROM WebPortalUrlPathDecorator w WHERE w.url = :url AND w.requestMethod = :requestMethod")
+                    .setParameter("url", value.getUrl())
+                    .setParameter("requestMethod", value.getRequestMethod())
+                    .executeUpdate();
+        }
+
     }
 }

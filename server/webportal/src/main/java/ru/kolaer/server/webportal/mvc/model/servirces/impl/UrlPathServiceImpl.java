@@ -9,6 +9,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathD
 import ru.kolaer.server.webportal.mvc.model.servirces.RoleService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,12 +48,15 @@ public class UrlPathServiceImpl implements UrlPathService {
     }
 
     @Override
-    public void createIsNone(WebPortalUrlPath urlPath) {
+    public void createOrUpdate(WebPortalUrlPath urlPath) {
         if(urlPath != null) {
             final WebPortalUrlPath path = this.urlPathDao
                     .getPathByUrlAndMethod(urlPath.getUrl(), urlPath.getRequestMethod());
             if(path == null) {
                 this.urlPathDao.persist(new WebPortalUrlPathDecorator(urlPath));
+            } else {
+                path.setDescription(urlPath.getDescription());
+                this.urlPathDao.update(path);
             }
         }
     }
@@ -60,6 +64,12 @@ public class UrlPathServiceImpl implements UrlPathService {
     @Override
     public void clear() {
         this.urlPathDao.clear();
+    }
+
+    @Override
+    public void removeAll(Collection<WebPortalUrlPath> values) {
+        if(values.size() > 0)
+            this.urlPathDao.removeAll(values);
     }
 
     @Override

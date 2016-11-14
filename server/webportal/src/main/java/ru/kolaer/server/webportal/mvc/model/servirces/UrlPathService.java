@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -12,7 +13,9 @@ public interface UrlPathService extends ServiceBase<WebPortalUrlPath> {
     WebPortalUrlPath getPathByUrl(String url);
     List<GeneralRolesEntity> getRoles(WebPortalUrlPath urlPath);
 
-    void createIsNone(WebPortalUrlPath urlPath);
+    void createOrUpdate(WebPortalUrlPath urlPath);
 
     void clear();
+
+    void removeAll(Collection<WebPortalUrlPath> values);
 }

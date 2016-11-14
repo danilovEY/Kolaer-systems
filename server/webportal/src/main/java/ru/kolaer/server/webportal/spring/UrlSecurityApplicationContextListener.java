@@ -16,11 +16,14 @@ import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPathBase;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.config.PathMapping;
+import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Считывание всех методов у бинов для поиска аннотации {@link UrlDeclaration}.
@@ -40,14 +43,15 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
     /***Сервис для работы с url.*/
     private UrlPathService urlPathService;
 
-    @Value("${hibernate.hbm2ddl.auto}")
-    private String hibGen;
+    private boolean isInit = false;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (!hibGen.equals("create")) {
+        if(isInit)
             return;
-        }
+
+        final Map<String, WebPortalUrlPath> mapUrlPaths = this.urlPathService.getAll().stream().collect(Collectors.toMap(w -> w.getUrl() + w.getRequestMethod(),w -> w));
+
         for(String beanName : event.getApplicationContext().getBeanDefinitionNames()) {
             final BeanDefinition bean = beanFactory.getBeanDefinition(beanName);
             final String beanClassName = bean.getBeanClassName();
@@ -82,27 +86,40 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
 
                     urlBuilder.append(methodMappingAnnotation.value()[0]);
 
-                    final List<String> accessList = new ArrayList<>();
-
                     final String url = urlBuilder.toString();
+                    final String requestMethodName = urlDeclaration.requestMethod().name();
+                    final String key = url + requestMethodName;
+                    WebPortalUrlPath urlPath = mapUrlPaths.get(key);
+                    if(urlPath == null) {
+                        urlPath = new WebPortalUrlPathBase();
+
+                        final List<String> accessList = new ArrayList<>();
+
+                        if(urlDeclaration.isAccessSuperAdmin())
+                            accessList.add("OIT");
+                        if(urlDeclaration.isAccessUser())
+                            accessList.add("Domain users");
+                        if(urlDeclaration.isAccessAll())
+                            accessList.add("ALL");
+
+                        urlPath.setAccesses(accessList);
+                    } else {
+                        mapUrlPaths.remove(key);
+                    }
+
                     final String description = urlDeclaration.description();
 
-                    if(urlDeclaration.isAccessSuperAdmin())
-                        accessList.add("OIT");
-                    if(urlDeclaration.isAccessUser())
-                        accessList.add("Domain users");
-                    if(urlDeclaration.isAccessAll())
-                        accessList.add("ALL");
-
-                    final WebPortalUrlPath urlPath = new WebPortalUrlPathBase();
                     urlPath.setUrl(url);
                     urlPath.setDescription(description);
-                    urlPath.setRequestMethod(urlDeclaration.requestMethod().name());
-                    urlPath.setAccesses(accessList);
-                    this.urlPathService.createIsNone(urlPath);
+                    urlPath.setRequestMethod(requestMethodName);
+
+                    this.urlPathService.createOrUpdate(urlPath);
                 }
             }
         }
+        this.urlPathService.removeAll(mapUrlPaths.values());
+        mapUrlPaths.clear();
+        this.isInit = true;
     }
 
     @Override
