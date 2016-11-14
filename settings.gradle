@@ -3,6 +3,7 @@ include 'api'
 
 include ':server:restful'
 include ':server:webportal'
+include ':server:web-forwarding'
 
 include ':client:usa'
 include ':client:birthday'
@@ -11,5 +12,4 @@ include ':client:browser'
 include ':client:asmc'
 include ':client:psr'
 include ':client:japc'
-
 

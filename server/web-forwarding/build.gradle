@@ -1,0 +1,27 @@
+group 'ru.kolaer'
+version '1.0.0'
+
+def name = "web-forwarding"
+def nameWarFile = name + ".war"
+
+apply plugin: 'groovy'
+
+dependencies {
+    compile "ch.qos.logback:logback-classic:1.1.3"
+    compile "javax.servlet:javax.servlet-api:3.1.0"
+}
+
+war {
+    archiveName = nameWarFile
+    baseName = name
+    webXml = file('src/main/webapp/WEB-INF/web.xml')
+}
+
+task buildApp(dependsOn: [clean, war]) {
+    doLast {
+        copy {
+            from 'build/libs/' + nameWarFile
+            into deployServerPath
+        }
+    }
+}
