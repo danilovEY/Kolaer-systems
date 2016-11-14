@@ -3,13 +3,13 @@ package ru.kolaer.server.webportal.mvc.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.mvc.model.dao.impl.DataBaseInitialization;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 
 import java.text.ParseException;
@@ -25,8 +25,13 @@ import java.util.List;
 @RequestMapping(value = "/general/employees")
 public class EmployeeController {
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeController.class);
+
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private DataBaseInitialization dataBaseInitialization;
+
 
     /**Получить всех сотрудников.*/
     @UrlDeclaration(description = "Получить всех сотрудников.", isAccessAll = true)
@@ -43,7 +48,6 @@ public class EmployeeController {
         final Date startDatePasre = sdf.parse(startDate);
         final Date endDatePasre = sdf.parse(endDate);
         return employeeService.getUserRangeBirthday(startDatePasre, endDatePasre);
-
     }
 
     @UrlDeclaration(description = "Получить всех сотрудников у кого сегодня день рождение.", isAccessAll = true)
@@ -59,7 +63,6 @@ public class EmployeeController {
 
         final Date datePasre = sdf.parse(date);
         return this.employeeService.getUsersByBirthday(datePasre);
-
     }
 
     @UrlDeclaration(description = "Получить колличество сотрудников у кого день рождение в определенную датату.", isAccessAll = true)
@@ -75,7 +78,13 @@ public class EmployeeController {
     @RequestMapping(value = "/get/by/initials/{initials}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GeneralEmployeesEntity> getUsersByInitials(final @PathVariable String initials) {
         List<GeneralEmployeesEntity> result = this.employeeService.getUsersByInitials(initials);
-        result.forEach(emp -> LOG.debug(emp.getDepartament().getAbbreviatedName()));
         return result;
+    }
+
+    @UrlDeclaration(description = "Обновить бвзу сотрудников из kolaer_base.")
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    public void updateEmployee() {
+        this.dataBaseInitialization.updateDataBase();
     }
 }

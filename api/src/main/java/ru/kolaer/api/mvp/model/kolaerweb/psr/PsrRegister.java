@@ -3,6 +3,7 @@ package ru.kolaer.api.mvp.model.kolaerweb.psr;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by danilovey on 29.07.2016.
  */
 @JsonDeserialize(as = PsrRegisterBase.class)
-public interface PsrRegister {
+public interface PsrRegister extends Serializable {
      Integer getId();
      void setId(Integer id);
 

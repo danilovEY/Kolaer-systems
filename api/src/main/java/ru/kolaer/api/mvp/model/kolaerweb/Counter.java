@@ -3,13 +3,14 @@ package ru.kolaer.api.mvp.model.kolaerweb;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by danilovey on 25.08.2016.
  */
 @JsonDeserialize(as = CounterBase.class)
-public interface Counter {
+public interface Counter extends Serializable {
     Integer getId();
     void setId(Integer id);
 

@@ -2,13 +2,14 @@ package ru.kolaer.api.mvp.model.kolaerweb.organizations;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by danilovey on 31.10.2016.
  */
 @JsonDeserialize(as = EmployeeOtherOrganizationBase.class)
- public interface EmployeeOtherOrganization {
+ public interface EmployeeOtherOrganization extends Serializable {
      short getId();
      void setId(short id);
 

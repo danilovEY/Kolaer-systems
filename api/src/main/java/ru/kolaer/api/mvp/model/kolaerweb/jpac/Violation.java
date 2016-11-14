@@ -3,13 +3,14 @@ package ru.kolaer.api.mvp.model.kolaerweb.jpac;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by danilovey on 06.09.2016.
  */
 @JsonDeserialize(contentAs = ViolationBase.class)
-public interface Violation {
+public interface Violation extends Serializable {
     /**Получить ID.*/
     Integer getId();
     void setId(Integer id);
