@@ -21,13 +21,21 @@ public class WebForwardingServlet extends HttpServlet {
 
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        String url = ((HttpServletRequest)req).getRequestURI();
+        final HttpServletRequest httpReq = (HttpServletRequest) req;
+
+        final String param = httpReq.getQueryString();
+        String url = httpReq.getRequestURI();
+
+        if(param  != null && !param.isEmpty())
+            url += "?" + param;
+
         logger.info("URL: {}",url);
 
+        final HttpServletResponse httpRes = (HttpServletResponse) res;
         if(this.flag.exists()) {
-            ((HttpServletResponse)res).sendRedirect("http://danilovey:8080" + url);
+            httpRes.sendRedirect("http://danilovey:8080" + url);
         } else {
-            ((HttpServletResponse)res).sendRedirect("http://js:8080" + url);
+            httpRes.sendRedirect("http://js:8080" + url);
         }
 
         super.service(req, res);
