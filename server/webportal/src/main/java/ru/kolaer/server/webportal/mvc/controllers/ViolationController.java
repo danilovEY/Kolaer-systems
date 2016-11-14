@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@RestController
-@RequestMapping(value = "/violations")
+//@RestController
+//@RequestMapping(value = "/violations")
 public class ViolationController {
 
     @Autowired

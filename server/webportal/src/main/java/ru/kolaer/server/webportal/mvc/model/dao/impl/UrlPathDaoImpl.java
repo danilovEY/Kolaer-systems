@@ -75,11 +75,7 @@ public class UrlPathDaoImpl implements UrlPathDao {
     @Transactional
     public void removeAll(Collection<WebPortalUrlPath> values) {
         for (WebPortalUrlPath value : values) {
-            this.sessionFactory.getCurrentSession()
-                    .createQuery("DELETE FROM WebPortalUrlPathDecorator w WHERE w.url = :url AND w.requestMethod = :requestMethod")
-                    .setParameter("url", value.getUrl())
-                    .setParameter("requestMethod", value.getRequestMethod())
-                    .executeUpdate();
+            this.sessionFactory.getCurrentSession().delete(value);
         }
 
     }

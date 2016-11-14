@@ -56,6 +56,7 @@ public class UrlPathServiceImpl implements UrlPathService {
                 this.urlPathDao.persist(new WebPortalUrlPathDecorator(urlPath));
             } else {
                 path.setDescription(urlPath.getDescription());
+                path.setAccesses(urlPath.getAccesses());
                 this.urlPathDao.update(path);
             }
         }

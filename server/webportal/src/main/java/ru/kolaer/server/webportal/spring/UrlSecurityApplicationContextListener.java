@@ -104,6 +104,18 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
 
                         urlPath.setAccesses(accessList);
                     } else {
+                        if(urlPath.getAccesses().size() == 0) {
+                            final List<String> accessList = new ArrayList<>();
+
+                            if(urlDeclaration.isAccessSuperAdmin())
+                                accessList.add("OIT");
+                            if(urlDeclaration.isAccessUser())
+                                accessList.add("Domain users");
+                            if(urlDeclaration.isAccessAll())
+                                accessList.add("ALL");
+
+                            urlPath.setAccesses(accessList);
+                        }
                         mapUrlPaths.remove(key);
                     }
 
