@@ -55,9 +55,12 @@ public class UrlPathServiceImpl implements UrlPathService {
             if(path == null) {
                 this.urlPathDao.persist(new WebPortalUrlPathDecorator(urlPath));
             } else {
-                path.setDescription(urlPath.getDescription());
-                path.setAccesses(urlPath.getAccesses());
-                this.urlPathDao.update(path);
+                if(path.getDescription().equals(urlPath.getDescription()) ||
+                        path.getAccesses().containsAll(urlPath.getAccesses())) {
+                    path.setAccesses(urlPath.getAccesses());
+                    path.setDescription(urlPath.getDescription());
+
+                }
             }
         }
     }
@@ -85,7 +88,7 @@ public class UrlPathServiceImpl implements UrlPathService {
 
     @Override
     public void add(WebPortalUrlPath entity) {
-        this.urlPathDao.persist(entity);
+        this.urlPathDao.persist(new WebPortalUrlPathDecorator(entity));
     }
 
     @Override
@@ -95,7 +98,7 @@ public class UrlPathServiceImpl implements UrlPathService {
 
     @Override
     public void update(WebPortalUrlPath entity) {
-
+        this.urlPathDao.update(entity);
     }
 
     @Override

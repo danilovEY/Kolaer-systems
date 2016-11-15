@@ -87,6 +87,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     urlBuilder.append(methodMappingAnnotation.value()[0]);
 
                     final String url = urlBuilder.toString();
+                    final String description = urlDeclaration.description();
                     final String requestMethodName = urlDeclaration.requestMethod().name();
                     final String key = url + requestMethodName;
                     WebPortalUrlPath urlPath = mapUrlPaths.get(key);
@@ -103,29 +104,19 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                             accessList.add("ALL");
 
                         urlPath.setAccesses(accessList);
+
+                        urlPath.setUrl(url);
+                        urlPath.setDescription(description);
+                        urlPath.setRequestMethod(requestMethodName);
+
+                        this.urlPathService.add(urlPath);
                     } else {
-                        if(urlPath.getAccesses().size() == 0) {
-                            final List<String> accessList = new ArrayList<>();
-
-                            if(urlDeclaration.isAccessSuperAdmin())
-                                accessList.add("OIT");
-                            if(urlDeclaration.isAccessUser())
-                                accessList.add("Domain users");
-                            if(urlDeclaration.isAccessAll())
-                                accessList.add("ALL");
-
-                            urlPath.setAccesses(accessList);
+                        if(!urlPath.getDescription().equals(description)) {
+                            urlPath.setDescription(description);
+                            this.urlPathService.update(urlPath);
                         }
                         mapUrlPaths.remove(key);
                     }
-
-                    final String description = urlDeclaration.description();
-
-                    urlPath.setUrl(url);
-                    urlPath.setDescription(description);
-                    urlPath.setRequestMethod(requestMethodName);
-
-                    this.urlPathService.createOrUpdate(urlPath);
                 }
             }
         }
