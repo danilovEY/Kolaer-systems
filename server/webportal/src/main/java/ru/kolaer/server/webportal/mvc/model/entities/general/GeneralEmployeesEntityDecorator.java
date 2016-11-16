@@ -82,7 +82,7 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
         this.generalEmployeesEntity.setMobileNumber(number);
     }
 
-    @Column(name = "phone_number", length = 15)
+    @Column(name = "phone_number", length = 30)
     public String getPhoneNumber() {
         return this.generalEmployeesEntity.getPhoneNumber();
     }

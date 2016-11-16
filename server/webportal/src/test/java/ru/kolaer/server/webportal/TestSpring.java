@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,7 @@ import ru.kolaer.server.webportal.config.SpringSecurityConfig;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
+import javax.naming.directory.*;
 import javax.naming.ldap.InitialLdapContext;
 
 /**
@@ -28,23 +27,45 @@ public class TestSpring {
     private InitialLdapContext ldapContext;
 
     @Test
+    @Ignore
     public void testJDBCController() {
         final SearchControls controls = new SearchControls();
         controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         controls.setReturningAttributes(new String[]{
-                "cn", "memberOf"
+                "cn", "memberOf", "employeeID", "distinguishedName"
         });
 
         try {
-            final NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(objectclass=group)", controls);
+            NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(& (userPrincipalName=temp1@kolaer.local)(objectClass=person))", controls);
+            SearchResult rslt = null;
             while (answer.hasMoreElements()) {
-                SearchResult rslt = (SearchResult) answer.next();
+                rslt = (SearchResult) answer.next();
                 Attributes attrs = rslt.getAttributes();
-                System.out.println(attrs.get("cn").get());
+                System.out.println(attrs);
             }
 
             answer.close();
-            System.out.println("AAAAAAAA");
+
+            Attributes attributes = rslt.getAttributes();
+            attributes.get("employeeID").add("7777");
+            ldapContext.modifyAttributes("CN=temp1", DirContext.REPLACE_ATTRIBUTE, attributes);
+
+            /*Attribute attribute = new BasicAttribute("employeeID",
+                    "7777");
+            // array of modified iteams
+            ModificationItem[] item = new ModificationItem[1];
+            // replacing the value
+            item[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, attribute);
+            // changing the value of the attribute
+
+
+            answer = this.ldapContext.search("", "(& (userPrincipalName=temp1@kolaer.local)(objectClass=person))", controls);
+            while (answer.hasMoreElements()) {
+                rslt = (SearchResult) answer.next();
+                Attributes attrs = rslt.getAttributes();
+                System.out.println("-------======: " + attrs);
+            }*/
+
         } catch (NamingException e) {
             e.printStackTrace();
         }

@@ -71,6 +71,7 @@ public class EmployeeOtherOrganizationServiceImpl implements EmployeeOtherOrgani
                     employee.setMobilePhone(mobilePhone);
                     employee.setPhone(phone);
                     employee.setEmail(email);
+                    employee.setOrganization(organization);
 
                     if(post.contains("Руководитель") || post.contains("Начальник")
                             || post.contains("Заместитель") || post.contains("заместитель")
@@ -95,7 +96,7 @@ public class EmployeeOtherOrganizationServiceImpl implements EmployeeOtherOrgani
                 }
             }
         }
-
+        logger.info("Employees size: {}", result.size());
         this.employeeOtherOrganizationDao.update(result);
     }
 
