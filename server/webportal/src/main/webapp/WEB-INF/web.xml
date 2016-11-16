@@ -10,12 +10,12 @@
 
 	<error-page>
 		<error-code>404</error-code>
-		<location>/rest//non-security/errors/404</location>
+		<location>/rest/non-security/errors/404</location>
 	</error-page>
 
 	<error-page>
 		<error-code>401</error-code>
-		<location>/rest//non-security/errors/401</location>
+		<location>/rest/non-security/errors/401</location>
 	</error-page>
 
 	<error-page>
@@ -23,5 +23,16 @@
 		<location>/rest/non-security/errors/503</location>
 	</error-page>
 
+	<filter>
+		<filter-name>simpleCORSFilter</filter-name>
+		<filter-class>
+			ru.kolaer.server.webportal.spring.SimpleCORSFilter
+		</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>simpleCORSFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 </web-app>
