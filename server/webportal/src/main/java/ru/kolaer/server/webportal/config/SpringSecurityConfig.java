@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
@@ -19,19 +21,26 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
+import ru.kolaer.server.webportal.spring.SimpleCORSFilter;
 
 import javax.annotation.Resource;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.ldap.InitialLdapContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Hashtable;
 
@@ -78,6 +87,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         .httpBasic()
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
                 .and()
+                .exceptionHandling().authenticationEntryPoint(new SimpleCORSFilter()).and()
         //Фильтер для проверки http request'а на наличие правильного токена
         .addFilterBefore(authenticationTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
         //Фильтер для проверки URL'ов.
