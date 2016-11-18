@@ -69,8 +69,8 @@ public class ConnectionKolaerWeb {
             UniformSystemEditorKitSingleton.getInstance().setUSNetwork(new NetworkUSImpl());
             //UniformSystemEditorKitSingleton.getInstance().getAuthentication().login(new UserAndPassJson("kolaeradmin", "kolaeradmin"));
             final NetworkUS networkUS = UniformSystemEditorKitSingleton.getInstance().getUSNetwork();
-            Integer i = networkUS.getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getCountUsersBirthday(new Date());
-            System.out.println(i);
+            //Integer i = networkUS.getRestfulServer().getKolaerDataBase().getUserBirthdayAllDataBase().getCountUsersBirthday(new Date());
+            //System.out.println(i);
             /*NotifyMessage mess = new NotifyMessageBase();
             mess.setMessage("Система обновлена до версии 2.0!");
             networkUS.getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().addNotifyMessage(mess);

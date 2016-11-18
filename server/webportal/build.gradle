@@ -60,14 +60,6 @@ war {
 apply plugin: 'io.github.robwin.swagger2markup'
 apply plugin: 'org.asciidoctor.convert'
 
-sourceSets {
-    swagger {
-        java {
-            srcDir file("${project.buildDir.path}/swagger/src/main/java")
-        }
-    }
-}
-
 convertSwagger2markup {
     inputDir file("docs/swagger")
     outputDir file("docs/asciidoc")
@@ -76,9 +68,9 @@ convertSwagger2markup {
 
 asciidoctor {
     dependsOn convertSwagger2markup
-    backends = ['pdf']
-    outputDir file("docs/asciidoc/")
-    sourceDir file("docs/asciidoc")
+    backends = ['html5']
+    outputDir file("src/main/webapp/asciidoc")
+    sourceDir file("src/main/webapp/asciidoc")
     attributes = [
             doctype: 'book',
             toc: 'left',

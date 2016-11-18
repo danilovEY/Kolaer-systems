@@ -105,7 +105,7 @@ public class PMainPaneImpl implements PMainPane {
         });
 
         account.getRoles().forEach(role -> {
-            if(role.getType() == EnumRole.ANONYMOUS) {
+            if(role.getType().equals(EnumRole.ANONYMOUS)) {
                 this.view.createPsrAction(e -> {
                     Alert warningAlert = new Alert(Alert.AlertType.ERROR);
                     warningAlert.setTitle("Ошибка");

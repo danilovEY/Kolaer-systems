@@ -145,7 +145,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
             final GeneralAccountsEntity accountsEntity = this.editorKit.getAuthentication().getAuthorizedUser();
 
             accountsEntity.getRoles().stream().map(GeneralRolesEntity::getType).forEach(role -> {
-                if(role == EnumRole.PSR_ADMIN || role == EnumRole.SUPER_ADMIN) {
+                //if(role == EnumRole.PSR_ADMIN || role == EnumRole.SUPER_ADMIN) {
                     final WizardPane editStatusPage = new WizardPane();
 
                     final ObservableList<PsrStatus> status = FXCollections.observableArrayList(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().getPsrStatusTable().getAllPsrStatus());
@@ -180,7 +180,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
 
                     wizardPaneList.add(editStatusPage);
                     return;
-                }
+                //}
             });
         }
 

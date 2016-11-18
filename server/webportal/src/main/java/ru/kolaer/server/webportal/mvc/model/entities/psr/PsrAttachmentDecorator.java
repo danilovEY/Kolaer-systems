@@ -1,8 +1,11 @@
 package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachment;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachmentBase;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 
 import javax.persistence.*;
 
@@ -11,7 +14,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "psr_attachment")
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@ApiModel(value="ПРС-вложения", description="Ссылки на ПСР-вложения.", subTypes = PsrAttachment.class)
 public class PsrAttachmentDecorator implements PsrAttachment {
     private PsrAttachment psrAttachment;
 
@@ -37,6 +40,7 @@ public class PsrAttachmentDecorator implements PsrAttachment {
 
 
     @Column(name = "name")
+    @ApiModelProperty(value = "Имя вложения")
     public String getName() {
         return this.psrAttachment.getName();
     }
@@ -46,6 +50,7 @@ public class PsrAttachmentDecorator implements PsrAttachment {
     }
 
     @Column(name = "path_file")
+    @ApiModelProperty(value = "Путь к вложению")
     public String getPathFile() {
         return this.psrAttachment.getPathFile();
     }
