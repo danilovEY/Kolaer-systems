@@ -7,6 +7,22 @@ def nameWarFile = name + ".war"
 
 apply plugin: 'groovy'
 
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'io.github.robwin:swagger2markup-gradle-plugin:0.9.2'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.10.1'
+        classpath "gradle.plugin.org.detoeuf:swagger-codegen-plugin:1.5.1"
+    }
+}
+
 dependencies {
     compile project(":api")
     compile 'commons-fileupload:commons-fileupload:1.3.2'
@@ -27,6 +43,9 @@ dependencies {
     compile "mysql:mysql-connector-java:5.1.38"
     compile "net.sourceforge.jexcelapi:jxl:2.6.12"
     compile "org.apache.poi:poi:3.15"
+    compile "io.swagger:swagger-jaxrs:1.5.10"
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.6.1'
+
 
     testCompile "junit:junit:4.12";
     testCompile "org.springframework:spring-test:4.3.1.RELEASE"
@@ -37,6 +56,41 @@ war {
     baseName = name
     webXml = file('src/main/webapp/WEB-INF/web.xml')
 }
+
+apply plugin: 'io.github.robwin.swagger2markup'
+apply plugin: 'org.asciidoctor.convert'
+
+sourceSets {
+    swagger {
+        java {
+            srcDir file("${project.buildDir.path}/swagger/src/main/java")
+        }
+    }
+}
+
+convertSwagger2markup {
+    inputDir file("docs/swagger")
+    outputDir file("docs/asciidoc")
+    pathsGroupedBy io.github.robwin.swagger2markup.GroupBy.TAGS
+}
+
+asciidoctor {
+    dependsOn convertSwagger2markup
+    backends = ['pdf']
+    outputDir file("docs/asciidoc/")
+    sourceDir file("docs/asciidoc")
+    attributes = [
+            doctype: 'book',
+            toc: 'left',
+            toclevels: '3',
+            numbered: '',
+            sectlinks: '',
+            sectanchors: '',
+            hardbreaks: '',
+            generated: file("docs/asciidoc")
+    ]
+}
+
 
 task renameResources(dependsOn: processResources) {
     doLast{

@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +27,13 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping(value = "/examples")
+@Api( description = "Примеры", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ExampleController {
 
     @Autowired
     private ServiceLDAP serviceLDAP;
 
+    @ApiOperation(value = "Получить пример журнала нарушений.", httpMethod = "GET", notes = "Fetch the admin user details", response = JournalViolationDecorator.class)
     @UrlDeclaration(description = "Пример нарушений", isAccessUser = true)
     @RequestMapping(value = "/violations/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<JournalViolationDecorator> insertViolations() {

@@ -24,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -37,6 +38,7 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
+@EnableSwagger2
 @ComponentScan({"ru.kolaer.server.webportal.spring",
         "ru.kolaer.server.webportal.beans",
         "ru.kolaer.server.webportal.mvc.model.dao.impl",
