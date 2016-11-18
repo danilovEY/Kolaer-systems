@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-//@RestController
-//@RequestMapping(value = "/violations")
+@RestController
+@RequestMapping(value = "/violations")
 public class ViolationController {
 
     @Autowired
@@ -36,42 +36,10 @@ public class ViolationController {
     @Autowired
     private JournalViolationService journalViolationService;
 
-    @Autowired
-    private ServiceLDAP serviceLDAP;
-
-    @UrlDeclaration(description = "Тестовая ссылка")
-    @RequestMapping(value = "/test/insert", method = RequestMethod.GET)
-    public ResponseEntity<List<JournalViolation>> insertViolations() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null)
-            throw new IllegalArgumentException("Authentication is null");
-
-        final GeneralEmployeesEntity generalEmployeesEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()).getGeneralEmployeesEntity();
-
-        final TypeViolationDecorator typeViolationDecorator = new TypeViolationDecorator();
-        typeViolationDecorator.setName("Тип нарушения1");
-
-        final ViolationDecorator violationDecorator = new ViolationDecorator();
-        violationDecorator.setTypeViolation(typeViolationDecorator);
-        violationDecorator.setStageEnum(StageEnum.I);
-        violationDecorator.setEffective(false);
-        violationDecorator.setViolation("Нарушение1");
-        violationDecorator.setExecutor(generalEmployeesEntity);
-        violationDecorator.setWriter(generalEmployeesEntity);
-        violationDecorator.setDateEndEliminationViolation(new Date());
-        violationDecorator.setDateLimitEliminationViolation(new Date());
-        violationDecorator.setStartMakingViolation(new Date());
-        violationDecorator.setTodo("Todo1");
-
-        final JournalViolationDecorator journalViolationDecorator = new JournalViolationDecorator();
-        journalViolationDecorator.setName("Новый журнал нарушений1");
-        journalViolationDecorator.setViolations(Arrays.asList(violationDecorator));
-
-        this.journalViolationService.add(journalViolationDecorator);
-
-        List<JournalViolation> all = this.journalViolationService.getAll();
-        return ResponseEntity.ok(all);
+    @UrlDeclaration(description = "Получить все журналы с нарушениями.")
+    @RequestMapping(value = "/journals/get/all")
+    public List<JournalViolation> getAllJournal() {
+        return this.journalViolationService.getAll();
     }
-
 
 }
