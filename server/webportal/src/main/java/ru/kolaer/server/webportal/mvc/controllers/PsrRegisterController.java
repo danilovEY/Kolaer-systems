@@ -69,7 +69,7 @@ public class PsrRegisterController {
     )
     @UrlDeclaration(description = "Добавить ПСР-проект.", isAccessUser = true)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public PsrRegister addPsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
+    public void addPsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
 
         final PsrStatus psrStatus = new PsrStatusDecorator();
@@ -80,7 +80,6 @@ public class PsrRegisterController {
         registerDto.setAuthor(serviceLDAP.getEmployeeByAuthentication());
 
         this.psrRegisterService.add(registerDto);
-        return this.psrRegisterService.getPsrRegisterByName(registerDto.getName());
     }
 
     @ApiOperation(
