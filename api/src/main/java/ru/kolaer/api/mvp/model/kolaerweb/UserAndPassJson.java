@@ -1,11 +1,19 @@
 package ru.kolaer.api.mvp.model.kolaerweb;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by danilovey on 28.07.2016.
  * Json структура для логина и пароля.
  */
+@ApiModel(value = "Логин и пароль")
 public class UserAndPassJson {
+
+    @ApiModelProperty(value = "Логин", required = true)
     private String username;
+
+    @ApiModelProperty(value = "Пароль")
     private String password;
 
     public UserAndPassJson(){

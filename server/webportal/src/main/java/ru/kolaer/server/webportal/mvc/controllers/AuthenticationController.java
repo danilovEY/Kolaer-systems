@@ -1,5 +1,8 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping(value = "/authentication")
+@Api(tags = "Аутентификация", description = "Работа с авторизацией")
 public class AuthenticationController {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationController.class);
 
@@ -50,6 +54,10 @@ public class AuthenticationController {
     @Autowired
     private ServiceLDAP serviceLDAP;
 
+    @ApiOperation(
+            value = "Выйти.",
+            notes = "Выйти."
+    )
     @UrlDeclaration(description = "Выйти.", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String logout(HttpServletResponse response, HttpServletRequest request) {
@@ -61,32 +69,45 @@ public class AuthenticationController {
         return "redirect:/";
     }
 
+    @ApiOperation(
+            value = "Выйти.",
+            notes = "Выйти."
+    )
     @UrlDeclaration(description = "Выйти.", requestMethod = RequestMethod.GET, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logoutGet(HttpServletResponse response, HttpServletRequest request) {
         return this.logout(response, request);
     }
 
-    /**Генерация пароля по строке.*/
+    @ApiOperation(
+            value = "Генерация пароля по строке.",
+            notes = "Генерация пароля по строке."
+    )
     @UrlDeclaration(description = "Генерация пароля по строке. (?pass={pass})", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/genpass", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public String getPass(@RequestParam("pass") String pass) {
+    public String getPass(@ApiParam(value = "Пароль", required = true) @RequestParam("pass") String pass) {
         return new StandardPasswordEncoder(secretKey).encode(pass);
     }
 
-    /**Авторизация.*/
+    @ApiOperation(
+            value = "Авторизация.",
+            notes = "Авторизация. (Генерация токена по имени и паролю пользователя)"
+    )
     @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public TokenJson getTokenPost(@RequestBody UserAndPassJson userAndPassJson){
+    public TokenJson getTokenPost(@ApiParam(value = "Логин и пароль", required = true) @RequestBody UserAndPassJson userAndPassJson){
         return this.getToken(userAndPassJson.getUsername(), Optional.ofNullable(userAndPassJson.getPassword()).orElse(""));
     }
 
 
-    /**Генерация токена по имени и паролю пользователя.*/
+    @ApiOperation(
+            value = "Авторизация с параметрами.",
+            notes = "Авторизация. (Генерация токена по имени и паролю пользователя) (?username={login}&password={pass})"
+    )
     @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя) (?username={login}&password={pass})", isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public TokenJson getToken(@RequestParam(value = "username", defaultValue = "anonymous") String username,
-                              @RequestParam(value = "password", defaultValue = "") String password){
+    public TokenJson getToken(@ApiParam(value = "Логин", required = true) @RequestParam(value = "username", defaultValue = "anonymous") String username,
+                              @ApiParam(value = "Пароль") @RequestParam(value = "password", defaultValue = "") String password){
         if(password == null)
             password = "";
         final UsernamePasswordAuthenticationToken authenticationToken =
