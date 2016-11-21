@@ -1,5 +1,8 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -15,21 +18,30 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
+@Api(tags = "URL пути", description = "Описание URL: путь и доступы.")
 public class UrlPathController {
 
     @Autowired
     private UrlPathService urlPathService;
 
-    /**Получить все URL.*/
+    @ApiOperation(
+            value = "Получить все URL",
+            notes = "Получить все URL"
+    )
     @UrlDeclaration(description = "Получить все URL.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<WebPortalUrlPath> getAllUrl() {
         return urlPathService.getAll();
     }
 
+    @ApiOperation(
+            value = "Получить роли по url",
+            notes = "Получить роли по url"
+    )
     @UrlDeclaration(description = "Получить роли по url.", isAccessAll = true)
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public WebPortalUrlPath getRoleByUrl(@RequestParam(value = "path") String path) {
+    public WebPortalUrlPath getRoleByUrl(
+            @ApiParam(value = "путь от корня", required = true) @RequestParam(value = "path") String path) {
         if(path == null || path.isEmpty())
             throw new IllegalArgumentException("Path is null!");
 
