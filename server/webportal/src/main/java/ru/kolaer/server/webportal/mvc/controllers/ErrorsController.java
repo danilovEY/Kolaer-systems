@@ -1,6 +1,8 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,9 +22,14 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping(value = "/non-security/errors")
+@Api(tags = "Ошибки", description = "Контроллер с ошибками")
 public class ErrorsController {
     private static final Logger logger = LoggerFactory.getLogger(ErrorsController.class);
 
+    @ApiOperation(
+            value = "404",
+            notes = "Страница не найдена"
+    )
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @RequestMapping(value = "/404")
     public ExceptionMessageRequest notFound(HttpServletRequest request) {
@@ -33,6 +40,10 @@ public class ErrorsController {
         return exep;
     }
 
+    @ApiOperation(
+            value = "401",
+            notes = "Не авторизовался"
+    )
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @RequestMapping(value = "/401")
     public ExceptionMessageRequest unAuthorized() {
@@ -42,12 +53,16 @@ public class ErrorsController {
         return exep;
     }
 
+    @ApiOperation(
+            value = "503",
+            notes = "Ошибка на сервере"
+    )
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @RequestMapping(value = "/503")
     @ExceptionHandler
     private ExceptionMessageRequest exception(HttpServletRequest request, Exception e) throws JsonProcessingException {
         final String origialUri = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
-        logger.error("Error on controller: {}", origialUri, (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION));
+        logger.error("Error on controller: {}", origialUri, request.getAttribute(RequestDispatcher.ERROR_EXCEPTION));
 
         return new ExceptionMessageRequest(Arrays.toString(e.getStackTrace()),
                 "503", new Date());
