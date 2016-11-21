@@ -35,7 +35,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping(value = "/authentication")
-@Api(tags = "Аутентификация", description = "Работа с авторизацией")
+@Api(description = "Работа с авторизацией", tags = "Аутентификация")
 public class AuthenticationController {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationController.class);
 
