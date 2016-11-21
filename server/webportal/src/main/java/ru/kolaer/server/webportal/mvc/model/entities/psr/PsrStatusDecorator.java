@@ -1,11 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Immutable;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatusBase;
-import ru.kolaer.server.webportal.mvc.model.dao.PsrStatusDao;
 
 import javax.persistence.*;
 
@@ -15,7 +12,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "psr_status")
 @Immutable
-@ApiModel(value="ПРС-статус", description="Статус ПСР-проекта.", subTypes = PsrStatus.class)
 public class PsrStatusDecorator implements PsrStatus {
     private PsrStatus psrProjectStatus;
 
@@ -40,7 +36,6 @@ public class PsrStatusDecorator implements PsrStatus {
 
 
     @Column(name = "type")
-    @ApiModelProperty(value = "Наименование типа.")
     public String getType() {
         return this.psrProjectStatus.getType();
     }

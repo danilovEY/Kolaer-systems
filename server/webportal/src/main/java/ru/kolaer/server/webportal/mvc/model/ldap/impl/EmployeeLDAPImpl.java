@@ -3,6 +3,10 @@ package ru.kolaer.server.webportal.mvc.model.ldap.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
@@ -48,5 +52,15 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
             LOG.error("Ошибка при получении аккаунта!", e);
         }
         return null;
+    }
+
+    @Override
+    public GeneralEmployeesEntity getEmployeeByAuthentication() {
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+            return this.getEmployeeByLogin(auth.getName());
+        }
+
+        throw new UsernameNotFoundException("NULL пользователь не найден!");
     }
 }

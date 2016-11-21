@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
-import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
+import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 
@@ -39,13 +38,12 @@ public class PsrRegisterController {
     private PsrStatusService psrStatusService;
 
     @Autowired
-    private EmployeeService employeeService;
+    private EmployeeLDAP employeeLDAP;
 
     /**Получить все статусы.*/
     @ApiOperation(
             value = "Получить все статусы.",
-            notes = "Получить все возможные статусы/положения для ПСР-проектов.",
-            response = PsrStatusDecorator[].class
+            notes = "Получить все возможные статусы/положения для ПСР-проектов."
     )
     @UrlDeclaration(description = "Получить все статусы.", isAccessAll = true)
     @RequestMapping(value = "/status/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -57,8 +55,7 @@ public class PsrRegisterController {
     /**Получить все ПСР-проекты.*/
     @ApiOperation(
             value = "Получить все ПСР-проекты.",
-            notes = "Получить все ПСР-проекты",
-            response = PsrRegisterDecorator[].class
+            notes = "Получить все ПСР-проекты"
     )
     @UrlDeclaration(description = "Получить все ПСР-проекты.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -70,10 +67,9 @@ public class PsrRegisterController {
     /**Добавить ПСР-проект.*/
     @ApiOperation(
             value = "Добавить ПСР-проект.",
-            notes = "Добавить ПСР-проект.",
-            response = PsrRegisterDecorator.class
+            notes = "Добавить ПСР-проект."
     )
-    @UrlDeclaration(description = "Добавить ПСР-проект.", isAccessAll = true)
+    @UrlDeclaration(description = "Добавить ПСР-проект.", isAccessUser = true)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister addPsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
@@ -83,7 +79,7 @@ public class PsrRegisterController {
         psrStatus.setType("Новый");
         registerDto.setStatus(psrStatus);
 
-        registerDto.setAuthor(this.employeeService.getById(register.getAuthor().getPnumber()));
+        registerDto.setAuthor(employeeLDAP.getEmployeeByAuthentication());
 
         this.psrRegisterService.add(registerDto);
         return this.psrRegisterService.getPsrRegisterByName(registerDto.getName());
@@ -94,7 +90,7 @@ public class PsrRegisterController {
             value = "Удалить ПСР-проект.",
             notes = "Удалить ПСР-проект."
     )
-    @UrlDeclaration(description = "Удалить ПСР-проект.", isAccessAll = true)
+    @UrlDeclaration(description = "Удалить ПСР-проект.", isAccessUser = true)
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void removePsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
@@ -106,7 +102,7 @@ public class PsrRegisterController {
             value = "Обновить ПСР-проект.",
             notes = "Обновить ПСР-проект."
     )
-    @UrlDeclaration(description = "Обновить ПСР-проект.", isAccessAll = true)
+    @UrlDeclaration(description = "Обновить ПСР-проект.", isAccessUser = true)
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updatePsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
@@ -115,9 +111,8 @@ public class PsrRegisterController {
 
     /**Получить все ПСР-проект. (только id и имя).*/
     @ApiOperation(
-            value = "Получить все ПСР-проект.",
-            notes = "Только id и имя.",
-            response = PsrRegisterDecorator[].class
+            value = "Получить все ПСР-проект (id, name).",
+            notes = "Только id и имя."
     )
     @UrlDeclaration(description = "Получить все ПСР-проект. (только id и имя).", isAccessAll = true)
     @RequestMapping(value = "/get/all/id-name", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

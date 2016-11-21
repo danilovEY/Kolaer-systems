@@ -7,4 +7,5 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
  */
 public interface EmployeeLDAP {
     GeneralEmployeesEntity getEmployeeByLogin(String login);
+    GeneralEmployeesEntity getEmployeeByAuthentication();
 }
