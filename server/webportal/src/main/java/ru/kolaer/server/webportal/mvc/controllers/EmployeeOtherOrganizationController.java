@@ -49,7 +49,7 @@ public class EmployeeOtherOrganizationController {
 	}
 
 	@ApiOperation(
-			value = "Получить число строк общего колличества сотрудников",
+			value = "Получить число (колличество сотрудников)",
 			notes = "Получить число строк общего колличества сотрудников"
 	)
 	@UrlDeclaration(description = "Получить число строк общего колличества сотрудников.", isAccessAll = true)
@@ -59,7 +59,7 @@ public class EmployeeOtherOrganizationController {
 	}
 
 	@ApiOperation(
-			value = "Получить сотрудников в периоде числа",
+			value = "Получить сотрудников (в периоде)",
 			notes = "Получить сотрудников в периоде числа"
 	)
 	@UrlDeclaration(description = "Получить сотрудников в периоде числа.", isAccessAll = true)
@@ -82,7 +82,7 @@ public class EmployeeOtherOrganizationController {
 	}
 
 	@ApiOperation(
-			value = "Получить сотрудников у кого сегодня день рождения",
+			value = "Получить сотрудников (сегодня)",
 			notes = "Получить сотрудников у кого сегодня день рождения"
 	)
 	@UrlDeclaration(description = "Получить сотрудников у кого сегодня день рождения.", isAccessAll = true)
@@ -92,7 +92,7 @@ public class EmployeeOtherOrganizationController {
 	}
 
 	@ApiOperation(
-			value = "Получить сотрудников у кого день рождение в указанный день",
+			value = "Получить сотрудников (в указанный день)",
 			notes = "Получить сотрудников у кого день рождение в указанный день"
 	)
 	@UrlDeclaration(description = "Получить сотрудников у кого день рождение в указанный день.", isAccessAll = true)
@@ -113,7 +113,7 @@ public class EmployeeOtherOrganizationController {
 	}
 
 	@ApiOperation(
-			value = "Получить сотрудников у кого день рождение в указанный день из указанной организации",
+			value = "Получить сотрудников (в указанный день и организации)",
 			notes = "Получить сотрудников у кого день рождение в указанный день из указанной организации"
 	)
 	@UrlDeclaration(description = "Получить сотрудников у кого день рождение в указанный день из указанной организации.", isAccessAll = true)
@@ -145,7 +145,7 @@ public class EmployeeOtherOrganizationController {
 	}
 
 	@ApiOperation(
-			value = "Получить число сотрудников у кого день рождение в указанный день",
+			value = "Получить число сотрудников (в указанный день)",
 			notes = "Получить число сотрудников у кого день рождение в указанный день"
 	)
 	@UrlDeclaration(description = "Получить число сотрудников у кого день рождение в указанный день.", isAccessAll = true)
@@ -165,7 +165,7 @@ public class EmployeeOtherOrganizationController {
 	}
 
 	@ApiOperation(
-			value = "Получить число сотрудников у кого день рождение в указанный день из указанной организации",
+			value = "Получить число сотрудников (в указанный день и организации)",
 			notes = "Получить число сотрудников у кого день рождение в указанный день из указанной организации"
 	)
 	@UrlDeclaration(description = "Получить число сотрудников у кого день рождение в указанный день из указанной организации.", isAccessAll = true)

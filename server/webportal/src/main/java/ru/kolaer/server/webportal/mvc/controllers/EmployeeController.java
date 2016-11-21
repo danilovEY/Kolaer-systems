@@ -48,7 +48,7 @@ public class EmployeeController {
     }
 
     @ApiOperation(
-            value = "Получить всех сотрудников у кого день рождение между датами",
+            value = "Получить всех сотрудников (между датами)",
             notes = "Получить всех сотрудников у кого день рождение между датами"
     )
     @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение между датами.", isAccessAll = true)
@@ -66,7 +66,7 @@ public class EmployeeController {
     }
 
     @ApiOperation(
-            value = "Получить всех сотрудников у кого сегодня день рождение",
+            value = "Получить всех сотрудников (сегодня)",
             notes = "Получить всех сотрудников у кого сегодня день рождение"
     )
     @UrlDeclaration(description = "Получить всех сотрудников у кого сегодня день рождение.", isAccessAll = true)
@@ -77,7 +77,7 @@ public class EmployeeController {
 
 
     @ApiOperation(
-            value = "Получить всех сотрудников у кого день рождение в определенную дату",
+            value = "Получить всех сотрудников (в определенную дату)",
             notes = "Получить всех сотрудников у кого день рождение в определенную дату"
     )
     @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение в определенную дату.", isAccessAll = true)
@@ -93,7 +93,7 @@ public class EmployeeController {
     }
 
     @ApiOperation(
-            value = "Получить колличество сотрудников у кого день рождение в определенную датату",
+            value = "Получить колличество сотрудников (в определенную датату)",
             notes = "Получить колличество сотрудников у кого день рождение в определенную датату"
     )
     @UrlDeclaration(description = "Получить колличество сотрудников у кого день рождение в определенную датату.", isAccessAll = true)
@@ -121,10 +121,10 @@ public class EmployeeController {
     }
 
     @ApiOperation(
-            value = "Обновить бвзу сотрудников из kolaer_base.db_date_all",
-            notes = "Обновить бвзу сотрудников из kolaer_base.db_date_all"
+            value = "Обновить базу сотрудников",
+            notes = "Обновить базу сотрудников из kolaer_base.db_date_all"
     )
-    @UrlDeclaration(description = "Обновить бвзу сотрудников из kolaer_base.")
+    @UrlDeclaration(description = "Обновить базу сотрудников из kolaer_base.")
     @RequestMapping(value = "/update", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     public void updateEmployee() {
