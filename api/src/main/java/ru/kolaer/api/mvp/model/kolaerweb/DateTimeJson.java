@@ -1,5 +1,7 @@
 package ru.kolaer.api.mvp.model.kolaerweb;
 
+import io.swagger.annotations.ApiModel;
+
 /**
  * Created by danilovey on 25.08.2016.
  */
