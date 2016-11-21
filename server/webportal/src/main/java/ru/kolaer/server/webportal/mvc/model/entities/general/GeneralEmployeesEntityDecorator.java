@@ -93,7 +93,7 @@ public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
     }
 
     @Column(name = "birthday")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getBirthday() {
         return this.generalEmployeesEntity.getBirthday();
     }

@@ -25,10 +25,10 @@ public class PsrRegisterDecorator implements PsrRegister {
 
     public PsrRegisterDecorator(PsrRegister psrRegister) {
         this.psrRegister = psrRegister;
-        this.setStateList(psrRegister.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList()));
-        this.setAuthor(new GeneralEmployeesEntityDecorator(psrRegister.getAuthor()));
-        this.setStatus(new PsrStatusDecorator(psrRegister.getStatus()));
-        this.setStateList(psrRegister.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList()));
+        //this.setStateList(psrRegister.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList()));
+        //this.setAuthor(new GeneralEmployeesEntityDecorator(psrRegister.getAuthor()));
+        //this.setStatus(new PsrStatusDecorator(psrRegister.getStatus()));
+        //this.setStateList(psrRegister.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList()));
     }
 
     @Id
@@ -84,7 +84,7 @@ public class PsrRegisterDecorator implements PsrRegister {
 
 
     @Column(name = "date_open", nullable = true)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDateOpen() {
         return this.psrRegister.getDateOpen();
     }
@@ -95,7 +95,7 @@ public class PsrRegisterDecorator implements PsrRegister {
 
 
     @Column(name = "date_close")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDateClose() {
         return this.psrRegister.getDateClose();
     }
@@ -105,7 +105,7 @@ public class PsrRegisterDecorator implements PsrRegister {
     }
 
 
-    @Column(name = "comment")
+    @Column(name = "comment", length = 1000)
     public String getComment() {
         return this.psrRegister.getComment();
     }

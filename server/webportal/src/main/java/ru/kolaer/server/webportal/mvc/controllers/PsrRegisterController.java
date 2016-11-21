@@ -19,6 +19,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
+import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class PsrRegisterController {
     private PsrStatusService psrStatusService;
 
     @Autowired
-    private EmployeeLDAP employeeLDAP;
+    private ServiceLDAP serviceLDAP;
 
     @ApiOperation(
             value = "Получить все статусы.",
@@ -76,7 +77,7 @@ public class PsrRegisterController {
         psrStatus.setType("Новый");
         registerDto.setStatus(psrStatus);
 
-        registerDto.setAuthor(employeeLDAP.getEmployeeByAuthentication());
+        registerDto.setAuthor(serviceLDAP.getEmployeeByAuthentication());
 
         this.psrRegisterService.add(registerDto);
         return this.psrRegisterService.getPsrRegisterByName(registerDto.getName());

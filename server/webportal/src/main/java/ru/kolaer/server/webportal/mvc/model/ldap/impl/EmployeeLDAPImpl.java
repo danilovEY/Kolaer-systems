@@ -53,14 +53,4 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
         }
         return null;
     }
-
-    @Override
-    public GeneralEmployeesEntity getEmployeeByAuthentication() {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){
-            return this.getEmployeeByLogin(auth.getName());
-        }
-
-        throw new UsernameNotFoundException("NULL пользователь не найден!");
-    }
 }
