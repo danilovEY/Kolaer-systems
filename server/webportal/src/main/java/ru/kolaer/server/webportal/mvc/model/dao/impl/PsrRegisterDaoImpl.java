@@ -63,6 +63,14 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     }
 
     @Override
+    @Transactional
+    public void deleteById(Integer ID) {
+        this.sessionFactory.getCurrentSession()
+                .createQuery("DELETE FROM PsrRegisterDecorator reg WHERE reg.id = :id")
+                .setParameter("id", ID).executeUpdate();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public PsrRegister getPsrRegisterByName(String name) {
         return (PsrRegister) this.sessionFactory.getCurrentSession().createQuery("FROM PsrRegisterDecorator psr WHERE psr.name = :name").setParameter("name", name).uniqueResult();

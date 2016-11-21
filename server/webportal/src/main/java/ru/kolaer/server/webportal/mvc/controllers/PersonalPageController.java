@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -21,6 +23,7 @@ import ru.kolaer.server.webportal.security.UnauthorizedEntryPoint;
  */
 @RestController
 @RequestMapping(value = "/personal_page")
+@Api(tags = "Персональная страница", description = "Все данные для персональной станици")
 public class PersonalPageController {
 
     @Autowired
@@ -29,6 +32,10 @@ public class PersonalPageController {
     @Autowired
     private ServiceLDAP serviceLDAP;
 
+    @ApiOperation(
+            value = "Получить данные для персональной страници",
+            notes = "Получить данные для персональной страници"
+    )
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @UrlDeclaration(description = "Получить данные для персональной страници", isAccessUser = true)
     public PersonalPageData getPersonalPageData() {

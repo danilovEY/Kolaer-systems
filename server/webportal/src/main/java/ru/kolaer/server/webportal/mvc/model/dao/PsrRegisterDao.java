@@ -9,5 +9,6 @@ import java.util.List;
  */
 public interface PsrRegisterDao extends DaoStandard<PsrRegister> {
     List<PsrRegister> getIdAndNamePsrRegister();
+    void deleteById(Integer ID);
     PsrRegister getPsrRegisterByName(String name);
 }

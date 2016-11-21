@@ -40,7 +40,6 @@ public class PsrRegisterController {
     @Autowired
     private EmployeeLDAP employeeLDAP;
 
-    /**Получить все статусы.*/
     @ApiOperation(
             value = "Получить все статусы.",
             notes = "Получить все возможные статусы/положения для ПСР-проектов."
@@ -52,7 +51,6 @@ public class PsrRegisterController {
         return list;
     }
 
-    /**Получить все ПСР-проекты.*/
     @ApiOperation(
             value = "Получить все ПСР-проекты.",
             notes = "Получить все ПСР-проекты"
@@ -64,7 +62,6 @@ public class PsrRegisterController {
         return list;
     }
 
-    /**Добавить ПСР-проект.*/
     @ApiOperation(
             value = "Добавить ПСР-проект.",
             notes = "Добавить ПСР-проект."
@@ -85,7 +82,6 @@ public class PsrRegisterController {
         return this.psrRegisterService.getPsrRegisterByName(registerDto.getName());
     }
 
-    /**Добавить ПСР-проект.*/
     @ApiOperation(
             value = "Удалить ПСР-проект.",
             notes = "Удалить ПСР-проект."
@@ -93,11 +89,20 @@ public class PsrRegisterController {
     @UrlDeclaration(description = "Удалить ПСР-проект.", isAccessUser = true)
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void removePsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
-        PsrRegister registerDto = new PsrRegisterDecorator(register);
-        this.psrRegisterService.delete(registerDto);
+        this.psrRegisterService.deletePstRegister(register.getId());
     }
 
-    /**Обновить ПСР-проект.*/
+    @ApiOperation(
+            value = "Удалить ПСР-проект.",
+            notes = "Удалить ПСР-проект."
+    )
+    @UrlDeclaration(description = "Удалить ПСР-проекты.", isAccessUser = true)
+    @RequestMapping(value = "/delete/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void removePsrRegisterList(
+            @ApiParam(value = "ПСР-проекты", required = true) @RequestBody List<PsrRegister> registers) {
+        this.psrRegisterService.deletePstRegisterListById(registers);
+    }
+
     @ApiOperation(
             value = "Обновить ПСР-проект.",
             notes = "Обновить ПСР-проект."
@@ -109,7 +114,6 @@ public class PsrRegisterController {
         this.psrRegisterService.update(registerDto);
     }
 
-    /**Получить все ПСР-проект. (только id и имя).*/
     @ApiOperation(
             value = "Получить все ПСР-проект (id, name).",
             notes = "Только id и имя."

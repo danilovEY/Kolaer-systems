@@ -70,7 +70,7 @@ asciidoctor {
     dependsOn convertSwagger2markup
     backends = ['html5']
     outputDir file("src/main/webapp/asciidoc")
-    sourceDir file("src/main/webapp/asciidoc")
+    sourceDir file("docs/asciidoc")
     attributes = [
             doctype: 'book',
             toc: 'left',

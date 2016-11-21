@@ -62,6 +62,19 @@ public class PsrRegisterServiceImpl implements PsrRegisterService {
     }
 
     @Override
+    public void deletePstRegister(Integer ID) {
+        if(ID != null && ID >= 0) {
+            this.psrRegisterDao.deleteById(ID);
+        } else
+            throw new IllegalArgumentException("Psr register ID in NULL!");
+    }
+
+    @Override
+    public void deletePstRegisterListById(List<PsrRegister> registers) {
+        registers.stream().map(PsrRegister::getId).forEach(this::deletePstRegister);
+    }
+
+    @Override
     public List<PsrRegister> getIdAndNamePsrRegisters() {
         return this.psrRegisterDao.getIdAndNamePsrRegister();
     }

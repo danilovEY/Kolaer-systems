@@ -9,5 +9,7 @@ import java.util.List;
  */
 public interface PsrRegisterService extends ServiceBase<PsrRegister> {
     PsrRegister getPsrRegisterByName(String name);
+    void deletePstRegister(Integer ID);
+    void deletePstRegisterListById(List<PsrRegister> registers);
     List<PsrRegister> getIdAndNamePsrRegisters();
 }
