@@ -1,11 +1,20 @@
 package ru.kolaer.api.mvp.model.kolaerweb;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by danilovey on 31.10.2016.
  */
+@ApiModel(value = "Праздник")
 public class Holiday {
+    @ApiModelProperty(value = "Наименование праздника")
     private String name;
+
+    @ApiModelProperty(value = "Дата праздника")
     private String date;
+
+    @ApiModelProperty(value = "Тип праздника")
     private TypeDay typeDay;
 
     public Holiday() {}
