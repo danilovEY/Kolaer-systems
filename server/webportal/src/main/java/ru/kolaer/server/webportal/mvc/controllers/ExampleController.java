@@ -27,16 +27,19 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping(value = "/examples")
-@Api( description = "Примеры", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@Api( tags = "Примеры", description = "Примеры объектов", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ExampleController {
 
     @Autowired
     private ServiceLDAP serviceLDAP;
 
-    @ApiOperation(value = "Получить пример журнала нарушений.", httpMethod = "GET", notes = "Fetch the admin user details", response = JournalViolationDecorator.class)
+    @ApiOperation(
+            value = "Получить пример журнала нарушений",
+            notes = "Получить пример журнала нарушений"
+    )
     @UrlDeclaration(description = "Пример нарушений", isAccessUser = true)
     @RequestMapping(value = "/violations/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<JournalViolationDecorator> insertViolations() {
+    public ResponseEntity<JournalViolation> insertViolations() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null)
             throw new IllegalArgumentException("Authentication is null");
