@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,11 +18,16 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/dc")
+@Api(tags = "Домен")
 public class DomainController {
 
     @Autowired
     private RoleLDAP roleLDAP;
 
+    @ApiOperation(
+            value = "Получить все роли из DC",
+            notes = "Получить все роли из DC"
+    )
     @UrlDeclaration(description = "Получить все роли из DC.")
     @RequestMapping(value = "/get/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<GeneralRolesEntity> getAllRolesFromDC() {
