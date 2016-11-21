@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/violations")
+@Api(tags = "Нарушения")
 public class ViolationController {
 
     @Autowired
@@ -36,6 +39,10 @@ public class ViolationController {
     @Autowired
     private JournalViolationService journalViolationService;
 
+    @ApiOperation(
+            value = "Получить все журналы с нарушениями",
+            notes = "Получить все журналы с нарушениями"
+    )
     @UrlDeclaration(description = "Получить все журналы с нарушениями.")
     @RequestMapping(value = "/journals/get/all")
     public List<JournalViolation> getAllJournal() {
