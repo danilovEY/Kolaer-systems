@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +34,17 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping(value = "/user")
+@Api(tags = "Аккаунт")
 public class UserController {
     private final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private ServiceLDAP serviceLDAP;
 
+    @ApiOperation(
+            value = "Получить авторизированный аккаунт",
+            notes = "Получить авторизированный аккаунт"
+    )
     @UrlDeclaration(description = "Получить авторизированный аккаунт.", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public GeneralAccountsEntity getUser() {
@@ -47,6 +54,10 @@ public class UserController {
         return this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName());
     }
 
+    @ApiOperation(
+            value = "Получить роли авторизированного аккаунта",
+            notes = "Получить роли авторизированного аккаунта"
+    )
     @UrlDeclaration(description = "Получить роли авторизированного аккаунта.", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/roles/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<GeneralRolesEntity> getUserRoles() {
@@ -91,6 +102,10 @@ public class UserController {
         return imgByte;
     }
 
+    @ApiOperation(
+            value = "Получить фото аккаунта",
+            notes = "Получить фото аккаунта"
+    )
     @UrlDeclaration(description = "Получить фото аккаунта.", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/photo/get", method = RequestMethod.GET)
     public void showImage(HttpServletResponse response) throws Exception {
@@ -106,6 +121,10 @@ public class UserController {
         responseOutputStream.close();
     }
 
+    @ApiOperation(
+            value = "Получить массив байт фото аккаунта",
+            notes = "Получить массив байт фото аккаунта"
+    )
     @UrlDeclaration(description = "Получить массив байт фото аккаунта.", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/photo/get/byte", method = RequestMethod.GET)
     public String getByteImage() throws Exception {
