@@ -1,6 +1,9 @@
 package ru.kolaer.api.mvp.model.kolaerweb.organizations;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -9,37 +12,49 @@ import java.util.Date;
  * Created by danilovey on 31.10.2016.
  */
 @JsonDeserialize(as = EmployeeOtherOrganizationBase.class)
+@ApiModel(value = "Сотрудник филиала")
  public interface EmployeeOtherOrganization extends Serializable {
-     short getId();
-     void setId(short id);
+    short getId();
+    void setId(short id);
 
-     Date getBirthday();
-     void setBirthday(Date birthday);
+    @JsonFormat(locale = "ru", shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Europe/Moscow")
+    @ApiModelProperty(value = "День рождения")
+    Date getBirthday();
+    void setBirthday(Date birthday);
 
-     String getCategoryUnit();
-     void setCategoryUnit(String categoryUnit);
+    @ApiModelProperty(value = "Категория сотрудника")
+    String getCategoryUnit();
+    void setCategoryUnit(String categoryUnit);
 
-     String getDepartament();
-     void setDepartament(String departament);
+    @ApiModelProperty(value = "Наименование подразделения")
+    String getDepartament();
+    void setDepartament(String departament);
 
-     String getEmail();
-     void setEmail(String email);
+    @ApiModelProperty(value = "E-Mail")
+    String getEmail();
+    void setEmail(String email);
 
-     String getInitials();
-     void setInitials(String initials);
+    @ApiModelProperty(value = "Инициалы")
+    String getInitials();
+    void setInitials(String initials);
 
-     String getMobilePhone();
-     void setMobilePhone(String mobilePhone);
+    @ApiModelProperty(value = "Мобильный номер")
+    String getMobilePhone();
+    void setMobilePhone(String mobilePhone);
 
-     String getPhone();
-     void setPhone(String phone);
+    @ApiModelProperty(value = "Телефонный номер")
+    String getPhone();
+    void setPhone(String phone);
 
-     String getPost();
-     void setPost(String post);
+    @ApiModelProperty(value = "Должность")
+    String getPost();
+    void setPost(String post);
 
-     String getOrganization();
-     void setOrganization(String organization);
+    @ApiModelProperty(value = "Наименование организации")
+    String getOrganization();
+    void setOrganization(String organization);
 
-     String getvCard();
-     void setvCard(String vCard);
+    @ApiModelProperty(value = "Ссылка на фото")
+    String getvCard();
+    void setvCard(String vCard);
 }
