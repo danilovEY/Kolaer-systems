@@ -60,11 +60,12 @@ public class ErrorsController {
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @RequestMapping(value = "/503")
     @ExceptionHandler
-    private ExceptionMessageRequest exception(HttpServletRequest request, Exception e) throws JsonProcessingException {
+    private ExceptionMessageRequest exception(HttpServletRequest request) throws JsonProcessingException {
         final String origialUri = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
-        logger.error("Error on controller: {}", origialUri, request.getAttribute(RequestDispatcher.ERROR_EXCEPTION));
+        final Exception exception = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+        logger.error("Error on controller: {}", origialUri, exception);
 
-        return new ExceptionMessageRequest(Arrays.toString(e.getStackTrace()),
+        return new ExceptionMessageRequest(exception.getCause().getMessage(),
                 "503", new Date());
     }
 
