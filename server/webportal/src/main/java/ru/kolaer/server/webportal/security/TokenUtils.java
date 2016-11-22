@@ -1,8 +1,11 @@
 package ru.kolaer.server.webportal.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.codec.Hex;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -12,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
  * Created by danilovey on 02.08.2016.
  */
 public class TokenUtils {
+    private static final Logger logger = LoggerFactory.getLogger(TokenUtils.class);
     public static final String MAGIC_KEY = "obfuscate";
 
     /**
@@ -24,7 +28,12 @@ public class TokenUtils {
         long expires = System.currentTimeMillis() + 1000L * 60 * 60 * 24;
 
         StringBuilder tokenBuilder = new StringBuilder();
-        tokenBuilder.append(username);
+        try {
+            tokenBuilder.append(java.util.Base64.getEncoder().encodeToString(username.getBytes("utf-8")));
+        } catch (UnsupportedEncodingException e) {
+            logger.error("Невозможно кодировать слово: {}", username, e);
+            tokenBuilder.append(username);
+        }
         tokenBuilder.append(":");
         tokenBuilder.append(expires);
         tokenBuilder.append(":");
@@ -77,8 +86,13 @@ public class TokenUtils {
             return null;
         }
 
-        String[] parts = authToken.split(":");
-        return parts[0];
+        String userName = authToken.split(":")[0];
+        try {
+            userName = new String(java.util.Base64.getDecoder().decode(userName), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return userName;
     }
 
     /**

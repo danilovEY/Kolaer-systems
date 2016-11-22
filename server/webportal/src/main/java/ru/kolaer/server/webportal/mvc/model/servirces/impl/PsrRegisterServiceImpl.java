@@ -87,7 +87,7 @@ public class PsrRegisterServiceImpl implements PsrRegisterService {
 
     @Override
     public boolean uniquePsrRegister(PsrRegister psrRegister) {
-        return psrRegister != null && this.psrRegisterDao.getCountEqualsPsrRegister(psrRegister).equals(0);
+        return psrRegister != null && this.psrRegisterDao.getCountEqualsPsrRegister(psrRegister).equals(0L);
     }
 
     @Override
