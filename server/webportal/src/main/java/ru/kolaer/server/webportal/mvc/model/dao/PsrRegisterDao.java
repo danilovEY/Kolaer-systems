@@ -11,4 +11,6 @@ public interface PsrRegisterDao extends DaoStandard<PsrRegister> {
     List<PsrRegister> getIdAndNamePsrRegister();
     void deleteById(Integer ID);
     PsrRegister getPsrRegisterByName(String name);
+    Object getCountEqualsPsrRegister(PsrRegister psrRegister);
+    List getPsrRegisterByStatusTitleComment(Integer status, String name, String comment);
 }

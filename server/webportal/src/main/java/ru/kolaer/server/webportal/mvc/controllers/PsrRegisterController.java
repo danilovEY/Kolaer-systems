@@ -16,7 +16,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
-import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
@@ -69,7 +68,7 @@ public class PsrRegisterController {
     )
     @UrlDeclaration(description = "Добавить ПСР-проект.", isAccessUser = true)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void addPsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
+    public PsrRegister addPsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
 
         final PsrStatus psrStatus = new PsrStatusDecorator();
@@ -77,9 +76,14 @@ public class PsrRegisterController {
         psrStatus.setType("Новый");
         registerDto.setStatus(psrStatus);
 
-        registerDto.setAuthor(serviceLDAP.getEmployeeByAuthentication());
+        if(this.psrRegisterService.uniquePsrRegister(register)) {
+            registerDto.setAuthor(serviceLDAP.getEmployeeByAuthentication());
 
-        this.psrRegisterService.add(registerDto);
+            this.psrRegisterService.add(registerDto);
+            return this.psrRegisterService.getLastInsertPsrRegister(register);
+        } else {
+            throw new IllegalArgumentException("ПСР-проект не уникальный!");
+        }
     }
 
     @ApiOperation(

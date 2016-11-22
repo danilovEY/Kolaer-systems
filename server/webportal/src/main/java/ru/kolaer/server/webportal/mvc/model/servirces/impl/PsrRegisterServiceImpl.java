@@ -75,6 +75,22 @@ public class PsrRegisterServiceImpl implements PsrRegisterService {
     }
 
     @Override
+    public PsrRegister getLastInsertPsrRegister(PsrRegister psrRegister) {
+        final List<PsrRegister> results = this.psrRegisterDao
+                .getPsrRegisterByStatusTitleComment(psrRegister.getStatus().getId(), psrRegister.getName(), psrRegister.getComment());
+
+        if(results.size() != 1)
+            throw new IllegalArgumentException("Таких проектов больше чем 1!");
+        else
+            return results.get(0);
+    }
+
+    @Override
+    public boolean uniquePsrRegister(PsrRegister psrRegister) {
+        return psrRegister != null && this.psrRegisterDao.getCountEqualsPsrRegister(psrRegister).equals(0);
+    }
+
+    @Override
     public List<PsrRegister> getIdAndNamePsrRegisters() {
         return this.psrRegisterDao.getIdAndNamePsrRegister();
     }

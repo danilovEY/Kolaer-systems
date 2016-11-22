@@ -11,5 +11,7 @@ public interface PsrRegisterService extends ServiceBase<PsrRegister> {
     PsrRegister getPsrRegisterByName(String name);
     void deletePstRegister(Integer ID);
     void deletePstRegisterListById(List<PsrRegister> registers);
+    PsrRegister getLastInsertPsrRegister(PsrRegister psrRegister);
+    boolean uniquePsrRegister(PsrRegister psrRegister);
     List<PsrRegister> getIdAndNamePsrRegisters();
 }

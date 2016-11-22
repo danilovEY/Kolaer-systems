@@ -73,6 +73,30 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     @Override
     @Transactional(readOnly = true)
     public PsrRegister getPsrRegisterByName(String name) {
-        return (PsrRegister) this.sessionFactory.getCurrentSession().createQuery("FROM PsrRegisterDecorator psr WHERE psr.name = :name").setParameter("name", name).uniqueResult();
+        return (PsrRegister) this.sessionFactory.getCurrentSession()
+                .createQuery("FROM PsrRegisterDecorator psr WHERE psr.name = :name")
+                .setParameter("name", name).uniqueResult();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long getCountEqualsPsrRegister(PsrRegister psrRegister) {
+        return (Long) this.sessionFactory.getCurrentSession().createQuery("SELECT COUNT(*) FROM PsrRegisterDecorator psr " +
+                "WHERE psr.status.id = :status AND psr.name = :name AND psr.comment = :comment")
+                .setParameter("status", psrRegister.getStatus().getId())
+                .setParameter("name", psrRegister.getName())
+                .setParameter("comment", psrRegister.getComment())
+                .uniqueResult();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PsrRegister> getPsrRegisterByStatusTitleComment(Integer status, String name, String comment) {
+        return this.sessionFactory.getCurrentSession().createQuery("FROM PsrRegisterDecorator psr " +
+                "WHERE psr.status.id = :status AND psr.name = :name AND psr.comment = :comment")
+                .setParameter("status", status)
+                .setParameter("name", name)
+                .setParameter("comment", comment)
+                .list();
     }
 }
