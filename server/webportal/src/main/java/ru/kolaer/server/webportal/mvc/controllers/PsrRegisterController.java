@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
@@ -82,7 +83,7 @@ public class PsrRegisterController {
             this.psrRegisterService.add(registerDto);
             return this.psrRegisterService.getLastInsertPsrRegister(register);
         } else {
-            throw new IllegalArgumentException("ПСР-проект не уникальный!");
+            throw new BadRequestException("ПСР-проект не уникальный!");
         }
     }
 
