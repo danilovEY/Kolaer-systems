@@ -49,4 +49,13 @@ public class PsrStatusDaoImpl implements PsrStatusDao {
     public void update(PsrStatus entity) {
 
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PsrStatus getStatusByType(String type) {
+        return (PsrStatus) this.sessionFactory.getCurrentSession()
+                .createQuery("FROM PsrStatusDecorator st WHERE st.type = :status")
+                .setParameter("status", type)
+                .uniqueResult();
+    }
 }

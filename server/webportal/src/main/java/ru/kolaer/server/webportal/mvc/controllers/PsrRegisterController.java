@@ -21,6 +21,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,6 +54,31 @@ public class PsrRegisterController {
     }
 
     @ApiOperation(
+            value = "Обновить статус у проекта.",
+            notes = "Обновить статус у ПСР-проекта."
+    )
+    @UrlDeclaration(description = "Обновить статус у проекта", isAccessUser = true)
+    @RequestMapping(value = "/psr/update/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PsrRegister updatePsrRegisterStatus(@ApiParam(value = "ПСР-проект", required = true) PsrRegister psrRegister) {
+        if(psrRegister.getId() == null || psrRegister.getId() < 0)
+            throw new BadRequestException("ID null или меньше нуля!");
+        if(psrRegister.getStatus() != null || psrRegister.getStatus().getType() == null)
+            throw new BadRequestException("Статус или тип = null!");
+
+        final PsrRegister updatePsrRegister = this.psrRegisterService.getById(psrRegister.getId());
+        updatePsrRegister.setStatus(this.psrStatusService.getStatusByType(updatePsrRegister.getStatus().getType()));
+
+        switch (updatePsrRegister.getStatus().getType()){
+            case "Новый": { updatePsrRegister.setDateOpen(new Date()); break;}
+            case "Закрыт": { updatePsrRegister.setDateClose(new Date()); break;}
+            default: break;
+        }
+
+        this.updatePsrRegister(updatePsrRegister);
+        return updatePsrRegister;
+    }
+
+    @ApiOperation(
             value = "Получить все ПСР-проекты.",
             notes = "Получить все ПСР-проекты"
     )
@@ -72,12 +98,8 @@ public class PsrRegisterController {
     public PsrRegister addPsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
 
-        final PsrStatus psrStatus = new PsrStatusDecorator();
-        psrStatus.setId(1);
-        psrStatus.setType("Новый");
-        registerDto.setStatus(psrStatus);
-
         if(this.psrRegisterService.uniquePsrRegister(register)) {
+            registerDto.setStatus(this.psrStatusService.getStatusByType("Новый"));
             registerDto.setAuthor(serviceLDAP.getEmployeeByAuthentication());
 
             this.psrRegisterService.add(registerDto);
@@ -98,8 +120,8 @@ public class PsrRegisterController {
     }
 
     @ApiOperation(
-            value = "Удалить ПСР-проект.",
-            notes = "Удалить ПСР-проект."
+            value = "Удалить ПСР-проекты (Список).",
+            notes = "Удалить ПСР-проекты."
     )
     @UrlDeclaration(description = "Удалить ПСР-проекты.", isAccessUser = true)
     @RequestMapping(value = "/delete/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -116,6 +138,7 @@ public class PsrRegisterController {
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updatePsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
+
         this.psrRegisterService.update(registerDto);
     }
 
