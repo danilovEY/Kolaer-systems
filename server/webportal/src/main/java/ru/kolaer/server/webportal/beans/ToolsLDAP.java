@@ -18,9 +18,13 @@ import java.util.List;
  */
 public class ToolsLDAP {
     private static final Logger LOG = LoggerFactory.getLogger(ToolsLDAP.class);
+    private static final String DEFAULT_ROLE = "Domain users";
 
     public static Collection<? extends GrantedAuthority> getRolesFromAttributes(Attributes attributes) {
         LOG.debug("Attributes: {}", attributes);
+
+        boolean haveDomainUserRole = false;
+
         final List<GrantedAuthority> roles = new ArrayList<>();
         try {
             final Attribute cn = attributes.get("memberOf");
@@ -28,10 +32,17 @@ public class ToolsLDAP {
                 final String value = (String) cn.get(i);
                 final String group = value.substring(3, value.indexOf(','));
                 roles.add(new SimpleGrantedAuthority(group));
+                if (group.equals(DEFAULT_ROLE))
+                    haveDomainUserRole = true;
             }
         } catch (NamingException e) {
             LOG.error("Ошибка при парсинге атрибутов!", e);
         }
+
+        if(!haveDomainUserRole) {
+            roles.add(new SimpleGrantedAuthority(DEFAULT_ROLE));
+        }
+
         return roles;
     }
 
