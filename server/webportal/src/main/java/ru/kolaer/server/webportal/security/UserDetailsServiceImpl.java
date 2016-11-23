@@ -27,9 +27,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         for(GeneralAccountsEntity acc : accountDao.findAll()) {
            if(acc.getUsername().equals(username)){
-               userResult = new User(username, acc.getPassword(), true,true,true,true, acc.getRoles().stream().map(role -> {
-                   return new SimpleGrantedAuthority(role.getType().toString());
-               }).collect(Collectors.toList()));
+               userResult = new User(username, acc.getPassword(), true,true,true,true,
+                       acc.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getType()))
+                       .collect(Collectors.toList()));
                break;
            }
         }
