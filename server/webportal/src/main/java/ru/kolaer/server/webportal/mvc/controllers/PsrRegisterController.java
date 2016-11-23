@@ -74,7 +74,7 @@ public class PsrRegisterController {
             default: break;
         }
 
-        this.updatePsrRegister(updatePsrRegister);
+        this.psrRegisterService.update(updatePsrRegister);
         return updatePsrRegister;
     }
 
@@ -97,9 +97,9 @@ public class PsrRegisterController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister addPsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
+        registerDto.setStatus(this.psrStatusService.getStatusByType("Новый"));
 
         if(this.psrRegisterService.uniquePsrRegister(register)) {
-            registerDto.setStatus(this.psrStatusService.getStatusByType("Новый"));
             registerDto.setAuthor(serviceLDAP.getEmployeeByAuthentication());
 
             this.psrRegisterService.add(registerDto);
@@ -137,9 +137,10 @@ public class PsrRegisterController {
     @UrlDeclaration(description = "Обновить ПСР-проект.", isAccessUser = true)
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updatePsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
-        PsrRegister registerDto = new PsrRegisterDecorator(register);
-
-        this.psrRegisterService.update(registerDto);
+        final PsrRegister updatePsrRegister = this.psrRegisterService.getById(register.getId());
+        updatePsrRegister.setName(register.getName());
+        updatePsrRegister.setComment(register.getComment());
+        this.psrRegisterService.update(updatePsrRegister);
     }
 
     @ApiOperation(
