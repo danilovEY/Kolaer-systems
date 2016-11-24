@@ -108,7 +108,7 @@ task renameProject(dependsOn: clean) {
     }
 }
 
-task buildAppForTest(dependsOn: [war, renameProject]) {
+task buildAppForTest(dependsOn: [war, asciidoctor, renameProject]) {
     doLast {
         copy {
             from 'build/libs/' + testName
