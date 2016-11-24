@@ -8,16 +8,19 @@ import java.io.Serializable;
 /**
  * Created by danilovey on 24.11.2016.
  */
-@ApiModel(value = "Доступы для одного ПСР-проекта")
+@ApiModel(value = "Доступы для одного ПСР-проекта", description = "Доступы для одного ПСР-проекта")
 public class PsrRegisterAccess implements Serializable {
     @ApiModelProperty(value = "ID ПСР-проекта")
     private Integer id;
+
     @ApiModelProperty(value = "Можно ли редактировать имя и описание проекта")
-    private boolean isEditNameComment;
+    private boolean editNameComment;
+
     @ApiModelProperty(value = "Можно ли редактировать статус проекта")
-    private boolean isEditStatus;
+    private boolean editStatus;
+
     @ApiModelProperty(value = "Можно ли удалить проект")
-    private boolean isDelete;
+    private boolean delete;
 
     public Integer getId() {
         return id;
@@ -28,26 +31,26 @@ public class PsrRegisterAccess implements Serializable {
     }
 
     public boolean isEditNameComment() {
-        return isEditNameComment;
+        return editNameComment;
     }
 
     public void setEditNameComment(boolean editNameComment) {
-        isEditNameComment = editNameComment;
+        this.editNameComment = editNameComment;
     }
 
     public boolean isEditStatus() {
-        return isEditStatus;
+        return editStatus;
     }
 
     public void setEditStatus(boolean editStatus) {
-        isEditStatus = editStatus;
+        this.editStatus = editStatus;
     }
 
     public boolean isDelete() {
-        return isDelete;
+        return delete;
     }
 
     public void setDelete(boolean delete) {
-        isDelete = delete;
+        this.delete = delete;
     }
 }
