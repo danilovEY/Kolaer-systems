@@ -87,11 +87,11 @@ public class PsrRegisterController {
                         .equals(psrRegister.getAuthor().getPnumber())) {
                     access.setDelete(true);
                     access.setEditNameComment(true);
-                } else {
-                    access.setEditNameComment(isEditNameCommentAllProject);
-                    access.setDelete(isDeleteAllProject);
-                    access.setEditStatus(isEditStatusAllProject);
                 }
+                access.setEditNameComment(isEditNameCommentAllProject);
+                access.setDelete(isDeleteAllProject);
+                access.setEditStatus(isEditStatusAllProject);
+
                 psrRegisterAccess.add(access);
             });
             psrAccess.setPsrRegisterAccesses(psrRegisterAccess);
