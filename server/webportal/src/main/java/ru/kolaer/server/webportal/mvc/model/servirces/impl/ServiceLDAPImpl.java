@@ -47,10 +47,10 @@ public class ServiceLDAPImpl implements ServiceLDAP {
     }
 
     @Override
-    public GeneralEmployeesEntity getEmployeeByAuthentication() {
+    public GeneralAccountsEntity getAccountByAuthentication() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){
-            return this.getAccountWithEmployeeByLogin(auth.getName()).getGeneralEmployeesEntity();
+            return this.getAccountWithEmployeeByLogin(auth.getName());
         }
 
         throw new UsernameNotFoundException("NULL пользователь не найден!");

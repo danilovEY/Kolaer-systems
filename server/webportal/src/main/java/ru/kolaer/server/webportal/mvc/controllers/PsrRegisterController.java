@@ -11,18 +11,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrAccess;
+import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterAccess;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
+import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 29.07.2016.
@@ -41,6 +47,60 @@ public class PsrRegisterController {
 
     @Autowired
     private ServiceLDAP serviceLDAP;
+
+    @Autowired
+    private UrlPathService pathService;
+
+    @ApiOperation(
+            value = "Получить доступы.",
+            notes = "Получить доступы."
+    )
+    @UrlDeclaration(description = "Получить доступы.", isAccessAll = true)
+    @RequestMapping(value = "/access", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PsrAccess getAllPsrAccess() {
+        final PsrAccess psrAccess = new PsrAccess();
+
+        final GeneralAccountsEntity entity = this.serviceLDAP.getAccountByAuthentication();
+
+        final List<String> roles = entity.getRoles().stream()
+                .map(GeneralRolesEntity::getType).collect(Collectors.toList());
+
+        boolean isGetAllProject = this.pathService.getPathByUrl("/psr/get/all")
+                .getAccesses().stream().filter(roles::contains).count() > 0;
+
+        if(isGetAllProject) {
+            final List<PsrRegisterAccess> psrRegisterAccess = new ArrayList<>();
+
+            final List<PsrRegister> registers = this.psrRegisterService.getAll();
+
+            boolean isEditNameCommentAllProject = this.pathService.getPathByUrl("/psr/update")
+                    .getAccesses().stream().filter(roles::contains).count() > 0;
+            boolean isEditStatusAllProject = this.pathService.getPathByUrl("/psr/update/status")
+                    .getAccesses().stream().filter(roles::contains).count() > 0;
+            boolean isDeleteAllProject = this.pathService.getPathByUrl("/psr/delete/list")
+                    .getAccesses().stream().filter(roles::contains).count() > 0;
+
+            registers.stream().forEach(psrRegister -> {
+                final PsrRegisterAccess access = new PsrRegisterAccess();
+                access.setId(psrRegister.getId());
+                if (entity.getGeneralEmployeesEntity().getPnumber()
+                        .equals(psrRegister.getAuthor().getPnumber())) {
+                    access.setDelete(true);
+                    access.setEditNameComment(true);
+                } else {
+                    access.setEditNameComment(isEditNameCommentAllProject);
+                    access.setDelete(isDeleteAllProject);
+                    access.setEditStatus(isEditStatusAllProject);
+                }
+                psrRegisterAccess.add(access);
+            });
+            psrAccess.setPsrRegisterAccesses(psrRegisterAccess);
+            psrAccess.setGettingAllPsrRegister(true);
+        }
+
+        return psrAccess;
+    }
+
 
     @ApiOperation(
             value = "Получить все статусы.",
@@ -100,7 +160,7 @@ public class PsrRegisterController {
 
         if(this.psrRegisterService.uniquePsrRegister(register)) {
             registerDto.setStatus(this.psrStatusService.getStatusByType("Новый"));
-            registerDto.setAuthor(serviceLDAP.getEmployeeByAuthentication());
+            registerDto.setAuthor(serviceLDAP.getAccountByAuthentication().getGeneralEmployeesEntity());
 
             this.psrRegisterService.add(registerDto);
             return this.psrRegisterService.getLastInsertPsrRegister(register);
@@ -136,12 +196,13 @@ public class PsrRegisterController {
     )
     @UrlDeclaration(description = "Обновить ПСР-проект.", isAccessUser = true)
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void updatePsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
+    public PsrRegister updatePsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         final PsrRegister updatePsrRegister = this.psrRegisterService.getById(register.getId());
         if(updatePsrRegister != null) {
             updatePsrRegister.setName(register.getName());
             updatePsrRegister.setComment(register.getComment());
             this.psrRegisterService.update(updatePsrRegister);
+            return updatePsrRegister;
         } else {
             throw new BadRequestException("ПСР-проект по id: " + register.getId() + " не найден!");
         }
