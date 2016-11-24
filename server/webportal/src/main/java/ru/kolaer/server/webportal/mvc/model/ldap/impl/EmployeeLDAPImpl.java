@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
+import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 
 import javax.naming.NamingEnumeration;
@@ -33,6 +34,8 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
 
     @Override
     public GeneralEmployeesEntity getEmployeeByLogin(String login) {
+        LOG.debug("Поиск аккаунта: {}", login);
+
         final SearchControls controls = new SearchControls();
         controls.setSearchScope(SUBTREE_SCOPE);
         controls.setReturningAttributes(new String[]{
@@ -50,7 +53,7 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
             return generalEmployeesEntity;
         } catch (NamingException e) {
             LOG.error("Ошибка при получении аккаунта!", e);
+            throw new BadRequestException("Аккаунт: " + login + " не найден!");
         }
-        return null;
     }
 }

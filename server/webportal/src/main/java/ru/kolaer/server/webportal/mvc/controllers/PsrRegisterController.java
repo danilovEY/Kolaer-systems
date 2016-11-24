@@ -63,7 +63,7 @@ public class PsrRegisterController {
         if(psrRegister.getId() == null || psrRegister.getId() < 0)
             throw new BadRequestException("ID null или меньше нуля!");
         if(psrRegister.getStatus() != null || psrRegister.getStatus().getType() == null)
-            throw new BadRequestException("Статус или тип = null!");
+            throw new BadRequestException("Статус или тип ПСР-проекта = null!");
 
         final PsrRegister updatePsrRegister = this.psrRegisterService.getById(psrRegister.getId());
         updatePsrRegister.setStatus(this.psrStatusService.getStatusByType(updatePsrRegister.getStatus().getType()));
@@ -97,9 +97,9 @@ public class PsrRegisterController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister addPsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
-        registerDto.setStatus(this.psrStatusService.getStatusByType("Новый"));
 
         if(this.psrRegisterService.uniquePsrRegister(register)) {
+            registerDto.setStatus(this.psrStatusService.getStatusByType("Новый"));
             registerDto.setAuthor(serviceLDAP.getEmployeeByAuthentication());
 
             this.psrRegisterService.add(registerDto);
@@ -138,9 +138,13 @@ public class PsrRegisterController {
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updatePsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         final PsrRegister updatePsrRegister = this.psrRegisterService.getById(register.getId());
-        updatePsrRegister.setName(register.getName());
-        updatePsrRegister.setComment(register.getComment());
-        this.psrRegisterService.update(updatePsrRegister);
+        if(updatePsrRegister != null) {
+            updatePsrRegister.setName(register.getName());
+            updatePsrRegister.setComment(register.getComment());
+            this.psrRegisterService.update(updatePsrRegister);
+        } else {
+            throw new BadRequestException("ПСР-проект по id: " + register.getId() + " не найден!");
+        }
     }
 
     @ApiOperation(

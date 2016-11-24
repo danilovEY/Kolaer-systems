@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
+import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 
@@ -24,10 +25,10 @@ public class PsrRegisterServiceImpl implements PsrRegisterService {
 
     @Override
     public PsrRegister getById(Integer id) {
-        if(id != null && id >= 0)
-            return psrRegisterDao.findByID(id);
+        if(id == null || id <0)
+            throw new BadRequestException("ID проекта пустой или меньше нуля!");
 
-        return null;
+        return psrRegisterDao.findByID(id);
     }
 
     @Override
@@ -87,7 +88,9 @@ public class PsrRegisterServiceImpl implements PsrRegisterService {
 
     @Override
     public boolean uniquePsrRegister(PsrRegister psrRegister) {
-        return psrRegister != null && this.psrRegisterDao.getCountEqualsPsrRegister(psrRegister).equals(0L);
+        if(psrRegister == null || psrRegister.getName() == null || psrRegister.getComment() == null)
+            throw new BadRequestException("Пср проект, его имя и описание не может быть null!");
+        return this.psrRegisterDao.getCountEqualsPsrRegister(psrRegister).equals(0L);
     }
 
     @Override
