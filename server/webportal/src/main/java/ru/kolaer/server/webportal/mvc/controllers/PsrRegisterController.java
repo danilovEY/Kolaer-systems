@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrAccess;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterAccess;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStateDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
@@ -28,6 +30,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -55,7 +58,7 @@ public class PsrRegisterController {
             value = "Получить доступы.",
             notes = "Получить доступы."
     )
-    @UrlDeclaration(description = "Получить доступы.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить доступы.", isAccessUser = true)
     @RequestMapping(value = "/access", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrAccess getAllPsrAccess() {
         final PsrAccess psrAccess = new PsrAccess();
@@ -101,6 +104,46 @@ public class PsrRegisterController {
         return psrAccess;
     }
 
+    @ApiOperation(
+            value = "Добавить состояние проекта.",
+            notes = "Добавить состояние для ПСР-проектов."
+    )
+    @UrlDeclaration(description = "Добавить состояние проекта.", isAccessUser = true)
+    @RequestMapping(value = "/add/states", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PsrRegister addPsrState(@ApiParam(value = "ПСР-проект") @RequestBody PsrRegister psrRegister) {
+        final PsrRegister updateRegister = this.psrRegisterService.getById(psrRegister.getId());
+        final List<PsrState> stateDecorators = new ArrayList<>();
+        psrRegister.getStateList().forEach(psrState -> {
+            if (psrState.getDate() != null && psrState.getComment() != null)
+                stateDecorators.add(new PsrStateDecorator(psrState));
+        });
+        List<PsrState> states = Optional.ofNullable(updateRegister.getStateList()).orElse(new ArrayList<>());
+        states.addAll(stateDecorators);
+        updateRegister.setStateList(states);
+        this.psrRegisterService.update(updateRegister);
+        return updateRegister;
+    }
+
+    @ApiOperation(
+            value = "Обновить состояние проекта.",
+            notes = "Обновить состояние для ПСР-проектов."
+    )
+    @UrlDeclaration(description = "Обновить состояние проекта.", isAccessUser = true)
+    @RequestMapping(value = "/update/states", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PsrRegister updatePsrState(@ApiParam(value = "ПСР-проект") @RequestBody PsrRegister psrRegister) {
+        final PsrRegister updateRegister = this.psrRegisterService.getById(psrRegister.getId());
+        updateRegister.getStateList().stream().forEach(psrState ->
+            psrRegister.getStateList().forEach(psrStateForUpdate -> {
+                if(psrState.getId().equals(psrStateForUpdate.getId())) {
+                    psrState.setComment(psrStateForUpdate.getComment());
+                    psrState.setDate(psrStateForUpdate.getDate());
+                    psrState.setPlan(psrStateForUpdate.isPlan());
+                }
+            })
+        );
+        this.psrRegisterService.update(updateRegister);
+        return updateRegister;
+    }
 
     @ApiOperation(
             value = "Получить все статусы.",
@@ -118,7 +161,7 @@ public class PsrRegisterController {
             notes = "Обновить статус у ПСР-проекта."
     )
     @UrlDeclaration(description = "Обновить статус у проекта", isAccessUser = true)
-    @RequestMapping(value = "/psr/update/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/update/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister updatePsrRegisterStatus(@ApiParam(value = "ПСР-проект", required = true) PsrRegister psrRegister) {
         if(psrRegister.getId() == null || psrRegister.getId() < 0)
             throw new BadRequestException("ID null или меньше нуля!");

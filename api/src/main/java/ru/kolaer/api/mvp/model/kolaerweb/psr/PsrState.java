@@ -11,8 +11,9 @@ import java.util.Date;
 /**
  * Created by danilovey on 29.07.2016.
  */
-@JsonDeserialize(as = PsrStateBase.class)
+
 @ApiModel(value="ПРС-состояние", description="ПРС-состояние на дату.")
+@JsonDeserialize(as = PsrStateBase.class)
 public interface PsrState extends Serializable {
     Integer getId();
     void setId(Integer id);
