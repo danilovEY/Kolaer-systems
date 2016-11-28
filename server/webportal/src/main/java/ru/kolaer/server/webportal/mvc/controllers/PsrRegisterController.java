@@ -161,7 +161,7 @@ public class PsrRegisterController {
             notes = "Обновить статус у ПСР-проекта."
     )
     @UrlDeclaration(description = "Обновить статус у проекта", isAccessUser = true)
-    @RequestMapping(value = "/update/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/update/status", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister updatePsrRegisterStatus(@ApiParam(value = "ПСР-проект", required = true) PsrRegister psrRegister) {
         if(psrRegister.getId() == null || psrRegister.getId() < 0)
             throw new BadRequestException("ID null или меньше нуля!");
