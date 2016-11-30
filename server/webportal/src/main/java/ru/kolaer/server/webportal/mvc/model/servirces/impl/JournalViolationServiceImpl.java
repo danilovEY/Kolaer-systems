@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Service
 public class JournalViolationServiceImpl implements JournalViolationService {
+
     @Autowired
     private JournalViolationDao journalViolationDao;
 
@@ -44,5 +45,10 @@ public class JournalViolationServiceImpl implements JournalViolationService {
     @Override
     public void update(List<JournalViolation> entity) {
 
+    }
+
+    @Override
+    public JournalViolation getGeneralJournalViolation() {
+        return this.journalViolationDao.findByID(0);
     }
 }

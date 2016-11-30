@@ -11,10 +11,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
 import javax.persistence.ManyToMany;
@@ -65,6 +67,10 @@ public class DataBaseInitialization {
         psrStatus = new PsrStatusDecorator();
         psrStatus.setType("Утвержден");
         this.sessionFactory.getCurrentSession().persist(psrStatus);
+
+        JournalViolation journalViolation = new JournalViolationDecorator();
+        journalViolation.setName("Общий журнал");
+        this.sessionFactory.getCurrentSession().persist(journalViolation);
     }
 
     @Transactional

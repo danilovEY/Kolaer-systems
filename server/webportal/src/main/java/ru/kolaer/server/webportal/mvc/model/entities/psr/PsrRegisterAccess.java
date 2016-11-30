@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by danilovey on 24.11.2016.
  */
-@ApiModel(value = "Доступы для одного ПСР-проекта", description = "Доступы для одного ПСР-проекта")
+@ApiModel(value = "(ПСР) Доступы для одного ПСР-проекта", description = "Доступы для одного ПСР-проекта")
 public class PsrRegisterAccess implements Serializable {
     @ApiModelProperty(value = "ID ПСР-проекта")
     private Integer id;

@@ -165,14 +165,18 @@ public class PsrRegisterController {
     public PsrRegister updatePsrRegisterStatus(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister psrRegister) {
         if(psrRegister.getId() == null || psrRegister.getId() < 0)
             throw new BadRequestException("ID null или меньше нуля!");
-        if(psrRegister.getStatus() != null || psrRegister.getStatus().getType() == null)
+        if(psrRegister.getStatus() != null && psrRegister.getStatus().getType() == null)
             throw new BadRequestException("Статус или тип ПСР-проекта = null!");
 
         final PsrRegister updatePsrRegister = this.psrRegisterService.getById(psrRegister.getId());
-        updatePsrRegister.setStatus(this.psrStatusService.getStatusByType(updatePsrRegister.getStatus().getType()));
+        updatePsrRegister.setStatus(this.psrStatusService.getStatusByType(psrRegister.getStatus().getType()));
 
         switch (updatePsrRegister.getStatus().getType()){
-            case "Новый": { updatePsrRegister.setDateOpen(new Date()); break;}
+            case "Открыт": {
+                updatePsrRegister.setDateOpen(new Date());
+                updatePsrRegister.setDateClose(null);
+                break;
+            }
             case "Закрыт": { updatePsrRegister.setDateClose(new Date()); break;}
             default: break;
         }

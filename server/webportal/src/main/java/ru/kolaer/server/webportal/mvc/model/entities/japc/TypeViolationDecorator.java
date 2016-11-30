@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.japc;
 
+import org.hibernate.annotations.Immutable;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolationBase;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "violation_type")
+@Immutable
 public class TypeViolationDecorator implements TypeViolation {
     private TypeViolation typeViolation;
 

@@ -1,5 +1,6 @@
 package ru.kolaer.api.mvp.model.kolaerweb.jpac;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,7 +13,7 @@ import java.util.Date;
  * Created by danilovey on 06.09.2016.
  */
 @JsonDeserialize(contentAs = ViolationBase.class)
-@ApiModel(value = "Нарушение")
+@ApiModel(value = "(Нарушения) Нарушение")
 public interface Violation extends Serializable {
     Integer getId();
     void setId(Integer id);
@@ -26,14 +27,17 @@ public interface Violation extends Serializable {
     void setTodo(String todo);
 
     @ApiModelProperty(value = "Дата записи нарушения")
+    @JsonFormat(locale = "ru", pattern = "dd.MM.yyyy hh.mm", timezone = "Europe/Moscow")
     Date getStartMakingViolation();
     void setStartMakingViolation(Date startMakingViolation) ;
 
     @ApiModelProperty(value = "Срок устранения нарушения")
+    @JsonFormat(locale = "ru", pattern = "dd.MM.yyyy hh.mm", timezone = "Europe/Moscow")
     Date getDateLimitEliminationViolation();
     void setDateLimitEliminationViolation(Date dateLimitEliminationViolation);
 
     @ApiModelProperty(value = "Дата устранения нарушения")
+    @JsonFormat(locale = "ru", pattern = "dd.MM.yyyy hh.mm", timezone = "Europe/Moscow")
     Date getDateEndEliminationViolation();
     void setDateEndEliminationViolation(Date dateEndEliminationViolation);
 

@@ -14,7 +14,7 @@ import java.util.List;
  * Created by danilovey on 29.07.2016.
  */
 @JsonDeserialize(as = PsrRegisterBase.class)
-@ApiModel(value="ПРС-проект", description="Структура ПСР-проекта.")
+@ApiModel(value="(ПСР) ПРС-проект", description="Структура ПСР-проекта.")
 public interface PsrRegister extends Serializable {
      @ApiModelProperty(value = "ID проекта")
      Integer getId();

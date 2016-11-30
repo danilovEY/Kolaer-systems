@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by danilovey on 29.07.2016.
  */
 @JsonDeserialize(as = PsrAttachmentBase.class)
-@ApiModel(value="ПРС-вложения", description="Ссылки на ПСР-вложения.")
+@ApiModel(value="(ПСР) ПРС-вложения", description="Ссылки на ПСР-вложения.")
 public interface PsrAttachment extends Serializable {
     Integer getId();
     void setId(Integer id);
