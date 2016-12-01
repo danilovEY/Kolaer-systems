@@ -10,10 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dao.impl.DataBaseInitialization;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
+import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,6 +38,8 @@ public class EmployeeController {
     @Autowired
     private DataBaseInitialization dataBaseInitialization;
 
+    @Autowired
+    private ServiceLDAP serviceLDAP;
 
     @ApiOperation(
             value = "Получить всех сотрудников",
@@ -46,6 +50,21 @@ public class EmployeeController {
     public List<GeneralEmployeesEntity> getAllEmployees() {
         return this.employeeService.getAll();
     }
+
+    @ApiOperation(
+            value = "Получить всех сотрудников из подразделения"
+    )
+    @UrlDeclaration(description = "Получить всех сотрудников из подразделения", isAccessAll = true)
+    @RequestMapping(value = "/get/all/by/dep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<GeneralEmployeesEntity> getAllEmployeesByDep(
+            @ApiParam("Подразделение") @RequestBody GeneralDepartamentEntity entity) {
+
+        final String name = entity == null ? serviceLDAP.getAccountByAuthentication()
+                .getGeneralEmployeesEntity().getDepartament().getName() : entity.getName();
+
+        return this.employeeService.getUsersByDepartament(name);
+    }
+
 
     @ApiOperation(
             value = "Получить всех сотрудников (между датами)",

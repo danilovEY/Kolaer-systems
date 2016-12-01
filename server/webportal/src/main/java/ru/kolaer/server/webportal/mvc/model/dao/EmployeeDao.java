@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface EmployeeDao extends DaoStandard<GeneralEmployeesEntity>, BirthdayDao<GeneralEmployeesEntity> {
     List<GeneralEmployeesEntity> findEmployeeByInitials(String initials);
+
+    List<GeneralEmployeesEntity> findByDepartament(String dep);
 }

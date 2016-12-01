@@ -74,6 +74,19 @@ public class EmployeeDaoImpl implements EmployeeDao {
         return result;
     }
 
+    @Transactional(readOnly = true)
+    public List<GeneralEmployeesEntity> findByDepartament(String dep) {
+        final List<GeneralEmployeesEntity> result = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.departament.name LIKE :dep")
+                .setParameter("dep", "%" + dep + "%").list();
+        result.forEach(emp -> {
+            emp.getDepartament().getAbbreviatedName();
+            emp.getDepartament().getName();
+            emp.getDepartament().getId();
+        });
+
+        return result;
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<GeneralEmployeesEntity> getUserRangeBirthday(final Date startDate, final Date endDate) {

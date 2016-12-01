@@ -80,19 +80,19 @@ public class PsrRegisterController {
                     .getAccesses().stream().filter(roles::contains).count() > 0;
             boolean isEditStatusAllProject = this.pathService.getPathByUrl("/psr/update/status")
                     .getAccesses().stream().filter(roles::contains).count() > 0;
-            boolean isDeleteAllProject = this.pathService.getPathByUrl("/psr/delete/list")
-                    .getAccesses().stream().filter(roles::contains).count() > 0;
 
             registers.stream().forEach(psrRegister -> {
                 final PsrRegisterAccess access = new PsrRegisterAccess();
                 access.setId(psrRegister.getId());
                 if (entity.getGeneralEmployeesEntity().getPnumber()
                         .equals(psrRegister.getAuthor().getPnumber())) {
-                    access.setDelete(true);
+                    if(psrRegister.getStatus().getType().equals("Новый"))
+                        access.setDeleteProject(true);
                     access.setEditNameComment(true);
                 }
                 access.setEditNameComment(isEditNameCommentAllProject);
-                access.setDelete(isDeleteAllProject);
+                if(roles.contains("OIT") && roles.contains("ПСР Администратор"))
+                    access.setDeleteProject(true);
                 access.setEditStatus(isEditStatusAllProject);
 
                 psrRegisterAccess.add(access);

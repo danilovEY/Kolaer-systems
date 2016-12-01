@@ -81,6 +81,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public List<GeneralEmployeesEntity> getUsersByDepartament(String dep) {
+        return this.employeeDao.findByDepartament(dep);
+    }
+
+    @Override
     public int getCountUserBirthday(Date date) {
         return this.employeeDao.getCountUserBirthday(date);
     }

@@ -50,7 +50,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
         if(isInit)
             return;
 
-        final Map<String, WebPortalUrlPath> mapUrlPaths = this.urlPathService.getAll().stream().collect(Collectors.toMap(w -> w.getUrl() + w.getRequestMethod(),w -> w));
+        final Map<String, WebPortalUrlPath> mapUrlPaths = this.urlPathService.getAll().stream().collect(Collectors.toMap(w -> w.getUrl() + w.getRequestMethod() + w.getDescription(),w -> w));
 
         for(String beanName : event.getApplicationContext().getBeanDefinitionNames()) {
             final BeanDefinition bean = beanFactory.getBeanDefinition(beanName);
@@ -89,7 +89,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     final String url = urlBuilder.toString();
                     final String description = urlDeclaration.description();
                     final String requestMethodName = urlDeclaration.requestMethod().name();
-                    final String key = url + requestMethodName;
+                    final String key = url + requestMethodName + description;
                     WebPortalUrlPath urlPath = mapUrlPaths.get(key);
                     if(urlPath == null) {
                         urlPath = new WebPortalUrlPathBase();

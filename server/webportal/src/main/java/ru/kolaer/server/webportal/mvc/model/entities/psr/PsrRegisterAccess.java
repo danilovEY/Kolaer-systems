@@ -20,7 +20,7 @@ public class PsrRegisterAccess implements Serializable {
     private boolean editStatus;
 
     @ApiModelProperty(value = "Можно ли удалить проект")
-    private boolean delete;
+    private boolean deleteProject;
 
     public Integer getId() {
         return id;
@@ -46,11 +46,11 @@ public class PsrRegisterAccess implements Serializable {
         this.editStatus = editStatus;
     }
 
-    public boolean isDelete() {
-        return delete;
+    public boolean isDeleteProject() {
+        return deleteProject;
     }
 
-    public void setDelete(boolean delete) {
-        this.delete = delete;
+    public void setDeleteProject(boolean deleteProject) {
+        this.deleteProject = deleteProject;
     }
 }
