@@ -58,7 +58,7 @@ public class PsrRegisterController {
             value = "Получить доступы.",
             notes = "Получить доступы."
     )
-    @UrlDeclaration(description = "Получить доступы.", isAccessUser = true)
+    @UrlDeclaration(description = "Получить доступы.", isAccessAll = true)
     @RequestMapping(value = "/access", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrAccess getAllPsrAccess() {
         final PsrAccess psrAccess = new PsrAccess();

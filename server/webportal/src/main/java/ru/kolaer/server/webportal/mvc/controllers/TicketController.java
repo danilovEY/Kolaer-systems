@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.Ticket;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
@@ -27,6 +28,9 @@ public class TicketController {
     private TicketRegisterService ticketRegisterService;
 
     @Autowired
+    private TicketDao ticketDao;
+
+    @Autowired
     private ServiceLDAP serviceLDAP;
 
     @ApiOperation(value = "Получить все реестры талонов")
@@ -43,6 +47,13 @@ public class TicketController {
         TicketRegister updateTicketRegister = this.ticketRegisterService.getById(ticketRegister.getId());
         updateTicketRegister.getTickents().addAll(ticketRegister.getTickents());
         this.ticketRegisterService.update(updateTicketRegister);
+    }
+
+    @ApiOperation(value = "Удалить талон из реестра")
+    @UrlDeclaration(description = "Удалить талон из реестра", isAccessUser = true)
+    @RequestMapping(value = "/remove", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void removeTicketFromRegister(@ApiParam(value = "ID талона", required = true) @RequestBody Ticket ticket) {
+        this.ticketDao.delete(ticket);
     }
 
     @ApiOperation(value = "Добавить реестр талонов")

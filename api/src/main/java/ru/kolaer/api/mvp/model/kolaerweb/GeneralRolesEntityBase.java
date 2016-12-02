@@ -8,6 +8,13 @@ public class GeneralRolesEntityBase implements GeneralRolesEntity{
     private Integer id;
     private String type;
 
+    public GeneralRolesEntityBase() {
+
+    }
+
+    public GeneralRolesEntityBase(String type) {
+        this.type = type;
+    }
 
     public Integer getId() {
         return id;

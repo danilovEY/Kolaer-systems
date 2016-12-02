@@ -36,7 +36,7 @@ public class TicketRegister implements Serializable {
 
     @ApiModelProperty(value = "Дата создания")
     @JsonFormat(shape = JsonFormat.Shape.STRING, locale = "ru", pattern = "dd.MM.yyyy", timezone = "Europe/Moscow")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createRegister;
 
     public Integer getId() {
