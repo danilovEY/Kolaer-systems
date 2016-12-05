@@ -68,35 +68,46 @@ public class PsrRegisterController {
         final List<String> roles = entity.getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());
 
-        boolean isGetAllProject = this.pathService.getPathByUrl("/psr/get/all")
-                .getAccesses().stream().filter(roles::contains).count() > 0;
+        List<String> accesses = this.pathService.getPathByUrl("/psr/get/all").getAccesses();
+
+        accesses.forEach(LOG::info);
+
+        boolean isGetAllProject = accesses.contains("ALL");
+        if(!isGetAllProject)
+            isGetAllProject = accesses.stream().filter(roles::contains).count() > 0;
 
         if(isGetAllProject) {
             final List<PsrRegisterAccess> psrRegisterAccess = new ArrayList<>();
 
+            accesses = this.pathService.getPathByUrl("/psr/update").getAccesses();
+            final boolean isEditNameCommentAllProject = !accesses.contains("ALL")
+                    && accesses.stream().filter(roles::contains).count() > 0;
+
+            accesses = this.pathService.getPathByUrl("/psr/update/status").getAccesses();
+            boolean isEditStatusAllProject = !accesses.contains("ALL")
+                    && accesses.stream().filter(roles::contains).count() > 0;
+
             final List<PsrRegister> registers = this.psrRegisterService.getAll();
-
-            boolean isEditNameCommentAllProject = this.pathService.getPathByUrl("/psr/update")
-                    .getAccesses().stream().filter(roles::contains).count() > 0;
-            boolean isEditStatusAllProject = this.pathService.getPathByUrl("/psr/update/status")
-                    .getAccesses().stream().filter(roles::contains).count() > 0;
-
             registers.stream().forEach(psrRegister -> {
                 final PsrRegisterAccess access = new PsrRegisterAccess();
                 access.setId(psrRegister.getId());
-                if (entity.getGeneralEmployeesEntity().getPnumber()
-                        .equals(psrRegister.getAuthor().getPnumber())) {
-                    if(psrRegister.getStatus().getType().equals("Новый"))
+                if (entity.getGeneralEmployeesEntity().getPnumber().equals(psrRegister.getAuthor().getPnumber())) {
+                    if(psrRegister.getStatus().getType().equals("Новый")) {
                         access.setDeleteProject(true);
+                    }
                     access.setEditNameComment(true);
+                } else {
+                    access.setEditNameComment(isEditNameCommentAllProject);
+                    if(roles.contains("OIT") && roles.contains("ПСР Администратор")) {
+                        access.setDeleteProject(true);
+                    }
                 }
-                access.setEditNameComment(isEditNameCommentAllProject);
-                if(roles.contains("OIT") && roles.contains("ПСР Администратор"))
-                    access.setDeleteProject(true);
+
                 access.setEditStatus(isEditStatusAllProject);
 
                 psrRegisterAccess.add(access);
             });
+
             psrAccess.setPsrRegisterAccesses(psrRegisterAccess);
             psrAccess.setGettingAllPsrRegister(true);
         }

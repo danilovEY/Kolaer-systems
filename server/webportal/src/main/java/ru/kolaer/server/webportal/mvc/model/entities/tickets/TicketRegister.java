@@ -27,7 +27,7 @@ public class TicketRegister implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "ticket_register_depatpament", joinColumns = {@JoinColumn(name = "id_register")},
             inverseJoinColumns = { @JoinColumn(name = "id_ticket")})
-    private List<Ticket> tickents;
+    private List<Ticket> tickets;
 
     @ApiModelProperty(value = "Подразделение")
     @OneToOne(targetEntity = GeneralDepartamentEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
@@ -47,12 +47,12 @@ public class TicketRegister implements Serializable {
         this.id = id;
     }
 
-    public List<Ticket> getTickents() {
-        return tickents;
+    public List<Ticket> getTickets() {
+        return tickets;
     }
 
-    public void setTickents(List<Ticket> tickents) {
-        this.tickents = tickents;
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
     }
 
     public GeneralDepartamentEntity getDepartament() {
