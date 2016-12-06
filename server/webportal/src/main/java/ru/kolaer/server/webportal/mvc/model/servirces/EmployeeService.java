@@ -13,6 +13,6 @@ public interface EmployeeService extends ServiceBase<GeneralEmployeesEntity> {
     List<GeneralEmployeesEntity> getUsersByBirthday(Date date);
     List<GeneralEmployeesEntity> getUserBirthdayToday();
     List<GeneralEmployeesEntity> getUsersByInitials(String initials);
-    List<GeneralEmployeesEntity> getUsersByDepartament(String dep);
+    List<GeneralEmployeesEntity> getUsersByDepartamentId(Integer id);
     int getCountUserBirthday(Date date);
 }

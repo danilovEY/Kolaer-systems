@@ -70,18 +70,12 @@ public class PsrRegisterController {
 
         List<String> accesses = this.pathService.getPathByUrl("/psr/get/all").getAccesses();
 
-        accesses.forEach(LOG::info);
-
         boolean isGetAllProject = accesses.contains("ALL");
         if(!isGetAllProject)
             isGetAllProject = accesses.stream().filter(roles::contains).count() > 0;
 
         if(isGetAllProject) {
             final List<PsrRegisterAccess> psrRegisterAccess = new ArrayList<>();
-
-            accesses = this.pathService.getPathByUrl("/psr/update").getAccesses();
-            final boolean isEditNameCommentAllProject = !accesses.contains("ALL")
-                    && accesses.stream().filter(roles::contains).count() > 0;
 
             accesses = this.pathService.getPathByUrl("/psr/update/status").getAccesses();
             boolean isEditStatusAllProject = !accesses.contains("ALL")
@@ -97,9 +91,9 @@ public class PsrRegisterController {
                     }
                     access.setEditNameComment(true);
                 } else {
-                    access.setEditNameComment(isEditNameCommentAllProject);
-                    if(roles.contains("OIT") && roles.contains("ПСР Администратор")) {
+                    if(roles.contains("OIT") || roles.contains("ПСР Администратор")) {
                         access.setDeleteProject(true);
+                        access.setEditNameComment(true);
                     }
                 }
 

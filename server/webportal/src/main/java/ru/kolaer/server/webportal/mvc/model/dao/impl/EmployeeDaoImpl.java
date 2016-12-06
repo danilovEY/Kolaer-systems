@@ -22,7 +22,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public List<GeneralEmployeesEntity> findAll() {
-        final List<GeneralEmployeesEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp").list();
+        final List<GeneralEmployeesEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp ORDER BY emp.initials").list();
         result.forEach(emp -> {
             emp.getDepartament().getAbbreviatedName();
             emp.getDepartament().getName();
@@ -34,7 +34,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public GeneralEmployeesEntity findByID(int id) {
-        final GeneralEmployeesEntity result = (GeneralEmployeesEntity) this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.pnumber = :id")
+        final GeneralEmployeesEntity result = (GeneralEmployeesEntity) this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.pnumber = :id ORDER BY emp.initials")
                 .setParameter("id", id).uniqueResult();
         result.getDepartament().getAbbreviatedName();
         result.getDepartament().getName();
@@ -64,7 +64,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public List<GeneralEmployeesEntity> findEmployeeByInitials(String initials) {
-        final List<GeneralEmployeesEntity> result = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.initials LIKE :initials")
+        final List<GeneralEmployeesEntity> result = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.initials LIKE :initials ORDER BY emp.initials")
                 .setParameter("initials", "%" + initials + "%").list();
         result.forEach(emp -> {
             emp.getDepartament().getAbbreviatedName();
@@ -75,22 +75,21 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Transactional(readOnly = true)
-    public List<GeneralEmployeesEntity> findByDepartament(String dep) {
-        final List<GeneralEmployeesEntity> result = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.departament.name LIKE :dep")
-                .setParameter("dep", "%" + dep + "%").list();
+    public List<GeneralEmployeesEntity> findByDepartamentById(Integer id) {
+        final List<GeneralEmployeesEntity> result = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.departament.id = :id ORDER BY emp.initials")
+                .setParameter("id", id).list();
         result.forEach(emp -> {
             emp.getDepartament().getAbbreviatedName();
             emp.getDepartament().getName();
             emp.getDepartament().getId();
         });
-
         return result;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<GeneralEmployeesEntity> getUserRangeBirthday(final Date startDate, final Date endDate) {
-        final List<GeneralEmployeesEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator t where t.birthday BETWEEN :startDate AND :endDate")
+        final List<GeneralEmployeesEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator t where t.birthday BETWEEN :startDate AND :endDate ORDER BY t.initials")
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .list();
@@ -105,7 +104,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public List<GeneralEmployeesEntity> getUsersByBirthday(final Date date) {
-        final List<GeneralEmployeesEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+        final List<GeneralEmployeesEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) ORDER BY t.initials")
                 .setParameter("date", date)
                 .list();
         result.forEach(emp -> {
@@ -119,7 +118,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public List<GeneralEmployeesEntity> getUserBirthdayToday() {
-        final List<GeneralEmployeesEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE)")
+        final List<GeneralEmployeesEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) ORDER BY t.initials")
                 .list();
         result.forEach(emp -> {
             emp.getDepartament().getAbbreviatedName();
@@ -132,7 +131,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public int getCountUserBirthday(final Date date) {
-        final Number result = (Number) sessionFactory.getCurrentSession().createQuery("SELECT count(t) FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+        final Number result = (Number) sessionFactory.getCurrentSession().createQuery("SELECT count(t) FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) ORDER BY t.initials")
                 .setParameter("date", date)
                 .list();
         return result.intValue();
@@ -141,7 +140,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public List<GeneralEmployeesEntity> getUsersByInitials(final String initials) {
-        final List<GeneralEmployeesEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator AS t JOIN FETCH t.departament where t.initials like :initials")
+        final List<GeneralEmployeesEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator AS t JOIN FETCH t.departament where t.initials like :initials ORDER BY t.initials")
                 .setParameter("initials", "%" + initials + "%")
                 .list();
         return result;

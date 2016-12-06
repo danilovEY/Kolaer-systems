@@ -37,7 +37,8 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
 
     @Override
     public void delete(TicketRegister entity) {
-        entity.getTickets().clear();
+        if (entity.getTickets() != null)
+            entity.getTickets().clear();
         this.ticketRegisterDao.delete(entity);
     }
 

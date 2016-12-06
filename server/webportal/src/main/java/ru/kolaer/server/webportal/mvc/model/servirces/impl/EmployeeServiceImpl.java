@@ -81,8 +81,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<GeneralEmployeesEntity> getUsersByDepartament(String dep) {
-        return this.employeeDao.findByDepartament(dep);
+    public List<GeneralEmployeesEntity> getUsersByDepartamentId(Integer id) {
+        return this.employeeDao.findByDepartamentById(id);
     }
 
     @Override

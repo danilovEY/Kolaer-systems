@@ -15,6 +15,7 @@ import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
@@ -39,7 +40,7 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
         final SearchControls controls = new SearchControls();
         controls.setSearchScope(SUBTREE_SCOPE);
         controls.setReturningAttributes(new String[]{
-                "name"
+                "name", "employeeID"
         });
 
         try {
@@ -47,6 +48,10 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
 
             final GeneralEmployeesEntity generalEmployeesEntity = new GeneralEmployeesEntityBase();
             final Attributes attributes = answer.next().getAttributes();
+            final Attribute name = attributes.get("employeeID");
+            if(name != null) {
+                generalEmployeesEntity.setPnumber(Integer.valueOf(name.get().toString()));
+            }
             generalEmployeesEntity.setInitials(attributes.get("name").get().toString());
 
             answer.close();

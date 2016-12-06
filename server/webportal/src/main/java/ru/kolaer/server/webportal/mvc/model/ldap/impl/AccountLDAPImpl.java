@@ -46,20 +46,20 @@ public class AccountLDAPImpl implements AccountLDAP {
         try {
             final NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(& (userPrincipalName=" + login + "@kolaer.local" + ")(objectClass=person))", controls);
 
-            final GeneralAccountsEntity generalEmployeesEntity = new GeneralAccountsEntityBase();
+            final GeneralAccountsEntity generalAccountEntity = new GeneralAccountsEntityBase();
             final Attributes attributes = answer.next().getAttributes();
-            generalEmployeesEntity.setUsername(attributes.get("samaccountname").get().toString());
-            generalEmployeesEntity.setEmail(attributes.get("userprincipalname").get().toString());
+            generalAccountEntity.setUsername(attributes.get("samaccountname").get().toString());
+            generalAccountEntity.setEmail(attributes.get("userprincipalname").get().toString());
             final Collection<? extends GrantedAuthority> rolesFromAttributes = ToolsLDAP.getRolesFromAttributes(attributes);
 
-            generalEmployeesEntity.setRoles(rolesFromAttributes.stream().map(role -> {
+            generalAccountEntity.setRoles(rolesFromAttributes.stream().map(role -> {
                 final GeneralRolesEntity generalRolesEntity = new GeneralRolesEntityBase();
                 generalRolesEntity.setType(role.getAuthority());
                 return generalRolesEntity;
             }).collect(Collectors.toList()));
 
             answer.close();
-            return generalEmployeesEntity;
+            return generalAccountEntity;
         } catch (NamingException e) {
             LOG.error("Ошибка при получении аккаунта!", e);
         }

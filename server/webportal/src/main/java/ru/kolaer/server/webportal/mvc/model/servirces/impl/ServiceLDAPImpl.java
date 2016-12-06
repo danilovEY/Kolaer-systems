@@ -15,6 +15,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,9 +37,18 @@ public class ServiceLDAPImpl implements ServiceLDAP {
 
     @PostConstruct
     public void init() {
+        GeneralDepartamentEntity departamentEntity = new GeneralDepartamentEntityBase();
+        departamentEntity.setAbbreviatedName("Anonymous");
+        departamentEntity.setName("Anonymous");
+        departamentEntity.setId(-1);
+
         GeneralEmployeesEntity employeesEntity = new GeneralEmployeesEntityBase();
-        employeesEntity.setPnumber(0);
-        employeesEntity.setInitials("null");
+        employeesEntity.setPnumber(-1);
+        employeesEntity.setInitials("Anon");
+        employeesEntity.setDepartament(departamentEntity);
+        employeesEntity.setBirthday(new Date());
+        employeesEntity.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/no_photo.jpg");
+        employeesEntity.setGender("Unknow");
 
         this.accountsEntity = new GeneralAccountsEntityBase();
         this.accountsEntity.setGeneralEmployeesEntity(employeesEntity);
@@ -50,13 +60,23 @@ public class ServiceLDAPImpl implements ServiceLDAP {
     public GeneralAccountsEntity getAccountWithEmployeeByLogin(String login) {
         final GeneralAccountsEntity generalAccountsEntity = accountLDAP.getAccountByLogin(login);
         final GeneralEmployeesEntity generalEmployeesEntity = employeeLDAP.getEmployeeByLogin(login);
-        generalAccountsEntity.setGeneralEmployeesEntity(generalEmployeesEntity);
+
         LOG.debug("Employee: {}", generalEmployeesEntity.getInitials());
-        final List<GeneralEmployeesEntity> generalEmployeesEntities = this.employeeDao.findEmployeeByInitials(generalEmployeesEntity.getInitials());
-        if(generalEmployeesEntities!= null && generalEmployeesEntities.size() == 1) {
-            generalAccountsEntity.setGeneralEmployeesEntity(generalEmployeesEntities.get(0));
+
+        if(generalEmployeesEntity.getPnumber() != null) {
+            final GeneralEmployeesEntity employee = this.employeeDao.findByID(generalEmployeesEntity.getPnumber());
+            generalAccountsEntity.setGeneralEmployeesEntity(employee);
+        } else {
+            final List<GeneralEmployeesEntity> generalEmployeesEntities = this.employeeDao.findEmployeeByInitials(generalEmployeesEntity.getInitials());
+            if(generalEmployeesEntities!= null && generalEmployeesEntities.size() > 0) {
+                generalAccountsEntity.setGeneralEmployeesEntity(generalEmployeesEntities.get(0));
+            }
         }
-        //TODO: Доделать реализацию
+
+        if(generalAccountsEntity.getGeneralEmployeesEntity() == null) {
+            generalAccountsEntity.setGeneralEmployeesEntity(this.accountsEntity.getGeneralEmployeesEntity());
+        }
+
         return generalAccountsEntity;
     }
 
