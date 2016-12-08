@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.Ticket;
@@ -46,8 +47,12 @@ public class TicketController {
     @ApiOperation(value = "Получить все реестры талонов")
     @UrlDeclaration(description = "Получить все реестры талонов", isAccessUser = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<TicketRegister> getAllRegister() {
-        return this.ticketRegisterService.getAllByDepName(serviceLDAP.getAccountByAuthentication().getGeneralEmployeesEntity().getDepartament().getName());
+    public Page<TicketRegister> getAllRegister(@RequestParam(value = "page", defaultValue = "0") Integer number,
+                                               @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+        return this.ticketRegisterService
+                .getAllByDepName(number, pageSize,
+                        serviceLDAP.getAccountByAuthentication()
+                                .getGeneralEmployeesEntity().getDepartament().getName());
     }
 
     @ApiOperation(value = "Добавить талон в реестр")

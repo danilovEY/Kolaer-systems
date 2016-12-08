@@ -7,10 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
@@ -18,6 +15,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrAccess;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterAccess;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
@@ -196,9 +194,9 @@ public class PsrRegisterController {
     )
     @UrlDeclaration(description = "Получить все ПСР-проекты.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<PsrRegister> getAllRegister() {
-        List<PsrRegister> list = this.psrRegisterService.getAll();
-        return list;
+    public Page<PsrRegister> getAllRegister(@RequestParam(value = "page", defaultValue = "0") Integer number,
+                                            @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+        return this.psrRegisterService.getAll(number, pageSize);
     }
 
     @ApiOperation(

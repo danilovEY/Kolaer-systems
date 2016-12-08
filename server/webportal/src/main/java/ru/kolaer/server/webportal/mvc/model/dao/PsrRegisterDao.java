@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface PsrRegisterDao extends DaoStandard<PsrRegister> {
     PsrRegister getPsrRegisterByName(String name);
     Object getCountEqualsPsrRegister(PsrRegister psrRegister);
     List getPsrRegisterByStatusTitleComment(Integer status, String name, String comment);
+
+    Page<PsrRegister> findAll(Integer number, Integer pageSize);
 }

@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.transform.Transformers;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
 
 import java.util.List;
@@ -97,5 +99,19 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
                 .setParameter("name", name)
                 .setParameter("comment", comment)
                 .list();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PsrRegister> findAll(Integer number, Integer pageSize) {
+        Session currentSession = this.sessionFactory.getCurrentSession();
+        final Long count = (Long) currentSession.createQuery("SELECT COUNT(reg.id) FROM PsrRegisterDecorator reg")
+                .uniqueResult();
+        List<PsrRegister> list = currentSession.createQuery("FROM PsrRegisterDecorator reg")
+                .setFirstResult((number - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .list();
+
+        return new Page<>(list, number, count, pageSize);
+
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dao.impl.DataBaseInitialization;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
@@ -36,9 +37,6 @@ public class EmployeeController {
     @Autowired
     private DataBaseInitialization dataBaseInitialization;
 
-    @Autowired
-    private ServiceLDAP serviceLDAP;
-
     @ApiOperation(
             value = "Получить всех сотрудников",
             notes = "Получить всех сотрудников"
@@ -54,9 +52,11 @@ public class EmployeeController {
     )
     @UrlDeclaration(description = "Получить всех сотрудников из подразделения", isAccessAll = true)
     @RequestMapping(value = "/get/all/by/dep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<GeneralEmployeesEntity> getAllEmployeesByDep(
-            @ApiParam("Подразделение") @RequestParam(value = "id") Integer id) {
-        return this.employeeService.getUsersByDepartamentId(id);
+    public Page<GeneralEmployeesEntity> getAllEmployeesByDep(
+            @ApiParam("Подразделение") @RequestParam(value = "id") Integer id,
+            @RequestParam(value = "page", defaultValue = "0") Integer number,
+            @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+        return this.employeeService.getUsersByDepartamentId(number, pageSize, id);
     }
 
 

@@ -45,6 +45,8 @@ dependencies {
     compile "org.apache.poi:poi:3.15"
     compile "io.swagger:swagger-jaxrs:1.5.10"
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.6.1'
+    compileOnly "org.projectlombok:lombok:1.16.12"
+
 
 
     testCompile "junit:junit:4.12";

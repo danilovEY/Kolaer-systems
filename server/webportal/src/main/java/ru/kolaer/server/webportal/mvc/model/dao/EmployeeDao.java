@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface EmployeeDao extends DaoStandard<GeneralEmployeesEntity>, Birthd
     List<GeneralEmployeesEntity> findEmployeeByInitials(String initials);
 
     List<GeneralEmployeesEntity> findByDepartamentById(Integer id);
+
+    Page<GeneralEmployeesEntity> findByDepartamentById(int page, int pageSize, Integer id);
 }

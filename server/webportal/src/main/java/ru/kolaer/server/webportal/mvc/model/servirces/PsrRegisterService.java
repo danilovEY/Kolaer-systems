@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface PsrRegisterService extends ServiceBase<PsrRegister> {
     PsrRegister getLastInsertPsrRegister(PsrRegister psrRegister);
     boolean uniquePsrRegister(PsrRegister psrRegister);
     List<PsrRegister> getIdAndNamePsrRegisters();
+
+    Page<PsrRegister> getAll(Integer number, Integer pageSize);
 }

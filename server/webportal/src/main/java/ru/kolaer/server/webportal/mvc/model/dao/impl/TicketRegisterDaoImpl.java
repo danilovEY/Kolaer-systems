@@ -1,10 +1,12 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
 
 import java.util.Date;
@@ -46,6 +48,23 @@ public class TicketRegisterDaoImpl implements TicketRegisterDao {
         return this.sessionFactory.getCurrentSession()
                 .createQuery("FROM TicketRegister tr WHERE tr.departament.name = :depName")
                 .setParameter("depName", depName).list();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TicketRegister> findAllByDepName(int number, int pageSize, String depName) {
+        final Session currentSession = this.sessionFactory.getCurrentSession();
+
+        final Long total = (Long) currentSession
+                .createQuery("SELECT COUNT(tr.id) FROM TicketRegister tr WHERE tr.departament.name = :depName")
+                .setParameter("depName", depName).uniqueResult();
+
+        final List<TicketRegister> registers = currentSession
+                .createQuery("FROM TicketRegister tr WHERE tr.departament.name = :depName")
+                .setFirstResult((number - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .setParameter("depName", depName).list();
+
+        return new Page<>(registers, number, total, pageSize);
     }
 
     @Override

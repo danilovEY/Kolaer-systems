@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 
@@ -55,5 +56,15 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
     @Override
     public List<TicketRegister> getAllByDepName(String name) {
         return this.ticketRegisterDao.findAllByDepName(name);
+    }
+
+    @Override
+    public Page<TicketRegister> getAllByDepName(int page, int pageSize, String name) {
+        if(page == 0) {
+            List<TicketRegister> allByDepName = this.getAllByDepName(name);
+            return new Page<>(allByDepName, 0, 0, allByDepName.size());
+        }
+
+        return this.ticketRegisterDao.findAllByDepName(page, pageSize, name);
     }
 }

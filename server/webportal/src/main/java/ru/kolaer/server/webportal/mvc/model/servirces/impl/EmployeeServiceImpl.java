@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 
 import java.util.Date;
@@ -83,6 +85,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<GeneralEmployeesEntity> getUsersByDepartamentId(Integer id) {
         return this.employeeDao.findByDepartamentById(id);
+    }
+
+    @Override
+    public Page<GeneralEmployeesEntity> getUsersByDepartamentId(int page, int pageSize, Integer id) {
+        if(page == 0) {
+            List<GeneralEmployeesEntity> usersByDepartamentId = this.getUsersByDepartamentId(id);
+            return new Page<>(usersByDepartamentId, 0, 0, usersByDepartamentId.size());
+        }
+        return this.employeeDao.findByDepartamentById(page, pageSize, id);
     }
 
     @Override

@@ -1,11 +1,13 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 
 import java.util.Date;
 import java.util.List;
@@ -84,6 +86,27 @@ public class EmployeeDaoImpl implements EmployeeDao {
             emp.getDepartament().getId();
         });
         return result;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<GeneralEmployeesEntity> findByDepartamentById(int page, int pageSize, Integer id) {
+        Session currentSession = this.sessionFactory.getCurrentSession();
+        final Long count = (Long) currentSession.createQuery("SELECT COUNT(emp.pnumber) FROM GeneralEmployeesEntityDecorator emp WHERE emp.departament.id = :id")
+                .setParameter("id", id)
+                .uniqueResult();
+
+        final List<GeneralEmployeesEntity> result = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.departament.id = :id ORDER BY emp.initials")
+                .setParameter("id", id)
+                .setFirstResult((page - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .list();
+        result.forEach(emp -> {
+            emp.getDepartament().getAbbreviatedName();
+            emp.getDepartament().getName();
+            emp.getDepartament().getId();
+        });
+
+        return new Page<>(result, page, count, pageSize);
     }
 
     @Override

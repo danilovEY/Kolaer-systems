@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 
 import java.util.Date;
 import java.util.List;
@@ -14,5 +15,6 @@ public interface EmployeeService extends ServiceBase<GeneralEmployeesEntity> {
     List<GeneralEmployeesEntity> getUserBirthdayToday();
     List<GeneralEmployeesEntity> getUsersByInitials(String initials);
     List<GeneralEmployeesEntity> getUsersByDepartamentId(Integer id);
+    Page<GeneralEmployeesEntity> getUsersByDepartamentId(int page, int pageSize, Integer id);
     int getCountUserBirthday(Date date);
 }

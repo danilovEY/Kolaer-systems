@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
+import ru.kolaer.server.webportal.mvc.model.entities.Page;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 
 import java.util.List;
@@ -96,5 +97,13 @@ public class PsrRegisterServiceImpl implements PsrRegisterService {
     @Override
     public List<PsrRegister> getIdAndNamePsrRegisters() {
         return this.psrRegisterDao.getIdAndNamePsrRegister();
+    }
+
+    @Override
+    public Page<PsrRegister> getAll(Integer number, Integer pageSize) {
+        if(number == 0) {
+            return new Page<>(this.getAll(), 0, 0, 0);
+        }
+        return this.psrRegisterDao.findAll(number, pageSize);
     }
 }
