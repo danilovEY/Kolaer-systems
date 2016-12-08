@@ -15,7 +15,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.entities.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrAccess;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterAccess;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;

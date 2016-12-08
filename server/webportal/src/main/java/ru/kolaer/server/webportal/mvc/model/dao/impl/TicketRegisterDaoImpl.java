@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
-import ru.kolaer.server.webportal.mvc.model.entities.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
 
 import java.util.Date;

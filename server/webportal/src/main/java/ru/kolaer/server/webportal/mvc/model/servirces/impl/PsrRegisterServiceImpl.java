@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
-import ru.kolaer.server.webportal.mvc.model.entities.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 
 import java.util.List;

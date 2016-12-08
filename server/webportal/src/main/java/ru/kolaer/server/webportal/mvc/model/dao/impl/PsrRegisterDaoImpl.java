@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
-import ru.kolaer.server.webportal.mvc.model.entities.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
 
 import java.util.List;
