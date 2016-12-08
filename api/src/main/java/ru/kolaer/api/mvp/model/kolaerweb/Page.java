@@ -31,8 +31,8 @@ public class Page<T> implements Serializable {
         this.data = data;
         this.number = number;
         if(number == 0){
-            this.total = 0;
             this.pageSize = data.size();
+            this.total = this.pageSize;
         } else {
             this.total = total;
             this.pageSize = pageSize;
