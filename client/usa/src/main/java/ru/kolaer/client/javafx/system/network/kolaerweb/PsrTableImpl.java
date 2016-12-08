@@ -5,10 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.network.kolaerweb.PsrStatusTable;
 import ru.kolaer.api.system.network.kolaerweb.PsrTable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
+
+import java.util.List;
 
 /**
  * Created by Danilov on 31.07.2016.
@@ -39,7 +42,8 @@ public class PsrTableImpl implements PsrTable {
     public PsrRegister[] getAllPsrRegister() throws ServerException {
         try {
             this.checkAuthorization();
-            return this.restTemplate.getForObject(this.URL_GET_ALL + "?token=" + UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken(), PsrRegister[].class);
+            PsrRegisterPage psrRegisterPage = this.restTemplate.getForObject(this.URL_GET_ALL + "?token=" + UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken(), PsrRegisterPage.class);
+            return psrRegisterPage.getData().stream().toArray(PsrRegister[]::new);
         } catch (RestClientException ex) {
             LOG.error(ex.getMessage());
             throw new ServerException(ex);
@@ -97,4 +101,8 @@ public class PsrTableImpl implements PsrTable {
         if(!UniformSystemEditorKitSingleton.getInstance().getAuthentication().isAuthentication())
             throw new ServerException("Не авторизован!");
     }
+}
+
+class PsrRegisterPage extends Page<PsrRegister> {
+
 }

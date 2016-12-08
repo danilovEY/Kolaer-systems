@@ -23,6 +23,10 @@ public class Page<T> implements Serializable {
     @ApiModelProperty("Кол-во объектов на странице")
     private int pageSize = 0;
 
+    public Page() {
+
+    }
+
     public Page(List<T> data, int number, int total, int pageSize) {
         this.data = data;
         this.number = number;
