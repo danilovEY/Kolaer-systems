@@ -33,7 +33,7 @@ public class EmployeeOtherOrganizationDaoImpl implements EmployeeOtherOrganizati
 	@Override
 	@Transactional(readOnly = true)
 	public int getRowCount() {
-		final Number result = (Number)  sessionFactory.getCurrentSession().createQuery("SELECT count(x) FROM EmployeeOtherOrganizationDecorator x").uniqueResult();
+		final Long result = (Long)  sessionFactory.getCurrentSession().createQuery("SELECT count(x.pnumber) FROM EmployeeOtherOrganizationDecorator x").uniqueResult();
 		return result.intValue();
 	}
 
@@ -68,7 +68,7 @@ public class EmployeeOtherOrganizationDaoImpl implements EmployeeOtherOrganizati
 	@Override
 	@Transactional(readOnly = true)
 	public int getCountUserBirthday(final Date date) {
-		final Long result = (Long) sessionFactory.getCurrentSession().createQuery("SELECT count(t) FROM EmployeeOtherOrganizationDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+		final Long result = (Long) sessionFactory.getCurrentSession().createQuery("SELECT count(t.pnumber) FROM EmployeeOtherOrganizationDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
 				.setParameter("date", date)
 				.uniqueResult();
 		return result.intValue();
@@ -146,10 +146,10 @@ public class EmployeeOtherOrganizationDaoImpl implements EmployeeOtherOrganizati
 	@Override
 	@Transactional(readOnly = true)
 	public int getCountUserBirthdayAndOrg(Date date, String organization) {
-		final Number result = (Number) sessionFactory.getCurrentSession().createQuery("SELECT count(t) FROM EmployeeOtherOrganizationDecorator t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+		final Long result = (Long) sessionFactory.getCurrentSession().createQuery("SELECT count(t.pnumber) FROM EmployeeOtherOrganizationDecorator t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
 				.setParameter("org", organization)
 				.setParameter("date", date)
-				.list();
+				.uniqueResult();
 		return result.intValue();
 	}
 

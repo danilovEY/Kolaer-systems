@@ -154,9 +154,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public int getCountUserBirthday(final Date date) {
-        final Number result = (Number) sessionFactory.getCurrentSession().createQuery("SELECT count(t) FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) ORDER BY t.initials")
+        final Long result = (Long) sessionFactory.getCurrentSession().createQuery("SELECT count(t.pnumber) FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
                 .setParameter("date", date)
-                .list();
+                .uniqueResult();
         return result.intValue();
     }
 

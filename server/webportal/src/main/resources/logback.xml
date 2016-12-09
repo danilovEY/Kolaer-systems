@@ -13,7 +13,6 @@
             <!-- daily rollover -->
             <fileNamePattern>logs/%d{yyyy-MM-dd}_debug_webportal.log</fileNamePattern>
 
-            <!-- keep 30 days' worth of history -->
             <maxHistory>15</maxHistory>
         </rollingPolicy>
 
@@ -29,9 +28,10 @@
     <logger name="org.springframework.web.servlet.mvc" level="WARN" />
     <logger name="org.springframework.security.ldap" level="TRACE" />
 
-    <logger name="org.hibernate" level="INFO"/>
+    <logger name="org.hibernate" level="TRACE"/>
+    <logger name="org.hibernate.type.EnumType" level="TRACE"/>
 
-    <root level="DEBUG">
+    <root level="TRACE">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>

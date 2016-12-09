@@ -11,7 +11,6 @@
             <!-- daily rollover -->
             <fileNamePattern>logs/%d{yyyy-MM-dd}_webportal.log</fileNamePattern>
 
-            <!-- keep 30 days' worth of history -->
             <maxHistory>15</maxHistory>
         </rollingPolicy>
 
@@ -19,6 +18,13 @@
             <pattern>%-25(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{36}.%method: %msg%n</pattern>
         </encoder>
     </appender>
+
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.springframework.transaction" level="WARN" />
+
+    <logger name="org.springframework.web.servlet.mvc" level="WARN" />
+    <logger name="org.springframework.security.ldap" level="WARN" />
+
 
     <logger name="org.hibernate" level="INFO"/>
 
