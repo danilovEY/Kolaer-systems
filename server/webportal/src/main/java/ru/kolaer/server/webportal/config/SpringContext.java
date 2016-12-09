@@ -46,7 +46,6 @@ import java.util.List;
         "ru.kolaer.server.webportal.mvc.model.servirces.impl",
         "ru.kolaer.server.webportal.mvc.controllers"})
 @PropertySource("classpath:database.properties")
-//@ImportResource({"/WEB-INF/spring-config/spring-context.groovy"})
 public class SpringContext extends WebMvcConfigurerAdapter {
 
     @Resource
@@ -113,6 +112,7 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         final LocalSessionFactoryBuilder sessionFactoryBean = new LocalSessionFactoryBuilder(dataSource);
         sessionFactoryBean.scanPackages("ru.kolaer.server.webportal.mvc.model");
         sessionFactoryBean.setProperty("db.hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        sessionFactoryBean.setProperty("hibernate.cache.use_second_level_cache", "true");
         sessionFactoryBean.setProperty("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
         sessionFactoryBean.setProperty("hibernate.format_sql", env.getRequiredProperty("hibernate.format_sql"));
         sessionFactoryBean.setProperty("hibernate.use_sql_comments", env.getRequiredProperty("hibernate.use_sql_comments"));

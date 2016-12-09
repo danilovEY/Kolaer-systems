@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by danilovey on 18.08.2016.
  */
-@Repository
+@Repository("notifyMessageDao")
 public class NotifyMessageDaoImpl implements NotifyMessageDao {
 
     @Autowired

@@ -16,7 +16,7 @@ import java.util.List;
 public class NotifyMessageImpl implements NotifyMessageService {
 
     @Autowired
-    @Qualifier(value = "jdbcNotifyMessageDao")
+    @Qualifier(value = "notifyMessageDao")
     private NotifyMessageDao notifyMessageDao;
 
     @Override
