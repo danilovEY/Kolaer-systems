@@ -8,7 +8,9 @@ import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 
+import java.time.ZoneId;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 30.11.2016.
@@ -31,8 +33,26 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
 
     @Override
     public void add(TicketRegister entity) {
-        if(ticketRegisterDao.getTicketRegisterByDateAndDep(entity.getCreateRegister(), entity.getDepartament().getName()) > 0)
-            throw new BadRequestException("Реестр уже существует в этом месяце и году!");
+        List<TicketRegister> ticketRegisterByDateAndDep = ticketRegisterDao.
+                getTicketRegisterByDateAndDep(entity.getCreateRegister(), entity.getDepartament().getName());
+
+        List<TicketRegister> collect = ticketRegisterByDateAndDep.stream().filter(ticketRegister ->
+                !ticketRegister.isClose()
+        ).collect(Collectors.toList());
+        if(collect.size() > 0) {
+            throw new BadRequestException("Открытый реестр уже существует в этом месяце и году!");
+        } else {
+            int day = entity.getCreateRegister()
+                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                    .getDayOfMonth();
+            ticketRegisterByDateAndDep.forEach(ticketRegister -> {
+                    if(ticketRegister.getCreateRegister()
+                            .toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                            .getDayOfMonth() == day)
+                        throw new BadRequestException("Реестр существует!");
+            });
+        }
+
         this.ticketRegisterDao.persist(entity);
     }
 

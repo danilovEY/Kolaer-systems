@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.tickets;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * Created by danilovey on 30.11.2016.
  */
 @Entity
+@Data
 @Table(name = "ticket_register")
 @ApiModel("(Талоны) Реестр талонов")
 public class TicketRegister implements Serializable {
@@ -22,6 +24,9 @@ public class TicketRegister implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(name = "close")
+    private boolean close;
 
     @ApiModelProperty(value = "Список талонов")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -39,35 +44,4 @@ public class TicketRegister implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createRegister;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
-    }
-
-    public GeneralDepartamentEntity getDepartament() {
-        return departament;
-    }
-
-    public void setDepartament(GeneralDepartamentEntity departament) {
-        this.departament = departament;
-    }
-
-    public Date getCreateRegister() {
-        return createRegister;
-    }
-
-    public void setCreateRegister(Date createRegister) {
-        this.createRegister = createRegister;
-    }
 }

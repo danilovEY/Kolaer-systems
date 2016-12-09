@@ -14,5 +14,5 @@ public interface TicketRegisterDao extends DaoStandard<TicketRegister> {
     Integer save(TicketRegister obj);
     List<TicketRegister> findAllByDepName(String depName);
     Page<TicketRegister> findAllByDepName(int number, int pageSize, String depName);
-    Long getTicketRegisterByDateAndDep(Date date, String depName);
+    List<TicketRegister> getTicketRegisterByDateAndDep(Date date, String depName);
 }
