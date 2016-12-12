@@ -23,12 +23,12 @@
     <logger name="org.springframework.transaction" level="WARN" />
 
     <logger name="org.springframework.web.servlet.mvc" level="WARN" />
-    <logger name="org.springframework.security.ldap" level="WARN" />
+    <logger name="org.springframework.security.ldap" level="DEBUG" />
 
 
     <logger name="org.hibernate" level="INFO"/>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="FILE" />
         <appender-ref ref="STDOUT" />
     </root>

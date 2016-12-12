@@ -119,7 +119,7 @@ public class DataBaseInitialization {
                 dataBaseEmployee.setEmail(dbDataAll.getEmail());
                 dataBaseEmployee.setGender(dbDataAll.getGender());
 
-                if (dbDataAll.getDepartament() != null || !dbDataAll.getDepartament().trim().isEmpty()) {
+                if (dbDataAll.getDepartament() != null && !dbDataAll.getDepartament().trim().isEmpty()) {
                     this.updateDepartament(dataBaseEmployee, dbDataAll, mapDep.get(dbDataAll.getDepartament()));
                 }
             } else {
