@@ -23,24 +23,20 @@ public class ToolsLDAP {
     public static Collection<? extends GrantedAuthority> getRolesFromAttributes(Attributes attributes) {
         LOG.debug("Attributes: {}", attributes);
 
-        boolean haveDomainUserRole = false;
-
         final List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(DEFAULT_ROLE));
         try {
             final Attribute cn = attributes.get("memberOf");
-            for(int i = 0; i< cn.size(); i++) {
-                final String value = (String) cn.get(i);
-                final String group = value.substring(3, value.indexOf(','));
-                roles.add(new SimpleGrantedAuthority(group));
-                if (group.equals(DEFAULT_ROLE))
-                    haveDomainUserRole = true;
+            if(cn != null) {
+                for (int i = 0; i < cn.size(); i++) {
+                    final String value = (String) cn.get(i);
+                    final String group = value.substring(3, value.indexOf(','));
+                    if (!group.equals(DEFAULT_ROLE))
+                        roles.add(new SimpleGrantedAuthority(group));
+                }
             }
         } catch (NamingException e) {
             LOG.error("Ошибка при парсинге атрибутов!", e);
-        }
-
-        if(!haveDomainUserRole) {
-            roles.add(new SimpleGrantedAuthority(DEFAULT_ROLE));
         }
 
         return roles;
