@@ -5,7 +5,7 @@ import javafx.util.Duration;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.mvp.model.restful.PublicHolidays;
 import ru.kolaer.api.plugins.services.Service;
@@ -67,7 +67,7 @@ public class BirthdayOnHoliday implements Service {
 	private void showNotifi(final String title, final LocalDate date, final Holiday holiday) {
 		//final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
 		final GeneralEmployeesEntity[] employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersByBirthday(Tools.convertToDate(date));
-		final EmployeeOtherOrganizationBase[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByBirthday(Tools.convertToDate(date));
+		final EmployeeOtherOrganization[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByBirthday(Tools.convertToDate(date));
 		
 		final NotifiAction[] actions = new NotifiAction[employeesEntities.length + usersBirthday.length];
 		int i = 0;
@@ -82,7 +82,7 @@ public class BirthdayOnHoliday implements Service {
 			});
 			i++;
 		}
-		for(final EmployeeOtherOrganizationBase user : usersBirthday) {
+		for(final EmployeeOtherOrganization user : usersBirthday) {
 			actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));

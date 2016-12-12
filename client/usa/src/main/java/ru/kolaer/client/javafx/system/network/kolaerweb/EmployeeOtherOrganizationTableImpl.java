@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.api.system.network.restful.EmployeeOtherOrganizationTable;
 
 import java.text.DateFormat;
@@ -38,15 +38,15 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 	}
 
 	@Override
-	public void insertUserList(List<EmployeeOtherOrganizationBase> userList) {
+	public void insertUserList(List<EmployeeOtherOrganization> userList) {
 
 	}
 
 	@Override
-	public EmployeeOtherOrganizationBase[] getUsersByBirthday(Date date, String organization) {
+	public EmployeeOtherOrganization[] getUsersByBirthday(Date date, String organization) {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
-    	final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS + "/" + organization + "/birthday/" + property.getValue(), EmployeeOtherOrganizationBase[].class);
+    	final EmployeeOtherOrganization[] users = restTemplate.getForObject(this.URL_GET_USERS + "/" + organization + "/birthday/" + property.getValue(), EmployeeOtherOrganization[].class);
     	return users;
 	}
 	
@@ -60,48 +60,48 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 	}
 	
 	@Override
-	public EmployeeOtherOrganizationBase[] getAllUser() {
-		final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX, EmployeeOtherOrganizationBase[].class);
+	public EmployeeOtherOrganization[] getAllUser() {
+		final EmployeeOtherOrganization[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX, EmployeeOtherOrganization[].class);
 		return users;
 	}
 
 	@Override
-	public EmployeeOtherOrganizationBase[] getUsersMax(final int maxCount) {
-		final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount), EmployeeOtherOrganizationBase[].class);
+	public EmployeeOtherOrganization[] getUsersMax(final int maxCount) {
+		final EmployeeOtherOrganization[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount), EmployeeOtherOrganization[].class);
 		return users;
 	}
 
 	@Override
-	public EmployeeOtherOrganizationBase[] getUsersByBirthday(final Date date) {
+	public EmployeeOtherOrganization[] getUsersByBirthday(final Date date) {
     	final SimpleStringProperty property = new SimpleStringProperty();
     	property.setValue(dateFormat.format(date));
     	
-    	final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), EmployeeOtherOrganizationBase[].class);
+    	final EmployeeOtherOrganization[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), EmployeeOtherOrganization[].class);
     	return users;
 	}
 
 	@Override
-	public EmployeeOtherOrganizationBase[] getUsersByRangeBirthday(final Date dateBegin, final Date dateEnd) {
+	public EmployeeOtherOrganization[] getUsersByRangeBirthday(final Date dateBegin, final Date dateEnd) {
 		final SimpleStringProperty propertyBegin = new SimpleStringProperty();
     	final SimpleStringProperty propertyEnd = new SimpleStringProperty();
     	propertyBegin.setValue(dateFormat.format(dateBegin));
     	propertyEnd.setValue(dateFormat.format(dateEnd));
     	
-    	final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), EmployeeOtherOrganizationBase[].class);
+    	final EmployeeOtherOrganization[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), EmployeeOtherOrganization[].class);
     	return users;
 	}
 
 	@Override
-	public EmployeeOtherOrganizationBase[] getUsersBirthdayToday() {
-    	final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY_TODAY, EmployeeOtherOrganizationBase[].class);
+	public EmployeeOtherOrganization[] getUsersBirthdayToday() {
+    	final EmployeeOtherOrganization[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY_TODAY, EmployeeOtherOrganization[].class);
     	return users;
 	}
 
 	@Override
-	public EmployeeOtherOrganizationBase[] getUsersByInitials(final String initials) {
+	public EmployeeOtherOrganization[] getUsersByInitials(final String initials) {
 		if(initials == null || initials.isEmpty())
 			throw new NullPointerException("Initials is null!");
-		final EmployeeOtherOrganizationBase[] users = restTemplate.getForObject(this.URL_GET_USERS_BY_INITIALS + "/" + initials, EmployeeOtherOrganizationBase[].class);
+		final EmployeeOtherOrganization[] users = restTemplate.getForObject(this.URL_GET_USERS_BY_INITIALS + "/" + initials, EmployeeOtherOrganization[].class);
 		return users;
 	}
 

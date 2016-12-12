@@ -31,8 +31,9 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 		this.employeeOtherOrganization.setId(id);
 	}
 
-	@Temporal(TemporalType.DATE)
+
 	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getBirthday() {
 		return this.employeeOtherOrganization.getBirthday();
 	}

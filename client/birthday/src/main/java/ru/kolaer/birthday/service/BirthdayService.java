@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -31,7 +31,7 @@ public class BirthdayService implements Service {
 	public void run() {
 		//final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersBirthdayToday();
 		final GeneralEmployeesEntity[]  employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersBirthdayToday();
-		final EmployeeOtherOrganizationBase[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersBirthdayToday();
+		final EmployeeOtherOrganization[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersBirthdayToday();
 
 		final NotifiAction[] actions = new NotifiAction[employeesEntities.length + usersBirthday.length];
 		int i = 0;
@@ -46,7 +46,7 @@ public class BirthdayService implements Service {
 			});
 			i++;
 		}
-		for(final EmployeeOtherOrganizationBase user : usersBirthday) {
+		for(final EmployeeOtherOrganization user : usersBirthday) {
 			actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));

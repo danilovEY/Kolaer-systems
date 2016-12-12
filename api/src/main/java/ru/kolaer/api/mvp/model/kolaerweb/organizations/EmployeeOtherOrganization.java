@@ -17,8 +17,8 @@ import java.util.Date;
     short getId();
     void setId(short id);
 
-    @JsonFormat(locale = "ru", shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Europe/Moscow")
     @ApiModelProperty(value = "День рождения")
+    @JsonFormat(locale = "ru", shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Europe/Moscow")
     Date getBirthday();
     void setBirthday(Date birthday);
 
