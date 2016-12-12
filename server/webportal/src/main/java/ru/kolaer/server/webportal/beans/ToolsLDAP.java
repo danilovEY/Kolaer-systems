@@ -42,16 +42,6 @@ public class ToolsLDAP {
         return roles;
     }
 
-    private static SimpleGrantedAuthority getRole(String role) {
-        LOG.debug(role);
-        switch (role) {
-            case "OIT": return new SimpleGrantedAuthority(EnumRole.SUPER_ADMIN.toString());
-            case "ПСР Администратор": return new SimpleGrantedAuthority(EnumRole.PSR_ADMIN.toString());
-            case "Анонимный": return new SimpleGrantedAuthority(EnumRole.ANONYMOUS.toString());
-            default: return null;
-        }
-    }
-
     public static String toDC(String domainName) {
         StringBuilder buf = new StringBuilder();
         for (String token : domainName.split("\\.")) {
