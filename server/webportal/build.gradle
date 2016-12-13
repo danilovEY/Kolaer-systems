@@ -94,7 +94,7 @@ task renameResources(dependsOn: processResources) {
     }
 }
 
-task buildApp(dependsOn: [clean, renameResources, war]) {
+task buildApp(dependsOn: [clean, asciidoctor, renameResources, war]) {
     doLast {
         copy {
             from 'build/libs/' + nameWarFile

@@ -70,7 +70,7 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
 
     @Override
     public void update(List<TicketRegister> entity) {
-
+        entity.forEach(this::update);
     }
 
     @Override
@@ -86,5 +86,10 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
         }
 
         return this.ticketRegisterDao.findAllByDepName(page, pageSize, name);
+    }
+
+    @Override
+    public List<TicketRegister> getAllOpenRegister() {
+        return this.ticketRegisterDao.findAllOpenRegister();
     }
 }

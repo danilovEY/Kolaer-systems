@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
@@ -43,6 +44,16 @@ public class TicketController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private RegisterTicketScheduler registerTicketScheduler;
+
+    @ApiOperation(value = "Сформировать отчет")
+    @UrlDeclaration(description = "Сформировать отчет")
+    @RequestMapping(value = "/generate/execute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void generateAndMailSend() {
+        registerTicketScheduler.setSend(true);
+    }
 
     @ApiOperation(value = "Получить все реестры талонов")
     @UrlDeclaration(description = "Получить все реестры талонов", isAccessUser = true)

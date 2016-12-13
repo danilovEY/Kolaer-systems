@@ -11,4 +11,5 @@ import java.util.List;
 public interface TicketRegisterService extends ServiceBase<TicketRegister>{
     List<TicketRegister> getAllByDepName(String name);
     Page<TicketRegister> getAllByDepName(int number, int pageSize, String name);
+    List<TicketRegister> getAllOpenRegister();
 }

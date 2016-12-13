@@ -71,11 +71,20 @@ public class TicketRegisterDaoImpl implements TicketRegisterDao {
     @Transactional(readOnly = true)
     public List<TicketRegister> getTicketRegisterByDateAndDep(Date date, String depName) {
         return this.sessionFactory.getCurrentSession()
-                .createQuery("FROM TicketRegister tr " +
-                        "WHERE MONTH(tr.createRegister) = MONTH(:createRegister) AND YEAR(tr.createRegister) = YEAR(:createRegister)" +
+                .createQuery("FROM TicketRegister tr" +
+                        " WHERE MONTH(tr.createRegister) = MONTH(:createRegister)" +
+                        " AND YEAR(tr.createRegister) = YEAR(:createRegister)" +
                         " AND tr.departament.name = :depName")
                 .setParameter("createRegister", date)
                 .setParameter("depName", depName)
+                .list();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TicketRegister> findAllOpenRegister() {
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("FROM TicketRegister tr WHERE tr.close = false")
                 .list();
     }
 
