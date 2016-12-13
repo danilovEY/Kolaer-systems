@@ -5,17 +5,18 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -39,13 +40,17 @@ import java.util.List;
 @EnableWebMvc
 @EnableTransactionManagement
 @EnableSwagger2
+@EnableScheduling
 @ComponentScan({"ru.kolaer.server.webportal.spring",
         "ru.kolaer.server.webportal.beans",
         "ru.kolaer.server.webportal.mvc.model.dao.impl",
         "ru.kolaer.server.webportal.mvc.model.ldap.impl",
         "ru.kolaer.server.webportal.mvc.model.servirces.impl",
         "ru.kolaer.server.webportal.mvc.controllers"})
-@PropertySource("classpath:database.properties")
+@PropertySources({
+        @PropertySource("classpath:database.properties"),
+        @PropertySource("classpath:mail.properties")
+})
 public class SpringContext extends WebMvcConfigurerAdapter {
 
     @Resource
@@ -126,6 +131,25 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory);
         return transactionManager;
+    }
+
+    @Bean
+    public JavaMailSender mailSender() {
+        final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+        javaMailSender.getJavaMailProperties().put("mail.smtps.auth", env.getRequiredProperty("mail.smtps.auth"));
+        javaMailSender.setHost(env.getRequiredProperty("mail.host"));
+        javaMailSender.setPort(Integer.valueOf(env.getRequiredProperty("mail.port")));
+        javaMailSender.setUsername(env.getRequiredProperty("mail.username"));
+        javaMailSender.setPassword(env.getRequiredProperty("mail.password"));
+        javaMailSender.setProtocol(env.getRequiredProperty("mail.protocol"));
+        return javaMailSender;
+    }
+
+    @Bean
+    public SimpleMailMessage templateMessage() {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom(env.getRequiredProperty("mail.from"));
+        return simpleMailMessage;
     }
 
     /**Позволяет мапить объект в json даже с учетом что стоит LAZY над property в entities.*/

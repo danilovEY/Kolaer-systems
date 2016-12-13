@@ -4,6 +4,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -25,6 +27,29 @@ public class TestSpring {
 
     @Autowired
     private InitialLdapContext ldapContext;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private SimpleMailMessage templateMessage;
+
+    @Test
+    public void testMailSend() {
+        SimpleMailMessage mailMessage = new SimpleMailMessage(templateMessage);
+        mailMessage.setSubject("Hello TEST!");
+        mailMessage.setText("TEST TEST!");
+        mailMessage.setTo("danilovey@kolaer.ru");
+
+        try {
+            mailSender.send(mailMessage);
+            System.out.println("Mail send!");
+        } catch (Exception ex) {
+            System.out.println("Mail NOT send!");
+            ex.printStackTrace();
+        }
+
+    }
 
     @Test
     @Ignore
