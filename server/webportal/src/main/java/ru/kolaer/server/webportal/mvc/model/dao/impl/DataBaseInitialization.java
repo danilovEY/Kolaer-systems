@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +68,8 @@ public class DataBaseInitialization {
     private void initOtherData() {
         XSSFWorkbook myExcelBook = null;
         try {
-            myExcelBook = new XSSFWorkbook(this.getClass().getResourceAsStream("bank_account.xlsx"));
+            Resource resource = new ClassPathResource("bank_account.xlsx");
+            myExcelBook = new XSSFWorkbook(resource.getInputStream());
             XSSFSheet myExcelSheet = myExcelBook.getSheet("KOLAER");
             myExcelSheet.forEach(row -> {
                 String initials = row.getCell(0).getStringCellValue();
