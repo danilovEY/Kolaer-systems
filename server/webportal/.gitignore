@@ -2,6 +2,7 @@
 /src/main/webapp/asciidoc/
 /src/main/resources/app.properties
 /src/main/resources/database.properties
+/src/main/resources/bank_account.xlsx
 /src/main/resources/ldap.properties
 /src/main/resources/mail.properties
 /src/main/resources/test_database.properties

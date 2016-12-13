@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.Ticket;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
@@ -18,7 +19,9 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by danilovey on 13.12.2016.
@@ -44,6 +47,9 @@ public class RegisterTicketScheduler {
 
     @Autowired
     private SimpleMailMessage mailMessage;
+
+    @Autowired
+    private BankAccountDao bankAccountDao;
 
     @PostConstruct
     public void init() {
@@ -112,7 +118,7 @@ public class RegisterTicketScheduler {
 
             for(final Ticket ticket : tickets) {
                 final String initials = ticket.getEmployee().getInitials().toUpperCase();
-                printWriter.printf("%s%"+ String.valueOf(this.INDEX - initials.length()) +"s              DR%s\n", initials, "1000401000183069", ticket.getCount());
+                printWriter.printf("%s%"+ String.valueOf(this.INDEX - initials.length()) +"s              DR%s\n", initials, bankAccountDao.findByInitials(initials), ticket.getCount());
             }
             printWriter.printf("T                 %d\n", tickets.size());
         } catch (FileNotFoundException | UnsupportedEncodingException e) {

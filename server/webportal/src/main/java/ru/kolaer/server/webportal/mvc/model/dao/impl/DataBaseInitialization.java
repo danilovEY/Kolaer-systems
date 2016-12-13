@@ -1,5 +1,14 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,18 +20,25 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
+import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
+import ru.kolaer.server.webportal.mvc.model.entities.bank.BankAccount;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.ManyToMany;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +48,7 @@ import java.util.stream.Collectors;
  * Created by danilovey on 03.08.2016.
  */
 @Repository
+@Slf4j
 public class DataBaseInitialization {
     private static final Logger LOG = LoggerFactory.getLogger(DataBaseInitialization.class);
 
@@ -42,8 +59,42 @@ public class DataBaseInitialization {
     @Autowired
     private SessionFactory sessionFactory;
 
-    @Value("${hibernate.hbm2ddl.auto}")
-    private String hibGen;
+    @Autowired
+    private BankAccountDao bankAccountDao;
+
+    @PostConstruct
+    private void initOtherData() {
+        XSSFWorkbook myExcelBook = null;
+        try {
+            myExcelBook = new XSSFWorkbook(this.getClass().getResourceAsStream("bank_account.xlsx"));
+            XSSFSheet myExcelSheet = myExcelBook.getSheet("KOLAER");
+            myExcelSheet.forEach(row -> {
+                String initials = row.getCell(0).getStringCellValue();
+                String cache = row.getCell(1).getStringCellValue();
+
+                if(initials!= null && cache!= null){
+                    initials = initials.trim();
+                    cache = cache.trim();
+                    if(!initials.isEmpty() && !cache.isEmpty()) {
+                        final GeneralEmployeesEntity entity = new GeneralEmployeesEntityBase();
+                        entity.setInitials(initials);
+                        final BankAccount account = new BankAccount(entity , cache);
+                        this.bankAccountDao.persist(account);
+                    }
+                }
+            });
+        } catch (IOException e) {
+            log.error("Ошибка при чтении файла!", e);
+        } finally {
+            if(myExcelBook != null) {
+                try {
+                    myExcelBook.close();
+                } catch (IOException e) {
+                    log.error("Ошибка закрытии файла!", e);
+                }
+            }
+        }
+    }
 
     @Transactional
     public void initDB() {
