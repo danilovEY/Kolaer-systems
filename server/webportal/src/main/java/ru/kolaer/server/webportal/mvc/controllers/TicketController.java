@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
 import ru.kolaer.server.webportal.errors.BadRequestException;
@@ -93,10 +95,16 @@ public class TicketController {
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<TicketRegister> getAllRegister(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                                @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-        return this.ticketRegisterService
-                .getAllByDepName(number, pageSize,
-                        serviceLDAP.getAccountByAuthentication()
-                                .getGeneralEmployeesEntity().getDepartament().getName());
+        final GeneralAccountsEntity accountByAuthentication = serviceLDAP.getAccountByAuthentication();
+        if(accountByAuthentication.getRoles().stream()
+                .map(GeneralRolesEntity::getType)
+                .collect(Collectors.toList()).contains("OIT")){
+            return new Page<>(this.ticketRegisterService.getAll(), 0, 0, 0);
+        } else {
+            return this.ticketRegisterService.getAllByDepName(number, pageSize,
+                            accountByAuthentication.getGeneralEmployeesEntity()
+                                    .getDepartament().getName());
+        }
     }
 
     @ApiOperation(value = "Добавить талон в реестр")

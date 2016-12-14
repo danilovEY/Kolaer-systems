@@ -62,7 +62,7 @@ public class RegisterTicketScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 15 * * *")
+    //@Scheduled(cron = "0 0 15 * * *", zone = "Europe/Moscow")
     public void generateTicketDocument() {
         if(test)
             return;
