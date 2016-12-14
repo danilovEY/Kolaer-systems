@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
@@ -20,6 +21,9 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
 
     @Autowired
     private TicketRegisterDao ticketRegisterDao;
+
+    @Autowired
+    private TicketDao ticketDao;
 
     @Override
     public List<TicketRegister> getAll() {
@@ -59,7 +63,7 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
     @Override
     public void delete(TicketRegister entity) {
         if (entity.getTickets() != null)
-            entity.getTickets().clear();
+            entity.getTickets().forEach(ticketDao::delete);
         this.ticketRegisterDao.delete(entity);
     }
 

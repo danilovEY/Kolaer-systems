@@ -18,6 +18,8 @@ import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,10 +51,41 @@ public class TicketController {
     private RegisterTicketScheduler registerTicketScheduler;
 
     @ApiOperation(value = "Сформировать отчет")
-    @UrlDeclaration(description = "Сформировать отчет")
+    @UrlDeclaration(description = "Сформировать отчет", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/generate/execute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void generateAndMailSend() {
         registerTicketScheduler.setSend(true);
+    }
+
+    @ApiOperation(value = "Добавить е-майл")
+    @UrlDeclaration(description = "Добавить е-майл")
+    @RequestMapping(value = "/generate/add", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<String> addEmail(@RequestParam("mail") String mail) {
+        this.registerTicketScheduler.addEmail(mail);
+        return registerTicketScheduler.getEmails();
+    }
+
+    @ApiOperation(value = "Удалить е-майл")
+    @UrlDeclaration(description = "Удалить е-майл")
+    @RequestMapping(value = "/generate/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<String> removeEmail(@RequestParam("mail") String mail) {
+        this.registerTicketScheduler.removeEmail(mail);
+        return registerTicketScheduler.getEmails();
+    }
+
+    @ApiOperation(value = "Получить все е-майлы")
+    @UrlDeclaration(description = "Получить все е-майлы")
+    @RequestMapping(value = "/generate/emails", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<String> getEmails() {
+        return registerTicketScheduler.getEmails();
+    }
+
+    @ApiOperation(value = "Получить последнюю дату отправки")
+    @UrlDeclaration(description = "Получить последнюю дату отправки")
+    @RequestMapping(value = "/generate/last", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public String getLastSend() {
+        final LocalDateTime lastSend = registerTicketScheduler.getLastSend();
+        return lastSend != null ? DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(lastSend) : "none";
     }
 
     @ApiOperation(value = "Получить все реестры талонов")

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 13.12.2016.
@@ -54,7 +55,7 @@ public class RegisterTicketScheduler {
     @PostConstruct
     public void init() {
         this.emails.add("oit@kolaer.ru");
-        this.emails.add("bondarenkora@kolaer.ru");
+        //this.emails.add("bondarenkora@kolaer.ru");
 
         if(env.getRequiredProperty("test").equals("false")) {
             this.test = false;
@@ -80,17 +81,14 @@ public class RegisterTicketScheduler {
                     try {
                         final File genFile = this.generateTextFile(allTiskets);
                         if (genFile != null) {
-                            final FileInputStream fileInputStream = new FileInputStream(genFile);
-                            this.emails.forEach(email ->
-                                this.mailSender.send(mimeMessage -> {
-                                    MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
-                                    messageHelper.setFrom(mailMessage.getFrom());
-                                    messageHelper.setTo(email);
-                                    messageHelper.setSubject("Сформированные талоны ЛПП");
-                                    messageHelper.setText("Сформированные талоны ЛПП. Файл во вложении!");
-                                    messageHelper.addAttachment(genFile.getName(), () -> fileInputStream);
-                                })
-                            );
+                            this.mailSender.send(mimeMessage -> {
+                                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+                                messageHelper.setFrom(mailMessage.getFrom());
+                                messageHelper.setTo(this.emails.toArray(new String[this.emails.size()]));
+                                messageHelper.setSubject("Сформированные талоны ЛПП");
+                                messageHelper.setText("Сформированные талоны ЛПП. Файл во вложении!");
+                                messageHelper.addAttachment(genFile.getName(), () -> new FileInputStream(genFile));
+                            });
                         }
                     } catch (IOException e) {
                         log.error("Ошибка при генерации фала!", e);
@@ -104,11 +102,16 @@ public class RegisterTicketScheduler {
 
     private File generateTextFile(List<Ticket> tickets) throws IOException {
         final LocalDateTime now = LocalDateTime.now();
-        final String fileName = "Z001000.KOLAER_ENROLL0010001." + now.getDayOfYear();
+        String fileName = "Z001000.KOLAER_ENROLL0010001." + now.getDayOfYear();
         final String[] dateTime = dateTimeFormatter.format(now).split("-");
 
-        final File file = new File(fileName);
-        if(!file.exists() && !file.createNewFile())
+        File file = new File(fileName);
+
+        if(file.exists()) {
+            file.delete();
+        }
+
+        if(!file.createNewFile())
             return null;
 
         PrintWriter printWriter = null;
@@ -118,7 +121,7 @@ public class RegisterTicketScheduler {
 
             for(final Ticket ticket : tickets) {
                 final String initials = ticket.getEmployee().getInitials().toUpperCase();
-                printWriter.printf("%s%"+ String.valueOf(this.INDEX - initials.length()) +"s              DR%s\n", initials, bankAccountDao.findByInitials(initials), ticket.getCount());
+                printWriter.printf("%s%"+ String.valueOf(this.INDEX - initials.length()) +"s              DR%s\n", initials, bankAccountDao.findByInitials(initials).getCheck(), ticket.getCount());
             }
             printWriter.printf("T                 %d\n", tickets.size());
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
@@ -129,6 +132,10 @@ public class RegisterTicketScheduler {
         }
 
         return file;
+    }
+
+    public LocalDateTime getLastSend() {
+        return lastSend;
     }
 
     public void addEmail(String email) {
