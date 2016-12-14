@@ -102,11 +102,14 @@ public class RegisterTicketScheduler {
 
     private File generateTextFile(List<Ticket> tickets) throws IOException {
         final LocalDateTime now = LocalDateTime.now();
-        String fileName = "Z001000.KOLAER_ENROLL0010001." + now.getDayOfYear();
+        String fileName = "tickets/Z001000.KOLAER_ENROLL0010001." + now.getDayOfYear();
         final String[] dateTime = dateTimeFormatter.format(now).split("-");
 
-        File file = new File(fileName);
+        File dirTickets = new File("tickets");
+        if(!dirTickets.exists())
+            dirTickets.mkdir();
 
+        File file = new File(fileName);
         if(file.exists()) {
             file.delete();
         }
