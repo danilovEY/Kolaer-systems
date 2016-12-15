@@ -73,9 +73,9 @@ public class DataBaseInitialization {
             XSSFSheet myExcelSheet = myExcelBook.getSheet("KOLAER");
             myExcelSheet.forEach(row -> {
                 String initials = row.getCell(0).getStringCellValue();
-                String cache = row.getCell(1).getStringCellValue();
+                String cache = String.valueOf(row.getCell(1).getNumericCellValue());
 
-                if(initials!= null && cache!= null){
+                if(initials!= null){
                     initials = initials.trim();
                     cache = cache.trim();
                     if(!initials.isEmpty() && !cache.isEmpty()) {

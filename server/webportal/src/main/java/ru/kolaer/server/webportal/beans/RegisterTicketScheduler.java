@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.beans;
 
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTimeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,12 +17,10 @@ import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,9 +31,7 @@ import java.util.stream.Collectors;
 public class RegisterTicketScheduler {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
     private final List<String> emails = new ArrayList<>();
-    private final int INDEX = 116;
     private LocalDateTime lastSend;
-    private boolean send = false;
     private boolean test = true;
 
     @Resource
@@ -55,7 +52,6 @@ public class RegisterTicketScheduler {
     @PostConstruct
     public void init() {
         this.emails.add("oit@kolaer.ru");
-        //this.emails.add("bondarenkora@kolaer.ru");
 
         if(env.getRequiredProperty("test").equals("false")) {
             this.test = false;
@@ -63,44 +59,77 @@ public class RegisterTicketScheduler {
     }
 
     //@Scheduled(cron = "0 0 15 * * *", zone = "Europe/Moscow")
-    public void generateTicketDocument() {
-        if(test)
-            return;
+    public void generateAddTicketsScheduled() {
+        if(!test)
+            this.generateAddTicketDocument();
+    }
 
-        if(send) {
-            final List<TicketRegister> allOpenRegister = this.ticketRegisterService.getAllOpenRegister();
-            if(allOpenRegister.size() > 0) {
-                allOpenRegister.forEach(ticketRegister -> ticketRegister.setClose(true));
-                this.ticketRegisterService.update(allOpenRegister);
+    @Scheduled(cron = "0 0 14 26-31 * ?", zone = "Europe/Moscow")
+    public void generateZeroTicketsLastDayOfMonthScheduled() {
+        if(!test) {
+            final LocalDate now = LocalDate.now();
+            final LocalDate end = now.withDayOfMonth(now.lengthOfMonth());
+            final int lastDay = end.getDayOfWeek().getValue() == DateTimeConstants.SUNDAY
+                    || end.getDayOfWeek().getValue() == DateTimeConstants.SATURDAY ? 6 :  end.getDayOfMonth();
 
-                List<Ticket> allTiskets = new ArrayList<>();
-                allOpenRegister.stream().filter(t -> t.getTickets() != null).map(TicketRegister::getTickets)
-                        .forEach(allTiskets::addAll);
-
-                if (allTiskets.size() > 0) {
-                    try {
-                        final File genFile = this.generateTextFile(allTiskets);
-                        if (genFile != null) {
-                            this.mailSender.send(mimeMessage -> {
-                                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
-                                messageHelper.setFrom(mailMessage.getFrom());
-                                messageHelper.setTo(this.emails.toArray(new String[this.emails.size()]));
-                                messageHelper.setSubject("Сформированные талоны ЛПП");
-                                messageHelper.setText("Сформированные талоны ЛПП. Файл во вложении!");
-                                messageHelper.addAttachment(genFile.getName(), () -> new FileInputStream(genFile));
-                            });
-                        }
-                    } catch (IOException e) {
-                        log.error("Ошибка при генерации фала!", e);
-                    }
-                }
+            if (now.getDayOfMonth() == lastDay) {
+                this.generateZeroTicketDocument();
             }
-            this.lastSend = LocalDateTime.now();
-            send = false;
         }
     }
 
-    private File generateTextFile(List<Ticket> tickets) throws IOException {
+    public boolean generateAddTicketDocument() {
+        final List<TicketRegister> allOpenRegister = this.ticketRegisterService.getAllOpenRegister();
+        if(allOpenRegister.size() > 0) {
+            allOpenRegister.forEach(ticketRegister -> ticketRegister.setClose(true));
+            this.ticketRegisterService.update(allOpenRegister);
+
+            List<Ticket> allTiskets = new ArrayList<>();
+            allOpenRegister.stream().filter(t -> t.getTickets() != null).map(TicketRegister::getTickets)
+                    .forEach(allTiskets::addAll);
+
+            if(this.sendMail(allTiskets, "DR", "Сформированные талоны ЛПП для зачисления. Файл во вложении!")) {
+                this.lastSend = LocalDateTime.now();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean generateZeroTicketDocument() {
+        List<Ticket> allTiskets = this.bankAccountDao.findAll().stream().map(bankAccount -> {
+            final Ticket ticket = new Ticket();
+            ticket.setEmployee(bankAccount.getGeneralEmployeesEntity());
+            ticket.setCount(0);
+            return ticket;
+        }).collect(Collectors.toList());
+
+        return this.sendMail(allTiskets, "ZR", "Сформированные талоны ЛПП для обнуления. Файл во вложении!");
+    }
+
+    private boolean sendMail(List<Ticket> tickets, String typeTiskets, String text) {
+        if (tickets.size() > 0) {
+            try {
+                final File genFile = this.generateTextFile(tickets, typeTiskets);
+                if (genFile != null) {
+                    this.mailSender.send(mimeMessage -> {
+                        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+                        messageHelper.setFrom(mailMessage.getFrom());
+                        messageHelper.setTo(this.emails.toArray(new String[this.emails.size()]));
+                        messageHelper.setSubject("Сформированные талоны ЛПП");
+                        messageHelper.setText(text);
+                        messageHelper.addAttachment(genFile.getName(), () -> new FileInputStream(genFile));
+                    });
+                    return true;
+                }
+            } catch (IOException e) {
+                log.error("Ошибка при генерации фала!", e);
+            }
+        }
+        return false;
+    }
+
+    private File generateTextFile(List<Ticket> tickets, String type) throws IOException {
         final LocalDateTime now = LocalDateTime.now();
         String fileName = "tickets/Z001000.KOLAER_ENROLL0010001." + now.getDayOfYear();
         final String[] dateTime = dateTimeFormatter.format(now).split("-");
@@ -124,7 +153,7 @@ public class RegisterTicketScheduler {
 
             for(final Ticket ticket : tickets) {
                 final String initials = ticket.getEmployee().getInitials().toUpperCase();
-                printWriter.printf("%s%"+ String.valueOf(this.INDEX - initials.length()) +"s              DR%s\n", initials, bankAccountDao.findByInitials(initials).getCheck(), ticket.getCount());
+                printWriter.printf("%s%"+ String.valueOf(116 - initials.length()) +"s              %s%s\n", initials, bankAccountDao.findByInitials(initials).getCheck(), type, ticket.getCount());
             }
             printWriter.printf("T                 %d\n", tickets.size());
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
@@ -153,12 +182,4 @@ public class RegisterTicketScheduler {
         return this.emails;
     }
 
-    public boolean isSend() {
-        return send;
-    }
-
-    public void setSend(boolean send) {
-        this.send = send;
-        this.generateTicketDocument();
-    }
 }

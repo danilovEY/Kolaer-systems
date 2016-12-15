@@ -55,8 +55,15 @@ public class TicketController {
     @ApiOperation(value = "Сформировать отчет")
     @UrlDeclaration(description = "Сформировать отчет", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/generate/execute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void generateAndMailSend() {
-        registerTicketScheduler.setSend(true);
+    public boolean generateAndMailSend() {
+        return registerTicketScheduler.generateAddTicketDocument();
+    }
+
+    @ApiOperation(value = "Сформировать отчет для обнуления")
+    @UrlDeclaration(description = "Сформировать отчет для обнуления", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/generate/zero/execute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public boolean generateZeroAndMailSend() {
+        return registerTicketScheduler.generateZeroTicketDocument();
     }
 
     @ApiOperation(value = "Добавить е-майл")
