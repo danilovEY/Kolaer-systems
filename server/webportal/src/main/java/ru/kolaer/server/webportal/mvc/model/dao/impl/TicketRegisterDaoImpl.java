@@ -23,7 +23,7 @@ public class TicketRegisterDaoImpl implements TicketRegisterDao {
 
     @Transactional(readOnly = true)
     public List<TicketRegister> findAll() {
-        return this.sessionFactory.getCurrentSession().createCriteria(TicketRegister.class).list();
+        return this.sessionFactory.getCurrentSession().createQuery("FROM TicketRegister").list();
     }
 
     @Transactional(readOnly = true)
