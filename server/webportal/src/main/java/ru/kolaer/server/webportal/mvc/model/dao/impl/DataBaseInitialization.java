@@ -70,10 +70,10 @@ public class DataBaseInitialization {
         try {
             Resource resource = new ClassPathResource("bank_account.xlsx");
             myExcelBook = new XSSFWorkbook(resource.getInputStream());
-            XSSFSheet myExcelSheet = myExcelBook.getSheet("KOLAER");
+            XSSFSheet myExcelSheet = myExcelBook.getSheet("Лист1");
             myExcelSheet.forEach(row -> {
                 String initials = row.getCell(0).getStringCellValue();
-                String cache = String.valueOf(row.getCell(1).getNumericCellValue());
+                String cache = row.getCell(1).getStringCellValue();
 
                 if(initials!= null){
                     initials = initials.trim();

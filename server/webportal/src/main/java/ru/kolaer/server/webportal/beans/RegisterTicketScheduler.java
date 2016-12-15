@@ -148,14 +148,17 @@ public class RegisterTicketScheduler {
 
         PrintWriter printWriter = null;
         try {
-            printWriter = new PrintWriter(fileName, "Cp1251");
-            printWriter.printf("H %s %s IMMEDIATE\n", dateTime[0], dateTime[1]);
+            printWriter = new PrintWriter(fileName, "windows-1251");
+            printWriter.printf("H %s %s IMMEDIATE", dateTime[0], dateTime[1]);
+            printWriter.printf(System.lineSeparator());
 
             for(final Ticket ticket : tickets) {
                 final String initials = ticket.getEmployee().getInitials().toUpperCase();
-                printWriter.printf("%s%"+ String.valueOf(116 - initials.length()) +"s              %s%s\n", initials, bankAccountDao.findByInitials(initials).getCheck(), type, ticket.getCount());
+                printWriter.printf("%s%"+ String.valueOf(116 - initials.length()) +"s              %s%s", initials, bankAccountDao.findByInitials(initials).getCheck(), type, ticket.getCount());
+                printWriter.printf(System.lineSeparator());
             }
-            printWriter.printf("T                 %d\n", tickets.size());
+            printWriter.printf("T                 %d", tickets.size());
+            printWriter.printf(System.lineSeparator());
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             log.error("Файл {} не найден!", fileName);
         } finally {
