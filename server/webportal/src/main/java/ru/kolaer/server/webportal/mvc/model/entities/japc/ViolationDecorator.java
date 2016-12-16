@@ -59,6 +59,7 @@ public class ViolationDecorator implements Violation {
     }
 
     @Column(name = "start_making_violation")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getStartMakingViolation() {
         return this.violation.getStartMakingViolation();
     }
@@ -69,6 +70,7 @@ public class ViolationDecorator implements Violation {
     }
 
     @Column(name = "date_limit_elimination_violation")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDateLimitEliminationViolation() {
         return this.violation.getDateLimitEliminationViolation();
     }
@@ -79,6 +81,7 @@ public class ViolationDecorator implements Violation {
     }
 
     @Column(name = "date_end_elimination_violation")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDateEndEliminationViolation() {
         return this.violation.getDateEndEliminationViolation();
     }

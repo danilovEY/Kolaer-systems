@@ -21,7 +21,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
     @Override
     @Transactional(readOnly = true)
     public List<JournalViolation> findAll() {
-        return this.sessionFactory.getCurrentSession().createCriteria(JournalViolationDecorator.class).list();
+        return this.sessionFactory.getCurrentSession().createQuery("FROM JournalViolationDecorator").list();
     }
 
     @Override
@@ -46,5 +46,11 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
     @Transactional
     public void update(JournalViolation entity) {
         this.sessionFactory.getCurrentSession().update(entity);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<JournalViolation> findAllByDep(String depName) {
+        return null;
     }
 }

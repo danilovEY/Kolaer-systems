@@ -27,17 +27,17 @@ public interface Violation extends Serializable {
     void setTodo(String todo);
 
     @ApiModelProperty(value = "Дата записи нарушения")
-    @JsonFormat(locale = "ru", pattern = "dd.MM.yyyy hh.mm", timezone = "Europe/Moscow")
+    @JsonFormat(locale = "ru", shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy hh:mm", timezone = "Europe/Moscow")
     Date getStartMakingViolation();
     void setStartMakingViolation(Date startMakingViolation) ;
 
     @ApiModelProperty(value = "Срок устранения нарушения")
-    @JsonFormat(locale = "ru", pattern = "dd.MM.yyyy hh.mm", timezone = "Europe/Moscow")
+    @JsonFormat(locale = "ru", shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy hh:mm", timezone = "Europe/Moscow")
     Date getDateLimitEliminationViolation();
     void setDateLimitEliminationViolation(Date dateLimitEliminationViolation);
 
     @ApiModelProperty(value = "Дата устранения нарушения")
-    @JsonFormat(locale = "ru", pattern = "dd.MM.yyyy hh.mm", timezone = "Europe/Moscow")
+    @JsonFormat(locale = "ru", shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy hh:mm", timezone = "Europe/Moscow")
     Date getDateEndEliminationViolation();
     void setDateEndEliminationViolation(Date dateEndEliminationViolation);
 

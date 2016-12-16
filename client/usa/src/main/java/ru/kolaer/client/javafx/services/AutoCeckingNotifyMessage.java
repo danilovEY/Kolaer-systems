@@ -31,7 +31,7 @@ public class AutoCeckingNotifyMessage implements Service {
 
     @Override
     public void run() {
-        this.run = true;
+        this.run = false;
 
         while (this.run) {
             try {

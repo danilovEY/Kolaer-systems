@@ -3,6 +3,7 @@ package ru.kolaer.api.mvp.model.kolaerweb.jpac;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,4 +24,8 @@ public interface JournalViolation extends Serializable {
     @ApiModelProperty(value = "Список нарушений")
     List<Violation> getViolations();
     void setViolations(List<Violation> violations);
+
+    @ApiModelProperty(value = "Подразделение")
+    GeneralDepartamentEntity getDepartament();
+    void setDepartament(GeneralDepartamentEntity departament);
 }

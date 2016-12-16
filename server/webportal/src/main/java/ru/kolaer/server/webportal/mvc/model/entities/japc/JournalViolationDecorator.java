@@ -1,8 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.entities.japc;
 
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolationBase;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
+import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
 
 import javax.persistence.*;
 import java.util.List;
@@ -55,5 +57,16 @@ public class JournalViolationDecorator implements JournalViolation {
     @Override
     public void setViolations(List<Violation> violations) {
         this.journalViolation.setViolations(violations);
+    }
+
+    @OneToOne(targetEntity = GeneralDepartamentEntityDecorator.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_departament")
+    public GeneralDepartamentEntity getDepartament() {
+        return this.journalViolation.getDepartament();
+    }
+
+    @Override
+    public void setDepartament(GeneralDepartamentEntity departament) {
+        this.journalViolation.setDepartament(departament);
     }
 }

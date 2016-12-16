@@ -51,4 +51,9 @@ public class JournalViolationServiceImpl implements JournalViolationService {
     public JournalViolation getGeneralJournalViolation() {
         return this.journalViolationDao.findByID(0);
     }
+
+    @Override
+    public List<JournalViolation> getAllByDep(String depName) {
+        return this.journalViolationDao.findAllByDep(depName);
+    }
 }
