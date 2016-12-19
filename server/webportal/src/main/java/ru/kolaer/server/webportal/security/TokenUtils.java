@@ -8,6 +8,7 @@ import org.springframework.security.crypto.codec.Hex;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 /**
  * Класс для работы с токенами.
@@ -61,7 +62,7 @@ public class TokenUtils {
         signatureBuilder.append(":");
         signatureBuilder.append(expires);
         signatureBuilder.append(":");
-        signatureBuilder.append(password);
+        signatureBuilder.append(Optional.ofNullable(password).orElse(TokenUtils.MAGIC_KEY + String.valueOf(expires)));
         signatureBuilder.append(":");
         signatureBuilder.append(TokenUtils.MAGIC_KEY);
 
@@ -135,10 +136,10 @@ public class TokenUtils {
             return false;
         }
 
-        return signature.equals(TokenUtils.computeSignature(userDetails.getUsername(), MAGIC_KEY, expires));
+        return signature.equals(TokenUtils.computeSignature(userDetails.getUsername(), null, expires));
     }
 
     public static String createTokenLDAP(UserDetails userDetails) {
-        return createToken(userDetails.getUsername(), MAGIC_KEY, "LDAP");
+        return createToken(userDetails.getUsername(), null, "LDAP");
     }
 }

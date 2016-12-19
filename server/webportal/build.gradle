@@ -97,10 +97,10 @@ task renameResources(dependsOn: processResources) {
 
 task buildApp(dependsOn: [clean, asciidoctor, renameResources, war]) {
     doLast {
-        copy {
+        /*copy {
             from 'build/libs/' + nameWarFile
             into deployServerPath
-        }
+        }*/
     }
 }
 
@@ -112,9 +112,9 @@ task renameProject(dependsOn: clean) {
 
 task buildAppForTest(dependsOn: [war, asciidoctor, renameProject]) {
     doLast {
-        copy {
+        /*copy {
             from 'build/libs/' + testName
             into deployServerPath
-        }
+        }*/
     }
 }
