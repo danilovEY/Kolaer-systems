@@ -109,6 +109,28 @@ public class ViolationController {
     }
 
     @ApiOperation(
+            value = "Удалить нарушение",
+            notes = "Удалить нарушение"
+    )
+    @UrlDeclaration(description = "Удалить нарушение", isAccessUser = true)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void deleteJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody Violation violation) {
+        this.violationService.delete(violation);
+    }
+
+    @ApiOperation(
+            value = "Удалить журнал для нарушений",
+            notes = "Удалить журнал для нарушений"
+    )
+    @UrlDeclaration(description = "Удалить журнал для нарушений", isAccessUser = true)
+    @RequestMapping(value = "/journal/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void deleteJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody JournalViolation violation) {
+        JournalViolation journalViolation = this.journalViolationService.getById(violation.getId());
+        journalViolation.getViolations().forEach(this.violationService::delete);
+        this.journalViolationService.delete(violation);
+    }
+
+    @ApiOperation(
             value = "Получить все журналы с нарушениями",
             notes = "Получить все журналы с нарушениями"
     )
