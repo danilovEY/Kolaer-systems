@@ -52,19 +52,16 @@ public class RegisterTicketScheduler {
     @PostConstruct
     public void init() {
         this.emails.add("oit@kolaer.ru");
-
-        if(env.getRequiredProperty("test").equals("false")) {
-            this.test = false;
-        }
+        this.test = !env.getRequiredProperty("test").equals("false");
     }
 
-    //@Scheduled(cron = "0 0 15 * * *", zone = "Europe/Moscow")
+    @Scheduled(cron = "0 0 14 * * *", zone = "Europe/Moscow")
     public void generateAddTicketsScheduled() {
         if(!test)
             this.generateAddTicketDocument();
     }
 
-    @Scheduled(cron = "0 0 14 26-31 * ?", zone = "Europe/Moscow")
+    @Scheduled(cron = "0 0 13 26-31 * ?", zone = "Europe/Moscow")
     public void generateZeroTicketsLastDayOfMonthScheduled() {
         if(!test) {
             final LocalDate now = LocalDate.now();

@@ -8,5 +8,5 @@ import java.util.List;
  * Created by danilovey on 14.09.2016.
  */
 public interface JournalViolationService extends ServiceBase<JournalViolation> {
-    List<JournalViolation> getAllByDep(String depName);
+    List<JournalViolation> getAllByDep(Integer id);
 }

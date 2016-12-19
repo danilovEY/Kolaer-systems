@@ -21,8 +21,10 @@ import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecora
 import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -71,7 +73,7 @@ public class ViolationController {
             List<JournalViolation> journalViolations = isAdmin
                     ? this.journalViolationService.getAll()
                     : this.journalViolationService.getAllByDep(account.getGeneralEmployeesEntity()
-                    .getDepartament().getName());
+                    .getDepartament().getId());
 
             access.setJournalAccesses(journalViolations.stream().map(journalViolation -> {
                 final JournalAccess journalAccess = new JournalAccess();
@@ -113,7 +115,15 @@ public class ViolationController {
     @UrlDeclaration(description = "Получить все журналы с нарушениями", isAccessUser = true)
     @RequestMapping(value = "/journal/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<JournalViolation> getAllJournal() {
-        return this.journalViolationService.getAll();
+        final GeneralAccountsEntity account = this.serviceLDAP.getAccountByAuthentication();
+        final List<String> userRoles = account.getRoles().stream()
+                .map(GeneralRolesEntity::getType).collect(Collectors.toList());
+
+        final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
+
+        return isAdmin ? this.journalViolationService.getAll()
+                : this.journalViolationService.getAllByDep(account.getGeneralEmployeesEntity()
+                .getDepartament().getId());
     }
 
     @ApiOperation(
@@ -126,15 +136,24 @@ public class ViolationController {
         GeneralEmployeesEntity generalEmployeesEntity = serviceLDAP.getAccountByAuthentication().getGeneralEmployeesEntity();
 
         JournalViolation generalJournalViolation = this.journalViolationService.getById(journalViolation.getId());
-        generalJournalViolation.getViolations().addAll(journalViolation.getViolations().stream()
+        if(generalJournalViolation == null)
+            throw new BadRequestException("Не найден журнал с ID: " + journalViolation.getId());
+
+        List<Violation> violations = Optional.ofNullable(generalJournalViolation.getViolations())
+                .orElse(new ArrayList<>());
+
+        violations.addAll(journalViolation.getViolations().stream()
                 .filter(violation ->
-                    violation.getTypeViolation() != null
+                        violation.getTypeViolation() != null
                 ).map(v -> {
-                    v.setTypeViolation(this.typeViolationService.getById(v.getTypeViolation().getId()));
+                    if(v.getTypeViolation() != null)
+                        v.setTypeViolation(this.typeViolationService.getById(v.getTypeViolation().getId()));
                     v.setWriter(generalEmployeesEntity);
                     v.setStartMakingViolation(new Date());
                     return new ViolationDecorator(v);
-        }).collect(Collectors.toList()));
+                }).collect(Collectors.toList()));
+
+        generalJournalViolation.setViolations(violations);
 
         this.journalViolationService.update(generalJournalViolation);
         return generalJournalViolation.getViolations();

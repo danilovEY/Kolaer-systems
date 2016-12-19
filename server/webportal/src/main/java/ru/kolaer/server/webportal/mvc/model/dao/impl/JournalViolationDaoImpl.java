@@ -50,7 +50,9 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<JournalViolation> findAllByDep(String depName) {
-        return null;
+    public List<JournalViolation> findAllByDep(Integer id) {
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("FROM JournalViolationDecorator j WHERE j.departament.id = :id")
+                .setParameter("id", id).list();
     }
 }
