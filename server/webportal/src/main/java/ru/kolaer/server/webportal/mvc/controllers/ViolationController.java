@@ -15,16 +15,10 @@ import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalAccess;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationAccess;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -50,6 +44,9 @@ public class ViolationController {
 
     @Autowired
     private UrlPathService urlPathService;
+
+    @Autowired
+    private EmployeeService employeeService;
 
 
     @ApiOperation("Получить доступы журналов")
@@ -85,6 +82,31 @@ public class ViolationController {
         }
 
         return access;
+    }
+
+    @ApiOperation("Получить доступы для нарушений в журнале")
+    @UrlDeclaration(description = "Получить доступы для нарушений в журнале", isAccessAll = true)
+    @RequestMapping(value = "/access", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<ViolationAccess> getViolationAccess(@ApiParam("ID журнала") @RequestParam("id") Integer id) {
+        JournalViolation journalViolation = this.journalViolationService.getById(id);
+
+        if(journalViolation != null) {
+            final GeneralAccountsEntity account = this.serviceLDAP.getAccountByAuthentication();
+            final List<String> userRoles = account.getRoles().stream()
+                    .map(GeneralRolesEntity::getType).collect(Collectors.toList());
+
+            final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
+            return journalViolation.getViolations().stream().map(violation -> {
+                ViolationAccess violationAccess = new ViolationAccess();
+                violationAccess.setId(violation.getId());
+                violationAccess.setEdit(isAdmin);
+                violationAccess.setDelete(isAdmin);
+                return violationAccess;
+            }).collect(Collectors.toList());
+        }
+
+
+        return Collections.emptyList();
     }
 
     @ApiOperation(
@@ -172,6 +194,8 @@ public class ViolationController {
                         v.setTypeViolation(this.typeViolationService.getById(v.getTypeViolation().getId()));
                     v.setWriter(generalEmployeesEntity);
                     v.setStartMakingViolation(new Date());
+                    if(v.getExecutor() != null)
+                        v.setExecutor(this.employeeService.getById(v.getExecutor().getPnumber()));
                     return new ViolationDecorator(v);
                 }).collect(Collectors.toList()));
 
