@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.beans.UserSessionInfo;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 import ru.kolaer.server.webportal.security.TokenUtils;
 
@@ -47,9 +46,6 @@ public class AuthenticationController {
 
     @Autowired
     private UserDetailsService userDetailsServiceLDAP;
-
-    @Autowired
-    private UserSessionInfo userSessionInfo;
 
     @Autowired
     private ServiceLDAP serviceLDAP;
@@ -125,8 +121,6 @@ public class AuthenticationController {
         if(userDetails == null) {
             throw new UsernameNotFoundException("Пользователь " + username + " не найден!");
         }
-
-        this.userSessionInfo.setGeneralAccountsEntity(serviceLDAP.getAccountWithEmployeeByLogin(userDetails.getUsername()));
 
         final String tokenJson = TokenUtils.createTokenLDAP(userDetails);
         return new TokenJson(tokenJson);

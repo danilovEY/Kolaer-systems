@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.authentication.AbstractLdapAuthenticationProvider;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import ru.kolaer.server.webportal.beans.SeterProviderBean;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
 
 import javax.naming.Context;
@@ -43,9 +42,6 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
     private String server;
     private boolean ssl;
 
-    @Autowired
-    private SeterProviderBean seterProviderBean;
-
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
@@ -70,8 +66,6 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
 
         if(userData == null)
             return null;
-
-        this.seterProviderBean.setLDAP(true);
 
         UserDetails user = this.userDetailsContextMapper.mapUserFromContext(userData,
                 authentication.getName(),

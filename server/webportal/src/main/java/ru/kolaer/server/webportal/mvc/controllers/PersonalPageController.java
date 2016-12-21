@@ -3,7 +3,6 @@ package ru.kolaer.server.webportal.mvc.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
@@ -12,11 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.beans.UserSessionInfo;
 import ru.kolaer.server.webportal.mvc.model.entities.other.PersonalPageData;
 import ru.kolaer.server.webportal.mvc.model.servirces.PersonalPageService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
-import ru.kolaer.server.webportal.security.UnauthorizedEntryPoint;
 
 /**
  * Created by danilovey on 11.11.2016.
