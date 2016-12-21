@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by danilovey on 06.09.2016.
  */
-@JsonDeserialize(contentAs = TypeViolationBase.class)
+@JsonDeserialize(as = TypeViolationBase.class)
 @ApiModel(value = "(Нарушения) Тип нарушения")
 public interface TypeViolation extends Serializable {
     Integer getId();

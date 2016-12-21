@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * Created by danilovey on 06.09.2016.
  */
-@JsonDeserialize(contentAs = ViolationBase.class)
+@JsonDeserialize(as = ViolationBase.class)
 @ApiModel(value = "(Нарушения) Нарушение")
 public interface Violation extends Serializable {
     Integer getId();

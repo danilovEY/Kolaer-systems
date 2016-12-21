@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by danilovey on 06.09.2016.
  */
-@JsonDeserialize(contentAs = JournalViolationBase.class)
+@JsonDeserialize(as = JournalViolationBase.class)
 @ApiModel(value = "(Нарушения) Журнал нарушений")
 public interface JournalViolation extends Serializable {
     Integer getId();

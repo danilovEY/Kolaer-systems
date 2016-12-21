@@ -142,10 +142,10 @@ public class ViolationController {
             value = "Удалить нарушение",
             notes = "Удалить нарушение"
     )
-    @UrlDeclaration(description = "Удалить нарушение", isAccessUser = true)
+    @UrlDeclaration(description = "Удалить нарушения", isAccessUser = true)
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void deleteJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody Violation violation) {
-        this.violationService.delete(violation);
+    public void deleteViolations(@ApiParam(value = "Журнал нарушения") @RequestBody List<Violation> violations) {
+        violations.forEach(this.violationService::delete);
     }
 
     @ApiOperation(
@@ -154,10 +154,13 @@ public class ViolationController {
     )
     @UrlDeclaration(description = "Удалить журнал для нарушений", isAccessUser = true)
     @RequestMapping(value = "/journal/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void deleteJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody JournalViolation violation) {
-        JournalViolation journalViolation = this.journalViolationService.getById(violation.getId());
-        journalViolation.getViolations().forEach(this.violationService::delete);
-        this.journalViolationService.delete(violation);
+    public void deleteJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody List<JournalViolation> journalViolations) {
+        journalViolations.forEach(journalViolation -> {
+            JournalViolation journal = this.journalViolationService.getById(journalViolation.getId());
+            this.deleteViolations(journal.getViolations());
+            this.journalViolationService.delete(journal);
+        });
+
     }
 
     @ApiOperation(
@@ -184,7 +187,7 @@ public class ViolationController {
     )
     @UrlDeclaration(description = "Добавить нарушение в журнал", isAccessUser = true)
     @RequestMapping(value = "/add/journal", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Violation> addViolation(@ApiParam(value = "Журнал с нарушением") @RequestBody JournalViolation journalViolation) {
+    public Violation addViolation(@ApiParam(value = "Журнал с нарушением") @RequestBody JournalViolation journalViolation) {
         GeneralEmployeesEntity generalEmployeesEntity = serviceLDAP.getAccountByAuthentication().getGeneralEmployeesEntity();
 
         JournalViolation generalJournalViolation = this.journalViolationService.getById(journalViolation.getId());
@@ -194,23 +197,23 @@ public class ViolationController {
         List<Violation> violations = Optional.ofNullable(generalJournalViolation.getViolations())
                 .orElse(new ArrayList<>());
 
-        violations.addAll(journalViolation.getViolations().stream()
-                .filter(violation ->
-                        violation.getTypeViolation() != null
-                ).map(v -> {
-                    if(v.getTypeViolation() != null)
-                        v.setTypeViolation(this.typeViolationService.getById(v.getTypeViolation().getId()));
-                    v.setWriter(generalEmployeesEntity);
-                    v.setStartMakingViolation(new Date());
-                    if(v.getExecutor() != null)
-                        v.setExecutor(this.employeeService.getById(v.getExecutor().getPnumber()));
-                    return new ViolationDecorator(v);
-                }).collect(Collectors.toList()));
+        Violation lastAdd = null;
+        if(journalViolation.getViolations().size() == 1) {
+            final Violation v = journalViolation.getViolations().get(0);
+            if (v.getTypeViolation() != null)
+                v.setTypeViolation(this.typeViolationService.getById(v.getTypeViolation().getId()));
+            v.setWriter(generalEmployeesEntity);
+            v.setStartMakingViolation(new Date());
+            if (v.getExecutor() != null)
+                v.setExecutor(this.employeeService.getById(v.getExecutor().getPnumber()));
+            lastAdd = new ViolationDecorator(v);
+            violations.add(lastAdd);
+            generalJournalViolation.setViolations(violations);
 
-        generalJournalViolation.setViolations(violations);
+            this.journalViolationService.update(generalJournalViolation);
+        }
 
-        this.journalViolationService.update(generalJournalViolation);
-        return generalJournalViolation.getViolations();
+        return lastAdd;
     }
 
     @ApiOperation(
