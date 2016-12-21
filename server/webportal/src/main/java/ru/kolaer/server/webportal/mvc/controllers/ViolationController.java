@@ -10,6 +10,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
@@ -49,8 +50,15 @@ public class ViolationController {
     private EmployeeService employeeService;
 
 
+    @ApiOperation("Получить состояние")
+    @UrlDeclaration(description = "Получить состояние", isAccessUser = true)
+    @RequestMapping(value = "/stage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public StageEnum[] getStage() {
+        return StageEnum.values();
+    }
+
     @ApiOperation("Получить доступы журналов")
-    @UrlDeclaration(description = "Добавить журнал для нарушений", isAccessAll = true)
+    @UrlDeclaration(description = "Добавить журнал для нарушений", isAccessUser  = true)
     @RequestMapping(value = "/journal/access", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public JournalViolationAccess getJournalAccess() {
         final GeneralAccountsEntity account = this.serviceLDAP.getAccountByAuthentication();
@@ -85,7 +93,7 @@ public class ViolationController {
     }
 
     @ApiOperation("Получить доступы для нарушений в журнале")
-    @UrlDeclaration(description = "Получить доступы для нарушений в журнале", isAccessAll = true)
+    @UrlDeclaration(description = "Получить доступы для нарушений в журнале", isAccessUser  = true)
     @RequestMapping(value = "/access", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ViolationAccess> getViolationAccess(@ApiParam("ID журнала") @RequestParam("id") Integer id) {
         JournalViolation journalViolation = this.journalViolationService.getById(id);

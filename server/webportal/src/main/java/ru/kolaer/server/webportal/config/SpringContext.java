@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import ru.kolaer.server.webportal.beans.TypeServer;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.Resource;
@@ -65,6 +67,13 @@ public class SpringContext extends WebMvcConfigurerAdapter {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**");
+    }
+
+    @Bean
+    public TypeServer typeServer() {
+        TypeServer typeServer = new TypeServer();
+        typeServer.setTest(env.getRequiredProperty("test").equals("true"));
+        return typeServer;
     }
 
     @Bean

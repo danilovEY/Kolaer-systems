@@ -32,10 +32,9 @@ public class RegisterTicketScheduler {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
     private final List<String> emails = new ArrayList<>();
     private LocalDateTime lastSend;
-    private boolean test = true;
 
     @Resource
-    private Environment env;
+    private TypeServer typeServer;
 
     @Autowired
     private TicketRegisterService ticketRegisterService;
@@ -52,18 +51,17 @@ public class RegisterTicketScheduler {
     @PostConstruct
     public void init() {
         this.emails.add("oit@kolaer.ru");
-        this.test = !env.getRequiredProperty("test").equals("false");
     }
 
     @Scheduled(cron = "0 0 14 * * *", zone = "Europe/Moscow")
     public void generateAddTicketsScheduled() {
-        if(!test)
+        if(!typeServer.isTest())
             this.generateAddTicketDocument();
     }
 
     @Scheduled(cron = "0 0 13 26-31 * ?", zone = "Europe/Moscow")
     public void generateZeroTicketsLastDayOfMonthScheduled() {
-        if(!test) {
+        if(!typeServer.isTest()) {
             final LocalDate now = LocalDate.now();
             final LocalDate end = now.withDayOfMonth(now.lengthOfMonth());
             final int lastDay = end.getDayOfWeek().getValue() == DateTimeConstants.SUNDAY
@@ -107,7 +105,7 @@ public class RegisterTicketScheduler {
     private boolean sendMail(List<Ticket> tickets, String typeTiskets, String text) {
         if (tickets.size() > 0) {
             try {
-                final File genFile = this.generateTextFile(tickets, typeTiskets);
+                final File genFile = this.generateTextFile(tickets, typeTiskets, text);
                 if (genFile != null) {
                     this.mailSender.send(mimeMessage -> {
                         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -126,7 +124,7 @@ public class RegisterTicketScheduler {
         return false;
     }
 
-    private File generateTextFile(List<Ticket> tickets, String type) throws IOException {
+    private File generateTextFile(List<Ticket> tickets, String type, String text) throws IOException {
         final LocalDateTime now = LocalDateTime.now();
         String fileName = "tickets/Z001000.KOLAER_ENROLL0010001." + now.getDayOfYear();
         final String[] dateTime = dateTimeFormatter.format(now).split("-");
@@ -148,13 +146,19 @@ public class RegisterTicketScheduler {
             printWriter = new PrintWriter(fileName, "windows-1251");
             printWriter.printf("H %s %s IMMEDIATE", dateTime[0], dateTime[1]);
             printWriter.printf(System.lineSeparator());
-
+            int countTickets = 0;
             for(final Ticket ticket : tickets) {
                 final String initials = ticket.getEmployee().getInitials().toUpperCase();
-                printWriter.printf("%s%"+ String.valueOf(116 - initials.length()) +"s              %s%s", initials, bankAccountDao.findByInitials(initials).getCheck(), type, ticket.getCount());
-                printWriter.printf(System.lineSeparator());
+                String check = bankAccountDao.findByInitials(initials).getCheck();
+                if(check != null) {
+                    printWriter.printf("%s%" + String.valueOf(116 - initials.length()) + "s              %s%s", initials, bankAccountDao.findByInitials(initials).getCheck(), type, ticket.getCount());
+                    printWriter.printf(System.lineSeparator());
+                    countTickets++;
+                } else {
+                    text += "\nВНИМАНИЕ! Для \"" + initials + "\" счет не найден!";
+                }
             }
-            printWriter.printf("T                 %d", tickets.size());
+            printWriter.printf("T                 %d", countTickets);
             printWriter.printf(System.lineSeparator());
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             log.error("Файл {} не найден!", fileName);
