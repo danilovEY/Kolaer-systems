@@ -306,7 +306,7 @@ public class ViolationController {
 
         final boolean gettingAll = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
 
-        return gettingAll ? this.journalViolationService.getById(id).getViolations()
+        return gettingAll ? this.violationService.getByIdJournal(id)
                 : this.violationService.getAllByJournalAndEffective(id);
     }
 }

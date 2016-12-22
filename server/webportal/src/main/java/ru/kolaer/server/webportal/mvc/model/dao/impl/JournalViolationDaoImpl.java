@@ -30,9 +30,9 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
     @Override
     @Transactional(readOnly = true)
     public JournalViolation findByID(Integer id) {
-        JournalViolationDecorator journalViolationDecorator = this.sessionFactory.getCurrentSession().get(JournalViolationDecorator.class, id);
-        Hibernate.initialize(journalViolationDecorator.getViolations());
-        return journalViolationDecorator;
+        JournalViolation journalViolation = (JournalViolation) this.sessionFactory.getCurrentSession().createQuery("FROM JournalViolationDecorator v WHERE v.id = :id")
+                .setParameter("id", id).uniqueResult();
+        return journalViolation;
     }
 
     @Override
