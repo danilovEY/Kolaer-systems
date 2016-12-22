@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 /**
  * Created by danilovey on 16.12.2016.
  */
-@ApiModel("Доступ к журналу")
+@ApiModel("(Нарушения) Доступ к журналу")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

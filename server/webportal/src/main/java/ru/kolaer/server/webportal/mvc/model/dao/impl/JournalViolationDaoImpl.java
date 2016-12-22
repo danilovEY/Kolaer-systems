@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.server.webportal.mvc.model.dao.JournalViolationDao;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -39,13 +41,25 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
     @Override
     @Transactional
     public void delete(JournalViolation obj) {
-        this.sessionFactory.getCurrentSession().delete(obj);
+        Session currentSession = this.sessionFactory.getCurrentSession();
+        currentSession.delete(obj);
+        currentSession.flush();
+    }
+
+    @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<JournalViolation> objs) {
+
     }
 
     @Override
     @Transactional
     public void update(JournalViolation entity) {
         this.sessionFactory.getCurrentSession().update(entity);
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<JournalViolation> objs) {
+
     }
 
     @Override

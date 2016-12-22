@@ -8,7 +8,7 @@ import java.util.Collection;
  * Created by danilovey on 28.07.2016.
  * Дао для работы с URL.
  */
-public interface UrlPathDao extends DaoStandard<WebPortalUrlPath> {
+public interface UrlPathDao extends DefaultDao<WebPortalUrlPath> {
     WebPortalUrlPath getPathByUrl(String url);
     WebPortalUrlPath getPathByUrlAndMethod(String url, String requestMethod);
 

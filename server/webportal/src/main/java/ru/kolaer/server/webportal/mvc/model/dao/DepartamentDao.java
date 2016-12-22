@@ -5,6 +5,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 /**
  * Created by danilovey on 12.09.2016.
  */
-public interface DepartamentDao extends DaoStandard<GeneralDepartamentEntity> {
+public interface DepartamentDao extends DefaultDao<GeneralDepartamentEntity> {
     GeneralDepartamentEntity findByName(String name);
 }

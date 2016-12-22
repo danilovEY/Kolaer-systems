@@ -60,4 +60,9 @@ public class DepartamentServiceImpl implements DepartamentService {
     public void update(List<GeneralDepartamentEntity> entity) {
 
     }
+
+    @Override
+    public void delete(List<GeneralDepartamentEntity> entites) {
+
+    }
 }

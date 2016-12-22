@@ -8,11 +8,16 @@ import lombok.Data;
  * Created by danilovey on 20.12.2016.
  */
 @Data
-@ApiModel("Доступ к нарушению")
+@ApiModel("(Нарушения) Доступ к нарушению")
 public class ViolationAccess {
     private Integer id;
+
     @ApiModelProperty("Редактировать нарушение")
     private boolean edit;
+
     @ApiModelProperty("Удалить нарушение")
     private boolean delete;
+
+    @ApiModelProperty("Изменить результативность")
+    private boolean effective;
 }

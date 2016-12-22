@@ -78,6 +78,11 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
     }
 
     @Override
+    public void delete(List<TicketRegister> entites) {
+
+    }
+
+    @Override
     public List<TicketRegister> getAllByDepName(String name) {
         return this.ticketRegisterDao.findAllByDepName(name);
     }

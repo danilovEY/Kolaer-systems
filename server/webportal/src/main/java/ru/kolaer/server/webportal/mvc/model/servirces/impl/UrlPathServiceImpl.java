@@ -19,6 +19,10 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UrlPathServiceImpl implements UrlPathService {
+    @Override
+    public void delete(List<WebPortalUrlPath> entites) {
+
+    }
 
     @Autowired
     private UrlPathDao urlPathDao;

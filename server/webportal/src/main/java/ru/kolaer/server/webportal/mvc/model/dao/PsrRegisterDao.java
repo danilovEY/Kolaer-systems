@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by danilovey on 29.07.2016.
  */
-public interface PsrRegisterDao extends DaoStandard<PsrRegister> {
+public interface PsrRegisterDao extends DefaultDao<PsrRegister> {
     List<PsrRegister> getIdAndNamePsrRegister();
     void deleteById(Integer ID);
     PsrRegister getPsrRegisterByName(String name);

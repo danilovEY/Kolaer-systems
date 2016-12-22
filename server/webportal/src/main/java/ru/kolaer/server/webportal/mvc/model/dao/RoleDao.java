@@ -6,5 +6,5 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
  * Created by danilovey on 28.07.2016.
  * Дао для работы с ролями.
  */
-public interface RoleDao extends DaoStandard<GeneralRolesEntity> {
+public interface RoleDao extends DefaultDao<GeneralRolesEntity> {
 }

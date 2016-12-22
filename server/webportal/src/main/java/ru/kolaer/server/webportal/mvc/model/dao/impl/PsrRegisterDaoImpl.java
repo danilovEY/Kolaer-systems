@@ -12,6 +12,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -49,9 +50,19 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<PsrRegister> objs) {
+
+    }
+
+    @Override
     @Transactional
     public void update(PsrRegister entity) {
         this.sessionFactory.getCurrentSession().update(entity);
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<PsrRegister> objs) {
+
     }
 
     @Override

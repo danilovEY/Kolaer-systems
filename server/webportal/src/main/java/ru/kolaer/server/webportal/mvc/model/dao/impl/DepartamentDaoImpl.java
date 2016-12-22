@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartamentDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -43,9 +44,19 @@ public class DepartamentDaoImpl implements DepartamentDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<GeneralDepartamentEntity> objs) {
+
+    }
+
+    @Override
     @Transactional
     public void update(GeneralDepartamentEntity entity) {
         this.sessionFactory.getCurrentSession().update(entity);
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<GeneralDepartamentEntity> objs) {
+
     }
 
     @Override

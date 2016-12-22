@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntityDecorator;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -44,7 +45,17 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<GeneralRolesEntity> objs) {
+
+    }
+
+    @Override
     public void update(GeneralRolesEntity entity) {
+
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<GeneralRolesEntity> objs) {
 
     }
 }

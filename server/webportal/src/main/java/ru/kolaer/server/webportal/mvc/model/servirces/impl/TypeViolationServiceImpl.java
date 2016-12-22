@@ -54,4 +54,9 @@ public class TypeViolationServiceImpl implements TypeViolationService {
     public void update(List<TypeViolation> entity) {
 
     }
+
+    @Override
+    public void delete(List<TypeViolation> entites) {
+
+    }
 }

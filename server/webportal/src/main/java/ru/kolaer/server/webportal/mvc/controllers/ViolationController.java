@@ -165,7 +165,8 @@ public class ViolationController {
     @UrlDeclaration(description = "Удалить нарушения", isAccessUser = true)
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteViolations(@ApiParam(value = "Журнал нарушения") @RequestBody List<Violation> violations) {
-        violations.stream().map(ViolationDecorator::new).forEach(this.violationService::delete);
+        this.violationService.delete(violations.stream().filter(violation -> violation.getId() != null)
+                .map(ViolationDecorator::new).collect(Collectors.toList()));
     }
 
     @ApiOperation(
@@ -175,10 +176,11 @@ public class ViolationController {
     @UrlDeclaration(description = "Удалить журнал для нарушений", isAccessUser = true)
     @RequestMapping(value = "/journal/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody List<JournalViolation> journalViolations) {
-        journalViolations.forEach(journalViolation -> {
-            JournalViolation journal = this.journalViolationService.getById(journalViolation.getId());
-            journal.getViolations().forEach(this.violationService::delete);
-            this.journalViolationService.delete(journal);
+        journalViolations.stream().filter(journalViolation -> journalViolation.getId() != null)
+                .forEach(journalViolation -> {
+                    JournalViolation journal = this.journalViolationService.getById(journalViolation.getId());
+                    journal.getViolations().forEach(this.violationService::delete);
+                    this.journalViolationService.delete(journal);
         });
 
     }

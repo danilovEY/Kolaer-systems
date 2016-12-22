@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,6 +43,11 @@ public class UrlPathDaoImpl implements UrlPathDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<WebPortalUrlPath> objs) {
+
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public WebPortalUrlPath getPathByUrl(String url) {
         return (WebPortalUrlPath) this.sessionFactory.getCurrentSession()
@@ -53,6 +59,11 @@ public class UrlPathDaoImpl implements UrlPathDao {
     @Transactional
     public void update(WebPortalUrlPath webPortalUrlPath) {
         this.sessionFactory.getCurrentSession().update(webPortalUrlPath);
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<WebPortalUrlPath> objs) {
+
     }
 
     @Override

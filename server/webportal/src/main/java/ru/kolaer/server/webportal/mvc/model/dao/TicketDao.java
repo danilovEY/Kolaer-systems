@@ -5,5 +5,5 @@ import ru.kolaer.server.webportal.mvc.model.entities.tickets.Ticket;
 /**
  * Created by danilovey on 02.12.2016.
  */
-public interface TicketDao extends DaoStandard<Ticket> {
+public interface TicketDao extends DefaultDao<Ticket> {
 }

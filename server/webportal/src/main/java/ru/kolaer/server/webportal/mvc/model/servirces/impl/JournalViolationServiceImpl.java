@@ -48,6 +48,11 @@ public class JournalViolationServiceImpl implements JournalViolationService {
     }
 
     @Override
+    public void delete(List<JournalViolation> entites) {
+
+    }
+
+    @Override
     public List<JournalViolation> getAllByDep(Integer id) {
         return this.journalViolationDao.findAllByDep(id);
     }

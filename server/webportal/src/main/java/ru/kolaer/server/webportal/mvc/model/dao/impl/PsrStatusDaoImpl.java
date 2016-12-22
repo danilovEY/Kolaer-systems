@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.mvc.model.dao.PsrStatusDao;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -45,8 +46,18 @@ public class PsrStatusDaoImpl implements PsrStatusDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<PsrStatus> objs) {
+
+    }
+
+    @Override
     @Transactional
     public void update(PsrStatus entity) {
+
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<PsrStatus> objs) {
 
     }
 

@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.Counter;
 import ru.kolaer.server.webportal.mvc.model.dao.CounterDao;
 import ru.kolaer.server.webportal.mvc.model.entities.other.CounterDecorator;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -44,8 +45,18 @@ public class CounterDaoImpl implements CounterDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<Counter> objs) {
+
+    }
+
+    @Override
     @Transactional
     public void update(Counter entity) {
         this.sessionFactory.getCurrentSession().update(entity);
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<Counter> objs) {
+
     }
 }

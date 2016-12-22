@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.mvc.model.dao.RssDao;
 import ru.kolaer.server.webportal.mvc.model.entities.webportal.rss.WebPortalRssEntityDecorator;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -43,7 +44,17 @@ public class RssDaoImpl implements RssDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<WebPortalRssEntityDecorator> objs) {
+
+    }
+
+    @Override
     public void update(WebPortalRssEntityDecorator entity) {
+
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<WebPortalRssEntityDecorator> objs) {
 
     }
 }

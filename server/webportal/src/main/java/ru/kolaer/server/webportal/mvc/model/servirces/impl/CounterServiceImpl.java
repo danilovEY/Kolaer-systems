@@ -51,4 +51,9 @@ public class CounterServiceImpl implements CounterService {
     public void update(List<Counter> entity) {
 
     }
+
+    @Override
+    public void delete(List<Counter> entites) {
+
+    }
 }

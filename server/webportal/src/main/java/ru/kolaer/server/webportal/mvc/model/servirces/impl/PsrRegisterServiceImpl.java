@@ -57,6 +57,11 @@ public class PsrRegisterServiceImpl implements PsrRegisterService {
     }
 
     @Override
+    public void delete(List<PsrRegister> entites) {
+
+    }
+
+    @Override
     public PsrRegister getPsrRegisterByName(String name) {
         if(name != null && !name.isEmpty())
             this.psrRegisterDao.getPsrRegisterByName(name);

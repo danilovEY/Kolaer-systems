@@ -46,4 +46,9 @@ public class TicketServiceImpl implements TicketService {
     public void update(List<Ticket> entity) {
 
     }
+
+    @Override
+    public void delete(List<Ticket> entites) {
+
+    }
 }

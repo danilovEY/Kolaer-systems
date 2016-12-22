@@ -7,6 +7,6 @@ import java.util.List;
 /**
  * Created by danilovey on 13.09.2016.
  */
-public interface JournalViolationDao extends DaoStandard<JournalViolation> {
+public interface JournalViolationDao extends DefaultDao<JournalViolation> {
     List<JournalViolation> findAllByDep(Integer id);
 }

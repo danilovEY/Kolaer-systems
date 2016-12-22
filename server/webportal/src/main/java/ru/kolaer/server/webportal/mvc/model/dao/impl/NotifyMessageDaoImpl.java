@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.server.webportal.mvc.model.dao.NotifyMessageDao;
 import ru.kolaer.server.webportal.mvc.model.entities.other.NotifyMessageDecorator;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -50,8 +51,18 @@ public class NotifyMessageDaoImpl implements NotifyMessageDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<NotifyMessage> objs) {
+
+    }
+
+    @Override
     @Transactional
     public void update(NotifyMessage entity) {
         this.sessionFactory.getCurrentSession().update(entity);
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<NotifyMessage> objs) {
+
     }
 }

@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
 import ru.kolaer.server.webportal.mvc.model.dao.TypeViolationDao;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationDecorator;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -43,8 +44,18 @@ public class TypeViolationDaoImol implements TypeViolationDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<TypeViolation> objs) {
+
+    }
+
+    @Override
     @Transactional
     public void update(TypeViolation entity) {
         this.sessionFactory.getCurrentSession().update(entity);
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<TypeViolation> objs) {
+
     }
 }

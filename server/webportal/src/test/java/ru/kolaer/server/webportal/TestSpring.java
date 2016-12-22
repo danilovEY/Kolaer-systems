@@ -35,6 +35,7 @@ public class TestSpring {
     private SimpleMailMessage templateMessage;
 
     @Test
+    @Ignore
     public void testMailSend() {
         SimpleMailMessage mailMessage = new SimpleMailMessage(templateMessage);
         mailMessage.setSubject("Hello TEST!");

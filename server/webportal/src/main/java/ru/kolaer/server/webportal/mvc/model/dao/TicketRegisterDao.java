@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by danilovey on 30.11.2016.
  */
-public interface TicketRegisterDao extends DaoStandard<TicketRegister> {
+public interface TicketRegisterDao extends DefaultDao<TicketRegister> {
     void persist(TicketRegister obj);
     Integer save(TicketRegister obj);
     List<TicketRegister> findAllByDepName(String depName);

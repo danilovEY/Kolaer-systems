@@ -49,6 +49,11 @@ public class PsrStatusServiceImpl implements PsrStatusService {
     }
 
     @Override
+    public void delete(List<PsrStatus> entites) {
+
+    }
+
+    @Override
     public PsrStatus getStatusByType(String type) {
         if(type == null || type.isEmpty())
             throw new BadRequestException("Тип пср-проекта не может быть пустым!");

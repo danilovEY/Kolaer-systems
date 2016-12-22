@@ -156,4 +156,9 @@ public class EmployeeOtherOrganizationServiceImpl implements EmployeeOtherOrgani
             this.employeeOtherOrganizationDao.update(entity);
         }
     }
+
+    @Override
+    public void delete(List<EmployeeOtherOrganization> entites) {
+
+    }
 }

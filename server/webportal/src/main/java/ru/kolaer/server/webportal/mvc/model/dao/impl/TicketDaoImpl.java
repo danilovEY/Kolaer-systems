@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.Ticket;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -38,8 +39,18 @@ public class TicketDaoImpl implements TicketDao {
         this.sessionFactory.getCurrentSession().delete(obj);
     }
 
+    @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<Ticket> objs) {
+
+    }
+
     @Transactional
     public void update(Ticket obj) {
         this.sessionFactory.getCurrentSession().update(obj);
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<Ticket> objs) {
+
     }
 }

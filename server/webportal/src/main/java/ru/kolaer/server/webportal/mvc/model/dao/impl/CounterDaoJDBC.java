@@ -10,6 +10,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.Counter;
 import ru.kolaer.api.mvp.model.kolaerweb.CounterBase;
 import ru.kolaer.server.webportal.mvc.model.dao.CounterDao;
 
+import javax.validation.constraints.NotNull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -47,7 +48,17 @@ public class CounterDaoJDBC implements CounterDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<Counter> objs) {
+
+    }
+
+    @Override
     public void update(Counter obj) {
+
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<Counter> objs) {
 
     }
 }

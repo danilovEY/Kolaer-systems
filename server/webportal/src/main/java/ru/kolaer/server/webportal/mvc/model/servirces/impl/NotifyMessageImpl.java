@@ -56,6 +56,11 @@ public class NotifyMessageImpl implements NotifyMessageService {
     }
 
     @Override
+    public void delete(List<NotifyMessage> entites) {
+
+    }
+
+    @Override
     public NotifyMessage getLastNotifyMessage() {
         return this.notifyMessageDao.getLastNotifyMessage();
     }

@@ -9,6 +9,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -93,8 +94,18 @@ public class TicketRegisterDaoImpl implements TicketRegisterDao {
         this.sessionFactory.getCurrentSession().delete(obj);
     }
 
+    @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<TicketRegister> objs) {
+
+    }
+
     @Transactional
     public void update(TicketRegister obj) {
         this.sessionFactory.getCurrentSession().update(obj);
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<TicketRegister> objs) {
+
     }
 }

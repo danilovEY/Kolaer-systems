@@ -74,4 +74,9 @@ public class AccountServiceImpl implements AccountService{
     public void update(List<GeneralAccountsEntity> entity) {
 
     }
+
+    @Override
+    public void delete(List<GeneralAccountsEntity> entites) {
+
+    }
 }

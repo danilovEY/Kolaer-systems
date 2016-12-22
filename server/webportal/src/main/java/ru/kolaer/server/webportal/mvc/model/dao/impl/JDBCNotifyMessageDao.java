@@ -11,6 +11,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.NotifyMessageDao;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -72,8 +73,18 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<NotifyMessage> objs) {
+
+    }
+
+    @Override
     @Transactional
     public void update(NotifyMessage obj) {
         this.jdbcTemplate.update("UPDATE notifications SET message = ? WHERE id = ?", obj.getMessage(), obj.getId());
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<NotifyMessage> objs) {
+
     }
 }

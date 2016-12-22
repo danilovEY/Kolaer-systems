@@ -46,4 +46,9 @@ public class ViolationServiceImpl implements ViolationService {
     public void update(List<Violation> entity) {
 
     }
+
+    @Override
+    public void delete(List<Violation> violations) {
+
+    }
 }

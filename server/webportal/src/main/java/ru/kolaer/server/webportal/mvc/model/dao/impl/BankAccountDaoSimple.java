@@ -6,6 +6,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.bank.BankAccount;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,17 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<BankAccount> objs) {
+
+    }
+
+    @Override
     public void update(BankAccount obj) {
+
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<BankAccount> objs) {
 
     }
 }

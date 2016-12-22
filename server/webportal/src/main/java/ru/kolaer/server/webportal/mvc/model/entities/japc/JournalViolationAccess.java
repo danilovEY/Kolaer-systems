@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by danilovey on 16.12.2016.
  */
-@ApiModel("Доступы к журналам")
+@ApiModel("(Нарушения) Доступы к журналам")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

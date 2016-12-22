@@ -9,6 +9,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -58,8 +59,18 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
+    public void delete(@NotNull(message = "Объект NULL!") List<GeneralEmployeesEntity> objs) {
+
+    }
+
+    @Override
     @Transactional
     public void update(GeneralEmployeesEntity entity) {
+
+    }
+
+    @Override
+    public void update(@NotNull(message = "Объект NULL!") List<GeneralEmployeesEntity> objs) {
 
     }
 
