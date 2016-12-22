@@ -32,7 +32,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
-    public BankAccount findByID(int id) {
+    public BankAccount findByID(Integer id) {
         return null;
     }
 
@@ -47,7 +47,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<BankAccount> objs) {
+    public void delete(List<BankAccount> objs) {
 
     }
 
@@ -57,7 +57,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<BankAccount> objs) {
+    public void update(List<BankAccount> objs) {
 
     }
 }

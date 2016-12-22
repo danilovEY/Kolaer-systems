@@ -32,7 +32,7 @@ public class CounterDaoJDBC implements CounterDao {
     }
 
     @Override
-    public Counter findByID(int id) {
+    public Counter findByID(Integer id) {
         return this.jdbcTemplateOrigin.queryForObject("SELECT * FROM counters WHERE id = ?",new Object[] {id}, new CounterMapping());
     }
 
@@ -48,7 +48,7 @@ public class CounterDaoJDBC implements CounterDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<Counter> objs) {
+    public void delete(List<Counter> objs) {
 
     }
 
@@ -58,7 +58,7 @@ public class CounterDaoJDBC implements CounterDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<Counter> objs) {
+    public void update(List<Counter> objs) {
 
     }
 }

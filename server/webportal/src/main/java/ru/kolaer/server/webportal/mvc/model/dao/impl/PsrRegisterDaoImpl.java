@@ -33,7 +33,7 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
 
     @Override
     @Transactional(readOnly = true)
-    public PsrRegister findByID(int id) {
+    public PsrRegister findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(PsrRegisterDecorator.class, id);
     }
 
@@ -50,7 +50,7 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<PsrRegister> objs) {
+    public void delete(List<PsrRegister> objs) {
 
     }
 
@@ -61,7 +61,7 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<PsrRegister> objs) {
+    public void update(List<PsrRegister> objs) {
 
     }
 

@@ -28,7 +28,7 @@ public class RssDaoImpl implements RssDao {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public WebPortalRssEntityDecorator findByID(int id) {
+    public WebPortalRssEntityDecorator findByID(Integer id) {
         final WebPortalRssEntityDecorator webPortalRssEntity = sessionFactory.getCurrentSession().get(WebPortalRssEntityDecorator.class,id);
         return webPortalRssEntity;
     }
@@ -44,7 +44,7 @@ public class RssDaoImpl implements RssDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<WebPortalRssEntityDecorator> objs) {
+    public void delete(List<WebPortalRssEntityDecorator> objs) {
 
     }
 
@@ -54,7 +54,7 @@ public class RssDaoImpl implements RssDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<WebPortalRssEntityDecorator> objs) {
+    public void update(List<WebPortalRssEntityDecorator> objs) {
 
     }
 }

@@ -27,7 +27,7 @@ public class DepartamentDaoImpl implements DepartamentDao {
 
     @Override
     @Transactional(readOnly = true)
-    public GeneralDepartamentEntity findByID(int id) {
+    public GeneralDepartamentEntity findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(GeneralDepartamentEntityDecorator.class, id);
     }
 
@@ -44,7 +44,7 @@ public class DepartamentDaoImpl implements DepartamentDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<GeneralDepartamentEntity> objs) {
+    public void delete(List<GeneralDepartamentEntity> objs) {
 
     }
 
@@ -55,7 +55,7 @@ public class DepartamentDaoImpl implements DepartamentDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<GeneralDepartamentEntity> objs) {
+    public void update(List<GeneralDepartamentEntity> objs) {
 
     }
 

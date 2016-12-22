@@ -27,7 +27,7 @@ public class TypeViolationDaoImol implements TypeViolationDao {
 
     @Override
     @Transactional(readOnly = true)
-    public TypeViolation findByID(int id) {
+    public TypeViolation findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(TypeViolationDecorator.class, id);
     }
 
@@ -44,7 +44,7 @@ public class TypeViolationDaoImol implements TypeViolationDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<TypeViolation> objs) {
+    public void delete(List<TypeViolation> objs) {
 
     }
 
@@ -55,7 +55,7 @@ public class TypeViolationDaoImol implements TypeViolationDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<TypeViolation> objs) {
+    public void update(List<TypeViolation> objs) {
 
     }
 }

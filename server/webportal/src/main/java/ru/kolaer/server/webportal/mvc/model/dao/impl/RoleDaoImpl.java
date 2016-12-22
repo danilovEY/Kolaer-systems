@@ -28,7 +28,7 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     @Transactional(readOnly = true)
-    public GeneralRolesEntity findByID(int id) {
+    public GeneralRolesEntity findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(GeneralRolesEntityDecorator.class, id);
     }
 
@@ -45,7 +45,7 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<GeneralRolesEntity> objs) {
+    public void delete(List<GeneralRolesEntity> objs) {
 
     }
 
@@ -55,7 +55,7 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<GeneralRolesEntity> objs) {
+    public void update(List<GeneralRolesEntity> objs) {
 
     }
 }

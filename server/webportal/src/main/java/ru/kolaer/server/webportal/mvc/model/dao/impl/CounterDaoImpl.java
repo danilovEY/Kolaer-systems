@@ -28,7 +28,7 @@ public class CounterDaoImpl implements CounterDao {
 
     @Override
     @Transactional(readOnly = true)
-    public Counter findByID(int id) {
+    public Counter findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(CounterDecorator.class, id);
     }
 
@@ -45,7 +45,7 @@ public class CounterDaoImpl implements CounterDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<Counter> objs) {
+    public void delete(List<Counter> objs) {
 
     }
 
@@ -56,7 +56,7 @@ public class CounterDaoImpl implements CounterDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<Counter> objs) {
+    public void update(List<Counter> objs) {
 
     }
 }

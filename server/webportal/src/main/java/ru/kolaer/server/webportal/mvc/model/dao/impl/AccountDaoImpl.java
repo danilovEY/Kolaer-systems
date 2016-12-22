@@ -10,7 +10,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralAccountsEntityDecorator;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     @Transactional(readOnly = true)
-    public GeneralAccountsEntityDecorator findByID(int id) {
+    public GeneralAccountsEntityDecorator findByID(Integer id) {
         return null;
     }
 
@@ -50,7 +49,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<GeneralAccountsEntity> objs) {
+    public void delete(List<GeneralAccountsEntity> objs) {
 
     }
 
@@ -60,7 +59,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<GeneralAccountsEntity> objs) {
+    public void update(List<GeneralAccountsEntity> objs) {
 
     }
 

@@ -36,7 +36,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     @Transactional(readOnly = true)
-    public GeneralEmployeesEntity findByID(int id) {
+    public GeneralEmployeesEntity findByID(Integer id) {
         final GeneralEmployeesEntity result = (GeneralEmployeesEntity) this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.pnumber = :id ORDER BY emp.initials")
                 .setParameter("id", id).uniqueResult();
         result.getDepartament().getAbbreviatedName();
@@ -59,7 +59,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<GeneralEmployeesEntity> objs) {
+    public void delete(List<GeneralEmployeesEntity> objs) {
 
     }
 
@@ -70,7 +70,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<GeneralEmployeesEntity> objs) {
+    public void update(List<GeneralEmployeesEntity> objs) {
 
     }
 

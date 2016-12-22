@@ -25,7 +25,7 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     @Transactional(readOnly = true)
-    public Ticket findByID(int id) {
+    public Ticket findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(Ticket.class, id);
     }
 
@@ -40,7 +40,7 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<Ticket> objs) {
+    public void delete(List<Ticket> objs) {
 
     }
 
@@ -50,7 +50,7 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<Ticket> objs) {
+    public void update(List<Ticket> objs) {
 
     }
 }

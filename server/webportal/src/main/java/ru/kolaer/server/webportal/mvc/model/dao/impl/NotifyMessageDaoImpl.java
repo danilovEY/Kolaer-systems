@@ -34,7 +34,7 @@ public class NotifyMessageDaoImpl implements NotifyMessageDao {
 
     @Override
     @Transactional(readOnly = true)
-    public NotifyMessage findByID(int id) {
+    public NotifyMessage findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(NotifyMessageDecorator.class, id);
     }
 
@@ -51,7 +51,7 @@ public class NotifyMessageDaoImpl implements NotifyMessageDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<NotifyMessage> objs) {
+    public void delete(List<NotifyMessage> objs) {
 
     }
 
@@ -62,7 +62,7 @@ public class NotifyMessageDaoImpl implements NotifyMessageDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<NotifyMessage> objs) {
+    public void update(List<NotifyMessage> objs) {
 
     }
 }

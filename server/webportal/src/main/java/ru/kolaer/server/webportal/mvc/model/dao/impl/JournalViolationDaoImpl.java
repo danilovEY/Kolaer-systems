@@ -9,7 +9,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.server.webportal.mvc.model.dao.JournalViolationDao;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -28,7 +27,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
 
     @Override
     @Transactional(readOnly = true)
-    public JournalViolation findByID(int id) {
+    public JournalViolation findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(JournalViolationDecorator.class, id);
     }
 
@@ -47,7 +46,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<JournalViolation> objs) {
+    public void delete(List<JournalViolation> objs) {
 
     }
 
@@ -58,7 +57,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<JournalViolation> objs) {
+    public void update(List<JournalViolation> objs) {
 
     }
 

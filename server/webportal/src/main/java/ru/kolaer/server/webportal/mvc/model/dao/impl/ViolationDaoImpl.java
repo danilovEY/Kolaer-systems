@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
+import lombok.NonNull;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -8,7 +9,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.server.webportal.mvc.model.dao.ViolationDao;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationDecorator;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -28,7 +28,7 @@ public class ViolationDaoImpl implements ViolationDao {
 
     @Override
     @Transactional(readOnly = true)
-    public Violation findByID(int id) {
+    public Violation findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(ViolationDecorator.class, id);
     }
 
@@ -45,7 +45,7 @@ public class ViolationDaoImpl implements ViolationDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<Violation> objs) {
+    public void delete( List<Violation> objs) {
 
     }
 
@@ -56,7 +56,7 @@ public class ViolationDaoImpl implements ViolationDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<Violation> objs) {
+    public void update( List<Violation> objs) {
 
     }
 }

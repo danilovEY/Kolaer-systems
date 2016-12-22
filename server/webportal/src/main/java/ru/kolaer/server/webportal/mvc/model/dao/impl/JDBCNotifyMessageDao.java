@@ -50,7 +50,7 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
 
     @Override
     @Transactional(readOnly = true)
-    public NotifyMessage findByID(int id) {
+    public NotifyMessage findByID(Integer id) {
         List<NotifyMessage> query = this.jdbcTemplate.query("SELECT id, message FROM notifications WHERE id = " + id, (rs, rowNum) -> {
             final NotifyMessage notifyMessage = new NotifyMessageBase();
             notifyMessage.setId(rs.getInt("id"));
@@ -73,7 +73,7 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<NotifyMessage> objs) {
+    public void delete(List<NotifyMessage> objs) {
 
     }
 
@@ -84,7 +84,7 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<NotifyMessage> objs) {
+    public void update(List<NotifyMessage> objs) {
 
     }
 }

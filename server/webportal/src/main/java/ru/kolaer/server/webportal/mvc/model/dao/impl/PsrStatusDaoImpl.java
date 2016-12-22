@@ -28,7 +28,7 @@ public class PsrStatusDaoImpl implements PsrStatusDao {
 
     @Override
     @Transactional(readOnly = true)
-    public PsrStatus findByID(int id) {
+    public PsrStatus findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(PsrStatusDecorator.class, id);
     }
 
@@ -46,7 +46,7 @@ public class PsrStatusDaoImpl implements PsrStatusDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<PsrStatus> objs) {
+    public void delete(List<PsrStatus> objs) {
 
     }
 
@@ -57,7 +57,7 @@ public class PsrStatusDaoImpl implements PsrStatusDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<PsrStatus> objs) {
+    public void update(List<PsrStatus> objs) {
 
     }
 

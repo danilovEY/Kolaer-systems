@@ -27,7 +27,7 @@ public class UrlPathDaoImpl implements UrlPathDao {
 
     @Override
     @Transactional(readOnly = true)
-    public WebPortalUrlPathDecorator findByID(int id) {
+    public WebPortalUrlPathDecorator findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(WebPortalUrlPathDecorator.class, id);
     }
 
@@ -43,7 +43,7 @@ public class UrlPathDaoImpl implements UrlPathDao {
     }
 
     @Override
-    public void delete(@NotNull(message = "Объект NULL!") List<WebPortalUrlPath> objs) {
+    public void delete(List<WebPortalUrlPath> objs) {
 
     }
 
@@ -62,7 +62,7 @@ public class UrlPathDaoImpl implements UrlPathDao {
     }
 
     @Override
-    public void update(@NotNull(message = "Объект NULL!") List<WebPortalUrlPath> objs) {
+    public void update(List<WebPortalUrlPath> objs) {
 
     }
 

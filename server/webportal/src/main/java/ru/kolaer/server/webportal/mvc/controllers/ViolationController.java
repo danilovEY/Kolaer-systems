@@ -109,6 +109,7 @@ public class ViolationController {
                 violationAccess.setId(violation.getId());
                 violationAccess.setEdit(isAdmin);
                 violationAccess.setDelete(isAdmin);
+                violationAccess.setEffective(isAdmin);
                 return violationAccess;
             }).collect(Collectors.toList());
         }
