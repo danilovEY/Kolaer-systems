@@ -59,7 +59,7 @@ public class JournalViolationDecorator implements JournalViolation {
         this.journalViolation.setViolations(violations);
     }
 
-    @OneToOne(targetEntity = GeneralDepartamentEntityDecorator.class, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = GeneralDepartamentEntityDecorator.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_departament")
     public GeneralDepartamentEntity getDepartament() {
         return this.journalViolation.getDepartament();

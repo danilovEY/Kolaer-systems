@@ -139,6 +139,26 @@ public class ViolationController {
     }
 
     @ApiOperation(
+            value = "Обновить журнал для нарушений",
+            notes = "Обновить журнал для нарушений"
+    )
+    @UrlDeclaration(description = "Обновить журнал для нарушений", isAccessUser = true)
+    @RequestMapping(value = "/journal/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public JournalViolation updateJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody JournalViolation violation) {
+        JournalViolation journalViolation = this.journalViolationService.getById(violation.getId());
+        if(violation.getDepartament() != null) {
+            journalViolation.setDepartament(departamentService.getById(violation.getDepartament().getId()));
+        }
+
+        if(violation.getName() != null) {
+            journalViolation.setName(violation.getName());
+        }
+
+        this.journalViolationService.update(journalViolation);
+        return journalViolation;
+    }
+
+    @ApiOperation(
             value = "Удалить нарушение",
             notes = "Удалить нарушение"
     )
@@ -179,6 +199,50 @@ public class ViolationController {
         return isAdmin ? this.journalViolationService.getAll()
                 : this.journalViolationService.getAllByDep(account.getGeneralEmployeesEntity()
                 .getDepartament().getId());
+    }
+
+    @ApiOperation(
+            value = "Обновить нарушение в журнал",
+            notes = "Обновить нарушение в журнал"
+    )
+    @UrlDeclaration(description = "Обновить нарушение в журнал", isAccessUser = true)
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Violation updateViolation(@ApiParam(value = "Нарушением") @RequestBody Violation violation) {
+        Violation updateViolation = this.violationService.getById(violation.getId());
+        if(updateViolation == null)
+            throw new BadRequestException("Не найден журнал с ID: " + violation.getId());
+
+        if(violation.getTypeViolation() != null) {
+            updateViolation.setTypeViolation(this.typeViolationService.getById(violation.getTypeViolation().getId()));
+        }
+
+        if(violation.getExecutor() != null) {
+            updateViolation.setExecutor(this.employeeService.getById(violation.getExecutor().getPnumber()));
+        }
+
+        if(violation.getDateLimitEliminationViolation() != null) {
+            updateViolation.setDateLimitEliminationViolation(violation.getDateLimitEliminationViolation());
+        }
+
+        if(violation.isEffective() != null) {
+            updateViolation.setEffective(violation.isEffective());
+        }
+
+        if(violation.getStageEnum() != null) {
+            updateViolation.setStageEnum(violation.getStageEnum());
+        }
+
+        if(violation.getTodo() != null) {
+            updateViolation.setTodo(violation.getTodo());
+        }
+
+        if(violation.getViolation() != null) {
+            updateViolation.setViolation(violation.getViolation());
+        }
+
+        this.violationService.update(updateViolation);
+
+        return updateViolation;
     }
 
     @ApiOperation(
