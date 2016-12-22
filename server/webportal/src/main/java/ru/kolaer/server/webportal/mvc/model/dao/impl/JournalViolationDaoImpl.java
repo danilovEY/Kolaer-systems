@@ -1,11 +1,13 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.server.webportal.mvc.model.dao.JournalViolationDao;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
 
@@ -28,7 +30,9 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
     @Override
     @Transactional(readOnly = true)
     public JournalViolation findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(JournalViolationDecorator.class, id);
+        JournalViolationDecorator journalViolationDecorator = this.sessionFactory.getCurrentSession().get(JournalViolationDecorator.class, id);
+        Hibernate.initialize(journalViolationDecorator.getViolations());
+        return journalViolationDecorator;
     }
 
     @Override
@@ -68,4 +72,5 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
                 .createQuery("FROM JournalViolationDecorator j WHERE j.departament.id = :id")
                 .setParameter("id", id).list();
     }
+
 }

@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.server.webportal.mvc.model.dao.JournalViolationDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.JournalViolationService;
 

@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 
 import java.util.List;
 

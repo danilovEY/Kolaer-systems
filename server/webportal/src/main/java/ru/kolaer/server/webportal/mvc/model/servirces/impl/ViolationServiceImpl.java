@@ -51,4 +51,9 @@ public class ViolationServiceImpl implements ViolationService {
     public void delete(List<Violation> violations) {
 
     }
+
+    @Override
+    public List<Violation> getAllByJournalAndEffective(Integer idJournal) {
+        return this.violationDao.findByJournalAndEffective(idJournal);
+    }
 }

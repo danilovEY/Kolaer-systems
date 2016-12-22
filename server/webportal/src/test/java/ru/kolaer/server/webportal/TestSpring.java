@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import ru.kolaer.server.webportal.config.SpringContext;
 import ru.kolaer.server.webportal.config.SpringSecurityConfig;
+import ru.kolaer.server.webportal.mvc.model.servirces.JournalViolationService;
+import ru.kolaer.server.webportal.mvc.model.servirces.ViolationService;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -33,6 +35,17 @@ public class TestSpring {
 
     @Autowired
     private SimpleMailMessage templateMessage;
+
+
+    @Autowired
+    private ViolationService violationService;
+
+    @Test
+    public void testViolation() {
+        this.violationService.getAllByJournalAndEffective(2).forEach(violation -> {
+            System.out.println(violation.getId());
+        });
+    }
 
     @Test
     @Ignore

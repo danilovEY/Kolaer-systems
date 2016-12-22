@@ -47,9 +47,7 @@ public class JournalViolationDecorator implements JournalViolation {
         this.journalViolation.setName(name);
     }
 
-    @OneToMany(targetEntity = ViolationDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "violations_journals", joinColumns = {@JoinColumn(name = "id_journal")},
-            inverseJoinColumns = { @JoinColumn(name = "id_violation")})
+    @OneToMany(targetEntity = ViolationDecorator.class, mappedBy = "journalViolation", fetch = FetchType.LAZY)
     public List<Violation> getViolations() {
         return this.journalViolation.getViolations();
     }

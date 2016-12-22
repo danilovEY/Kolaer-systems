@@ -1,10 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.japc;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.ViolationBase;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.*;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
 
 import javax.persistence.*;
@@ -91,6 +88,17 @@ public class ViolationDecorator implements Violation {
         this.violation.setDateEndEliminationViolation(dateEndEliminationViolation);
     }
 
+    @ManyToOne(targetEntity = JournalViolationDecorator.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_journal", nullable = false)
+    public JournalViolation getJournalViolation() {
+        return this.violation.getJournalViolation();
+    }
+
+    @Override
+    public void setJournalViolation(JournalViolation journalViolation) {
+        this.violation.setJournalViolation(journalViolation);
+    }
+
     @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_writer", nullable = false)
     public GeneralEmployeesEntity getWriter() {
@@ -113,7 +121,7 @@ public class ViolationDecorator implements Violation {
         this.violation.setExecutor(executor);
     }
 
-    @Column(name = "is_effective")
+    @Column(name = "is_effective", nullable = false)
     public Boolean isEffective() {
         return this.violation.isEffective();
     }

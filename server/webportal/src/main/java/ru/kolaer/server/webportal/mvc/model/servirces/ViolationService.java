@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface ViolationService extends ServiceBase<Violation> {
 
+    List<Violation> getAllByJournalAndEffective(Integer idJournal);
 }

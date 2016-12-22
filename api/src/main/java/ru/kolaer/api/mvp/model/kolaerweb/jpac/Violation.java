@@ -60,4 +60,8 @@ public interface Violation extends Serializable {
     @ApiModelProperty(value = "Тип нарушения")
     TypeViolation getTypeViolation();
     void setTypeViolation(TypeViolation typeViolation);
+
+    @ApiModelProperty(value = "Журнал в котором находится нарушение")
+    JournalViolation getJournalViolation();
+    void setJournalViolation(JournalViolation journalViolation);
 }

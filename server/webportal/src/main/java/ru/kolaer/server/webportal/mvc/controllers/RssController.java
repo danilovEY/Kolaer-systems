@@ -48,6 +48,6 @@ public class RssController {
                 throw new IllegalArgumentException("ID in not integer!");
         }
 
-        return rssDao.findByID(Short.valueOf(id));
+        return rssDao.findByID(Integer.valueOf(id));
     }
 }

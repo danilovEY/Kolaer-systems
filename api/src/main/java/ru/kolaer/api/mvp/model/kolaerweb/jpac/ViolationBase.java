@@ -19,6 +19,7 @@ public class ViolationBase implements Violation {
     private Boolean effective;
     private StageEnum stage;
     private TypeViolation typeViolation;
+    private JournalViolation journalViolation;
 
     public Integer getId() {
         return id;
@@ -112,5 +113,13 @@ public class ViolationBase implements Violation {
     @Override
     public void setTypeViolation(TypeViolation typeViolation) {
         this.typeViolation = typeViolation;
+    }
+
+    public JournalViolation getJournalViolation() {
+        return journalViolation;
+    }
+
+    public void setJournalViolation(JournalViolation journalViolation) {
+        this.journalViolation = journalViolation;
     }
 }
