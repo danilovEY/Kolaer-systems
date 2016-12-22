@@ -11,9 +11,6 @@ dependencies {
     compile "org.springframework:spring-core:4.3.1.RELEASE"
     compile "org.springframework:spring-beans:4.3.1.RELEASE"
     compile "org.springframework:spring-webmvc:4.3.1.RELEASE"
-    compile "org.springframework:spring-orm:4.3.1.RELEASE"
-    compile "org.hibernate:hibernate-core:5.1.0.Final"
-    compile "mysql:mysql-connector-java:5.1.38"
 }
 
 war {
@@ -23,9 +20,6 @@ war {
 
 task buildApp(dependsOn: [clean, war]) {
     doLast {
-        copy {
-            from 'build/libs/' + nameWarFile
-            into deployServerPath
-        }
+
     }
 }
