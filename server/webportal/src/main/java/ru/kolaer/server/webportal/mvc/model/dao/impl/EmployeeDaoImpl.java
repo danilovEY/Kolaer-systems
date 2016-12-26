@@ -2,6 +2,8 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +78,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     @Transactional(readOnly = true)
+    @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     public List<GeneralEmployeesEntity> findEmployeeByInitials(String initials) {
         final List<GeneralEmployeesEntity> result = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.initials LIKE :initials ORDER BY emp.initials")
                 .setParameter("initials", "%" + initials + "%").list();
