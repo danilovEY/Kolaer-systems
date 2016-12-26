@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
-import lombok.NonNull;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -72,5 +71,11 @@ public class ViolationDaoImpl implements ViolationDao {
     public List<Violation> findByJournalId(Integer id) {
         return this.sessionFactory.getCurrentSession().createQuery("FROM ViolationDecorator v WHERE v.journalViolation.id = :id")
                 .setParameter("id", id).list();
+    }
+
+    @Transactional
+    public void deleteByJournalId(Integer idJournal) {
+        this.sessionFactory.getCurrentSession().createQuery("DELETE FROM ViolationDecorator v WHERE v.journalViolation.id = :id")
+                .setParameter("id", idJournal).executeUpdate();
     }
 }

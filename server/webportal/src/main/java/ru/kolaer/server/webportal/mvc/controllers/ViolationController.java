@@ -180,7 +180,7 @@ public class ViolationController {
         journalViolations.stream().filter(journalViolation -> journalViolation.getId() != null)
                 .forEach(journalViolation -> {
                     JournalViolation journal = this.journalViolationService.getById(journalViolation.getId());
-                    journal.getViolations().forEach(this.violationService::delete);
+                    this.violationService.deleteByJournalId(journal.getId());
                     this.journalViolationService.delete(journal);
         });
 

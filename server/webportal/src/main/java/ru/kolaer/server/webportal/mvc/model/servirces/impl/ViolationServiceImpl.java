@@ -53,6 +53,11 @@ public class ViolationServiceImpl implements ViolationService {
     }
 
     @Override
+    public void deleteByJournalId(Integer idJournal) {
+        this.violationDao.deleteByJournalId(idJournal);
+    }
+
+    @Override
     public List<Violation> getAllByJournalAndEffective(Integer idJournal) {
         return this.violationDao.findByJournalAndEffective(idJournal);
     }
