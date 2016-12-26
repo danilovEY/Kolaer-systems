@@ -261,7 +261,7 @@ public class ViolationController {
         if(generalJournalViolation == null)
             throw new BadRequestException("Не найден журнал с ID: " + journalViolation.getId());
 
-        List<Violation> violations = Optional.ofNullable(generalJournalViolation.getViolations())
+        List<Violation> violations = Optional.ofNullable(this.violationService.getByIdJournal(generalJournalViolation.getId()))
                 .orElse(new ArrayList<>());
 
         Violation lastAdd = null;
