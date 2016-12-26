@@ -7,15 +7,39 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 14.11.2016.
  */
 public class WebForwardingServlet extends HttpServlet {
+    private final String PROD_SERVER = "prod";
+    private final String PROD_BACKUP_SERVER = "prod_backup";
+    private final Map<String, String> mapServers = new HashMap<>();
     private final File flag = new File("flag.txt");
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        try (InputStream resource = this.getClass().getResourceAsStream("./servers.properties")) {
+            this.mapServers.putAll(new BufferedReader(new InputStreamReader(resource,
+                            StandardCharsets.UTF_8)).lines().map(line -> line.split("="))
+                            .filter(elem -> elem.length==2)
+                            .collect(Collectors.toMap(e -> e[0], e -> e[1])));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(this.mapServers.size() < 2) {
+            this.mapServers.clear();
+            this.mapServers.put(this.PROD_SERVER, "http://js:8080");
+            this.mapServers.put(this.PROD_BACKUP_SERVER, "http://danilovey:8080");
+        }
+    }
 
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
@@ -32,43 +56,22 @@ public class WebForwardingServlet extends HttpServlet {
         httpRes.setHeader("Access-Control-Allow-Methods", httpReq.getHeader("Access-Control-Request-Method"));
         httpRes.setHeader("Access-Control-Allow-Headers", httpReq.getHeader("Access-Control-Request-Headers"));
         httpRes.setHeader("Access-Control-Allow-Credentials", "true");
-        //httpRes.setHeader("Access-Control-Max-Age", "86400");
-        //httpRes.setHeader("Content-Type","application/x-www-form-urlencoded;charset=UTF-8");
-
-
-        /*System.out.println("123123: " + httpReq.getHeader("X-Token"));
-        Enumeration headerNames = httpReq.getHeaderNames();
-        while(headerNames.hasMoreElements()) {
-            String headerName = (String)headerNames.nextElement();
-            System.out.println("Header Name - " + headerName + ", Value - " + httpReq.getHeader(headerName));
-        }*/
-
-        /*Enumeration params = httpReq.getParameterNames();
-        while(params.hasMoreElements()){
-            String paramName = (String)params.nextElement();
-            System.out.println("Parameter Name - "+paramName+", Value - "+httpReq.getParameter(paramName));
-        }*/
+        httpRes.setHeader("Access-Control-Max-Age", "86400");
 
         if(this.flag.exists()) {
-            if (Optional.ofNullable(httpReq.getHeader("Access-Control-Request-Method"))
-                    .orElse(httpReq.getMethod()).equals("POST")) {
-                this.sendPost("http://danilovey:8080" + url, httpReq, httpRes);
+            if (httpReq.getMethod().equals("POST")) {
+                this.sendPost(this.mapServers.get(this.PROD_BACKUP_SERVER) + url, httpReq, httpRes);
             } else {
-                if(httpReq.getHeader("Access-Control-Request-Headers") == null) {
-                    httpRes.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-                    httpRes.addHeader("Location", "http://danilovey:8080" + url);
+                if(httpReq.getMethod().equals("GET")) {
+                    sendGet(this.mapServers.get(this.PROD_BACKUP_SERVER) + url, httpReq, httpRes);
                 }
             }
         } else {
-            if (httpReq.getHeader("Access-Control-Request-Method") == null
-                    && httpReq.getMethod().equals("POST")) {
-                this.sendPost("http://js:9090" + url, httpReq, httpRes);
+            if (httpReq.getMethod().equals("POST")) {
+                this.sendPost(this.mapServers.get(this.PROD_SERVER) + url, httpReq, httpRes);
             } else {
-                if(httpReq.getHeader("Access-Control-Request-Headers") == null) {
-                    sendGet("http://js:9090" + url, httpReq, httpRes);
-                //httpRes.sendRedirect("http://js:9090" + url);
-                    //httpRes.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-                    //httpRes.setHeader("Location", "http://js:9090" + url);
+                if(httpReq.getMethod().equals("GET")) {
+                    this.sendGet(this.mapServers.get(this.PROD_SERVER) + url, httpReq, httpRes);
                 }
             }
         }
@@ -76,7 +79,6 @@ public class WebForwardingServlet extends HttpServlet {
 
     private void sendGet(String url, HttpServletRequest httpReq, HttpServletResponse httpRes) {
         HttpURLConnection con = null;
-        DataOutputStream wr = null;
         InputStream inputStream = null;
         try{
             final URL toJS  = new URL(url);
@@ -84,7 +86,8 @@ public class WebForwardingServlet extends HttpServlet {
 
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-            con.setDoOutput(false);
+            con.setRequestProperty("Accept","*");
+            con.setDoOutput(true);
             if(httpReq.getHeader("X-Token") != null) {
                 con.setRequestProperty("X-Token", httpReq.getHeader("X-Token"));
             }
@@ -92,10 +95,8 @@ public class WebForwardingServlet extends HttpServlet {
 
             final ServletOutputStream writer = httpRes.getOutputStream();
             httpRes.setHeader("Content-Type", "application/json");
-
             httpRes.setStatus(responseCode);
-
-            inputStream = con.getInputStream();
+            inputStream = responseCode == 200 ? con.getInputStream() : con.getErrorStream();
             int readByte;
             while ((readByte = inputStream.read()) != -1) {
                 writer.write(readByte);
@@ -121,28 +122,22 @@ public class WebForwardingServlet extends HttpServlet {
             con = (HttpURLConnection) toJS.openConnection();
 
             con.setRequestMethod("POST");
+            con.setRequestProperty("Accept","*");
             con.setDoOutput(true);
             con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             if(httpReq.getHeader("X-Token") != null) {
                 con.setRequestProperty("X-Token", httpReq.getHeader("X-Token"));
-                System.out.println(httpReq.getHeader("X-Token"));
             }
 
-            String body = "";
+            String body = null;
             ServletInputStream inputStream1 = httpReq.getInputStream();
             if(inputStream1.isReady()) {
                 body = new BufferedReader(new InputStreamReader(inputStream1))
                         .lines().collect(Collectors.joining("\n"));
             }
 
-            if(body == null || body.trim().isEmpty()) {
-                Enumeration arts = httpReq.getAttributeNames();
-                while(arts.hasMoreElements()){
-                    body = (String)arts.nextElement();
-                }
-                if(body == null || body.trim().isEmpty())
-                    body = "{}";
-            }
+            if(body == null || body.trim().isEmpty())
+                body = "{}";
 
             System.out.println("Body: " + body);
 
@@ -156,12 +151,10 @@ public class WebForwardingServlet extends HttpServlet {
             final ServletOutputStream writer = httpRes.getOutputStream();
             httpRes.setHeader("Content-Type", "application/json");
             httpRes.setStatus(responseCode);
-            if(responseCode == 200) {
-                inputStream = con.getInputStream();
-                int readByte;
-                while ((readByte = inputStream.read()) != -1) {
-                    writer.write(readByte);
-                }
+            inputStream = responseCode == 200 ? con.getInputStream() : con.getErrorStream();
+            int readByte;
+            while ((readByte = inputStream.read()) != -1) {
+                writer.write(readByte);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
