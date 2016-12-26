@@ -16,29 +16,28 @@ import java.util.stream.Collectors;
  * Created by danilovey on 14.11.2016.
  */
 public class WebForwardingServlet extends HttpServlet {
-    private final String PROD_SERVER = "prod";
-    private final String PROD_BACKUP_SERVER = "prod_backup";
-    private final Map<String, String> mapServers = new HashMap<>();
+    private static final String PROD_SERVER = "prod";
+    private static final String PROD_BACKUP_SERVER = "prod_backup";
+    private static final Map<String, String> mapServers = new HashMap<>();
     private final File flag = new File("flag.txt");
+
+    static {
+        try (InputStream resource = WebForwardingServlet.class.getResourceAsStream("/servers.properties")) {
+            mapServers.putAll(new BufferedReader(new InputStreamReader(resource,
+                    StandardCharsets.UTF_8)).lines().map(line -> line.split("="))
+                    .filter(elem -> elem.length==2)
+                    .collect(Collectors.toMap(e -> e[0], e -> e[1])));
+
+        } catch (IOException e) {
+            mapServers.clear();
+            mapServers.put(PROD_SERVER, "http://js:8080");
+            mapServers.put(PROD_BACKUP_SERVER, "http://danilovey:8080");
+        }
+    }
 
     @Override
     public void init() throws ServletException {
         super.init();
-        try (InputStream resource = this.getClass().getResourceAsStream("./servers.properties")) {
-            this.mapServers.putAll(new BufferedReader(new InputStreamReader(resource,
-                            StandardCharsets.UTF_8)).lines().map(line -> line.split("="))
-                            .filter(elem -> elem.length==2)
-                            .collect(Collectors.toMap(e -> e[0], e -> e[1])));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if(this.mapServers.size() < 2) {
-            this.mapServers.clear();
-            this.mapServers.put(this.PROD_SERVER, "http://js:8080");
-            this.mapServers.put(this.PROD_BACKUP_SERVER, "http://danilovey:8080");
-        }
     }
 
     @Override
