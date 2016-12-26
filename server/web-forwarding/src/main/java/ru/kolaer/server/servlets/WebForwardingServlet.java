@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -31,39 +32,83 @@ public class WebForwardingServlet extends HttpServlet {
         httpRes.setHeader("Access-Control-Allow-Methods", httpReq.getHeader("Access-Control-Request-Method"));
         httpRes.setHeader("Access-Control-Allow-Headers", httpReq.getHeader("Access-Control-Request-Headers"));
         httpRes.setHeader("Access-Control-Allow-Credentials", "true");
+        //httpRes.setHeader("Access-Control-Max-Age", "86400");
+        //httpRes.setHeader("Content-Type","application/x-www-form-urlencoded;charset=UTF-8");
 
+
+        /*System.out.println("123123: " + httpReq.getHeader("X-Token"));
         Enumeration headerNames = httpReq.getHeaderNames();
         while(headerNames.hasMoreElements()) {
             String headerName = (String)headerNames.nextElement();
             System.out.println("Header Name - " + headerName + ", Value - " + httpReq.getHeader(headerName));
-        }
+        }*/
 
-        Enumeration params = httpReq.getParameterNames();
+        /*Enumeration params = httpReq.getParameterNames();
         while(params.hasMoreElements()){
             String paramName = (String)params.nextElement();
             System.out.println("Parameter Name - "+paramName+", Value - "+httpReq.getParameter(paramName));
-        }
-
-        Enumeration arts = httpReq.getAttributeNames();
-        while(arts.hasMoreElements()){
-            String art = (String)arts.nextElement();
-            System.out.println("Parameter Name - "+art+", Value - "+httpReq.getAttribute(art));
-        }
+        }*/
 
         if(this.flag.exists()) {
-            if (httpReq.getHeader("Access-Control-Request-Method").equals("POST")) {
+            if (Optional.ofNullable(httpReq.getHeader("Access-Control-Request-Method"))
+                    .orElse(httpReq.getMethod()).equals("POST")) {
                 this.sendPost("http://danilovey:8080" + url, httpReq, httpRes);
             } else {
-                httpRes.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-                httpRes.setHeader("Location", "http://danilovey:8080" + url);
+                if(httpReq.getHeader("Access-Control-Request-Headers") == null) {
+                    httpRes.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
+                    httpRes.addHeader("Location", "http://danilovey:8080" + url);
+                }
             }
         } else {
-            if (httpReq.getHeader("Access-Control-Request-Method").equals("POST")) {
-                this.sendPost("http://js:8080" + url, httpReq, httpRes);
+            if (httpReq.getHeader("Access-Control-Request-Method") == null
+                    && httpReq.getMethod().equals("POST")) {
+                this.sendPost("http://js:9090" + url, httpReq, httpRes);
             } else {
-                httpRes.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-                httpRes.setHeader("Location", "http://js:8080" + url);
+                if(httpReq.getHeader("Access-Control-Request-Headers") == null) {
+                    sendGet("http://js:9090" + url, httpReq, httpRes);
+                //httpRes.sendRedirect("http://js:9090" + url);
+                    //httpRes.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
+                    //httpRes.setHeader("Location", "http://js:9090" + url);
+                }
             }
+        }
+    }
+
+    private void sendGet(String url, HttpServletRequest httpReq, HttpServletResponse httpRes) {
+        HttpURLConnection con = null;
+        DataOutputStream wr = null;
+        InputStream inputStream = null;
+        try{
+            final URL toJS  = new URL(url);
+            con = (HttpURLConnection) toJS.openConnection();
+
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            con.setDoOutput(false);
+            if(httpReq.getHeader("X-Token") != null) {
+                con.setRequestProperty("X-Token", httpReq.getHeader("X-Token"));
+            }
+            int responseCode = con.getResponseCode();
+
+            final ServletOutputStream writer = httpRes.getOutputStream();
+            httpRes.setHeader("Content-Type", "application/json");
+
+            httpRes.setStatus(responseCode);
+
+            inputStream = con.getInputStream();
+            int readByte;
+            while ((readByte = inputStream.read()) != -1) {
+                writer.write(readByte);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if(inputStream != null)
+                    inputStream.close();
+                if(con != null)
+                    con.disconnect();
+            } catch (Throwable ignore) {}
         }
     }
 
@@ -76,11 +121,30 @@ public class WebForwardingServlet extends HttpServlet {
             con = (HttpURLConnection) toJS.openConnection();
 
             con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json");
             con.setDoOutput(true);
+            con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            if(httpReq.getHeader("X-Token") != null) {
+                con.setRequestProperty("X-Token", httpReq.getHeader("X-Token"));
+                System.out.println(httpReq.getHeader("X-Token"));
+            }
 
-            final String body = httpReq.getReader().lines().collect(Collectors.joining());
-            System.out.println(body);
+            String body = "";
+            ServletInputStream inputStream1 = httpReq.getInputStream();
+            if(inputStream1.isReady()) {
+                body = new BufferedReader(new InputStreamReader(inputStream1))
+                        .lines().collect(Collectors.joining("\n"));
+            }
+
+            if(body == null || body.trim().isEmpty()) {
+                Enumeration arts = httpReq.getAttributeNames();
+                while(arts.hasMoreElements()){
+                    body = (String)arts.nextElement();
+                }
+                if(body == null || body.trim().isEmpty())
+                    body = "{}";
+            }
+
+            System.out.println("Body: " + body);
 
             wr = new DataOutputStream(con.getOutputStream());
             wr.write(body.getBytes());
@@ -92,11 +156,12 @@ public class WebForwardingServlet extends HttpServlet {
             final ServletOutputStream writer = httpRes.getOutputStream();
             httpRes.setHeader("Content-Type", "application/json");
             httpRes.setStatus(responseCode);
-
-            inputStream = con.getInputStream();
-            int readByte;
-            while ((readByte = inputStream.read()) != -1) {
-                writer.write(readByte);
+            if(responseCode == 200) {
+                inputStream = con.getInputStream();
+                int readByte;
+                while ((readByte = inputStream.read()) != -1) {
+                    writer.write(readByte);
+                }
             }
         } catch (IOException ex) {
             ex.printStackTrace();
