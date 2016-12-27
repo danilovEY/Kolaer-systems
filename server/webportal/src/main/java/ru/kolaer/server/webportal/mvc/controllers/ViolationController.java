@@ -274,11 +274,13 @@ public class ViolationController {
             v.setEffective(false);
             if (v.getExecutor() != null)
                 v.setExecutor(this.employeeService.getById(v.getExecutor().getPnumber()));
+            v.setJournalViolation(generalJournalViolation);
             lastAdd = new ViolationDecorator(v);
             violations.add(lastAdd);
             generalJournalViolation.setViolations(violations);
 
             this.journalViolationService.update(generalJournalViolation);
+            lastAdd.setJournalViolation(null);
         }
 
         return lastAdd;
