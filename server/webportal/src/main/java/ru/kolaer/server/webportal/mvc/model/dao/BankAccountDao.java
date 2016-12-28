@@ -7,4 +7,5 @@ import ru.kolaer.server.webportal.mvc.model.entities.bank.BankAccount;
  */
 public interface BankAccountDao extends DefaultDao<BankAccount> {
     BankAccount findByInitials(String initials);
+    Integer getCountAllAccount();
 }

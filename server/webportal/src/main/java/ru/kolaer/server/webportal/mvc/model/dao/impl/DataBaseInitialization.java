@@ -1,20 +1,11 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,13 +25,9 @@ import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecora
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.ManyToMany;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +39,6 @@ import java.util.stream.Collectors;
 @Repository
 @Slf4j
 public class DataBaseInitialization {
-    private static final Logger LOG = LoggerFactory.getLogger(DataBaseInitialization.class);
-
     @Autowired
     @Qualifier(value = "dataSourceKolaerBase")
     private JdbcTemplate jdbcTemplate;
@@ -86,6 +71,7 @@ public class DataBaseInitialization {
                     }
                 }
             });
+            log.info("BackAccount size: {}", this.bankAccountDao.getCountAllAccount());
         } catch (IOException e) {
             log.error("Ошибка при чтении файла!", e);
         } finally {
@@ -167,7 +153,7 @@ public class DataBaseInitialization {
                 try {
                     dataBaseEmployee.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(dbDataAll.getInitials(), "UTF-8").replace("+", "%20") + ".jpg");
                 } catch (UnsupportedEncodingException e) {
-                    LOG.error("Невозможно преобразовать {} в URL!", dbDataAll.getInitials(), e);
+                    log.error("Невозможно преобразовать {} в URL!", dbDataAll.getInitials(), e);
                     dataBaseEmployee.setPhoto(dbDataAll.getVCard());
                 }
                 dataBaseEmployee.setEmail(dbDataAll.getEmail());
@@ -185,7 +171,7 @@ public class DataBaseInitialization {
                 try {
                     dataBaseEmployee.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(dbDataAll.getInitials(), "UTF-8").replace("+", "%20") + ".jpg");
                 } catch (UnsupportedEncodingException e) {
-                    LOG.error("Невозможно преобразовать {} в URL!", dbDataAll.getInitials(), e);
+                    log.error("Невозможно преобразовать {} в URL!", dbDataAll.getInitials(), e);
                     dataBaseEmployee.setPhoto(dbDataAll.getVCard());
                 }
                 dataBaseEmployee.setEmail(dbDataAll.getEmail());

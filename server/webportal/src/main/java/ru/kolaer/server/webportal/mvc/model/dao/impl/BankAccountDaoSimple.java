@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 13.12.2016.
@@ -23,12 +24,32 @@ public class BankAccountDaoSimple implements BankAccountDao {
         final GeneralEmployeesEntity entity = new GeneralEmployeesEntityBase();
         entity.setInitials(initials);
 
-        return new BankAccount(entity, initialsAccountMap.get(initials.toUpperCase()));
+        final BankAccount bankAccount = new BankAccount(entity, "null");
+
+        for (Map.Entry<String, String> entry : initialsAccountMap.entrySet()) {
+            if(entry.getValue().equals(initials)) {
+                bankAccount.setCheck(entry.getKey());
+                return bankAccount;
+            }
+        }
+
+        return bankAccount;
+    }
+
+    @Override
+    public Integer getCountAllAccount() {
+        return this.initialsAccountMap.size();
     }
 
     @Override
     public List<BankAccount> findAll() {
-        return null;
+        return this.initialsAccountMap.entrySet().stream()
+                .map(stringStringEntry -> {
+                    final GeneralEmployeesEntity entity = new GeneralEmployeesEntityBase();
+                    entity.setInitials(stringStringEntry.getValue());
+
+                    return new BankAccount(entity, stringStringEntry.getKey());
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -38,7 +59,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
 
     @Override
     public void persist(BankAccount obj) {
-        this.initialsAccountMap.put(obj.getGeneralEmployeesEntity().getInitials(), obj.getCheck());
+        this.initialsAccountMap.put(obj.getCheck(), obj.getGeneralEmployeesEntity().getInitials());
     }
 
     @Override
