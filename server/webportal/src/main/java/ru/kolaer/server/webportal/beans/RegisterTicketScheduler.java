@@ -92,14 +92,18 @@ public class RegisterTicketScheduler {
     }
 
     public boolean generateZeroTicketDocument() {
+        return this.generateSetTicketDocument(0, "ZR", "Сформированные талоны ЛПП для обнуления. Файл во вложении!");
+    }
+
+    public boolean generateSetTicketDocument(Integer count, String typeTicket, String textMail) {
         List<Ticket> allTiskets = this.bankAccountDao.findAll().stream().map(bankAccount -> {
             final Ticket ticket = new Ticket();
             ticket.setEmployee(bankAccount.getGeneralEmployeesEntity());
-            ticket.setCount(0);
+            ticket.setCount(count);
             return ticket;
         }).collect(Collectors.toList());
 
-        return this.sendMail(allTiskets, "ZR", "Сформированные талоны ЛПП для обнуления. Файл во вложении!");
+        return this.sendMail(allTiskets, typeTicket, textMail);
     }
 
     private boolean sendMail(List<Ticket> tickets, String typeTiskets, String text) {
