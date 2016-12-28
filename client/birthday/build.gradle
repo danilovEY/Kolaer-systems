@@ -23,6 +23,17 @@ jar {
     }
 }
 
+task createJar(type: Jar) {
+    archiveName = projectJarName
+    baseName = project.name
+    manifest {
+        attributes 'Main-Class': 'ru.kolaer.birthday.runnable.BirthdaySwing'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
 task copyJarToBin(dependsOn: jar) {
     doLast {
         copy {
