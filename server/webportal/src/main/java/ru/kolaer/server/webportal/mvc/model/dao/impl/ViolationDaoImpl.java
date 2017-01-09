@@ -44,8 +44,9 @@ public class ViolationDaoImpl implements ViolationDao {
     }
 
     @Override
+    @Transactional
     public void delete( List<Violation> objs) {
-
+        objs.forEach(this::delete);
     }
 
     @Override

@@ -37,12 +37,10 @@ public interface PsrRegister extends Serializable {
      void setName(String name);
 
      @ApiModelProperty(value = "Дата открытия проекта")
-     @JsonFormat(locale = "ru", shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Europe/Moscow")
      Date getDateOpen();
      void setDateOpen(Date dateOpen);
 
      @ApiModelProperty(value = "Дата завершения проекта")
-     @JsonFormat(locale = "ru", shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Europe/Moscow")
      Date getDateClose();
      void setDateClose(Date dateClose);
 

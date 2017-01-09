@@ -1,6 +1,5 @@
 package ru.kolaer.api.mvp.model.kolaerweb.organizations;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,7 +17,6 @@ import java.util.Date;
     void setId(short id);
 
     @ApiModelProperty(value = "День рождения")
-    @JsonFormat(locale = "ru", shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Europe/Moscow")
     Date getBirthday();
     void setBirthday(Date birthday);
 

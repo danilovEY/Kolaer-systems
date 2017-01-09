@@ -23,7 +23,6 @@ public interface PsrState extends Serializable {
     void setComment(String comment);
 
     @ApiModelProperty(value = "Дата состояния")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy hh:mm")
     Date getDate();
     void setDate(Date date);
 

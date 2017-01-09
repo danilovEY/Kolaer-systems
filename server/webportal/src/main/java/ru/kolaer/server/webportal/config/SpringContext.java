@@ -1,6 +1,8 @@
 package ru.kolaer.server.webportal.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
@@ -167,7 +169,7 @@ public class SpringContext extends WebMvcConfigurerAdapter {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Hibernate5Module());
-
+        mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         messageConverter.setObjectMapper(mapper);
         return messageConverter;
 

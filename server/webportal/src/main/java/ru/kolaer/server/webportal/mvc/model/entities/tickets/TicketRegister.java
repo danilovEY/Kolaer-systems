@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.entities.tickets;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -40,7 +39,6 @@ public class TicketRegister implements Serializable {
     private GeneralDepartamentEntity departament;
 
     @ApiModelProperty(value = "Дата создания")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, locale = "ru", pattern = "dd.MM.yyyy", timezone = "Europe/Moscow")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createRegister;
 

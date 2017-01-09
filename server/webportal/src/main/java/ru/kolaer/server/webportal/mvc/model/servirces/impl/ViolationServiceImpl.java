@@ -49,7 +49,7 @@ public class ViolationServiceImpl implements ViolationService {
 
     @Override
     public void delete(List<Violation> violations) {
-
+        this.violationDao.delete(violations);
     }
 
     @Override
