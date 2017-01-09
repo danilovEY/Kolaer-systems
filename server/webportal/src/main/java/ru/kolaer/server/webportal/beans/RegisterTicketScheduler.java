@@ -162,7 +162,7 @@ public class RegisterTicketScheduler {
                     text += "\nВНИМАНИЕ! Для \"" + initials + "\" счет не найден!";
                 }
             }
-            printWriter.printf("T                 %d", countTickets);
+            printWriter.printf("T         %10d", countTickets);
             printWriter.printf(System.lineSeparator());
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             log.error("Файл {} не найден!", fileName);
