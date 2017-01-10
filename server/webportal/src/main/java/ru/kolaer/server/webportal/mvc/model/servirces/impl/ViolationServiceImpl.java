@@ -58,8 +58,8 @@ public class ViolationServiceImpl implements ViolationService {
     }
 
     @Override
-    public List<Violation> getAllByJournalAndEffective(Integer idJournal) {
-        return this.violationDao.findByJournalAndEffective(idJournal);
+    public List<Violation> getAllByJournalAndEffectiveOrWriter(Integer idJournal, Integer pnumber) {
+        return this.violationDao.findByJournalAndEffectiveOrPnumber(idJournal, pnumber);
     }
 
     @Override

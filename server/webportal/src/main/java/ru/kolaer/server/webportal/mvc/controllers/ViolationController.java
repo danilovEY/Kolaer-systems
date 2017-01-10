@@ -303,12 +303,13 @@ public class ViolationController {
     @UrlDeclaration(description = "Получить все нарушения в журнале", isAccessUser = true)
     @RequestMapping(value = "/journal/violation/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Violation> getViolations(@ApiParam(value = "ID журнала") @RequestParam("id") Integer id) {
+        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final List<String> userRoles = this.serviceLDAP.getAccountByAuthentication().getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());
 
         final boolean gettingAll = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
 
         return gettingAll ? this.violationService.getByIdJournal(id)
-                : this.violationService.getAllByJournalAndEffective(id);
+                : this.violationService.getAllByJournalAndEffectiveOrWriter(id, accountByAuthentication.getGeneralEmployeesEntity().getPnumber());
     }
 }

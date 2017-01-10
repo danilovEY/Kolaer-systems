@@ -62,9 +62,10 @@ public class ViolationDaoImpl implements ViolationDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Violation> findByJournalAndEffective(Integer idJournal) {
-        return this.sessionFactory.getCurrentSession().createQuery("FROM ViolationDecorator v WHERE v.journalViolation.id = :id AND v.effective = true")
-                .setParameter("id", idJournal).list();
+    public List<Violation> findByJournalAndEffectiveOrPnumber(Integer idJournal, Integer pnumber) {
+        return this.sessionFactory.getCurrentSession().createQuery("FROM ViolationDecorator v WHERE v.journalViolation.id = :id AND (v.effective = true OR v.writer.pnumber = :pnumber)")
+                .setParameter("id", idJournal)
+                .setParameter("pnumber", pnumber).list();
     }
 
     @Override

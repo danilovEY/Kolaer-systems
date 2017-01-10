@@ -10,6 +10,6 @@ import java.util.List;
  */
 public interface ViolationService extends ServiceBase<Violation> {
     void deleteByJournalId(Integer idJournal);
-    List<Violation> getAllByJournalAndEffective(Integer idJournal);
+    List<Violation> getAllByJournalAndEffectiveOrWriter(Integer idJournal, Integer pnumber);
     List<Violation> getByIdJournal(Integer id);
 }
