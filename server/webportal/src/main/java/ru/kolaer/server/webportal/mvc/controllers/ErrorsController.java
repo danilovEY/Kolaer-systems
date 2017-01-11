@@ -71,4 +71,20 @@ public class ErrorsController {
                 "503", new Date());
     }
 
+    @ApiOperation(
+            value = "403",
+            notes = "Нет доступа"
+    )
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @RequestMapping(value = "/403")
+    private ExceptionMessageRequest forbidden(HttpServletRequest request) throws JsonProcessingException {
+        final String origialUri = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
+        final String message = request.getAttribute(RequestDispatcher.ERROR_MESSAGE).toString();
+        logger.error("Error on controller: {}", origialUri);
+        logger.error("Error message: {}", message);
+
+        return new ExceptionMessageRequest(message,
+                "403", new Date());
+    }
+
 }
