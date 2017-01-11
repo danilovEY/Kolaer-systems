@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -81,6 +82,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
     }
 
     @Override
+    @Cacheable(value = "accounts", key = "#root.target", cacheManager = "springCM")
     public GeneralAccountsEntity getAccountByAuthentication() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && !auth.getName().equals("anonymousUser")){

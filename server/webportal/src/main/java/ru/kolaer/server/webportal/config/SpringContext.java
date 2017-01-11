@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -45,6 +48,7 @@ import java.util.List;
 @EnableTransactionManagement
 @EnableSwagger2
 @EnableScheduling
+@EnableCaching
 @ComponentScan({"ru.kolaer.server.webportal.spring",
         "ru.kolaer.server.webportal.beans",
         "ru.kolaer.server.webportal.mvc.model.dao.impl",
@@ -161,6 +165,11 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(env.getRequiredProperty("mail.from"));
         return simpleMailMessage;
+    }
+
+    @Bean(name = "springCM")
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager("accounts");
     }
 
     /**Позволяет мапить объект в json даже с учетом что стоит LAZY над property в entities.*/
