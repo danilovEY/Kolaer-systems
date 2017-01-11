@@ -107,9 +107,11 @@ public class ViolationController {
             return journalViolation.getViolations().stream().map(violation -> {
                 ViolationAccess violationAccess = new ViolationAccess();
                 violationAccess.setId(violation.getId());
-                violationAccess.setEdit(isAdmin);
+                violationAccess.setEdit(isAdmin || account.getGeneralEmployeesEntity().getPnumber()
+                        .equals(violation.getWriter().getPnumber()));
                 violationAccess.setDelete(isAdmin);
-                violationAccess.setEffective(isAdmin);
+                violationAccess.setEffective(isAdmin || (!violation.isEffective() && account.getGeneralEmployeesEntity().getPnumber()
+                        .equals(violation.getWriter().getPnumber())));
                 return violationAccess;
             }).collect(Collectors.toList());
         }
