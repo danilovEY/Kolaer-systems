@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(PathMapping.PATH_TO_RSS)
-public class RssController {
+public class RssController extends BaseController {
     private static final Logger LOG = LoggerFactory.getLogger(RssController.class);
 
     @Autowired

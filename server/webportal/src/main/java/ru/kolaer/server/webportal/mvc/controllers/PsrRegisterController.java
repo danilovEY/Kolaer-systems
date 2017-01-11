@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/psr")
 @Api(description = "Работа с ПСР-проектами.", tags = "ПСР-проект")
-public class PsrRegisterController {
+public class PsrRegisterController extends BaseController {
     private static final Logger LOG = LoggerFactory.getLogger(PsrRegisterController.class);
 
     @Autowired

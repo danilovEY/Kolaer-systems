@@ -33,7 +33,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/user")
 @Api(tags = "Аккаунт")
-public class UserController {
+public class UserController extends BaseController {
     private final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @Autowired

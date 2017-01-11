@@ -29,7 +29,7 @@ import java.util.Date;
 @RestController
 @RequestMapping(value = "/examples")
 @Api( tags = "Примеры", description = "Примеры объектов", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class ExampleController {
+public class ExampleController extends BaseController {
 
     @Autowired
     private ServiceLDAP serviceLDAP;

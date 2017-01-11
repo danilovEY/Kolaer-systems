@@ -19,7 +19,7 @@ import java.util.List;
 @Api(tags = "Подразделения")
 @RestController
 @RequestMapping(value = "/general/departament")
-public class DepartamentController {
+public class DepartamentController extends BaseController {
 
     @Autowired
     private DepartamentService departamentService;

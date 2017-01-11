@@ -27,7 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/general/employees")
 @Api(tags = "Сотрудники КолАЭР", description = "Сотрудники из организации КолАЭР.")
-public class EmployeeController {
+public class EmployeeController extends BaseController {
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeController.class);
 
     @Autowired

@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/non-security/holidays")
 @Api(tags = "Праздники", description = "Празники в России")
-public class HolidaysController {
+public class HolidaysController extends BaseController {
 
     @Autowired
     private HolidayService holidayService;

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/violations")
 @Api(tags = "Нарушения")
-public class ViolationController {
+public class ViolationController extends BaseController {
     private static final String ADMIN_VIOLATION = "Администратор нарушений";
 
     @Autowired

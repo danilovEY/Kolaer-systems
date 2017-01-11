@@ -23,7 +23,6 @@
 		<location>/rest/non-security/errors/403</location>
 	</error-page>
 
-
 	<error-page>
 		<exception-type>java.lang.Exception</exception-type>
 		<location>/rest/non-security/errors/503</location>

@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @Api(tags = "URL пути", description = "Описание URL: путь и доступы.")
-public class UrlPathController {
+public class UrlPathController extends BaseController {
 
     @Autowired
     private UrlPathService urlPathService;

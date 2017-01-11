@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/tickets")
 @Slf4j
-public class TicketController {
+public class TicketController extends BaseController {
 
     @Autowired
     private TicketRegisterService ticketRegisterService;

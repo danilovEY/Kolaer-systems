@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/non-security/counters")
 @Api(tags = "Счетчик")
-public class CounterControllers {
+public class CounterControllers extends BaseController {
 
     @Autowired
     private CounterService counterService;

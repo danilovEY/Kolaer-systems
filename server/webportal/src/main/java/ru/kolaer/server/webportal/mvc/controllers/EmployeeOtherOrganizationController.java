@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value="/organizations/employees")
 @Api(tags = "Содрудники филиалов")
-public class EmployeeOtherOrganizationController {
+public class EmployeeOtherOrganizationController extends BaseController {
 	private final Logger LOG = LoggerFactory.getLogger(EmployeeOtherOrganizationController.class);
 	
 	@Autowired

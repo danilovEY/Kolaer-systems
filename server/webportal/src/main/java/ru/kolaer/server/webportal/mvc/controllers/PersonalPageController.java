@@ -21,7 +21,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 @RestController
 @RequestMapping(value = "/personal_page")
 @Api(tags = "Персональная страница", description = "Все данные для персональной станици")
-public class PersonalPageController {
+public class PersonalPageController extends BaseController {
 
     @Autowired
     private PersonalPageService personalPageService;
