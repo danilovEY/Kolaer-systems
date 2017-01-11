@@ -127,7 +127,7 @@ public class Application implements Runnable {
 							if(isWindowsXP()) {
 								this.operUrlInPluginBrowser(this.pathApp);
 							} else {
-								r.exec("cmd /C explorer \"" + this.pathApp + "\"");
+								r.exec("cmd /C START \"\" \"" + this.pathApp + "\"");
 							}
 							return;
 						} else {
