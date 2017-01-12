@@ -117,8 +117,7 @@ public class ViolationController extends BaseController {
                 violationAccess.setEdit(isAdmin || account.getGeneralEmployeesEntity().getPnumber()
                         .equals(violation.getWriter().getPnumber()));
                 violationAccess.setDelete(isAdmin);
-                violationAccess.setEffective(isAdmin || (!violation.isEffective() && account.getGeneralEmployeesEntity().getPnumber()
-                        .equals(violation.getWriter().getPnumber())));
+                violationAccess.setEffective(isAdmin);
                 return violationAccess;
             }).collect(Collectors.toList());
         }
