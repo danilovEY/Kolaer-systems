@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/violations")
 @Api(tags = "Нарушения")
+@Slf4j
 public class ViolationController extends BaseController {
     private static final String ADMIN_VIOLATION = "Администратор нарушений";
 
@@ -73,8 +75,10 @@ public class ViolationController extends BaseController {
         access.setGetAll(gettingAll);
 
         if(gettingAll) {
+            log.info("ADMIN_VIOLATION: {} ", userRoles.contains(ADMIN_VIOLATION));
+            log.info("OIT: {} ", userRoles.contains("OIT"));
             final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
-
+            log.info("ADMIN: {} ", isAdmin);
             List<JournalViolation> journalViolations = isAdmin
                     ? this.journalViolationService.getAll()
                     : this.journalViolationService.getAllByDep(account.getGeneralEmployeesEntity()
@@ -84,7 +88,7 @@ public class ViolationController extends BaseController {
                 final JournalAccess journalAccess = new JournalAccess();
                 journalAccess.setIdJournal(journalViolation.getId());
                 journalAccess.setEdit(isAdmin);
-                journalAccess.setRemove(isAdmin);
+                journalAccess.setDelete(isAdmin);
                 return journalAccess;
             }).collect(Collectors.toList()));
         }

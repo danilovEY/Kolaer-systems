@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,7 @@ import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +60,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
     }
 
     @Override
+    @Cacheable(value = "accounts", cacheManager = "springCM")
     public GeneralAccountsEntity getAccountWithEmployeeByLogin(String login) {
         final GeneralAccountsEntity generalAccountsEntity = accountLDAP.getAccountByLogin(login);
         final GeneralEmployeesEntity generalEmployeesEntity = employeeLDAP.getEmployeeByLogin(login);
@@ -82,7 +85,6 @@ public class ServiceLDAPImpl implements ServiceLDAP {
     }
 
     @Override
-    @Cacheable(value = "accounts", key = "#root.target", cacheManager = "springCM")
     public GeneralAccountsEntity getAccountByAuthentication() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && !auth.getName().equals("anonymousUser")){
@@ -97,5 +99,10 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         if(login != null)
             return this.accountLDAP.getPhotoByLogin(login);
         return null;
+    }
+
+    @PreDestroy
+    @CacheEvict(value = "accounts", cacheManager = "springCM")
+    public void destroy() {
     }
 }

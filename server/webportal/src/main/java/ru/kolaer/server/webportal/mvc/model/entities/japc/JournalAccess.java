@@ -21,5 +21,5 @@ public class JournalAccess {
     private boolean edit;
 
     @ApiModelProperty("Удаление")
-    private boolean remove;
+    private boolean delete;
 }
