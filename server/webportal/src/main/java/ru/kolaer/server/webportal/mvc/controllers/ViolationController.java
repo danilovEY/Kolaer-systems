@@ -66,16 +66,19 @@ public class ViolationController extends BaseController {
         final GeneralAccountsEntity account = this.serviceLDAP.getAccountByAuthentication();
         final List<String> userRoles = account.getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());
-        final WebPortalUrlPath pathByUrl = urlPathService.getPathByUrl("/violations/journal/get/all");
+        final WebPortalUrlPath pathByUrlGetAll = urlPathService.getPathByUrl("/violations/journal/get/all");
+        final WebPortalUrlPath pathByUrlAddJournal = urlPathService.getPathByUrl("/violations/journal/add");
+        final boolean gettingAll = pathByUrlGetAll.getAccesses().contains("ALL") || pathByUrlGetAll.getAccesses().stream()
+                .filter(userRoles::contains).count() > 0;
 
-        final boolean gettingAll = pathByUrl.getAccesses().contains("ALL") || pathByUrl.getAccesses().stream()
+        final boolean addJournal = pathByUrlAddJournal.getAccesses().contains("ALL") || pathByUrlAddJournal.getAccesses().stream()
                 .filter(userRoles::contains).count() > 0;
 
         final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
 
         final JournalViolationAccess access = new JournalViolationAccess();
         access.setGetAll(gettingAll);
-        access.setAddJournal(gettingAll);
+        access.setAddJournal(addJournal);
         access.setAddAnyJournal(isAdmin);
 
         if(gettingAll) {
