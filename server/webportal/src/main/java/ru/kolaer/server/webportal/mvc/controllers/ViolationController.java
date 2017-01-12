@@ -111,7 +111,7 @@ public class ViolationController extends BaseController {
                     .map(GeneralRolesEntity::getType).collect(Collectors.toList());
 
             final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
-            return journalViolation.getViolations().stream().map(violation -> {
+            return this.violationService.getByIdJournal(journalViolation.getId()).stream().map(violation -> {
                 ViolationAccess violationAccess = new ViolationAccess();
                 violationAccess.setId(violation.getId());
                 violationAccess.setEdit(isAdmin || account.getGeneralEmployeesEntity().getPnumber()
@@ -255,6 +255,52 @@ public class ViolationController extends BaseController {
         this.violationService.update(updateViolation);
 
         return updateViolation;
+    }
+
+    @ApiOperation(
+            value = "Обновить нарушение в журнал",
+            notes = "Обновить нарушение в журнал"
+    )
+    @UrlDeclaration(description = "Обновить нарушение в журнал", isAccessUser = true)
+    @RequestMapping(value = "/update/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Violation> updateEffectiveViolation(@ApiParam(value = "Нарушением") @RequestBody List<Violation> violations) {
+        return violations.stream().map(violation -> {
+            Violation updateViolation = this.violationService.getById(violation.getId());
+            if (updateViolation == null)
+                throw new BadRequestException("Не найден журнал с ID: " + violation.getId());
+
+            if(violation.getTypeViolation() != null) {
+                updateViolation.setTypeViolation(this.typeViolationService.getById(violation.getTypeViolation().getId()));
+            }
+
+            if(violation.getExecutor() != null) {
+                updateViolation.setExecutor(this.employeeService.getById(violation.getExecutor().getPnumber()));
+            }
+
+            if(violation.getDateLimitEliminationViolation() != null) {
+                updateViolation.setDateLimitEliminationViolation(violation.getDateLimitEliminationViolation());
+            }
+
+            if(violation.isEffective() != null) {
+                updateViolation.setEffective(violation.isEffective());
+            }
+
+            if(violation.getStageEnum() != null) {
+                updateViolation.setStageEnum(violation.getStageEnum());
+            }
+
+            if(violation.getTodo() != null) {
+                updateViolation.setTodo(violation.getTodo());
+            }
+
+            if(violation.getViolation() != null) {
+                updateViolation.setViolation(violation.getViolation());
+            }
+
+            this.violationService.update(updateViolation);
+
+            return updateViolation;
+        }).collect(Collectors.toList());
     }
 
     @ApiOperation(
