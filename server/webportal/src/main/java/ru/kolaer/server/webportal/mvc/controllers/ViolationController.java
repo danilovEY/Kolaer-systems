@@ -71,14 +71,14 @@ public class ViolationController extends BaseController {
         final boolean gettingAll = pathByUrl.getAccesses().contains("ALL") || pathByUrl.getAccesses().stream()
                 .filter(userRoles::contains).count() > 0;
 
+        final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
+
         final JournalViolationAccess access = new JournalViolationAccess();
         access.setGetAll(gettingAll);
+        access.setAddJournal(gettingAll);
+        access.setAddAnyJournal(isAdmin);
 
         if(gettingAll) {
-            log.info("ADMIN_VIOLATION: {} ", userRoles.contains(ADMIN_VIOLATION));
-            log.info("OIT: {} ", userRoles.contains("OIT"));
-            final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
-            log.info("ADMIN: {} ", isAdmin);
             List<JournalViolation> journalViolations = isAdmin
                     ? this.journalViolationService.getAll()
                     : this.journalViolationService.getAllByDep(account.getGeneralEmployeesEntity()
