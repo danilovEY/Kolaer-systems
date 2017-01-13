@@ -41,13 +41,6 @@ public class TestSpring {
     private ViolationService violationService;
 
     @Test
-    public void testViolation() {
-        this.violationService.getAllByJournalAndEffective(2).forEach(violation -> {
-            System.out.println(violation.getId());
-        });
-    }
-
-    @Test
     @Ignore
     public void testMailSend() {
         SimpleMailMessage mailMessage = new SimpleMailMessage(templateMessage);
