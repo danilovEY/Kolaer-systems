@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,4 +29,9 @@ public interface JournalViolation extends Serializable {
     @ApiModelProperty(value = "Подразделение")
     GeneralDepartamentEntity getDepartament();
     void setDepartament(GeneralDepartamentEntity departament);
+
+    @ApiModelProperty(value = "Кто создал журнал")
+    GeneralEmployeesEntity getWriter();
+    void setWriter(GeneralEmployeesEntity writer);
+
 }

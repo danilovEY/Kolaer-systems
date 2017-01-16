@@ -6,10 +6,12 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
@@ -21,7 +23,9 @@ import ru.kolaer.server.webportal.mvc.model.entities.japc.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.*;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/violations")
@@ -29,6 +33,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ViolationController extends BaseController {
     private static final String ADMIN_VIOLATION = "Администратор нарушений";
+    private static final String ADMIN = "OIT";
+    private static final String COURATOR_VIOLATION = "Куратор нарушений";
 
     @Autowired
     private DepartamentService departamentService;
@@ -66,15 +72,16 @@ public class ViolationController extends BaseController {
         final GeneralAccountsEntity account = this.serviceLDAP.getAccountByAuthentication();
         final List<String> userRoles = account.getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());
+
         final WebPortalUrlPath pathByUrlGetAll = urlPathService.getPathByUrl("/violations/journal/get/all");
         final WebPortalUrlPath pathByUrlAddJournal = urlPathService.getPathByUrl("/violations/journal/add");
         final boolean gettingAll = pathByUrlGetAll.getAccesses().contains("ALL") || pathByUrlGetAll.getAccesses().stream()
-                .filter(userRoles::contains).count() > 0;
+                .anyMatch(userRoles::contains);
 
         final boolean addJournal = pathByUrlAddJournal.getAccesses().contains("ALL") || pathByUrlAddJournal.getAccesses().stream()
-                .filter(userRoles::contains).count() > 0;
+                .anyMatch(userRoles::contains);
 
-        final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
+        final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains(ADMIN);
 
         final JournalViolationAccess access = new JournalViolationAccess();
         access.setGetAll(gettingAll);
@@ -82,10 +89,14 @@ public class ViolationController extends BaseController {
         access.setAddAnyJournal(isAdmin);
 
         if(gettingAll) {
-            List<JournalViolation> journalViolations = isAdmin
-                    ? this.journalViolationService.getAll()
-                    : this.journalViolationService.getAllByDep(account.getGeneralEmployeesEntity()
-                    .getDepartament().getId());
+            List<JournalViolation> journalViolations;
+            if(isAdmin) {
+                journalViolations = this.journalViolationService.getAll();
+            } else {
+                journalViolations = userRoles.contains(COURATOR_VIOLATION) ? this.journalViolationService
+                        .getAllByDep(account.getGeneralEmployeesEntity().getDepartament().getId()).getData()
+                        : this.journalViolationService.getByPnumberWriter(account.getGeneralEmployeesEntity().getPnumber()).getData();
+            }
 
             access.setJournalAccesses(journalViolations.stream().map(journalViolation -> {
                 final JournalAccess journalAccess = new JournalAccess();
@@ -110,8 +121,9 @@ public class ViolationController extends BaseController {
             final List<String> userRoles = account.getRoles().stream()
                     .map(GeneralRolesEntity::getType).collect(Collectors.toList());
 
-            final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
-            return this.violationService.getByIdJournal(journalViolation.getId()).stream().map(violation -> {
+            final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains(ADMIN);
+
+            return this.violationService.getByIdJournal(journalViolation.getId()).getData().stream().map(violation -> {
                 ViolationAccess violationAccess = new ViolationAccess();
                 violationAccess.setId(violation.getId());
                 violationAccess.setEdit(isAdmin || account.getGeneralEmployeesEntity().getPnumber()
@@ -136,9 +148,20 @@ public class ViolationController extends BaseController {
         if(violation.getName()== null)
             throw new BadRequestException("Имя не может быть пустым!");
 
+        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
+
+        if(accountByAuthentication.getRoles().stream().map(GeneralRolesEntity::getType).filter(role -> !ADMIN_VIOLATION.equals(role)
+                || !ADMIN.equals(role) || !COURATOR_VIOLATION.equals(role)).findFirst().isPresent()) {
+            if(this.journalViolationService.getCountByPnumberWriter(accountByAuthentication
+                    .getGeneralEmployeesEntity().getPnumber()) > 0) {
+                throw new AccessDeniedException("Вы не можете больше создавать журналы!");
+            }
+        }
+
         JournalViolation journalViolation = new JournalViolationDecorator(violation);
+        journalViolation.setWriter(accountByAuthentication.getGeneralEmployeesEntity());
         if(journalViolation.getDepartament() == null) {
-            journalViolation.setDepartament(this.serviceLDAP.getAccountByAuthentication().getGeneralEmployeesEntity().getDepartament());
+            journalViolation.setDepartament(accountByAuthentication.getGeneralEmployeesEntity().getDepartament());
         } else {
             journalViolation.setDepartament(departamentService.getById(journalViolation.getDepartament().getId()));
         }
@@ -200,16 +223,26 @@ public class ViolationController extends BaseController {
     )
     @UrlDeclaration(description = "Получить все журналы с нарушениями", isAccessUser = true)
     @RequestMapping(value = "/journal/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<JournalViolation> getAllJournal() {
+    public Page<JournalViolation> getAllJournal(
+            @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
+            @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         final GeneralAccountsEntity account = this.serviceLDAP.getAccountByAuthentication();
         final List<String> userRoles = account.getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());
 
-        final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
+        final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains(ADMIN);
 
-        return isAdmin ? this.journalViolationService.getAll()
-                : this.journalViolationService.getAllByDep(account.getGeneralEmployeesEntity()
-                .getDepartament().getId());
+        if(isAdmin) {
+            return this.journalViolationService.getAllJournal(number, pageSize);
+        } else {
+            final boolean isCourator = userRoles.contains(COURATOR_VIOLATION);
+
+            return isCourator
+                    ? this.journalViolationService.getAllByDep(account.getGeneralEmployeesEntity()
+                    .getDepartament().getId(), number, pageSize)
+                    : this.journalViolationService.getByPnumberWriter(account.getGeneralEmployeesEntity()
+                    .getPnumber(), number, pageSize);
+        }
     }
 
     @ApiOperation(
@@ -231,10 +264,6 @@ public class ViolationController extends BaseController {
             updateViolation.setExecutor(this.employeeService.getById(violation.getExecutor().getPnumber()));
         }
 
-        if(violation.getDateLimitEliminationViolation() != null) {
-            updateViolation.setDateLimitEliminationViolation(violation.getDateLimitEliminationViolation());
-        }
-
         if(violation.isEffective() != null) {
             updateViolation.setEffective(violation.isEffective());
         }
@@ -250,6 +279,8 @@ public class ViolationController extends BaseController {
         if(violation.getViolation() != null) {
             updateViolation.setViolation(violation.getViolation());
         }
+
+        updateViolation.setDateLimitEliminationViolation(violation.getDateLimitEliminationViolation());
 
         this.violationService.update(updateViolation);
 
@@ -276,10 +307,6 @@ public class ViolationController extends BaseController {
                 updateViolation.setExecutor(this.employeeService.getById(violation.getExecutor().getPnumber()));
             }
 
-            if(violation.getDateLimitEliminationViolation() != null) {
-                updateViolation.setDateLimitEliminationViolation(violation.getDateLimitEliminationViolation());
-            }
-
             if(violation.isEffective() != null) {
                 updateViolation.setEffective(violation.isEffective());
             }
@@ -295,6 +322,9 @@ public class ViolationController extends BaseController {
             if(violation.getViolation() != null) {
                 updateViolation.setViolation(violation.getViolation());
             }
+
+            if(violation.getDateLimitEliminationViolation() != null)
+                updateViolation.setDateLimitEliminationViolation(violation.getDateLimitEliminationViolation());
 
             this.violationService.update(updateViolation);
 
@@ -315,7 +345,8 @@ public class ViolationController extends BaseController {
         if(generalJournalViolation == null)
             throw new BadRequestException("Не найден журнал с ID: " + journalViolation.getId());
 
-        List<Violation> violations = Optional.ofNullable(this.violationService.getByIdJournal(generalJournalViolation.getId()))
+        List<Violation> violations = Optional
+                .ofNullable(this.violationService.getByIdJournal(generalJournalViolation.getId()).getData())
                 .orElse(new ArrayList<>());
 
         Violation lastAdd = null;
@@ -356,14 +387,29 @@ public class ViolationController extends BaseController {
     )
     @UrlDeclaration(description = "Получить все нарушения в журнале", isAccessUser = true)
     @RequestMapping(value = "/journal/violation/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Violation> getViolations(@ApiParam(value = "ID журнала") @RequestParam("id") Integer id) {
+    public Page<Violation> getViolations(
+            @ApiParam(value = "ID журнала") @RequestParam("id") Integer id,
+            @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
+            @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
-        final List<String> userRoles = this.serviceLDAP.getAccountByAuthentication().getRoles().stream()
+        final GeneralEmployeesEntity generalEmployeesEntity = accountByAuthentication.getGeneralEmployeesEntity();
+        final List<String> roleStream = this.serviceLDAP.getAccountByAuthentication().getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());
 
-        final boolean gettingAll = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains("OIT");
+        final boolean isAdmin = roleStream.contains(ADMIN_VIOLATION)
+                        || roleStream.contains(ADMIN);
 
-        return gettingAll ? this.violationService.getByIdJournal(id)
-                : this.violationService.getAllByJournalAndEffectiveOrWriter(id, accountByAuthentication.getGeneralEmployeesEntity().getPnumber());
+        if(isAdmin) {
+            return this.violationService.getByIdJournal(id, number, pageSize);
+        } else {
+            final JournalViolation journal = this.journalViolationService.getById(id);
+            if(journal.getWriter().getPnumber().equals(generalEmployeesEntity.getPnumber())
+                    || (journal.getDepartament().getId().equals(generalEmployeesEntity.getDepartament().getId())
+                    && roleStream.contains(COURATOR_VIOLATION))) {
+                return this.violationService.getByIdJournal(id, number, pageSize);
+            }
+
+            throw new AccessDeniedException("У вас нет доступа!");
+        }
     }
 }

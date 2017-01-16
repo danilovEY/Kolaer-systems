@@ -2,11 +2,13 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.server.webportal.mvc.model.dao.ViolationDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.ViolationService;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 21.09.2016.
@@ -63,7 +65,14 @@ public class ViolationServiceImpl implements ViolationService {
     }
 
     @Override
-    public List<Violation> getByIdJournal(Integer id) {
-        return this.violationDao.findByJournalId(id);
+    public Page<Violation> getByIdJournal(Integer id) {
+        return this.getByIdJournal(id, 0, 0);
+    }
+
+    @Override
+    public Page<Violation> getByIdJournal(Integer id, Integer number, Integer pageSize) {
+        return this.violationDao.findByJournalId(id,
+                Optional.ofNullable(number).orElse(0),
+                Optional.ofNullable(pageSize).orElse(0));
     }
 }

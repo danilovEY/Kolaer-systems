@@ -17,6 +17,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
+import ru.kolaer.server.webportal.beans.TypeServer;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.bank.BankAccount;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
@@ -49,8 +50,14 @@ public class DataBaseInitialization {
     @Autowired
     private BankAccountDao bankAccountDao;
 
+    @Autowired
+    private TypeServer typeServer;
+
     @PostConstruct
     private void initOtherData() {
+        if(typeServer.isTest())
+            return;
+
         XSSFWorkbook myExcelBook = null;
         try {
             Resource resource = new ClassPathResource("bank_account.xlsx");
