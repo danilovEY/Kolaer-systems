@@ -314,6 +314,8 @@ public class ViolationController extends BaseController {
                 updateViolation.setEffective(violation.isEffective());
                 if(violation.isEffective()) {
                     updateViolation.setDateEndEliminationViolation(new Date());
+                } else {
+                    updateViolation.setDateEndEliminationViolation(null);
                 }
             }
 
