@@ -92,10 +92,11 @@ public class BirthdaySwing implements Service {
 		        user = "";
 		        for(String date : text.split(",")){
 		        	if(date.startsWith("\"organization\"")) {
-		        		user = " (" + getNameOrganization(date.split(":")[1].replaceAll("\"", "")) + ")";
+						list.add(user + " (" + getNameOrganization(date.split(":")[1].replaceAll("\"", "")) + ")");
 		        	}
+
 		        	if(date.startsWith("\"initials\"")) {
-		        		list.add(date.split(":")[1].replaceAll("\"", "") + user);
+						user = date.split(":")[1].replaceAll("\"", "");
 		        	}
 		        }
 			} catch(Exception e1){
