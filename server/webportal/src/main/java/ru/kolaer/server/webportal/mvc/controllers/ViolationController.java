@@ -266,6 +266,9 @@ public class ViolationController extends BaseController {
 
         if(violation.isEffective() != null) {
             updateViolation.setEffective(violation.isEffective());
+            if(violation.isEffective()) {
+                updateViolation.setDateEndEliminationViolation(new Date());
+            }
         }
 
         if(violation.getStageEnum() != null) {
@@ -309,6 +312,9 @@ public class ViolationController extends BaseController {
 
             if(violation.isEffective() != null) {
                 updateViolation.setEffective(violation.isEffective());
+                if(violation.isEffective()) {
+                    updateViolation.setDateEndEliminationViolation(new Date());
+                }
             }
 
             if(violation.getStageEnum() != null) {
