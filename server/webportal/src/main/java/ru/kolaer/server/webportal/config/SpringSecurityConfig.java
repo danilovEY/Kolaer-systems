@@ -83,7 +83,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //Отключаем csrf хак
         http.csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and()
         .httpBasic()
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
                 .and()
