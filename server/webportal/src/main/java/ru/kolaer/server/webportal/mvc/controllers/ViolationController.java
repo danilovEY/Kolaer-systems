@@ -4,8 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
@@ -18,14 +21,17 @@ import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.beans.ViolationReport;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/violations")
@@ -57,6 +63,51 @@ public class ViolationController extends BaseController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private ViolationReport violationReport;
+
+
+    @ApiOperation("Сгенерировать отчет по всем нарушениям")
+    @UrlDeclaration(description = "Сгенерировать отчет по всем нарушениям", isAccessUser = true)
+    @RequestMapping(value = "/reports/generate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity generateReportByAllViolations(
+            @ApiParam("Генерировать по всем подразделениям") @RequestParam(value = "all", defaultValue = "false") Boolean all,
+            @ApiParam("Генерировать подробную информацию") @RequestParam(value = "detailed", defaultValue = "false") Boolean detailed,
+            @ApiParam("Генерировать по ID подразделению") @RequestParam(value = "idDep", defaultValue = "-1") Integer idDep,
+
+            @ApiParam("Генерировать в промежутке С") @RequestParam(value = "createStart", defaultValue = "-1") Long startUnix,
+
+            @ApiParam("Генерировать в промежутке ПО") @RequestParam(value = "createEnd", defaultValue = "-1") Long endUnix,
+
+            final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+        final Date start = !startUnix.equals(-1L) ? new Date(startUnix * 1000) : null;
+        final Date end = !endUnix.equals(-1L) ? new Date(endUnix * 1000) : null;
+
+        final File report = all ? this.violationReport.makeReportStatisticByAllDepBetween(detailed, start, end)
+                : this.violationReport.makeReportStatisticByDepBetween(idDep, detailed, start, end);
+
+        if(report != null) {
+            try (InputStream fileInputStream = new FileInputStream(report);
+                 OutputStream output = response.getOutputStream()) {
+
+                response.reset();
+
+                response.setContentType("application/ms-excel; charset=UTF-8");
+                response.setCharacterEncoding("UTF-8");
+                response.setContentLength((int) (report.length()));
+
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder
+                        .encode(report.getName(),"UTF-8").replace("+", "%20") + "\"");
+
+                IOUtils.copyLarge(fileInputStream, output);
+                output.flush();
+            } catch (IOException e) {
+                log.error("Ошибка при передачи файла!");
+                throw e;
+            }
+        }
+        return ResponseEntity.ok("");
+    }
 
     @ApiOperation("Получить состояние")
     @UrlDeclaration(description = "Получить состояние", isAccessUser = true)
@@ -268,6 +319,8 @@ public class ViolationController extends BaseController {
             updateViolation.setEffective(violation.isEffective());
             if(violation.isEffective()) {
                 updateViolation.setDateEndEliminationViolation(new Date());
+            } else {
+                updateViolation.setDateEndEliminationViolation(null);
             }
         }
 

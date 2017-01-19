@@ -3,10 +3,12 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.server.webportal.mvc.model.dao.ViolationDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.ViolationService;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,8 +62,20 @@ public class ViolationServiceImpl implements ViolationService {
     }
 
     @Override
-    public List<Violation> getAllByJournalAndEffectiveOrWriter(Integer idJournal, Integer pnumber) {
-        return this.violationDao.findByJournalAndEffectiveOrPnumber(idJournal, pnumber);
+    public List<Violation> getAllByJournalAndEffective(Integer idJournal, Date createStart, Date createEnd) {
+        return createStart == null && createEnd == null ? this.violationDao.findByJournalAndEffective(idJournal)
+                : this.violationDao.findByJournalAndEffectiveBetween(idJournal, createStart, createEnd);
+    }
+
+    @Override
+    public List<Violation> getAllEffective(Date createStart, Date createEnd) {
+        return createEnd == null && createStart == null ? this.violationDao.findAllEffective()
+                : this.violationDao.findAllEffectiveBenween(createStart, createEnd);
+    }
+
+    @Override
+    public List<Violation> getAllByJournalAndWriter(Integer idJournal, Integer pnumber) {
+        return this.violationDao.findByJournalAndPnumber(idJournal, pnumber);
     }
 
     @Override
@@ -74,5 +88,12 @@ public class ViolationServiceImpl implements ViolationService {
         return this.violationDao.findByJournalId(id,
                 Optional.ofNullable(number).orElse(0),
                 Optional.ofNullable(pageSize).orElse(0));
+    }
+
+    @Override
+    public Long getCountViolationEffectiveByTypeBetween(Integer idType, StageEnum stageEnum, Date createStart, Date createEnd) {
+        if(idType < 0 && createStart == null && createEnd == null)
+            return 0L;
+        return this.violationDao.findCountViolationEffectiveByTypeBetween(idType, stageEnum, createStart, createEnd);
     }
 }

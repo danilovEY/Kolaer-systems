@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.server.webportal.mvc.model.dao.ViolationDao;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationDecorator;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,17 +67,30 @@ public class ViolationDaoImpl implements ViolationDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Violation> findByJournalAndEffectiveOrPnumber(Integer idJournal, Integer pnumber) {
-        return this.sessionFactory.getCurrentSession().createQuery("FROM ViolationDecorator v WHERE v.journalViolation.id = :id AND (v.effective = true OR v.writer.pnumber = :pnumber)")
+    public List<Violation> findByJournalAndEffective(Integer idJournal) {
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("FROM ViolationDecorator v WHERE v.journalViolation.id = :id AND v.effective = true")
                 .setParameter("id", idJournal)
-                .setParameter("pnumber", pnumber).list();
+                .list();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Violation> findByJournalAndPnumber(Integer idJournal, Integer pnumber) {
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("FROM ViolationDecorator v WHERE v.journalViolation.id = :id AND v.writer.pnumber = :pnumber")
+                .setParameter("id", idJournal)
+                .setParameter("pnumber", pnumber)
+                .list();
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Violation> findByJournalId(Integer id) {
-        return this.sessionFactory.getCurrentSession().createQuery("FROM ViolationDecorator v WHERE v.journalViolation.id = :id")
-                .setParameter("id", id).list();
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("FROM ViolationDecorator v WHERE v.journalViolation.id = :id")
+                .setParameter("id", id)
+                .list();
     }
 
     @Override
@@ -103,7 +118,86 @@ public class ViolationDaoImpl implements ViolationDao {
 
     @Transactional
     public void deleteByJournalId(Integer idJournal) {
-        this.sessionFactory.getCurrentSession().createQuery("DELETE FROM ViolationDecorator v WHERE v.journalViolation.id = :id")
-                .setParameter("id", idJournal).executeUpdate();
+        this.sessionFactory.getCurrentSession()
+                .createQuery("DELETE FROM ViolationDecorator v WHERE v.journalViolation.id = :id")
+                .setParameter("id", idJournal)
+                .executeUpdate();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Violation> findAllEffective() {
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("FROM ViolationDecorator v WHERE v.effective = true")
+                .list();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Violation> findAllEffectiveBenween(Date createStart, Date createEnd) {
+        String queryStr = "FROM ViolationDecorator v WHERE v.effective = true";
+        if(createStart != null) {
+            queryStr += " AND v.startMakingViolation >= :createStart";
+        }
+        if(createEnd != null) {
+            queryStr += " AND v.startMakingViolation <= :createEnd";
+        }
+        Query query = this.sessionFactory.getCurrentSession()
+                .createQuery(queryStr);
+
+        if(createStart != null) {
+            query = query.setParameter("createStart", createStart);
+        }
+        if(createEnd != null) {
+            query = query.setParameter("createEnd", createEnd);
+        }
+
+        return query.list();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Violation> findByJournalAndEffectiveBetween(Integer idJournal, Date createStart, Date createEnd) {
+        String queryStr = "FROM ViolationDecorator v WHERE v.journalViolation.id = :id AND v.effective = true";
+        if(createStart != null) {
+            queryStr += " AND v.startMakingViolation >= :createStart";
+        }
+        if(createEnd != null) {
+            queryStr += " AND v.startMakingViolation <= :createEnd";
+        }
+        Query query = this.sessionFactory.getCurrentSession()
+                .createQuery(queryStr)
+                .setParameter("id", idJournal);
+
+        if(createStart != null) {
+            query = query.setParameter("createStart", createStart);
+        }
+        if(createEnd != null) {
+            query = query.setParameter("createEnd", createEnd);
+        }
+
+        return query.list();
+
+    }
+
+    @Transactional(readOnly = true)
+    public Long findCountViolationEffectiveByTypeBetween(Integer idType, StageEnum stage, Date createStart, Date createEnd) {
+        String queryStr = "SELECT COUNT(v.id) FROM ViolationDecorator v WHERE v.effective = true AND v.typeViolation.id = :idType AND v.stageEnum = :stage";
+        if(createStart != null) {
+            queryStr += " AND v.startMakingViolation >= :createStart";
+        }
+        if(createEnd != null) {
+            queryStr += " AND v.startMakingViolation <= :createEnd";
+        }
+        Query query = this.sessionFactory.getCurrentSession()
+                .createQuery(queryStr)
+                .setParameter("idType", idType)
+                .setParameter("stage", stage);
+
+        if(createStart != null) {
+            query = query.setParameter("createStart", createStart);
+        }
+        if(createEnd != null) {
+            query = query.setParameter("createEnd", createEnd);
+        }
+
+        return (Long) query.uniqueResult();
     }
 }

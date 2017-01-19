@@ -53,7 +53,7 @@ public class RegisterTicketScheduler {
         this.emails.add("oit@kolaer.ru");
     }
 
-    @Scheduled(cron = "0 0 14 * * *", zone = "Europe/Moscow")
+    //@Scheduled(cron = "0 0 14 * * *", zone = "Europe/Moscow")
     public void generateAddTicketsScheduled() {
         if(!typeServer.isTest())
             this.generateAddTicketDocument();
