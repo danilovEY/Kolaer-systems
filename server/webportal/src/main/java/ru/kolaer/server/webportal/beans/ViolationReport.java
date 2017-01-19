@@ -131,6 +131,16 @@ public class ViolationReport {
         cal.set(Calendar.DAY_OF_YEAR, 1);
         final Date dateOfFirstDayInYear = cal.getTime();
 
+        long totalAllViolationCountInFirst = 0;
+        long totalEndViolationCountFirst = 0;
+        long totalCountViolationEffectiveInYearFirst = 0;
+
+        long totalAllViolationCountInSecond = 0;
+        long totalEndViolationCountSecond = 0;
+        long totalCountViolationEffectiveInYearSecond = 0;
+
+        Integer lastIdType = 0;
+
         for(TypeViolation typeViolation : this.typeViolationService.getAll()) {
             Supplier<Stream<Violation>> violationByType = () -> violations.stream().filter(violation ->
                 violation.getTypeViolation().getId().equals(typeViolation.getId())
@@ -150,10 +160,20 @@ public class ViolationReport {
             final long countViolationEffectiveInYearSecond = this.violationService
                     .getCountViolationEffectiveByTypeBetween(typeViolation.getId(), StageEnum.II, dateOfFirstDayInYear, new Date());
 
+            totalAllViolationCountInFirst += allViolationCountInFirst;
+            totalEndViolationCountFirst += endViolationCountFirst;
+            totalCountViolationEffectiveInYearFirst += countViolationEffectiveInYearFirst;
+
+            totalAllViolationCountInSecond += allViolationCountInSecond;
+            totalEndViolationCountSecond += endViolationCountSecond;
+            totalCountViolationEffectiveInYearSecond += countViolationEffectiveInYearSecond;
+
             copyRow(sheet, rowIndex, rowIndex+1);
             final HSSFRow row = sheet.getRow(rowIndex++);
 
             Integer cellIndex = 0;
+
+            lastIdType = typeViolation.getId();
 
             HSSFCell cell = row.getCell(cellIndex++);
             cell.setCellValue(typeViolation.getId());
@@ -182,7 +202,37 @@ public class ViolationReport {
             cell.setCellValue(countViolationEffectiveInYearSecond);
         }
 
-        sheet.removeRow(sheet.getRow(rowIndex));
+        //ИТОГИ
+        final HSSFRow row = sheet.getRow(rowIndex);
+
+        Integer cellIndex = 0;
+
+        HSSFCell cell = row.getCell(cellIndex++);
+        cell.setCellValue(lastIdType);
+
+        cell = row.getCell(cellIndex++);
+        cell.setCellValue("ИТОГ");
+
+        //Stage I
+        cell = row.getCell(cellIndex++);
+        cell.setCellValue(totalAllViolationCountInFirst);
+
+        cell = row.getCell(cellIndex++);
+        cell.setCellValue(totalEndViolationCountFirst);
+
+        cell = row.getCell(cellIndex++);
+        cell.setCellValue(totalCountViolationEffectiveInYearFirst);
+
+        //Stage II
+        cell = row.getCell(cellIndex++);
+        cell.setCellValue(totalAllViolationCountInSecond);
+
+        cell = row.getCell(cellIndex++);
+        cell.setCellValue(totalEndViolationCountSecond);
+
+        cell = row.getCell(cellIndex);
+        cell.setCellValue(totalCountViolationEffectiveInYearSecond);
+
         return sheet;
 
     }
