@@ -93,7 +93,11 @@ public class WebForwardingServlet extends HttpServlet {
             int responseCode = con.getResponseCode();
 
             final ServletOutputStream writer = httpRes.getOutputStream();
-            httpRes.setHeader("Content-Type", "application/json");
+            con.getHeaderFields().forEach((k,v) -> {
+                if(k != null)
+                    httpRes.addHeader(k, v.stream().collect(Collectors.joining(";")));
+            });
+
             httpRes.setStatus(responseCode);
             inputStream = responseCode == 200 ? con.getInputStream() : con.getErrorStream();
             int readByte;
@@ -138,8 +142,6 @@ public class WebForwardingServlet extends HttpServlet {
             if(body == null || body.trim().isEmpty())
                 body = "{}";
 
-            System.out.println("Body: " + body);
-
             wr = new DataOutputStream(con.getOutputStream());
             wr.write(body.getBytes());
             wr.flush();
@@ -148,7 +150,10 @@ public class WebForwardingServlet extends HttpServlet {
             int responseCode = con.getResponseCode();
 
             final ServletOutputStream writer = httpRes.getOutputStream();
-            httpRes.setHeader("Content-Type", "application/json");
+            con.getHeaderFields().forEach((k,v) -> {
+                if(k != null)
+                    httpRes.addHeader(k, v.stream().collect(Collectors.joining(";")));
+            });
             httpRes.setStatus(responseCode);
             inputStream = responseCode == 200 ? con.getInputStream() : con.getErrorStream();
             int readByte;
