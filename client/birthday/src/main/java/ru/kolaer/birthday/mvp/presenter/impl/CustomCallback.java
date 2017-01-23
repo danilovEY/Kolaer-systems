@@ -8,7 +8,7 @@ import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.network.UserDataBase;
-import ru.kolaer.api.system.network.restful.EmployeeOtherOrganizationTable;
+import ru.kolaer.api.system.network.kolaerweb.EmployeeOtherOrganizationTable;
 import ru.kolaer.birthday.tools.Tools;
 
 import java.time.LocalDate;

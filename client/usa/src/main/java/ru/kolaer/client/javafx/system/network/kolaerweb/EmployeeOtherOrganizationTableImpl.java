@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
-import ru.kolaer.api.system.network.restful.EmployeeOtherOrganizationTable;
+import ru.kolaer.api.system.network.kolaerweb.EmployeeOtherOrganizationTable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

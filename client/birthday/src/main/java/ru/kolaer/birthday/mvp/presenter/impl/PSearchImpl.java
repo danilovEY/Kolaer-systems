@@ -1,5 +1,6 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
+import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -23,12 +24,12 @@ public class PSearchImpl implements PSearchUsers {
 		this.editorKid = editorKid;
 		
 		this.view.setSearchAction(e -> {
-			final DbDataAll[] dbDataAllArray = this.editorKid.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByInitials(this.view.getSearchText());
+			final GeneralEmployeesEntity[] dbDataAllArray = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersByInitials(this.view.getSearchText());
 			final EmployeeOtherOrganization[] dbBirthdayAllArray = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByInitials(this.view.getSearchText());
 
 			final List<UserModel> users = new ArrayList<>();
 
-			for(final DbDataAll user : dbDataAllArray) {
+			for(final GeneralEmployeesEntity user : dbDataAllArray) {
 				users.add(new UserModelImpl(user));
 			}
 

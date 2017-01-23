@@ -1,7 +1,7 @@
 package ru.kolaer.client.javafx.system.network.kolaerweb;
 
 import ru.kolaer.api.system.network.kolaerweb.*;
-import ru.kolaer.api.system.network.restful.EmployeeOtherOrganizationTable;
+import ru.kolaer.api.system.network.kolaerweb.EmployeeOtherOrganizationTable;
 
 /**
  * Created by Danilov on 31.07.2016.
@@ -41,6 +41,7 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
         return this.counterTable;
     }
 
+    @Override
     public EmployeeOtherOrganizationTable getEmployeeOtherOrganizationTable() {
         return this.employeeOtherOrganizationTable;
     }

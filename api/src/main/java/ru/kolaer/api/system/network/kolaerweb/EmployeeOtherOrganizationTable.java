@@ -1,4 +1,4 @@
-package ru.kolaer.api.system.network.restful;
+package ru.kolaer.api.system.network.kolaerweb;
 
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
