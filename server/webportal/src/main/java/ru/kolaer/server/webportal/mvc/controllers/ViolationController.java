@@ -90,13 +90,11 @@ public class ViolationController extends BaseController {
             try (InputStream fileInputStream = new FileInputStream(report);
                  OutputStream output = response.getOutputStream()) {
 
-                response.reset();
-
-                response.setContentType("application/ms-excel; charset=UTF-8");
+                response.setContentType("attachment/ms-excel; charset=UTF-8");
                 response.setCharacterEncoding("UTF-8");
                 response.setContentLength((int) (report.length()));
 
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder
+                response.addHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder
                         .encode(report.getName(),"UTF-8").replace("+", "%20") + "\"");
 
                 IOUtils.copyLarge(fileInputStream, output);
