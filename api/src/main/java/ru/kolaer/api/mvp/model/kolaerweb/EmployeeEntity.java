@@ -31,8 +31,8 @@ public interface EmployeeEntity extends Serializable {
      void setDepartment(DepartmentEntity department);
 
      @ApiModelProperty(value = "Должность")
-     String getPost();
-     void setPost(String post);
+     PostEntity getPostEntity();
+     void setPostEntity(PostEntity postEntity);
 
      @ApiModelProperty(value = "Мобильный номер")
      String getMobileNumber();

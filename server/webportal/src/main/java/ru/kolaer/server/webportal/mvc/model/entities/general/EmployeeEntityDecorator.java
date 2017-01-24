@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.general;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.PostEntity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -53,7 +54,7 @@ public class EmployeeEntityDecorator implements EmployeeEntity {
     }
 
 
-    @OneToOne(targetEntity = DepartmentEntityDecorator.class, fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = DepartmentEntityDecorator.class)
     @JoinColumn(name = "id_department")
     public DepartmentEntity getDepartment() {
         return this.employeeEntity.getDepartment();
@@ -63,13 +64,15 @@ public class EmployeeEntityDecorator implements EmployeeEntity {
         this.employeeEntity.setDepartment(departament);
     }
 
-    @Column(name = "post")
-    public String getPost() {
-        return this.employeeEntity.getPost();
+    @OneToOne(targetEntity = PostEntityDecorator.class)
+    @JoinColumn(name = "id_post_entity")
+    public PostEntity getPostEntity() {
+        return this.employeeEntity.getPostEntity();
     }
 
-    public void setPost(String post) {
-        this.employeeEntity.setPost(post);
+    @Override
+    public void setPostEntity(PostEntity postEntity) {
+        this.employeeEntity.setPostEntity(postEntity);
     }
 
     @Column(name = "mobile_number", length = 15)
