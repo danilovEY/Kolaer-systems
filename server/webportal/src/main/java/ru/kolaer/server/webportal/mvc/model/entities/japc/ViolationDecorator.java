@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.japc;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.*;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -99,25 +99,25 @@ public class ViolationDecorator implements Violation {
         this.violation.setJournalViolation(journalViolation);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_writer", nullable = false)
-    public GeneralEmployeesEntity getWriter() {
+    public EmployeeEntity getWriter() {
         return this.violation.getWriter();
     }
 
     @Override
-    public void setWriter(GeneralEmployeesEntity writer) {
+    public void setWriter(EmployeeEntity writer) {
         this.violation.setWriter(writer);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_executor", nullable = true)
-    public GeneralEmployeesEntity getExecutor() {
+    public EmployeeEntity getExecutor() {
         return this.violation.getExecutor();
     }
 
     @Override
-    public void setExecutor(GeneralEmployeesEntity executor) {
+    public void setExecutor(EmployeeEntity executor) {
         this.violation.setExecutor(executor);
     }
 

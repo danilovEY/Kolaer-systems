@@ -1,6 +1,6 @@
 package ru.kolaer.api.mvp.model.kolaerweb.jpac;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 
 import java.util.Date;
 
@@ -14,8 +14,8 @@ public class ViolationBase implements Violation {
     private Date startMakingViolation;
     private Date dateLimitEliminationViolation;
     private Date dateEndEliminationViolation;
-    private GeneralEmployeesEntity writer;
-    private GeneralEmployeesEntity executor;
+    private EmployeeEntity writer;
+    private EmployeeEntity executor;
     private Boolean effective;
     private StageEnum stage;
     private TypeViolation typeViolation;
@@ -69,19 +69,19 @@ public class ViolationBase implements Violation {
         this.dateEndEliminationViolation = dateEndEliminationViolation;
     }
 
-    public GeneralEmployeesEntity getWriter() {
+    public EmployeeEntity getWriter() {
         return writer;
     }
 
-    public void setWriter(GeneralEmployeesEntity writer) {
+    public void setWriter(EmployeeEntity writer) {
         this.writer = writer;
     }
 
-    public GeneralEmployeesEntity getExecutor() {
+    public EmployeeEntity getExecutor() {
         return executor;
     }
 
-    public void setExecutor(GeneralEmployeesEntity executor) {
+    public void setExecutor(EmployeeEntity executor) {
         this.executor = executor;
     }
 

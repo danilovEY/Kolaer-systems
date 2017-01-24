@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.springframework.stereotype.Repository;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.bank.BankAccount;
 
@@ -21,7 +21,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
 
     @Override
     public BankAccount findByInitials(String initials) {
-        final GeneralEmployeesEntity entity = new GeneralEmployeesEntityBase();
+        final EmployeeEntity entity = new EmployeeEntityBase();
         entity.setInitials(initials);
 
         final BankAccount bankAccount = new BankAccount(entity, "null");
@@ -45,7 +45,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
     public List<BankAccount> findAll() {
         return this.initialsAccountMap.entrySet().stream()
                 .map(stringStringEntry -> {
-                    final GeneralEmployeesEntity entity = new GeneralEmployeesEntityBase();
+                    final EmployeeEntity entity = new EmployeeEntityBase();
                     entity.setInitials(stringStringEntry.getValue());
 
                     return new BankAccount(entity, stringStringEntry.getKey());
@@ -59,7 +59,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
 
     @Override
     public void persist(BankAccount obj) {
-        this.initialsAccountMap.put(obj.getCheck(), obj.getGeneralEmployeesEntity().getInitials());
+        this.initialsAccountMap.put(obj.getCheck(), obj.getEmployeeEntity().getInitials());
     }
 
     @Override

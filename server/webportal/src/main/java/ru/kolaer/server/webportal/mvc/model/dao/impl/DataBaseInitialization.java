@@ -12,8 +12,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
@@ -21,7 +21,7 @@ import ru.kolaer.server.webportal.beans.TypeServer;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.bank.BankAccount;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
@@ -71,7 +71,7 @@ public class DataBaseInitialization {
                     initials = initials.trim();
                     cache = cache.trim();
                     if(!initials.isEmpty() && !cache.isEmpty()) {
-                        final GeneralEmployeesEntity entity = new GeneralEmployeesEntityBase();
+                        final EmployeeEntity entity = new EmployeeEntityBase();
                         entity.setInitials(initials);
                         final BankAccount account = new BankAccount(entity , cache);
                         this.bankAccountDao.persist(account);
@@ -139,17 +139,17 @@ public class DataBaseInitialization {
         }));
         int i = 0;
 
-        final List<GeneralEmployeesEntity> generalEmployeesEntities = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator").list();
-        Map<Integer, GeneralEmployeesEntity> mapEmployee = new HashMap<>();
+        final List<EmployeeEntity> generalEmployeesEntities = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator").list();
+        Map<Integer, EmployeeEntity> mapEmployee = new HashMap<>();
         generalEmployeesEntities.forEach(generalEmployeesEntity -> mapEmployee.put(generalEmployeesEntity.getPnumber(), generalEmployeesEntity));
 
         List<GeneralDepartamentEntity> departamentEntities = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralDepartamentEntityDecorator").list();
         Map<String, GeneralDepartamentEntity> mapDep = departamentEntities.stream().collect(Collectors.toMap(GeneralDepartamentEntity::getName, d -> d));
         for (DbDataAll dbDataAll : dbDataAlls) {
-            GeneralEmployeesEntity dataBaseEmployee = mapEmployee.get(dbDataAll.getPersonNumber());
+            EmployeeEntity dataBaseEmployee = mapEmployee.get(dbDataAll.getPersonNumber());
 
             if(dataBaseEmployee == null) {
-                dataBaseEmployee = new GeneralEmployeesEntityDecorator();
+                dataBaseEmployee = new EmployeeEntityDecorator();
                 dataBaseEmployee.setPnumber(dbDataAll.getPersonNumber());
                 dataBaseEmployee.setPost(dbDataAll.getPost());
                 dataBaseEmployee.setInitials(dbDataAll.getInitials());
@@ -198,7 +198,7 @@ public class DataBaseInitialization {
         mapEmployee.values().forEach(generalEmployeesEntity -> this.sessionFactory.getCurrentSession().delete(generalEmployeesEntity));
     }
 
-    private void updateDepartament(GeneralEmployeesEntity entity, DbDataAll dbDataAll, GeneralDepartamentEntity dep) {
+    private void updateDepartament(EmployeeEntity entity, DbDataAll dbDataAll, GeneralDepartamentEntity dep) {
         GeneralDepartamentEntity generalDepartamentEntity = dep;
 
         if (generalDepartamentEntity == null) {

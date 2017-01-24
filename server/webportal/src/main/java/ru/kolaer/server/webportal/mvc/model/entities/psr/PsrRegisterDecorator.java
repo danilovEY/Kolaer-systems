@@ -2,9 +2,9 @@ package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -53,23 +53,23 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setStatus(status);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_author")
-    public GeneralEmployeesEntity getAuthor() {
+    public EmployeeEntity getAuthor() {
         return this.psrRegister.getAuthor();
     }
 
-    public void setAuthor(GeneralEmployeesEntity author) {
+    public void setAuthor(EmployeeEntity author) {
         this.psrRegister.setAuthor(author);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_project_admin")
-    public GeneralEmployeesEntity getAdmin() {
+    public EmployeeEntity getAdmin() {
         return this.psrRegister.getAdmin();
     }
 
-    public void setAdmin(GeneralEmployeesEntity admin) {
+    public void setAdmin(EmployeeEntity admin) {
         this.psrRegister.setAdmin(admin);
     }
 

@@ -2,8 +2,8 @@ package ru.kolaer.server.webportal.mvc.model.entities.tickets;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,9 +21,9 @@ public class Ticket implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "Сотрудник")
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_employee")
-    private GeneralEmployeesEntity employee;
+    private EmployeeEntity employee;
 
     @ApiModelProperty(value = "Колличество талонов")
     private Integer count;
@@ -36,11 +36,11 @@ public class Ticket implements Serializable {
         this.id = id;
     }
 
-    public GeneralEmployeesEntity getEmployee() {
+    public EmployeeEntity getEmployee() {
         return employee;
     }
 
-    public void setEmployee(GeneralEmployeesEntity employee) {
+    public void setEmployee(EmployeeEntity employee) {
         this.employee = employee;
     }
 

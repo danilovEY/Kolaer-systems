@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
@@ -45,7 +45,7 @@ public class ExampleController extends BaseController {
         if(authentication == null)
             throw new IllegalArgumentException("Authentication is null");
 
-        final GeneralEmployeesEntity generalEmployeesEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()).getGeneralEmployeesEntity();
+        final EmployeeEntity employeeEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()).getGeneralEmployeesEntity();
 
         final TypeViolationDecorator typeViolationDecorator = new TypeViolationDecorator();
         typeViolationDecorator.setId(0);
@@ -56,8 +56,8 @@ public class ExampleController extends BaseController {
         violationDecorator.setStageEnum(StageEnum.I);
         violationDecorator.setEffective(false);
         violationDecorator.setViolation("<p>Нарушение1</p>");
-        violationDecorator.setExecutor(generalEmployeesEntity);
-        violationDecorator.setWriter(generalEmployeesEntity);
+        violationDecorator.setExecutor(employeeEntity);
+        violationDecorator.setWriter(employeeEntity);
         violationDecorator.setDateEndEliminationViolation(new Date());
         violationDecorator.setDateLimitEliminationViolation(new Date());
         violationDecorator.setStartMakingViolation(new Date());

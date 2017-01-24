@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,9 +30,9 @@ public class RepositoryPassword implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_employee", nullable = false)
-    private GeneralEmployeesEntity employee;
+    private EmployeeEntity employee;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "last_pass_id")

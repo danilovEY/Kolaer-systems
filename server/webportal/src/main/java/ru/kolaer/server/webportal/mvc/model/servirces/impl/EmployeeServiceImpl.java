@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
@@ -23,12 +23,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeDao employeeDao;
 
     @Override
-    public List<GeneralEmployeesEntity> getAll() {
+    public List<EmployeeEntity> getAll() {
         return this.employeeDao.findAll();
     }
 
     @Override
-    public GeneralEmployeesEntity getById(Integer id) {
+    public EmployeeEntity getById(Integer id) {
         if(id != null && id >= 0)
             return this.employeeDao.findByID(id);
 
@@ -37,7 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void add(GeneralEmployeesEntity accountsEntity) {
+    public void add(EmployeeEntity accountsEntity) {
         if(accountsEntity == null) {
             LOG.error("Account is NULL");
             return;
@@ -47,54 +47,54 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void delete(GeneralEmployeesEntity entity) {
+    public void delete(EmployeeEntity entity) {
 
     }
 
     @Override
-    public void update(GeneralEmployeesEntity entity) {
+    public void update(EmployeeEntity entity) {
 
     }
 
     @Override
-    public void update(List<GeneralEmployeesEntity> entity) {
+    public void update(List<EmployeeEntity> entity) {
 
     }
 
     @Override
-    public void delete(List<GeneralEmployeesEntity> entites) {
+    public void delete(List<EmployeeEntity> entites) {
 
     }
 
     @Override
-    public List<GeneralEmployeesEntity> getUserRangeBirthday(Date startData, Date endData) {
+    public List<EmployeeEntity> getUserRangeBirthday(Date startData, Date endData) {
         return this.employeeDao.getUserRangeBirthday(startData, endData);
     }
 
     @Override
-    public List<GeneralEmployeesEntity> getUsersByBirthday(Date date) {
+    public List<EmployeeEntity> getUsersByBirthday(Date date) {
         return this.employeeDao.getUsersByBirthday(date);
     }
 
     @Override
-    public List<GeneralEmployeesEntity> getUserBirthdayToday() {
+    public List<EmployeeEntity> getUserBirthdayToday() {
         return this.employeeDao.getUserBirthdayToday();
     }
 
     @Override
-    public List<GeneralEmployeesEntity> getUsersByInitials(String initials) {
+    public List<EmployeeEntity> getUsersByInitials(String initials) {
         return this.employeeDao.getUsersByInitials(initials);
     }
 
     @Override
-    public List<GeneralEmployeesEntity> getUsersByDepartamentId(Integer id) {
+    public List<EmployeeEntity> getUsersByDepartamentId(Integer id) {
         return this.employeeDao.findByDepartamentById(id);
     }
 
     @Override
-    public Page<GeneralEmployeesEntity> getUsersByDepartamentId(int page, int pageSize, Integer id) {
+    public Page<EmployeeEntity> getUsersByDepartamentId(int page, int pageSize, Integer id) {
         if(page == 0) {
-            List<GeneralEmployeesEntity> usersByDepartamentId = this.getUsersByDepartamentId(id);
+            List<EmployeeEntity> usersByDepartamentId = this.getUsersByDepartamentId(id);
             return new Page<>(usersByDepartamentId, 0, 0, usersByDepartamentId.size());
         }
         return this.employeeDao.findByDepartamentById(page, pageSize, id);

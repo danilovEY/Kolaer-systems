@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
@@ -56,8 +56,8 @@ public class KolpassContorller {
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize
     ) {
         final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
-        final GeneralEmployeesEntity generalEmployeesEntity = accountByAuthentication.getGeneralEmployeesEntity();
-        return this.repPassService.getAllByPnumber(generalEmployeesEntity.getPnumber(), number, pageSize);
+        final EmployeeEntity employeeEntity = accountByAuthentication.getGeneralEmployeesEntity();
+        return this.repPassService.getAllByPnumber(employeeEntity.getPnumber(), number, pageSize);
     }
 
     @ApiOperation(value = "Добавить новое хранилище")
@@ -67,18 +67,18 @@ public class KolpassContorller {
             @ApiParam("Наименование хранилища") @RequestBody RepositoryPassword repositoryPassword
     ) {
         final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
-        final GeneralEmployeesEntity generalEmployeesEntity = accountByAuthentication.getGeneralEmployeesEntity();
+        final EmployeeEntity employeeEntity = accountByAuthentication.getGeneralEmployeesEntity();
         if(repositoryPassword.getName() == null) {
             throw new BadRequestException("Имя не может быть пустым!");
         }
 
         final RepositoryPassword doubleRep = this.repPassService
-                .getByNameAndPnumber(repositoryPassword.getName(), generalEmployeesEntity.getPnumber());
+                .getByNameAndPnumber(repositoryPassword.getName(), employeeEntity.getPnumber());
 
         if(doubleRep != null)
             throw new BadRequestException("Хранилище с таким названием у вас уже существует!");
 
-        repositoryPassword.setEmployee(generalEmployeesEntity);
+        repositoryPassword.setEmployee(employeeEntity);
 
         this.repPassService.add(repositoryPassword);
 
@@ -101,10 +101,10 @@ public class KolpassContorller {
         }
 
         final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
-        final GeneralEmployeesEntity generalEmployeesEntity = accountByAuthentication.getGeneralEmployeesEntity();
+        final EmployeeEntity employeeEntity = accountByAuthentication.getGeneralEmployeesEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
-        if(!rep.getEmployee().getPnumber().equals(generalEmployeesEntity.getPnumber())
+        if(!rep.getEmployee().getPnumber().equals(employeeEntity.getPnumber())
                 || !accountByAuthentication.getRoles().stream()
                 .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
@@ -144,10 +144,10 @@ public class KolpassContorller {
         }
 
         final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
-        final GeneralEmployeesEntity generalEmployeesEntity = accountByAuthentication.getGeneralEmployeesEntity();
+        final EmployeeEntity employeeEntity = accountByAuthentication.getGeneralEmployeesEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
-        if(!rep.getEmployee().getPnumber().equals(generalEmployeesEntity.getPnumber())
+        if(!rep.getEmployee().getPnumber().equals(employeeEntity.getPnumber())
                 || !accountByAuthentication.getRoles().stream()
                 .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
@@ -170,10 +170,10 @@ public class KolpassContorller {
         }
 
         final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
-        final GeneralEmployeesEntity generalEmployeesEntity = accountByAuthentication.getGeneralEmployeesEntity();
+        final EmployeeEntity employeeEntity = accountByAuthentication.getGeneralEmployeesEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
-        if(!rep.getEmployee().getPnumber().equals(generalEmployeesEntity.getPnumber())
+        if(!rep.getEmployee().getPnumber().equals(employeeEntity.getPnumber())
                 || !accountByAuthentication.getRoles().stream()
                 .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
@@ -199,17 +199,17 @@ public class KolpassContorller {
             throw new BadRequestException("ID не может быть пустым!");
 
         final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
-        final GeneralEmployeesEntity generalEmployeesEntity = accountByAuthentication.getGeneralEmployeesEntity();
+        final EmployeeEntity employeeEntity = accountByAuthentication.getGeneralEmployeesEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
-        if(!rep.getEmployee().getPnumber().equals(generalEmployeesEntity.getPnumber())
+        if(!rep.getEmployee().getPnumber().equals(employeeEntity.getPnumber())
                 || !accountByAuthentication.getRoles().stream()
                 .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
         }
 
         final RepositoryPassword updateRep = this.repPassService
-                .getByNameAndPnumber(repositoryPassword.getName(), generalEmployeesEntity.getPnumber());
+                .getByNameAndPnumber(repositoryPassword.getName(), employeeEntity.getPnumber());
 
         if(updateRep != null)
             throw new BadRequestException("Это имя уже занято!");
@@ -230,10 +230,10 @@ public class KolpassContorller {
             @ApiParam("ID Хринилища") @RequestParam("id") Integer id
     ) {
         final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
-        final GeneralEmployeesEntity generalEmployeesEntity = accountByAuthentication.getGeneralEmployeesEntity();
+        final EmployeeEntity employeeEntity = accountByAuthentication.getGeneralEmployeesEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(id);
 
-        if(!rep.getEmployee().getPnumber().equals(generalEmployeesEntity.getPnumber())
+        if(!rep.getEmployee().getPnumber().equals(employeeEntity.getPnumber())
                 || !accountByAuthentication.getRoles().stream()
                 .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");

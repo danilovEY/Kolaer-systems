@@ -3,7 +3,7 @@ package ru.kolaer.api.mvp.model.kolaerweb.jpac;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -38,12 +38,12 @@ public interface Violation extends Serializable {
     void setDateEndEliminationViolation(Date dateEndEliminationViolation);
 
     @ApiModelProperty(value = "Сотрудник записавшего нарушение")
-    GeneralEmployeesEntity getWriter();
-    void setWriter(GeneralEmployeesEntity writer);
+    EmployeeEntity getWriter();
+    void setWriter(EmployeeEntity writer);
 
     @ApiModelProperty(value = "Сотрудник ответственный за нарушение")
-    GeneralEmployeesEntity getExecutor();
-    void setExecutor(GeneralEmployeesEntity executor);
+    EmployeeEntity getExecutor();
+    void setExecutor(EmployeeEntity executor);
 
     @ApiModelProperty(value = "Результативность")
     Boolean isEffective();

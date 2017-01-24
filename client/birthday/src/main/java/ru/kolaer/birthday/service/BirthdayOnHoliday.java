@@ -2,7 +2,7 @@ package ru.kolaer.birthday.service;
 
 import javafx.application.Platform;
 import javafx.util.Duration;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
@@ -66,13 +66,13 @@ public class BirthdayOnHoliday implements Service {
 
 	private void showNotifi(final String title, final LocalDate date, final Holiday holiday) {
 		//final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
-		final GeneralEmployeesEntity[] employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersByBirthday(Tools.convertToDate(date));
+		final EmployeeEntity[] employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersByBirthday(Tools.convertToDate(date));
 		final EmployeeOtherOrganization[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByBirthday(Tools.convertToDate(date));
 		
 		final NotifiAction[] actions = new NotifiAction[employeesEntities.length + usersBirthday.length];
 		int i = 0;
 
-		for(final GeneralEmployeesEntity user : employeesEntities) {
+		for(final EmployeeEntity user : employeesEntities) {
 			actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartament().getAbbreviatedName(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				

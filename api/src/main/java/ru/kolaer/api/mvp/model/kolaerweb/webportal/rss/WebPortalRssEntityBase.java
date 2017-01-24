@@ -1,7 +1,7 @@
 package ru.kolaer.api.mvp.model.kolaerweb.webportal.rss;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 
 import java.sql.Date;
 
@@ -16,7 +16,7 @@ public class WebPortalRssEntityBase implements WebPortalRssEntity {
     private Date date;
     private boolean isHide;
     private int priority;
-    private GeneralEmployeesEntity user;
+    private EmployeeEntity user;
 
     public int getId() {
         return id;
@@ -26,11 +26,11 @@ public class WebPortalRssEntityBase implements WebPortalRssEntity {
         this.id = id;
     }
 
-    public GeneralEmployeesEntity getUser() {
+    public EmployeeEntity getUser() {
         return user;
     }
 
-    public void setUser(GeneralEmployeesEntity user) {
+    public void setUser(EmployeeEntity user) {
         this.user = user;
     }
 

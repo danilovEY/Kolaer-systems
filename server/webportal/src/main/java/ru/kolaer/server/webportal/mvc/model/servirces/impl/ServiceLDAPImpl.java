@@ -45,7 +45,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         departamentEntity.setName("Anonymous");
         departamentEntity.setId(-1);
 
-        GeneralEmployeesEntity employeesEntity = new GeneralEmployeesEntityBase();
+        EmployeeEntity employeesEntity = new EmployeeEntityBase();
         employeesEntity.setPnumber(-1);
         employeesEntity.setInitials("Anon");
         employeesEntity.setDepartament(departamentEntity);
@@ -63,15 +63,15 @@ public class ServiceLDAPImpl implements ServiceLDAP {
     @Cacheable(value = "accounts", cacheManager = "springCM")
     public GeneralAccountsEntity getAccountWithEmployeeByLogin(String login) {
         final GeneralAccountsEntity generalAccountsEntity = accountLDAP.getAccountByLogin(login);
-        final GeneralEmployeesEntity generalEmployeesEntity = employeeLDAP.getEmployeeByLogin(login);
+        final EmployeeEntity employeeEntity = employeeLDAP.getEmployeeByLogin(login);
 
-        LOG.debug("Employee: {}", generalEmployeesEntity.getInitials());
+        LOG.debug("Employee: {}", employeeEntity.getInitials());
 
-        if(generalEmployeesEntity.getPnumber() != null) {
-            final GeneralEmployeesEntity employee = this.employeeDao.findByID(generalEmployeesEntity.getPnumber());
+        if(employeeEntity.getPnumber() != null) {
+            final EmployeeEntity employee = this.employeeDao.findByID(employeeEntity.getPnumber());
             generalAccountsEntity.setGeneralEmployeesEntity(employee);
         } else {
-            final List<GeneralEmployeesEntity> generalEmployeesEntities = this.employeeDao.findEmployeeByInitials(generalEmployeesEntity.getInitials());
+            final List<EmployeeEntity> generalEmployeesEntities = this.employeeDao.findEmployeeByInitials(employeeEntity.getInitials());
             if(generalEmployeesEntities!= null && generalEmployeesEntities.size() > 0) {
                 generalAccountsEntity.setGeneralEmployeesEntity(generalEmployeesEntities.get(0));
             }

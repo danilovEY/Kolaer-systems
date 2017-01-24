@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachment;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -84,10 +84,10 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                 return;
             }
 
-            final GeneralEmployeesEntity selectPsrEmployee = selectPsr.getAuthor();
+            final EmployeeEntity selectPsrEmployee = selectPsr.getAuthor();
 
             final GeneralAccountsEntity accountsEntity = editorKit.getAuthentication().getAuthorizedUser();
-            final GeneralEmployeesEntity authorizedEmployee = accountsEntity.getGeneralEmployeesEntity();
+            final EmployeeEntity authorizedEmployee = accountsEntity.getGeneralEmployeesEntity();
             final EnumRole[] roles = this.editorKit.getAuthentication().getRoles();
             for(EnumRole role : roles) {
                 if(role == EnumRole.PSR_ADMIN || role == EnumRole.SUPER_ADMIN) {
@@ -115,13 +115,13 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         psrRegisterStatusColumn.setStyle("-fx-alignment: CENTER;");
         psrRegisterStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        final TableColumn<PsrRegister, GeneralEmployeesEntity> psrRegisterAuthorColumn = new TableColumn<>("Руководитель проекта");
+        final TableColumn<PsrRegister, EmployeeEntity> psrRegisterAuthorColumn = new TableColumn<>("Руководитель проекта");
         psrRegisterAuthorColumn.setStyle("-fx-alignment: CENTER;");
         psrRegisterAuthorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         psrRegisterAuthorColumn.setCellFactory(column ->
-            new TableCell<PsrRegister, GeneralEmployeesEntity>() {
+            new TableCell<PsrRegister, EmployeeEntity>() {
                 @Override
-                protected void updateItem(GeneralEmployeesEntity item, boolean empty) {
+                protected void updateItem(EmployeeEntity item, boolean empty) {
                     super.updateItem(item, empty);
                     this.setText("");
                     if(!empty && item != null)

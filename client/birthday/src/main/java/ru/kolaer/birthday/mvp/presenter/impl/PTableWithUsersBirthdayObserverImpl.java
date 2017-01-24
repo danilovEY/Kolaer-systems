@@ -2,7 +2,7 @@ package ru.kolaer.birthday.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -74,8 +74,8 @@ public class PTableWithUsersBirthdayObserverImpl implements PTableWithUsersBirth
 	@Override
 	public void showTodayBirthday() {
 		CompletableFuture.runAsync(() -> {
-			final GeneralEmployeesEntity[] usersKolaer = editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersBirthdayToday();
-			for(final GeneralEmployeesEntity user : usersKolaer) {
+			final EmployeeEntity[] usersKolaer = editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersBirthdayToday();
+			for(final EmployeeEntity user : usersKolaer) {
 				final UserModel userModel = new UserModelImpl(user);
 				table.addData(userModel);
 			}

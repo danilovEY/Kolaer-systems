@@ -10,9 +10,9 @@ import java.util.Date;
 /**
  * Created by danilovey on 29.07.2016.
  */
-@JsonDeserialize(as = GeneralEmployeesEntityBase.class)
+@JsonDeserialize(as = EmployeeEntityBase.class)
 @ApiModel(value = "Сотрудник КолАЭР", description = "Сотрудник КолАЭР")
-public interface GeneralEmployeesEntity extends Serializable {
+public interface EmployeeEntity extends Serializable {
 
      @ApiModelProperty(value = "Табельный номер")
      Integer getPnumber();

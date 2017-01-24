@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,12 +25,12 @@ public interface PsrRegister extends Serializable {
      void setStatus(PsrStatus status);
 
      @ApiModelProperty(value = "Автор проекта")
-     GeneralEmployeesEntity getAuthor();
-     void setAuthor(GeneralEmployeesEntity author);
+     EmployeeEntity getAuthor();
+     void setAuthor(EmployeeEntity author);
 
      @ApiModelProperty(value = "Куратор проекта")
-     GeneralEmployeesEntity getAdmin();
-     void setAdmin(GeneralEmployeesEntity admin);
+     EmployeeEntity getAdmin();
+     void setAdmin(EmployeeEntity admin);
 
      @ApiModelProperty(value = "Имя проекта")
      String getName();

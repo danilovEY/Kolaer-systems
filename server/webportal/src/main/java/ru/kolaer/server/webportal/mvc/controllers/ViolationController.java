@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
@@ -398,7 +398,7 @@ public class ViolationController extends BaseController {
     @UrlDeclaration(description = "Добавить нарушение в журнал", isAccessUser = true)
     @RequestMapping(value = "/add/journal", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Violation addViolation(@ApiParam(value = "Журнал с нарушением") @RequestBody JournalViolation journalViolation) {
-        GeneralEmployeesEntity generalEmployeesEntity = serviceLDAP.getAccountByAuthentication().getGeneralEmployeesEntity();
+        EmployeeEntity employeeEntity = serviceLDAP.getAccountByAuthentication().getGeneralEmployeesEntity();
 
         JournalViolation generalJournalViolation = this.journalViolationService.getById(journalViolation.getId());
         if(generalJournalViolation == null)
@@ -413,7 +413,7 @@ public class ViolationController extends BaseController {
             final Violation v = journalViolation.getViolations().get(0);
             if (v.getTypeViolation() != null)
                 v.setTypeViolation(this.typeViolationService.getById(v.getTypeViolation().getId()));
-            v.setWriter(generalEmployeesEntity);
+            v.setWriter(employeeEntity);
             v.setStartMakingViolation(new Date());
             v.setEffective(false);
             if (v.getExecutor() != null)
@@ -451,7 +451,7 @@ public class ViolationController extends BaseController {
             @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
-        final GeneralEmployeesEntity generalEmployeesEntity = accountByAuthentication.getGeneralEmployeesEntity();
+        final EmployeeEntity employeeEntity = accountByAuthentication.getGeneralEmployeesEntity();
         final List<String> roleStream = this.serviceLDAP.getAccountByAuthentication().getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());
 
@@ -462,8 +462,8 @@ public class ViolationController extends BaseController {
             return this.violationService.getByIdJournal(id, number, pageSize);
         } else {
             final JournalViolation journal = this.journalViolationService.getById(id);
-            if(journal.getWriter().getPnumber().equals(generalEmployeesEntity.getPnumber())
-                    || (journal.getDepartament().getId().equals(generalEmployeesEntity.getDepartament().getId())
+            if(journal.getWriter().getPnumber().equals(employeeEntity.getPnumber())
+                    || (journal.getDepartament().getId().equals(employeeEntity.getDepartament().getId())
                     && roleStream.contains(COURATOR_VIOLATION))) {
                 return this.violationService.getByIdJournal(id, number, pageSize);
             }

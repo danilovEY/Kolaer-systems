@@ -6,7 +6,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.server.webportal.mvc.model.dao.JournalViolationDao;
@@ -69,7 +69,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
                 .createQuery("FROM JournalViolationDecorator v WHERE v.id = :id")
                 .setParameter("id", id).uniqueResult();
 
-        GeneralEmployeesEntity writer = journalViolation.getWriter();
+        EmployeeEntity writer = journalViolation.getWriter();
         writer.getPnumber();
         writer.getInitials();
 

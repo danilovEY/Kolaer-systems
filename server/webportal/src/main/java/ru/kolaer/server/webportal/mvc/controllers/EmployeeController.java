@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dao.impl.DataBaseInitialization;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
@@ -42,7 +42,7 @@ public class EmployeeController extends BaseController {
     )
     @UrlDeclaration(description = "Получить всех сотрудников.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<GeneralEmployeesEntity> getAllEmployees() {
+    public List<EmployeeEntity> getAllEmployees() {
         return this.employeeService.getAll();
     }
 
@@ -51,7 +51,7 @@ public class EmployeeController extends BaseController {
     )
     @UrlDeclaration(description = "Получить всех сотрудников из подразделения", isAccessAll = true)
     @RequestMapping(value = "/get/all/by/dep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<GeneralEmployeesEntity> getAllEmployeesByDep(
+    public Page<EmployeeEntity> getAllEmployeesByDep(
             @ApiParam("Подразделение") @RequestParam(value = "id") Integer id,
             @RequestParam(value = "page", defaultValue = "0") Integer number,
             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
@@ -65,7 +65,7 @@ public class EmployeeController extends BaseController {
     )
     @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение между датами.", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/{startDate}/{endDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<GeneralEmployeesEntity> getUsersRangeBirthday(
+    public List<EmployeeEntity> getUsersRangeBirthday(
             final @ApiParam(value = "Дата с", required = true) @PathVariable String startDate,
             final @ApiParam(value = "Дата по", required = true) @PathVariable String endDate) throws ParseException {
         final SimpleDateFormat sdf = startDate.contains("-")
@@ -83,7 +83,7 @@ public class EmployeeController extends BaseController {
     )
     @UrlDeclaration(description = "Получить всех сотрудников у кого сегодня день рождение.", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<GeneralEmployeesEntity> getUsersRangeBirthday() {
+    public List<EmployeeEntity> getUsersRangeBirthday() {
         return this.employeeService.getUserBirthdayToday();
     }
 
@@ -94,7 +94,7 @@ public class EmployeeController extends BaseController {
     )
     @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение в определенную дату.", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<GeneralEmployeesEntity> getUsersRangeBirthday(
+    public List<EmployeeEntity> getUsersRangeBirthday(
            final @ApiParam(value = "Дата", required = true) @PathVariable String date) throws ParseException {
         final SimpleDateFormat sdf = date.contains("-")
                 ? new SimpleDateFormat("yyyy-MM-dd")
@@ -126,9 +126,9 @@ public class EmployeeController extends BaseController {
     )
     @UrlDeclaration(description = "Получить сотрудника по имени.", isAccessAll = true)
     @RequestMapping(value = "/get/by/initials/{initials}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<GeneralEmployeesEntity> getUsersByInitials(
+    public List<EmployeeEntity> getUsersByInitials(
             final @ApiParam(value = "Инициалы", required = true) @PathVariable String initials) {
-        List<GeneralEmployeesEntity> result = this.employeeService.getUsersByInitials(initials);
+        List<EmployeeEntity> result = this.employeeService.getUsersByInitials(initials);
         return result;
     }
 

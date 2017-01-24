@@ -33,6 +33,6 @@ public interface GeneralAccountsEntity extends Serializable {
     void setEmail(String email);
 
     @ApiModelProperty(value = "Сотрудник")
-    GeneralEmployeesEntity getGeneralEmployeesEntity();
-    void setGeneralEmployeesEntity(GeneralEmployeesEntity generalAccountsEntity);
+    EmployeeEntity getGeneralEmployeesEntity();
+    void setGeneralEmployeesEntity(EmployeeEntity generalAccountsEntity);
 }

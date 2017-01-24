@@ -2,7 +2,7 @@ package ru.kolaer.client.javafx.system.network.kolaerweb;
 
 import javafx.beans.property.SimpleStringProperty;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.system.network.kolaerweb.GeneralEmployeesTable;
 
 import java.text.DateFormat;
@@ -31,40 +31,40 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable {
     }
 
     @Override
-    public GeneralEmployeesEntity[] getAllUser() {
-        GeneralEmployeesEntity[] list = restTemplate.getForObject(this.URL_GET_ALL, GeneralEmployeesEntity[].class);
+    public EmployeeEntity[] getAllUser() {
+        EmployeeEntity[] list = restTemplate.getForObject(this.URL_GET_ALL, EmployeeEntity[].class);
         return list;
     }
 
     @Override
-    public GeneralEmployeesEntity[] getUsersMax(final int maxCount) {
-        final GeneralEmployeesEntity[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount), GeneralEmployeesEntity[].class);
+    public EmployeeEntity[] getUsersMax(final int maxCount) {
+        final EmployeeEntity[] users = restTemplate.getForObject(this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount), EmployeeEntity[].class);
         return users;
     }
 
     @Override
-    public GeneralEmployeesEntity[] getUsersByBirthday(final Date date) {
+    public EmployeeEntity[] getUsersByBirthday(final Date date) {
         final SimpleStringProperty property = new SimpleStringProperty();
         property.setValue(dateFormat.format(date));
 
-        final GeneralEmployeesEntity[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), GeneralEmployeesEntity[].class);
+        final EmployeeEntity[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), EmployeeEntity[].class);
         return users;
     }
 
     @Override
-    public GeneralEmployeesEntity[] getUsersByRangeBirthday(final Date dateBegin, final Date dateEnd) {
+    public EmployeeEntity[] getUsersByRangeBirthday(final Date dateBegin, final Date dateEnd) {
         final SimpleStringProperty propertyBegin = new SimpleStringProperty();
         final SimpleStringProperty propertyEnd = new SimpleStringProperty();
         propertyBegin.setValue(dateFormat.format(dateBegin));
         propertyEnd.setValue(dateFormat.format(dateEnd));
 
-        final GeneralEmployeesEntity[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), GeneralEmployeesEntity[].class);
+        final EmployeeEntity[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), EmployeeEntity[].class);
         return users;
     }
 
     @Override
-    public GeneralEmployeesEntity[] getUsersBirthdayToday() {
-        final GeneralEmployeesEntity[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY_TODAY, GeneralEmployeesEntity[].class);
+    public EmployeeEntity[] getUsersBirthdayToday() {
+        final EmployeeEntity[] users = restTemplate.getForObject(this.URL_GET_USERS_BIRTHDAY_TODAY, EmployeeEntity[].class);
         return users;
     }
 
@@ -77,10 +77,10 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable {
     }
 
     @Override
-    public GeneralEmployeesEntity[] getUsersByInitials(final String initials) {
+    public EmployeeEntity[] getUsersByInitials(final String initials) {
         if(initials == null || initials.isEmpty())
             throw new NullPointerException("Initials is null!");
-        final GeneralEmployeesEntity[] users = restTemplate.getForObject(this.URL_GET_USERS_BY_INITIALS + "/" + initials, GeneralEmployeesEntity[].class);
+        final EmployeeEntity[] users = restTemplate.getForObject(this.URL_GET_USERS_BY_INITIALS + "/" + initials, EmployeeEntity[].class);
         return users;
     }
 

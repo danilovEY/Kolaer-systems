@@ -3,7 +3,7 @@ package ru.kolaer.api.mvp.model.kolaerweb.webportal.rss;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -16,8 +16,8 @@ import java.sql.Date;
      int getId();
      void setId(int id);
 
-     GeneralEmployeesEntity getUser();
-     void setUser(GeneralEmployeesEntity user);
+     EmployeeEntity getUser();
+     void setUser(EmployeeEntity user);
 
      String getTitle();
      void setTitle(String title);

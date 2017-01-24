@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,123 +13,123 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "general_employees")
-public class GeneralEmployeesEntityDecorator implements GeneralEmployeesEntity {
-    private GeneralEmployeesEntity generalEmployeesEntity;
+public class EmployeeEntityDecorator implements EmployeeEntity {
+    private EmployeeEntity employeeEntity;
 
-    public GeneralEmployeesEntityDecorator() {
-        this.generalEmployeesEntity = new GeneralEmployeesEntityBase();
+    public EmployeeEntityDecorator() {
+        this.employeeEntity = new EmployeeEntityBase();
     }
 
-    public GeneralEmployeesEntityDecorator(GeneralEmployeesEntity generalEmployeesEntity) {
-        this.generalEmployeesEntity = generalEmployeesEntity;
+    public EmployeeEntityDecorator(EmployeeEntity employeeEntity) {
+        this.employeeEntity = employeeEntity;
     }
 
     @Id
     @Column(name = "pnumber", length = 8)
     public Integer getPnumber() {
-        return this.generalEmployeesEntity.getPnumber();
+        return this.employeeEntity.getPnumber();
     }
 
     public void setPnumber(Integer pnumber) {
-        this.generalEmployeesEntity.setPnumber(pnumber);
+        this.employeeEntity.setPnumber(pnumber);
     }
 
     @Column(name = "initials", length = 70)
     public String getInitials() {
-        return this.generalEmployeesEntity.getInitials();
+        return this.employeeEntity.getInitials();
     }
 
     public void setInitials(String initials) {
-        this.generalEmployeesEntity.setInitials(initials);
+        this.employeeEntity.setInitials(initials);
     }
 
     @Column(name = "gender", length = 8)
     public String getGender() {
-        return this.generalEmployeesEntity.getGender();
+        return this.employeeEntity.getGender();
     }
 
     public void setGender(String gender) {
-        this.generalEmployeesEntity.setGender(gender);
+        this.employeeEntity.setGender(gender);
     }
 
 
     @OneToOne(targetEntity = GeneralDepartamentEntityDecorator.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_departament")
     public GeneralDepartamentEntity getDepartament() {
-        return this.generalEmployeesEntity.getDepartament();
+        return this.employeeEntity.getDepartament();
     }
 
     public void setDepartament(GeneralDepartamentEntity departament) {
-        this.generalEmployeesEntity.setDepartament(departament);
+        this.employeeEntity.setDepartament(departament);
     }
 
     @Column(name = "post")
     public String getPost() {
-        return this.generalEmployeesEntity.getPost();
+        return this.employeeEntity.getPost();
     }
 
     public void setPost(String post) {
-        this.generalEmployeesEntity.setPost(post);
+        this.employeeEntity.setPost(post);
     }
 
     @Column(name = "mobile_number", length = 15)
     public String getMobileNumber() {
-        return this.generalEmployeesEntity.getMobileNumber();
+        return this.employeeEntity.getMobileNumber();
     }
 
     @Override
     public void setMobileNumber(String number) {
-        this.generalEmployeesEntity.setMobileNumber(number);
+        this.employeeEntity.setMobileNumber(number);
     }
 
     @Column(name = "phone_number", length = 30)
     public String getPhoneNumber() {
-        return this.generalEmployeesEntity.getPhoneNumber();
+        return this.employeeEntity.getPhoneNumber();
     }
 
     @Override
     public void setPhoneNumber(String number) {
-        this.generalEmployeesEntity.setPhoneNumber(number);
+        this.employeeEntity.setPhoneNumber(number);
     }
 
     @Column(name = "birthday")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getBirthday() {
-        return this.generalEmployeesEntity.getBirthday();
+        return this.employeeEntity.getBirthday();
     }
 
     @Override
     public void setBirthday(Date birthday) {
-        this.generalEmployeesEntity.setBirthday(birthday);
+        this.employeeEntity.setBirthday(birthday);
     }
 
     @Column(name = "email", length = 30)
     public String getEmail() {
-        return this.generalEmployeesEntity.getEmail();
+        return this.employeeEntity.getEmail();
     }
 
     @Override
     public void setEmail(String email) {
-        this.generalEmployeesEntity.setEmail(email);
+        this.employeeEntity.setEmail(email);
     }
 
     @Column(name = "photo", length = 300)
     public String getPhoto() {
-        return this.generalEmployeesEntity.getPhoto();
+        return this.employeeEntity.getPhoto();
     }
 
     @Override
     public void setPhoto(String url) {
-        this.generalEmployeesEntity.setPhoto(url);
+        this.employeeEntity.setPhoto(url);
     }
 
     @Override
     public boolean equals(Object o) {
-        return this.generalEmployeesEntity.equals(o);
+        return this.employeeEntity.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return this.generalEmployeesEntity.hashCode();
+        return this.employeeEntity.hashCode();
     }
 }

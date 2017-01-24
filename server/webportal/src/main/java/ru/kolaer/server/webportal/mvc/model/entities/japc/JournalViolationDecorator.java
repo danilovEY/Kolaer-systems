@@ -1,12 +1,12 @@
 package ru.kolaer.server.webportal.mvc.model.entities.japc;
 
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolationBase;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
 import java.util.List;
@@ -70,14 +70,14 @@ public class JournalViolationDecorator implements JournalViolation {
         this.journalViolation.setDepartament(departament);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_writer", nullable = false)
-    public GeneralEmployeesEntity getWriter() {
+    public EmployeeEntity getWriter() {
         return this.journalViolation.getWriter();
     }
 
     @Override
-    public void setWriter(GeneralEmployeesEntity writer) {
+    public void setWriter(EmployeeEntity writer) {
         this.journalViolation.setWriter(writer);
     }
 }

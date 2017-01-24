@@ -8,8 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 
@@ -34,7 +34,7 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
     private InitialLdapContext ldapContext;
 
     @Override
-    public GeneralEmployeesEntity getEmployeeByLogin(String login) {
+    public EmployeeEntity getEmployeeByLogin(String login) {
         LOG.debug("Поиск аккаунта: {}", login);
 
         final SearchControls controls = new SearchControls();
@@ -46,16 +46,16 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
         try {
             final NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(& (userPrincipalName=" + login + "@kolaer.local" + ")(objectClass=person))", controls);
 
-            final GeneralEmployeesEntity generalEmployeesEntity = new GeneralEmployeesEntityBase();
+            final EmployeeEntity employeeEntity = new EmployeeEntityBase();
             final Attributes attributes = answer.next().getAttributes();
             final Attribute name = attributes.get("employeeID");
             if(name != null) {
-                generalEmployeesEntity.setPnumber(Integer.valueOf(name.get().toString()));
+                employeeEntity.setPnumber(Integer.valueOf(name.get().toString()));
             }
-            generalEmployeesEntity.setInitials(attributes.get("name").get().toString());
+            employeeEntity.setInitials(attributes.get("name").get().toString());
 
             answer.close();
-            return generalEmployeesEntity;
+            return employeeEntity;
         } catch (NamingException e) {
             LOG.error("Ошибка при получении аккаунта!", e);
             throw new BadRequestException("Аккаунт: " + login + " не найден!");

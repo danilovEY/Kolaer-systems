@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -141,7 +141,7 @@ public class PMainPaneImpl implements PMainPane {
                             if(logPassArray.length >= 2)
                                 pass =  logPassArray[1];
                             if(editorKit.getAuthentication().login(new UserAndPassJson(login, pass))) {
-                                GeneralEmployeesEntity entity = editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity();
+                                EmployeeEntity entity = editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity();
                                 if(entity == null) {
                                     editorKit.getAuthentication().logout();
                                     Tools.runOnThreadFX(() ->{

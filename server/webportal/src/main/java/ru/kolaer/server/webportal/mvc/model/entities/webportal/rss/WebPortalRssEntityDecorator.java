@@ -1,9 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.entities.webportal.rss;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.rss.WebPortalRssEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.rss.WebPortalRssEntityBase;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralEmployeesEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -32,13 +32,13 @@ public class WebPortalRssEntityDecorator implements WebPortalRssEntity {
         this.webPortalRssEntity.setId(id);
     }
 
-    @OneToOne(targetEntity = GeneralEmployeesEntityDecorator.class, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_employee")
-    public GeneralEmployeesEntity getUser() {
+    public EmployeeEntity getUser() {
         return this.webPortalRssEntity.getUser();
     }
 
-    public void setUser(GeneralEmployeesEntity user) {
+    public void setUser(EmployeeEntity user) {
         this.webPortalRssEntity.setUser(user);
     }
 

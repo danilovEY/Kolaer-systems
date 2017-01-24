@@ -98,7 +98,7 @@ public class RegisterTicketScheduler {
     public boolean generateSetTicketDocument(Integer count, String typeTicket, String textMail) {
         List<Ticket> allTiskets = this.bankAccountDao.findAll().stream().map(bankAccount -> {
             final Ticket ticket = new Ticket();
-            ticket.setEmployee(bankAccount.getGeneralEmployeesEntity());
+            ticket.setEmployee(bankAccount.getEmployeeEntity());
             ticket.setCount(count);
             return ticket;
         }).collect(Collectors.toList());

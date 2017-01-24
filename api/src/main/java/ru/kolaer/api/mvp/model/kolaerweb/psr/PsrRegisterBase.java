@@ -1,6 +1,6 @@
 package ru.kolaer.api.mvp.model.kolaerweb.psr;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralEmployeesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -11,8 +11,8 @@ import java.util.List;
 public class PsrRegisterBase implements PsrRegister {
     private Integer id = null;
     private PsrStatus status;
-    private GeneralEmployeesEntity author;
-    private GeneralEmployeesEntity admin;
+    private EmployeeEntity author;
+    private EmployeeEntity admin;
     private String name;
     private Date dateOpen;
     private Date dateClose;
@@ -36,19 +36,19 @@ public class PsrRegisterBase implements PsrRegister {
         this.status = status;
     }
 
-    public GeneralEmployeesEntity getAuthor() {
+    public EmployeeEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(GeneralEmployeesEntity autor) {
+    public void setAuthor(EmployeeEntity autor) {
         this.author = autor;
     }
 
-    public GeneralEmployeesEntity getAdmin() {
+    public EmployeeEntity getAdmin() {
         return admin;
     }
 
-    public void setAdmin(GeneralEmployeesEntity admin) {
+    public void setAdmin(EmployeeEntity admin) {
         this.admin = admin;
     }
 

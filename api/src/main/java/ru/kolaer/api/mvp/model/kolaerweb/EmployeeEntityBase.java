@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by Danilov on 24.07.2016.
  * Структура сотрудника в БД.
  */
-public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
+public class EmployeeEntityBase implements EmployeeEntity {
     private Integer pnumber;
     private String initials;
     private String mobileNumber;
@@ -113,7 +113,7 @@ public class GeneralEmployeesEntityBase  implements GeneralEmployeesEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        GeneralEmployeesEntityBase that = (GeneralEmployeesEntityBase) o;
+        EmployeeEntityBase that = (EmployeeEntityBase) o;
 
         if (pnumber != that.pnumber) return false;
         if (initials != null ? !initials.equals(that.initials) : that.initials != null) return false;
