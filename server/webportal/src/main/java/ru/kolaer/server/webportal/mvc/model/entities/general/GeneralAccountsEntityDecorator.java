@@ -43,13 +43,13 @@ public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
     @ManyToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "general_employee_account", joinColumns = {@JoinColumn(name = "id_account")},
             inverseJoinColumns = { @JoinColumn(name = "id_employee")})
-    public EmployeeEntity getGeneralEmployeesEntity() {
-        return this.generalAccountsEntity.getGeneralEmployeesEntity();
+    public EmployeeEntity getEmployeeEntity() {
+        return this.generalAccountsEntity.getEmployeeEntity();
     }
 
     @Override
-    public void setGeneralEmployeesEntity(EmployeeEntity generalAccountsEntity) {
-        this.generalAccountsEntity.setGeneralEmployeesEntity(generalAccountsEntity);
+    public void setEmployeeEntity(EmployeeEntity generalAccountsEntity) {
+        this.generalAccountsEntity.setEmployeeEntity(generalAccountsEntity);
     }
 
     /**Список ролей пользователя.*/

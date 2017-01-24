@@ -45,7 +45,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         departamentEntity.setId(-1);
 
         EmployeeEntity employeesEntity = new EmployeeEntityBase();
-        employeesEntity.setPnumber(-1);
+        employeesEntity.setPersonnelNumber(-1);
         employeesEntity.setInitials("Anon");
         employeesEntity.setDepartment(departamentEntity);
         employeesEntity.setBirthday(new Date());
@@ -53,7 +53,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         employeesEntity.setGender("Unknow");
 
         this.accountsEntity = new GeneralAccountsEntityBase();
-        this.accountsEntity.setGeneralEmployeesEntity(employeesEntity);
+        this.accountsEntity.setEmployeeEntity(employeesEntity);
         this.accountsEntity.setUsername("empty");
         this.accountsEntity.setRoles(Arrays.asList(new GeneralRolesEntityBase("ALL"), new GeneralRolesEntityBase("Anonymous")));
     }
@@ -66,18 +66,18 @@ public class ServiceLDAPImpl implements ServiceLDAP {
 
         LOG.debug("Employee: {}", employeeEntity.getInitials());
 
-        if(employeeEntity.getPnumber() != null) {
-            final EmployeeEntity employee = this.employeeDao.findByID(employeeEntity.getPnumber());
-            generalAccountsEntity.setGeneralEmployeesEntity(employee);
+        if(employeeEntity.getPersonnelNumber() != null) {
+            final EmployeeEntity employee = this.employeeDao.findByID(employeeEntity.getPersonnelNumber());
+            generalAccountsEntity.setEmployeeEntity(employee);
         } else {
             final List<EmployeeEntity> generalEmployeesEntities = this.employeeDao.findEmployeeByInitials(employeeEntity.getInitials());
             if(generalEmployeesEntities!= null && generalEmployeesEntities.size() > 0) {
-                generalAccountsEntity.setGeneralEmployeesEntity(generalEmployeesEntities.get(0));
+                generalAccountsEntity.setEmployeeEntity(generalEmployeesEntities.get(0));
             }
         }
 
-        if(generalAccountsEntity.getGeneralEmployeesEntity() == null) {
-            generalAccountsEntity.setGeneralEmployeesEntity(this.accountsEntity.getGeneralEmployeesEntity());
+        if(generalAccountsEntity.getEmployeeEntity() == null) {
+            generalAccountsEntity.setEmployeeEntity(this.accountsEntity.getEmployeeEntity());
         }
 
         return generalAccountsEntity;

@@ -14,7 +14,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationDecorator;
@@ -45,7 +44,7 @@ public class ExampleController extends BaseController {
         if(authentication == null)
             throw new IllegalArgumentException("Authentication is null");
 
-        final EmployeeEntity employeeEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()).getGeneralEmployeesEntity();
+        final EmployeeEntity employeeEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()).getEmployeeEntity();
 
         final TypeViolationDecorator typeViolationDecorator = new TypeViolationDecorator();
         typeViolationDecorator.setId(0);

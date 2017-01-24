@@ -9,7 +9,7 @@ import javax.persistence.*;
  * Created by danilovey on 12.09.2016.
  */
 @Entity
-@Table(name = "department")
+@Table(name = "departments")
 public class DepartmentEntityDecorator implements DepartmentEntity {
     private DepartmentEntity departmentEntity;
 

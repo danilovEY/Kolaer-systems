@@ -87,7 +87,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
             final EmployeeEntity selectPsrEmployee = selectPsr.getAuthor();
 
             final GeneralAccountsEntity accountsEntity = editorKit.getAuthentication().getAuthorizedUser();
-            final EmployeeEntity authorizedEmployee = accountsEntity.getGeneralEmployeesEntity();
+            final EmployeeEntity authorizedEmployee = accountsEntity.getEmployeeEntity();
             final EnumRole[] roles = this.editorKit.getAuthentication().getRoles();
             for(EnumRole role : roles) {
                 if(role == EnumRole.PSR_ADMIN || role == EnumRole.SUPER_ADMIN) {
@@ -95,7 +95,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
                 }
             }
 
-            if(!selectPsrEmployee.getPnumber().equals(authorizedEmployee.getPnumber())) {
+            if(!selectPsrEmployee.getPersonnelNumber().equals(authorizedEmployee.getPersonnelNumber())) {
                 contextMenu.hide();
             }
         });

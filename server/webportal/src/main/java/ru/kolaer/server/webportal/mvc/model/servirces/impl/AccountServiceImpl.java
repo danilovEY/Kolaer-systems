@@ -48,8 +48,8 @@ public class AccountServiceImpl implements AccountService{
         if(accountsEntity == null) {
             LOG.error("Account is NULL!");
             return;
-        } else if(accountsEntity.getGeneralEmployeesEntity() != null && accountsEntity.getGeneralEmployeesEntity().getPnumber() == null) {
-            accountsEntity.setGeneralEmployeesEntity(null);
+        } else if(accountsEntity.getEmployeeEntity() != null && accountsEntity.getEmployeeEntity().getPersonnelNumber() == null) {
+            accountsEntity.setEmployeeEntity(null);
         }
 
         this.accountDao.persist(accountsEntity);

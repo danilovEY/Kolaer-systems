@@ -81,7 +81,7 @@ public class UserController extends BaseController {
         if(imgByte == null) {
             GeneralAccountsEntity user = this.getUser();
 
-            final String url = user.getGeneralEmployeesEntity().getPhoto();
+            final String url = user.getEmployeeEntity().getPhoto();
             InputStream inputStream = URI.create(url).toURL().openStream();
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();

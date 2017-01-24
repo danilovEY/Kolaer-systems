@@ -25,13 +25,13 @@ public class EmployeeEntityDecorator implements EmployeeEntity {
     }
 
     @Id
-    @Column(name = "pnumber", length = 8)
-    public Integer getPnumber() {
-        return this.employeeEntity.getPnumber();
+    @Column(name = "personnel_number", length = 8)
+    public Integer getPersonnelNumber() {
+        return this.employeeEntity.getPersonnelNumber();
     }
 
-    public void setPnumber(Integer pnumber) {
-        this.employeeEntity.setPnumber(pnumber);
+    public void setPersonnelNumber(Integer personnelNumber) {
+        this.employeeEntity.setPersonnelNumber(personnelNumber);
     }
 
     @Column(name = "initials", length = 70)

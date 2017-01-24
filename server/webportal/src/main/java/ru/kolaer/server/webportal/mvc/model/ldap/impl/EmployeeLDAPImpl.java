@@ -3,10 +3,6 @@ package ru.kolaer.server.webportal.mvc.model.ldap.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
@@ -50,7 +46,7 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
             final Attributes attributes = answer.next().getAttributes();
             final Attribute name = attributes.get("employeeID");
             if(name != null) {
-                employeeEntity.setPnumber(Integer.valueOf(name.get().toString()));
+                employeeEntity.setPersonnelNumber(Integer.valueOf(name.get().toString()));
             }
             employeeEntity.setInitials(attributes.get("name").get().toString());
 

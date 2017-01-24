@@ -31,7 +31,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
     public List<JournalViolation> findAll() {
         final List<JournalViolation> result = this.sessionFactory.getCurrentSession().createQuery("FROM JournalViolationDecorator").list();
         result.stream().forEach(j -> {
-            j.getWriter().getPnumber();
+            j.getWriter().getPersonnelNumber();
             j.getWriter().getInitials();
         });
 
@@ -55,7 +55,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
 
         final List<JournalViolation> result = query.list();
         result.stream().forEach(j -> {
-            j.getWriter().getPnumber();
+            j.getWriter().getPersonnelNumber();
             j.getWriter().getInitials();
         });
 
@@ -70,7 +70,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
                 .setParameter("id", id).uniqueResult();
 
         EmployeeEntity writer = journalViolation.getWriter();
-        writer.getPnumber();
+        writer.getPersonnelNumber();
         writer.getInitials();
 
         return journalViolation;
@@ -127,7 +127,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
         final List<JournalViolation> result = query.list();
 
         result.stream().forEach(j -> {
-            j.getWriter().getPnumber();
+            j.getWriter().getPersonnelNumber();
             j.getWriter().getInitials();
         });
 
@@ -157,7 +157,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
         final List<JournalViolation> result = query.list();
 
         result.stream().forEach(j -> {
-            j.getWriter().getPnumber();
+            j.getWriter().getPersonnelNumber();
             j.getWriter().getInitials();
         });
 

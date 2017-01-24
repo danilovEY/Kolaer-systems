@@ -117,7 +117,7 @@ public class TicketController extends BaseController {
             return new Page<>(this.ticketRegisterService.getAll(), 0, 0, 0);
         } else {
             return this.ticketRegisterService.getAllByDepName(number, pageSize,
-                            accountByAuthentication.getGeneralEmployeesEntity()
+                            accountByAuthentication.getEmployeeEntity()
                                     .getDepartment().getName());
         }
     }
@@ -136,11 +136,11 @@ public class TicketController extends BaseController {
             throw new BadRequestException("Добавлять в реестр запрещено!");
         }
 
-        List<Integer> pnumberUpdate = ticketRegister.getTickets().stream().map(ticket -> ticket.getEmployee().getPnumber()).collect(Collectors.toList());
+        List<Integer> pnumberUpdate = ticketRegister.getTickets().stream().map(ticket -> ticket.getEmployee().getPersonnelNumber()).collect(Collectors.toList());
         List<Ticket> tickets = Optional.ofNullable(updateTicketRegister.getTickets()).orElse(new ArrayList<>());
 
         List<Ticket> ticketsDoulbes = tickets.stream().filter(ticket ->
-                pnumberUpdate.contains(ticket.getEmployee().getPnumber())).collect(Collectors.toList());
+                pnumberUpdate.contains(ticket.getEmployee().getPersonnelNumber())).collect(Collectors.toList());
 
         if(ticketsDoulbes.size() > 0){
             final String initials = ticketsDoulbes.stream()
@@ -149,7 +149,7 @@ public class TicketController extends BaseController {
         }
 
         List<Ticket> ticketsToAdd = ticketRegister.getTickets().stream().map(ticket -> {
-            ticket.setEmployee(employeeService.getById(ticket.getEmployee().getPnumber()));
+            ticket.setEmployee(employeeService.getById(ticket.getEmployee().getPersonnelNumber()));
             return ticket;
         }).collect(Collectors.toList());
 
@@ -165,8 +165,8 @@ public class TicketController extends BaseController {
     public Ticket updateTicketToRegister(@ApiParam(value = "ID талона и данные", required = true) @RequestBody Ticket ticket) {
         Ticket updateTicket = this.ticketDao.findByID(ticket.getId());
         updateTicket.setCount(Optional.ofNullable(ticket.getCount()).orElse(updateTicket.getCount()));
-        if(ticket.getEmployee() != null && !updateTicket.getEmployee().getPnumber().equals(ticket.getEmployee().getPnumber())) {
-            updateTicket.setEmployee(this.employeeService.getById(ticket.getEmployee().getPnumber()));
+        if(ticket.getEmployee() != null && !updateTicket.getEmployee().getPersonnelNumber().equals(ticket.getEmployee().getPersonnelNumber())) {
+            updateTicket.setEmployee(this.employeeService.getById(ticket.getEmployee().getPersonnelNumber()));
         }
         this.ticketDao.update(updateTicket);
         return updateTicket;
@@ -193,7 +193,7 @@ public class TicketController extends BaseController {
         TicketRegister ticketRegister = new TicketRegister();
         ticketRegister.setCreateRegister(new Date());
         ticketRegister.setDepartament(this.serviceLDAP.getAccountByAuthentication()
-                .getGeneralEmployeesEntity().getDepartment());
+                .getEmployeeEntity().getDepartment());
 
         this.ticketRegisterService.add(ticketRegister);
         return ticketRegister;

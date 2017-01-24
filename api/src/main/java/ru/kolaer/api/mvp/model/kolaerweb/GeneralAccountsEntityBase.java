@@ -58,12 +58,12 @@ public class GeneralAccountsEntityBase implements GeneralAccountsEntity {
     }
 
     @Override
-    public EmployeeEntity getGeneralEmployeesEntity() {
+    public EmployeeEntity getEmployeeEntity() {
         return this.account;
     }
 
     @Override
-    public void setGeneralEmployeesEntity(EmployeeEntity generalAccountsEntity) {
+    public void setEmployeeEntity(EmployeeEntity generalAccountsEntity) {
         this.account = generalAccountsEntity;
     }
 

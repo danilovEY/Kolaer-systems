@@ -83,7 +83,7 @@ public class PsrRegisterController extends BaseController {
             registers.stream().forEach(psrRegister -> {
                 final PsrRegisterAccess access = new PsrRegisterAccess();
                 access.setId(psrRegister.getId());
-                if (entity.getGeneralEmployeesEntity().getPnumber().equals(psrRegister.getAuthor().getPnumber())) {
+                if (entity.getEmployeeEntity().getPersonnelNumber().equals(psrRegister.getAuthor().getPersonnelNumber())) {
                     if(psrRegister.getStatus().getType().equals("Новый")) {
                         access.setDeleteProject(true);
                     }
@@ -210,7 +210,7 @@ public class PsrRegisterController extends BaseController {
 
         if(this.psrRegisterService.uniquePsrRegister(register)) {
             registerDto.setStatus(this.psrStatusService.getStatusByType("Новый"));
-            registerDto.setAuthor(serviceLDAP.getAccountByAuthentication().getGeneralEmployeesEntity());
+            registerDto.setAuthor(serviceLDAP.getAccountByAuthentication().getEmployeeEntity());
 
             this.psrRegisterService.add(registerDto);
             return this.psrRegisterService.getLastInsertPsrRegister(register);

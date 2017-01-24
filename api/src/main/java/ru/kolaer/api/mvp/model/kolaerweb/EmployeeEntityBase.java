@@ -18,11 +18,11 @@ public class EmployeeEntityBase implements EmployeeEntity {
     private String email;
     private String photo;
 
-    public Integer getPnumber() {
+    public Integer getPersonnelNumber() {
         return pnumber;
     }
 
-    public void setPnumber(Integer pnumber) {
+    public void setPersonnelNumber(Integer pnumber) {
         this.pnumber = pnumber;
     }
 

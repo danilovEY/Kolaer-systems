@@ -1,11 +1,9 @@
 package ru.kolaer.client.psr.mvp.presenter.impl;
 
 import javafx.concurrent.Task;
-import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
-import javafx.scene.layout.BorderPane;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,6 @@ import ru.kolaer.client.psr.mvp.presenter.PPsrRegisterTable;
 import ru.kolaer.client.psr.mvp.view.VMainPane;
 import ru.kolaer.client.psr.mvp.view.impl.VMainPaneImpl;
 
-import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -91,7 +88,7 @@ public class PMainPaneImpl implements PMainPane {
                     PsrRegister psrRegister = detailsOrEditPsrRegister.getPsrRegister();
                     if(psrRegister != null) {
                         LOG.info("Отправка....");
-                        psrRegister.setAuthor(this.editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity());
+                        psrRegister.setAuthor(this.editorKit.getAuthentication().getAuthorizedUser().getEmployeeEntity());
                         psrRegister = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().persistPsrRegister(psrRegister);
                         LOG.info("Отправка прошла успешно!");
                         //this.model.addPsrProject(psrRegister);
@@ -141,7 +138,7 @@ public class PMainPaneImpl implements PMainPane {
                             if(logPassArray.length >= 2)
                                 pass =  logPassArray[1];
                             if(editorKit.getAuthentication().login(new UserAndPassJson(login, pass))) {
-                                EmployeeEntity entity = editorKit.getAuthentication().getAuthorizedUser().getGeneralEmployeesEntity();
+                                EmployeeEntity entity = editorKit.getAuthentication().getAuthorizedUser().getEmployeeEntity();
                                 if(entity == null) {
                                     editorKit.getAuthentication().logout();
                                     Tools.runOnThreadFX(() ->{

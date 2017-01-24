@@ -141,7 +141,7 @@ public class DataBaseInitialization {
 
         final List<EmployeeEntity> generalEmployeesEntities = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator").list();
         Map<Integer, EmployeeEntity> mapEmployee = new HashMap<>();
-        generalEmployeesEntities.forEach(generalEmployeesEntity -> mapEmployee.put(generalEmployeesEntity.getPnumber(), generalEmployeesEntity));
+        generalEmployeesEntities.forEach(generalEmployeesEntity -> mapEmployee.put(generalEmployeesEntity.getPersonnelNumber(), generalEmployeesEntity));
 
         List<DepartmentEntity> departamentEntities = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralDepartamentEntityDecorator").list();
         Map<String, DepartmentEntity> mapDep = departamentEntities.stream().collect(Collectors.toMap(DepartmentEntity::getName, d -> d));
@@ -150,7 +150,7 @@ public class DataBaseInitialization {
 
             if(dataBaseEmployee == null) {
                 dataBaseEmployee = new EmployeeEntityDecorator();
-                dataBaseEmployee.setPnumber(dbDataAll.getPersonNumber());
+                dataBaseEmployee.setPersonnelNumber(dbDataAll.getPersonNumber());
                 dataBaseEmployee.setPost(dbDataAll.getPost());
                 dataBaseEmployee.setInitials(dbDataAll.getInitials());
                 dataBaseEmployee.setPhoneNumber(dbDataAll.getPhone());
@@ -184,7 +184,7 @@ public class DataBaseInitialization {
                 dataBaseEmployee.setEmail(dbDataAll.getEmail());
 
                 this.updateDepartament(dataBaseEmployee, dbDataAll, mapDep.get(dbDataAll.getDepartament()));
-                mapEmployee.remove(dataBaseEmployee.getPnumber());
+                mapEmployee.remove(dataBaseEmployee.getPersonnelNumber());
             }
 
             if (i == 50) {
@@ -210,7 +210,7 @@ public class DataBaseInitialization {
             if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")
                     || dbDataAll.getPost().equals("Руководитель") || dbDataAll.getPost().equals("Ведущий")
                     || dbDataAll.getPost().equals("Главный")) {
-                departmentEntity.setChiefEntity(entity.getPnumber());
+                departmentEntity.setChiefEntity(entity.getPersonnelNumber());
             }
 
             this.sessionFactory.getCurrentSession().persist(departmentEntity);

@@ -15,8 +15,8 @@ import java.util.Date;
 public interface EmployeeEntity extends Serializable {
 
      @ApiModelProperty(value = "Табельный номер")
-     Integer getPnumber();
-     void setPnumber(Integer pnumber);
+     Integer getPersonnelNumber();
+     void setPersonnelNumber(Integer personnelNumber);
 
      @ApiModelProperty(value = "Инициалы")
      String getInitials();
@@ -28,7 +28,7 @@ public interface EmployeeEntity extends Serializable {
 
      @ApiModelProperty(value = "Подразделение")
      DepartmentEntity getDepartment();
-     void setDepartment(DepartmentEntity departament);
+     void setDepartment(DepartmentEntity department);
 
      @ApiModelProperty(value = "Должность")
      String getPost();
