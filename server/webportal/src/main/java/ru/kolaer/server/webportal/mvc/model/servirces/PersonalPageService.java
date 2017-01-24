@@ -1,6 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.other.PersonalPageData;
 
 /**
@@ -8,5 +8,5 @@ import ru.kolaer.server.webportal.mvc.model.entities.other.PersonalPageData;
  */
 public interface PersonalPageService {
     PersonalPageData getPersonalPageData(Integer id);
-    PersonalPageData getPersonalPageData(GeneralAccountsEntity accountsEntity);
+    PersonalPageData getPersonalPageData(AccountEntity accountsEntity);
 }

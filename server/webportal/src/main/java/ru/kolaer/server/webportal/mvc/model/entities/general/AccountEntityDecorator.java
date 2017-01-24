@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 
@@ -18,38 +18,38 @@ import java.util.List;
 //@Table(name = "general_accounts")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Deprecated
-public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
-    private GeneralAccountsEntity generalAccountsEntity;
+public class AccountEntityDecorator implements AccountEntity {
+    private AccountEntity accountEntity;
 
-    public GeneralAccountsEntityDecorator() {
-        this.generalAccountsEntity = new GeneralAccountsEntityBase();
+    public AccountEntityDecorator() {
+        this.accountEntity = new AccountEntityBase();
     }
 
-    public GeneralAccountsEntityDecorator(GeneralAccountsEntity generalAccountsEntity) {
-        this.generalAccountsEntity = generalAccountsEntity;
+    public AccountEntityDecorator(AccountEntity accountEntity) {
+        this.accountEntity = accountEntity;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public Integer getId() {
-        return this.generalAccountsEntity.getId();
+        return this.accountEntity.getId();
     }
 
     public void setId(Integer id) {
-        this.generalAccountsEntity.setId(id);
+        this.accountEntity.setId(id);
     }
 
     @ManyToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "general_employee_account", joinColumns = {@JoinColumn(name = "id_account")},
             inverseJoinColumns = { @JoinColumn(name = "id_employee")})
     public EmployeeEntity getEmployeeEntity() {
-        return this.generalAccountsEntity.getEmployeeEntity();
+        return this.accountEntity.getEmployeeEntity();
     }
 
     @Override
     public void setEmployeeEntity(EmployeeEntity generalAccountsEntity) {
-        this.generalAccountsEntity.setEmployeeEntity(generalAccountsEntity);
+        this.accountEntity.setEmployeeEntity(generalAccountsEntity);
     }
 
     /**Список ролей пользователя.*/
@@ -57,47 +57,47 @@ public class GeneralAccountsEntityDecorator implements GeneralAccountsEntity {
     @JoinTable(name = "general_account_role", joinColumns = {@JoinColumn(name = "id_account")},
             inverseJoinColumns = { @JoinColumn(name = "id_role")})
     public List<GeneralRolesEntity> getRoles() {
-        return this.generalAccountsEntity.getRoles();
+        return this.accountEntity.getRoles();
     }
 
     public void setRoles(List<GeneralRolesEntity> roles) {
-        this.generalAccountsEntity.setRoles(roles);
+        this.accountEntity.setRoles(roles);
     }
 
     @Column(name = "username", nullable = false)
     public String getUsername() {
-        return this.generalAccountsEntity.getUsername();
+        return this.accountEntity.getUsername();
     }
 
     public void setUsername(String username) {
-        this.generalAccountsEntity.setUsername(username);
+        this.accountEntity.setUsername(username);
     }
 
     @Column(name = "password", nullable = false)
     public String getPassword() {
-        return this.generalAccountsEntity.getPassword();
+        return this.accountEntity.getPassword();
     }
 
     public void setPassword(String password) {
-        this.generalAccountsEntity.setPassword(password);
+        this.accountEntity.setPassword(password);
     }
 
     @Column(name = "email")
     public String getEmail() {
-        return this.generalAccountsEntity.getEmail();
+        return this.accountEntity.getEmail();
     }
 
     public void setEmail(String email) {
-        this.generalAccountsEntity.setEmail(email);
+        this.accountEntity.setEmail(email);
     }
 
     @Override
     public boolean equals(Object o) {
-        return this.generalAccountsEntity.equals(o);
+        return this.accountEntity.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return this.generalAccountsEntity.hashCode();
+        return this.accountEntity.hashCode();
     }
 }

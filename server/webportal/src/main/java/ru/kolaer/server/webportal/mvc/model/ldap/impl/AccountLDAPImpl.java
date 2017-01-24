@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Repository;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
@@ -36,7 +36,7 @@ public class AccountLDAPImpl implements AccountLDAP {
 
 
     @Override
-    public GeneralAccountsEntity getAccountByLogin(String login) {
+    public AccountEntity getAccountByLogin(String login) {
         final SearchControls controls = new SearchControls();
         controls.setSearchScope(SUBTREE_SCOPE);
         controls.setReturningAttributes(new String[]{
@@ -46,7 +46,7 @@ public class AccountLDAPImpl implements AccountLDAP {
         try {
             final NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(& (userPrincipalName=" + login + "@kolaer.local" + ")(objectClass=person))", controls);
 
-            final GeneralAccountsEntity generalAccountEntity = new GeneralAccountsEntityBase();
+            final AccountEntity generalAccountEntity = new AccountEntityBase();
             final Attributes attributes = answer.next().getAttributes();
             generalAccountEntity.setUsername(attributes.get("samaccountname").get().toString());
             generalAccountEntity.setEmail(attributes.get("userprincipalname").get().toString());

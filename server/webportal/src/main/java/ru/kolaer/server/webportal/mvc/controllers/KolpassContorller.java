@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
@@ -55,7 +55,7 @@ public class KolpassContorller {
             @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize
     ) {
-        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         return this.repPassService.getAllByPnumber(employeeEntity.getPersonnelNumber(), number, pageSize);
     }
@@ -66,7 +66,7 @@ public class KolpassContorller {
     public RepositoryPassword addRepositoryPasswords(
             @ApiParam("Наименование хранилища") @RequestBody RepositoryPassword repositoryPassword
     ) {
-        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         if(repositoryPassword.getName() == null) {
             throw new BadRequestException("Имя не может быть пустым!");
@@ -100,7 +100,7 @@ public class KolpassContorller {
             throw new BadRequestException("Добавьте пароль!");
         }
 
-        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
@@ -143,7 +143,7 @@ public class KolpassContorller {
             throw new BadRequestException("ID не может быть пустым!");
         }
 
-        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
@@ -169,7 +169,7 @@ public class KolpassContorller {
             throw new BadRequestException("ID не может быть пустым!");
         }
 
-        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
@@ -198,7 +198,7 @@ public class KolpassContorller {
         if(repositoryPassword.getId() == null)
             throw new BadRequestException("ID не может быть пустым!");
 
-        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
@@ -229,7 +229,7 @@ public class KolpassContorller {
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
             @ApiParam("ID Хринилища") @RequestParam("id") Integer id
     ) {
-        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(id);
 

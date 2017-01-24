@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
@@ -74,7 +74,7 @@ public class PMainPaneImpl implements PMainPane {
     }
 
     @Override
-    public void login(GeneralAccountsEntity account) {
+    public void login(AccountEntity account) {
         this.view.setUserName("Вошли как: (" + account.getUsername() + ") | Выход");
         this.view.logoutAction(e -> this.editorKit.getAuthentication().logout());
 
@@ -115,7 +115,7 @@ public class PMainPaneImpl implements PMainPane {
     }
 
     @Override
-    public void logout(GeneralAccountsEntity account) {
+    public void logout(AccountEntity account) {
         this.view.setUserName("Вход");
         this.view.loginAction(e -> {
             final Dialog loginDialog = this.editorKit.getUISystemUS().getDialog().createLoginDialog();

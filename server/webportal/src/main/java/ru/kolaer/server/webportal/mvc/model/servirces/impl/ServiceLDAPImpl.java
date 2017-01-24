@@ -26,7 +26,7 @@ import java.util.List;
 @Service
 public class ServiceLDAPImpl implements ServiceLDAP {
     private final Logger LOG = LoggerFactory.getLogger(ServiceLDAPImpl.class);
-    private GeneralAccountsEntity accountsEntity;
+    private AccountEntity accountsEntity;
 
     @Autowired
     private EmployeeDao employeeDao;
@@ -52,7 +52,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         employeesEntity.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/no_photo.jpg");
         employeesEntity.setGender("Unknow");
 
-        this.accountsEntity = new GeneralAccountsEntityBase();
+        this.accountsEntity = new AccountEntityBase();
         this.accountsEntity.setEmployeeEntity(employeesEntity);
         this.accountsEntity.setUsername("empty");
         this.accountsEntity.setRoles(Arrays.asList(new GeneralRolesEntityBase("ALL"), new GeneralRolesEntityBase("Anonymous")));
@@ -60,31 +60,31 @@ public class ServiceLDAPImpl implements ServiceLDAP {
 
     @Override
     @Cacheable(value = "accounts", cacheManager = "springCM")
-    public GeneralAccountsEntity getAccountWithEmployeeByLogin(String login) {
-        final GeneralAccountsEntity generalAccountsEntity = accountLDAP.getAccountByLogin(login);
+    public AccountEntity getAccountWithEmployeeByLogin(String login) {
+        final AccountEntity accountEntity = accountLDAP.getAccountByLogin(login);
         final EmployeeEntity employeeEntity = employeeLDAP.getEmployeeByLogin(login);
 
         LOG.debug("Employee: {}", employeeEntity.getInitials());
 
         if(employeeEntity.getPersonnelNumber() != null) {
             final EmployeeEntity employee = this.employeeDao.findByID(employeeEntity.getPersonnelNumber());
-            generalAccountsEntity.setEmployeeEntity(employee);
+            accountEntity.setEmployeeEntity(employee);
         } else {
             final List<EmployeeEntity> generalEmployeesEntities = this.employeeDao.findEmployeeByInitials(employeeEntity.getInitials());
             if(generalEmployeesEntities!= null && generalEmployeesEntities.size() > 0) {
-                generalAccountsEntity.setEmployeeEntity(generalEmployeesEntities.get(0));
+                accountEntity.setEmployeeEntity(generalEmployeesEntities.get(0));
             }
         }
 
-        if(generalAccountsEntity.getEmployeeEntity() == null) {
-            generalAccountsEntity.setEmployeeEntity(this.accountsEntity.getEmployeeEntity());
+        if(accountEntity.getEmployeeEntity() == null) {
+            accountEntity.setEmployeeEntity(this.accountsEntity.getEmployeeEntity());
         }
 
-        return generalAccountsEntity;
+        return accountEntity;
     }
 
     @Override
-    public GeneralAccountsEntity getAccountByAuthentication() {
+    public AccountEntity getAccountByAuthentication() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && !auth.getName().equals("anonymousUser")){
             return this.getAccountWithEmployeeByLogin(auth.getName());

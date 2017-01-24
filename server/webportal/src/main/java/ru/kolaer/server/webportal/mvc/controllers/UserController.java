@@ -13,7 +13,7 @@ import org.springframework.security.crypto.codec.Base64;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
@@ -45,7 +45,7 @@ public class UserController extends BaseController {
     )
     @UrlDeclaration(description = "Получить авторизированный аккаунт.", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public GeneralAccountsEntity getUser() {
+    public AccountEntity getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null)
             return null;
@@ -64,10 +64,10 @@ public class UserController extends BaseController {
         if(authentication == null)
             return Collections.emptyList();
 
-        final GeneralAccountsEntity generalAccountsEntity = this.serviceLDAP
+        final AccountEntity accountEntity = this.serviceLDAP
                 .getAccountWithEmployeeByLogin(authentication.getName());
 
-        return generalAccountsEntity.getRoles();
+        return accountEntity.getRoles();
     }
 
     private byte[] getImageByte() throws IOException {
@@ -79,7 +79,7 @@ public class UserController extends BaseController {
         byte[] imgByte = this.serviceLDAP.getAccountPhoto(authentication.getName());
 
         if(imgByte == null) {
-            GeneralAccountsEntity user = this.getUser();
+            AccountEntity user = this.getUser();
 
             final String url = user.getEmployeeEntity().getPhoto();
             InputStream inputStream = URI.create(url).toURL().openStream();

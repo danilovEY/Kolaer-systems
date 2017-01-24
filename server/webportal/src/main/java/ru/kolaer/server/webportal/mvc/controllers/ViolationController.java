@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
@@ -117,7 +117,7 @@ public class ViolationController extends BaseController {
     @UrlDeclaration(description = "Добавить журнал для нарушений", isAccessUser  = true)
     @RequestMapping(value = "/journal/access", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public JournalViolationAccess getJournalAccess() {
-        final GeneralAccountsEntity account = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity account = this.serviceLDAP.getAccountByAuthentication();
         final List<String> userRoles = account.getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());
 
@@ -165,7 +165,7 @@ public class ViolationController extends BaseController {
         JournalViolation journalViolation = this.journalViolationService.getById(id);
 
         if(journalViolation != null) {
-            final GeneralAccountsEntity account = this.serviceLDAP.getAccountByAuthentication();
+            final AccountEntity account = this.serviceLDAP.getAccountByAuthentication();
             final List<String> userRoles = account.getRoles().stream()
                     .map(GeneralRolesEntity::getType).collect(Collectors.toList());
 
@@ -196,7 +196,7 @@ public class ViolationController extends BaseController {
         if(violation.getName()== null)
             throw new BadRequestException("Имя не может быть пустым!");
 
-        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
 
         if(accountByAuthentication.getRoles().stream().map(GeneralRolesEntity::getType).filter(role -> !ADMIN_VIOLATION.equals(role)
                 || !ADMIN.equals(role) || !COURATOR_VIOLATION.equals(role)).findFirst().isPresent()) {
@@ -274,7 +274,7 @@ public class ViolationController extends BaseController {
     public Page<JournalViolation> getAllJournal(
             @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-        final GeneralAccountsEntity account = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity account = this.serviceLDAP.getAccountByAuthentication();
         final List<String> userRoles = account.getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());
 
@@ -449,7 +449,7 @@ public class ViolationController extends BaseController {
             @ApiParam(value = "ID журнала") @RequestParam("id") Integer id,
             @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-        final GeneralAccountsEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         final List<String> roleStream = this.serviceLDAP.getAccountByAuthentication().getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());

@@ -10,9 +10,9 @@ import java.util.List;
 /**
  * Created by danilovey on 29.07.2016.
  */
-@JsonDeserialize(as = GeneralAccountsEntityBase.class)
+@JsonDeserialize(as = AccountEntityBase.class)
 @ApiModel(value = "Аккаунт")
-public interface GeneralAccountsEntity extends Serializable {
+public interface AccountEntity extends Serializable {
     Integer getId();
     void setId(Integer id);
 

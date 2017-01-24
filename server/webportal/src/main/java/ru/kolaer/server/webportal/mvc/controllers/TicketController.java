@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
@@ -110,7 +110,7 @@ public class TicketController extends BaseController {
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<TicketRegister> getAllRegister(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                                @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-        final GeneralAccountsEntity accountByAuthentication = serviceLDAP.getAccountByAuthentication();
+        final AccountEntity accountByAuthentication = serviceLDAP.getAccountByAuthentication();
         if(accountByAuthentication.getRoles().stream()
                 .map(GeneralRolesEntity::getType)
                 .collect(Collectors.toList()).contains("OIT")){

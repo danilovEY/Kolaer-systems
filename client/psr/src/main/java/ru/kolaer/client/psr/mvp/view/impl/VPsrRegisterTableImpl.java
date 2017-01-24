@@ -12,7 +12,7 @@ import javafx.scene.web.HTMLEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachment;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
@@ -86,7 +86,7 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
 
             final EmployeeEntity selectPsrEmployee = selectPsr.getAuthor();
 
-            final GeneralAccountsEntity accountsEntity = editorKit.getAuthentication().getAuthorizedUser();
+            final AccountEntity accountsEntity = editorKit.getAuthentication().getAuthorizedUser();
             final EmployeeEntity authorizedEmployee = accountsEntity.getEmployeeEntity();
             final EnumRole[] roles = this.editorKit.getAuthentication().getRoles();
             for(EnumRole role : roles) {

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
@@ -61,7 +61,7 @@ public class PsrRegisterController extends BaseController {
     public PsrAccess getAllPsrAccess() {
         final PsrAccess psrAccess = new PsrAccess();
 
-        final GeneralAccountsEntity entity = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity entity = this.serviceLDAP.getAccountByAuthentication();
 
         final List<String> roles = entity.getRoles().stream()
                 .map(GeneralRolesEntity::getType).collect(Collectors.toList());

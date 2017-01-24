@@ -7,7 +7,7 @@ import java.util.List;
  * Структура аккаунта в БД.
  */
 
-public class GeneralAccountsEntityBase implements GeneralAccountsEntity {
+public class AccountEntityBase implements AccountEntity {
     private Integer id;
     private String username;
     private String password;
@@ -72,7 +72,7 @@ public class GeneralAccountsEntityBase implements GeneralAccountsEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        GeneralAccountsEntityBase that = (GeneralAccountsEntityBase) o;
+        AccountEntityBase that = (AccountEntityBase) o;
 
         if (id != that.id) return false;
         if (username != null ? !username.equals(that.username) : that.username != null) return false;

@@ -13,8 +13,7 @@ import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -142,7 +141,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
         wizardPaneList.add(psrPlanPane);
 
         if(this.psrRegister != null) {
-            final GeneralAccountsEntity accountsEntity = this.editorKit.getAuthentication().getAuthorizedUser();
+            final AccountEntity accountsEntity = this.editorKit.getAuthentication().getAuthorizedUser();
 
             accountsEntity.getRoles().stream().map(GeneralRolesEntity::getType).forEach(role -> {
                 //if(role == EnumRole.PSR_ADMIN || role == EnumRole.SUPER_ADMIN) {

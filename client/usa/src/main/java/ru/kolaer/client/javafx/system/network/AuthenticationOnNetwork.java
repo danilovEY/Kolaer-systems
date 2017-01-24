@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.observers.AuthenticationObserver;
@@ -24,7 +24,7 @@ public class AuthenticationOnNetwork implements Authentication {
     private final List<AuthenticationObserver> authenticationObserverList;
     private final RestTemplate restTemplate;
     private final String pathToServer;
-    private GeneralAccountsEntity accountsEntity;
+    private AccountEntity accountsEntity;
     private TokenJson tokenJson;
     private boolean isAuth = false;
     private final String URL_TO_GET_TOKEN;
@@ -57,7 +57,7 @@ public class AuthenticationOnNetwork implements Authentication {
             if(this.tokenJson != null)
                 LOG.info("Токен получен...");
             LOG.info(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken());
-            this.accountsEntity = this.restTemplate.getForObject(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken(), GeneralAccountsEntity.class);
+            this.accountsEntity = this.restTemplate.getForObject(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken(), AccountEntity.class);
             if(this.accountsEntity != null) {
                 LOG.info("Пользователь получен...");
                 this.isAuth = true;
@@ -77,7 +77,7 @@ public class AuthenticationOnNetwork implements Authentication {
         }
     }
 
-    public GeneralAccountsEntity getAuthorizedUser() {
+    public AccountEntity getAuthorizedUser() {
         return this.accountsEntity;
     }
 

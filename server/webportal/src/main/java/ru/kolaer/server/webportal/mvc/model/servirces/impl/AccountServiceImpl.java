@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 
@@ -21,12 +21,12 @@ public class AccountServiceImpl implements AccountService{
     private AccountDao accountDao;
 
     @Override
-    public List<GeneralAccountsEntity> getAll() {
+    public List<AccountEntity> getAll() {
         return this.accountDao.findAll();
     }
 
     @Override
-    public GeneralAccountsEntity getByLogin(String login) {
+    public AccountEntity getByLogin(String login) {
         if(login != null &&!login.isEmpty())
             return this.accountDao.findName(login);
 
@@ -35,7 +35,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public GeneralAccountsEntity getById(Integer id) {
+    public AccountEntity getById(Integer id) {
         if(id != null && id >= 0)
             return this.accountDao.findByID(id);
 
@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void add(GeneralAccountsEntity accountsEntity) {
+    public void add(AccountEntity accountsEntity) {
         if(accountsEntity == null) {
             LOG.error("Account is NULL!");
             return;
@@ -57,26 +57,26 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void delete(GeneralAccountsEntity entity) {
+    public void delete(AccountEntity entity) {
         if(entity != null) {
             this.accountDao.delete(entity);
         }
     }
 
     @Override
-    public void update(GeneralAccountsEntity entity) {
+    public void update(AccountEntity entity) {
         if(entity != null) {
             this.accountDao.persist(entity);
         }
     }
 
     @Override
-    public void update(List<GeneralAccountsEntity> entity) {
+    public void update(List<AccountEntity> entity) {
 
     }
 
     @Override
-    public void delete(List<GeneralAccountsEntity> entites) {
+    public void delete(List<AccountEntity> entites) {
 
     }
 }

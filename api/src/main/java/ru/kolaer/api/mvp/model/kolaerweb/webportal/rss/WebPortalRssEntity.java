@@ -2,7 +2,6 @@ package ru.kolaer.api.mvp.model.kolaerweb.webportal.rss;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 
 import java.io.Serializable;

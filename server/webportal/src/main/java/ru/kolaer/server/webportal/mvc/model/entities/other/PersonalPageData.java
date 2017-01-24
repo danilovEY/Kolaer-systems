@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.other;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 
 /**
  * Created by danilovey on 10.11.2016.
@@ -11,13 +11,13 @@ import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
 public class PersonalPageData {
 
     @ApiModelProperty(value = "Аккаунт")
-    private GeneralAccountsEntity account;
+    private AccountEntity account;
 
-    public GeneralAccountsEntity getAccount() {
+    public AccountEntity getAccount() {
         return account;
     }
 
-    public void setAccount(GeneralAccountsEntity account) {
+    public void setAccount(AccountEntity account) {
         this.account = account;
     }
 }

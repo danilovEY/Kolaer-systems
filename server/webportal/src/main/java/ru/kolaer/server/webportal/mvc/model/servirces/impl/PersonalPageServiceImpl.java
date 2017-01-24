@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralAccountsEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.other.PersonalPageData;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PersonalPageService;
@@ -24,7 +24,7 @@ public class PersonalPageServiceImpl implements PersonalPageService {
     }
 
     @Override
-    public PersonalPageData getPersonalPageData(GeneralAccountsEntity accountsEntity) {
+    public PersonalPageData getPersonalPageData(AccountEntity accountsEntity) {
         final PersonalPageData result = new PersonalPageData();
         result.setAccount(accountsEntity);
 
