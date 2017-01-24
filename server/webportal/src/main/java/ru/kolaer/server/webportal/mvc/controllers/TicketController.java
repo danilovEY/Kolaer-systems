@@ -118,7 +118,7 @@ public class TicketController extends BaseController {
         } else {
             return this.ticketRegisterService.getAllByDepName(number, pageSize,
                             accountByAuthentication.getGeneralEmployeesEntity()
-                                    .getDepartament().getName());
+                                    .getDepartment().getName());
         }
     }
 
@@ -193,7 +193,7 @@ public class TicketController extends BaseController {
         TicketRegister ticketRegister = new TicketRegister();
         ticketRegister.setCreateRegister(new Date());
         ticketRegister.setDepartament(this.serviceLDAP.getAccountByAuthentication()
-                .getGeneralEmployeesEntity().getDepartament());
+                .getGeneralEmployeesEntity().getDepartment());
 
         this.ticketRegisterService.add(ticketRegister);
         return ticketRegister;

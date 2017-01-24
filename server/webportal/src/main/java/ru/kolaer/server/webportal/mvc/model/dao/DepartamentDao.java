@@ -1,10 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 
 /**
  * Created by danilovey on 12.09.2016.
  */
-public interface DepartamentDao extends DefaultDao<GeneralDepartamentEntity> {
-    GeneralDepartamentEntity findByName(String name);
+public interface DepartamentDao extends DefaultDao<DepartmentEntity> {
+    DepartmentEntity findByName(String name);
 }

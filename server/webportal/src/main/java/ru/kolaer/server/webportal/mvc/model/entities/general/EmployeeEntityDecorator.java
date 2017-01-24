@@ -1,6 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 
@@ -12,7 +12,7 @@ import java.util.Date;
  * Структура сотрудника в БД.
  */
 @Entity
-@Table(name = "general_employees")
+@Table(name = "employees")
 public class EmployeeEntityDecorator implements EmployeeEntity {
     private EmployeeEntity employeeEntity;
 
@@ -53,14 +53,14 @@ public class EmployeeEntityDecorator implements EmployeeEntity {
     }
 
 
-    @OneToOne(targetEntity = GeneralDepartamentEntityDecorator.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_departament")
-    public GeneralDepartamentEntity getDepartament() {
-        return this.employeeEntity.getDepartament();
+    @OneToOne(targetEntity = DepartmentEntityDecorator.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_department")
+    public DepartmentEntity getDepartment() {
+        return this.employeeEntity.getDepartment();
     }
 
-    public void setDepartament(GeneralDepartamentEntity departament) {
-        this.employeeEntity.setDepartament(departament);
+    public void setDepartment(DepartmentEntity departament) {
+        this.employeeEntity.setDepartment(departament);
     }
 
     @Column(name = "post")

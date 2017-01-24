@@ -1,11 +1,11 @@
 package ru.kolaer.server.webportal.mvc.model.entities.japc;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolationBase;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
@@ -59,14 +59,14 @@ public class JournalViolationDecorator implements JournalViolation {
         this.journalViolation.setViolations(violations);
     }
 
-    @OneToOne(targetEntity = GeneralDepartamentEntityDecorator.class, cascade = CascadeType.MERGE)
+    @OneToOne(targetEntity = DepartmentEntityDecorator.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_departament")
-    public GeneralDepartamentEntity getDepartament() {
+    public DepartmentEntity getDepartament() {
         return this.journalViolation.getDepartament();
     }
 
     @Override
-    public void setDepartament(GeneralDepartamentEntity departament) {
+    public void setDepartament(DepartmentEntity departament) {
         this.journalViolation.setDepartament(departament);
     }
 

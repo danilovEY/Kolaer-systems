@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -143,7 +142,7 @@ public class ViolationController extends BaseController {
                 journalViolations = this.journalViolationService.getAll();
             } else {
                 journalViolations = userRoles.contains(COURATOR_VIOLATION) ? this.journalViolationService
-                        .getAllByDep(account.getGeneralEmployeesEntity().getDepartament().getId()).getData()
+                        .getAllByDep(account.getGeneralEmployeesEntity().getDepartment().getId()).getData()
                         : this.journalViolationService.getByPnumberWriter(account.getGeneralEmployeesEntity().getPnumber()).getData();
             }
 
@@ -210,7 +209,7 @@ public class ViolationController extends BaseController {
         JournalViolation journalViolation = new JournalViolationDecorator(violation);
         journalViolation.setWriter(accountByAuthentication.getGeneralEmployeesEntity());
         if(journalViolation.getDepartament() == null) {
-            journalViolation.setDepartament(accountByAuthentication.getGeneralEmployeesEntity().getDepartament());
+            journalViolation.setDepartament(accountByAuthentication.getGeneralEmployeesEntity().getDepartment());
         } else {
             journalViolation.setDepartament(departamentService.getById(journalViolation.getDepartament().getId()));
         }
@@ -288,7 +287,7 @@ public class ViolationController extends BaseController {
 
             return isCourator
                     ? this.journalViolationService.getAllByDep(account.getGeneralEmployeesEntity()
-                    .getDepartament().getId(), number, pageSize)
+                    .getDepartment().getId(), number, pageSize)
                     : this.journalViolationService.getByPnumberWriter(account.getGeneralEmployeesEntity()
                     .getPnumber(), number, pageSize);
         }
@@ -463,7 +462,7 @@ public class ViolationController extends BaseController {
         } else {
             final JournalViolation journal = this.journalViolationService.getById(id);
             if(journal.getWriter().getPnumber().equals(employeeEntity.getPnumber())
-                    || (journal.getDepartament().getId().equals(employeeEntity.getDepartament().getId())
+                    || (journal.getDepartament().getId().equals(employeeEntity.getDepartment().getId())
                     && roleStream.contains(COURATOR_VIOLATION))) {
                 return this.violationService.getByIdJournal(id, number, pageSize);
             }

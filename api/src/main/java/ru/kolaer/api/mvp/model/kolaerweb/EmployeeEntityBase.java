@@ -12,7 +12,7 @@ public class EmployeeEntityBase implements EmployeeEntity {
     private String mobileNumber;
     private String phoneNumber;
     private String gender;
-    private GeneralDepartamentEntity departament;
+    private DepartmentEntity departament;
     private String post;
     private Date birthday;
     private String email;
@@ -42,11 +42,11 @@ public class EmployeeEntityBase implements EmployeeEntity {
         this.gender = gender;
     }
 
-    public GeneralDepartamentEntity getDepartament() {
+    public DepartmentEntity getDepartment() {
         return departament;
     }
 
-    public void setDepartament(GeneralDepartamentEntity departament) {
+    public void setDepartment(DepartmentEntity departament) {
         this.departament = departament;
     }
 

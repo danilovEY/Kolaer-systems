@@ -3,8 +3,8 @@ package ru.kolaer.server.webportal.mvc.model.entities.tickets;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -34,9 +34,9 @@ public class TicketRegister implements Serializable {
     private List<Ticket> tickets;
 
     @ApiModelProperty(value = "Подразделение")
-    @OneToOne(targetEntity = GeneralDepartamentEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = DepartmentEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_departament")
-    private GeneralDepartamentEntity departament;
+    private DepartmentEntity departament;
 
     @ApiModelProperty(value = "Дата создания")
     @Temporal(TemporalType.TIMESTAMP)

@@ -4,11 +4,10 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartamentDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -21,48 +20,48 @@ public class DepartamentDaoImpl implements DepartamentDao {
     private SessionFactory sessionFactory;
 
     @Transactional(readOnly = true)
-    public List<GeneralDepartamentEntity> findAll() {
-        return sessionFactory.getCurrentSession().createCriteria(GeneralDepartamentEntityDecorator.class).list();
+    public List<DepartmentEntity> findAll() {
+        return sessionFactory.getCurrentSession().createCriteria(DepartmentEntityDecorator.class).list();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public GeneralDepartamentEntity findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(GeneralDepartamentEntityDecorator.class, id);
+    public DepartmentEntity findByID(Integer id) {
+        return this.sessionFactory.getCurrentSession().get(DepartmentEntityDecorator.class, id);
     }
 
     @Override
     @Transactional
-    public void persist(GeneralDepartamentEntity obj) {
+    public void persist(DepartmentEntity obj) {
         this.sessionFactory.getCurrentSession().persist(obj);
     }
 
     @Override
     @Transactional
-    public void delete(GeneralDepartamentEntity obj) {
+    public void delete(DepartmentEntity obj) {
         this.sessionFactory.getCurrentSession().delete(obj);
     }
 
     @Override
-    public void delete(List<GeneralDepartamentEntity> objs) {
+    public void delete(List<DepartmentEntity> objs) {
 
     }
 
     @Override
     @Transactional
-    public void update(GeneralDepartamentEntity entity) {
+    public void update(DepartmentEntity entity) {
         this.sessionFactory.getCurrentSession().update(entity);
     }
 
     @Override
-    public void update(List<GeneralDepartamentEntity> objs) {
+    public void update(List<DepartmentEntity> objs) {
 
     }
 
     @Override
     @Transactional(readOnly = true)
-    public GeneralDepartamentEntity findByName(String name) {
-        return (GeneralDepartamentEntity) this.sessionFactory.getCurrentSession()
+    public DepartmentEntity findByName(String name) {
+        return (DepartmentEntity) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM GeneralDepartamentEntityDecorator dep WHERE dep.name = :name")
                 .setParameter("name", name).uniqueResult();
     }

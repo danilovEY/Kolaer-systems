@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
@@ -40,7 +39,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
 
     @PostConstruct
     public void init() {
-        GeneralDepartamentEntity departamentEntity = new GeneralDepartamentEntityBase();
+        DepartmentEntity departamentEntity = new DepartmentEntityBase();
         departamentEntity.setAbbreviatedName("Anonymous");
         departamentEntity.setName("Anonymous");
         departamentEntity.setId(-1);
@@ -48,7 +47,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         EmployeeEntity employeesEntity = new EmployeeEntityBase();
         employeesEntity.setPnumber(-1);
         employeesEntity.setInitials("Anon");
-        employeesEntity.setDepartament(departamentEntity);
+        employeesEntity.setDepartment(departamentEntity);
         employeesEntity.setBirthday(new Date());
         employeesEntity.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/no_photo.jpg");
         employeesEntity.setGender("Unknow");

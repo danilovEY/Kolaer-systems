@@ -1,6 +1,6 @@
 package ru.kolaer.api.mvp.model.kolaerweb.jpac;
 
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 public class JournalViolationBase implements JournalViolation {
     private Integer id;
     private String name;
-    private GeneralDepartamentEntity departamentEntity;
+    private DepartmentEntity departamentEntity;
     private List<Violation> violations;
     private EmployeeEntity writer;
 
@@ -46,12 +46,12 @@ public class JournalViolationBase implements JournalViolation {
     }
 
     @Override
-    public GeneralDepartamentEntity getDepartament() {
+    public DepartmentEntity getDepartament() {
         return this.departamentEntity;
     }
 
     @Override
-    public void setDepartament(GeneralDepartamentEntity departament) {
+    public void setDepartament(DepartmentEntity departament) {
         this.departamentEntity = departament;
     }
 

@@ -2,12 +2,9 @@ package ru.kolaer.birthday.mvp.model.impl;
 
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.birthday.mvp.model.UserModel;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Date;
 
 /**
@@ -83,7 +80,7 @@ public class UserModelImpl implements UserModel {
 		this.setOrganization("КолАтомэнергоремонт");
 		this.setInitials(user.getInitials());
 		this.setBirthday(user.getBirthday());
-		this.setDepartament(user.getDepartament().getAbbreviatedName());
+		this.setDepartament(user.getDepartment().getAbbreviatedName());
 		this.setPost(user.getPost());
 		this.setPhoneNumber(user.getPhoneNumber());
 		this.setEmail("");

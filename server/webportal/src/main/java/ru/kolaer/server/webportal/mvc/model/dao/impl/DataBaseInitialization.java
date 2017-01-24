@@ -11,7 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralDepartamentEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
@@ -20,7 +20,7 @@ import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.server.webportal.beans.TypeServer;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.bank.BankAccount;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralDepartamentEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
@@ -143,8 +143,8 @@ public class DataBaseInitialization {
         Map<Integer, EmployeeEntity> mapEmployee = new HashMap<>();
         generalEmployeesEntities.forEach(generalEmployeesEntity -> mapEmployee.put(generalEmployeesEntity.getPnumber(), generalEmployeesEntity));
 
-        List<GeneralDepartamentEntity> departamentEntities = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralDepartamentEntityDecorator").list();
-        Map<String, GeneralDepartamentEntity> mapDep = departamentEntities.stream().collect(Collectors.toMap(GeneralDepartamentEntity::getName, d -> d));
+        List<DepartmentEntity> departamentEntities = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralDepartamentEntityDecorator").list();
+        Map<String, DepartmentEntity> mapDep = departamentEntities.stream().collect(Collectors.toMap(DepartmentEntity::getName, d -> d));
         for (DbDataAll dbDataAll : dbDataAlls) {
             EmployeeEntity dataBaseEmployee = mapEmployee.get(dbDataAll.getPersonNumber());
 
@@ -198,33 +198,33 @@ public class DataBaseInitialization {
         mapEmployee.values().forEach(generalEmployeesEntity -> this.sessionFactory.getCurrentSession().delete(generalEmployeesEntity));
     }
 
-    private void updateDepartament(EmployeeEntity entity, DbDataAll dbDataAll, GeneralDepartamentEntity dep) {
-        GeneralDepartamentEntity generalDepartamentEntity = dep;
+    private void updateDepartament(EmployeeEntity entity, DbDataAll dbDataAll, DepartmentEntity dep) {
+        DepartmentEntity departmentEntity = dep;
 
-        if (generalDepartamentEntity == null) {
-            generalDepartamentEntity = new GeneralDepartamentEntityDecorator();
-            generalDepartamentEntity.setName(dbDataAll.getDepartament());
+        if (departmentEntity == null) {
+            departmentEntity = new DepartmentEntityDecorator();
+            departmentEntity.setName(dbDataAll.getDepartament());
             final String abbrev = dbDataAll.getDepartament().substring(0, dbDataAll.getDepartament().indexOf(" ")).trim();
-            generalDepartamentEntity.setAbbreviatedName(abbrev);
+            departmentEntity.setAbbreviatedName(abbrev);
 
             if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")
                     || dbDataAll.getPost().equals("Руководитель") || dbDataAll.getPost().equals("Ведущий")
                     || dbDataAll.getPost().equals("Главный")) {
-                generalDepartamentEntity.setChiefEntity(entity.getPnumber());
+                departmentEntity.setChiefEntity(entity.getPnumber());
             }
 
-            this.sessionFactory.getCurrentSession().persist(generalDepartamentEntity);
-            entity.setDepartament(generalDepartamentEntity);
+            this.sessionFactory.getCurrentSession().persist(departmentEntity);
+            entity.setDepartment(departmentEntity);
             this.sessionFactory.getCurrentSession().persist(entity);
         } else {
-            entity.setDepartament(generalDepartamentEntity);
+            entity.setDepartment(departmentEntity);
             this.sessionFactory.getCurrentSession().persist(entity);
 
             if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")
                     || dbDataAll.getPost().equals("Руководитель") || dbDataAll.getPost().equals("Ведущий")
                     || dbDataAll.getPost().equals("Главный")) {
-                generalDepartamentEntity.setChiefEntity(dbDataAll.getPersonNumber());
-                this.sessionFactory.getCurrentSession().update(generalDepartamentEntity);
+                departmentEntity.setChiefEntity(dbDataAll.getPersonNumber());
+                this.sessionFactory.getCurrentSession().update(departmentEntity);
             }
         }
     }

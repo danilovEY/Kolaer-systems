@@ -6,11 +6,8 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
-import ru.kolaer.api.mvp.model.restful.DbDataAll;
-import ru.kolaer.api.mvp.model.restful.PublicHolidays;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.ui.NotifiAction;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
@@ -73,7 +70,7 @@ public class BirthdayOnHoliday implements Service {
 		int i = 0;
 
 		for(final EmployeeEntity user : employeesEntities) {
-			actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartament().getAbbreviatedName(), e -> {
+			actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartment().getAbbreviatedName(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				
 				Platform.runLater(() -> {

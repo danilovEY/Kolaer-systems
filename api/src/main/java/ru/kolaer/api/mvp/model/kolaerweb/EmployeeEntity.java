@@ -27,8 +27,8 @@ public interface EmployeeEntity extends Serializable {
      void setGender(String gender);
 
      @ApiModelProperty(value = "Подразделение")
-     GeneralDepartamentEntity getDepartament();
-     void setDepartament(GeneralDepartamentEntity departament);
+     DepartmentEntity getDepartment();
+     void setDepartment(DepartmentEntity departament);
 
      @ApiModelProperty(value = "Должность")
      String getPost();

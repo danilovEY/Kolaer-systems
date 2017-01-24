@@ -11,7 +11,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -29,9 +28,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
     public List<EmployeeEntity> findAll() {
         final List<EmployeeEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp ORDER BY emp.initials").list();
         result.forEach(emp -> {
-            emp.getDepartament().getAbbreviatedName();
-            emp.getDepartament().getName();
-            emp.getDepartament().getId();
+            emp.getDepartment().getAbbreviatedName();
+            emp.getDepartment().getName();
+            emp.getDepartment().getId();
         });
         return result;
     }
@@ -41,9 +40,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
     public EmployeeEntity findByID(Integer id) {
         final EmployeeEntity result = (EmployeeEntity) this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.pnumber = :id ORDER BY emp.initials")
                 .setParameter("id", id).uniqueResult();
-        result.getDepartament().getAbbreviatedName();
-        result.getDepartament().getName();
-        result.getDepartament().getId();
+        result.getDepartment().getAbbreviatedName();
+        result.getDepartment().getName();
+        result.getDepartment().getId();
         return result;
     }
 
@@ -83,9 +82,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
         final List<EmployeeEntity> result = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.initials LIKE :initials ORDER BY emp.initials")
                 .setParameter("initials", "%" + initials + "%").list();
         result.forEach(emp -> {
-            emp.getDepartament().getAbbreviatedName();
-            emp.getDepartament().getName();
-            emp.getDepartament().getId();
+            emp.getDepartment().getAbbreviatedName();
+            emp.getDepartment().getName();
+            emp.getDepartment().getId();
         });
         return result;
     }
@@ -95,9 +94,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
         final List<EmployeeEntity> result = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.departament.id = :id ORDER BY emp.initials")
                 .setParameter("id", id).list();
         result.forEach(emp -> {
-            emp.getDepartament().getAbbreviatedName();
-            emp.getDepartament().getName();
-            emp.getDepartament().getId();
+            emp.getDepartment().getAbbreviatedName();
+            emp.getDepartment().getName();
+            emp.getDepartment().getId();
         });
         return result;
     }
@@ -115,9 +114,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 .setMaxResults(pageSize)
                 .list();
         result.forEach(emp -> {
-            emp.getDepartament().getAbbreviatedName();
-            emp.getDepartament().getName();
-            emp.getDepartament().getId();
+            emp.getDepartment().getAbbreviatedName();
+            emp.getDepartment().getName();
+            emp.getDepartment().getId();
         });
 
         return new Page<>(result, page, count, pageSize);
@@ -131,9 +130,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 .setParameter("endDate", endDate)
                 .list();
         result.forEach(emp -> {
-            emp.getDepartament().getAbbreviatedName();
-            emp.getDepartament().getName();
-            emp.getDepartament().getId();
+            emp.getDepartment().getAbbreviatedName();
+            emp.getDepartment().getName();
+            emp.getDepartment().getId();
         });
         return result;
     }
@@ -145,9 +144,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 .setParameter("date", date)
                 .list();
         result.forEach(emp -> {
-            emp.getDepartament().getAbbreviatedName();
-            emp.getDepartament().getName();
-            emp.getDepartament().getId();
+            emp.getDepartment().getAbbreviatedName();
+            emp.getDepartment().getName();
+            emp.getDepartment().getId();
         });
         return result;
     }
@@ -158,9 +157,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
         final List<EmployeeEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) ORDER BY t.initials")
                 .list();
         result.forEach(emp -> {
-            emp.getDepartament().getAbbreviatedName();
-            emp.getDepartament().getName();
-            emp.getDepartament().getId();
+            emp.getDepartment().getAbbreviatedName();
+            emp.getDepartment().getName();
+            emp.getDepartment().getId();
         });
         return result;
     }
