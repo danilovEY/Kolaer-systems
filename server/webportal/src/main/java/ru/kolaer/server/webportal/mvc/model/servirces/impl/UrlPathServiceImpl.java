@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
 import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
@@ -41,7 +41,7 @@ public class UrlPathServiceImpl implements UrlPathService {
     }
 
     @Override
-    public List<GeneralRolesEntity> getRoles(WebPortalUrlPath urlPath) {
+    public List<RoleEntity> getRoles(WebPortalUrlPath urlPath) {
         if(urlPath.getAccesses().contains("ALL")) {
             return Collections.emptyList();
         }

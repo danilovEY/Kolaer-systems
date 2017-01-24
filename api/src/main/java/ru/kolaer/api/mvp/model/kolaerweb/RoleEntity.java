@@ -9,9 +9,9 @@ import java.io.Serializable;
 /**
  * Created by danilovey on 29.07.2016.
  */
-@JsonDeserialize(as = GeneralRolesEntityBase.class)
+@JsonDeserialize(as = RoleEntityBase.class)
 @ApiModel(value = "Роль", description = "Роль/группа доступа пользователя.")
-public interface GeneralRolesEntity extends Serializable {
+public interface RoleEntity extends Serializable {
      Integer getId();
      void setId(Integer id);
 

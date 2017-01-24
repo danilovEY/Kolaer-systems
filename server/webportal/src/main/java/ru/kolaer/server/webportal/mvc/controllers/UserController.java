@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
@@ -58,7 +58,7 @@ public class UserController extends BaseController {
     )
     @UrlDeclaration(description = "Получить роли авторизированного аккаунта.", isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/roles/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<GeneralRolesEntity> getUserRoles() {
+    public List<RoleEntity> getUserRoles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication == null)

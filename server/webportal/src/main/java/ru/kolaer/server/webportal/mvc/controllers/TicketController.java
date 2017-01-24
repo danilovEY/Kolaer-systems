@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
 import ru.kolaer.server.webportal.errors.BadRequestException;
@@ -112,7 +112,7 @@ public class TicketController extends BaseController {
                                                @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         final AccountEntity accountByAuthentication = serviceLDAP.getAccountByAuthentication();
         if(accountByAuthentication.getRoles().stream()
-                .map(GeneralRolesEntity::getType)
+                .map(RoleEntity::getType)
                 .collect(Collectors.toList()).contains("OIT")){
             return new Page<>(this.ticketRegisterService.getAll(), 0, 0, 0);
         } else {

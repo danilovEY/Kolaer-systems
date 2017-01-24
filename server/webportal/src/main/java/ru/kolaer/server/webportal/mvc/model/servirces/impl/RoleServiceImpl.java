@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.server.webportal.mvc.model.ldap.RoleLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.RoleService;
 
@@ -18,36 +18,36 @@ public class RoleServiceImpl implements RoleService {
     private RoleLDAP roleDao;
 
     @Override
-    public List<GeneralRolesEntity> getAll() {
+    public List<RoleEntity> getAll() {
         return this.roleDao.findAllRoles();
     }
 
     @Override
-    public GeneralRolesEntity getById(Integer id) {
+    public RoleEntity getById(Integer id) {
         return null;
     }
 
     @Override
-    public void add(GeneralRolesEntity entity) {
+    public void add(RoleEntity entity) {
     }
 
     @Override
-    public void delete(GeneralRolesEntity entity) {
-
-    }
-
-    @Override
-    public void update(GeneralRolesEntity entity) {
+    public void delete(RoleEntity entity) {
 
     }
 
     @Override
-    public void update(List<GeneralRolesEntity> entity) {
+    public void update(RoleEntity entity) {
 
     }
 
     @Override
-    public void delete(List<GeneralRolesEntity> entites) {
+    public void update(List<RoleEntity> entity) {
+
+    }
+
+    @Override
+    public void delete(List<RoleEntity> entites) {
 
     }
 }

@@ -12,7 +12,7 @@ public class AccountEntityBase implements AccountEntity {
     private String username;
     private String password;
     private String email;
-    private List<GeneralRolesEntity> roles;
+    private List<RoleEntity> roles;
     private EmployeeEntity account;
 
 
@@ -25,11 +25,11 @@ public class AccountEntityBase implements AccountEntity {
     }
 
     /**Список ролей пользователя.*/
-    public List<GeneralRolesEntity> getRoles() {
+    public List<RoleEntity> getRoles() {
         return this.roles;
     }
 
-    public void setRoles(List<GeneralRolesEntity> roles) {
+    public void setRoles(List<RoleEntity> roles) {
         this.roles = roles;
     }
 

@@ -12,7 +12,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
@@ -119,7 +119,7 @@ public class ViolationController extends BaseController {
     public JournalViolationAccess getJournalAccess() {
         final AccountEntity account = this.serviceLDAP.getAccountByAuthentication();
         final List<String> userRoles = account.getRoles().stream()
-                .map(GeneralRolesEntity::getType).collect(Collectors.toList());
+                .map(RoleEntity::getType).collect(Collectors.toList());
 
         final WebPortalUrlPath pathByUrlGetAll = urlPathService.getPathByUrl("/violations/journal/get/all");
         final WebPortalUrlPath pathByUrlAddJournal = urlPathService.getPathByUrl("/violations/journal/add");
@@ -167,7 +167,7 @@ public class ViolationController extends BaseController {
         if(journalViolation != null) {
             final AccountEntity account = this.serviceLDAP.getAccountByAuthentication();
             final List<String> userRoles = account.getRoles().stream()
-                    .map(GeneralRolesEntity::getType).collect(Collectors.toList());
+                    .map(RoleEntity::getType).collect(Collectors.toList());
 
             final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains(ADMIN);
 
@@ -198,7 +198,7 @@ public class ViolationController extends BaseController {
 
         final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
 
-        if(accountByAuthentication.getRoles().stream().map(GeneralRolesEntity::getType).filter(role -> !ADMIN_VIOLATION.equals(role)
+        if(accountByAuthentication.getRoles().stream().map(RoleEntity::getType).filter(role -> !ADMIN_VIOLATION.equals(role)
                 || !ADMIN.equals(role) || !COURATOR_VIOLATION.equals(role)).findFirst().isPresent()) {
             if(this.journalViolationService.getCountByPnumberWriter(accountByAuthentication
                     .getEmployeeEntity().getPersonnelNumber()) > 0) {
@@ -276,7 +276,7 @@ public class ViolationController extends BaseController {
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         final AccountEntity account = this.serviceLDAP.getAccountByAuthentication();
         final List<String> userRoles = account.getRoles().stream()
-                .map(GeneralRolesEntity::getType).collect(Collectors.toList());
+                .map(RoleEntity::getType).collect(Collectors.toList());
 
         final boolean isAdmin = userRoles.contains(ADMIN_VIOLATION) || userRoles.contains(ADMIN);
 
@@ -452,7 +452,7 @@ public class ViolationController extends BaseController {
         final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         final List<String> roleStream = this.serviceLDAP.getAccountByAuthentication().getRoles().stream()
-                .map(GeneralRolesEntity::getType).collect(Collectors.toList());
+                .map(RoleEntity::getType).collect(Collectors.toList());
 
         final boolean isAdmin = roleStream.contains(ADMIN_VIOLATION)
                         || roleStream.contains(ADMIN);

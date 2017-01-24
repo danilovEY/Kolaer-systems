@@ -17,8 +17,8 @@ public interface AccountEntity extends Serializable {
     void setId(Integer id);
 
     @ApiModelProperty(value = "Коллекция ролей")
-    List<GeneralRolesEntity> getRoles();
-    void setRoles(List<GeneralRolesEntity> roles);
+    List<RoleEntity> getRoles();
+    void setRoles(List<RoleEntity> roles);
 
     @ApiModelProperty(value = "Логин")
     String getUsername();

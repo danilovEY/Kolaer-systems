@@ -7,8 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntityBase;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntityBase;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
 import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
 
@@ -53,9 +53,9 @@ public class AccountLDAPImpl implements AccountLDAP {
             final Collection<? extends GrantedAuthority> rolesFromAttributes = ToolsLDAP.getRolesFromAttributes(attributes);
 
             generalAccountEntity.setRoles(rolesFromAttributes.stream().map(role -> {
-                final GeneralRolesEntity generalRolesEntity = new GeneralRolesEntityBase();
-                generalRolesEntity.setType(role.getAuthority());
-                return generalRolesEntity;
+                final RoleEntity roleEntity = new RoleEntityBase();
+                roleEntity.setType(role.getAuthority());
+                return roleEntity;
             }).collect(Collectors.toList()));
 
             answer.close();

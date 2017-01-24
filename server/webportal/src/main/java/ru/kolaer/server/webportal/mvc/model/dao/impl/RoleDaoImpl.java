@@ -4,11 +4,10 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.GeneralRolesEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.RoleEntityDecorator;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -22,40 +21,40 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GeneralRolesEntity> findAll() {
-        return sessionFactory.getCurrentSession().createCriteria(GeneralRolesEntityDecorator.class).list();
+    public List<RoleEntity> findAll() {
+        return sessionFactory.getCurrentSession().createCriteria(RoleEntityDecorator.class).list();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public GeneralRolesEntity findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(GeneralRolesEntityDecorator.class, id);
+    public RoleEntity findByID(Integer id) {
+        return this.sessionFactory.getCurrentSession().get(RoleEntityDecorator.class, id);
     }
 
     @Override
     @Transactional
-    public void persist(GeneralRolesEntity obj) {
+    public void persist(RoleEntity obj) {
         if(obj != null)
             this.sessionFactory.getCurrentSession().persist(obj);
     }
 
     @Override
-    public void delete(GeneralRolesEntity obj) {
+    public void delete(RoleEntity obj) {
 
     }
 
     @Override
-    public void delete(List<GeneralRolesEntity> objs) {
+    public void delete(List<RoleEntity> objs) {
 
     }
 
     @Override
-    public void update(GeneralRolesEntity entity) {
+    public void update(RoleEntity entity) {
 
     }
 
     @Override
-    public void update(List<GeneralRolesEntity> objs) {
+    public void update(List<RoleEntity> objs) {
 
     }
 }

@@ -55,7 +55,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         this.accountsEntity = new AccountEntityBase();
         this.accountsEntity.setEmployeeEntity(employeesEntity);
         this.accountsEntity.setUsername("empty");
-        this.accountsEntity.setRoles(Arrays.asList(new GeneralRolesEntityBase("ALL"), new GeneralRolesEntityBase("Anonymous")));
+        this.accountsEntity.setRoles(Arrays.asList(new RoleEntityBase("ALL"), new RoleEntityBase("Anonymous")));
     }
 
     @Override

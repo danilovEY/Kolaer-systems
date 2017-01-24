@@ -4,15 +4,15 @@ package ru.kolaer.api.mvp.model.kolaerweb;
  * Created by Danilov on 24.07.2016.
  * Структура роли в БД.
  */
-public class GeneralRolesEntityBase implements GeneralRolesEntity{
+public class RoleEntityBase implements RoleEntity {
     private Integer id;
     private String type;
 
-    public GeneralRolesEntityBase() {
+    public RoleEntityBase() {
 
     }
 
-    public GeneralRolesEntityBase(String type) {
+    public RoleEntityBase(String type) {
         this.type = type;
     }
 
@@ -37,7 +37,7 @@ public class GeneralRolesEntityBase implements GeneralRolesEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        GeneralRolesEntityBase that = (GeneralRolesEntityBase) o;
+        RoleEntityBase that = (RoleEntityBase) o;
 
         if (id != that.id) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;

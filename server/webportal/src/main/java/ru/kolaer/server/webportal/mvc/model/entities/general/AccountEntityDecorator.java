@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -53,14 +53,14 @@ public class AccountEntityDecorator implements AccountEntity {
     }
 
     /**Список ролей пользователя.*/
-    @ManyToMany(targetEntity = GeneralRolesEntityDecorator.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = RoleEntityDecorator.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "general_account_role", joinColumns = {@JoinColumn(name = "id_account")},
             inverseJoinColumns = { @JoinColumn(name = "id_role")})
-    public List<GeneralRolesEntity> getRoles() {
+    public List<RoleEntity> getRoles() {
         return this.accountEntity.getRoles();
     }
 
-    public void setRoles(List<GeneralRolesEntity> roles) {
+    public void setRoles(List<RoleEntity> roles) {
         this.accountEntity.setRoles(roles);
     }
 

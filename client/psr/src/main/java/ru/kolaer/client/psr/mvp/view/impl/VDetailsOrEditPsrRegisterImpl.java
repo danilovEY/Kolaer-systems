@@ -14,7 +14,7 @@ import org.controlsfx.dialog.WizardPane;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.GeneralRolesEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
@@ -143,7 +143,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
         if(this.psrRegister != null) {
             final AccountEntity accountsEntity = this.editorKit.getAuthentication().getAuthorizedUser();
 
-            accountsEntity.getRoles().stream().map(GeneralRolesEntity::getType).forEach(role -> {
+            accountsEntity.getRoles().stream().map(RoleEntity::getType).forEach(role -> {
                 //if(role == EnumRole.PSR_ADMIN || role == EnumRole.SUPER_ADMIN) {
                     final WizardPane editStatusPage = new WizardPane();
 
