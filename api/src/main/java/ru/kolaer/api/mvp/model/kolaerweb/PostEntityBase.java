@@ -59,4 +59,15 @@ public class PostEntityBase implements PostEntity {
     public void setRang(Integer rang) {
         this.rang = rang;
     }
+
+    @Override
+    public String toString() {
+        return "PostEntityBase{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", abbreviatedName='" + abbreviatedName + '\'' +
+                ", typeRang='" + typeRang + '\'' +
+                ", rang=" + rang +
+                '}';
+    }
 }

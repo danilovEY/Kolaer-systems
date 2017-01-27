@@ -40,4 +40,14 @@ public class DepartmentEntityBase implements DepartmentEntity {
     public void setChiefEntity(Integer chiefEntity) {
         this.idChiefEntity = chiefEntity;
     }
+
+    @Override
+    public String toString() {
+        return "DepartmentEntityBase{" +
+                "Id=" + Id +
+                ", name='" + name + '\'' +
+                ", abbreviatedName='" + abbreviatedName + '\'' +
+                ", idChiefEntity=" + idChiefEntity +
+                '}';
+    }
 }

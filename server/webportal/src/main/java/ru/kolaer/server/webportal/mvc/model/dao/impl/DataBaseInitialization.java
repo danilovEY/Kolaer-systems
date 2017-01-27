@@ -24,6 +24,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDec
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
+import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class DataBaseInitialization {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private SessionFactory sessionFactory;
+    private PsrStatusService psrStatusService;
 
     @Autowired
     private BankAccountDao bankAccountDao;
@@ -97,30 +98,26 @@ public class DataBaseInitialization {
         //==============PSR=====================
         PsrStatus psrStatus = new PsrStatusDecorator();
         psrStatus.setType("Новый");
-        this.sessionFactory.getCurrentSession().persist(psrStatus);
+        this.psrStatusService.add(psrStatus);
 
         psrStatus = new PsrStatusDecorator();
         psrStatus.setType("Открыт");
-        this.sessionFactory.getCurrentSession().persist(psrStatus);
+        this.psrStatusService.add(psrStatus);
 
         psrStatus = new PsrStatusDecorator();
         psrStatus.setType("Закрыт");
-        this.sessionFactory.getCurrentSession().persist(psrStatus);
+        this.psrStatusService.add(psrStatus);
 
         psrStatus = new PsrStatusDecorator();
         psrStatus.setType("Отклонен");
-        this.sessionFactory.getCurrentSession().persist(psrStatus);
+        this.psrStatusService.add(psrStatus);
 
         psrStatus = new PsrStatusDecorator();
         psrStatus.setType("Утвержден");
-        this.sessionFactory.getCurrentSession().persist(psrStatus);
-
-        JournalViolation journalViolation = new JournalViolationDecorator();
-        journalViolation.setName("Общий журнал");
-        this.sessionFactory.getCurrentSession().persist(journalViolation);
+        this.psrStatusService.add(psrStatus);
     }
 
-    @Transactional
+    /*@Transactional
     public void updateDataBase() {
         final List<DbDataAll> dbDataAlls = this.jdbcTemplate.query("SELECT * FROM db_data_all", ((rs, rowNum) -> {
             final DbDataAll dbDataAll = new DbDataAll();
@@ -227,6 +224,6 @@ public class DataBaseInitialization {
                 this.sessionFactory.getCurrentSession().update(departmentEntity);
             }
         }
-    }
+    }*/
 
 }

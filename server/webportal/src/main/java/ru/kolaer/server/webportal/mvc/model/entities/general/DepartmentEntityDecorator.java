@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import lombok.ToString;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntityBase;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "departments")
+@ToString
 public class DepartmentEntityDecorator implements DepartmentEntity {
     private DepartmentEntity departmentEntity;
 

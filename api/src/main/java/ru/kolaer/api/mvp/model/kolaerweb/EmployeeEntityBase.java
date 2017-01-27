@@ -12,9 +12,11 @@ public class EmployeeEntityBase implements EmployeeEntity {
     private String mobileNumber;
     private String phoneNumber;
     private String gender;
-    private DepartmentEntity departament;
-    private String post;
+    private DepartmentEntity department;
+    private PostEntity post;
     private Date birthday;
+    private Date employmentDate;
+    private Date dismissalDate;
     private String email;
     private String photo;
 
@@ -43,19 +45,21 @@ public class EmployeeEntityBase implements EmployeeEntity {
     }
 
     public DepartmentEntity getDepartment() {
-        return departament;
+        return department;
     }
 
-    public void setDepartment(DepartmentEntity departament) {
-        this.departament = departament;
+    public void setDepartment(DepartmentEntity department) {
+        this.department = department;
     }
 
-    public String getPost() {
-        return post;
+    @Override
+    public PostEntity getPostEntity() {
+        return this.post;
     }
 
-    public void setPost(String post) {
-        this.post = post;
+    @Override
+    public void setPostEntity(PostEntity postEntity) {
+        this.post = postEntity;
     }
 
     @Override
@@ -89,6 +93,26 @@ public class EmployeeEntityBase implements EmployeeEntity {
     }
 
     @Override
+    public Date getEmploymentDate() {
+        return this.employmentDate;
+    }
+
+    @Override
+    public void setEmploymentDate(Date date) {
+        this.employmentDate = date;
+    }
+
+    @Override
+    public Date getDismissalDate() {
+        return this.dismissalDate;
+    }
+
+    @Override
+    public void setDismissalDate(Date date) {
+        this.dismissalDate = date;
+    }
+
+    @Override
     public String getEmail() {
         return this.email;
     }
@@ -115,22 +139,55 @@ public class EmployeeEntityBase implements EmployeeEntity {
 
         EmployeeEntityBase that = (EmployeeEntityBase) o;
 
-        if (pnumber != that.pnumber) return false;
+        if (pnumber != null ? !pnumber.equals(that.pnumber) : that.pnumber != null) return false;
         if (initials != null ? !initials.equals(that.initials) : that.initials != null) return false;
+        if (mobileNumber != null ? !mobileNumber.equals(that.mobileNumber) : that.mobileNumber != null) return false;
+        if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) return false;
         if (gender != null ? !gender.equals(that.gender) : that.gender != null) return false;
-        if (departament != null ? !departament.equals(that.departament) : that.departament != null) return false;
+        if (department != null ? !department.equals(that.department) : that.department != null) return false;
         if (post != null ? !post.equals(that.post) : that.post != null) return false;
+        if (birthday != null ? !birthday.equals(that.birthday) : that.birthday != null) return false;
+        if (employmentDate != null ? !employmentDate.equals(that.employmentDate) : that.employmentDate != null)
+            return false;
+        if (dismissalDate != null ? !dismissalDate.equals(that.dismissalDate) : that.dismissalDate != null)
+            return false;
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        return photo != null ? photo.equals(that.photo) : that.photo == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) pnumber;
+        int result = pnumber != null ? pnumber.hashCode() : 0;
         result = 31 * result + (initials != null ? initials.hashCode() : 0);
+        result = 31 * result + (mobileNumber != null ? mobileNumber.hashCode() : 0);
+        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         result = 31 * result + (gender != null ? gender.hashCode() : 0);
-        result = 31 * result + (departament != null ? departament.hashCode() : 0);
+        result = 31 * result + (department != null ? department.hashCode() : 0);
         result = 31 * result + (post != null ? post.hashCode() : 0);
+        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
+        result = 31 * result + (employmentDate != null ? employmentDate.hashCode() : 0);
+        result = 31 * result + (dismissalDate != null ? dismissalDate.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (photo != null ? photo.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "EmployeeEntityBase{" +
+                "pnumber=" + pnumber +
+                ", initials='" + initials + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", gender='" + gender + '\'' +
+                ", department=" + department +
+                ", post=" + post +
+                ", birthday=" + birthday +
+                ", employmentDate=" + employmentDate +
+                ", dismissalDate=" + dismissalDate +
+                ", email='" + email + '\'' +
+                ", photo='" + photo + '\'' +
+                '}';
     }
 }

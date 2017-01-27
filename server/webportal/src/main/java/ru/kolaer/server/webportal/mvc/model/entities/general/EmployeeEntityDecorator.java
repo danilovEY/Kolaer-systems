@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import lombok.ToString;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
@@ -14,6 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "employees")
+@ToString
 public class EmployeeEntityDecorator implements EmployeeEntity {
     private EmployeeEntity employeeEntity;
 
@@ -106,6 +108,28 @@ public class EmployeeEntityDecorator implements EmployeeEntity {
         this.employeeEntity.setBirthday(birthday);
     }
 
+    @Column(name = "employment_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date getEmploymentDate() {
+        return this.employeeEntity.getEmploymentDate();
+    }
+
+    @Override
+    public void setEmploymentDate(Date date) {
+        this.employeeEntity.setEmploymentDate(date);
+    }
+
+    @Column(name = "dismissal_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date getDismissalDate() {
+        return this.employeeEntity.getDismissalDate();
+    }
+
+    @Override
+    public void setDismissalDate(Date date) {
+        this.employeeEntity.setDismissalDate(date);
+    }
+
     @Column(name = "email", length = 30)
     public String getEmail() {
         return this.employeeEntity.getEmail();
@@ -126,13 +150,4 @@ public class EmployeeEntityDecorator implements EmployeeEntity {
         this.employeeEntity.setPhoto(url);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        return this.employeeEntity.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return this.employeeEntity.hashCode();
-    }
 }

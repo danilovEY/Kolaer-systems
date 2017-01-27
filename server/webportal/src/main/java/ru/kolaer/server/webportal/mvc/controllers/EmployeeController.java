@@ -132,14 +132,4 @@ public class EmployeeController extends BaseController {
         return result;
     }
 
-    @ApiOperation(
-            value = "Обновить базу сотрудников",
-            notes = "Обновить базу сотрудников из kolaer_base.db_date_all"
-    )
-    @UrlDeclaration(description = "Обновить базу сотрудников из kolaer_base.")
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
-    public void updateEmployee() {
-        this.dataBaseInitialization.updateDataBase();
-    }
 }

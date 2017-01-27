@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import lombok.ToString;
 import org.hibernate.annotations.Immutable;
 import ru.kolaer.api.mvp.model.kolaerweb.PostEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.PostEntityBase;
@@ -11,6 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "post")
+@ToString
 public class PostEntityDecorator implements PostEntity {
     private PostEntity postEntity;
 
@@ -55,7 +57,6 @@ public class PostEntityDecorator implements PostEntity {
     }
 
     @Column(name = "type_rang", length = 10)
-    @Immutable
     public String getTypeRang() {
         return this.postEntity.getTypeRang();
     }

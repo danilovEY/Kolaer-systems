@@ -7,8 +7,12 @@ import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.mvc.model.entities.dto.ResultUpdateEmployeesDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
+import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +20,7 @@ import java.util.List;
  * Created by danilovey on 09.08.2016.
  */
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService, UpdateEmployeesService {
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     @Autowired
@@ -103,5 +107,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public int getCountUserBirthday(Date date) {
         return this.employeeDao.getCountUserBirthday(date);
+    }
+
+    @Override
+    public ResultUpdateEmployeesDto updateEployees(File file) {
+        return this.employeeDao.updateEmployeesFromXlsx(file);
+    }
+
+    @Override
+    public ResultUpdateEmployeesDto updateEployees(InputStream inputStream) {
+        return this.employeeDao.updateEmployeesFromXlsx(inputStream);
     }
 }

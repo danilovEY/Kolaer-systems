@@ -46,6 +46,14 @@ public interface EmployeeEntity extends Serializable {
      Date getBirthday();
      void setBirthday(Date birthday);
 
+     @ApiModelProperty(value = "Дата приема на работу")
+     Date getEmploymentDate();
+     void setEmploymentDate(Date date);
+
+     @ApiModelProperty(value = "Дата увольнения")
+     Date getDismissalDate();
+     void setDismissalDate(Date date);
+
      @ApiModelProperty(value = "E-Mail")
      String getEmail();
      void setEmail(String email);
