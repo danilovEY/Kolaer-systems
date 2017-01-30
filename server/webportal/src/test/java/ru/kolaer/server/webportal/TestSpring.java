@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal;
 
+import org.hibernate.SessionFactory;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,13 +12,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import ru.kolaer.server.webportal.config.SpringContext;
 import ru.kolaer.server.webportal.config.SpringSecurityConfig;
+import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.JournalViolationService;
+import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ViolationService;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.*;
 import javax.naming.ldap.InitialLdapContext;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 /**
  * Created by danilovey on 10.11.2016.
@@ -36,9 +41,20 @@ public class TestSpring {
     @Autowired
     private SimpleMailMessage templateMessage;
 
-
     @Autowired
     private ViolationService violationService;
+
+    @Autowired
+    private UpdateEmployeesService employeeService;
+
+    @Autowired
+    private SessionFactory sessionFactory;
+
+
+    @Test
+    public void updateEmployees() throws FileNotFoundException {
+        System.out.println(this.employeeService.updateEployees(new FileInputStream("D:\\L106_Data_26.XLSX")));
+    }
 
     @Test
     @Ignore

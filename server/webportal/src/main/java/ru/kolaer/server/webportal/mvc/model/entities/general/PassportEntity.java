@@ -24,16 +24,16 @@ public class PassportEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @OneToOne(targetEntity = EmployeeEntityDecorator.class)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_employee")
     @ApiModelProperty("Сотрудник")
     private EmployeeEntity employee;
 
     @Column(name = "serial", length = 2)
     @ApiModelProperty("Серия")
-    private Integer serial;
+    private String serial;
 
-    @Column(name = "number", length = 5)
+    @Column(name = "number", length = 6)
     @ApiModelProperty("Номер")
-    private Integer number;
+    private String number;
 }

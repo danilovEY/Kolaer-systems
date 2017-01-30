@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @ApiModel("Результат обновления сотрудников")
 public class ResultUpdateEmployeesDto implements Serializable {
     @ApiModelProperty("Общее кол-во должностей")
@@ -29,5 +31,12 @@ public class ResultUpdateEmployeesDto implements Serializable {
     private Integer deleteDepCount;
     @ApiModelProperty("Кол-во добавленных подразделений")
     private Integer addDepCount;
+
+    @ApiModelProperty("Общее кол-во сотрудников")
+    private Integer allEmployeeSize;
+    @ApiModelProperty("Кол-во уволенных сотрудников")
+    private Integer deleteEmployeeCount;
+    @ApiModelProperty("Кол-во добавленных сотрудников")
+    private Integer addEmployeeCount;
 
 }

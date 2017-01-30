@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -24,14 +25,17 @@ import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.entities.dto.ResultUpdateEmployeesDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.PassportEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntityDecorator;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -209,119 +213,145 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
             Map<String, PostEntity> postEntityMap = new HashMap<>();
             Map<String, DepartmentEntity> departmentEntityMap = new HashMap<>();
-            List<EmployeeEntity> newEmployees = new ArrayList<>(sheetAt.getLastRowNum());
+            Map<Integer, EmployeeEntity> newEmployeesMap = new HashMap<>();
+            List<PassportEntity> passportEntityList = new ArrayList<>();
 
             for(int i = 1; i < sheetAt.getLastRowNum(); i++) {
                 final XSSFRow row = sheetAt.getRow(i);
-                XSSFCell cell = row.getCell(nameColumns.indexOf(SERIAL_DOCUMENT));
-                String value = cell.getStringCellValue();
-                if(value != null && !value.trim().isEmpty()) {
-                    final EmployeeEntity newEmployeeEntity = new EmployeeEntityDecorator();
 
-                    value = row.getCell(nameColumns.indexOf(PERSONNEL_NUMBER)).getStringCellValue();
-                    newEmployeeEntity.setPersonnelNumber(Integer.valueOf(value));
+                String value = row.getCell(nameColumns.indexOf(PERSONNEL_NUMBER)).getStringCellValue();
 
-                    value = row.getCell(nameColumns.indexOf(SECOND_NAME)).getStringCellValue();
-                    value += " " + row.getCell(nameColumns.indexOf(FIRST_NAME)).getStringCellValue();
-                    value += " " +row.getCell(nameColumns.indexOf(THIRD_NAME)).getStringCellValue();
-                    newEmployeeEntity.setInitials(value);
+                if(value == null || value.trim().isEmpty()
+                        || newEmployeesMap.containsKey(Integer.valueOf(value)))
+                    continue;
 
-                    Date date = row.getCell(nameColumns.indexOf(BIRTHDAY_DATE)).getDateCellValue();
-                    newEmployeeEntity.setBirthday(date);
+                final EmployeeEntity newEmployeeEntity = new EmployeeEntityDecorator();
+                newEmployeeEntity.setPersonnelNumber(Integer.valueOf(value));
 
-                    date = row.getCell(nameColumns.indexOf(EMPLOYTMENT_DATE)).getDateCellValue();
-                    newEmployeeEntity.setEmploymentDate(date);
+                value = row.getCell(nameColumns.indexOf(SECOND_NAME)).getStringCellValue();
+                value += " " + row.getCell(nameColumns.indexOf(FIRST_NAME)).getStringCellValue();
+                value += " " +row.getCell(nameColumns.indexOf(THIRD_NAME)).getStringCellValue();
+                newEmployeeEntity.setInitials(value);
 
-                    date = row.getCell(nameColumns.indexOf(DISMISSAL_DATE)).getDateCellValue();
-                    //TODO: Set with out on 9999 year
-                        newEmployeeEntity.setDismissalDate(date);
+                Date date = row.getCell(nameColumns.indexOf(BIRTHDAY_DATE)).getDateCellValue();
+                newEmployeeEntity.setBirthday(date);
 
-                    value = row.getCell(nameColumns.indexOf(SEX)).getStringCellValue();
-                    newEmployeeEntity.setGender(value);
+                date = row.getCell(nameColumns.indexOf(EMPLOYTMENT_DATE)).getDateCellValue();
+                newEmployeeEntity.setEmploymentDate(date);
 
-                    value = row.getCell(nameColumns.indexOf(PHONE_NUMBER)).getStringCellValue();
-                    if(value.length() == 10)
-                        newEmployeeEntity.setMobileNumber(value);
-                    else
-                        newEmployeeEntity.setPhoneNumber(value);
+                date = row.getCell(nameColumns.indexOf(DISMISSAL_DATE)).getDateCellValue();
+                //TODO: Set with out on 9999 year
+                    newEmployeeEntity.setDismissalDate(date);
 
-                    value = row.getCell(nameColumns.indexOf(EMAIL)).getStringCellValue();
-                    newEmployeeEntity.setEmail(value);
+                value = row.getCell(nameColumns.indexOf(SEX)).getStringCellValue();
+                newEmployeeEntity.setGender(value);
 
-                    value = row.getCell(nameColumns.indexOf(DEP_NAME)).getStringCellValue();
-                    DepartmentEntity departmentEntity = departmentEntityMap.getOrDefault(value ,new DepartmentEntityDecorator());
+                value = row.getCell(nameColumns.indexOf(PHONE_NUMBER)).getStringCellValue();
+                if(value.length() == 10)
+                    newEmployeeEntity.setMobileNumber(value);
+                else
+                    newEmployeeEntity.setPhoneNumber(value);
 
-                    if(departmentEntity.getName() == null) {
-                        final Pattern pattern = Pattern.compile("[а-яА-Я]*");
-                        final Matcher matcher = pattern.matcher(value);
+                value = row.getCell(nameColumns.indexOf(EMAIL)).getStringCellValue();
+                newEmployeeEntity.setEmail(value);
 
-                        departmentEntity.setName(value);
-                        if (matcher.find())
-                            departmentEntity.setAbbreviatedName(matcher.group().trim());
-                        else
-                            departmentEntity.setAbbreviatedName(value);
-                    }
+                value = row.getCell(nameColumns.indexOf(DEP_NAME)).getStringCellValue();
+                DepartmentEntity departmentEntity = departmentEntityMap.getOrDefault(value ,new DepartmentEntityDecorator());
 
-
-                    value = row.getCell(nameColumns.indexOf(POST_NAME)).getStringCellValue();
-                    final Pattern pattern = Pattern.compile("[^\\d|+]*");
+                if(departmentEntity.getName() == null) {
+                    final Pattern pattern = Pattern.compile("[а-яА-Я ]*");
                     final Matcher matcher = pattern.matcher(value);
 
-                    PostEntity postEntity;
+                    departmentEntity.setName(value);
+                    if (matcher.find())
+                        departmentEntity.setAbbreviatedName(matcher.group().trim());
+                    else
+                        departmentEntity.setAbbreviatedName(value);
+                }
 
-                    if(matcher.find() && value.length() != matcher.group().length()) {
-                        final String rangInfo = matcher.group();
-                        int indexRang = rangInfo.length();
-                        int indexType = rangInfo.length() + 2;
-                        postEntity = postEntityMap.getOrDefault(rangInfo + Character.getNumericValue(value.charAt(indexRang)), new PostEntityDecorator());
+                value = row.getCell(nameColumns.indexOf(POST_NAME)).getStringCellValue();
+                final Pattern pattern = Pattern.compile("[^\\d|+]*");
+                final Matcher matcher = pattern.matcher(value);
 
-                        if(postEntity.getName() == null) {
-                            postEntity.setRang(Character.getNumericValue(value.charAt(indexRang)));
+                PostEntity postEntity;
 
-                            if(indexType < value.length()) {
-                                switch (value.charAt(indexType)) {
-                                    case 'р':
-                                        postEntity.setTypeRang(TypeRangEnum.DISCHARGE.getName());
-                                        break;
-                                    case 'к':
-                                        postEntity.setTypeRang(TypeRangEnum.CATEGORY.getName());
-                                        break;
-                                    case 'г':
-                                        postEntity.setTypeRang(TypeRangEnum.GROUP.getName());
-                                        break;
-                                    default:
-                                        break;
-                                }
+                if(matcher.find() && value.length() != matcher.group().length()) {
+                    final String rangInfo = matcher.group();
+                    int indexRang = rangInfo.length();
+                    int indexType = rangInfo.length() + 2;
+                    postEntity = postEntityMap.getOrDefault(rangInfo + Character.getNumericValue(value.charAt(indexRang)), new PostEntityDecorator());
+
+                    if(postEntity.getName() == null) {
+                        postEntity.setRang(Character.getNumericValue(value.charAt(indexRang)));
+
+                        if(indexType < value.length()) {
+                            switch (value.charAt(indexType)) {
+                                case 'р':
+                                    postEntity.setTypeRang(TypeRangEnum.DISCHARGE.getName());
+                                    break;
+                                case 'к':
+                                    postEntity.setTypeRang(TypeRangEnum.CATEGORY.getName());
+                                    break;
+                                case 'г':
+                                    postEntity.setTypeRang(TypeRangEnum.GROUP.getName());
+                                    break;
+                                default:
+                                    break;
                             }
-                        }
-
-                        postEntity.setName(rangInfo.trim());
-                    } else {
-                        postEntity = postEntityMap.getOrDefault(value + "0", new PostEntityDecorator());
-                        if(postEntity.getName() == null) {
-                            postEntity.setName(value);
                         }
                     }
 
-                    if(!postEntityMap.containsKey(postEntity.getName() + Optional.ofNullable(postEntity.getRang()).orElse(0)))
-                        postEntityMap.put(postEntity.getName(), postEntity);
-
-                    if(!departmentEntityMap.containsKey(departmentEntity.getName()))
-                        departmentEntityMap.put(departmentEntity.getName(), departmentEntity);
-
-                    newEmployeeEntity.setDepartment(departmentEntity);
-                    newEmployeeEntity.setPostEntity(postEntity);
-
-                    newEmployees.add(newEmployeeEntity);
+                    postEntity.setName(rangInfo.trim());
+                } else {
+                    postEntity = postEntityMap.getOrDefault(value + "0", new PostEntityDecorator());
+                    if(postEntity.getName() == null) {
+                        postEntity.setName(value);
+                    }
                 }
+
+                value = row.getCell(nameColumns.indexOf(SERIAL_DOCUMENT)).getStringCellValue();
+                if(value != null && !value.trim().isEmpty()) {
+                    final PassportEntity passportEntity = new PassportEntity();
+                    passportEntity.setEmployee(newEmployeeEntity);
+                    passportEntity.setSerial(value);
+                    value = row.getCell(nameColumns.indexOf(NUMBER_DOCUMENT)).getStringCellValue();
+                    passportEntity.setNumber(value);
+                    passportEntityList.add(passportEntity);
+
+                }
+
+                if(!postEntityMap.containsKey(postEntity.getName() + Optional.ofNullable(postEntity.getRang()).orElse(0))) {
+                    postEntityMap.put(postEntity.getName() + Optional.ofNullable(postEntity.getRang()).orElse(0), postEntity);
+                    newEmployeeEntity.setPostEntity(postEntity);
+                } else {
+                    newEmployeeEntity.setPostEntity(postEntityMap.get(postEntity.getName()
+                            + Optional.ofNullable(postEntity.getRang()).orElse(0)));
+                }
+
+                if(!departmentEntityMap.containsKey(departmentEntity.getAbbreviatedName())) {
+                    departmentEntityMap.put(departmentEntity.getAbbreviatedName(), departmentEntity);
+                    newEmployeeEntity.setDepartment(departmentEntity);
+                } else {
+                    newEmployeeEntity.setDepartment(departmentEntityMap.get(departmentEntity.getAbbreviatedName()));
+                }
+
+                newEmployeeEntity.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/o_"
+                        + URLEncoder.encode(newEmployeeEntity.getInitials(), "UTF-8")
+                        .replace("+", "%20") + ".jpg");
+
+                newEmployeesMap.put(newEmployeeEntity.getPersonnelNumber(), newEmployeeEntity);
             }
 
-            newEmployees.forEach(employeeEntity -> {
-                log.debug(employeeEntity.toString());
-            });
+            final ResultUpdateEmployeesDto resultUpdateEmployeesDto = new ResultUpdateEmployeesDto();
+            //final Session currentSession = this.sessionFactory.getCurrentSession();
 
-            /*final ResultUpdateEmployeesDto resultUpdateEmployeesDto = new ResultUpdateEmployeesDto();
-            final Session currentSession = this.sessionFactory.getCurrentSession();
+            Session currentSession;
+            try {
+                currentSession = sessionFactory.getCurrentSession();
+            } catch (HibernateException e) {
+                currentSession = sessionFactory.openSession();
+            }
+
             final Transaction transaction = currentSession.getTransaction();
             try {
                 transaction.begin();
@@ -343,12 +373,21 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 }
 
                 resultUpdateEmployeesDto.setDeletePostCount(postEntitiesFromDb.size());
+                resultUpdateEmployeesDto.setAddPostCount(resultUpdateEmployeesDto.getAllPostSize()
+                        - resultUpdateEmployeesDto.getDeletePostCount()
+                );
 
-                currentSession.createQuery("DELETE FROM PostEntityDecorator p WHERE p.id IN :idList")
-                        .setParameterList("idList", postEntitiesFromDb.stream().map(PostEntity::getId)
-                                .collect(Collectors.toList()))
-                        .executeUpdate();
+                List<Integer> postIds = postEntitiesFromDb.stream().map(PostEntity::getId)
+                        .collect(Collectors.toList());
+                if(postIds.size() > 0) {
+                    currentSession.createQuery("DELETE FROM PostEntityDecorator p WHERE p.id IN (:idList)")
+                            .setParameterList("idList", postIds)
+                            .executeUpdate();
 
+
+                    currentSession.flush();
+                    currentSession.clear();
+                }
 
                 List<DepartmentEntity> depListFromDb = currentSession
                         .createQuery("FROM DepartmentEntityDecorator d")
@@ -361,39 +400,182 @@ public class EmployeeDaoImpl implements EmployeeDao {
                     final DepartmentEntity next = iteratorDepEntity.next();
                     final DepartmentEntity departmentEntity = departmentEntityMap.get(next.getName());
                     if(departmentEntity != null) {
-                        departmentEntityMap.put(next.getName(), next);
+                        departmentEntityMap.put(next.getAbbreviatedName(), next);
                         iteratorDepEntity.remove();
                     }
                 }
 
                 resultUpdateEmployeesDto.setDeleteDepCount(depListFromDb.size());
+                resultUpdateEmployeesDto.setAddDepCount(
+                        resultUpdateEmployeesDto.getAllDepSize()
+                        - resultUpdateEmployeesDto.getDeleteDepCount()
+                );
 
-                currentSession.createQuery("DELETE FROM DepartmentEntityDecorator d WHERE d.id IN :idList")
-                        .setParameterList("idList", depListFromDb.stream().map(DepartmentEntity::getId)
-                        .collect(Collectors.toList()))
-                .executeUpdate();
+                postIds = depListFromDb.stream().map(DepartmentEntity::getId)
+                        .collect(Collectors.toList());
 
+                if(postIds.size() > 0) {
+                    currentSession.createQuery("DELETE FROM DepartmentEntityDecorator d WHERE d.id IN (:idList)")
+                            .setParameterList("idList", postIds)
+                            .executeUpdate();
 
-                List<EmployeeEntity> employeeFromDb = currentSession.createQuery("FROM EmployeeEntityDecorator")
+                    currentSession.flush();
+                    currentSession.clear();
+                }
+
+                List<Integer> employeeFromDb = currentSession.createQuery("SELECT e.personnelNumber FROM EmployeeEntityDecorator e")
                         .list();
 
-                Map<Integer, EmployeeEntity> pnumberEmployee = newEmployees.stream()
-                        .collect(Collectors.toMap(EmployeeEntity::getPersonnelNumber, e -> e));
+                resultUpdateEmployeesDto.setAllEmployeeSize(employeeFromDb.size());
 
-                employeeFromDb.stream().filter(emp -> pnumberEmployee.containsKey(emp.getPersonnelNumber())).collect(Collectors.toList());
+                List<Integer> removeEmployees = employeeFromDb.stream()
+                        .filter(key -> !newEmployeesMap.containsKey(key))
+                        .collect(Collectors.toList());
 
+                resultUpdateEmployeesDto.setDeleteEmployeeCount(removeEmployees.size());
+                resultUpdateEmployeesDto.setAddEmployeeCount(
+                        resultUpdateEmployeesDto.getAllEmployeeSize()
+                        - resultUpdateEmployeesDto.getDeleteEmployeeCount()
+                );
 
+                if(removeEmployees.size() > 0) {
+                    currentSession.createQuery("DELETE FROM EmployeeEntityDecorator e WHERE e.personnelNumber IN (:pnumbers)")
+                            .setParameterList("pnumbers", removeEmployees)
+                            .executeUpdate();
+
+                    currentSession.flush();
+                    currentSession.clear();
+                }
+
+                final int defaultBachSize = Integer.valueOf(Dialect.DEFAULT_BATCH_SIZE);
+
+                int i = 0;
+                for (DepartmentEntity departmentEntity : departmentEntityMap.values()) {
+                    currentSession.saveOrUpdate(departmentEntity);
+
+                    if(++i % defaultBachSize == 0) {
+                        i = 0;
+                        currentSession.flush();
+                        currentSession.clear();
+                    }
+                }
+
+                if(i != 0) {
+                    i = 0;
+                    currentSession.flush();
+                    currentSession.clear();
+                }
+                for (PostEntity postEntity : postEntityMap.values()) {
+                    currentSession.saveOrUpdate(postEntity);
+
+                    if(++i % defaultBachSize == 0) {
+                        i = 0;
+                        currentSession.flush();
+                        currentSession.clear();
+                    }
+                }
+
+                if(i != 0) {
+                    i = 0;
+                    currentSession.flush();
+                    currentSession.clear();
+                }
+
+                List<DepartmentEntity> updatesDep = new ArrayList<>();
+
+                for (EmployeeEntity newEmployee : newEmployeesMap.values()) {
+                    final String postName = newEmployee.getPostEntity().getName();
+
+                    newEmployee.setPostEntity(postEntityMap.get(postName
+                            + Optional.ofNullable(newEmployee.getPostEntity().getRang()).orElse(0)));
+                    newEmployee.setDepartment(departmentEntityMap.get(newEmployee.getDepartment().getAbbreviatedName()));
+
+                    Integer idChief = newEmployee.getDepartment().getChiefEntity();
+                    if ((postName.contains("Начальник") || postName.equals("Директор")
+                            || postName.equals("Руководитель") || postName.equals("Ведущий")
+                            || postName.equals("Главный"))
+                            && (idChief == null || !idChief.equals(newEmployee.getPersonnelNumber()))) {
+                        newEmployee.getDepartment().setChiefEntity(newEmployee.getPersonnelNumber());
+                        updatesDep.add(newEmployee.getDepartment());
+                    }
+
+                    currentSession.saveOrUpdate(newEmployee);
+
+                    if(++i % defaultBachSize == 0) {
+                        i = 0;
+                        currentSession.flush();
+                        currentSession.clear();
+                    }
+                }
+
+                if(i != 0) {
+                    i = 0;
+                    currentSession.flush();
+                    currentSession.clear();
+                }
+
+                final String hql = "UPDATE DepartmentEntityDecorator d SET d.chiefEntity = :idCief WHERE d.id = :id";
+
+                for (DepartmentEntity departmentEntity : updatesDep) {
+                    currentSession.createQuery(hql)
+                            .setParameter("id", departmentEntity.getId())
+                            .setParameter("idCief", departmentEntity.getChiefEntity())
+                            .executeUpdate();
+
+                    if(++i % defaultBachSize == 0) {
+                        i = 0;
+                        currentSession.flush();
+                        currentSession.clear();
+                    }
+                }
+
+                if(i != 0) {
+                    i = 0;
+                    currentSession.flush();
+                    currentSession.clear();
+                }
+
+                List<PassportEntity> passportEntities = currentSession.createQuery("FROM PassportEntity").list();
+                Map<String, PassportEntity> collectPassportMap = passportEntities.stream()
+                        .collect(Collectors.toMap(p -> p.getSerial() + p.getNumber(), p -> p));
+
+                for (PassportEntity passportEntity : passportEntityList) {
+                    final String key = passportEntity.getSerial() + passportEntity.getNumber();
+                    if(!collectPassportMap.containsKey(key)) {
+                        currentSession.persist(passportEntity);
+                    } else {
+                        collectPassportMap.remove(key);
+                    }
+
+                    if(++i % defaultBachSize == 0) {
+                        i = 0;
+                        currentSession.flush();
+                        currentSession.clear();
+                    }
+                }
+
+                if(i != 0) {
+                    currentSession.flush();
+                    currentSession.clear();
+                }
+
+                currentSession.createQuery("DELETE FROM PassportEntity p WHERE p.id=:iDs")
+                        .setParameterList("iDs", collectPassportMap.values().stream()
+                                .map(PassportEntity::getId)
+                                .collect(Collectors.toList()));
+
+                return resultUpdateEmployeesDto;
             } catch (Exception ex) {
                 transaction.rollback();
                 log.error("Ошибка при обновлении сотрудников!", ex);
                 throw ex;
-            }*/
+            }
 
         } catch (Exception e) {
             log.error("Ошибка при чтении файла!", e);
             throw new BadRequestException("Невозможно прочитать файл!");
         }
-
-        return null;
     }
+
+
 }
