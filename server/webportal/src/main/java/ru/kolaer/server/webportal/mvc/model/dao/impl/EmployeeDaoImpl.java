@@ -313,7 +313,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 if(value != null && !value.trim().isEmpty()) {
                     final PassportEntity passportEntity = new PassportEntity();
                     passportEntity.setEmployee(newEmployeeEntity);
-                    passportEntity.setSerial(value);
+                    passportEntity.setSerial("47" + value);
                     value = row.getCell(nameColumns.indexOf(NUMBER_DOCUMENT)).getStringCellValue();
                     passportEntity.setNumber(value);
                     passportEntityList.add(passportEntity);

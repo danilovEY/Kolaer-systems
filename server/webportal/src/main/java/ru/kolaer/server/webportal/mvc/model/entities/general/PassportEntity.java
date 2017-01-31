@@ -29,7 +29,7 @@ public class PassportEntity implements Serializable {
     @ApiModelProperty("Сотрудник")
     private EmployeeEntity employee;
 
-    @Column(name = "serial", length = 2)
+    @Column(name = "serial", length = 4)
     @ApiModelProperty("Серия")
     private String serial;
 
