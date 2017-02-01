@@ -81,7 +81,7 @@ public class UserModelImpl implements UserModel {
 		this.setInitials(user.getInitials());
 		this.setBirthday(user.getBirthday());
 		this.setDepartament(user.getDepartment().getAbbreviatedName());
-		this.setPost(user.getPost());
+		this.setPost(user.getPostEntity().getAbbreviatedName());
 		this.setPhoneNumber(user.getPhoneNumber());
 		this.setEmail("");
 		this.setIcon(user.getInitials() + ".jpg");
