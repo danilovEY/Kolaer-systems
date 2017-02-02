@@ -34,7 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService, UpdateEmployeesServ
     @Override
     public EmployeeEntity getById(Integer id) {
         if(id != null && id >= 0)
-            return this.employeeDao.findByID(id);
+            return this.employeeDao.findByPersonnelNumber(id);
 
         LOG.error("ID is NULL or < 0!");
         return null;

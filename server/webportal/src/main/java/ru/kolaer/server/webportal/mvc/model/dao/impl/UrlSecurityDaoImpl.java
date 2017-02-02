@@ -26,7 +26,7 @@ public class UrlSecurityDaoImpl implements UrlSecurityDao {
 
     @Override
     @Transactional(readOnly = true)
-    public UrlSecurityDecorator findByID(Integer id) {
+    public UrlSecurityDecorator findByPersonnelNumber(Integer id) {
         return this.sessionFactory.getCurrentSession().get(UrlSecurityDecorator.class, id);
     }
 

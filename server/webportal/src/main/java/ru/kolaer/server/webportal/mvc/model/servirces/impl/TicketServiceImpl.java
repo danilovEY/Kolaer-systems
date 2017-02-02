@@ -24,7 +24,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket getById(Integer id) {
-        return this.ticketDao.findByID(id);
+        return this.ticketDao.findByPersonnelNumber(id);
     }
 
     @Override

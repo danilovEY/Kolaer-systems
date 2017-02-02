@@ -36,7 +36,7 @@ public class RepositoryPasswordHistoryDaoImpl implements RepositoryPasswordHisto
 
     @Override
     @Transactional(readOnly = true)
-    public RepositoryPasswordHistory findByID(@NonNull Integer id) {
+    public RepositoryPasswordHistory findByPersonnelNumber(@NonNull Integer id) {
         return (RepositoryPasswordHistory) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM RepositoryPasswordHistory r WHERE r.id = :id")
                 .setParameter("id", id)

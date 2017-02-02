@@ -32,7 +32,7 @@ public class ViolationDaoImpl implements ViolationDao {
 
     @Override
     @Transactional(readOnly = true)
-    public Violation findByID(Integer id) {
+    public Violation findByPersonnelNumber(Integer id) {
         return this.sessionFactory.getCurrentSession().get(ViolationDecorator.class, id);
     }
 

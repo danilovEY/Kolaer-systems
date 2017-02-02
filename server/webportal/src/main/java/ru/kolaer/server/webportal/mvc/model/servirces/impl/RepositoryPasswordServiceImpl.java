@@ -30,7 +30,7 @@ public class RepositoryPasswordServiceImpl implements RepositoryPasswordService 
         if(id == null || id < 0)
             throw new BadRequestException("ID должно быть больше 0");
 
-        return this.repositoryPasswordDao.findByID(id);
+        return this.repositoryPasswordDao.findByPersonnelNumber(id);
     }
 
     @Override

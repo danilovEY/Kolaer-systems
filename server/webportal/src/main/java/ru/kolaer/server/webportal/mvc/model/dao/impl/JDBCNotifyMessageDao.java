@@ -11,7 +11,6 @@ import ru.kolaer.server.webportal.mvc.model.dao.NotifyMessageDao;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     @Override
     @Transactional(readOnly = true)
     public NotifyMessage getLastNotifyMessage() {
-        return this.findByID(1);
+        return this.findByPersonnelNumber(1);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
 
     @Override
     @Transactional(readOnly = true)
-    public NotifyMessage findByID(Integer id) {
+    public NotifyMessage findByPersonnelNumber(Integer id) {
         List<NotifyMessage> query = this.jdbcTemplate.query("SELECT id, message FROM notifications WHERE id = " + id, (rs, rowNum) -> {
             final NotifyMessage notifyMessage = new NotifyMessageBase();
             notifyMessage.setId(rs.getInt("id"));

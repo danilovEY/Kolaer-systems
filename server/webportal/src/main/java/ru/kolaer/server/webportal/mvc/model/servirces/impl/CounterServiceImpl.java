@@ -25,7 +25,7 @@ public class CounterServiceImpl implements CounterService {
     @Override
     public Counter getById(Integer id) {
         if(id >= 0)
-            return this.counterDao.findByID(id);
+            return this.counterDao.findByPersonnelNumber(id);
         return null;
     }
 

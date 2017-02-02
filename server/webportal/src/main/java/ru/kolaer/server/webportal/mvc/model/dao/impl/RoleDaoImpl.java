@@ -27,7 +27,7 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     @Transactional(readOnly = true)
-    public RoleEntity findByID(Integer id) {
+    public RoleEntity findByPersonnelNumber(Integer id) {
         return this.sessionFactory.getCurrentSession().get(RoleEntityDecorator.class, id);
     }
 

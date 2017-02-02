@@ -37,7 +37,7 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public AccountEntity getById(Integer id) {
         if(id != null && id >= 0)
-            return this.accountDao.findByID(id);
+            return this.accountDao.findByPersonnelNumber(id);
 
         LOG.error("Id is NULL or < 0!");
         return null;

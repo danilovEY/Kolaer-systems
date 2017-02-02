@@ -32,7 +32,7 @@ public class CounterDaoJDBC implements CounterDao {
     }
 
     @Override
-    public Counter findByID(Integer id) {
+    public Counter findByPersonnelNumber(Integer id) {
         return this.jdbcTemplateOrigin.queryForObject("SELECT * FROM counters WHERE id = ?",new Object[] {id}, new CounterMapping());
     }
 

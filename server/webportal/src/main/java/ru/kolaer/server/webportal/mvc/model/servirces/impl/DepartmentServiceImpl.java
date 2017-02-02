@@ -32,7 +32,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public DepartmentEntity getById(Integer id) {
         if(id == null || id < 0)
             throw new IllegalArgumentException("Id is null or < 0!");
-        return this.departmentDao.findByID(id);
+        return this.departmentDao.findByPersonnelNumber(id);
     }
 
     @Override

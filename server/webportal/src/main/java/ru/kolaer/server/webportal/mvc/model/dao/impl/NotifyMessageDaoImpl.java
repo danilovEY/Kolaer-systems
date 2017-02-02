@@ -8,7 +8,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.server.webportal.mvc.model.dao.NotifyMessageDao;
 import ru.kolaer.server.webportal.mvc.model.entities.other.NotifyMessageDecorator;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public class NotifyMessageDaoImpl implements NotifyMessageDao {
     @Override
     @Transactional(readOnly = true)
     public NotifyMessage getLastNotifyMessage() {
-        return this.findByID(1);
+        return this.findByPersonnelNumber(1);
     }
 
     @Override
@@ -34,7 +33,7 @@ public class NotifyMessageDaoImpl implements NotifyMessageDao {
 
     @Override
     @Transactional(readOnly = true)
-    public NotifyMessage findByID(Integer id) {
+    public NotifyMessage findByPersonnelNumber(Integer id) {
         return this.sessionFactory.getCurrentSession().get(NotifyMessageDecorator.class, id);
     }
 

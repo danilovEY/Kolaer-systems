@@ -13,7 +13,7 @@ public interface DefaultDao<T> {
     List<T> findAll();
 
     /**Получить объект по ID.*/
-    T findByID(@NonNull Integer id);
+    T findByPersonnelNumber(@NonNull Integer id);
 
     /**Добавить объект в БД.*/
     void persist(@NonNull T obj);

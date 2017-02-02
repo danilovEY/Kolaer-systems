@@ -28,7 +28,7 @@ public class ViolationServiceImpl implements ViolationService {
 
     @Override
     public Violation getById(Integer id) {
-        return this.violationDao.findByID(id);
+        return this.violationDao.findByPersonnelNumber(id);
     }
 
     @Override
