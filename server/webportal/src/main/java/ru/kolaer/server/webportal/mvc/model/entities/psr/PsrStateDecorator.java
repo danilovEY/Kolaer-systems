@@ -24,6 +24,7 @@ public class PsrStateDecorator implements PsrState {
 
     @Id
     @Column(name = "id")
+    @SequenceGenerator(name = "psr_state.seq", sequenceName = "psr_state_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "psr_state.seq")
     public Integer getId() {
         return this.psrProjectState.getId();

@@ -21,6 +21,7 @@ public class PassportEntity implements Serializable {
 
     @Id
     @Column(name = "id")
+    @SequenceGenerator(name = "passports.seq", sequenceName = "passports_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "passports.seq")
     private Integer id;
 

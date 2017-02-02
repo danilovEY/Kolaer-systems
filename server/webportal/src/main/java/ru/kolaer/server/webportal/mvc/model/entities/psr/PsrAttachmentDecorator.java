@@ -22,6 +22,7 @@ public class PsrAttachmentDecorator implements PsrAttachment {
     }
 
     @Id
+    @SequenceGenerator(name = "psr_attachment.seq", sequenceName = "psr_attachment_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "psr_attachment.seq")
     @Column(name = "id")
     public Integer getId() {

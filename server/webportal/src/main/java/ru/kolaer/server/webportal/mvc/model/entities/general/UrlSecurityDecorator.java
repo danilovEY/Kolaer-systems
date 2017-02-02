@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import org.hibernate.annotations.GenericGenerator;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurityBase;
 
@@ -24,6 +25,7 @@ public class UrlSecurityDecorator implements UrlSecurity {
     }
 
     @Id
+    @SequenceGenerator(name = "url_security.seq", sequenceName = "url_security_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "url_security.seq")
     @Column(name = "id")
     public int getId() {

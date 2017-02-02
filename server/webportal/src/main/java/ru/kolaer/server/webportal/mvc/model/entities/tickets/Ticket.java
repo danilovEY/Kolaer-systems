@@ -19,6 +19,7 @@ import java.io.Serializable;
 public class Ticket implements Serializable {
 
     @Id
+    @SequenceGenerator(name = "tickets.seq", sequenceName = "tickets_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tickets.seq")
     private Integer id;
 

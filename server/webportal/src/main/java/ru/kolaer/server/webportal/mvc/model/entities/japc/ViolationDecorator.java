@@ -25,6 +25,7 @@ public class ViolationDecorator implements Violation {
 
     @Id
     @Column(name = "id")
+    @SequenceGenerator(name = "violations.seq", sequenceName = "violations_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "violations.seq")
     public Integer getId() {
         return this.violation.getId();

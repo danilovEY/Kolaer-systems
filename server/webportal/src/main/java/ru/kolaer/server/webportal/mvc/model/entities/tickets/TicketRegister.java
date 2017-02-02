@@ -21,6 +21,7 @@ import java.util.List;
 public class TicketRegister implements Serializable {
 
     @Id
+    @SequenceGenerator(name = "ticket_register.seq", sequenceName = "ticket_register_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ticket_register.seq")
     private Integer id;
 

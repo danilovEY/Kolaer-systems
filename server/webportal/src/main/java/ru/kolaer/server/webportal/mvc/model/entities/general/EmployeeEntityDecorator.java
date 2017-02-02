@@ -29,6 +29,7 @@ public class EmployeeEntityDecorator implements EmployeeEntity {
 
 
     @Id
+    @SequenceGenerator(name = "employees.seq", sequenceName = "employees_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employees.seq")
     public Integer getId() {
         return this.employeeEntity.getId();

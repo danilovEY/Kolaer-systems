@@ -440,11 +440,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
                 resultUpdateEmployeesDto.setAddDepCount(countToAdd);
                 countToAdd = 0;
-                if(i != 0) {
-                    i = 0;
-                    currentSession.flush();
-                    currentSession.clear();
-                }
+                i = 0;
                 for (PostEntity postEntity : postEntityMap.values()) {
                     currentSession.saveOrUpdate(postEntity);
 
@@ -456,12 +452,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 }
 
                 resultUpdateEmployeesDto.setAddPostCount(countToAdd);
-                countToAdd = 0;
-                if(i != 0) {
-                    i = 0;
-                    currentSession.flush();
-                    currentSession.clear();
-                }
+                i = 0;
 
                 List<DepartmentEntity> updatesDep = new ArrayList<>();
 
@@ -491,12 +482,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 }
 
                 resultUpdateEmployeesDto.setAddPostCount(countToAdd);
-
-                if(i != 0) {
-                    i = 0;
-                    currentSession.flush();
-                    currentSession.clear();
-                }
+                i = 0;
 
                 final String hql = "UPDATE DepartmentEntityDecorator d SET d.chiefEntity = :idCief WHERE d.id = :id";
 
@@ -513,11 +499,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                     }
                 }
 
-                if(i != 0) {
-                    i = 0;
-                    currentSession.flush();
-                    currentSession.clear();
-                }
+                i = 0;
 
                 List<PassportEntity> passportEntities = currentSession.createQuery("FROM PassportEntity").list();
                 Map<String, PassportEntity> collectPassportMap = passportEntities.stream()
@@ -536,11 +518,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
                         currentSession.flush();
                         currentSession.clear();
                     }
-                }
-
-                if(i != 0) {
-                    currentSession.flush();
-                    currentSession.clear();
                 }
 
                 currentSession.createQuery("DELETE FROM PassportEntity p WHERE p.id=:iDs")
