@@ -34,9 +34,9 @@ public class TicketRegister implements Serializable {
     private List<Ticket> tickets;
 
     @ApiModelProperty(value = "Подразделение")
-    @OneToOne(targetEntity = DepartmentEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = DepartmentEntityDecorator.class, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_departament")
-    private DepartmentEntity departament;
+    private DepartmentEntity department;
 
     @ApiModelProperty(value = "Дата создания")
     @Temporal(TemporalType.TIMESTAMP)

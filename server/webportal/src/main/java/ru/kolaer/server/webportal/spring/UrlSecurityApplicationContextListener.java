@@ -3,7 +3,6 @@ package ru.kolaer.server.webportal.spring;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationListener;
@@ -12,12 +11,11 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPathBase;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurityBase;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.config.PathMapping;
-import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
-import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
+import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -41,7 +39,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
 
     @Autowired
     /***Сервис для работы с url.*/
-    private UrlPathService urlPathService;
+    private UrlSecurityService urlSecurityService;
 
     private boolean isInit = false;
 
@@ -50,7 +48,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
         if(isInit)
             return;
 
-        final Map<String, WebPortalUrlPath> mapUrlPaths = this.urlPathService.getAll().stream().collect(Collectors.toMap(w -> w.getUrl() + w.getRequestMethod() + w.getDescription(),w -> w));
+        final Map<String, UrlSecurity> mapUrlPaths = this.urlSecurityService.getAll().stream().collect(Collectors.toMap(w -> w.getUrl() + w.getRequestMethod() + w.getDescription(), w -> w));
 
         for(String beanName : event.getApplicationContext().getBeanDefinitionNames()) {
             final BeanDefinition bean = beanFactory.getBeanDefinition(beanName);
@@ -90,9 +88,9 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     final String description = urlDeclaration.description();
                     final String requestMethodName = urlDeclaration.requestMethod().name();
                     final String key = url + requestMethodName + description;
-                    WebPortalUrlPath urlPath = mapUrlPaths.get(key);
+                    UrlSecurity urlPath = mapUrlPaths.get(key);
                     if(urlPath == null) {
-                        urlPath = new WebPortalUrlPathBase();
+                        urlPath = new UrlSecurityBase();
 
                         final List<String> accessList = new ArrayList<>();
 
@@ -109,18 +107,18 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                         urlPath.setDescription(description);
                         urlPath.setRequestMethod(requestMethodName);
 
-                        this.urlPathService.add(urlPath);
+                        this.urlSecurityService.add(urlPath);
                     } else {
                         if(!urlPath.getDescription().equals(description)) {
                             urlPath.setDescription(description);
-                            this.urlPathService.update(urlPath);
+                            this.urlSecurityService.update(urlPath);
                         }
                         mapUrlPaths.remove(key);
                     }
                 }
             }
         }
-        this.urlPathService.removeAll(mapUrlPaths.values());
+        this.urlSecurityService.removeAll(mapUrlPaths.values());
         mapUrlPaths.clear();
         this.isInit = true;
     }

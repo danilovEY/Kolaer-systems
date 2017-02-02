@@ -6,9 +6,9 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
+import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ import java.util.List;
 public class UrlPathController extends BaseController {
 
     @Autowired
-    private UrlPathService urlPathService;
+    private UrlSecurityService urlSecurityService;
 
     @ApiOperation(
             value = "Получить все URL",
@@ -30,8 +30,8 @@ public class UrlPathController extends BaseController {
     )
     @UrlDeclaration(description = "Получить все URL.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<WebPortalUrlPath> getAllUrl() {
-        return urlPathService.getAll();
+    public List<UrlSecurity> getAllUrl() {
+        return urlSecurityService.getAll();
     }
 
     @ApiOperation(
@@ -40,7 +40,7 @@ public class UrlPathController extends BaseController {
     )
     @UrlDeclaration(description = "Получить роли по url.", isAccessAll = true)
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public WebPortalUrlPath getRoleByUrl(
+    public UrlSecurity getRoleByUrl(
             @ApiParam(value = "путь от корня", required = true) @RequestParam(value = "path") String path) {
         if(path == null || path.isEmpty())
             throw new IllegalArgumentException("Path is null!");
@@ -51,7 +51,7 @@ public class UrlPathController extends BaseController {
         if(path.indexOf("/rest") != 0)
             path = "/rest" + path;
 
-        return this.urlPathService.getPathByUrl(path);
+        return this.urlSecurityService.getPathByUrl(path);
     }
 
 }

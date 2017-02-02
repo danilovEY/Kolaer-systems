@@ -91,17 +91,17 @@ public class EmployeeServiceImpl implements EmployeeService, UpdateEmployeesServ
     }
 
     @Override
-    public List<EmployeeEntity> getUsersByDepartamentId(Integer id) {
-        return this.employeeDao.findByDepartamentById(id);
+    public List<EmployeeEntity> getUsersByDepartmentId(Integer id) {
+        return this.employeeDao.findByDepartmentById(id);
     }
 
     @Override
-    public Page<EmployeeEntity> getUsersByDepartamentId(int page, int pageSize, Integer id) {
+    public Page<EmployeeEntity> getUsersByDepartmentId(int page, int pageSize, Integer id) {
         if(page == 0) {
-            List<EmployeeEntity> usersByDepartamentId = this.getUsersByDepartamentId(id);
+            List<EmployeeEntity> usersByDepartamentId = this.getUsersByDepartmentId(id);
             return new Page<>(usersByDepartamentId, 0, 0, usersByDepartamentId.size());
         }
-        return this.employeeDao.findByDepartamentById(page, pageSize, id);
+        return this.employeeDao.findByDepartmentById(page, pageSize, id);
     }
 
     @Override

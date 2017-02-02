@@ -38,7 +38,7 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
     @Override
     public void add(TicketRegister entity) {
         List<TicketRegister> ticketRegisterByDateAndDep = ticketRegisterDao.
-                getTicketRegisterByDateAndDep(entity.getCreateRegister(), entity.getDepartament().getName());
+                getTicketRegisterByDateAndDep(entity.getCreateRegister(), entity.getDepartment().getName());
 
         List<TicketRegister> collect = ticketRegisterByDateAndDep.stream().filter(ticketRegister ->
                 !ticketRegister.isClose()

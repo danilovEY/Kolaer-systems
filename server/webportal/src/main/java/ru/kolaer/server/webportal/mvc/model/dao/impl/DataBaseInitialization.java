@@ -3,7 +3,9 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
@@ -23,6 +25,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.bank.BankAccount;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 
@@ -46,7 +49,7 @@ public class DataBaseInitialization {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private PsrStatusService psrStatusService;
+    private SessionFactory sessionFactory;
 
     @Autowired
     private BankAccountDao bankAccountDao;
@@ -63,7 +66,7 @@ public class DataBaseInitialization {
         try {
             Resource resource = new ClassPathResource("bank_account.xlsx");
             myExcelBook = new XSSFWorkbook(resource.getInputStream());
-            XSSFSheet myExcelSheet = myExcelBook.getSheet("Лист1");
+            XSSFSheet myExcelSheet = myExcelBook.getSheetAt(0);
             myExcelSheet.forEach(row -> {
                 String initials = row.getCell(0).getStringCellValue();
                 String cache = row.getCell(1).getStringCellValue();
@@ -93,137 +96,44 @@ public class DataBaseInitialization {
         }
     }
 
-    @Transactional
     public void initDB() {
         //==============PSR=====================
-        PsrStatus psrStatus = new PsrStatusDecorator();
-        psrStatus.setType("Новый");
-        this.psrStatusService.add(psrStatus);
+        Session currentSession = this.sessionFactory.getCurrentSession();
+        Transaction transaction = currentSession.getTransaction();
+        try {
+            transaction.begin();
 
-        psrStatus = new PsrStatusDecorator();
-        psrStatus.setType("Открыт");
-        this.psrStatusService.add(psrStatus);
+            PsrStatus psrStatus = new PsrStatusDecorator();
+            psrStatus.setType("Новый");
+            currentSession.persist(psrStatus);
 
-        psrStatus = new PsrStatusDecorator();
-        psrStatus.setType("Закрыт");
-        this.psrStatusService.add(psrStatus);
+            psrStatus = new PsrStatusDecorator();
+            psrStatus.setType("Открыт");
+            currentSession.persist(psrStatus);
 
-        psrStatus = new PsrStatusDecorator();
-        psrStatus.setType("Отклонен");
-        this.psrStatusService.add(psrStatus);
+            psrStatus = new PsrStatusDecorator();
+            psrStatus.setType("Закрыт");
+            currentSession.persist(psrStatus);
 
-        psrStatus = new PsrStatusDecorator();
-        psrStatus.setType("Утвержден");
-        this.psrStatusService.add(psrStatus);
-    }
+            psrStatus = new PsrStatusDecorator();
+            psrStatus.setType("Отклонен");
+            currentSession.persist(psrStatus);
 
-    /*@Transactional
-    public void updateDataBase() {
-        final List<DbDataAll> dbDataAlls = this.jdbcTemplate.query("SELECT * FROM db_data_all", ((rs, rowNum) -> {
-            final DbDataAll dbDataAll = new DbDataAll();
-            dbDataAll.setPersonNumber(rs.getInt("person_number"));
-            dbDataAll.setInitials(rs.getString("initials"));
-            dbDataAll.setDepartament(rs.getString("departament"));
-            dbDataAll.setDepartamentAbbreviated(rs.getString("departament_abbreviated"));
-            dbDataAll.setPost(rs.getString("post"));
-            dbDataAll.setGender(rs.getString("gender"));
-            dbDataAll.setEmail(rs.getString("email"));
-            dbDataAll.setPhone(rs.getString("phone"));
-            dbDataAll.setMobilePhone(rs.getString("mobile_phone"));
-            dbDataAll.setVCard(rs.getString("vCard"));
-            dbDataAll.setBirthday(rs.getDate("birthday"));
-            return dbDataAll;
-        }));
-        int i = 0;
+            psrStatus = new PsrStatusDecorator();
+            psrStatus.setType("Утвержден");
+            currentSession.persist(psrStatus);
 
-        final List<EmployeeEntity> generalEmployeesEntities = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator").list();
-        Map<Integer, EmployeeEntity> mapEmployee = new HashMap<>();
-        generalEmployeesEntities.forEach(generalEmployeesEntity -> mapEmployee.put(generalEmployeesEntity.getPersonnelNumber(), generalEmployeesEntity));
+            currentSession.flush();
+            currentSession.clear();
 
-        List<DepartmentEntity> departamentEntities = this.sessionFactory.getCurrentSession().createQuery("FROM GeneralDepartamentEntityDecorator").list();
-        Map<String, DepartmentEntity> mapDep = departamentEntities.stream().collect(Collectors.toMap(DepartmentEntity::getName, d -> d));
-        for (DbDataAll dbDataAll : dbDataAlls) {
-            EmployeeEntity dataBaseEmployee = mapEmployee.get(dbDataAll.getPersonNumber());
+            TypeViolationDecorator defaultTypeViolation = new TypeViolationDecorator();
+            defaultTypeViolation.setName("Состояние ОТ соответствует требованиям");
+            currentSession.persist(defaultTypeViolation);
 
-            if(dataBaseEmployee == null) {
-                dataBaseEmployee = new EmployeeEntityDecorator();
-                dataBaseEmployee.setPersonnelNumber(dbDataAll.getPersonNumber());
-                dataBaseEmployee.setPost(dbDataAll.getPost());
-                dataBaseEmployee.setInitials(dbDataAll.getInitials());
-                dataBaseEmployee.setPhoneNumber(dbDataAll.getPhone());
-                dataBaseEmployee.setMobileNumber(dbDataAll.getMobilePhone());
-                dataBaseEmployee.setBirthday(dbDataAll.getBirthday());
-                dataBaseEmployee.setPhoto(dbDataAll.getVCard());
-                try {
-                    dataBaseEmployee.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(dbDataAll.getInitials(), "UTF-8").replace("+", "%20") + ".jpg");
-                } catch (UnsupportedEncodingException e) {
-                    log.error("Невозможно преобразовать {} в URL!", dbDataAll.getInitials(), e);
-                    dataBaseEmployee.setPhoto(dbDataAll.getVCard());
-                }
-                dataBaseEmployee.setEmail(dbDataAll.getEmail());
-                dataBaseEmployee.setGender(dbDataAll.getGender());
-
-                if (dbDataAll.getDepartament() != null && !dbDataAll.getDepartament().trim().isEmpty()) {
-                    this.updateDepartament(dataBaseEmployee, dbDataAll, mapDep.get(dbDataAll.getDepartament()));
-                }
-            } else {
-                dataBaseEmployee.setPost(dbDataAll.getPost());
-                dataBaseEmployee.setInitials(dbDataAll.getInitials());
-                dataBaseEmployee.setPhoneNumber(dbDataAll.getPhone());
-                dataBaseEmployee.setMobileNumber(dbDataAll.getMobilePhone());
-                dataBaseEmployee.setBirthday(dbDataAll.getBirthday());
-                try {
-                    dataBaseEmployee.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/o_" + URLEncoder.encode(dbDataAll.getInitials(), "UTF-8").replace("+", "%20") + ".jpg");
-                } catch (UnsupportedEncodingException e) {
-                    log.error("Невозможно преобразовать {} в URL!", dbDataAll.getInitials(), e);
-                    dataBaseEmployee.setPhoto(dbDataAll.getVCard());
-                }
-                dataBaseEmployee.setEmail(dbDataAll.getEmail());
-
-                this.updateDepartament(dataBaseEmployee, dbDataAll, mapDep.get(dbDataAll.getDepartament()));
-                mapEmployee.remove(dataBaseEmployee.getPersonnelNumber());
-            }
-
-            if (i == 50) {
-                i = 0;
-                this.sessionFactory.getCurrentSession().flush();
-            } else {
-                i++;
-            }
+            transaction.commit();
+        } catch (Exception ex) {
+            log.error("Невозжномно инициализировать БД!", ex);
+            transaction.rollback();
         }
-
-        mapEmployee.values().forEach(generalEmployeesEntity -> this.sessionFactory.getCurrentSession().delete(generalEmployeesEntity));
     }
-
-    private void updateDepartament(EmployeeEntity entity, DbDataAll dbDataAll, DepartmentEntity dep) {
-        DepartmentEntity departmentEntity = dep;
-
-        if (departmentEntity == null) {
-            departmentEntity = new DepartmentEntityDecorator();
-            departmentEntity.setName(dbDataAll.getDepartament());
-            final String abbrev = dbDataAll.getDepartament().substring(0, dbDataAll.getDepartament().indexOf(" ")).trim();
-            departmentEntity.setAbbreviatedName(abbrev);
-
-            if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")
-                    || dbDataAll.getPost().equals("Руководитель") || dbDataAll.getPost().equals("Ведущий")
-                    || dbDataAll.getPost().equals("Главный")) {
-                departmentEntity.setChiefEntity(entity.getPersonnelNumber());
-            }
-
-            this.sessionFactory.getCurrentSession().persist(departmentEntity);
-            entity.setDepartment(departmentEntity);
-            this.sessionFactory.getCurrentSession().persist(entity);
-        } else {
-            entity.setDepartment(departmentEntity);
-            this.sessionFactory.getCurrentSession().persist(entity);
-
-            if (dbDataAll.getPost().contains("Начальник") || dbDataAll.getPost().equals("Директор")
-                    || dbDataAll.getPost().equals("Руководитель") || dbDataAll.getPost().equals("Ведущий")
-                    || dbDataAll.getPost().equals("Главный")) {
-                departmentEntity.setChiefEntity(dbDataAll.getPersonNumber());
-                this.sessionFactory.getCurrentSession().update(departmentEntity);
-            }
-        }
-    }*/
-
 }

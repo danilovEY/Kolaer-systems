@@ -141,12 +141,12 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
 
         Long count = 0L;
 
-        Query query = currentSession.createQuery("FROM JournalViolationDecorator j WHERE j.writer.pnumber = :id")
+        Query query = currentSession.createQuery("FROM JournalViolationDecorator j WHERE j.writer.personnelNumber = :id")
                 .setParameter("id", id);
 
         if(number != 0) {
             count = (Long) currentSession
-                    .createQuery("SELECT COUNT(j.id) FROM JournalViolationDecorator j WHERE j.writer.pnumber = :id")
+                    .createQuery("SELECT COUNT(j.id) FROM JournalViolationDecorator j WHERE j.writer.personnelNumber = :id")
                     .setParameter("id", id)
                     .uniqueResult();
 
@@ -168,7 +168,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
     @Transactional(readOnly = true)
     public Long getCountByPnumberWriter(Integer id) {
         return (Long) this.sessionFactory.getCurrentSession()
-                .createQuery("SELECT COUNT(j.id) FROM JournalViolationDecorator j WHERE j.writer.pnumber = :id")
+                .createQuery("SELECT COUNT(j.id) FROM JournalViolationDecorator j WHERE j.writer.personnelNumber = :id")
                 .setParameter("id", id)
                 .uniqueResult();
     }

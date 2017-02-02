@@ -3,11 +3,11 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
-import ru.kolaer.server.webportal.mvc.model.dao.UrlPathDao;
-import ru.kolaer.server.webportal.mvc.model.entities.webportal.WebPortalUrlPathDecorator;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
+import ru.kolaer.server.webportal.mvc.model.dao.UrlSecurityDao;
+import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurityDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.RoleService;
-import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
+import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -18,30 +18,30 @@ import java.util.stream.Collectors;
  * Created by danilovey on 09.08.2016.
  */
 @Service
-public class UrlPathServiceImpl implements UrlPathService {
+public class UrlSecurityServiceImpl implements UrlSecurityService {
     @Override
-    public void delete(List<WebPortalUrlPath> entites) {
+    public void delete(List<UrlSecurity> entites) {
 
     }
 
     @Autowired
-    private UrlPathDao urlPathDao;
+    private UrlSecurityDao urlSecurityDao;
 
     @Autowired
     private RoleService roleService;
 
     @Override
-    public WebPortalUrlPath getPathByUrl(String userUrl) {
+    public UrlSecurity getPathByUrl(String userUrl) {
         String url = userUrl;
         if(userUrl.contains("?")) {
             url = userUrl.substring(0, userUrl.indexOf("?"));
         }
 
-        return this.urlPathDao.getPathByUrl(url);
+        return this.urlSecurityDao.getPathByUrl(url);
     }
 
     @Override
-    public List<RoleEntity> getRoles(WebPortalUrlPath urlPath) {
+    public List<RoleEntity> getRoles(UrlSecurity urlPath) {
         if(urlPath.getAccesses().contains("ALL")) {
             return Collections.emptyList();
         }
@@ -52,12 +52,12 @@ public class UrlPathServiceImpl implements UrlPathService {
     }
 
     @Override
-    public void createOrUpdate(WebPortalUrlPath urlPath) {
+    public void createOrUpdate(UrlSecurity urlPath) {
         if(urlPath != null) {
-            final WebPortalUrlPath path = this.urlPathDao
+            final UrlSecurity path = this.urlSecurityDao
                     .getPathByUrlAndMethod(urlPath.getUrl(), urlPath.getRequestMethod());
             if(path == null) {
-                this.urlPathDao.persist(new WebPortalUrlPathDecorator(urlPath));
+                this.urlSecurityDao.persist(new UrlSecurityDecorator(urlPath));
             } else {
                 if(path.getDescription().equals(urlPath.getDescription()) ||
                         path.getAccesses().containsAll(urlPath.getAccesses())) {
@@ -71,42 +71,42 @@ public class UrlPathServiceImpl implements UrlPathService {
 
     @Override
     public void clear() {
-        this.urlPathDao.clear();
+        this.urlSecurityDao.clear();
     }
 
     @Override
-    public void removeAll(Collection<WebPortalUrlPath> values) {
+    public void removeAll(Collection<UrlSecurity> values) {
         if(values.size() > 0)
-            this.urlPathDao.removeAll(values);
+            this.urlSecurityDao.removeAll(values);
     }
 
     @Override
-    public List<WebPortalUrlPath> getAll() {
-        return urlPathDao.findAll();
+    public List<UrlSecurity> getAll() {
+        return urlSecurityDao.findAll();
     }
 
     @Override
-    public WebPortalUrlPath getById(Integer id) {
-        return this.urlPathDao.findByID(id);
+    public UrlSecurity getById(Integer id) {
+        return this.urlSecurityDao.findByID(id);
     }
 
     @Override
-    public void add(WebPortalUrlPath entity) {
-        this.urlPathDao.persist(new WebPortalUrlPathDecorator(entity));
+    public void add(UrlSecurity entity) {
+        this.urlSecurityDao.persist(new UrlSecurityDecorator(entity));
     }
 
     @Override
-    public void delete(WebPortalUrlPath entity) {
+    public void delete(UrlSecurity entity) {
 
     }
 
     @Override
-    public void update(WebPortalUrlPath entity) {
-        this.urlPathDao.update(entity);
+    public void update(UrlSecurity entity) {
+        this.urlSecurityDao.update(entity);
     }
 
     @Override
-    public void update(List<WebPortalUrlPath> entity) {
+    public void update(List<UrlSecurity> entity) {
 
     }
 }

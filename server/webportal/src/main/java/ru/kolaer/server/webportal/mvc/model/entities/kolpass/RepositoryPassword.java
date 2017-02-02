@@ -31,7 +31,7 @@ public class RepositoryPassword implements Serializable {
     private String name;
 
     @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "id_employee", nullable = false)
+    @JoinColumn(name = "id_employee")
     private EmployeeEntity employee;
 
     @OneToOne(cascade = CascadeType.ALL)

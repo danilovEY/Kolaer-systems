@@ -9,7 +9,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import ru.kolaer.server.webportal.mvc.model.dao.impl.DataBaseInitialization;
-import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
 
 /**
  * Created by danilovey on 12.09.2016.

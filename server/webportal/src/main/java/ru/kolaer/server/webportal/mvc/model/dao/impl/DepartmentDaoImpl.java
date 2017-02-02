@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
-import ru.kolaer.server.webportal.mvc.model.dao.DepartamentDao;
+import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * Created by danilovey on 12.09.2016.
  */
 @Repository
-public class DepartamentDaoImpl implements DepartamentDao {
+public class DepartmentDaoImpl implements DepartmentDao {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -62,7 +62,7 @@ public class DepartamentDaoImpl implements DepartamentDao {
     @Transactional(readOnly = true)
     public DepartmentEntity findByName(String name) {
         return (DepartmentEntity) this.sessionFactory.getCurrentSession()
-                .createQuery("FROM GeneralDepartamentEntityDecorator dep WHERE dep.name = :name")
+                .createQuery("FROM DepartmentEntityDecorator dep WHERE dep.name = :name")
                 .setParameter("name", name).uniqueResult();
     }
 }

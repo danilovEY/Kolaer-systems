@@ -18,7 +18,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.ViolationReport;
 import ru.kolaer.server.webportal.errors.BadRequestException;
@@ -42,7 +42,7 @@ public class ViolationController extends BaseController {
     private static final String COURATOR_VIOLATION = "Куратор нарушений";
 
     @Autowired
-    private DepartamentService departamentService;
+    private DepartmentService departmentService;
 
     @Autowired
     private ViolationService violationService;
@@ -57,7 +57,7 @@ public class ViolationController extends BaseController {
     private ServiceLDAP serviceLDAP;
 
     @Autowired
-    private UrlPathService urlPathService;
+    private UrlSecurityService urlSecurityService;
 
     @Autowired
     private EmployeeService employeeService;
@@ -121,8 +121,8 @@ public class ViolationController extends BaseController {
         final List<String> userRoles = account.getRoles().stream()
                 .map(RoleEntity::getType).collect(Collectors.toList());
 
-        final WebPortalUrlPath pathByUrlGetAll = urlPathService.getPathByUrl("/violations/journal/get/all");
-        final WebPortalUrlPath pathByUrlAddJournal = urlPathService.getPathByUrl("/violations/journal/add");
+        final UrlSecurity pathByUrlGetAll = urlSecurityService.getPathByUrl("/violations/journal/get/all");
+        final UrlSecurity pathByUrlAddJournal = urlSecurityService.getPathByUrl("/violations/journal/add");
         final boolean gettingAll = pathByUrlGetAll.getAccesses().contains("ALL") || pathByUrlGetAll.getAccesses().stream()
                 .anyMatch(userRoles::contains);
 
@@ -211,7 +211,7 @@ public class ViolationController extends BaseController {
         if(journalViolation.getDepartament() == null) {
             journalViolation.setDepartament(accountByAuthentication.getEmployeeEntity().getDepartment());
         } else {
-            journalViolation.setDepartament(departamentService.getById(journalViolation.getDepartament().getId()));
+            journalViolation.setDepartament(departmentService.getById(journalViolation.getDepartament().getId()));
         }
 
         this.journalViolationService.add(journalViolation);
@@ -227,7 +227,7 @@ public class ViolationController extends BaseController {
     public JournalViolation updateJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody JournalViolation violation) {
         JournalViolation journalViolation = this.journalViolationService.getById(violation.getId());
         if(violation.getDepartament() != null) {
-            journalViolation.setDepartament(departamentService.getById(violation.getDepartament().getId()));
+            journalViolation.setDepartament(departmentService.getById(violation.getDepartament().getId()));
         }
 
         if(violation.getName() != null) {

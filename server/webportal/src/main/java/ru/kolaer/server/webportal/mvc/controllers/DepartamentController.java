@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.servirces.DepartamentService;
+import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 
 import java.util.List;
 
@@ -18,17 +18,17 @@ import java.util.List;
  */
 @Api(tags = "Подразделения")
 @RestController
-@RequestMapping(value = "/general/departament")
+@RequestMapping(value = "/departament")
 public class DepartamentController extends BaseController {
 
     @Autowired
-    private DepartamentService departamentService;
+    private DepartmentService departmentService;
 
     @ApiOperation(value = "Получить все подразделеия")
     @UrlDeclaration(description = "Получить все подразделения", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<DepartmentEntity> getAllDepartament() {
-        return this.departamentService.getAll();
+        return this.departmentService.getAll();
     }
 
 

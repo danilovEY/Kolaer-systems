@@ -23,7 +23,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStateDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
-import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
+import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,7 +50,7 @@ public class PsrRegisterController extends BaseController {
     private ServiceLDAP serviceLDAP;
 
     @Autowired
-    private UrlPathService pathService;
+    private UrlSecurityService pathService;
 
     @ApiOperation(
             value = "Получить доступы.",

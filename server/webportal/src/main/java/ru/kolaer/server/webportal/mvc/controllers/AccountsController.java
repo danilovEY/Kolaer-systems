@@ -17,7 +17,7 @@ import java.util.List;
  * Рест контроллер для работы с аккаунтами.
  */
 //@RestController
-@RequestMapping("/general/accounts")
+@RequestMapping("/accounts")
 @Deprecated
 public class AccountsController {
     private static final Logger LOG = LoggerFactory.getLogger(AccountsController.class);

@@ -6,8 +6,8 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.WebPortalUrlPath;
-import ru.kolaer.server.webportal.mvc.model.servirces.UrlPathService;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
+import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMetadataSource {
     private static final Logger logger = LoggerFactory.getLogger(SecurityMetadataSourceFilter.class);
 
-    private UrlPathService urlPathService;
+    private UrlSecurityService urlSecurityService;
 
-    public SecurityMetadataSourceFilter(UrlPathService urlPathService) {
-        this.urlPathService = urlPathService;
+    public SecurityMetadataSourceFilter(UrlSecurityService urlSecurityService) {
+        this.urlSecurityService = urlSecurityService;
     }
 
     public Collection<ConfigAttribute> getAttributes(Object object)
@@ -30,7 +30,7 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
         FilterInvocation fi=(FilterInvocation)object;
         String url=fi.getRequestUrl();
 
-        final WebPortalUrlPath urlPth = urlPathService.getPathByUrl(url);
+        final UrlSecurity urlPth = urlSecurityService.getPathByUrl(url);
         if(urlPth != null) {
             return this.getRoles(urlPth);
         }
@@ -38,8 +38,8 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
         return SecurityConfig.createList();
     }
 
-    private Collection<ConfigAttribute> getRoles(WebPortalUrlPath urlPath) {
-        return this.urlPathService.getRoles(urlPath).stream()
+    private Collection<ConfigAttribute> getRoles(UrlSecurity urlPath) {
+        return this.urlSecurityService.getRoles(urlPath).stream()
                 .map(role -> new SecurityConfig(role.getType()))
                 .collect(Collectors.toList());
     }

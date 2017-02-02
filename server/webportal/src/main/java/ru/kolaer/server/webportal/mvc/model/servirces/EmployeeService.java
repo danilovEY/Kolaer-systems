@@ -14,7 +14,7 @@ public interface EmployeeService extends ServiceBase<EmployeeEntity> {
     List<EmployeeEntity> getUsersByBirthday(Date date);
     List<EmployeeEntity> getUserBirthdayToday();
     List<EmployeeEntity> getUsersByInitials(String initials);
-    List<EmployeeEntity> getUsersByDepartamentId(Integer id);
-    Page<EmployeeEntity> getUsersByDepartamentId(int page, int pageSize, Integer id);
+    List<EmployeeEntity> getUsersByDepartmentId(Integer id);
+    Page<EmployeeEntity> getUsersByDepartmentId(int page, int pageSize, Integer id);
     int getCountUserBirthday(Date date);
 }

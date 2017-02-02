@@ -101,11 +101,11 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
     @Transactional(readOnly = true)
     public Page<RepositoryPassword> findAllByPnumber(Integer pnumber, Integer number, Integer pageSize) {
         final Long count = (Long) this.sessionFactory.getCurrentSession()
-                .createQuery("SELECT COUNT(r.id) FROM RepositoryPassword r WHERE r.employee.pnumber = :pnumber")
+                .createQuery("SELECT COUNT(r.id) FROM RepositoryPassword r WHERE r.employee.personnelNumber = :pnumber")
                 .setParameter("pnumber", pnumber).uniqueResult();
 
         List<RepositoryPassword> repositories = this.sessionFactory.getCurrentSession()
-                .createQuery("FROM RepositoryPassword r WHERE r.employee.pnumber = :pnumber")
+                .createQuery("FROM RepositoryPassword r WHERE r.employee.personnelNumber = :pnumber")
                 .setParameter("pnumber", pnumber)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
@@ -116,7 +116,7 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
     @Transactional(readOnly = true)
     public RepositoryPassword findByNameAndPnumber(String name, Integer pnumber) {
         return (RepositoryPassword) this.sessionFactory.getCurrentSession()
-                .createQuery("FROM RepositoryPassword r WHERE r.employee.pnumber = :pnumber AND r.name = :name")
+                .createQuery("FROM RepositoryPassword r WHERE r.employee.personnelNumber = :pnumber AND r.name = :name")
                 .setParameter("pnumber", pnumber)
                 .setParameter("name", name)
                 .uniqueResult();

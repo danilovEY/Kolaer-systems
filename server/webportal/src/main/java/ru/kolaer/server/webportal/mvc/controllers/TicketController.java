@@ -192,7 +192,7 @@ public class TicketController extends BaseController {
     public TicketRegister addTicketRegister() {
         TicketRegister ticketRegister = new TicketRegister();
         ticketRegister.setCreateRegister(new Date());
-        ticketRegister.setDepartament(this.serviceLDAP.getAccountByAuthentication()
+        ticketRegister.setDepartment(this.serviceLDAP.getAccountByAuthentication()
                 .getEmployeeEntity().getDepartment());
 
         this.ticketRegisterService.add(ticketRegister);

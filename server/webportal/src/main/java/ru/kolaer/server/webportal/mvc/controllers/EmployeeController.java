@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
@@ -25,7 +24,7 @@ import java.util.List;
  * Рест контроллер для работы с сотрудниками.
  */
 @RestController
-@RequestMapping(value = "/general/employees")
+@RequestMapping(value = "/employees")
 @Api(tags = "Сотрудники КолАЭР", description = "Сотрудники из организации КолАЭР.")
 public class EmployeeController extends BaseController {
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeController.class);
@@ -55,7 +54,7 @@ public class EmployeeController extends BaseController {
             @ApiParam("Подразделение") @RequestParam(value = "id") Integer id,
             @RequestParam(value = "page", defaultValue = "0") Integer number,
             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-        return this.employeeService.getUsersByDepartamentId(number, pageSize, id);
+        return this.employeeService.getUsersByDepartmentId(number, pageSize, id);
     }
 
 

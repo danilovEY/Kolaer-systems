@@ -69,7 +69,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Transactional(readOnly = true)
     public List<EmployeeEntity> findAll() {
         final List<EmployeeEntity> result = sessionFactory.getCurrentSession()
-                .createQuery("FROM GeneralEmployeesEntityDecorator emp ORDER BY emp.initials")
+                .createQuery("FROM EmployeeEntityDecorator emp ORDER BY emp.initials")
                 .list();
         return result;
     }
@@ -78,7 +78,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Transactional(readOnly = true)
     public EmployeeEntity findByID(@NonNull Integer id) {
         final EmployeeEntity result = (EmployeeEntity) this.sessionFactory.getCurrentSession()
-                .createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.pnumber = :id ORDER BY emp.initials")
+                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.personnelNumber = :id ORDER BY emp.initials")
                 .setParameter("id", id)
                 .uniqueResult();
         return result;
@@ -114,32 +114,31 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     @Transactional(readOnly = true)
-    @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     public List<EmployeeEntity> findEmployeeByInitials(@NonNull String initials) {
         final List<EmployeeEntity> result = this.sessionFactory.getCurrentSession()
-                .createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.initials LIKE :initials ORDER BY emp.initials")
+                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.initials LIKE :initials ORDER BY emp.initials")
                 .setParameter("initials", "%" + initials + "%")
                 .list();
         return result;
     }
 
     @Transactional(readOnly = true)
-    public List<EmployeeEntity> findByDepartamentById(@NonNull Integer id) {
+    public List<EmployeeEntity> findByDepartmentById(@NonNull Integer id) {
         final List<EmployeeEntity> result = this.sessionFactory.getCurrentSession()
-                .createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.departament.id = :id ORDER BY emp.initials")
+                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.departament.id = :id ORDER BY emp.initials")
                 .setParameter("id", id).list();
         return result;
     }
 
     @Transactional(readOnly = true)
-    public Page<EmployeeEntity> findByDepartamentById(int page, int pageSize, @NonNull Integer id) {
+    public Page<EmployeeEntity> findByDepartmentById(int page, int pageSize, @NonNull Integer id) {
         Session currentSession = this.sessionFactory.getCurrentSession();
-        final Long count = (Long) currentSession.createQuery("SELECT COUNT(emp.pnumber) FROM GeneralEmployeesEntityDecorator emp WHERE emp.departament.id = :id")
+        final Long count = (Long) currentSession.createQuery("SELECT COUNT(emp.personnelNumber) FROM EmployeeEntityDecorator emp WHERE emp.departament.id = :id")
                 .setParameter("id", id)
                 .uniqueResult();
 
         final List<EmployeeEntity> result = this.sessionFactory.getCurrentSession()
-                .createQuery("FROM GeneralEmployeesEntityDecorator emp WHERE emp.departament.id = :id ORDER BY emp.initials")
+                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.departament.id = :id ORDER BY emp.initials")
                 .setParameter("id", id)
                 .setFirstResult((page - 1) * pageSize)
                 .setMaxResults(pageSize)
@@ -152,7 +151,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Transactional(readOnly = true)
     public List<EmployeeEntity> getUserRangeBirthday(@NonNull final Date startDate, @NonNull final Date endDate) {
         final List<EmployeeEntity> result = sessionFactory.getCurrentSession()
-                .createQuery("FROM GeneralEmployeesEntityDecorator t where t.birthday BETWEEN :startDate AND :endDate ORDER BY t.initials")
+                .createQuery("FROM EmployeeEntityDecorator t where t.birthday BETWEEN :startDate AND :endDate ORDER BY t.initials")
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .list();
@@ -163,7 +162,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Transactional(readOnly = true)
     public List<EmployeeEntity> getUsersByBirthday(@NonNull final Date date) {
         final List<EmployeeEntity> result = sessionFactory.getCurrentSession()
-                .createQuery("FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) ORDER BY t.initials")
+                .createQuery("FROM EmployeeEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) ORDER BY t.initials")
                 .setParameter("date", date)
                 .list();
         return result;
@@ -173,7 +172,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Transactional(readOnly = true)
     public List<EmployeeEntity> getUserBirthdayToday() {
         final List<EmployeeEntity> result = sessionFactory.getCurrentSession()
-                .createQuery("FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) ORDER BY t.initials")
+                .createQuery("FROM EmployeeEntityDecorator t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) ORDER BY t.initials")
                 .list();
         return result;
     }
@@ -182,7 +181,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Transactional(readOnly = true)
     public int getCountUserBirthday(@NonNull final Date date) {
         final Long result = (Long) sessionFactory.getCurrentSession()
-                .createQuery("SELECT count(t.pnumber) FROM GeneralEmployeesEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+                .createQuery("SELECT count(t.personnelNumber) FROM EmployeeEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
                 .setParameter("date", date)
                 .uniqueResult();
         return result.intValue();
@@ -191,7 +190,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeEntity> getUsersByInitials(@NonNull final String initials) {
-        final List<EmployeeEntity> result = sessionFactory.getCurrentSession().createQuery("FROM GeneralEmployeesEntityDecorator AS t JOIN FETCH t.departament where t.initials like :initials ORDER BY t.initials")
+        final List<EmployeeEntity> result = sessionFactory.getCurrentSession().createQuery("FROM EmployeeEntityDecorator t where t.initials like :initials ORDER BY t.initials")
                 .setParameter("initials", "%" + initials + "%")
                 .list();
         return result;
@@ -439,8 +438,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 );
 
                 if(removeEmployees.size() > 0) {
-                    currentSession.createQuery("DELETE FROM EmployeeEntityDecorator e WHERE e.personnelNumber IN (:pnumbers)")
-                            .setParameterList("pnumbers", removeEmployees)
+                    currentSession.createQuery("DELETE FROM EmployeeEntityDecorator e WHERE e.personnelNumber IN (:personnelNumbers)")
+                            .setParameterList("personnelNumbers", removeEmployees)
                             .executeUpdate();
 
                     currentSession.flush();

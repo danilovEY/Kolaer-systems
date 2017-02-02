@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * Created by danilovey on 29.07.2016.
  */
-@JsonDeserialize(as = WebPortalUrlPathBase.class)
-public interface WebPortalUrlPath extends Serializable {
+@JsonDeserialize(as = UrlSecurityBase.class)
+public interface UrlSecurity extends Serializable {
      int getId();
      void setId(int id);
 

@@ -182,7 +182,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
     	});
 	    
 	    final TableColumn<UserModel, String> userDepartamentColumn = new TableColumn<>("Цех/Отдел");
-	    userDepartamentColumn.setCellValueFactory(new PropertyValueFactory<>("departament"));
+	    userDepartamentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
 	    
 	    userInitialsColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");
 	    userPostColumn.setStyle( "-fx-alignment: CENTER; -fx-font-size: 11pt;");

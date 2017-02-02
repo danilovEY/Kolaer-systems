@@ -6,7 +6,7 @@ import java.util.List;
  * Created by danilovey on 28.07.2016.
  * Структура URl из БД.
  */
-public class WebPortalUrlPathBase implements WebPortalUrlPath {
+public class UrlSecurityBase implements UrlSecurity {
     private int id;
     private String url;
     private String description;
@@ -61,7 +61,7 @@ public class WebPortalUrlPathBase implements WebPortalUrlPath {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        WebPortalUrlPathBase that = (WebPortalUrlPathBase) o;
+        UrlSecurityBase that = (UrlSecurityBase) o;
 
         if (id != that.id) return false;
         if (url != null ? !url.equals(that.url) : that.url != null) return false;

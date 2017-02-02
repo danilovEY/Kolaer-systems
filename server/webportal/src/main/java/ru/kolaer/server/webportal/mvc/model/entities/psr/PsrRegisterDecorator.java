@@ -2,6 +2,8 @@ package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
@@ -43,7 +45,7 @@ public class PsrRegisterDecorator implements PsrRegister {
     }
 
 
-    @OneToOne(targetEntity = PsrStatusDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = PsrStatusDecorator.class, optional = false, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_status")
     public PsrStatus getStatus() {
         return this.psrRegister.getStatus();
@@ -53,8 +55,9 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setStatus(status);
     }
 
-    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, optional = false, cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_author")
+    @NotFound(action = NotFoundAction.IGNORE)
     public EmployeeEntity getAuthor() {
         return this.psrRegister.getAuthor();
     }
@@ -63,8 +66,7 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setAuthor(author);
     }
 
-    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "id_project_admin")
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, optional = false, cascade = CascadeType.MERGE)
     public EmployeeEntity getAdmin() {
         return this.psrRegister.getAdmin();
     }
@@ -126,7 +128,7 @@ public class PsrRegisterDecorator implements PsrRegister {
     }
 
 
-    @OneToMany(targetEntity = PsrAttachmentDecorator.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = PsrAttachmentDecorator.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_psr_project")
     @Fetch(FetchMode.SELECT)
     public List<PsrAttachment> getAttachments() {

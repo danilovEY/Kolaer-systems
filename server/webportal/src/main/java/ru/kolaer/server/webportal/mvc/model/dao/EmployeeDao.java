@@ -12,7 +12,7 @@ import java.util.List;
 public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<EmployeeEntity>, UpdateEmployeesDao {
     List<EmployeeEntity> findEmployeeByInitials(String initials);
 
-    List<EmployeeEntity> findByDepartamentById(Integer id);
+    List<EmployeeEntity> findByDepartmentById(Integer id);
 
-    Page<EmployeeEntity> findByDepartamentById(int page, int pageSize, Integer id);
+    Page<EmployeeEntity> findByDepartmentById(int page, int pageSize, Integer id);
 }
