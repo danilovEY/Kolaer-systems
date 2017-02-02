@@ -14,6 +14,9 @@ import java.util.Date;
 @ApiModel(value = "(Сотрудник) Сотрудник КолАЭР", description = "Сотрудник КолАЭР")
 public interface EmployeeEntity extends Serializable {
 
+     Integer getId();
+     void setId(Integer id);
+
      @ApiModelProperty(value = "Табельный номер")
      Integer getPersonnelNumber();
      void setPersonnelNumber(Integer personnelNumber);

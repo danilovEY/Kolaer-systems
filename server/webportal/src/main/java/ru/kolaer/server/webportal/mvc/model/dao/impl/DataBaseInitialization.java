@@ -12,31 +12,17 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
-import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.server.webportal.beans.TypeServer;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
-import ru.kolaer.server.webportal.mvc.model.entities.bank.BankAccount;
-import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
+import ru.kolaer.server.webportal.mvc.model.dto.BankAccount;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
-import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 03.08.2016.
@@ -98,7 +84,7 @@ public class DataBaseInitialization {
 
     public void initDB() {
         //==============PSR=====================
-        Session currentSession = this.sessionFactory.getCurrentSession();
+        Session currentSession = this.sessionFactory.openSession();
         Transaction transaction = currentSession.getTransaction();
         try {
             transaction.begin();
@@ -135,5 +121,6 @@ public class DataBaseInitialization {
             log.error("Невозжномно инициализировать БД!", ex);
             transaction.rollback();
         }
+        currentSession.close();
     }
 }

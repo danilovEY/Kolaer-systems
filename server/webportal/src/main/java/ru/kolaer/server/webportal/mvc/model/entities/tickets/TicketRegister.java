@@ -21,16 +21,14 @@ import java.util.List;
 public class TicketRegister implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ticket_register.seq")
     private Integer id;
 
     @Column(name = "close")
     private boolean close;
 
     @ApiModelProperty(value = "Список талонов")
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "ticket_register_department", joinColumns = {@JoinColumn(name = "id_register")},
-            inverseJoinColumns = { @JoinColumn(name = "id_ticket")})
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "ticketRegister")
     private List<Ticket> tickets;
 
     @ApiModelProperty(value = "Подразделение")

@@ -24,7 +24,7 @@ public class RepositoryPasswordHistory implements Serializable {
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "repository_pass_history.seq")
     private Long id;
 
     @Column(name = "password", length = 32, nullable = false)

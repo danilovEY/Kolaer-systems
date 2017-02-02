@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.mvc.model.entities.birthday;
+package ru.kolaer.server.webportal.mvc.model.dto;
 
 
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;

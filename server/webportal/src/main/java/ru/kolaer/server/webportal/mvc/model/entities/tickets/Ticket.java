@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.tickets;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
@@ -14,10 +15,11 @@ import java.io.Serializable;
 @Entity
 @Table(name = "tickets")
 @ApiModel(value = "(Талоны) Талон ЛПП")
+@Data
 public class Ticket implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tickets.seq")
     private Integer id;
 
     @ApiModelProperty(value = "Сотрудник")
@@ -28,27 +30,6 @@ public class Ticket implements Serializable {
     @ApiModelProperty(value = "Колличество талонов")
     private Integer count;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public EmployeeEntity getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(EmployeeEntity employee) {
-        this.employee = employee;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    private TicketRegister ticketRegister;
 }

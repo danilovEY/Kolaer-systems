@@ -26,7 +26,7 @@ public class RepositoryPassword implements Serializable {
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "repository_pass.seq")
     private Integer id;
 
     @Column(name = "name", nullable = false)

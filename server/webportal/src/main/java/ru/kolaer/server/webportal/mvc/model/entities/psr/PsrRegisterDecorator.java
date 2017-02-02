@@ -35,7 +35,7 @@ public class PsrRegisterDecorator implements PsrRegister {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "psr_register.seq")
     public Integer getId() {
         return this.psrRegister.getId();
     }

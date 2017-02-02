@@ -25,7 +25,7 @@ public class PsrStatusDecorator implements PsrStatus {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "psr_status.seq")
     public Integer getId() {
         return this.psrProjectStatus.getId();
     }

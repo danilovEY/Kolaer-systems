@@ -21,7 +21,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_other_organization.seq")
 	@Column(name = "id")
 	public short getId() {
 		return this.employeeOtherOrganization.getId();

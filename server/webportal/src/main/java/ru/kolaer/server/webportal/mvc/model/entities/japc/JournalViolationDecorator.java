@@ -29,7 +29,7 @@ public class JournalViolationDecorator implements JournalViolation {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "violation_journal.seq")
     public Integer getId() {
         return journalViolation.getId();
     }

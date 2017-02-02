@@ -21,7 +21,7 @@ public class PassportEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "passports.seq")
     private Integer id;
 
     @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.LAZY)

@@ -7,6 +7,7 @@ import java.util.Date;
  * Структура сотрудника в БД.
  */
 public class EmployeeEntityBase implements EmployeeEntity {
+    private Integer id;
     private Integer pnumber;
     private String initials;
     private String mobileNumber;
@@ -19,6 +20,16 @@ public class EmployeeEntityBase implements EmployeeEntity {
     private Date dismissalDate;
     private String email;
     private String photo;
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getPersonnelNumber() {
         return pnumber;

@@ -27,7 +27,18 @@ public class EmployeeEntityDecorator implements EmployeeEntity {
         this.employeeEntity = employeeEntity;
     }
 
+
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employees.seq")
+    public Integer getId() {
+        return this.employeeEntity.getId();
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.employeeEntity.setId(id);
+    }
+
     @Column(name = "personnel_number", length = 8)
     public Integer getPersonnelNumber() {
         return this.employeeEntity.getPersonnelNumber();
