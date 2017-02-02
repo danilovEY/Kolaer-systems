@@ -40,10 +40,9 @@ public class UserController extends BaseController {
     private ServiceLDAP serviceLDAP;
 
     @ApiOperation(
-            value = "Получить авторизированный аккаунт",
-            notes = "Получить авторизированный аккаунт"
+            value = "Получить авторизированный аккаунт"
     )
-    @UrlDeclaration(description = "Получить авторизированный аккаунт.", isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Получить авторизированный аккаунт", isAccessUser = true)
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public AccountEntity getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,10 +52,9 @@ public class UserController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить роли авторизированного аккаунта",
-            notes = "Получить роли авторизированного аккаунта"
+            value = "Получить роли авторизированного аккаунта"
     )
-    @UrlDeclaration(description = "Получить роли авторизированного аккаунта.", isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Получить роли авторизированного аккаунта", isAccessUser = true)
     @RequestMapping(value = "/roles/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<RoleEntity> getUserRoles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -101,10 +99,9 @@ public class UserController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить фото аккаунта",
-            notes = "Получить фото аккаунта"
+            value = "Получить фото аккаунта"
     )
-    @UrlDeclaration(description = "Получить фото аккаунта.", isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Получить фото аккаунта", isAccessUser = true)
     @RequestMapping(value = "/photo/get", method = RequestMethod.GET)
     public void showImage(HttpServletResponse response) throws Exception {
         final byte[] imgByte = this.getImageByte();
@@ -120,10 +117,9 @@ public class UserController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить массив байт фото аккаунта",
-            notes = "Получить массив байт фото аккаунта"
+            value = "Получить массив байт фото аккаунта"
     )
-    @UrlDeclaration(description = "Получить массив байт фото аккаунта.", isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Получить массив байт фото аккаунта", isAccessUser = true)
     @RequestMapping(value = "/photo/get/byte", method = RequestMethod.GET)
     public String getByteImage() throws Exception {
         final byte[] imgByte = this.getImageByte();

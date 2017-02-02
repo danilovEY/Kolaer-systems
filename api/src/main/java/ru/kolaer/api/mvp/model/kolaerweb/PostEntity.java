@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by danilovey on 24.01.2017.
  */
 @JsonDeserialize(as = PostEntityBase.class)
-@ApiModel("Должность")
+@ApiModel(value = "(Сотрудник) Должность")
 public interface PostEntity extends Serializable {
     Integer getId();
     void setId(Integer id);

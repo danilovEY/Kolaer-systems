@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.entities.dto.ResultUpdateEmployeesDto;
+import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 

@@ -25,8 +25,7 @@ public class CounterControllers extends BaseController {
     private CounterService counterService;
 
     @ApiOperation(
-            value = "Получить все счетчики",
-            notes = "Получить все счетчики"
+            value = "Получить все счетчики"
     )
     @UrlDeclaration(description = "Получить все счетчики", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

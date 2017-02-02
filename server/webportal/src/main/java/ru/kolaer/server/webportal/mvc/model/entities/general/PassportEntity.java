@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Table(name = "passports")
 @Data
 @EqualsAndHashCode
-@ApiModel("Паспорт")
+@ApiModel("(Сотрудник) Паспорт")
 public class PassportEntity implements Serializable {
 
     @Id

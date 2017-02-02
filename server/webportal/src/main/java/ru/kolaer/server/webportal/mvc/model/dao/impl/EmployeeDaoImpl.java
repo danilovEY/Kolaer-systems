@@ -2,10 +2,6 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.formula.functions.T;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -13,8 +9,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.dialect.Dialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,20 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
-import ru.kolaer.server.webportal.mvc.model.entities.dto.ResultUpdateEmployeesDto;
+import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PassportEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntityDecorator;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -372,9 +362,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 }
 
                 resultUpdateEmployeesDto.setDeletePostCount(postEntitiesFromDb.size());
-                resultUpdateEmployeesDto.setAddPostCount(resultUpdateEmployeesDto.getAllPostSize()
-                        - resultUpdateEmployeesDto.getDeletePostCount()
-                );
 
                 List<Integer> postIds = postEntitiesFromDb.stream().map(PostEntity::getId)
                         .collect(Collectors.toList());
@@ -405,10 +392,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 }
 
                 resultUpdateEmployeesDto.setDeleteDepCount(depListFromDb.size());
-                resultUpdateEmployeesDto.setAddDepCount(
-                        resultUpdateEmployeesDto.getAllDepSize()
-                        - resultUpdateEmployeesDto.getDeleteDepCount()
-                );
 
                 postIds = depListFromDb.stream().map(DepartmentEntity::getId)
                         .collect(Collectors.toList());
@@ -432,10 +415,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
                         .collect(Collectors.toList());
 
                 resultUpdateEmployeesDto.setDeleteEmployeeCount(removeEmployees.size());
-                resultUpdateEmployeesDto.setAddEmployeeCount(
-                        resultUpdateEmployeesDto.getAllEmployeeSize()
-                        - resultUpdateEmployeesDto.getDeleteEmployeeCount()
-                );
 
                 if(removeEmployees.size() > 0) {
                     currentSession.createQuery("DELETE FROM EmployeeEntityDecorator e WHERE e.personnelNumber IN (:personnelNumbers)")
@@ -447,11 +426,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 }
 
                 final int defaultBachSize = Integer.valueOf(Dialect.DEFAULT_BATCH_SIZE);
-
+                int countToAdd = 0;
                 int i = 0;
                 for (DepartmentEntity departmentEntity : departmentEntityMap.values()) {
                     currentSession.saveOrUpdate(departmentEntity);
-
+                    countToAdd++;
                     if(++i % defaultBachSize == 0) {
                         i = 0;
                         currentSession.flush();
@@ -459,6 +438,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
                     }
                 }
 
+                resultUpdateEmployeesDto.setAddDepCount(countToAdd);
+                countToAdd = 0;
                 if(i != 0) {
                     i = 0;
                     currentSession.flush();
@@ -474,6 +455,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
                     }
                 }
 
+                resultUpdateEmployeesDto.setAddPostCount(countToAdd);
+                countToAdd = 0;
                 if(i != 0) {
                     i = 0;
                     currentSession.flush();
@@ -499,13 +482,15 @@ public class EmployeeDaoImpl implements EmployeeDao {
                     }
 
                     currentSession.saveOrUpdate(newEmployee);
-
+                    countToAdd++;
                     if(++i % defaultBachSize == 0) {
                         i = 0;
                         currentSession.flush();
                         currentSession.clear();
                     }
                 }
+
+                resultUpdateEmployeesDto.setAddPostCount(countToAdd);
 
                 if(i != 0) {
                     i = 0;

@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.mvc.model.entities.dto;
+package ru.kolaer.server.webportal.mvc.model.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

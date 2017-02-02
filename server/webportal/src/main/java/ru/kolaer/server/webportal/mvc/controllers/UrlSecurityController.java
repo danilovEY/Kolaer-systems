@@ -19,29 +19,27 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @Api(tags = "URL пути", description = "Описание URL: путь и доступы.")
-public class UrlPathController extends BaseController {
+public class UrlSecurityController extends BaseController {
 
     @Autowired
     private UrlSecurityService urlSecurityService;
 
     @ApiOperation(
-            value = "Получить все URL",
-            notes = "Получить все URL"
+            value = "Получить все URL"
     )
-    @UrlDeclaration(description = "Получить все URL.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить все URL")
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<UrlSecurity> getAllUrl() {
         return urlSecurityService.getAll();
     }
 
     @ApiOperation(
-            value = "Получить роли по url",
-            notes = "Получить роли по url"
+            value = "Получить роли по URL"
     )
-    @UrlDeclaration(description = "Получить роли по url.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить роли по URL")
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public UrlSecurity getRoleByUrl(
-            @ApiParam(value = "путь от корня", required = true) @RequestParam(value = "path") String path) {
+            @ApiParam(value = "Путь от корня", required = true) @RequestParam(value = "path") String path) {
         if(path == null || path.isEmpty())
             throw new IllegalArgumentException("Path is null!");
 

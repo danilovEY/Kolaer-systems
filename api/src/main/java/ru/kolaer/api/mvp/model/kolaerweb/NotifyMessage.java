@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by danilovey on 18.08.2016.
  */
 @JsonDeserialize(as = NotifyMessageBase.class)
-@ApiModel(value = "Нотификация")
+@ApiModel("(Общее) Нотификатор сообщения")
 public interface NotifyMessage extends Serializable {
     Integer getId();
     void setId(Integer id);

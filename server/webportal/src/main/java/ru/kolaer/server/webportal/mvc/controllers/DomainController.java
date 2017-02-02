@@ -25,8 +25,7 @@ public class DomainController extends BaseController {
     private RoleLDAP roleLDAP;
 
     @ApiOperation(
-            value = "Получить все роли из DC",
-            notes = "Получить все роли из DC"
+            value = "Получить все роли из DC"
     )
     @UrlDeclaration(description = "Получить все роли из DC.")
     @RequestMapping(value = "/get/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

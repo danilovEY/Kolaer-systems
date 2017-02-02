@@ -27,8 +27,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/kolpass")
-@Api("Хранилища паролей (Kolpass)")
-public class KolpassContorller {
+@Api("Хранилища паролей (Парольница)")
+public class KolpassController {
 
     private static final String ADMIN = "OIT";
 

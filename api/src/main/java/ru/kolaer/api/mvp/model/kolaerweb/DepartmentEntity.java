@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by danilovey on 12.09.2016.
  */
 @JsonDeserialize(as = DepartmentEntityBase.class)
-@ApiModel(value = "Подразделение")
+@ApiModel(value = "(Сотрудник) Подразделение")
 public interface DepartmentEntity extends Serializable{
     Integer getId();
     void setId(Integer id);

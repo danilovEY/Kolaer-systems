@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.controllers.jsp;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
  */
 @Controller
 @RequestMapping("/api")
+@Api(value = "API", tags = "JSP")
 public class ApiMapController {
 
     @Autowired
@@ -21,6 +24,7 @@ public class ApiMapController {
 
     @UrlDeclaration(description = "Получить все ссылки.", isAccessAll = true)
     @RequestMapping(value = "/mapping", method = RequestMethod.GET)
+    @ApiOperation("Получить страницу")
     public ModelAndView getMapControllers() {
         final ModelAndView view = new ModelAndView("api-mapping");
         view.addObject("listApi", urlSecurityService.getAll());

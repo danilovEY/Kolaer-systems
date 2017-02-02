@@ -34,15 +34,12 @@ public class ExampleController extends BaseController {
     private ServiceLDAP serviceLDAP;
 
     @ApiOperation(
-            value = "Получить пример журнала нарушений",
-            notes = "Получить пример журнала нарушений"
+            value = "Получить пример журнала нарушений"
     )
     @UrlDeclaration(description = "Пример нарушений", isAccessUser = true)
     @RequestMapping(value = "/violations/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<JournalViolation> insertViolations() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null)
-            throw new IllegalArgumentException("Authentication is null");
 
         final EmployeeEntity employeeEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()).getEmployeeEntity();
 

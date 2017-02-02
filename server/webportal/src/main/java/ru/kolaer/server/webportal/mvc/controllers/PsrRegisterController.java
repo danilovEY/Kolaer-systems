@@ -16,8 +16,8 @@ import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrAccess;
-import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterAccess;
+import ru.kolaer.server.webportal.mvc.model.dto.PsrAccess;
+import ru.kolaer.server.webportal.mvc.model.dto.PsrRegisterAccess;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStateDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping(value = "/psr")
-@Api(description = "Работа с ПСР-проектами.", tags = "ПСР-проект")
+@Api(description = "Работа с ПСР-проектами", tags = "ПСР-проект")
 public class PsrRegisterController extends BaseController {
     private static final Logger LOG = LoggerFactory.getLogger(PsrRegisterController.class);
 
@@ -53,10 +53,9 @@ public class PsrRegisterController extends BaseController {
     private UrlSecurityService pathService;
 
     @ApiOperation(
-            value = "Получить доступы.",
-            notes = "Получить доступы."
+            value = "Получить доступы"
     )
-    @UrlDeclaration(description = "Получить доступы.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить доступы", isAccessAll = true)
     @RequestMapping(value = "/access", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrAccess getAllPsrAccess() {
         final PsrAccess psrAccess = new PsrAccess();
@@ -108,10 +107,9 @@ public class PsrRegisterController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Добавить состояние проекта.",
-            notes = "Добавить состояние для ПСР-проектов."
+            value = "Добавить состояние ПСР-проектов"
     )
-    @UrlDeclaration(description = "Добавить состояние проекта.", isAccessUser = true)
+    @UrlDeclaration(description = "Добавить состояние проекта", isAccessUser = true)
     @RequestMapping(value = "/add/states", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister addPsrState(@ApiParam(value = "ПСР-проект") @RequestBody PsrRegister psrRegister) {
         final PsrRegister updateRegister = this.psrRegisterService.getById(psrRegister.getId());
@@ -128,10 +126,9 @@ public class PsrRegisterController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Обновить состояние проекта.",
-            notes = "Обновить состояние для ПСР-проектов."
+            value = "Обновить состояние ПСР-проектов"
     )
-    @UrlDeclaration(description = "Обновить состояние проекта.", isAccessUser = true)
+    @UrlDeclaration(description = "Обновить состояние проекта", isAccessUser = true)
     @RequestMapping(value = "/update/states", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister updatePsrState(@ApiParam(value = "ПСР-проект") @RequestBody PsrRegister psrRegister) {
         final PsrRegister updateRegister = this.psrRegisterService.getById(psrRegister.getId());
@@ -149,10 +146,9 @@ public class PsrRegisterController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить все статусы.",
-            notes = "Получить все возможные статусы/положения для ПСР-проектов."
+            value = "Получить все статусы для ПСР-проектов"
     )
-    @UrlDeclaration(description = "Получить все статусы.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить все статусы", isAccessAll = true)
     @RequestMapping(value = "/status/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<PsrStatus> getAllPsrStatus() {
         List<PsrStatus> list = this.psrStatusService.getAll();
@@ -160,8 +156,7 @@ public class PsrRegisterController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Обновить статус у проекта.",
-            notes = "Обновить статус у ПСР-проекта."
+            value = "Обновить статус у ПСР-проекта"
     )
     @UrlDeclaration(description = "Обновить статус у проекта", isAccessUser = true)
     @RequestMapping(value = "/update/status", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -189,10 +184,9 @@ public class PsrRegisterController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить все ПСР-проекты.",
-            notes = "Получить все ПСР-проекты"
+            value = "Получить все ПСР-проекты"
     )
-    @UrlDeclaration(description = "Получить все ПСР-проекты.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить все ПСР-проекты", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PsrRegister> getAllRegister(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
@@ -200,10 +194,9 @@ public class PsrRegisterController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Добавить ПСР-проект.",
-            notes = "Добавить ПСР-проект."
+            value = "Добавить ПСР-проект"
     )
-    @UrlDeclaration(description = "Добавить ПСР-проект.", isAccessUser = true)
+    @UrlDeclaration(description = "Добавить ПСР-проект", isAccessUser = true)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister addPsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         PsrRegister registerDto = new PsrRegisterDecorator(register);
@@ -220,20 +213,18 @@ public class PsrRegisterController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Удалить ПСР-проект.",
-            notes = "Удалить ПСР-проект."
+            value = "Удалить ПСР-проект"
     )
-    @UrlDeclaration(description = "Удалить ПСР-проект.", isAccessUser = true)
+    @UrlDeclaration(description = "Удалить ПСР-проект", isAccessUser = true)
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void removePsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         this.psrRegisterService.deletePstRegister(register.getId());
     }
 
     @ApiOperation(
-            value = "Удалить ПСР-проекты (Список).",
-            notes = "Удалить ПСР-проекты."
+            value = "Удалить список ПСР-проектов"
     )
-    @UrlDeclaration(description = "Удалить ПСР-проекты.", isAccessUser = true)
+    @UrlDeclaration(description = "Удалить ПСР-проекты", isAccessUser = true)
     @RequestMapping(value = "/delete/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void removePsrRegisterList(
             @ApiParam(value = "ПСР-проекты", required = true) @RequestBody List<PsrRegister> registers) {
@@ -241,10 +232,9 @@ public class PsrRegisterController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Обновить ПСР-проект.",
-            notes = "Обновить ПСР-проект."
+            value = "Обновить ПСР-проект"
     )
-    @UrlDeclaration(description = "Обновить ПСР-проект.", isAccessUser = true)
+    @UrlDeclaration(description = "Обновить ПСР-проект", isAccessUser = true)
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister updatePsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
         final PsrRegister updatePsrRegister = this.psrRegisterService.getById(register.getId());
@@ -259,10 +249,10 @@ public class PsrRegisterController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить все ПСР-проект (id, name).",
-            notes = "Только id и имя."
+            value = "Получить все ПСР-проекты",
+            notes = "Только id и имя"
     )
-    @UrlDeclaration(description = "Получить все ПСР-проект. (только id и имя).", isAccessAll = true)
+    @UrlDeclaration(description = "Получить все ПСР-проект. (только id и имя)", isAccessAll = true)
     @RequestMapping(value = "/get/all/id-name", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<PsrRegister> getAllRegisterWithIdAndName() {
         List<PsrRegister> list = this.psrRegisterService.getIdAndNamePsrRegisters();

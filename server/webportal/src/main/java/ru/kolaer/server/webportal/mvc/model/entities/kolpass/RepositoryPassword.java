@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.kolpass;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +21,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@ApiModel("(Парольница) Репозиторий паролей")
 public class RepositoryPassword implements Serializable {
 
     @Id
@@ -28,25 +30,31 @@ public class RepositoryPassword implements Serializable {
     private Integer id;
 
     @Column(name = "name", nullable = false)
+    @ApiModelProperty("Наименование репозитория")
     private String name;
 
     @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_employee")
+    @ApiModelProperty("Сотрудник репозитория")
     private EmployeeEntity employee;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "last_pass_id")
+    @ApiModelProperty("Актуальный пароль")
     private RepositoryPasswordHistory lastPassword;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "first_pass_id")
+    @ApiModelProperty("Первый пароль")
     private RepositoryPasswordHistory firstPassword;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prev_pass_id")
+    @ApiModelProperty("Предыдущий пароль")
     private RepositoryPasswordHistory prevPassword;
 
     @OneToMany(mappedBy = "repositoryPassword", cascade = CascadeType.ALL)
+    @ApiModelProperty("История паролей")
     private List<RepositoryPasswordHistory> historyPasswords;
 
 }

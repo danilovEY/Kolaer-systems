@@ -32,12 +32,8 @@ public class EmployeeController extends BaseController {
     @Autowired
     private EmployeeService employeeService;
 
-    @Autowired
-    private DataBaseInitialization dataBaseInitialization;
-
     @ApiOperation(
-            value = "Получить всех сотрудников",
-            notes = "Получить всех сотрудников"
+            value = "Получить всех сотрудников"
     )
     @UrlDeclaration(description = "Получить всех сотрудников.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -62,7 +58,7 @@ public class EmployeeController extends BaseController {
             value = "Получить всех сотрудников (между датами)",
             notes = "Получить всех сотрудников у кого день рождение между датами"
     )
-    @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение между датами.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение между датами", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/{startDate}/{endDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<EmployeeEntity> getUsersRangeBirthday(
             final @ApiParam(value = "Дата с", required = true) @PathVariable String startDate,
@@ -80,7 +76,7 @@ public class EmployeeController extends BaseController {
             value = "Получить всех сотрудников (сегодня)",
             notes = "Получить всех сотрудников у кого сегодня день рождение"
     )
-    @UrlDeclaration(description = "Получить всех сотрудников у кого сегодня день рождение.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить всех сотрудников у кого сегодня день рождение", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<EmployeeEntity> getUsersRangeBirthday() {
         return this.employeeService.getUserBirthdayToday();
@@ -91,7 +87,7 @@ public class EmployeeController extends BaseController {
             value = "Получить всех сотрудников (в определенную дату)",
             notes = "Получить всех сотрудников у кого день рождение в определенную дату"
     )
-    @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение в определенную дату.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение в определенную дату", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<EmployeeEntity> getUsersRangeBirthday(
            final @ApiParam(value = "Дата", required = true) @PathVariable String date) throws ParseException {
@@ -104,10 +100,10 @@ public class EmployeeController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить колличество сотрудников (в определенную датату)",
-            notes = "Получить колличество сотрудников у кого день рождение в определенную датату"
+            value = "Получить количество сотрудников (в определенную датату)",
+            notes = "Получить количество сотрудников у кого день рождение в определенную датату"
     )
-    @UrlDeclaration(description = "Получить колличество сотрудников у кого день рождение в определенную датату.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить количество сотрудников у кого день рождение в определенную датату", isAccessAll = true)
     @RequestMapping(value = "/get/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public int getCountUsersBirthday(
             final @ApiParam(value = "Дата", required = true) @PathVariable String date) throws ParseException {
@@ -120,10 +116,9 @@ public class EmployeeController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить сотрудника по инициалам",
-            notes = "Получить сотрудника по инициалам"
+            value = "Получить сотрудника по инициалам"
     )
-    @UrlDeclaration(description = "Получить сотрудника по имени.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить сотрудника по имени", isAccessAll = true)
     @RequestMapping(value = "/get/by/initials/{initials}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<EmployeeEntity> getUsersByInitials(
             final @ApiParam(value = "Инициалы", required = true) @PathVariable String initials) {

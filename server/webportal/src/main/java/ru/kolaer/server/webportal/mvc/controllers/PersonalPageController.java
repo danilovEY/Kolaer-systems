@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.entities.other.PersonalPageData;
+import ru.kolaer.server.webportal.mvc.model.dto.PersonalPageData;
 import ru.kolaer.server.webportal.mvc.model.servirces.PersonalPageService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
@@ -19,7 +19,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
  * Created by danilovey on 11.11.2016.
  */
 @RestController
-@RequestMapping(value = "/personal_page")
+@RequestMapping(value = "/personal-page")
 @Api(tags = "Персональная страница", description = "Все данные для персональной станици")
 public class PersonalPageController extends BaseController {
 
@@ -30,8 +30,7 @@ public class PersonalPageController extends BaseController {
     private ServiceLDAP serviceLDAP;
 
     @ApiOperation(
-            value = "Получить данные для персональной страници",
-            notes = "Получить данные для персональной страници"
+            value = "Получить данные для персональной страницы"
     )
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @UrlDeclaration(description = "Получить данные для персональной страници", isAccessUser = true)

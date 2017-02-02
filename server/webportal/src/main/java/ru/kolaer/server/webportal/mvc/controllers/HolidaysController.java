@@ -21,27 +21,25 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/non-security/holidays")
-@Api(tags = "Праздники", description = "Празники в России")
+@Api(tags = "Праздники", description = "Праздники в России")
 public class HolidaysController extends BaseController {
 
     @Autowired
     private HolidayService holidayService;
 
     @ApiOperation(
-            value = "Получить все праздники",
-            notes = "Получить все праздники"
+            value = "Получить все праздники"
     )
-    @UrlDeclaration(description = "Получить все праздники.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить все праздники", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Holiday> getHolidaysAll() {
         return this.holidayService.getAllHolidays();
     }
 
     @ApiOperation(
-            value = "Получить праздники в месяце",
-            notes = "Получить праздники в месяце"
+            value = "Получить праздники в месяце"
     )
-    @UrlDeclaration(description = "Получить праздники в месяце.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить праздники в месяце", isAccessAll = true)
     @RequestMapping(value = "/get/{month}/{year}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Holiday> getPublicHolidays(
             @ApiParam(value = "Номер месяца", required = true) @PathVariable final String month,

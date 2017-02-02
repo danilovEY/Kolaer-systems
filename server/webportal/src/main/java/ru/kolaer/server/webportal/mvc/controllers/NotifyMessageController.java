@@ -26,20 +26,18 @@ public class NotifyMessageController extends BaseController {
     private NotifyMessageService notifyMessageService;
 
     @ApiOperation(
-            value = "Получить последнее оповещение",
-            notes = "Получить последнее оповещение"
+            value = "Получить последнее оповещение"
     )
-    @UrlDeclaration(description = "Получить последнее оповещение.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить последнее оповещение", isAccessAll = true)
     @RequestMapping(value = "/get/last", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public NotifyMessage getLastNotifyMessage() {
         return this.notifyMessageService.getLastNotifyMessage();
     }
 
     @ApiOperation(
-            value = "Добавить оповещение",
-            notes = "Добавить оповещение"
+            value = "Добавить оповещение"
     )
-    @UrlDeclaration(description = "Добавить оповещение.", requestMethod = RequestMethod.POST)
+    @UrlDeclaration(description = "Добавить оповещение", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void addNotifyMessage(@ApiParam(value = "Сообщение", required = true) @RequestBody NotifyMessage notifyMessage) {
         notifyMessage.setId(1);

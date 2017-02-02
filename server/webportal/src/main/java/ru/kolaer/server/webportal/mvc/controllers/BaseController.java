@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.entities.other.ExceptionMessageRequest;
+import ru.kolaer.server.webportal.mvc.model.dto.ExceptionMessageRequest;
 
 import java.util.Date;
 

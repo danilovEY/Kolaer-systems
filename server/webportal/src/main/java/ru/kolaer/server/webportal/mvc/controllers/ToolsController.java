@@ -23,8 +23,7 @@ import java.time.temporal.ChronoUnit;
 public class ToolsController extends BaseController {
 
     @ApiOperation(
-            value = "Получить серверное время",
-            notes = "Получить серверное время"
+            value = "Получить серверное время"
     )
     @UrlDeclaration(description = "Получить серверное время",isAccessAll = true)
     @RequestMapping(value = "/get/time", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -38,8 +37,7 @@ public class ToolsController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить период до времени",
-            notes = "Получить период до времени"
+            value = "Получить период до времени"
     )
     @UrlDeclaration(description = "Получить период до времени",isAccessAll = true)
     @RequestMapping(value = "/get/period", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -79,8 +77,7 @@ public class ToolsController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить период до времени",
-            notes = "Получить период до времени"
+            value = "Получить период до времени"
     )
     @UrlDeclaration(description = "Получить период до времени",isAccessAll = true)
     @RequestMapping(value = "/get/period/{date}/{time}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -91,10 +88,9 @@ public class ToolsController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить колличество после даты",
-            notes = "Получить колличество после даты"
+            value = "Получить количество после даты"
     )
-    @UrlDeclaration(description = "Получить колличество после даты",isAccessAll = true)
+    @UrlDeclaration(description = "Получить количество после даты",isAccessAll = true)
     @RequestMapping(value = "/get/period/days/{fromDate}/{toDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public long getPeriodDays(
             @ApiParam(value = "От даты", required = true) @PathVariable(value = "fromDate") String fromDate,
@@ -110,10 +106,9 @@ public class ToolsController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить колличество после даты",
-            notes = "Получить колличество после даты"
+            value = "Получить количество после даты"
     )
-    @UrlDeclaration(description = "Получить колличество после даты",isAccessAll = true)
+    @UrlDeclaration(description = "Получить количество после даты",isAccessAll = true)
     @RequestMapping(value = "/get/period/days/{fromDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public long getPeriodDays(
             @ApiParam(value = "От даты", required = true) @PathVariable(value = "fromDate") String fromDate) {
@@ -121,8 +116,7 @@ public class ToolsController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Получить подробное серверное время",
-            notes = "Получить подробное серверное время"
+            value = "Получить подробное серверное время"
     )
     @UrlDeclaration(description = "Получить подробное серверное время",isAccessAll = true)
     @RequestMapping(value = "/get/time/default", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

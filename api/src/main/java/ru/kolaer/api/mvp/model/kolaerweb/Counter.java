@@ -12,7 +12,7 @@ import java.util.Date;
  * Created by danilovey on 25.08.2016.
  */
 @JsonDeserialize(as = CounterBase.class)
-@ApiModel(value = "Счетчик")
+@ApiModel(value = "(Общее) Счетчик")
 public interface Counter extends Serializable {
     Integer getId();
     void setId(Integer id);

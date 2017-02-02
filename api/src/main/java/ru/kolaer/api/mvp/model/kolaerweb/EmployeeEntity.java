@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by danilovey on 29.07.2016.
  */
 @JsonDeserialize(as = EmployeeEntityBase.class)
-@ApiModel(value = "Сотрудник КолАЭР", description = "Сотрудник КолАЭР")
+@ApiModel(value = "(Сотрудник) Сотрудник КолАЭР", description = "Сотрудник КолАЭР")
 public interface EmployeeEntity extends Serializable {
 
      @ApiModelProperty(value = "Табельный номер")

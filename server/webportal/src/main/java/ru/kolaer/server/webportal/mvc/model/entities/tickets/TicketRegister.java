@@ -29,13 +29,13 @@ public class TicketRegister implements Serializable {
 
     @ApiModelProperty(value = "Список талонов")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "ticket_register_depatpament", joinColumns = {@JoinColumn(name = "id_register")},
+    @JoinTable(name = "ticket_register_department", joinColumns = {@JoinColumn(name = "id_register")},
             inverseJoinColumns = { @JoinColumn(name = "id_ticket")})
     private List<Ticket> tickets;
 
     @ApiModelProperty(value = "Подразделение")
     @OneToOne(targetEntity = DepartmentEntityDecorator.class, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "id_departament")
+    @JoinColumn(name = "id_department")
     private DepartmentEntity department;
 
     @ApiModelProperty(value = "Дата создания")

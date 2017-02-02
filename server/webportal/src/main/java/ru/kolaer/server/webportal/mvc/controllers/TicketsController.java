@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/tickets")
 @Slf4j
-public class TicketController extends BaseController {
+public class TicketsController extends BaseController {
 
     @Autowired
     private TicketRegisterService ticketRegisterService;
@@ -199,15 +199,15 @@ public class TicketController extends BaseController {
         return ticketRegister;
     }
 
-    @ApiOperation(value = "Получить реестр талонов по id")
-    @UrlDeclaration(description = "Получить реестр талонов по id", isAccessUser = true)
+    @ApiOperation(value = "Получить реестр талонов по ID")
+    @UrlDeclaration(description = "Получить реестр талонов по ID", isAccessUser = true)
     @RequestMapping(value = "/register/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TicketRegister getTicketRegister(@ApiParam(value = "ID реестра", required = true) @RequestParam(value = "id") Integer id) {
         return this.ticketRegisterService.getById(id);
     }
 
-    @ApiOperation(value = "Получить талоны по id реестра")
-    @UrlDeclaration(description = "Получить талоны по id реестра", isAccessUser = true)
+    @ApiOperation(value = "Получить талоны по ID реестра")
+    @UrlDeclaration(description = "Получить талоны по ID реестра", isAccessUser = true)
     @RequestMapping(value = "/get/by/register", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Ticket> getTickets(@ApiParam(value = "ID реестра", required = true) @RequestParam(value = "id") Integer id) {
         return this.ticketRegisterService.getById(id).getTickets();

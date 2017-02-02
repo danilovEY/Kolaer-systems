@@ -51,10 +51,9 @@ public class AuthenticationController extends BaseController {
     private ServiceLDAP serviceLDAP;
 
     @ApiOperation(
-            value = "Выйти.",
-            notes = "Выйти."
+            value = "Выйти"
     )
-    @UrlDeclaration(description = "Выйти.", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Выйти", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String logout(HttpServletResponse response, HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -66,28 +65,27 @@ public class AuthenticationController extends BaseController {
     }
 
     @ApiOperation(
-            value = "Выйти.",
-            notes = "Выйти."
+            value = "Выйти"
     )
-    @UrlDeclaration(description = "Выйти.", requestMethod = RequestMethod.GET, isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Выйти", requestMethod = RequestMethod.GET, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logoutGet(HttpServletResponse response, HttpServletRequest request) {
         return this.logout(response, request);
     }
 
     @ApiOperation(
-            value = "Генерация пароля по строке.",
-            notes = "Генерация пароля по строке."
+            value = "Генерация пароля по строке",
+            hidden = true
     )
-    @UrlDeclaration(description = "Генерация пароля по строке. (?pass={pass})", isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Генерация пароля по строке")
     @RequestMapping(value = "/genpass", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String getPass(@ApiParam(value = "Пароль", required = true) @RequestParam("pass") String pass) {
         return new StandardPasswordEncoder(secretKey).encode(pass);
     }
 
     @ApiOperation(
-            value = "Авторизация.",
-            notes = "Авторизация. (Генерация токена по имени и паролю пользователя)"
+            value = "Авторизация",
+            notes = "Генерация токена по имени и паролю пользователя."
     )
     @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -97,10 +95,10 @@ public class AuthenticationController extends BaseController {
 
 
     @ApiOperation(
-            value = "Авторизация с параметрами.",
-            notes = "Авторизация. (Генерация токена по имени и паролю пользователя) (?username={login}&password={pass})"
+            value = "Авторизация",
+            notes = "Генерация токена по имени и паролю пользователя"
     )
-    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя) (?username={login}&password={pass})", isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getToken(@ApiParam(value = "Логин", required = true) @RequestParam(value = "username", defaultValue = "anonymous") String username,
                               @ApiParam(value = "Пароль") @RequestParam(value = "password", defaultValue = "") String password){

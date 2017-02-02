@@ -29,30 +29,28 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	protected EmployeeOtherOrganizationDao employeeOtherOrganizationDao;
 
 	@ApiOperation(
-			value = "Получить всех сотрудников",
-			notes = "Получить всех сотрудников"
+			value = "Получить всех сотрудников"
 	)
-	@UrlDeclaration(description = "Получить всех сотрудников.", isAccessAll = true)
+	@UrlDeclaration(description = "Получить всех сотрудников", isAccessAll = true)
 	@RequestMapping(value = "/get/users/max", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsers() {
 		return employeeOtherOrganizationDao.getAll();
 	}
 
 	@ApiOperation(
-			value = "Получить ограниченное число сотрудников",
-			notes = "Получить ограниченное число сотрудников"
+			value = "Получить ограниченное число сотрудников"
 	)
-	@UrlDeclaration(description = "Получить ограниченное число сотрудников.", isAccessAll = true)
+	@UrlDeclaration(description = "Получить ограниченное число сотрудников", isAccessAll = true)
 	@RequestMapping(value = "/get/users/max/{max}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsers(final @ApiParam(value = "Ограничение", required = true) @PathVariable int max) {
 		return employeeOtherOrganizationDao.getAllMaxCount(max);
 	}
 
 	@ApiOperation(
-			value = "Получить число (колличество сотрудников)",
+			value = "Получить число (количество сотрудников)",
 			notes = "Получить число строк общего колличества сотрудников"
 	)
-	@UrlDeclaration(description = "Получить число строк общего колличества сотрудников.", isAccessAll = true)
+	@UrlDeclaration(description = "Получить число строк общего колличества сотрудников", isAccessAll = true)
 	@RequestMapping(value = "/get/users/сount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public int getRowCount() {
 		return employeeOtherOrganizationDao.getRowCount();
@@ -62,7 +60,7 @@ public class EmployeeOtherOrganizationController extends BaseController {
 			value = "Получить сотрудников (в периоде)",
 			notes = "Получить сотрудников в периоде числа"
 	)
-	@UrlDeclaration(description = "Получить сотрудников в периоде числа.", isAccessAll = true)
+	@UrlDeclaration(description = "Получить сотрудников в периоде числа", isAccessAll = true)
 	@RequestMapping(value = "/get/users/birthday/{startDate}/{endDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsersRangeBirthday(
 			final @ApiParam(value = "Дата с", required = true) @PathVariable String startDate,
@@ -85,7 +83,7 @@ public class EmployeeOtherOrganizationController extends BaseController {
 			value = "Получить сотрудников (сегодня)",
 			notes = "Получить сотрудников у кого сегодня день рождения"
 	)
-	@UrlDeclaration(description = "Получить сотрудников у кого сегодня день рождения.", isAccessAll = true)
+	@UrlDeclaration(description = "Получить сотрудников у кого сегодня день рождения", isAccessAll = true)
 	@RequestMapping(value = "/get/users/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsersRangeBirthday() {
 		return employeeOtherOrganizationDao.getUserBirthdayToday();
@@ -93,9 +91,9 @@ public class EmployeeOtherOrganizationController extends BaseController {
 
 	@ApiOperation(
 			value = "Получить сотрудников (в указанный день)",
-			notes = "Получить сотрудников у кого день рождение в указанный день"
+			notes = "Получить сотрудников у кого день рождения в указанный день"
 	)
-	@UrlDeclaration(description = "Получить сотрудников у кого день рождение в указанный день.", isAccessAll = true)
+	@UrlDeclaration(description = "Получить сотрудников у кого день рождения в указанный день", isAccessAll = true)
 	@RequestMapping(value = "/get/users/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsersRangeBirthday(
 			final @ApiParam(value = "Дата", required = true) @PathVariable String date) {
@@ -114,9 +112,9 @@ public class EmployeeOtherOrganizationController extends BaseController {
 
 	@ApiOperation(
 			value = "Получить сотрудников (в указанный день и организации)",
-			notes = "Получить сотрудников у кого день рождение в указанный день из указанной организации"
+			notes = "Получить сотрудников у кого день рождения в указанный день из указанной организации"
 	)
-	@UrlDeclaration(description = "Получить сотрудников у кого день рождение в указанный день из указанной организации.", isAccessAll = true)
+	@UrlDeclaration(description = "Получить сотрудников у кого день рождения в указанный день из указанной организации", isAccessAll = true)
 	@RequestMapping(value = "/get/users/{orgainzation}/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsersRangeBirthdayAndOrg(
 			final @ApiParam(value = "Дата", required = true) @PathVariable String date,
@@ -138,7 +136,7 @@ public class EmployeeOtherOrganizationController extends BaseController {
 			value = "Задать сотрудников из других организаций",
 			notes = "Задать сотрудников из других организаций"
 	)
-	@UrlDeclaration(description = "Задать сотрудников из других организаций.", requestMethod = RequestMethod.POST)
+	@UrlDeclaration(description = "Задать сотрудников из других организаций", requestMethod = RequestMethod.POST)
 	@RequestMapping(value = "/set/users/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public void setUsers(final @ApiParam(value = "Список сотрудников", required = true) @RequestBody RequestDbBirthdayAllList usersList) {
 		this.employeeOtherOrganizationDao.insertDataList(usersList.getBirthdayList());
@@ -146,9 +144,9 @@ public class EmployeeOtherOrganizationController extends BaseController {
 
 	@ApiOperation(
 			value = "Получить число сотрудников (в указанный день)",
-			notes = "Получить число сотрудников у кого день рождение в указанный день"
+			notes = "Получить число сотрудников у кого день рождения в указанный день"
 	)
-	@UrlDeclaration(description = "Получить число сотрудников у кого день рождение в указанный день.", isAccessAll = true)
+	@UrlDeclaration(description = "Получить число сотрудников у кого день рождения в указанный день", isAccessAll = true)
 	@RequestMapping(value = "/get/users/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Integer getCountUsersBirthday(final @ApiParam(value = "Дата", required = true) @PathVariable String date) {
 		final SimpleDateFormat sdf = date.contains("-")
@@ -166,9 +164,9 @@ public class EmployeeOtherOrganizationController extends BaseController {
 
 	@ApiOperation(
 			value = "Получить число сотрудников (в указанный день и организации)",
-			notes = "Получить число сотрудников у кого день рождение в указанный день из указанной организации"
+			notes = "Получить число сотрудников у кого день рождения в указанный день из указанной организации"
 	)
-	@UrlDeclaration(description = "Получить число сотрудников у кого день рождение в указанный день из указанной организации.", isAccessAll = true)
+	@UrlDeclaration(description = "Получить число сотрудников у кого день рождения в указанный день из указанной организации", isAccessAll = true)
 	@RequestMapping(value = "/get/users/{organization}/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public int getCountUsersBirthday(
 			final @ApiParam(value = "Дата", required = true) @PathVariable String date,
@@ -190,7 +188,7 @@ public class EmployeeOtherOrganizationController extends BaseController {
 			value = "Получить сотрудников по инициалам",
 			notes = "Получить сотрудников по инициалам"
 	)
-	@UrlDeclaration(description = "Получить сотрудников по инициалам.", isAccessAll = true)
+	@UrlDeclaration(description = "Получить сотрудников по инициалам", isAccessAll = true)
 	@RequestMapping(value = "/get/users/by/initials/{initials}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganization> getUsersByInitials(
 			final @ApiParam(value = "Иничиалы", required = true) @PathVariable String initials) {

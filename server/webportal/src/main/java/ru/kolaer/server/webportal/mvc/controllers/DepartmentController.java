@@ -18,16 +18,16 @@ import java.util.List;
  */
 @Api(tags = "Подразделения")
 @RestController
-@RequestMapping(value = "/departament")
-public class DepartamentController extends BaseController {
+@RequestMapping(value = "/department")
+public class DepartmentController extends BaseController {
 
     @Autowired
     private DepartmentService departmentService;
 
-    @ApiOperation(value = "Получить все подразделеия")
+    @ApiOperation(value = "Получить все подразделения")
     @UrlDeclaration(description = "Получить все подразделения", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<DepartmentEntity> getAllDepartament() {
+    public List<DepartmentEntity> getAllDepartment() {
         return this.departmentService.getAll();
     }
 

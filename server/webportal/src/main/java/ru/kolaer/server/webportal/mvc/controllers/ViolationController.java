@@ -22,6 +22,9 @@ import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.ViolationReport;
 import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.mvc.model.dto.JournalAccess;
+import ru.kolaer.server.webportal.mvc.model.dto.JournalViolationAccess;
+import ru.kolaer.server.webportal.mvc.model.dto.ViolationAccess;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.*;
 

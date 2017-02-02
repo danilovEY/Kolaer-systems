@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.entities.other;
 
+import io.swagger.annotations.ApiModel;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageBase;
 

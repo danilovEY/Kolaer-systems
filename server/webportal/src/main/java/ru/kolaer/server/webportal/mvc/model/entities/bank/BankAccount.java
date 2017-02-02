@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.bank;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
@@ -9,7 +11,10 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
  */
 @Data
 @AllArgsConstructor
+@ApiModel("(Банк) Данные банка")
 public class BankAccount {
+    @ApiModelProperty("Сотрудник")
     private EmployeeEntity employeeEntity;
+    @ApiModelProperty("Счет")
     private String check;
 }

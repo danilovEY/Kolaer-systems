@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.controllers.jsp;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping(value = "upload")
+@Api(value = "Обновление данных", tags = "JSP")
 public class UploadController {
 
     @Autowired
@@ -29,11 +32,13 @@ public class UploadController {
     private UpdateEmployeesService employeeService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @ApiOperation("Получить страницу")
     public String getStartPage() {
         return "tools";
     }
 
     @RequestMapping(value = "/employees/other", method = RequestMethod.POST)
+    @ApiOperation(value = "Обновить сотрудников из из других организация в xml", hidden = true)
     public String uploadEmployeeOtherOrganization(@RequestParam("file")MultipartFile file, RedirectAttributes redirectAttributes)
             throws IOException, ParserConfigurationException, SAXException {
         this.employeeOtherOrganizationService.updateFromXml(file.getInputStream());
@@ -42,6 +47,7 @@ public class UploadController {
     }
 
     @RequestMapping(value = "/employees", method = RequestMethod.POST)
+    @ApiOperation(value = "Обновить сотрудников КолАЭР из xls", hidden = true)
     public String uploadEmployee(@RequestParam("file")MultipartFile file, RedirectAttributes redirectAttributes)
             throws IOException, ParserConfigurationException, SAXException {
         this.employeeService.updateEployees(file.getInputStream());
