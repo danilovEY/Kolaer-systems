@@ -10,6 +10,8 @@ import java.util.List;
  * Created by danilovey on 09.08.2016.
  */
 public interface EmployeeService extends ServiceBase<EmployeeEntity> {
+    EmployeeEntity getByPersonnelNumber(Integer id);
+
     List<EmployeeEntity> getUserRangeBirthday(Date startData, Date endData);
     List<EmployeeEntity> getUsersByBirthday(Date date);
     List<EmployeeEntity> getUserBirthdayToday();

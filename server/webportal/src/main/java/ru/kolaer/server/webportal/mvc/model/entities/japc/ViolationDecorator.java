@@ -100,7 +100,7 @@ public class ViolationDecorator implements Violation {
         this.violation.setJournalViolation(journalViolation);
     }
 
-    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_writer", nullable = false)
     public EmployeeEntity getWriter() {
         return this.violation.getWriter();
@@ -111,8 +111,8 @@ public class ViolationDecorator implements Violation {
         this.violation.setWriter(writer);
     }
 
-    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "id_executor", nullable = true)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "id_executor")
     public EmployeeEntity getExecutor() {
         return this.violation.getExecutor();
     }
@@ -144,7 +144,7 @@ public class ViolationDecorator implements Violation {
     }
 
     @OneToOne(targetEntity = TypeViolationDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "id_type_violation", nullable = true)
+    @JoinColumn(name = "id_type_violation")
     public TypeViolation getTypeViolation() {
         return this.violation.getTypeViolation();
     }

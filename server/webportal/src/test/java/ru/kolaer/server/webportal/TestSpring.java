@@ -12,8 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import ru.kolaer.server.webportal.config.SpringContext;
 import ru.kolaer.server.webportal.config.SpringSecurityConfig;
-import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
-import ru.kolaer.server.webportal.mvc.model.servirces.JournalViolationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ViolationService;
 
@@ -53,7 +51,7 @@ public class TestSpring {
 
     @Test
     public void updateEmployees() throws FileNotFoundException {
-        System.out.println(this.employeeService.updateEployees(new FileInputStream("D:\\L106_Data_26.XLSX")));
+        System.out.println(this.employeeService.updateEmployees(new FileInputStream("D:\\L106_Data_26.XLSX")));
     }
 
     @Test

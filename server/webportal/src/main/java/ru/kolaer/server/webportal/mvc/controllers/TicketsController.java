@@ -150,7 +150,7 @@ public class TicketsController extends BaseController {
         }
 
         List<Ticket> ticketsToAdd = ticketRegister.getTickets().stream().map(ticket -> {
-            ticket.setEmployee(employeeService.getById(ticket.getEmployee().getPersonnelNumber()));
+            ticket.setEmployee(employeeService.getByPersonnelNumber(ticket.getEmployee().getPersonnelNumber()));
             return ticket;
         }).collect(Collectors.toList());
 
@@ -167,7 +167,7 @@ public class TicketsController extends BaseController {
         Ticket updateTicket = this.ticketService.getById(ticket.getId());
         updateTicket.setCount(Optional.ofNullable(ticket.getCount()).orElse(updateTicket.getCount()));
         if(ticket.getEmployee() != null && !updateTicket.getEmployee().getPersonnelNumber().equals(ticket.getEmployee().getPersonnelNumber())) {
-            updateTicket.setEmployee(this.employeeService.getById(ticket.getEmployee().getPersonnelNumber()));
+            updateTicket.setEmployee(this.employeeService.getByPersonnelNumber(ticket.getEmployee().getPersonnelNumber()));
         }
         this.ticketService.update(updateTicket);
         return updateTicket;

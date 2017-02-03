@@ -41,10 +41,17 @@ public class EmployeeServiceImpl implements EmployeeService, UpdateEmployeesServ
     }
 
     @Override
+    public EmployeeEntity getByPersonnelNumber(Integer id) {
+        if(id != null && id >= 0)
+            return this.employeeDao.findByPersonnelNumber(id);
+
+        throw new BadRequestException("Персональный номер NULL или < 0!");
+    }
+
+    @Override
     public void add(EmployeeEntity accountsEntity) {
         if(accountsEntity == null) {
-            LOG.error("Account is NULL");
-            return;
+            throw new IllegalArgumentException("Account is NULL");
         }
 
         this.employeeDao.persist(accountsEntity);
@@ -110,12 +117,12 @@ public class EmployeeServiceImpl implements EmployeeService, UpdateEmployeesServ
     }
 
     @Override
-    public ResultUpdateEmployeesDto updateEployees(File file) {
+    public ResultUpdateEmployeesDto updateEmployees(File file) {
         return this.employeeDao.updateEmployeesFromXlsx(file);
     }
 
     @Override
-    public ResultUpdateEmployeesDto updateEployees(InputStream inputStream) {
+    public ResultUpdateEmployeesDto updateEmployees(InputStream inputStream) {
         return this.employeeDao.updateEmployeesFromXlsx(inputStream);
     }
 }

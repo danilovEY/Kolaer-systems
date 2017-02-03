@@ -21,9 +21,6 @@ import java.util.List;
 public class JournalViolationDaoImpl implements JournalViolationDao {
 
     @Autowired
-    private EmployeeService employeeService;
-
-    @Autowired
     private SessionFactory sessionFactory;
 
     @Override

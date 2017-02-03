@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -312,7 +313,7 @@ public class ViolationController extends BaseController {
         }
 
         if(violation.getExecutor() != null) {
-            updateViolation.setExecutor(this.employeeService.getById(violation.getExecutor().getPersonnelNumber()));
+            updateViolation.setExecutor(this.employeeService.getByPersonnelNumber(violation.getExecutor().getPersonnelNumber()));
         }
 
         if(violation.isEffective() != null) {
@@ -360,7 +361,7 @@ public class ViolationController extends BaseController {
             }
 
             if(violation.getExecutor() != null) {
-                updateViolation.setExecutor(this.employeeService.getById(violation.getExecutor().getPersonnelNumber()));
+                updateViolation.setExecutor(this.employeeService.getByPersonnelNumber(violation.getExecutor().getPersonnelNumber()));
             }
 
             if(violation.isEffective() != null) {
@@ -406,10 +407,6 @@ public class ViolationController extends BaseController {
         if(generalJournalViolation == null)
             throw new BadRequestException("Не найден журнал с ID: " + journalViolation.getId());
 
-        List<Violation> violations = Optional
-                .ofNullable(this.violationService.getByIdJournal(generalJournalViolation.getId()).getData())
-                .orElse(new ArrayList<>());
-
         Violation lastAdd = null;
         if(journalViolation.getViolations().size() == 1) {
             final Violation v = journalViolation.getViolations().get(0);
@@ -419,13 +416,11 @@ public class ViolationController extends BaseController {
             v.setStartMakingViolation(new Date());
             v.setEffective(false);
             if (v.getExecutor() != null)
-                v.setExecutor(this.employeeService.getById(v.getExecutor().getPersonnelNumber()));
+                v.setExecutor(this.employeeService.getByPersonnelNumber(v.getExecutor().getPersonnelNumber()));
             v.setJournalViolation(generalJournalViolation);
             lastAdd = new ViolationDecorator(v);
-            violations.add(lastAdd);
-            generalJournalViolation.setViolations(violations);
 
-            this.journalViolationService.update(generalJournalViolation);
+            this.violationService.add(lastAdd);
             lastAdd.setJournalViolation(null);
         }
 

@@ -68,7 +68,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Transactional(readOnly = true)
     public EmployeeEntity findByID(@NonNull Integer id) {
         final EmployeeEntity result = (EmployeeEntity) this.sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.personnelNumber = :id")
+                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.id = :id")
                 .setParameter("id", id)
                 .uniqueResult();
         return result;
@@ -135,6 +135,16 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 .list();
 
         return new Page<>(result, page, count, pageSize);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public EmployeeEntity findByPersonnelNumber(Integer id) {
+        final EmployeeEntity result = (EmployeeEntity) this.sessionFactory.getCurrentSession()
+                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.personnelNumber = :id")
+                .setParameter("id", id)
+                .uniqueResult();
+        return result;
     }
 
     @Override

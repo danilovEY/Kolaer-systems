@@ -15,4 +15,6 @@ public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<Emp
     List<EmployeeEntity> findByDepartmentById(Integer id);
 
     Page<EmployeeEntity> findByDepartmentById(int page, int pageSize, Integer id);
+
+    EmployeeEntity findByPersonnelNumber(Integer id);
 }

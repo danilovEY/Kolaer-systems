@@ -9,6 +9,6 @@ import java.io.InputStream;
  * Created by danilovey on 27.01.2017.
  */
 public interface UpdateEmployeesService {
-    ResultUpdateEmployeesDto updateEployees(File file);
-    ResultUpdateEmployeesDto updateEployees(InputStream inputStream);
+    ResultUpdateEmployeesDto updateEmployees(File file);
+    ResultUpdateEmployeesDto updateEmployees(InputStream inputStream);
 }

@@ -55,7 +55,7 @@ public class UploadController {
     @ApiOperation(value = "Обновить сотрудников КолАЭР из xls", hidden = true)
     public String uploadEmployee(@RequestParam("file")MultipartFile file, RedirectAttributes redirectAttributes)
             throws IOException, ParserConfigurationException, SAXException {
-        this.employeeService.updateEployees(file.getInputStream());
+        this.employeeService.updateEmployees(file.getInputStream());
         redirectAttributes.addFlashAttribute("message","You successfully uploaded " + file.getOriginalFilename() + "!");
         return "update-emp";
     }

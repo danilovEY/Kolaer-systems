@@ -12,6 +12,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
 import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
+import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
 import javax.annotation.PostConstruct;
@@ -29,7 +30,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
     private AccountEntity accountsEntity;
 
     @Autowired
-    private EmployeeDao employeeDao;
+    private EmployeeService employeeService;
 
     @Autowired
     private AccountLDAP accountLDAP;
@@ -67,10 +68,10 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         LOG.debug("Employee: {}", employeeEntity.getInitials());
 
         if(employeeEntity.getPersonnelNumber() != null) {
-            final EmployeeEntity employee = this.employeeDao.findByID(employeeEntity.getPersonnelNumber());
+            final EmployeeEntity employee = this.employeeService.getByPersonnelNumber(employeeEntity.getPersonnelNumber());
             accountEntity.setEmployeeEntity(employee);
         } else {
-            final List<EmployeeEntity> generalEmployeesEntities = this.employeeDao.findEmployeeByInitials(employeeEntity.getInitials());
+            final List<EmployeeEntity> generalEmployeesEntities = this.employeeService.getUsersByInitials(employeeEntity.getInitials());
             if(generalEmployeesEntities!= null && generalEmployeesEntities.size() > 0) {
                 accountEntity.setEmployeeEntity(generalEmployeesEntities.get(0));
             }
