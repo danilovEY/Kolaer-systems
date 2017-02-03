@@ -39,6 +39,9 @@ public class RepositoryPassword implements Serializable {
     @ApiModelProperty("Сотрудник репозитория")
     private EmployeeEntity employee;
 
+    @Column(name = "url_image")
+    private String urlImage;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "last_pass_id")
     @ApiModelProperty("Актуальный пароль")
