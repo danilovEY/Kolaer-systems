@@ -62,13 +62,13 @@ public class JournalViolationDecorator implements JournalViolation {
 
     @OneToOne(targetEntity = DepartmentEntityDecorator.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_departament")
-    public DepartmentEntity getDepartament() {
-        return this.journalViolation.getDepartament();
+    public DepartmentEntity getDepartment() {
+        return this.journalViolation.getDepartment();
     }
 
     @Override
-    public void setDepartament(DepartmentEntity departament) {
-        this.journalViolation.setDepartament(departament);
+    public void setDepartment(DepartmentEntity departament) {
+        this.journalViolation.setDepartment(departament);
     }
 
     @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)

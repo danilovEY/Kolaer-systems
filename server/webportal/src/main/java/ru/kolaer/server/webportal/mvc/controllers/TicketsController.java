@@ -19,6 +19,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
+import ru.kolaer.server.webportal.mvc.model.servirces.TicketService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,7 +42,7 @@ public class TicketsController extends BaseController {
     private TicketRegisterService ticketRegisterService;
 
     @Autowired
-    private TicketDao ticketDao;
+    private TicketService ticketService;
 
     @Autowired
     private ServiceLDAP serviceLDAP;
@@ -163,12 +164,12 @@ public class TicketsController extends BaseController {
     @UrlDeclaration(description = "Обновить талон по ID", isAccessUser = true)
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Ticket updateTicketToRegister(@ApiParam(value = "ID талона и данные", required = true) @RequestBody Ticket ticket) {
-        Ticket updateTicket = this.ticketDao.findByID(ticket.getId());
+        Ticket updateTicket = this.ticketService.getById(ticket.getId());
         updateTicket.setCount(Optional.ofNullable(ticket.getCount()).orElse(updateTicket.getCount()));
         if(ticket.getEmployee() != null && !updateTicket.getEmployee().getPersonnelNumber().equals(ticket.getEmployee().getPersonnelNumber())) {
             updateTicket.setEmployee(this.employeeService.getById(ticket.getEmployee().getPersonnelNumber()));
         }
-        this.ticketDao.update(updateTicket);
+        this.ticketService.update(updateTicket);
         return updateTicket;
     }
 
@@ -183,7 +184,7 @@ public class TicketsController extends BaseController {
     @UrlDeclaration(description = "Удалить талоны из реестра", isAccessUser = true)
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteTicketFromRegister(@ApiParam(value = "ID талонов", required = true) @RequestBody List<Ticket> tickets) {
-        tickets.forEach(this.ticketDao::delete);
+        tickets.forEach(this.ticketService::delete);
     }
 
     @ApiOperation(value = "Добавить реестр талонов")
@@ -210,7 +211,7 @@ public class TicketsController extends BaseController {
     @UrlDeclaration(description = "Получить талоны по ID реестра", isAccessUser = true)
     @RequestMapping(value = "/get/by/register", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Ticket> getTickets(@ApiParam(value = "ID реестра", required = true) @RequestParam(value = "id") Integer id) {
-        return this.ticketRegisterService.getById(id).getTickets();
+        return this.ticketService.getTicketsByRegisterId(id);
     }
 
 }

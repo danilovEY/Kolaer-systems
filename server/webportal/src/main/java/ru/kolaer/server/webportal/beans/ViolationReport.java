@@ -1,12 +1,9 @@
 package ru.kolaer.server.webportal.beans;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.POIDocument;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -286,7 +283,7 @@ public class ViolationReport {
         cell.setCellValue(journal.getName());
         //Подразделение журнала
         cell = row.getCell(cellIndex++);
-        cell.setCellValue(journal.getDepartament().getAbbreviatedName());
+        cell.setCellValue(journal.getDepartment().getAbbreviatedName());
         //Имя записавшего журнал
         cell = row.getCell(cellIndex++);
         cell.setCellValue(journal.getWriter().getInitials());

@@ -51,4 +51,9 @@ public class TicketServiceImpl implements TicketService {
     public void delete(List<Ticket> entites) {
 
     }
+
+    @Override
+    public List<Ticket> getTicketsByRegisterId(Integer id) {
+        return this.ticketDao.findAllByRegisterId(id);
+    }
 }

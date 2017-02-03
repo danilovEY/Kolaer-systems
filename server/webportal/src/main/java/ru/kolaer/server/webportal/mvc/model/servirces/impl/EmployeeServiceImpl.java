@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
@@ -36,8 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService, UpdateEmployeesServ
         if(id != null && id >= 0)
             return this.employeeDao.findByID(id);
 
-        LOG.error("ID is NULL or < 0!");
-        return null;
+        throw new BadRequestException("ID is NULL or < 0!");
     }
 
     @Override

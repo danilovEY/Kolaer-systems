@@ -211,10 +211,10 @@ public class ViolationController extends BaseController {
 
         JournalViolation journalViolation = new JournalViolationDecorator(violation);
         journalViolation.setWriter(accountByAuthentication.getEmployeeEntity());
-        if(journalViolation.getDepartament() == null) {
-            journalViolation.setDepartament(accountByAuthentication.getEmployeeEntity().getDepartment());
+        if(journalViolation.getDepartment() == null) {
+            journalViolation.setDepartment(accountByAuthentication.getEmployeeEntity().getDepartment());
         } else {
-            journalViolation.setDepartament(departmentService.getById(journalViolation.getDepartament().getId()));
+            journalViolation.setDepartment(departmentService.getById(journalViolation.getDepartment().getId()));
         }
 
         this.journalViolationService.add(journalViolation);
@@ -229,8 +229,8 @@ public class ViolationController extends BaseController {
     @RequestMapping(value = "/journal/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public JournalViolation updateJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody JournalViolation violation) {
         JournalViolation journalViolation = this.journalViolationService.getById(violation.getId());
-        if(violation.getDepartament() != null) {
-            journalViolation.setDepartament(departmentService.getById(violation.getDepartament().getId()));
+        if(violation.getDepartment() != null) {
+            journalViolation.setDepartment(departmentService.getById(violation.getDepartment().getId()));
         }
 
         if(violation.getName() != null) {
@@ -465,7 +465,7 @@ public class ViolationController extends BaseController {
         } else {
             final JournalViolation journal = this.journalViolationService.getById(id);
             if(journal.getWriter().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
-                    || (journal.getDepartament().getId().equals(employeeEntity.getDepartment().getId())
+                    || (journal.getDepartment().getId().equals(employeeEntity.getDepartment().getId())
                     && roleStream.contains(COURATOR_VIOLATION))) {
                 return this.violationService.getByIdJournal(id, number, pageSize);
             }

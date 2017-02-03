@@ -27,8 +27,8 @@ public interface JournalViolation extends Serializable {
     void setViolations(List<Violation> violations);
 
     @ApiModelProperty(value = "Подразделение")
-    DepartmentEntity getDepartament();
-    void setDepartament(DepartmentEntity departament);
+    DepartmentEntity getDepartment();
+    void setDepartment(DepartmentEntity departament);
 
     @ApiModelProperty(value = "Кто создал журнал")
     EmployeeEntity getWriter();

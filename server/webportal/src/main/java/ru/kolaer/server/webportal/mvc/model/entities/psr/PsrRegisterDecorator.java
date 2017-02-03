@@ -27,10 +27,6 @@ public class PsrRegisterDecorator implements PsrRegister {
 
     public PsrRegisterDecorator(PsrRegister psrRegister) {
         this.psrRegister = psrRegister;
-        //this.setStateList(psrRegister.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList()));
-        //this.setAuthor(new GeneralEmployeesEntityDecorator(psrRegister.getAuthor()));
-        //this.setStatus(new PsrStatusDecorator(psrRegister.getStatus()));
-        //this.setStateList(psrRegister.getStateList().stream().map(PsrStateDecorator::new).collect(Collectors.toList()));
     }
 
     @Id
@@ -46,7 +42,7 @@ public class PsrRegisterDecorator implements PsrRegister {
     }
 
 
-    @OneToOne(targetEntity = PsrStatusDecorator.class, optional = false, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = PsrStatusDecorator.class, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_status")
     public PsrStatus getStatus() {
         return this.psrRegister.getStatus();
@@ -56,9 +52,8 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setStatus(status);
     }
 
-    @OneToOne(targetEntity = EmployeeEntityDecorator.class, optional = false, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "id_author")
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "id_author", nullable = false)
     public EmployeeEntity getAuthor() {
         return this.psrRegister.getAuthor();
     }
@@ -67,7 +62,8 @@ public class PsrRegisterDecorator implements PsrRegister {
         this.psrRegister.setAuthor(author);
     }
 
-    @OneToOne(targetEntity = EmployeeEntityDecorator.class, optional = false, cascade = CascadeType.MERGE)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "id_admin")
     public EmployeeEntity getAdmin() {
         return this.psrRegister.getAdmin();
     }
@@ -86,7 +82,7 @@ public class PsrRegisterDecorator implements PsrRegister {
     }
 
 
-    @Column(name = "date_open", nullable = true)
+    @Column(name = "date_open")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getDateOpen() {
         return this.psrRegister.getDateOpen();

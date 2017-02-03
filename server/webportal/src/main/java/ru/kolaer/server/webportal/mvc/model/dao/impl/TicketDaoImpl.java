@@ -53,4 +53,13 @@ public class TicketDaoImpl implements TicketDao {
     public void update(List<Ticket> objs) {
 
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Ticket> findAllByRegisterId(Integer id) {
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("FROM Ticket t WHERE t.ticketRegister.id = :id")
+                .setParameter("id", id)
+                .list();
+    }
 }

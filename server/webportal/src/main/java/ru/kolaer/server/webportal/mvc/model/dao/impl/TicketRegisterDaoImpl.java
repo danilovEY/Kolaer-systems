@@ -47,7 +47,7 @@ public class TicketRegisterDaoImpl implements TicketRegisterDao {
     @Transactional(readOnly = true)
     public List<TicketRegister> findAllByDepName(String depName) {
         return this.sessionFactory.getCurrentSession()
-                .createQuery("FROM TicketRegister tr WHERE tr.departament.name = :depName")
+                .createQuery("FROM TicketRegister tr WHERE tr.department.name = :depName")
                 .setParameter("depName", depName).list();
     }
 
@@ -56,11 +56,11 @@ public class TicketRegisterDaoImpl implements TicketRegisterDao {
         final Session currentSession = this.sessionFactory.getCurrentSession();
 
         final Long total = (Long) currentSession
-                .createQuery("SELECT COUNT(tr.id) FROM TicketRegister tr WHERE tr.departament.name = :depName")
+                .createQuery("SELECT COUNT(tr.id) FROM TicketRegister tr WHERE tr.department.name = :depName")
                 .setParameter("depName", depName).uniqueResult();
 
         final List<TicketRegister> registers = currentSession
-                .createQuery("FROM TicketRegister tr WHERE tr.departament.name = :depName")
+                .createQuery("FROM TicketRegister tr WHERE tr.department.name = :depName")
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .setParameter("depName", depName).list();
@@ -75,7 +75,7 @@ public class TicketRegisterDaoImpl implements TicketRegisterDao {
                 .createQuery("FROM TicketRegister tr" +
                         " WHERE MONTH(tr.createRegister) = MONTH(:createRegister)" +
                         " AND YEAR(tr.createRegister) = YEAR(:createRegister)" +
-                        " AND tr.departament.name = :depName")
+                        " AND tr.department.name = :depName")
                 .setParameter("createRegister", date)
                 .setParameter("depName", depName)
                 .list();

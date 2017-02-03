@@ -46,12 +46,12 @@ public class JournalViolationBase implements JournalViolation {
     }
 
     @Override
-    public DepartmentEntity getDepartament() {
+    public DepartmentEntity getDepartment() {
         return this.departamentEntity;
     }
 
     @Override
-    public void setDepartament(DepartmentEntity departament) {
+    public void setDepartment(DepartmentEntity departament) {
         this.departamentEntity = departament;
     }
 

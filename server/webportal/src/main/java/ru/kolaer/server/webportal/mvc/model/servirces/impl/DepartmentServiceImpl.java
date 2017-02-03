@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
+import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 
@@ -19,7 +20,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentEntity getGeneralDepartmentEntityByName(String name) {
         if(name == null || name.trim().isEmpty())
-            throw new IllegalArgumentException("Name is null!");
+            throw new BadRequestException("Name is null!");
         return this.departmentDao.findByName(name);
     }
 
@@ -31,28 +32,28 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentEntity getById(Integer id) {
         if(id == null || id < 0)
-            throw new IllegalArgumentException("Id is null or < 0!");
+            throw new BadRequestException("Id is null or < 0!");
         return this.departmentDao.findByID(id);
     }
 
     @Override
     public void add(DepartmentEntity entity) {
         if(entity == null)
-            throw new IllegalArgumentException("entity is null!");
+            throw new BadRequestException("entity is null!");
         this.departmentDao.persist(entity);
     }
 
     @Override
     public void delete(DepartmentEntity entity) {
         if(entity == null)
-            throw new IllegalArgumentException("entity is null!");
+            throw new BadRequestException("entity is null!");
         this.departmentDao.delete(entity);
     }
 
     @Override
     public void update(DepartmentEntity entity) {
         if(entity == null)
-            throw new IllegalArgumentException("entity is null!");
+            throw new BadRequestException("entity is null!");
         this.departmentDao.update(entity);
     }
 

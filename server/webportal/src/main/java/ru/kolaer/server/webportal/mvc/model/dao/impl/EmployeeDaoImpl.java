@@ -115,7 +115,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Transactional(readOnly = true)
     public List<EmployeeEntity> findByDepartmentById(@NonNull Integer id) {
         final List<EmployeeEntity> result = this.sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.departament.id = :id ORDER BY emp.initials")
+                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.department.id = :id ORDER BY emp.initials")
                 .setParameter("id", id).list();
         return result;
     }
@@ -123,12 +123,12 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Transactional(readOnly = true)
     public Page<EmployeeEntity> findByDepartmentById(int page, int pageSize, @NonNull Integer id) {
         Session currentSession = this.sessionFactory.getCurrentSession();
-        final Long count = (Long) currentSession.createQuery("SELECT COUNT(emp.personnelNumber) FROM EmployeeEntityDecorator emp WHERE emp.departament.id = :id")
+        final Long count = (Long) currentSession.createQuery("SELECT COUNT(emp.personnelNumber) FROM EmployeeEntityDecorator emp WHERE emp.department.id = :id")
                 .setParameter("id", id)
                 .uniqueResult();
 
         final List<EmployeeEntity> result = this.sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.departament.id = :id ORDER BY emp.initials")
+                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.department.id = :id ORDER BY emp.initials")
                 .setParameter("id", id)
                 .setFirstResult((page - 1) * pageSize)
                 .setMaxResults(pageSize)

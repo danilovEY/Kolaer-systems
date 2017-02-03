@@ -28,7 +28,7 @@ public class TicketRegister implements Serializable {
     private boolean close;
 
     @ApiModelProperty(value = "Список талонов")
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "ticketRegister")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ticketRegister")
     private List<Ticket> tickets;
 
     @ApiModelProperty(value = "Подразделение")

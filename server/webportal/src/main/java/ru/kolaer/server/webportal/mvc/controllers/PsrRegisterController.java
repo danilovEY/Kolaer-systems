@@ -206,7 +206,7 @@ public class PsrRegisterController extends BaseController {
             registerDto.setAuthor(serviceLDAP.getAccountByAuthentication().getEmployeeEntity());
 
             this.psrRegisterService.add(registerDto);
-            return this.psrRegisterService.getLastInsertPsrRegister(register);
+            return registerDto;
         } else {
             throw new BadRequestException("ПСР-проект не уникальный!");
         }

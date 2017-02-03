@@ -24,7 +24,7 @@ public class Ticket implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "Сотрудник")
-    @OneToOne(targetEntity = EmployeeEntityDecorator.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = EmployeeEntityDecorator.class, cascade = CascadeType.DETACH)
     @JoinColumn(name = "id_employee")
     private EmployeeEntity employee;
 
@@ -32,5 +32,6 @@ public class Ticket implements Serializable {
     private Integer count;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_register")
     private TicketRegister ticketRegister;
 }

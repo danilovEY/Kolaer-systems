@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
+import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.TypeViolationDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.TypeViolationService;
 
@@ -25,7 +26,7 @@ public class TypeViolationServiceImpl implements TypeViolationService {
     @Override
     public TypeViolation getById(Integer id) {
         if(id == null || id < 0)
-            throw new IllegalArgumentException("Id is null!");
+            throw new BadRequestException("Id is null!");
         return this.typeViolationDao.findByID(id);
     }
 
