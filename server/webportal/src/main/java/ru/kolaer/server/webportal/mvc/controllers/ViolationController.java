@@ -249,8 +249,7 @@ public class ViolationController extends BaseController {
     @UrlDeclaration(description = "Удалить нарушения", isAccessUser = true)
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteViolations(@ApiParam(value = "Журнал нарушения") @RequestBody List<Violation> violations) {
-        this.violationService.delete(violations.stream().filter(violation -> violation.getId() != null)
-                .map(ViolationDecorator::new).collect(Collectors.toList()));
+        this.violationService.delete(violations);
     }
 
     @ApiOperation(

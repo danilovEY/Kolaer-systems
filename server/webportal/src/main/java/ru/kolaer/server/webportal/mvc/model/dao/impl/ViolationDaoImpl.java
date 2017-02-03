@@ -14,6 +14,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationDecorator;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 13.09.2016.
@@ -51,7 +52,10 @@ public class ViolationDaoImpl implements ViolationDao {
     @Override
     @Transactional
     public void delete( List<Violation> objs) {
-        objs.forEach(this::delete);
+        this.sessionFactory.getCurrentSession()
+                .createQuery("DELETE FROM ViolationDecorator v WHERE v.id IN (:iDs)")
+                .setParameterList("iDs", objs.stream().map(Violation::getId).collect(Collectors.toList()))
+                .executeUpdate();
     }
 
     @Override
