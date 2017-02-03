@@ -25,8 +25,7 @@ public class TypeViolationDecorator implements TypeViolation {
 
     @Id
     @Column(name = "id")
-    @SequenceGenerator(name = "violation_type.seq", sequenceName = "violation_type_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "violation_type.seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return typeViolation.getId();
     }

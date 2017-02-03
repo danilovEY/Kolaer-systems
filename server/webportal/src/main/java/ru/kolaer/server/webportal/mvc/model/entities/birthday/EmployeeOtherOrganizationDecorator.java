@@ -53,12 +53,12 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 	}
 
 	@Column
-	public String getDepartament() {
-		return this.employeeOtherOrganization.getDepartament();
+	public String getDepartment() {
+		return this.employeeOtherOrganization.getDepartment();
 	}
 
-	public void setDepartament(String departament) {
-		this.employeeOtherOrganization.setDepartament(departament);
+	public void setDepartment(String departament) {
+		this.employeeOtherOrganization.setDepartment(departament);
 	}
 
 	@Column(length=100)
@@ -116,11 +116,11 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 	}
 
 	@Column(length=70)
-	public String getvCard() {
-		return this.employeeOtherOrganization.getvCard();
+	public String getPhoto() {
+		return this.employeeOtherOrganization.getPhoto();
 	}
 
-	public void setvCard(String vCard) {
-		this.employeeOtherOrganization.setvCard(vCard);
+	public void setPhoto(String vCard) {
+		this.employeeOtherOrganization.setPhoto(vCard);
 	}
 }

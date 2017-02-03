@@ -23,8 +23,7 @@ public class CounterDecorator implements Counter {
     }
 
     @Id
-    @SequenceGenerator(name = "counters.seq", sequenceName = "counters_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "counters.seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public Integer getId() {
         return this.counter.getId();

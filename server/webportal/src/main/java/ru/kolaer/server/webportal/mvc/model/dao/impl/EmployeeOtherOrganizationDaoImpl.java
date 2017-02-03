@@ -110,14 +110,14 @@ public class EmployeeOtherOrganizationDaoImpl implements EmployeeOtherOrganizati
 			} else {
 				dbEmp.setBirthday(entity.getBirthday());
 				dbEmp.setPost(entity.getPost());
-				dbEmp.setDepartament(entity.getDepartament());
+				dbEmp.setDepartment(entity.getDepartment());
 				dbEmp.setCategoryUnit(entity.getCategoryUnit());
 				dbEmp.setEmail(entity.getEmail());
 				dbEmp.setMobilePhone(entity.getMobilePhone());
 				dbEmp.setPhone(entity.getPhone());
 				dbEmp.setInitials(entity.getInitials());
 				dbEmp.setOrganization(entity.getOrganization());
-				dbEmp.setvCard(entity.getvCard());
+				dbEmp.setPhoto(entity.getPhoto());
 				mapEmp.remove(key);
 				this.sessionFactory.getCurrentSession().update(dbEmp);
 			}

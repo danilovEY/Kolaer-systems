@@ -44,11 +44,11 @@ public class EmployeeOtherOrganizationBase implements EmployeeOtherOrganization 
 		this.categoryUnit = categoryUnit;
 	}
 
-	public String getDepartament() {
+	public String getDepartment() {
 		return this.departament;
 	}
 
-	public void setDepartament(String departament) {
+	public void setDepartment(String departament) {
 		this.departament = departament;
 	}
 
@@ -100,11 +100,11 @@ public class EmployeeOtherOrganizationBase implements EmployeeOtherOrganization 
 		this.organization = organization;
 	}
 
-	public String getvCard() {
+	public String getPhoto() {
 		return vCard;
 	}
 
-	public void setvCard(String vCard) {
+	public void setPhoto(String vCard) {
 		this.vCard = vCard;
 	}
 

@@ -91,11 +91,11 @@ public class UserModelImpl implements UserModel {
 		this.setOrganization(user.getOrganization());
 		this.setInitials(user.getInitials());
 		this.setBirthday(user.getBirthday());
-		this.setDepartament(user.getDepartament());
+		this.setDepartament(user.getDepartment());
 		this.setPost(user.getPost());
 		this.setPhoneNumber(user.getPhone());
 		this.setEmail(user.getEmail());
-		this.setIcon(user.getvCard());
+		this.setIcon(user.getPhoto());
 	}
 	
 	public String getFirstName() {

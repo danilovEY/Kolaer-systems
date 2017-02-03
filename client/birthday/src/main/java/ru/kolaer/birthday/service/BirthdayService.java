@@ -45,7 +45,7 @@ public class BirthdayService implements Service {
 			i++;
 		}
 		for(final EmployeeOtherOrganization user : usersBirthday) {
-			actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartament(), e -> {
+			actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartment(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
 				Platform.runLater(() -> {

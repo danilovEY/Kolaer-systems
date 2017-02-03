@@ -25,8 +25,8 @@ import java.util.Date;
     void setCategoryUnit(String categoryUnit);
 
     @ApiModelProperty(value = "Наименование подразделения")
-    String getDepartament();
-    void setDepartament(String departament);
+    String getDepartment();
+    void setDepartment(String departament);
 
     @ApiModelProperty(value = "E-Mail")
     String getEmail();
@@ -53,6 +53,6 @@ import java.util.Date;
     void setOrganization(String organization);
 
     @ApiModelProperty(value = "Ссылка на фото")
-    String getvCard();
-    void setvCard(String vCard);
+    String getPhoto();
+    void setPhoto(String vCard);
 }

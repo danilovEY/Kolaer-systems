@@ -67,7 +67,7 @@ public class EmployeeOtherOrganizationServiceImpl implements EmployeeOtherOrgani
                     final EmployeeOtherOrganization employee = new EmployeeOtherOrganizationBase();
                     employee.setInitials(name);
                     employee.setPost(post);
-                    employee.setDepartament(department);
+                    employee.setDepartment(department);
                     employee.setMobilePhone(mobilePhone);
                     employee.setPhone(phone);
                     employee.setEmail(email);
