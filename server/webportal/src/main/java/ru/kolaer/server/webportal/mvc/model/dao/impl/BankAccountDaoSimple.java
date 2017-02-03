@@ -52,7 +52,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
-    public BankAccount findByPersonnelNumber(Integer id) {
+    public BankAccount findByID(Integer id) {
         return null;
     }
 

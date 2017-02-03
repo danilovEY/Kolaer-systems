@@ -29,7 +29,7 @@ public class PsrRegisterServiceImpl implements PsrRegisterService {
         if(id == null || id <0)
             throw new BadRequestException("ID проекта пустой или меньше нуля!");
 
-        return psrRegisterDao.findByPersonnelNumber(id);
+        return psrRegisterDao.findByID(id);
     }
 
     @Override

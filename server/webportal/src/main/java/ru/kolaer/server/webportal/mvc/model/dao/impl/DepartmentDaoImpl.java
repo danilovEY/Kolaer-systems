@@ -26,7 +26,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
     @Override
     @Transactional(readOnly = true)
-    public DepartmentEntity findByPersonnelNumber(Integer id) {
+    public DepartmentEntity findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(DepartmentEntityDecorator.class, id);
     }
 

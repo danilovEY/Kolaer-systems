@@ -31,7 +31,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     @Transactional(readOnly = true)
-    public AccountEntityDecorator findByPersonnelNumber(Integer id) {
+    public AccountEntityDecorator findByID(Integer id) {
         return null;
     }
 

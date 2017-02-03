@@ -36,7 +36,7 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
 
     @Override
     @Transactional(readOnly = true)
-    public RepositoryPassword findByPersonnelNumber(@NonNull Integer id) {
+    public RepositoryPassword findByID(@NonNull Integer id) {
         return (RepositoryPassword) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM RepositoryPassword r WHERE r.id = :id")
                 .setParameter("id", id).uniqueResult();

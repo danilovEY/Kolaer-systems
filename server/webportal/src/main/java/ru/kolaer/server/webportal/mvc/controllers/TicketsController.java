@@ -163,7 +163,7 @@ public class TicketsController extends BaseController {
     @UrlDeclaration(description = "Обновить талон по ID", isAccessUser = true)
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Ticket updateTicketToRegister(@ApiParam(value = "ID талона и данные", required = true) @RequestBody Ticket ticket) {
-        Ticket updateTicket = this.ticketDao.findByPersonnelNumber(ticket.getId());
+        Ticket updateTicket = this.ticketDao.findByID(ticket.getId());
         updateTicket.setCount(Optional.ofNullable(ticket.getCount()).orElse(updateTicket.getCount()));
         if(ticket.getEmployee() != null && !updateTicket.getEmployee().getPersonnelNumber().equals(ticket.getEmployee().getPersonnelNumber())) {
             updateTicket.setEmployee(this.employeeService.getById(ticket.getEmployee().getPersonnelNumber()));

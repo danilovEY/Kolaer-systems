@@ -80,7 +80,6 @@ public class CustomLdapAuthenticationProvider extends AbstractLdapAuthentication
         String principalName = auth.getName() + "@" + this.dc;
         props.put(Context.SECURITY_PRINCIPAL, principalName);
         props.put(Context.SECURITY_CREDENTIALS, auth.getCredentials().toString());
-        LOG.debug("PASS: {}", auth.getCredentials().toString());
 
         String ldapURL;
         if(!this.ssl){

@@ -27,7 +27,7 @@ public class NotifyMessageImpl implements NotifyMessageService {
     @Override
     public NotifyMessage getById(Integer id) {
         if(id != null && id >= 0)
-            return this.notifyMessageDao.findByPersonnelNumber(id);
+            return this.notifyMessageDao.findByID(id);
         else
             return null;
     }

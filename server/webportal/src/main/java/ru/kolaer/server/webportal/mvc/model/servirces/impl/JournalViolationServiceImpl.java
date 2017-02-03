@@ -26,7 +26,7 @@ public class JournalViolationServiceImpl implements JournalViolationService {
 
     @Override
     public JournalViolation getById(Integer id) {
-        return this.journalViolationDao.findByPersonnelNumber(id);
+        return this.journalViolationDao.findByID(id);
     }
 
     @Override

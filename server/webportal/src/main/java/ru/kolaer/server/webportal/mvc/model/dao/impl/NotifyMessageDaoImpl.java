@@ -22,7 +22,7 @@ public class NotifyMessageDaoImpl implements NotifyMessageDao {
     @Override
     @Transactional(readOnly = true)
     public NotifyMessage getLastNotifyMessage() {
-        return this.findByPersonnelNumber(1);
+        return this.findByID(1);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class NotifyMessageDaoImpl implements NotifyMessageDao {
 
     @Override
     @Transactional(readOnly = true)
-    public NotifyMessage findByPersonnelNumber(Integer id) {
+    public NotifyMessage findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(NotifyMessageDecorator.class, id);
     }
 

@@ -26,7 +26,7 @@ public class TypeViolationServiceImpl implements TypeViolationService {
     public TypeViolation getById(Integer id) {
         if(id == null || id < 0)
             throw new IllegalArgumentException("Id is null!");
-        return this.typeViolationDao.findByPersonnelNumber(id);
+        return this.typeViolationDao.findByID(id);
     }
 
     @Override

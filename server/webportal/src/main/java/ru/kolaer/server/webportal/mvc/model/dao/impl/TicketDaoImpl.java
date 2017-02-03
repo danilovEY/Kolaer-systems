@@ -25,7 +25,7 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     @Transactional(readOnly = true)
-    public Ticket findByPersonnelNumber(Integer id) {
+    public Ticket findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(Ticket.class, id);
     }
 

@@ -27,7 +27,7 @@ public class TypeViolationDaoImol implements TypeViolationDao {
 
     @Override
     @Transactional(readOnly = true)
-    public TypeViolation findByPersonnelNumber(Integer id) {
+    public TypeViolation findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(TypeViolationDecorator.class, id);
     }
 

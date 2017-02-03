@@ -33,7 +33,7 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
 
     @Override
     @Transactional(readOnly = true)
-    public PsrRegister findByPersonnelNumber(Integer id) {
+    public PsrRegister findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(PsrRegisterDecorator.class, id);
     }
 

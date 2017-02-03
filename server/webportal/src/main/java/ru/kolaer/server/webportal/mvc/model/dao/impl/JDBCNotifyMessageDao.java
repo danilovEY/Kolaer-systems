@@ -33,7 +33,7 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     @Override
     @Transactional(readOnly = true)
     public NotifyMessage getLastNotifyMessage() {
-        return this.findByPersonnelNumber(1);
+        return this.findByID(1);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
 
     @Override
     @Transactional(readOnly = true)
-    public NotifyMessage findByPersonnelNumber(Integer id) {
+    public NotifyMessage findByID(Integer id) {
         List<NotifyMessage> query = this.jdbcTemplate.query("SELECT id, message FROM notifications WHERE id = " + id, (rs, rowNum) -> {
             final NotifyMessage notifyMessage = new NotifyMessageBase();
             notifyMessage.setId(rs.getInt("id"));

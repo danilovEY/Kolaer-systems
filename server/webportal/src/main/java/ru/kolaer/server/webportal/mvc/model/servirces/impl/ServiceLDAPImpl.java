@@ -67,7 +67,7 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         LOG.debug("Employee: {}", employeeEntity.getInitials());
 
         if(employeeEntity.getPersonnelNumber() != null) {
-            final EmployeeEntity employee = this.employeeDao.findByPersonnelNumber(employeeEntity.getPersonnelNumber());
+            final EmployeeEntity employee = this.employeeDao.findByID(employeeEntity.getPersonnelNumber());
             accountEntity.setEmployeeEntity(employee);
         } else {
             final List<EmployeeEntity> generalEmployeesEntities = this.employeeDao.findEmployeeByInitials(employeeEntity.getInitials());

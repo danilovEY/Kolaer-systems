@@ -28,7 +28,7 @@ public class CounterDaoImpl implements CounterDao {
 
     @Override
     @Transactional(readOnly = true)
-    public Counter findByPersonnelNumber(Integer id) {
+    public Counter findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(CounterDecorator.class, id);
     }
 

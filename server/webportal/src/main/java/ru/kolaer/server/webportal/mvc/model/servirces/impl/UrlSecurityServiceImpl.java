@@ -87,7 +87,7 @@ public class UrlSecurityServiceImpl implements UrlSecurityService {
 
     @Override
     public UrlSecurity getById(Integer id) {
-        return this.urlSecurityDao.findByPersonnelNumber(id);
+        return this.urlSecurityDao.findByID(id);
     }
 
     @Override

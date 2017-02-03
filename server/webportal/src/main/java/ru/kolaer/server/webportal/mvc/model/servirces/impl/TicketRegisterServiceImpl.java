@@ -32,7 +32,7 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
 
     @Override
     public TicketRegister getById(Integer id) {
-        return this.ticketRegisterDao.findByPersonnelNumber(id);
+        return this.ticketRegisterDao.findByID(id);
     }
 
     @Override

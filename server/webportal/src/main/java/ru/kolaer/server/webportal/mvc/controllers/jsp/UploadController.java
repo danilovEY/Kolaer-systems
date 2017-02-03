@@ -39,7 +39,7 @@ public class UploadController {
     @RequestMapping(value = "/other-emp", method = RequestMethod.GET)
     @ApiOperation("Получить страницу")
     public String getUpdateOtherEmpPage() {
-        return "update-emp";
+        return "update-other-emp";
     }
 
     @RequestMapping(value = "/employees/other", method = RequestMethod.POST)

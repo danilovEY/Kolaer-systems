@@ -28,7 +28,7 @@ public class PsrStatusDaoImpl implements PsrStatusDao {
 
     @Override
     @Transactional(readOnly = true)
-    public PsrStatus findByPersonnelNumber(Integer id) {
+    public PsrStatus findByID(Integer id) {
         return this.sessionFactory.getCurrentSession().get(PsrStatusDecorator.class, id);
     }
 

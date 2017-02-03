@@ -29,7 +29,7 @@ public class RepositoryPasswordHistoryServiceImpl implements RepositoryPasswordH
         if(id == null || id < 0)
             throw new BadRequestException("ID должно быть больше 0!");
 
-        return this.repositoryPasswordHistoryDao.findByPersonnelNumber(id);
+        return this.repositoryPasswordHistoryDao.findByID(id);
     }
 
     @Override

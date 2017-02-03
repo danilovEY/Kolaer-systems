@@ -64,7 +64,7 @@ public class JournalViolationDaoImpl implements JournalViolationDao {
 
     @Override
     @Transactional(readOnly = true)
-    public JournalViolation findByPersonnelNumber(Integer id) {
+    public JournalViolation findByID(Integer id) {
         JournalViolation journalViolation = (JournalViolation) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM JournalViolationDecorator v WHERE v.id = :id")
                 .setParameter("id", id).uniqueResult();

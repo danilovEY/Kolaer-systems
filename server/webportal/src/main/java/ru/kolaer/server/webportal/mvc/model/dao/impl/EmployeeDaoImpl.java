@@ -66,7 +66,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     @Transactional(readOnly = true)
-    public EmployeeEntity findByPersonnelNumber(@NonNull Integer id) {
+    public EmployeeEntity findByID(@NonNull Integer id) {
         final EmployeeEntity result = (EmployeeEntity) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.personnelNumber = :id")
                 .setParameter("id", id)
