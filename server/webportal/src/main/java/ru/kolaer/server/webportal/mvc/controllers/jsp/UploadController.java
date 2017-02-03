@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.xml.sax.SAXException;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeOtherOrganizationService;
-import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +20,7 @@ import java.io.IOException;
  * Created by danilovey on 03.11.2016.
  */
 @Controller
-@RequestMapping(value = "upload")
+@RequestMapping(value = "/upload")
 @Api(value = "Обновление данных", tags = "JSP")
 public class UploadController {
 
@@ -31,10 +30,16 @@ public class UploadController {
     @Autowired
     private UpdateEmployeesService employeeService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/emp", method = RequestMethod.GET)
     @ApiOperation("Получить страницу")
-    public String getStartPage() {
-        return "tools";
+    public String getUpdateEmpPage() {
+        return "update-emp";
+    }
+
+    @RequestMapping(value = "/other-emp", method = RequestMethod.GET)
+    @ApiOperation("Получить страницу")
+    public String getUpdateOtherEmpPage() {
+        return "update-emp";
     }
 
     @RequestMapping(value = "/employees/other", method = RequestMethod.POST)
@@ -43,7 +48,7 @@ public class UploadController {
             throws IOException, ParserConfigurationException, SAXException {
         this.employeeOtherOrganizationService.updateFromXml(file.getInputStream());
         redirectAttributes.addFlashAttribute("message","You successfully uploaded " + file.getOriginalFilename() + "!");
-        return "tools";
+        return "update-emp";
     }
 
     @RequestMapping(value = "/employees", method = RequestMethod.POST)
@@ -52,7 +57,7 @@ public class UploadController {
             throws IOException, ParserConfigurationException, SAXException {
         this.employeeService.updateEployees(file.getInputStream());
         redirectAttributes.addFlashAttribute("message","You successfully uploaded " + file.getOriginalFilename() + "!");
-        return "tools";
+        return "update-emp";
     }
 
 }
