@@ -3,22 +3,26 @@ package ru.kolaer.server.webportal.mvc.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.mvc.model.dto.UploadFile;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPassword;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordHistoryService;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/kolpass")
 @Api("Хранилища паролей (Парольница)")
+@Slf4j
 public class KolpassController {
 
     private static final String ADMIN = "OIT";

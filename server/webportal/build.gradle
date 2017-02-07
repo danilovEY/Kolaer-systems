@@ -91,8 +91,12 @@ task renameResources(dependsOn: processResources) {
     doLast{
         file("build/resources/main/database.properties").delete()
         file("build/resources/main/origin_database.properties").renameTo("build/resources/main/database.properties")
+
         file("build/resources/main/logback.xml").delete()
         file("build/resources/main/origin_logback.xml").renameTo("build/resources/main/logback.xml")
+
+        file("build/resources/main/common.xml").delete()
+        file("build/resources/main/origin_common.xml").renameTo("build/resources/main/common.xml")
     }
 }
 

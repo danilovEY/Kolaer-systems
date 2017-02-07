@@ -7,6 +7,8 @@
 /src/main/resources/mail.properties
 /src/main/resources/test_database.properties
 /src/main/resources/origin_database.properties
+/src/main/resources/common.properties
+/src/main/resources/origin_common.properties
 !build.gradle
 !settings.gradle
 !/pom.xml

@@ -13,6 +13,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -58,7 +59,8 @@ import java.util.List;
         "ru.kolaer.server.webportal.mvc.controllers"})
 @PropertySources({
         @PropertySource("classpath:database.properties"),
-        @PropertySource("classpath:mail.properties")
+        @PropertySource("classpath:mail.properties"),
+        @PropertySource("classpath:common.properties")
 })
 public class SpringContext extends WebMvcConfigurerAdapter {
 
