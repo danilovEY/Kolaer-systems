@@ -19,7 +19,6 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 /**
  * Created by danilovey on 07.02.2017.
  */
