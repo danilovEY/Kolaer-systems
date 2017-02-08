@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '1.3'
+version '1.4'
 
 
 def projectName = "ru.kolaer.birthday"
@@ -18,8 +18,6 @@ jar {
     manifest {
         name = 'Дни рождения'
         symbolicName = projectName
-        //instruction "Bundle-ClassPath", "."
-        //instruction "Import-Package", "*"
     }
 }
 

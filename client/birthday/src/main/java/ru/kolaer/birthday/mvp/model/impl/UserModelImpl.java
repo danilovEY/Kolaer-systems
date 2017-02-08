@@ -22,7 +22,7 @@ public class UserModelImpl implements UserModel {
 	/**Отчество.*/
 	private String thirdName;
 	/**Отдел.*/
-	private String departament;
+	private String department;
 	/**Организация.*/
 	private String organization;
 	/**Дата рождения.*/
@@ -41,7 +41,7 @@ public class UserModelImpl implements UserModel {
 			final String firstName, 
 			final String secondName, 
 			final String thirdName, 
-			final String departament, 
+			final String department,
 			final Date birthday, 
 			final String icon, 
 			final String phoneNumber, 
@@ -51,7 +51,7 @@ public class UserModelImpl implements UserModel {
 		this.firstName = firstName;
 		this.secondName = secondName;
 		this.thirdName = thirdName;
-		this.departament = departament;
+		this.department = department;
 		this.birthday = birthday;
 		this.phoneNumber = phoneNumber;
 		this.icon = icon;
@@ -124,10 +124,10 @@ public class UserModelImpl implements UserModel {
 		this.thirdName = thirdName;
 	}
 	public String getDepartment() {
-		return departament;
+		return department;
 	}
 	public void setDepartment(final String departament) {
-		this.departament = departament;
+		this.department = departament;
 	}
 	public Date getBirthday() {
 		return birthday;
