@@ -49,7 +49,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
     private final static String PERSONNEL_NUMBER = "Таб.№";
     private final static String PHONE_NUMBER = "Телефон";
     private final static String EMAIL = "Эл. почта(MAIL)";
-    private final static String TYPE_DOCUMENT = "Вид документа";
     private final static String SERIAL_DOCUMENT = "Серия2";
     private final static String NUMBER_DOCUMENT = "Номер документа";
 
