@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,6 @@ import java.util.*;
 @Service(value = "holidayService")
 public class HolidayServiceImpl implements HolidayService {
     private static Logger logger = LoggerFactory.getLogger(HolidayServiceImpl.class);
-    private final String CALENDAR_URL = "http://xmlcalendar.ru/data/ru/";
 
     @Autowired
     private HolidayDao holidayDao;
@@ -58,15 +58,20 @@ public class HolidayServiceImpl implements HolidayService {
         this.updateHoliday();
     }
 
-    @Scheduled(cron = "0 0 0 1 * ?")
-    @Async
     public void updateHoliday() {
         final String year = String.valueOf(LocalDate.now().getYear());
 
         try {
+            ClassPathResource classPathResource = new ClassPathResource("/calendar.xml");
+            if(!classPathResource.exists())
+                logger.warn("Нет локальных данных с http://xmlcalendar.ru в xml формате!");
+
             final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            final Document document = documentBuilder.parse(this.CALENDAR_URL + year + "/calendar.xml");
+            final Document document = classPathResource.exists()
+                    ? documentBuilder.parse(classPathResource.getInputStream())
+                    : documentBuilder.parse("http://xmlcalendar.ru/data/ru/" + year + "/calendar.xml");
+
             final Node holidays = document.getElementsByTagName("holidays").item(0);
             final NodeList holidaysList = holidays.getChildNodes();
 

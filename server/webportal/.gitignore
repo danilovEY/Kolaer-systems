@@ -9,6 +9,7 @@
 /src/main/resources/origin_database.properties
 /src/main/resources/common.properties
 /src/main/resources/origin_common.properties
+/src/main/resources/calendar.xml
 !build.gradle
 !settings.gradle
 !/pom.xml
