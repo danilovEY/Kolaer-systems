@@ -1,6 +1,7 @@
 package ru.kolaer.birthday.mvp.model.impl;
 
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.PostEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.api.mvp.model.restful.DbDataAll;
 import ru.kolaer.birthday.mvp.model.UserModel;
@@ -66,7 +67,7 @@ public class UserModelImpl implements UserModel {
 		this.setOrganization("КолАтомэнергоремонт");
 		this.setInitials(user.getInitials());
 		this.setBirthday(user.getBirthday());
-		this.setDepartament(user.getDepartament());
+		this.setDepartment(user.getDepartament());
 		this.setPost(user.getPost());
 		this.setPhoneNumber(user.getPhone());
 		this.setEmail(user.getEmail());
@@ -80,8 +81,14 @@ public class UserModelImpl implements UserModel {
 		this.setOrganization("КолАтомэнергоремонт");
 		this.setInitials(user.getInitials());
 		this.setBirthday(user.getBirthday());
-		this.setDepartament(user.getDepartment().getAbbreviatedName());
-		this.setPost(user.getPostEntity().getAbbreviatedName());
+		this.setDepartment(user.getDepartment().getAbbreviatedName());
+
+		PostEntity postEntity = user.getPostEntity();
+		String postName = postEntity.getName();
+		if(postEntity.getTypeRang() != null && !postEntity.getTypeRang().trim().isEmpty())
+			postName += postEntity.getRang() + " " + postEntity.getTypeRang();
+
+		this.setPost(postName);
 		this.setPhoneNumber(user.getPhoneNumber());
 		this.setEmail("");
 		this.setIcon(user.getInitials() + ".jpg");
@@ -91,7 +98,7 @@ public class UserModelImpl implements UserModel {
 		this.setOrganization(user.getOrganization());
 		this.setInitials(user.getInitials());
 		this.setBirthday(user.getBirthday());
-		this.setDepartament(user.getDepartment());
+		this.setDepartment(user.getDepartment());
 		this.setPost(user.getPost());
 		this.setPhoneNumber(user.getPhone());
 		this.setEmail(user.getEmail());
@@ -116,10 +123,10 @@ public class UserModelImpl implements UserModel {
 	public void setThirdName(final String thirdName) {
 		this.thirdName = thirdName;
 	}
-	public String getDepartament() {
+	public String getDepartment() {
 		return departament;
 	}
-	public void setDepartament(final String departament) {
+	public void setDepartment(final String departament) {
 		this.departament = departament;
 	}
 	public Date getBirthday() {

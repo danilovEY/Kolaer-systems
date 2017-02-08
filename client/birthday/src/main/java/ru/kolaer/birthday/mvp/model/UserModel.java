@@ -22,9 +22,9 @@ import java.util.Date;
 	/**Задать отчество.*/
 	 void setThirdName(String thirdName);
 	/**Получить цех/отдел.*/
-	 String getDepartament();
+	 String getDepartment();
 	/**Задать цех/отдел.*/
-	 void setDepartament(String departament);
+	 void setDepartment(String departament);
 	/**Получить дату рождения.*/
 	 Date getBirthday();
 	/**Задать дату рождения.*/

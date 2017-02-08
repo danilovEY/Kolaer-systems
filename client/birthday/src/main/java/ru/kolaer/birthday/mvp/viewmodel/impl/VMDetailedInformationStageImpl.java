@@ -93,7 +93,7 @@ public class VMDetailedInformationStageImpl extends BorderPane implements Initia
 		});
 		this.initial.setText(user.getInitials());
 		this.organization.setText(user.getOrganization());
-		this.dep.setText(user.getDepartament());
+		this.dep.setText(user.getDepartment());
 		this.email.setText(user.getEmail());
 		this.phoneNumber.setText(user.getPhoneNumber());	
 		this.post.setText(user.getPost());

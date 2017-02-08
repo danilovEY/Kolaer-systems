@@ -14,7 +14,7 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
     private final EmployeeOtherOrganizationTable employeeOtherOrganizationTable;
 
     public ApplicationDataBaseImpl(String path) {
-        this.generalEmployeesTable = new GeneralEmployeesTableImpl(path + "/general" + "/employees");
+        this.generalEmployeesTable = new GeneralEmployeesTableImpl(path + "/employees");
         this.psrTable = new PsrTableImpl(path + "/psr");
         this.notifyMessageTable = new NotifyMessageTableImpl(path + "/non-security/notify");
         this.counterTable = new CounterTableImpl(path + "/non-security/counters");
