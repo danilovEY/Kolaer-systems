@@ -60,7 +60,7 @@ public class BirthdaySwing implements Service {
 		SwingUtilities.invokeLater(() -> {
 			List<String> list = new ArrayList<>();
 			try{
-				URL oracle = new URL("http://js:8080/kolaer-web/rest/general/employees/get/birthday/today");
+				URL oracle = new URL("http://js:8081/kolaer-web/rest/employees/get/birthday/today");
 
 		        BufferedReader in = new BufferedReader(
 		        new InputStreamReader(oracle.openStream(), "UTF-8"));
@@ -79,7 +79,7 @@ public class BirthdaySwing implements Service {
 		        	}  	
 		        }
 		        
-		        oracle = new URL("http://js:8080/kolaer-web/rest/organizations/employees/get/users/birthday/today");
+		        oracle = new URL("http://js:8081/kolaer-web/rest/organizations/employees/get/users/birthday/today");
 				
 		        in = new BufferedReader(
 		        new InputStreamReader(oracle.openStream(), "UTF-8"));
