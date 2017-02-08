@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 /**
  * Created by Danilov on 27.07.2016.
+ *
  */
 @Repository(value = "employeeDao")
 @Slf4j
@@ -42,7 +43,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     private final static String SEX = "Пол";
     private final static String DEP_NAME = "Текст Подразделение";
     private final static String POST_NAME = "Штатная должность";
-    private final static String EMPLOYTMENT_DATE = "Поступл.";
+    private final static String EMPLOYMENT_DATE = "Поступл.";
     private final static String DISMISSAL_DATE = "Дата увольнения";
     private final static String BIRTHDAY_DATE = "ДатаРожд";
     private final static String PERSONNEL_NUMBER = "Таб.№";
@@ -58,20 +59,18 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeEntity> findAll() {
-        final List<EmployeeEntity> result = sessionFactory.getCurrentSession()
+        return sessionFactory.getCurrentSession()
                 .createQuery("FROM EmployeeEntityDecorator emp ORDER BY emp.initials")
                 .list();
-        return result;
     }
 
     @Override
     @Transactional(readOnly = true)
     public EmployeeEntity findByID(@NonNull Integer id) {
-        final EmployeeEntity result = (EmployeeEntity) this.sessionFactory.getCurrentSession()
+        return (EmployeeEntity) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.id = :id")
                 .setParameter("id", id)
                 .uniqueResult();
-        return result;
     }
 
     @Override
@@ -105,25 +104,25 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeEntity> findEmployeeByInitials(@NonNull String initials) {
-        final List<EmployeeEntity> result = this.sessionFactory.getCurrentSession()
+        return this.sessionFactory.getCurrentSession()
                 .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.initials LIKE :initials ORDER BY emp.initials")
                 .setParameter("initials", "%" + initials + "%")
                 .list();
-        return result;
     }
 
     @Transactional(readOnly = true)
     public List<EmployeeEntity> findByDepartmentById(@NonNull Integer id) {
-        final List<EmployeeEntity> result = this.sessionFactory.getCurrentSession()
+        return this.sessionFactory.getCurrentSession()
                 .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.department.id = :id ORDER BY emp.initials")
                 .setParameter("id", id).list();
-        return result;
     }
 
     @Transactional(readOnly = true)
     public Page<EmployeeEntity> findByDepartmentById(int page, int pageSize, @NonNull Integer id) {
         Session currentSession = this.sessionFactory.getCurrentSession();
-        final Long count = (Long) currentSession.createQuery("SELECT COUNT(emp.personnelNumber) FROM EmployeeEntityDecorator emp WHERE emp.department.id = :id")
+        final Long count = (Long) currentSession.createQuery("SELECT COUNT(emp.personnelNumber) " +
+                "FROM EmployeeEntityDecorator emp " +
+                "WHERE emp.department.id = :id")
                 .setParameter("id", id)
                 .uniqueResult();
 
@@ -140,48 +139,51 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public EmployeeEntity findByPersonnelNumber(Integer id) {
-        final EmployeeEntity result = (EmployeeEntity) this.sessionFactory.getCurrentSession()
+        return (EmployeeEntity) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.personnelNumber = :id")
                 .setParameter("id", id)
                 .uniqueResult();
-        return result;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeEntity> getUserRangeBirthday(@NonNull final Date startDate, @NonNull final Date endDate) {
-        final List<EmployeeEntity> result = sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator t where t.birthday BETWEEN :startDate AND :endDate ORDER BY t.initials")
+        return sessionFactory.getCurrentSession()
+                .createQuery("FROM EmployeeEntityDecorator t " +
+                        "where t.birthday BETWEEN :startDate AND :endDate " +
+                        "ORDER BY t.initials")
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .list();
-        return result;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeEntity> getUsersByBirthday(@NonNull final Date date) {
-        final List<EmployeeEntity> result = sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) ORDER BY t.initials")
+        return sessionFactory.getCurrentSession()
+                .createQuery("FROM EmployeeEntityDecorator t " +
+                        "where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) " +
+                        "ORDER BY t.initials")
                 .setParameter("date", date)
                 .list();
-        return result;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeEntity> getUserBirthdayToday() {
-        final List<EmployeeEntity> result = sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) ORDER BY t.initials")
+        return sessionFactory.getCurrentSession()
+                .createQuery("FROM EmployeeEntityDecorator t " +
+                        "where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) " +
+                        "ORDER BY t.initials")
                 .list();
-        return result;
     }
 
     @Override
     @Transactional(readOnly = true)
     public int getCountUserBirthday(@NonNull final Date date) {
         final Long result = (Long) sessionFactory.getCurrentSession()
-                .createQuery("SELECT count(t.personnelNumber) FROM EmployeeEntityDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+                .createQuery("SELECT count(t.personnelNumber) FROM EmployeeEntityDecorator t " +
+                        "where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
                 .setParameter("date", date)
                 .uniqueResult();
         return result.intValue();
@@ -190,10 +192,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeEntity> getUsersByInitials(@NonNull final String initials) {
-        final List<EmployeeEntity> result = sessionFactory.getCurrentSession().createQuery("FROM EmployeeEntityDecorator t where t.initials like :initials ORDER BY t.initials")
+        return sessionFactory.getCurrentSession().createQuery("FROM EmployeeEntityDecorator t " +
+                "where t.initials like :initials ORDER BY t.initials")
                 .setParameter("initials", "%" + initials + "%")
                 .list();
-        return result;
     }
 
     @Override
@@ -219,12 +221,12 @@ public class EmployeeDaoImpl implements EmployeeDao {
             Map<Integer, EmployeeEntity> newEmployeesMap = new HashMap<>();
             List<PassportEntity> passportEntityList = new ArrayList<>();
 
-            for(int i = 1; i < sheetAt.getLastRowNum(); i++) {
+            for (int i = 1; i < sheetAt.getLastRowNum(); i++) {
                 final XSSFRow row = sheetAt.getRow(i);
 
                 final EmployeeEntity newEmployeeEntity
                         = this.createEmployeeByRow(newEmployeesMap, row, nameColumns);
-                if(newEmployeeEntity == null)
+                if (newEmployeeEntity == null)
                     continue;
 
                 final DepartmentEntity departmentEntity
@@ -234,18 +236,20 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
                 final PassportEntity passportEntity
                         = this.createPassport(newEmployeeEntity, row, nameColumns);
-                if(passportEntity != null)
+                if (passportEntity != null)
                     passportEntityList.add(passportEntity);
 
-                if(!postEntityMap.containsKey(postEntity.getName() + Optional.ofNullable(postEntity.getRang()).orElse(0))) {
-                    postEntityMap.put(postEntity.getName() + Optional.ofNullable(postEntity.getRang()).orElse(0), postEntity);
+                final String postKey = postEntity.getName() +
+                        Optional.ofNullable(postEntity.getRang()).orElse(0);
+
+                if (!postEntityMap.containsKey(postKey)) {
+                    postEntityMap.put(postKey, postEntity);
                     newEmployeeEntity.setPostEntity(postEntity);
                 } else {
-                    newEmployeeEntity.setPostEntity(postEntityMap.get(postEntity.getName()
-                            + Optional.ofNullable(postEntity.getRang()).orElse(0)));
+                    newEmployeeEntity.setPostEntity(postEntityMap.get(postKey));
                 }
 
-                if(!departmentEntityMap.containsKey(departmentEntity.getAbbreviatedName())) {
+                if (!departmentEntityMap.containsKey(departmentEntity.getAbbreviatedName())) {
                     departmentEntityMap.put(departmentEntity.getAbbreviatedName(), departmentEntity);
                     newEmployeeEntity.setDepartment(departmentEntity);
                 } else {
@@ -316,13 +320,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         for (PassportEntity passportEntity : passportEntityList) {
             final String key = passportEntity.getSerial() + passportEntity.getNumber();
-            if(!collectPassportMap.containsKey(key)) {
+            if (!collectPassportMap.containsKey(key)) {
                 currentSession.persist(passportEntity);
             } else {
                 collectPassportMap.remove(key);
             }
 
-            if(++i % defaultBachSize == 0) {
+            if (++i % defaultBachSize == 0) {
                 i = 0;
                 currentSession.flush();
                 currentSession.clear();
@@ -363,7 +367,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
             currentSession.saveOrUpdate(newEmployee);
             countToAdd++;
-            if(++i % defaultBachSize == 0) {
+            if (++i % defaultBachSize == 0) {
                 i = 0;
                 currentSession.flush();
                 currentSession.clear();
@@ -381,7 +385,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                     .setParameter("idCief", departmentEntity.getChiefEntity())
                     .executeUpdate();
 
-            if(++i % defaultBachSize == 0) {
+            if (++i % defaultBachSize == 0) {
                 i = 0;
                 currentSession.flush();
                 currentSession.clear();
@@ -399,7 +403,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         for (PostEntity postEntity : postEntityMap.values()) {
             currentSession.saveOrUpdate(postEntity);
 
-            if(++i % defaultBachSize == 0) {
+            if (++i % defaultBachSize == 0) {
                 i = 0;
                 currentSession.flush();
                 currentSession.clear();
@@ -412,14 +416,14 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     private ResultUpdateEmployeesDto saveOrUpdateDepartment(Session currentSession, int defaultBachSize,
-                                                  Map<String, DepartmentEntity> departmentEntityMap,
-                                                  ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
+                                                            Map<String, DepartmentEntity> departmentEntityMap,
+                                                            ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         int countToAdd = 0;
         int i = 0;
         for (DepartmentEntity departmentEntity : departmentEntityMap.values()) {
             currentSession.saveOrUpdate(departmentEntity);
             countToAdd++;
-            if(++i % defaultBachSize == 0) {
+            if (++i % defaultBachSize == 0) {
                 i = 0;
                 currentSession.flush();
                 currentSession.clear();
@@ -432,8 +436,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     private ResultUpdateEmployeesDto getUpdateDeleteEmployees(Session currentSession,
-                                                               Map<Integer, EmployeeEntity> newEmployeesMap,
-                                                               ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
+                                                              Map<Integer, EmployeeEntity> newEmployeesMap,
+                                                              ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         final List<Integer> employeeFromDb
                 = currentSession.createQuery("SELECT e.personnelNumber FROM EmployeeEntityDecorator e")
                 .list();
@@ -446,7 +450,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         resultUpdateEmployeesDto.setDeleteEmployeeCount(removeEmployees.size());
 
-        if(removeEmployees.size() > 0) {
+        if (removeEmployees.size() > 0) {
             currentSession.createQuery("DELETE FROM EmployeeEntityDecorator e WHERE e.personnelNumber IN (:personnelNumbers)")
                     .setParameterList("personnelNumbers", removeEmployees)
                     .executeUpdate();
@@ -459,8 +463,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     private ResultUpdateEmployeesDto getUpdateDeleteDepartment(Session currentSession,
-                                                         Map<String, DepartmentEntity> departmentEntityMap,
-                                                         ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
+                                                               Map<String, DepartmentEntity> departmentEntityMap,
+                                                               ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         final List<DepartmentEntity> depListFromDb = currentSession
                 .createQuery("FROM DepartmentEntityDecorator d")
                 .list();
@@ -468,10 +472,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
         resultUpdateEmployeesDto.setAllDepSize(depListFromDb.size());
 
         final Iterator<DepartmentEntity> iteratorDepEntity = depListFromDb.iterator();
-        while(iteratorDepEntity.hasNext()) {
+        while (iteratorDepEntity.hasNext()) {
             final DepartmentEntity next = iteratorDepEntity.next();
             final DepartmentEntity departmentEntity = departmentEntityMap.get(next.getName());
-            if(departmentEntity != null) {
+            if (departmentEntity != null) {
                 departmentEntityMap.put(next.getAbbreviatedName(), next);
                 iteratorDepEntity.remove();
             }
@@ -482,7 +486,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         final List<Integer> postIds = depListFromDb.stream().map(DepartmentEntity::getId)
                 .collect(Collectors.toList());
 
-        if(postIds.size() > 0) {
+        if (postIds.size() > 0) {
             currentSession.createQuery("DELETE FROM DepartmentEntityDecorator d WHERE d.id IN (:idList)")
                     .setParameterList("idList", postIds)
                     .executeUpdate();
@@ -504,11 +508,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
         resultUpdateEmployeesDto.setAllPostSize(postEntitiesFromDb.size());
 
         final Iterator<PostEntity> iteratorPostEntity = postEntitiesFromDb.iterator();
-        while(iteratorPostEntity.hasNext()) {
+        while (iteratorPostEntity.hasNext()) {
             final PostEntity next = iteratorPostEntity.next();
             final String key = next.getName() + Optional.ofNullable(next.getRang()).orElse(0);
             final PostEntity postEntity = postEntityMap.get(key);
-            if(postEntity != null) {
+            if (postEntity != null) {
                 postEntityMap.put(key, next);
                 iteratorPostEntity.remove();
             }
@@ -518,7 +522,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         final List<Integer> postIds = postEntitiesFromDb.stream().map(PostEntity::getId)
                 .collect(Collectors.toList());
-        if(postIds.size() > 0) {
+        if (postIds.size() > 0) {
             currentSession.createQuery("DELETE FROM PostEntityDecorator p WHERE p.id IN (:idList)")
                     .setParameterList("idList", postIds)
                     .executeUpdate();
@@ -535,7 +539,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                                           XSSFRow row, List<String> nameColumns) {
         String value = row.getCell(nameColumns.indexOf(SERIAL_DOCUMENT)).getStringCellValue();
         PassportEntity passportEntity = null;
-        if(value != null && !value.trim().isEmpty()) {
+        if (value != null && !value.trim().isEmpty()) {
             passportEntity = new PassportEntity();
             passportEntity.setEmployee(newEmployeeEntity);
             passportEntity.setSerial("47" + value);
@@ -553,10 +557,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
         String value = row.getCell(nameColumns.indexOf(POST_NAME)).getStringCellValue();
 
         final String rang = value.replaceAll("[\\D]", "");
-        if(!rang.trim().isEmpty()) {
+        if (!rang.trim().isEmpty()) {
             final String rangInfo = value.substring(0, value.indexOf(rang));
             postEntity = postEntityMap.getOrDefault(rangInfo + rang, new PostEntityDecorator());
-            if(postEntity.getName() == null) {
+            if (postEntity.getName() == null) {
                 postEntity.setRang(Integer.valueOf(rang));
 
                 switch (value.charAt(value.indexOf(rang) + 2)) {
@@ -577,7 +581,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
             postEntity.setName(rangInfo.trim());
         } else {
             postEntity = postEntityMap.getOrDefault(value + "0", new PostEntityDecorator());
-            if(postEntity.getName() == null) {
+            if (postEntity.getName() == null) {
                 postEntity.setName(value);
             }
         }
@@ -609,7 +613,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                                                XSSFRow row, List<String> nameColumns) {
         String value = row.getCell(nameColumns.indexOf(PERSONNEL_NUMBER)).getStringCellValue();
 
-        if(value == null || value.trim().isEmpty()
+        if (value == null || value.trim().isEmpty()
                 || newEmployeesMap.containsKey(Integer.valueOf(value)))
             return null;
 
@@ -618,27 +622,27 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         value = row.getCell(nameColumns.indexOf(SECOND_NAME)).getStringCellValue();
         value += " " + row.getCell(nameColumns.indexOf(FIRST_NAME)).getStringCellValue();
-        value += " " +row.getCell(nameColumns.indexOf(THIRD_NAME)).getStringCellValue();
+        value += " " + row.getCell(nameColumns.indexOf(THIRD_NAME)).getStringCellValue();
         newEmployeeEntity.setInitials(value);
 
         Date date = row.getCell(nameColumns.indexOf(BIRTHDAY_DATE)).getDateCellValue();
         newEmployeeEntity.setBirthday(date);
 
-        date = row.getCell(nameColumns.indexOf(EMPLOYTMENT_DATE)).getDateCellValue();
+        date = row.getCell(nameColumns.indexOf(EMPLOYMENT_DATE)).getDateCellValue();
         newEmployeeEntity.setEmploymentDate(date);
 
         date = row.getCell(nameColumns.indexOf(DISMISSAL_DATE)).getDateCellValue();
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
-        if(calendar.get(Calendar.YEAR) != YEAR_NOT_DISMISSAL)
+        if (calendar.get(Calendar.YEAR) != YEAR_NOT_DISMISSAL)
             newEmployeeEntity.setDismissalDate(date);
 
         value = row.getCell(nameColumns.indexOf(SEX)).getStringCellValue();
         newEmployeeEntity.setGender(value);
 
         value = row.getCell(nameColumns.indexOf(PHONE_NUMBER)).getStringCellValue();
-        if(value.length() == 10)
+        if (value.length() == 10)
             newEmployeeEntity.setMobileNumber(value);
         else
             newEmployeeEntity.setPhoneNumber(value);
@@ -650,7 +654,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
             newEmployeeEntity.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/o_"
                     + URLEncoder.encode(newEmployeeEntity.getInitials(), "UTF-8")
                     .replace("+", "%20") + ".jpg");
-        } catch (UnsupportedEncodingException ignore) {}
+        } catch (UnsupportedEncodingException ignore) {
+        }
 
         return newEmployeeEntity;
     }
