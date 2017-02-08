@@ -8,7 +8,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -82,14 +81,15 @@ public class WebForwardingServlet extends HttpServlet {
         try{
             final URL toJS  = new URL(url);
             con = (HttpURLConnection) toJS.openConnection();
-
             con.setRequestMethod("GET");
-            con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-            con.setRequestProperty("Accept","*");
             con.setDoOutput(true);
-            if(httpReq.getHeader("X-Token") != null) {
-                con.setRequestProperty("X-Token", httpReq.getHeader("X-Token"));
+
+            final Enumeration<String> headerNames = httpReq.getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                final String headerName = headerNames.nextElement();
+                con.setRequestProperty(headerName, httpReq.getHeader(headerName));
             }
+
             int responseCode = con.getResponseCode();
 
             final ServletOutputStream writer = httpRes.getOutputStream();
@@ -123,20 +123,20 @@ public class WebForwardingServlet extends HttpServlet {
         try{
             final URL toJS  = new URL(url);
             con = (HttpURLConnection) toJS.openConnection();
-
             con.setRequestMethod("POST");
-            con.setRequestProperty("Accept","*");
             con.setDoOutput(true);
-            con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-            if(httpReq.getHeader("X-Token") != null) {
-                con.setRequestProperty("X-Token", httpReq.getHeader("X-Token"));
+
+            final Enumeration<String> headerNames = httpReq.getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                final String headerName = headerNames.nextElement();
+                con.setRequestProperty(headerName, httpReq.getHeader(headerName));
             }
 
             String body = null;
-            ServletInputStream inputStream1 = httpReq.getInputStream();
-            if(inputStream1.isReady()) {
-                body = new BufferedReader(new InputStreamReader(inputStream1))
-                        .lines().collect(Collectors.joining("\n"));
+            ServletInputStream inputStreamForRequest = httpReq.getInputStream();
+            if(inputStreamForRequest.isReady()) {
+                body = new BufferedReader(new InputStreamReader(inputStreamForRequest))
+                        .lines().collect(Collectors.joining("\r\n"));
             }
 
             if(body == null || body.trim().isEmpty())
