@@ -13,6 +13,7 @@ public class UISystemUSImpl implements UISystemUS {
 	private DialogUS dialog = new DialogUSImpl();
 	private StatusBarUS statusBar;
 	private StaticUS staticUS;
+	private MenuBarUS menuBarUS;
 
 	public UISystemUSImpl(final StatusBarUS statusBar) {
 		this.statusBar = statusBar;
@@ -39,13 +40,20 @@ public class UISystemUSImpl implements UISystemUS {
 	}
 
 	@Override
-	public StaticUS getStaticUs() {
+	public StaticUS getStatic() {
 		return this.staticUS;
+	}
+
+	@Override
+	public MenuBarUS getMenuBar() {
+		return this.menuBarUS;
 	}
 
 	public void setNotification(final NotificationUS notificationUS) {
 		this.notification = notificationUS;
 	}
+
+	public void setMenuBarUS(final MenuBarUS menuBarUS) {this.menuBarUS = menuBarUS;}
 
 	public void setDialog(final DialogUS dialogUS) {
 		this.dialog = dialogUS;

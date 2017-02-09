@@ -7,9 +7,9 @@ import javafx.scene.Parent;
  * @author Danilov
  * @version 0.1
  */
-public interface VComponentUI {
+public interface BaseView<T extends Parent> {
 	/**Задать view контент.*/
-	void setContent(Parent content);
+	void setContent(T content);
 	/**Получить view контент.*/
-	Parent getContent();
+	T getContent();
 }

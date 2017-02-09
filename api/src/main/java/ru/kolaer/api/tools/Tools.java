@@ -61,4 +61,14 @@ public class Tools {
             Platform.runLater(runnable);
         }
     }
+
+    public static void runOnWithOutThreadFX(final Runnable runnable) {
+        Objects.requireNonNull(runnable, "runnable");
+
+        if(Platform.isFxApplicationThread()) {
+            runnable.run();
+        } else {
+            Platform.runLater(runnable);
+        }
+    }
 }

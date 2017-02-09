@@ -15,7 +15,7 @@ import javafx.util.Duration;
 import org.controlsfx.tools.Borders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.view.VComponentUI;
+import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.system.ui.NotifiAction;
 import ru.kolaer.api.system.ui.NotificationUS;
 import ru.kolaer.api.tools.Tools;
@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Created by danilovey on 18.08.2016.
  */
-public class NotificationPane implements NotificationUS, VComponentUI {
+public class NotificationPane implements NotificationUS, BaseView {
     private static final Logger LOG = LoggerFactory.getLogger(NotificationPane.class);
     private final int SIMPLE_MESSAGE = 0;
     private final int INFO_MESSAGE = 1;

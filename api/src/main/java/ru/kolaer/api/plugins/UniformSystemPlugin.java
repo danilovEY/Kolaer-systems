@@ -1,6 +1,6 @@
 package ru.kolaer.api.plugins;
 
-import ru.kolaer.api.mvp.view.VComponentUI;
+import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 
@@ -13,7 +13,7 @@ import java.util.Collection;
  * @author danilovey
  * @version 1.0
  */
-public interface UniformSystemPlugin extends VComponentUI {
+public interface UniformSystemPlugin extends BaseView {
 
 	/**Инициализация плагина */
 	void initialization(UniformSystemEditorKit editorKit) throws Exception;

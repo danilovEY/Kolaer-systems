@@ -8,7 +8,6 @@ import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -67,7 +66,7 @@ public class PprService implements Service {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(counter.getEnd());
 
-            editorKit.getUISystemUS().getStaticUs().addStaticView(staticViewPPR);
+            editorKit.getUISystemUS().getStatic().addStaticView(staticViewPPR);
 
             pprs.add(staticViewPPR);
         }

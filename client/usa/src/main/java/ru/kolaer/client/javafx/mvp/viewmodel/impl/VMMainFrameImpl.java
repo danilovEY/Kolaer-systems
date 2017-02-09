@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -14,6 +15,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;
+import ru.kolaer.api.system.ui.MenuBarUS;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
@@ -25,6 +27,7 @@ import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.javafx.system.network.NetworkUSImpl;
+import ru.kolaer.client.javafx.system.ui.MenuBarUSImpl;
 import ru.kolaer.client.javafx.system.ui.NotificationPane;
 import ru.kolaer.client.javafx.system.ui.UISystemUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;
@@ -77,12 +80,21 @@ public class VMMainFrameImpl extends Application {
         splitPane.setDividerPositions(1);
         this.mainPane.setCenter(splitPane);
 
+        final MenuBar menuBar = new MenuBar();
+        this.mainPane.setTop(menuBar);
+
+        final MenuBarUSImpl menuBarUS = new MenuBarUSImpl(menuBar);
         final NotificationPane notify = new NotificationPane();
+        final NetworkUSImpl network = new NetworkUSImpl();
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         uiSystemUS.setNotification(notify);
         splitPane.getItems().add(notify.getContent());
-        final NetworkUSImpl network = new NetworkUSImpl();
+
+
+
         final AuthenticationOnNetwork authentication = new AuthenticationOnNetwork();
+        authentication.registerObserver(menuBarUS);
+
         final UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
         editorKit.setUSNetwork(network);
         editorKit.setUISystemUS(uiSystemUS);

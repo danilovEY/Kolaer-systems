@@ -42,6 +42,12 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
     }
 
     @Override
+    public KolpassTable getKolpassTable() {
+        //TODO NPE!
+        return null;
+    }
+
+    @Override
     public EmployeeOtherOrganizationTable getEmployeeOtherOrganizationTable() {
         return this.employeeOtherOrganizationTable;
     }
