@@ -91,7 +91,6 @@ public class VMMainFrameImpl extends Application {
         splitPane.getItems().add(notify.getContent());
 
 
-
         final AuthenticationOnNetwork authentication = new AuthenticationOnNetwork();
         authentication.registerObserver(menuBarUS);
 

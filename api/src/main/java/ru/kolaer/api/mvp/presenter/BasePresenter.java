@@ -8,4 +8,6 @@ import ru.kolaer.api.mvp.view.BaseView;
 public interface BasePresenter<T extends BaseView> {
     T getView();
     void setView(T view);
+
+    void updateView();
 }

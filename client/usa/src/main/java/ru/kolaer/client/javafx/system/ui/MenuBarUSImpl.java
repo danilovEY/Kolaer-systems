@@ -59,6 +59,8 @@ public class MenuBarUSImpl implements MenuBarUS, AuthenticationObserver {
 
     @Override
     public void logout(AccountEntity account) {
+        authorizationItem.setText("Авторизоваться");
+
         UniformSystemEditorKitSingleton.getInstance().getUISystemUS()
                 .getNotification().showInformationNotifi("Выход из системы",
                 "Выход из системы прошел успешно");

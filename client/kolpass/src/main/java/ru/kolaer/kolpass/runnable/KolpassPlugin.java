@@ -17,10 +17,11 @@ import java.util.Collection;
 @Slf4j
 public class KolpassPlugin implements UniformSystemPlugin {
     private BorderPane mainPane;
+    private UniformSystemEditorKit editorKit;
 
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
-        log.info("KOLPASS INITIALIZATION!");
+        this.editorKit = editorKit;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class KolpassPlugin implements UniformSystemPlugin {
 
     @Override
     public void start() throws Exception {
-        this.mainPane = new BorderPane(new Label("KolPass"));
+        this.mainPane = new BorderPane();
     }
 
     @Override

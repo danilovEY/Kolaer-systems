@@ -15,6 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class RepositoryPasswordHistoryDto implements Serializable {
     private Long id;
+    private String login;
     private String password;
     private Date passwordWriteDate;
     private RepositoryPasswordDto repositoryPasswordDto;

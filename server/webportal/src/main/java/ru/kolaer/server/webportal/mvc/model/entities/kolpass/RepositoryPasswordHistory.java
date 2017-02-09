@@ -28,6 +28,10 @@ public class RepositoryPasswordHistory implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "repository_pass_history.seq")
     private Long id;
 
+    @Column(name = "login", length = 32, nullable = false)
+    @ApiModelProperty("Логин")
+    private String login;
+
     @Column(name = "password", length = 32, nullable = false)
     @ApiModelProperty("Пароль")
     private String password;
