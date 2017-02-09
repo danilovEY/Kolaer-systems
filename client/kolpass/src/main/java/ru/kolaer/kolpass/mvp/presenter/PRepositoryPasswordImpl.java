@@ -16,6 +16,9 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
 
     public PRepositoryPasswordImpl() {
         this.vRepositoryPassword = new VRepositoryPasswordImpl();
+        this.lastPassword = new PPasswordHistoryImpl();
+        this.firstPassword = new PPasswordHistoryImpl();
+        this.prevPassword = new PPasswordHistoryImpl();
     }
 
     public PRepositoryPasswordImpl(RepositoryPasswordDto passwordDto) {
@@ -27,6 +30,14 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
     @Override
     public void updateView() {
         this.vRepositoryPassword.setName(this.passwordDto.getName());
+
+        this.lastPassword.setModel(this.passwordDto.getLastPassword());
+        this.firstPassword.setModel(this.passwordDto.getFirstPassword());
+        this.prevPassword.setModel(this.passwordDto.getPrevPassword());
+
+        this.vRepositoryPassword.setFirstPassword(this.firstPassword.getView());
+        this.vRepositoryPassword.setFirstPassword(this.lastPassword.getView());
+        this.vRepositoryPassword.setPrevPassword(this.prevPassword.getView());
     }
 
     @Override
