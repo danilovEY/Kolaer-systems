@@ -47,10 +47,10 @@ project(":client") {
     }
 
     task makePretty() {
-        //delete pathToProjectDirWithPlugins
+        delete pathToProjectDirWithPlugins
     }
 
-    task makeProjectDirTask (dependsOn: makePretty) {
+    task makeProjectDirTask () {
         doLast {
             mkdir(pathToProjectDir)
             mkdir(pathToProjectDirWithPlugins)

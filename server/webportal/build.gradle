@@ -47,7 +47,6 @@ dependencies {
     compile "io.springfox:springfox-swagger2:2.6.1"
     compile "net.sf.ehcache:ehcache:2.10.3"
     compile "com.sun.mail:javax.mail:1.5.4"
-    compile "org.projectlombok:lombok:1.16.12"
     compile "org.jsoup:jsoup:1.10.2"
 
     testCompile "junit:junit:4.12";
