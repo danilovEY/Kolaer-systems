@@ -8,6 +8,7 @@ public interface ApplicationDataBase {
     NotifyMessageTable getNotifyMessageTable();
     PsrTable getPsrTable();
     CounterTable getCounterTable();
+    KolpassTable getKolpassTable();
 
     EmployeeOtherOrganizationTable getEmployeeOtherOrganizationTable();
 }
