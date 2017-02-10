@@ -9,5 +9,6 @@ import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
  * Created by danilovey on 09.02.2017.
  */
 public interface PPasswordHistory extends BasePresenter<VPasswordHistory>, BaseModel<RepositoryPasswordHistoryDto> {
-
+    void setEditable(boolean edit);
+    boolean isEditable();
 }

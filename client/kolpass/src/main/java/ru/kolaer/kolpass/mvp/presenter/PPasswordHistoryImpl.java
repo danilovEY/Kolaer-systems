@@ -27,6 +27,7 @@ public class PPasswordHistoryImpl implements PPasswordHistory {
     public void updateView() {
         this.vPasswordHistory.setDate(this.sdf.format(this.passwordHistoryDto.getPasswordWriteDate()));
         this.vPasswordHistory.setPassword(this.passwordHistoryDto.getPassword());
+        this.vPasswordHistory.setLogin(this.passwordHistoryDto.getLogin());
     }
 
     @Override
@@ -49,5 +50,15 @@ public class PPasswordHistoryImpl implements PPasswordHistory {
     public void setView(VPasswordHistory view) {
         this.vPasswordHistory = view;
         this.updateView();
+    }
+
+    @Override
+    public void setEditable(boolean edit) {
+        this.vPasswordHistory.setEditable(edit);
+    }
+
+    @Override
+    public boolean isEditable() {
+        return this.vPasswordHistory.isEditable();
     }
 }

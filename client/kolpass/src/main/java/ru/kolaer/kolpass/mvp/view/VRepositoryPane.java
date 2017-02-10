@@ -7,6 +7,6 @@ import ru.kolaer.api.mvp.view.BaseView;
  * Created by danilovey on 09.02.2017.
  */
 public interface VRepositoryPane extends BaseView<BorderPane> {
-    void addRepository(VRepositoryPane vRepositoryPane);
-    void removeRepository(VRepositoryPane vRepositoryPane);
+    void addRepositoryPassword(VRepositoryPassword vRepositoryPassword);
+    void removeRepositoryPassword(VRepositoryPassword vRepositoryPassword);
 }

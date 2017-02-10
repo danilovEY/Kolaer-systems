@@ -7,5 +7,6 @@ import ru.kolaer.kolpass.mvp.view.VRepositoryPane;
  * Created by danilovey on 09.02.2017.
  */
 public interface PRepositoryPane extends BasePresenter<VRepositoryPane> {
-
+    void addRepositoryPassword(PRepositoryPassword pRepositoryPassword);
+    void removeRepositoryPassword(PRepositoryPassword pRepositoryPassword);
 }

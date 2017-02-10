@@ -15,4 +15,7 @@ public interface VPasswordHistory extends BaseView<BorderPane> {
 
     String getPassword();
     void setPassword(String name);
+
+    void setEditable(boolean edit);
+    boolean isEditable();
 }

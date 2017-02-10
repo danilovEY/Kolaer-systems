@@ -10,6 +10,9 @@ public interface VRepositoryPassword extends BaseView<BorderPane> {
     void setName(String name);
     String getName();
 
+    void setImageUrl(String url);
+    String getImageUrl();
+
     void setLastPassword(VPasswordHistory password);
     void setFirstPassword(VPasswordHistory password);
     void setPrevPassword(VPasswordHistory password);

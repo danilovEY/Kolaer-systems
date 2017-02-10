@@ -1,8 +1,12 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryDto;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPassword;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPasswordImpl;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 09.02.2017.
@@ -16,9 +20,6 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
 
     public PRepositoryPasswordImpl() {
         this.vRepositoryPassword = new VRepositoryPasswordImpl();
-        this.lastPassword = new PPasswordHistoryImpl();
-        this.firstPassword = new PPasswordHistoryImpl();
-        this.prevPassword = new PPasswordHistoryImpl();
     }
 
     public PRepositoryPasswordImpl(RepositoryPasswordDto passwordDto) {
@@ -31,13 +32,27 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
     public void updateView() {
         this.vRepositoryPassword.setName(this.passwordDto.getName());
 
-        this.lastPassword.setModel(this.passwordDto.getLastPassword());
-        this.firstPassword.setModel(this.passwordDto.getFirstPassword());
-        this.prevPassword.setModel(this.passwordDto.getPrevPassword());
+        final String url = this.passwordDto.getUrlImage() == null
+                ? this.getClass().getResource("/icon-security1.png").toString()
+                : this.passwordDto.getUrlImage();
 
-        this.vRepositoryPassword.setFirstPassword(this.firstPassword.getView());
-        this.vRepositoryPassword.setFirstPassword(this.lastPassword.getView());
-        this.vRepositoryPassword.setPrevPassword(this.prevPassword.getView());
+        this.vRepositoryPassword.setImageUrl(url);
+
+        Optional.ofNullable(this.passwordDto.getLastPassword())
+                .filter(Objects::nonNull)
+                .map(dto -> this.lastPassword = this.setIfExist(this.lastPassword, dto, true))
+                .ifPresent(pass -> this.vRepositoryPassword.setLastPassword(pass.getView()));
+
+        Optional.ofNullable(this.passwordDto.getPrevPassword())
+                .filter(Objects::nonNull)
+                .map(dto -> this.prevPassword = this.setIfExist(this.prevPassword, dto, false))
+                .ifPresent(pass -> this.vRepositoryPassword.setPrevPassword(pass.getView()));
+
+        Optional.ofNullable(this.passwordDto.getFirstPassword())
+                .filter(Objects::nonNull)
+                .map(dto -> this.firstPassword = this.setIfExist(this.firstPassword, dto, false))
+                .ifPresent(pass -> this.vRepositoryPassword.setFirstPassword(pass.getView()));
+
     }
 
     @Override
@@ -58,5 +73,12 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
     @Override
     public void setView(VRepositoryPassword view) {
         this.vRepositoryPassword = view;
+    }
+
+    private PPasswordHistory setIfExist(PPasswordHistory pPass, RepositoryPasswordHistoryDto dto, boolean edit) {
+        PPasswordHistory pPasswordHistory = Optional.ofNullable(pPass).orElse(new PPasswordHistoryImpl());
+        pPasswordHistory.setEditable(edit);
+        pPasswordHistory.setModel(dto);
+        return pPasswordHistory;
     }
 }

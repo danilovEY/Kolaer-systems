@@ -1,23 +1,106 @@
 package ru.kolaer.kolpass.mvp.view;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+
+import java.util.Optional;
 
 /**
  * Created by danilovey on 09.02.2017.
  */
 public class VRepositoryPasswordImpl implements VRepositoryPassword {
-    private HBox content;
     private BorderPane mainPane;
     private Label labelName;
+    private VPasswordHistory lastPass;
+    private VPasswordHistory firstPass;
+    private VPasswordHistory prevPass;
+    private ImageView imageView;
+    private String imageUrl;
+    private TitledPane titledPaneLast;
+    private TitledPane titledPaneFirst;
+    private TitledPane titledPanePrev;
+    private Stage stage;
+    private VBox content;
+
 
     public VRepositoryPasswordImpl() {
-        this.content = new HBox();
-        this.mainPane = new BorderPane(this.content);
         this.labelName = new Label();
+        this.labelName.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        this.labelName.setAlignment(Pos.CENTER);
 
+        this.imageView = new ImageView();
+        this.imageView.setFitHeight(200);
+        this.imageView.setFitWidth(200);
+
+        this.mainPane = new BorderPane();
+        this.mainPane.setStyle("-fx-background-color: lightskyblue");
+        this.mainPane.setPadding(new Insets(5));
+        this.mainPane.setBorder(new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID, new CornerRadii(20.0), new BorderWidths(3.0))));
         this.mainPane.setTop(this.labelName);
+        this.mainPane.setCenter(this.imageView);
+
+        this.titledPaneLast = new TitledPane("Последний пароль", null);
+
+        this.titledPaneFirst = new TitledPane("Первый пароль", null);
+        this.titledPaneFirst.setExpanded(false);
+
+        this.titledPanePrev = new TitledPane("Предыдущий пароль", null);
+        this.titledPanePrev.setExpanded(false);
+
+        BorderPane.setAlignment(this.labelName, Pos.CENTER);
+        this.init();
+    }
+
+    private void init() {
+        final Button openPass = new Button("Открыть");
+        openPass.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        openPass.setPrefHeight(30);
+        openPass.setOnAction(e -> {
+            if(this.stage == null) {
+                this.stage = new Stage();
+                this.stage.setTitle(this.labelName.getText());
+                this.content = new VBox();
+                stage.setScene(new Scene(content));
+
+                this.titledPaneLast.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
+                this.titledPanePrev.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
+                this.titledPaneFirst.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
+
+                Optional.ofNullable(this.lastPass).ifPresent(pass -> {
+                    this.titledPaneLast.setContent(pass.getContent());
+                    content.getChildren().add(this.titledPaneLast);
+                });
+
+                Optional.ofNullable(this.prevPass).ifPresent(pass -> {
+                    this.titledPanePrev.setContent(pass.getContent());
+                    content.getChildren().add(this.titledPanePrev);
+                });
+
+                Optional.ofNullable(this.firstPass).ifPresent(pass -> {
+                    this.titledPaneFirst.setContent(pass.getContent());
+                    content.getChildren().add(this.titledPaneFirst);
+                });
+            }
+            stage.requestFocus();
+            stage.sizeToScene();
+            stage.centerOnScreen();
+            stage.show();
+        });
+
+        this.mainPane.setBottom(openPass);
+        BorderPane.setAlignment(openPass, Pos.CENTER);
     }
 
     @Override
@@ -31,33 +114,43 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
     }
 
     @Override
+    public void setImageUrl(String url) {
+        this.imageView.setImage(new Image(url));
+    }
+
+    @Override
+    public String getImageUrl() {
+        return this.imageUrl;
+    }
+
+    @Override
     public void setLastPassword(VPasswordHistory password) {
-        this.content.getChildren().set(0, password.getContent());
+        this.lastPass = password;
     }
 
     @Override
     public void setFirstPassword(VPasswordHistory password) {
-        this.content.getChildren().set(2, password.getContent());
+        this.firstPass = password;
     }
 
     @Override
     public void setPrevPassword(VPasswordHistory password) {
-        this.content.getChildren().set(1, password.getContent());
+        this.prevPass = password;
     }
 
     @Override
     public VPasswordHistory getLastPassword() {
-        return null;
+        return this.lastPass;
     }
 
     @Override
     public VPasswordHistory getFirstPassword() {
-        return null;
+        return this.firstPass;
     }
 
     @Override
     public VPasswordHistory getPrevPassword() {
-        return null;
+        return this.prevPass;
     }
 
     @Override

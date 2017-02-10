@@ -27,4 +27,14 @@ public class PRepositoryPaneImpl implements PRepositoryPane {
     public void updateView() {
 
     }
+
+    @Override
+    public void addRepositoryPassword(PRepositoryPassword pRepositoryPassword) {
+        this.view.addRepositoryPassword(pRepositoryPassword.getView());
+    }
+
+    @Override
+    public void removeRepositoryPassword(PRepositoryPassword pRepositoryPassword) {
+        this.view.removeRepositoryPassword(pRepositoryPassword.getView());
+    }
 }

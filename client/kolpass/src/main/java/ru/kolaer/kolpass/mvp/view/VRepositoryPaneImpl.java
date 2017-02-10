@@ -1,5 +1,6 @@
 package ru.kolaer.kolpass.mvp.view;
 
+import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 
@@ -11,8 +12,10 @@ public class VRepositoryPaneImpl implements VRepositoryPane {
     private FlowPane contentPane;
 
     public VRepositoryPaneImpl() {
-        this.contentPane = new FlowPane();
+        this.contentPane = new FlowPane(5, 5);
         this.mainPane = new BorderPane(this.contentPane);
+        this.mainPane.setStyle("-fx-background-image: url('" + this.getClass().getResource("/background.jpg").toString() + "')");
+        this.mainPane.setPadding(new Insets(10));
     }
 
     @Override
@@ -26,12 +29,12 @@ public class VRepositoryPaneImpl implements VRepositoryPane {
     }
 
     @Override
-    public void addRepository(VRepositoryPane vRepositoryPane) {
-        this.contentPane.getChildren().add(vRepositoryPane.getContent());
+    public void addRepositoryPassword(VRepositoryPassword vRepositoryPassword) {
+        this.contentPane.getChildren().add(vRepositoryPassword.getContent());
     }
 
     @Override
-    public void removeRepository(VRepositoryPane vRepositoryPane) {
-        this.contentPane.getChildren().remove(vRepositoryPane.getContent());
+    public void removeRepositoryPassword(VRepositoryPassword vRepositoryPassword) {
+        this.contentPane.getChildren().remove(vRepositoryPassword.getContent());
     }
 }
