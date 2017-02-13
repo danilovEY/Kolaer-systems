@@ -1,5 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.kolpass;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"historyPasswords"})
 @ApiModel("(Парольница) Репозиторий паролей")
 public class RepositoryPassword implements Serializable {
 
@@ -57,7 +60,7 @@ public class RepositoryPassword implements Serializable {
     @ApiModelProperty("Предыдущий пароль")
     private RepositoryPasswordHistory prevPassword;
 
-    @OneToMany(mappedBy = "repositoryPassword", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "repositoryPassword")
     @ApiModelProperty("История паролей")
     private List<RepositoryPasswordHistory> historyPasswords;
 

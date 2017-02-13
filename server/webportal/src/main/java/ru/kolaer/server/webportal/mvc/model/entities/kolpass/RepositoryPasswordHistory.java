@@ -1,11 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.entities.kolpass;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,9 +15,11 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "repository_pass_history")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"repositoryPassword"})
 @ApiModel("(Парольница) Контейнер с паролем")
 public class RepositoryPasswordHistory implements Serializable {
 
@@ -44,6 +45,31 @@ public class RepositoryPasswordHistory implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "repository_pass_id", nullable = false)
     @ApiModelProperty("Репозиторий пароля")
+    @JsonIgnore
     private RepositoryPassword repositoryPassword;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RepositoryPasswordHistory that = (RepositoryPasswordHistory) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (login != null ? !login.equals(that.login) : that.login != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        if (passwordWriteDate != null ? !passwordWriteDate.equals(that.passwordWriteDate) : that.passwordWriteDate != null)
+            return false;
+        return repositoryPassword != null ? repositoryPassword.getId().equals(that.repositoryPassword.getId()) : that.repositoryPassword == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (login != null ? login.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (passwordWriteDate != null ? passwordWriteDate.hashCode() : 0);
+        return result;
+    }
 }

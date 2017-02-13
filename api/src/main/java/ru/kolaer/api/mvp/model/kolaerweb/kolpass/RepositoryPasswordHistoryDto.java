@@ -18,5 +18,4 @@ public class RepositoryPasswordHistoryDto implements Serializable {
     private String login;
     private String password;
     private Date passwordWriteDate;
-    private RepositoryPasswordDto repositoryPasswordDto;
 }
