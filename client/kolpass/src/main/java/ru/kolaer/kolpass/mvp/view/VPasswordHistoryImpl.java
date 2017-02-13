@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -96,6 +97,12 @@ public class VPasswordHistoryImpl implements VPasswordHistory {
     @Override
     public boolean isEditable() {
         return this.loginField.isEditable();
+    }
+
+    @Override
+    public boolean isChangeData(RepositoryPasswordHistory passwordHistory) {
+        return !this.passwordField.getText().equals(passwordHistory.getPassword())
+                && !this.loginField.getText().equals(passwordHistory.getLogin());
     }
 
     @Override

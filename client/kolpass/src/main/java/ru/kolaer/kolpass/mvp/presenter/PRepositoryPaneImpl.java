@@ -1,6 +1,6 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordBase;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPane;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPaneImpl;
@@ -35,7 +35,7 @@ public class PRepositoryPaneImpl implements PRepositoryPane {
         this.view.clear();
         this.repositoryPasswordList.clear();
 
-        for (RepositoryPasswordBase repositoryPassword : this.kolpassTable.getAllRepositoryPasswords()) {
+        for (RepositoryPassword repositoryPassword : this.kolpassTable.getAllRepositoryPasswords()) {
             this.addRepositoryPassword(new PRepositoryPasswordImpl(repositoryPassword));
         }
     }

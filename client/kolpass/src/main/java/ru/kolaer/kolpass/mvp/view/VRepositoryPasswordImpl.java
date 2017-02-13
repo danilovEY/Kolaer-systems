@@ -71,6 +71,7 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
             if(this.stage == null) {
                 this.stage = new Stage();
                 this.stage.setTitle(this.labelName.getText());
+
                 this.content = new VBox();
                 stage.setScene(new Scene(content));
 

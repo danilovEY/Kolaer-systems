@@ -1,42 +1,48 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryBase;
+import lombok.extern.slf4j.Slf4j;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistoryImpl;
 
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 09.02.2017.
  */
+@Slf4j
 public class PPasswordHistoryImpl implements PPasswordHistory {
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
     private VPasswordHistory vPasswordHistory;
-    private RepositoryPasswordHistoryBase passwordHistoryDto;
+    private RepositoryPasswordHistory passwordHistoryDto;
 
     public PPasswordHistoryImpl() {
         this.vPasswordHistory = new VPasswordHistoryImpl();
     }
 
-    public PPasswordHistoryImpl(RepositoryPasswordHistoryBase passwordHistoryDto) {
+    public PPasswordHistoryImpl(RepositoryPasswordHistory passwordHistoryDto) {
         this();
         this.setModel(passwordHistoryDto);
     }
 
     @Override
     public void updateView() {
-        this.vPasswordHistory.setDate(this.sdf.format(this.passwordHistoryDto.getPasswordWriteDate()));
+        Optional.ofNullable(this.passwordHistoryDto.getPasswordWriteDate()).ifPresent(date ->
+                this.vPasswordHistory.setDate(this.sdf.format(date))
+        );
         this.vPasswordHistory.setPassword(this.passwordHistoryDto.getPassword());
         this.vPasswordHistory.setLogin(this.passwordHistoryDto.getLogin());
     }
 
     @Override
-    public RepositoryPasswordHistoryBase getModel() {
+    public RepositoryPasswordHistory getModel() {
         return this.passwordHistoryDto;
     }
 
     @Override
-    public void setModel(RepositoryPasswordHistoryBase model) {
+    public void setModel(RepositoryPasswordHistory model) {
         this.passwordHistoryDto = model;
         this.updateView();
     }
