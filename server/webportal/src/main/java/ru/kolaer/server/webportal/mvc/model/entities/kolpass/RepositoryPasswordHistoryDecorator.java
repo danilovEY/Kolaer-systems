@@ -14,8 +14,6 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "repository_pass_history")
-@Getter
-@Setter
 public class RepositoryPasswordHistoryDecorator implements RepositoryPasswordHistory {
     private RepositoryPasswordHistory repositoryPasswordHistory;
 

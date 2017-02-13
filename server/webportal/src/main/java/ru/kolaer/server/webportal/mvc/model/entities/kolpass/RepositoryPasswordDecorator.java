@@ -1,11 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.entities.kolpass;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordBase;
@@ -13,7 +7,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 /**
