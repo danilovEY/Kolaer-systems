@@ -1,6 +1,6 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryBase;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistoryImpl;
 
@@ -12,13 +12,13 @@ import java.text.SimpleDateFormat;
 public class PPasswordHistoryImpl implements PPasswordHistory {
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
     private VPasswordHistory vPasswordHistory;
-    private RepositoryPasswordHistoryDto passwordHistoryDto;
+    private RepositoryPasswordHistoryBase passwordHistoryDto;
 
     public PPasswordHistoryImpl() {
         this.vPasswordHistory = new VPasswordHistoryImpl();
     }
 
-    public PPasswordHistoryImpl(RepositoryPasswordHistoryDto passwordHistoryDto) {
+    public PPasswordHistoryImpl(RepositoryPasswordHistoryBase passwordHistoryDto) {
         this();
         this.setModel(passwordHistoryDto);
     }
@@ -31,12 +31,12 @@ public class PPasswordHistoryImpl implements PPasswordHistory {
     }
 
     @Override
-    public RepositoryPasswordHistoryDto getModel() {
+    public RepositoryPasswordHistoryBase getModel() {
         return this.passwordHistoryDto;
     }
 
     @Override
-    public void setModel(RepositoryPasswordHistoryDto model) {
+    public void setModel(RepositoryPasswordHistoryBase model) {
         this.passwordHistoryDto = model;
         this.updateView();
     }

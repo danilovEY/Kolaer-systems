@@ -1,7 +1,7 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordBase;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryBase;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPassword;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPasswordImpl;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public class PRepositoryPasswordImpl implements PRepositoryPassword {
     private VRepositoryPassword vRepositoryPassword;
-    private RepositoryPasswordDto passwordDto;
+    private RepositoryPasswordBase passwordDto;
     private PPasswordHistory lastPassword;
     private PPasswordHistory firstPassword;
     private PPasswordHistory prevPassword;
@@ -22,7 +22,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
         this.vRepositoryPassword = new VRepositoryPasswordImpl();
     }
 
-    public PRepositoryPasswordImpl(RepositoryPasswordDto passwordDto) {
+    public PRepositoryPasswordImpl(RepositoryPasswordBase passwordDto) {
         this();
         this.passwordDto = passwordDto;
         this.updateView();
@@ -56,12 +56,12 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
     }
 
     @Override
-    public RepositoryPasswordDto getModel() {
+    public RepositoryPasswordBase getModel() {
         return this.passwordDto;
     }
 
     @Override
-    public void setModel(RepositoryPasswordDto model) {
+    public void setModel(RepositoryPasswordBase model) {
         this.passwordDto = model;
     }
 
@@ -75,7 +75,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
         this.vRepositoryPassword = view;
     }
 
-    private PPasswordHistory setIfExist(PPasswordHistory pPass, RepositoryPasswordHistoryDto dto, boolean edit) {
+    private PPasswordHistory setIfExist(PPasswordHistory pPass, RepositoryPasswordHistoryBase dto, boolean edit) {
         PPasswordHistory pPasswordHistory = Optional.ofNullable(pPass).orElse(new PPasswordHistoryImpl());
         pPasswordHistory.setEditable(edit);
         pPasswordHistory.setModel(dto);

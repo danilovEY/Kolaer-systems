@@ -10,8 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.mvc.model.dao.RepositoryPasswordHistoryDao;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistory;
+import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryDecorator;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,15 +31,15 @@ public class RepositoryPasswordHistoryDaoImpl implements RepositoryPasswordHisto
     @Transactional(readOnly = true)
     public List<RepositoryPasswordHistory> findAll() {
         return this.sessionFactory.getCurrentSession()
-                .createQuery("FROM RepositoryPasswordHistory")
+                .createQuery("FROM RepositoryPasswordHistoryDecorator")
                 .list();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public RepositoryPasswordHistory findByID(@NonNull Integer id) {
-        return (RepositoryPasswordHistory) this.sessionFactory.getCurrentSession()
-                .createQuery("FROM RepositoryPasswordHistory r WHERE r.id = :id")
+    public RepositoryPasswordHistoryDecorator findByID(@NonNull Integer id) {
+        return (RepositoryPasswordHistoryDecorator) this.sessionFactory.getCurrentSession()
+                .createQuery("FROM RepositoryPasswordHistoryDecorator r WHERE r.id = :id")
                 .setParameter("id", id)
                 .uniqueResult();
     }
@@ -59,7 +60,7 @@ public class RepositoryPasswordHistoryDaoImpl implements RepositoryPasswordHisto
     @Transactional
     public void delete(@NonNull List<RepositoryPasswordHistory> objs) {
         this.sessionFactory.getCurrentSession()
-                .createQuery("DELETE FROM RepositoryPasswordHistory r WHERE r.id = :objIds")
+                .createQuery("DELETE FROM RepositoryPasswordHistoryDecorator r WHERE r.id = :objIds")
                 .setParameterList("objIds", objs.stream()
                     .filter(pass -> pass.getId() != null)
                     .map(RepositoryPasswordHistory::getId)
@@ -100,12 +101,12 @@ public class RepositoryPasswordHistoryDaoImpl implements RepositoryPasswordHisto
     public Page<RepositoryPasswordHistory> findHistoryByIdRepository(Integer id, Integer number, Integer pageSize) {
         final Session currentSession = this.sessionFactory.getCurrentSession();
         final Long count = (Long) currentSession
-                .createQuery("SELECT COUNT(p.id) FROM RepositoryPasswordHistory p WHERE p.repositoryPassword.id = :id")
+                .createQuery("SELECT COUNT(p.id) FROM RepositoryPasswordHistoryDecorator p WHERE p.repositoryPassword.id = :id")
                 .setParameter("id", id)
                 .uniqueResult();
 
-        List<RepositoryPasswordHistory> result = currentSession
-                .createQuery("FROM RepositoryPasswordHistory p WHERE p.repositoryPassword.id = :id")
+        List<RepositoryPasswordHistoryDecorator> result = currentSession
+                .createQuery("FROM RepositoryPasswordHistoryDecorator p WHERE p.repositoryPassword.id = :id")
                 .setParameter("id", id)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)

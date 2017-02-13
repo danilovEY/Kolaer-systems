@@ -5,8 +5,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordBase;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryBase;
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
@@ -37,24 +39,23 @@ public class NetworkTest {
     }
 
     @Test
-    @Ignore
     public void testRepositoryPasswordAdd() {
         KolpassTable kolpassTable = this.networkUS.getKolaerWebServer().getApplicationDataBase().getKolpassTable();
 
-        RepositoryPasswordDto repositoryPasswordDto = new RepositoryPasswordDto();
-        repositoryPasswordDto.setName("Test123");
+        RepositoryPassword repositoryPasswordDto = new RepositoryPasswordBase();
+        repositoryPasswordDto.setName("Test123456");
 
-        RepositoryPasswordDto repositoryPasswordDto1 = kolpassTable.addRepositoryPassword(repositoryPasswordDto);
+        RepositoryPassword repositoryPasswordDto1 = kolpassTable.addRepositoryPassword(repositoryPasswordDto);
         log.info(repositoryPasswordDto1.getId().toString());
 
     }
 
     @Test
     public void testRepositoryPasswordGetAll() {
-        for (RepositoryPasswordDto repositoryPasswordDto : this.networkUS.getKolaerWebServer().getApplicationDataBase()
+        for (RepositoryPassword repositoryPasswordDto : this.networkUS.getKolaerWebServer().getApplicationDataBase()
                 .getKolpassTable().getAllRepositoryPasswords()) {
             log.info(repositoryPasswordDto.getName());
-            RepositoryPasswordHistoryDto lastPassword = repositoryPasswordDto.getLastPassword();
+            RepositoryPasswordHistory lastPassword = repositoryPasswordDto.getLastPassword();
             log.info(lastPassword.getLogin());
             log.info(lastPassword.getPassword());
             log.info(lastPassword.getPasswordWriteDate().toString());

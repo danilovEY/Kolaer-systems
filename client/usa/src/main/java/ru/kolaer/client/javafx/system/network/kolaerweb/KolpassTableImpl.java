@@ -1,12 +1,13 @@
 package ru.kolaer.client.javafx.system.network.kolaerweb;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
+
+import java.util.List;
 
 /**
  * Created by danilovey on 13.02.2017.
@@ -24,32 +25,32 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
     }
 
     @Override
-    public RepositoryPasswordDto[] getAllRepositoryPasswords() {
-        final Page<RepositoryPasswordDto> body = restTemplate
+    public List<RepositoryPassword> getAllRepositoryPasswords() {
+        final Page<RepositoryPassword> body = restTemplate
                 .exchange(this.GET_ALL_MY_REPOSITORY_PASS,
                         HttpMethod.GET,
                         new HttpEntity<>(this.getTokenToHeader()),
-                        this.getTypeFromPage(RepositoryPasswordDto.class))
+                        this.getTypeFromPage(RepositoryPassword.class))
                 .getBody();
-
-        return body.getData().stream().toArray(RepositoryPasswordDto[]::new);
+        body.getData().forEach(r -> log.info(r.getName()));
+        return body.getData();
     }
 
     @Override
-    public RepositoryPasswordDto addRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
+    public RepositoryPassword addRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
         return restTemplate.exchange(this.ADD_HISTORY_PASSWORD,
                 HttpMethod.POST,
                 new HttpEntity<>(repositoryPasswordDto, this.getTokenToHeader()),
-                RepositoryPasswordDto.class).getBody();
+                RepositoryPassword.class).getBody();
     }
 
     @Override
-    public RepositoryPasswordDto updateRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
+    public RepositoryPassword updateRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
         return null;
     }
 
     @Override
-    public void deleteRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
+    public void deleteRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
 
     }
 }

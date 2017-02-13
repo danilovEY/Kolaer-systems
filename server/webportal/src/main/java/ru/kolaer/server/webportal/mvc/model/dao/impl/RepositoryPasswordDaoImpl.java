@@ -9,11 +9,10 @@ import org.hibernate.dialect.Dialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.server.webportal.mvc.model.dao.RepositoryPasswordDao;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPassword;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistory;
+import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordDecorator;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,14 +30,14 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
     @Override
     @Transactional(readOnly = true)
     public List<RepositoryPassword> findAll() {
-        return this.sessionFactory.getCurrentSession().createQuery("FROM RepositoryPassword").list();
+        return this.sessionFactory.getCurrentSession().createQuery("FROM RepositoryPasswordDecorator").list();
     }
 
     @Override
     @Transactional(readOnly = true)
     public RepositoryPassword findByID(@NonNull Integer id) {
-        return (RepositoryPassword) this.sessionFactory.getCurrentSession()
-                .createQuery("FROM RepositoryPassword r WHERE r.id = :id")
+        return (RepositoryPasswordDecorator) this.sessionFactory.getCurrentSession()
+                .createQuery("FROM RepositoryPasswordDecorator r WHERE r.id = :id")
                 .setParameter("id", id).uniqueResult();
     }
 
@@ -58,7 +57,7 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
     @Transactional
     public void delete(@NonNull List<RepositoryPassword> objs) {
         this.sessionFactory.getCurrentSession()
-                .createQuery("DELETE FROM RepositoryPassword r WHERE r.id IN :objIds")
+                .createQuery("DELETE FROM RepositoryPasswordDecorator r WHERE r.id IN :objIds")
                 .setParameterList("objIds", objs.stream()
                         .filter(pass -> pass.getId() != null)
                         .map(RepositoryPassword::getId)
@@ -101,11 +100,11 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
     @Transactional(readOnly = true)
     public Page<RepositoryPassword> findAllByPnumber(Integer pnumber, Integer number, Integer pageSize) {
         final Long count = (Long) this.sessionFactory.getCurrentSession()
-                .createQuery("SELECT COUNT(r.id) FROM RepositoryPassword r WHERE r.employee.personnelNumber = :pnumber")
+                .createQuery("SELECT COUNT(r.id) FROM RepositoryPasswordDecorator r WHERE r.employee.personnelNumber = :pnumber")
                 .setParameter("pnumber", pnumber).uniqueResult();
 
         List<RepositoryPassword> repositories = this.sessionFactory.getCurrentSession()
-                .createQuery("FROM RepositoryPassword r WHERE r.employee.personnelNumber = :pnumber")
+                .createQuery("FROM RepositoryPasswordDecorator r WHERE r.employee.personnelNumber = :pnumber")
                 .setParameter("pnumber", pnumber)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
@@ -115,8 +114,8 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
 
     @Transactional(readOnly = true)
     public RepositoryPassword findByNameAndPnumber(String name, Integer pnumber) {
-        return (RepositoryPassword) this.sessionFactory.getCurrentSession()
-                .createQuery("FROM RepositoryPassword r WHERE r.employee.personnelNumber = :pnumber AND r.name = :name")
+        return (RepositoryPasswordDecorator) this.sessionFactory.getCurrentSession()
+                .createQuery("FROM RepositoryPasswordDecorator r WHERE r.employee.personnelNumber = :pnumber AND r.name = :name")
                 .setParameter("pnumber", pnumber)
                 .setParameter("name", name)
                 .uniqueResult();
@@ -124,8 +123,8 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
 
     @Transactional(readOnly = true)
     public RepositoryPassword findRepositoryWithJoinById(Integer id) {
-        RepositoryPassword password = (RepositoryPassword) this.sessionFactory.getCurrentSession()
-                .createQuery("SELECT r FROM RepositoryPassword r JOIN r.employee WHERE r.id = :id")
+        RepositoryPasswordDecorator password = (RepositoryPasswordDecorator) this.sessionFactory.getCurrentSession()
+                .createQuery("SELECT r FROM RepositoryPasswordDecorator r JOIN r.employee WHERE r.id = :id")
                 .setParameter("id", id).uniqueResult();
         return password;
     }

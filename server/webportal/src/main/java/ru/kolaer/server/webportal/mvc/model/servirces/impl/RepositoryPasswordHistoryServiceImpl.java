@@ -3,9 +3,9 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.RepositoryPasswordHistoryDao;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordHistoryService;
 
 import java.util.List;

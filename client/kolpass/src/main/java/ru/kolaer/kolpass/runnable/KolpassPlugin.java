@@ -9,6 +9,7 @@ import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.kolpass.mvp.presenter.PRepositoryPaneImpl;
 
 import java.net.URL;
@@ -46,9 +47,10 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
 
         this.pRepositoryPane = new PRepositoryPaneImpl();
 
-        if(editorKit.getAuthentication().isAuthentication()) {
-            this.mainPane.setCenter(this.pRepositoryPane.getView().getContent());
-        } else this.logout(null);
+        if(editorKit.getAuthentication().isAuthentication())
+            this.login(null);
+        else
+            this.logout(null);
     }
 
     @Override
@@ -74,7 +76,10 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
     @Override
     public void login(AccountEntity account) {
         Optional.ofNullable(this.pRepositoryPane).ifPresent(pane ->
-            this.mainPane.setCenter(this.pRepositoryPane.getView().getContent())
+            Tools.runOnWithOutThreadFX(() -> {
+                this.mainPane.setCenter(this.pRepositoryPane.getView().getContent());
+                this.pRepositoryPane.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getKolpassTable());
+            })
         );
     }
 

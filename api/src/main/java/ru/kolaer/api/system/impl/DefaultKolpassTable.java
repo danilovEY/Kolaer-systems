@@ -1,10 +1,10 @@
 package ru.kolaer.api.system.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,24 +14,24 @@ import java.util.List;
 public class DefaultKolpassTable implements KolpassTable {
 
     @Override
-    public RepositoryPasswordDto[] getAllRepositoryPasswords() {
-        return new RepositoryPasswordDto[0];
+    public List<RepositoryPassword> getAllRepositoryPasswords() {
+        return Collections.emptyList();
     }
 
     @Override
-    public RepositoryPasswordDto addRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
+    public RepositoryPassword addRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
         log.info("Добавлен репозиторий паролей");
         return repositoryPasswordDto;
     }
 
     @Override
-    public RepositoryPasswordDto updateRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
+    public RepositoryPassword updateRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
         log.info("Обновлен репозиторий паролей");
         return repositoryPasswordDto;
     }
 
     @Override
-    public void deleteRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
+    public void deleteRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
         log.info("Удален репозиторий паролей");
     }
 }

@@ -46,10 +46,6 @@ project(":client") {
         sourceCompatibility = 1.8
     }
 
-    task makePretty() {
-        delete pathToProjectDirWithPlugins
-    }
-
     task makeProjectDirTask () {
         doLast {
             mkdir(pathToProjectDir)
