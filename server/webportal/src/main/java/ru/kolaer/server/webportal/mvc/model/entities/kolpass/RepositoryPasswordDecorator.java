@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "repository_pass")
 public class RepositoryPasswordDecorator implements RepositoryPassword {
-    public RepositoryPassword repositoryPassword;
+    private RepositoryPassword repositoryPassword;
 
     public RepositoryPasswordDecorator() {
         this(new RepositoryPasswordBase());

@@ -16,6 +16,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordHistoryService;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
@@ -112,7 +113,8 @@ public class KolpassController {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
         }
 
-        final RepositoryPasswordHistory lastPassword = repositoryPassword.getLastPassword();
+        final RepositoryPasswordHistory lastPassword =
+                new RepositoryPasswordHistoryDecorator(repositoryPassword.getLastPassword());
         lastPassword.setPasswordWriteDate(new Date());
         lastPassword.setRepositoryPassword(rep);
 

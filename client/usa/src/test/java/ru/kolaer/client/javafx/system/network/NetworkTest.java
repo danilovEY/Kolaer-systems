@@ -39,6 +39,19 @@ public class NetworkTest {
     }
 
     @Test
+    public void testHistoryPasswordAdd() {
+        KolpassTable kolpassTable = this.networkUS.getKolaerWebServer().getApplicationDataBase().getKolpassTable();
+
+        RepositoryPasswordHistory repositoryPasswordHistory = new RepositoryPasswordHistoryBase();
+        repositoryPasswordHistory.setLogin("login_login");
+        repositoryPasswordHistory.setPassword("pass_pass");
+
+        RepositoryPassword repositoryPasswordDto1 = kolpassTable.addHistoryPasswordToRepository(53, repositoryPasswordHistory);
+        log.info(repositoryPasswordDto1.getId().toString());
+
+    }
+
+    @Test
     public void testRepositoryPasswordAdd() {
         KolpassTable kolpassTable = this.networkUS.getKolaerWebServer().getApplicationDataBase().getKolpassTable();
 
