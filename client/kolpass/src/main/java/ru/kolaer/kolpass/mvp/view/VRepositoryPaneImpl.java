@@ -37,4 +37,9 @@ public class VRepositoryPaneImpl implements VRepositoryPane {
     public void removeRepositoryPassword(VRepositoryPassword vRepositoryPassword) {
         this.contentPane.getChildren().remove(vRepositoryPassword.getContent());
     }
+
+    @Override
+    public void clear() {
+        this.contentPane.getChildren().clear();
+    }
 }

@@ -80,8 +80,10 @@ public class DefaultAuthentication implements Authentication {
     }
 
     @Override
-    public List<RoleEntity> getRoles() {
-        return this.isAuth ? this.ACCOUNT.getRoles() : Collections.emptyList();
+    public RoleEntity[] getRoles() {
+        return this.isAuth
+                ? this.ACCOUNT.getRoles().toArray(new RoleEntity[this.ACCOUNT.getRoles().size()])
+                : new RoleEntity[0];
     }
 
     @Override

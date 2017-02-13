@@ -13,7 +13,7 @@ public interface Authentication extends AuthenticationObservable {
     boolean login(UserAndPassJson userAndPassJson) throws ServerException;
     AccountEntity getAuthorizedUser();
     TokenJson getToken();
-    List<RoleEntity> getRoles();
+    RoleEntity[] getRoles();
     boolean isAuthentication();
     boolean logout() throws ServerException;
 }

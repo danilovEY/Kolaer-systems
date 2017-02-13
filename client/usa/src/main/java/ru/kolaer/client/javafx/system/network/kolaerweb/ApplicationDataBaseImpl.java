@@ -12,6 +12,7 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
     private final NotifyMessageTable notifyMessageTable;
     private final CounterTable counterTable;
     private final EmployeeOtherOrganizationTable employeeOtherOrganizationTable;
+    private final KolpassTable kolpassTable;
 
     public ApplicationDataBaseImpl(String path) {
         this.generalEmployeesTable = new GeneralEmployeesTableImpl(path + "/employees");
@@ -19,6 +20,7 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
         this.notifyMessageTable = new NotifyMessageTableImpl(path + "/non-security/notify");
         this.counterTable = new CounterTableImpl(path + "/non-security/counters");
         this.employeeOtherOrganizationTable = new EmployeeOtherOrganizationTableImpl(path + "/organizations/employees");
+        this.kolpassTable = new KolpassTableImpl(path + "/kolpass");
     }
 
     @Override
@@ -43,8 +45,7 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
 
     @Override
     public KolpassTable getKolpassTable() {
-        //TODO NPE!
-        return null;
+        return this.kolpassTable;
     }
 
     @Override

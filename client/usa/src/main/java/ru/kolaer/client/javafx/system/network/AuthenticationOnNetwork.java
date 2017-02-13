@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
-import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
+import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.client.javafx.tools.Resources;
@@ -56,6 +53,7 @@ public class AuthenticationOnNetwork implements Authentication {
             this.tokenJson  = this.restTemplate.postForObject(this.URL_TO_GET_TOKEN, userAndPassJson, TokenJson.class);
             if(this.tokenJson != null)
                 LOG.info("Токен получен...");
+
             LOG.info(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken());
             this.accountsEntity = this.restTemplate.getForObject(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken(), AccountEntity.class);
             if(this.accountsEntity != null) {
@@ -87,12 +85,11 @@ public class AuthenticationOnNetwork implements Authentication {
     }
 
     @Override
-    public EnumRole[] getRoles() {
+    public RoleEntity[] getRoles() {
         if(this.isAuth) {
-            final EnumRole[] roles = this.restTemplate.getForObject(this.URL_TO_GET_USER_ROLE + "?token=" + this.tokenJson.getToken(), EnumRole[].class);
-            return roles;
+            return this.restTemplate.getForObject(this.URL_TO_GET_USER_ROLE + "?token=" + this.tokenJson.getToken(), RoleEntity[].class);
         }
-        return new EnumRole[] {EnumRole.ANONYMOUS};
+        return new RoleEntity[0];
     }
 
     public boolean isAuthentication() {

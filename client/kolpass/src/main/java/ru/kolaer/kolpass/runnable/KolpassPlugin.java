@@ -48,7 +48,7 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
 
         if(editorKit.getAuthentication().isAuthentication()) {
             this.mainPane.setCenter(this.pRepositoryPane.getView().getContent());
-        }
+        } else this.logout(null);
     }
 
     @Override

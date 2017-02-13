@@ -7,4 +7,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
  */
 public interface KolpassTable {
     RepositoryPasswordDto[] getAllRepositoryPasswords();
+    RepositoryPasswordDto addRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
+    RepositoryPasswordDto updateRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
+    void deleteRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
 }
