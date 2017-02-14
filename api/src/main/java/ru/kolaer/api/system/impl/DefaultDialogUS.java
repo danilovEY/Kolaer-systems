@@ -25,7 +25,7 @@ public class DefaultDialogUS implements DialogUS {
     }
 
     @Override
-    public void createAndShowLoginDialog() {
+    public void createAndShowLoginToSystemDialog() {
 
     }
 

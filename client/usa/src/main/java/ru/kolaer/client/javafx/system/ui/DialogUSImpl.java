@@ -4,7 +4,9 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
+import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.dialog.LoginDialog;
 import org.controlsfx.dialog.ProgressDialog;
@@ -20,6 +22,12 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.tools.Resources;
 
+import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 /**
@@ -63,11 +71,13 @@ public class DialogUSImpl implements DialogUS {
 	}
 
 	@Override
-	public void createAndShowLoginDialog() {
+	public void createAndShowLoginToSystemDialog() {
 		final Authentication authentication = UniformSystemEditorKitSingleton.getInstance().getAuthentication();
 		final UISystemUS uiSystemUS = UniformSystemEditorKitSingleton.getInstance().getUISystemUS();
 
-		final Dialog loginDialog = uiSystemUS.getDialog().createLoginDialog();
+		final Dialog loginDialog = this.createLoginDialog();
+		final CheckBox checkBoxRemember = new CheckBox("Запомни меня");
+		((VBox)loginDialog.getDialogPane().getContent()).getChildren().add(checkBoxRemember);
 		loginDialog.showAndWait();
 		if(loginDialog.getResult() == null)
 			return;
@@ -88,10 +98,14 @@ public class DialogUSImpl implements DialogUS {
 							login = logPassArray[0];
 						if (logPassArray.length >= 2)
 							pass = logPassArray[1];
-						if (authentication.login(new UserAndPassJson(login, pass))) {
+
+						final UserAndPassJson userAndPass = new UserAndPassJson(login, pass);
+
+						if (authentication.login(userAndPass, checkBoxRemember.isSelected())) {
 							uiSystemUS.getNotification().showInformationNotifi("Успешная авторизация!",
 									"Вы авторизовались как: \"" + authentication
 											.getAuthorizedUser().getUsername() + "\"");
+
 							return true;
 						} else {
 							uiSystemUS.getNotification().showErrorNotifi("Ошибка!",
@@ -100,8 +114,8 @@ public class DialogUSImpl implements DialogUS {
 					} catch (ServerException ex) {
 						updateMessage("Не удалось авторизоваться!!");
 						this.setException(ex);
-						Tools.runOnWithOutThreadFX(() -> uiSystemUS.getDialog()
-								.createErrorDialog("Ошибка!", "Неудалось авторизоватся!").show()
+						Tools.runOnWithOutThreadFX(() ->
+								createErrorDialog("Ошибка!", "Неудалось авторизоватся!").show()
 						);
 					}
 				} else {

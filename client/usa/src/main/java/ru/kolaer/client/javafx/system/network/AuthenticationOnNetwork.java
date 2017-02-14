@@ -7,9 +7,16 @@ import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
+import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.tools.Resources;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,6 +80,52 @@ public class AuthenticationOnNetwork implements Authentication {
             LOG.error("Не удалось авторизоваться!", ex);
             throw new ServerException(ex);
         }
+    }
+
+    @Override
+    public boolean login(UserAndPassJson userAndPassJson, boolean remember) throws ServerException {
+        if(remember) {
+            try {
+                final List<String> loginAndPassList =
+                        Arrays.asList(userAndPassJson.getUsername(), userAndPassJson.getPassword());
+
+                Files.write(Paths.get(Authentication.TEMP_NAME),
+                        loginAndPassList, Charset.forName("UTF-8"));
+            } catch (IOException e) {
+                LOG.error("Не удалось запомнить логин и пароль!", e);
+                UniformSystemEditorKitSingleton.getInstance().getUISystemUS()
+                        .getNotification().showErrorNotifi("Ошибка!", "Не удалось запомнить логин и пароль!");
+            }
+        } else {
+            new File(Authentication.TEMP_NAME).delete();
+        }
+
+        return this.login(userAndPassJson);
+    }
+
+    @Override
+    public boolean loginIsRemember() throws ServerException {
+        if(new File(Authentication.TEMP_NAME).exists()) {
+            try {
+                final List<String> strings = Files
+                        .readAllLines(Paths.get(Authentication.TEMP_NAME), Charset.forName("UTF-8"));
+
+                final UserAndPassJson userAndPassJson = new UserAndPassJson();
+
+                if(strings.size() > 0) {
+                    userAndPassJson.setUsername(strings.get(0));
+                }
+
+                if(strings.size() > 1) {
+                    userAndPassJson.setPassword(strings.get(1));
+                }
+
+                return this.login(userAndPassJson);
+            } catch (IOException e) {
+                LOG.error("Не удалось прочитать авто логин!", e);
+            }
+        }
+        return false;
     }
 
     public AccountEntity getAuthorizedUser() {

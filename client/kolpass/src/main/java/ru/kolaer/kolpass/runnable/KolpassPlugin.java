@@ -2,7 +2,6 @@ package ru.kolaer.kolpass.runnable;
 
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
@@ -47,7 +46,7 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
     public void start() throws Exception {
         this.mainPane = new BorderPane();
         this.loginButton = new Button("Авторизоваться");
-        this.loginButton.setOnAction(e -> this.editorKit.getUISystemUS().getDialog().createAndShowLoginDialog());
+        this.loginButton.setOnAction(e -> this.editorKit.getUISystemUS().getDialog().createAndShowLoginToSystemDialog());
 
         this.pRepositoryPane = new PRepositoryPaneImpl(this.editorKit);
 

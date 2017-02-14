@@ -30,7 +30,7 @@ public class MenuBarUSImpl implements MenuBarUS, AuthenticationObserver {
             final Authentication authentication = UniformSystemEditorKitSingleton.getInstance().getAuthentication();
             if(!authentication.isAuthentication()) {
                 UniformSystemEditorKitSingleton.getInstance()
-                        .getUISystemUS().getDialog().createAndShowLoginDialog();
+                        .getUISystemUS().getDialog().createAndShowLoginToSystemDialog();
             } else {
                 authentication.logout();
             }

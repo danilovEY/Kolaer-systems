@@ -10,7 +10,10 @@ import java.util.List;
  * Created by danilovey on 02.08.2016.
  */
 public interface Authentication extends AuthenticationObservable {
+    String TEMP_NAME = System.getProperty("java.io.tmpdir") + "\\" + "remember_login.txt";
     boolean login(UserAndPassJson userAndPassJson) throws ServerException;
+    boolean login(UserAndPassJson userAndPassJson, boolean remember) throws ServerException;
+    boolean loginIsRemember() throws ServerException;
     AccountEntity getAuthorizedUser();
     TokenJson getToken();
     RoleEntity[] getRoles();

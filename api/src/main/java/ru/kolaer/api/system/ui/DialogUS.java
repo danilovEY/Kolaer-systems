@@ -13,7 +13,7 @@ public interface DialogUS {
 
 	Dialog<?> createLoadingDialog(Task<?> task);
 
-	void createAndShowLoginDialog();
+	void createAndShowLoginToSystemDialog();
 
 	/**Показать диалоговое информирующее окно.*/
 	Dialog<?> createInfoDialog(String title, String text);

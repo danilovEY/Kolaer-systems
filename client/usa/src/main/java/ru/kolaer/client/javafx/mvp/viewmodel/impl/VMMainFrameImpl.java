@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;
+import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.ui.MenuBarUS;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
@@ -32,7 +33,11 @@ import ru.kolaer.client.javafx.system.ui.NotificationPane;
 import ru.kolaer.client.javafx.system.ui.UISystemUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -99,6 +104,8 @@ public class VMMainFrameImpl extends Application {
         editorKit.setUISystemUS(uiSystemUS);
         editorKit.setPluginsUS(explorer);
         editorKit.setAuthentication(authentication);
+
+        authentication.loginIsRemember();
 
         final SearchPlugins searchPlugins = new SearchPlugins();
         this.pluginManager = new PluginManager(searchPlugins);

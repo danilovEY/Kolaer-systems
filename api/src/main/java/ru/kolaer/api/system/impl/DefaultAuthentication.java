@@ -70,6 +70,11 @@ public class DefaultAuthentication implements Authentication {
     }
 
     @Override
+    public boolean login(UserAndPassJson userAndPassJson, boolean remember) throws ServerException {
+        return this.login(userAndPassJson);
+    }
+
+    @Override
     public AccountEntity getAuthorizedUser() {
         return this.isAuth ? this.ACCOUNT : null;
     }
