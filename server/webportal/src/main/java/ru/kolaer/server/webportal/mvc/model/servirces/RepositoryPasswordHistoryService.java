@@ -9,4 +9,6 @@ import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordH
  */
 public interface RepositoryPasswordHistoryService extends ServiceBase<RepositoryPasswordHistory> {
     Page<RepositoryPasswordHistory> getHistoryByIdRepository(Integer id, Integer number, Integer pageSize);
+
+    void deleteByIdRep(Integer id);
 }

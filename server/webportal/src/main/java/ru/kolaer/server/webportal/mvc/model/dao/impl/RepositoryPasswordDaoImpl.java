@@ -72,7 +72,6 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
     }
 
     @Override
-    @Transactional
     public void update(@NonNull List<RepositoryPassword> objs) {
         final Session currentSession = this.sessionFactory.getCurrentSession();
         final Transaction transaction = currentSession.getTransaction();

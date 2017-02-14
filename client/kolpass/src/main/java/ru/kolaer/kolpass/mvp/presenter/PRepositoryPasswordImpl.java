@@ -11,6 +11,7 @@ import ru.kolaer.kolpass.mvp.view.VRepositoryPasswordImpl;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Created by danilovey on 09.02.2017.
@@ -40,28 +41,22 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
         this.vRepositoryPassword.setName(this.passwordDto.getName());
         this.vRepositoryPassword.setOnSaveData(o -> {
             if(this.lastPassword.getView().isChangeData(lastPassword.getModel())) {
-                if(lastPassword.getModel() == null) {
-                    final VPasswordHistory view = this.lastPassword.getView();
-                    final RepositoryPasswordHistoryBase passwordHistory = new RepositoryPasswordHistoryBase();
-                    passwordHistory.setLogin(view.getLogin());
-                    passwordHistory.setPassword(view.getPassword());
+                final VPasswordHistory view = this.lastPassword.getView();
+                final RepositoryPasswordHistoryBase passwordHistory = new RepositoryPasswordHistoryBase();
+                passwordHistory.setLogin(view.getLogin());
+                passwordHistory.setPassword(view.getPassword());
 
-                    this.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
-                            .getKolpassTable().addHistoryPasswordToRepository(this.passwordDto.getId(), passwordHistory));
+                this.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
+                        .getKolpassTable().addHistoryPasswordToRepository(this.passwordDto.getId(), passwordHistory));
 
-                    this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Информация!", "Сохранение прошло успешно!");
-                } else {
-                    VPasswordHistory view = this.lastPassword.getView();
-                    final RepositoryPasswordHistory passwordHistory = new RepositoryPasswordHistoryBase();
-                    passwordHistory.setLogin(view.getLogin());
-                    passwordHistory.setPassword(view.getPassword());
-
-                    this.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
-                            .getKolpassTable().addHistoryPasswordToRepository(this.passwordDto.getId(), passwordHistory));
-
-                    this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Информация!", "Сохранение прошло успешно!");
-                }
+                this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Информация!", "Сохранение прошло успешно!");
             }
+
+            return null;
+        });
+
+        this.vRepositoryPassword.setOnEditName(e -> {
+
 
             return null;
         });
@@ -113,5 +108,29 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
         pPasswordHistory.setEditable(edit);
         pPasswordHistory.setModel(dto);
         return pPasswordHistory;
+    }
+
+    @Override
+    public void setOnSaveData(Function function) {
+
+    }
+
+    @Override
+    public void setOnEditName(Function function) {
+
+    }
+
+    @Override
+    public void setOnDelete(Function<PRepositoryPassword, Void> function) {
+        this.vRepositoryPassword.setOnDelete(e -> {
+            this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
+                    .getKolpassTable().deleteRepositoryPassword(this.passwordDto);
+
+            this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!",
+                    "Удален репозиторий: \"" + this.passwordDto.getName() + "\"");
+
+
+            return function.apply(this);
+        });
     }
 }

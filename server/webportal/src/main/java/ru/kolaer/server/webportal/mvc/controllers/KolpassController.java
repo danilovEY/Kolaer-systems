@@ -118,6 +118,8 @@ public class KolpassController {
         lastPassword.setPasswordWriteDate(new Date());
         lastPassword.setRepositoryPassword(rep);
 
+        this.repPassHistoryService.add(lastPassword);
+
         if(rep.getFirstPassword() == null) {
             rep.setFirstPassword(lastPassword);
         }
@@ -131,9 +133,7 @@ public class KolpassController {
         rep.setLastPassword(lastPassword);
 
         this.repPassService.update(rep);
-        rep.getFirstPassword().setRepositoryPassword(null);
-        rep.getPrevPassword().setRepositoryPassword(null);
-        rep.getLastPassword().setRepositoryPassword(null);
+
         return rep;
     }
 
@@ -157,7 +157,7 @@ public class KolpassController {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
         }
 
-        this.repPassHistoryService.delete(rep.getHistoryPasswords());
+        this.repPassHistoryService.deleteByIdRep(rep.getId());
         this.repPassService.delete(rep);
 
         return ResponseEntity.ok("Операция успешно выполнена!");
@@ -211,12 +211,6 @@ public class KolpassController {
                 .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
         }
-
-        final RepositoryPassword updateRep = this.repPassService
-                .getByNameAndPnumber(repositoryPassword.getName(), employeeEntity.getPersonnelNumber());
-
-        if(updateRep != null)
-            throw new BadRequestException("Это имя уже занято!");
 
         rep.setName(repositoryPassword.getName());
 

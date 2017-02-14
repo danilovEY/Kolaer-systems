@@ -9,4 +9,6 @@ import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordH
  */
 public interface RepositoryPasswordHistoryDao extends DefaultDao<RepositoryPasswordHistory> {
     Page<RepositoryPasswordHistory> findHistoryByIdRepository(Integer id, Integer number, Integer pageSize);
+
+    void deleteByIdRep(Integer id);
 }

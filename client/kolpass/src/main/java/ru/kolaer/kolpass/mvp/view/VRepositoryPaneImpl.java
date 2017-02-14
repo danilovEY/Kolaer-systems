@@ -26,8 +26,6 @@ public class VRepositoryPaneImpl implements VRepositoryPane {
         scrollPane.setFitToWidth(true);
 
         this.mainPane = new BorderPane(scrollPane);
-        //this.mainPane.setStyle("-fx-background-image: url('" + this.getClass().getResource("/background.jpg").toString() + "')");
-        //this.mainPane.setPadding(new Insets(10));
     }
 
     @Override

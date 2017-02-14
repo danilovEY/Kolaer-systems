@@ -61,4 +61,9 @@ public class RepositoryPasswordHistoryServiceImpl implements RepositoryPasswordH
     public Page<RepositoryPasswordHistory> getHistoryByIdRepository(Integer id, Integer number, Integer pageSize) {
         return this.repositoryPasswordHistoryDao.findHistoryByIdRepository(id, number, pageSize);
     }
+
+    @Override
+    public void deleteByIdRep(Integer id) {
+        this.repositoryPasswordHistoryDao.deleteByIdRep(id);
+    }
 }

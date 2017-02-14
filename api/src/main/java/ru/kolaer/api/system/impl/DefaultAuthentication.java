@@ -75,6 +75,11 @@ public class DefaultAuthentication implements Authentication {
     }
 
     @Override
+    public boolean loginIsRemember() throws ServerException {
+        return this.login(new UserAndPassJson(LOGIN, PASSWORD));
+    }
+
+    @Override
     public AccountEntity getAuthorizedUser() {
         return this.isAuth ? this.ACCOUNT : null;
     }

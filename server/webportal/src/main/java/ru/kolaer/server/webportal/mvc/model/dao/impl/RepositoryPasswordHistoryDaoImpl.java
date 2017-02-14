@@ -75,7 +75,6 @@ public class RepositoryPasswordHistoryDaoImpl implements RepositoryPasswordHisto
     }
 
     @Override
-    @Transactional
     public void update(@NonNull List<RepositoryPasswordHistory> objs) {
         final Session currentSession = this.sessionFactory.getCurrentSession();
         final Transaction transaction = currentSession.getTransaction();
@@ -113,5 +112,14 @@ public class RepositoryPasswordHistoryDaoImpl implements RepositoryPasswordHisto
                 .list();
 
         return new Page(result, number, count, pageSize);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByIdRep(Integer id) {
+        this.sessionFactory.getCurrentSession()
+                .createQuery("DELETE FROM RepositoryPasswordHistoryDecorator r WHERE r.repositoryPassword.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 }

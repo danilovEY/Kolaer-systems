@@ -21,6 +21,7 @@ import java.util.List;
  */
 @Slf4j
 class KolpassTableImpl implements KolpassTable, TokenToHeader {
+    private final String DELETE_REPOSITORY_PASSWORD;
     private ObjectMapper mapper;
     private final String PATH;
     private final String GET_ALL_MY_REPOSITORY_PASS;
@@ -35,6 +36,7 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
         this.GET_ALL_MY_REPOSITORY_PASS = this.PATH + "/get/all/personal";
         this.ADD_REPOSITORY_PASSWORD = this.PATH + "/add";
         this.ADD_HISTORY_PASSWORD_TO_REP = this.PATH + "/passwords/add";
+        this.DELETE_REPOSITORY_PASSWORD = this.PATH + "/delete";
     }
 
     @Override
@@ -70,9 +72,6 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
         repositoryPassword.setId(idRep);
         repositoryPassword.setLastPassword(repositoryPasswordHistory);
 
-        log.debug("В репозиторий {} добавляется логин: {} и пароль: {}", repositoryPassword.getId(), repositoryPassword.getLastPassword().getLogin(),
-                repositoryPassword.getLastPassword().getPassword());
-
         return restTemplate.exchange(this.ADD_HISTORY_PASSWORD_TO_REP,
                 HttpMethod.POST,
                 new HttpEntity<>(repositoryPassword, this.getTokenToHeader()),
@@ -85,7 +84,13 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
     }
 
     @Override
-    public void deleteRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
+    public void deleteRepositoryPassword(RepositoryPassword repositoryPassword) {
+        final RepositoryPassword request = new RepositoryPasswordBase();
+        request.setId(repositoryPassword.getId());
 
+        restTemplate.exchange(this.DELETE_REPOSITORY_PASSWORD,
+                HttpMethod.POST,
+                new HttpEntity<>(request, this.getTokenToHeader()),
+                String.class);
     }
 }

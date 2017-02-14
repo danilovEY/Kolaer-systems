@@ -3,11 +3,10 @@ package ru.kolaer.kolpass.mvp.view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -23,35 +22,54 @@ import java.util.function.Function;
 public class VRepositoryPasswordImpl implements VRepositoryPassword {
     private BorderPane mainPane;
     private Label labelName;
+    private String urlImage;
     private VPasswordHistory lastPass;
     private VPasswordHistory firstPass;
     private VPasswordHistory prevPass;
     private ImageView imageView;
-    private String imageUrl;
     private TitledPane titledPaneLast;
     private TitledPane titledPaneFirst;
     private TitledPane titledPanePrev;
     private Stage stage;
     private VBox content;
     private Button saveDataButton;
+    private MenuItem editName;
+    private MenuItem deleteItem;
 
 
     public VRepositoryPasswordImpl() {
+        this.editName = new MenuItem("Редактировать имя");
+        this.deleteItem = new MenuItem("Удалить");
+
+        final ContextMenu contextMenu = new ContextMenu();
+        contextMenu.getItems().addAll(this.editName, deleteItem);
+
         this.saveDataButton = new Button("Сохранить");
 
         this.labelName = new Label();
         this.labelName.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         this.labelName.setAlignment(Pos.CENTER);
+        this.labelName.setContextMenu(contextMenu);
 
         this.imageView = new ImageView();
         this.imageView.setFitHeight(200);
         this.imageView.setFitWidth(200);
+        this.imageView.setOnContextMenuRequested(e -> {
+            contextMenu.show(this.imageView, e.getScreenX(), e.getScreenY());
+            e.consume();
+        });
+        this.imageView.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> contextMenu.hide());
 
         this.mainPane = new BorderPane();
         this.mainPane.setStyle("-fx-background-color: lightskyblue; -fx-background-radius: 20");
         this.mainPane.setPadding(new Insets(5));
         this.mainPane.setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, new CornerRadii(20.0), new BorderWidths(3.0))));
+        this.mainPane.setOnContextMenuRequested(e -> {
+            contextMenu.show(this.mainPane, e.getScreenX(), e.getScreenY());
+            e.consume();
+        });
+        this.mainPane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> contextMenu.hide());
         this.mainPane.setTop(this.labelName);
         this.mainPane.setCenter(this.imageView);
 
@@ -130,12 +148,13 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
 
     @Override
     public void setImageUrl(String url) {
+        this.urlImage = url;
         this.imageView.setImage(new Image(url));
     }
 
     @Override
     public String getImageUrl() {
-        return this.imageUrl;
+        return this.urlImage;
     }
 
     @Override
@@ -184,6 +203,16 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
             function.apply(e);
             this.stage.close();
         });
+    }
+
+    @Override
+    public void setOnEditName(Function function) {
+        this.editName.setOnAction(function::apply);
+    }
+
+    @Override
+    public void setOnDelete(Function function) {
+        this.deleteItem.setOnAction(function::apply);
     }
 
     @Override

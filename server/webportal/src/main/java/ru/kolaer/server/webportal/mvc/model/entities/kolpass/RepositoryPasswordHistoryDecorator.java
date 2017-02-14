@@ -73,7 +73,7 @@ public class RepositoryPasswordHistoryDecorator implements RepositoryPasswordHis
         this.repositoryPasswordHistory.setPasswordWriteDate(passwordWriteDate);
     }
 
-    @ManyToOne(targetEntity = RepositoryPasswordDecorator.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = RepositoryPasswordDecorator.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "repository_pass_id", nullable = false)
     @ApiModelProperty("Репозиторий пароля")
     public RepositoryPassword getRepositoryPassword() {

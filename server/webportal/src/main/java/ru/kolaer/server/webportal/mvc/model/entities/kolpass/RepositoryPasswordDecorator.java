@@ -69,7 +69,7 @@ public class RepositoryPasswordDecorator implements RepositoryPassword {
         this.repositoryPassword.setUrlImage(urlImage);
     }
 
-    @OneToOne(targetEntity = RepositoryPasswordHistoryDecorator.class, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = RepositoryPasswordHistoryDecorator.class)
     @JoinColumn(name = "last_pass_id")
     public RepositoryPasswordHistory getLastPassword() {
         return this.repositoryPassword.getLastPassword();
@@ -80,7 +80,7 @@ public class RepositoryPasswordDecorator implements RepositoryPassword {
         this.repositoryPassword.setLastPassword(lastPassword);
     }
 
-    @OneToOne(targetEntity = RepositoryPasswordHistoryDecorator.class, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = RepositoryPasswordHistoryDecorator.class)
     @JoinColumn(name = "first_pass_id")
     public RepositoryPasswordHistory getFirstPassword() {
         return this.repositoryPassword.getFirstPassword();
@@ -91,7 +91,7 @@ public class RepositoryPasswordDecorator implements RepositoryPassword {
         this.repositoryPassword.setFirstPassword(firstPassword);
     }
 
-    @OneToOne(targetEntity = RepositoryPasswordHistoryDecorator.class, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = RepositoryPasswordHistoryDecorator.class)
     @JoinColumn(name = "prev_pass_id")
     public RepositoryPasswordHistory getPrevPassword() {
         return this.repositoryPassword.getPrevPassword();
