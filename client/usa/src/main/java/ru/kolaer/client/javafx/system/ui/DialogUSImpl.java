@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Dialog;
+import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.dialog.LoginDialog;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import ru.kolaer.api.system.ui.DialogUS;
 import ru.kolaer.api.system.ui.UISystemUS;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.javafx.tools.Resources;
 
 import java.util.concurrent.Executors;
 
@@ -26,6 +28,7 @@ import java.util.concurrent.Executors;
  * @author danilovey
  * @version 0.1
  */
+@Slf4j
 public class DialogUSImpl implements DialogUS {
 	private final Logger LOG = LoggerFactory.getLogger(DialogUSImpl.class);
 
@@ -101,6 +104,10 @@ public class DialogUSImpl implements DialogUS {
 								.createErrorDialog("Ошибка!", "Неудалось авторизоватся!").show()
 						);
 					}
+				} else {
+					log.warn("Сервер {} недоступен!", Resources.URL_TO_KOLAER_WEB);
+					uiSystemUS.getNotification().showErrorNotifi("Ошибка!",
+							"Сервер недоступен!");
 				}
 				updateProgress(100, 100);
 				return false;
