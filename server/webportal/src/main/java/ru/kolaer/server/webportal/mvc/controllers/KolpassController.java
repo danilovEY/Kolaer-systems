@@ -99,8 +99,8 @@ public class KolpassController {
         }
 
         if(repositoryPassword.getLastPassword() == null
-                || repositoryPassword.getLastPassword().getPassword() == null) {
-            throw new BadRequestException("Добавьте пароль!");
+                || repositoryPassword.getLastPassword().getLogin() == null) {
+            throw new BadRequestException("Добавьте логин!");
         }
 
         final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();

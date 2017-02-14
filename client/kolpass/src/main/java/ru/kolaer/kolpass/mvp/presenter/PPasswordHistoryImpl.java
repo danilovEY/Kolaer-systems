@@ -29,11 +29,17 @@ public class PPasswordHistoryImpl implements PPasswordHistory {
 
     @Override
     public void updateView() {
-        Optional.ofNullable(this.passwordHistoryDto.getPasswordWriteDate()).ifPresent(date ->
-                this.vPasswordHistory.setDate(this.sdf.format(date))
-        );
-        this.vPasswordHistory.setPassword(this.passwordHistoryDto.getPassword());
-        this.vPasswordHistory.setLogin(this.passwordHistoryDto.getLogin());
+        this.vPasswordHistory.setDate(null);
+        this.vPasswordHistory.setPassword(null);
+        this.vPasswordHistory.setLogin(null);
+
+        Optional.ofNullable(this.passwordHistoryDto).ifPresent(pass -> {
+            Optional.ofNullable(pass.getPasswordWriteDate()).ifPresent(date ->
+                    this.vPasswordHistory.setDate(this.sdf.format(date))
+            );
+            this.vPasswordHistory.setPassword(pass.getPassword());
+            this.vPasswordHistory.setLogin(pass.getLogin());
+        });
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPane;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPaneImpl;
@@ -13,11 +14,13 @@ import java.util.List;
  */
 public class PRepositoryPaneImpl implements PRepositoryPane {
     private final List<PRepositoryPassword> repositoryPasswordList = new ArrayList<>();
+    private final UniformSystemEditorKit editorKit;
     private VRepositoryPane view;
     private KolpassTable kolpassTable;
 
-    public PRepositoryPaneImpl() {
+    public PRepositoryPaneImpl(UniformSystemEditorKit editorKit) {
         this.view = new VRepositoryPaneImpl();
+        this.editorKit = editorKit;
     }
 
     @Override
@@ -36,7 +39,7 @@ public class PRepositoryPaneImpl implements PRepositoryPane {
         this.repositoryPasswordList.clear();
 
         for (RepositoryPassword repositoryPassword : this.kolpassTable.getAllRepositoryPasswords()) {
-            this.addRepositoryPassword(new PRepositoryPasswordImpl(repositoryPassword));
+            this.addRepositoryPassword(new PRepositoryPasswordImpl(this.editorKit, repositoryPassword));
         }
     }
 

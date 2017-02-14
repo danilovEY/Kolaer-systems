@@ -70,6 +70,9 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
         repositoryPassword.setId(idRep);
         repositoryPassword.setLastPassword(repositoryPasswordHistory);
 
+        log.debug("В репозиторий {} добавляется логин: {} и пароль: {}", repositoryPassword.getId(), repositoryPassword.getLastPassword().getLogin(),
+                repositoryPassword.getLastPassword().getPassword());
+
         return restTemplate.exchange(this.ADD_HISTORY_PASSWORD_TO_REP,
                 HttpMethod.POST,
                 new HttpEntity<>(repositoryPassword, this.getTokenToHeader()),

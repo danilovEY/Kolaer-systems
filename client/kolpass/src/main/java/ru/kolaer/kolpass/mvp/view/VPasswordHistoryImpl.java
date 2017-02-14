@@ -101,8 +101,10 @@ public class VPasswordHistoryImpl implements VPasswordHistory {
 
     @Override
     public boolean isChangeData(RepositoryPasswordHistory passwordHistory) {
-        return !this.passwordField.getText().equals(passwordHistory.getPassword())
-                && !this.loginField.getText().equals(passwordHistory.getLogin());
+        return (passwordHistory == null && (!this.passwordField.getText().isEmpty() || !this.loginField.getText().isEmpty()))
+                || passwordHistory == null
+                || !this.passwordField.getText().equals(passwordHistory.getPassword())
+                || !this.loginField.getText().equals(passwordHistory.getLogin());
     }
 
     @Override

@@ -1,8 +1,11 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryBase;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPassword;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPasswordImpl;
 
@@ -12,19 +15,22 @@ import java.util.Optional;
 /**
  * Created by danilovey on 09.02.2017.
  */
+@Slf4j
 public class PRepositoryPasswordImpl implements PRepositoryPassword {
+    private final UniformSystemEditorKit editorKit;
     private VRepositoryPassword vRepositoryPassword;
     private RepositoryPassword passwordDto;
     private PPasswordHistory lastPassword;
     private PPasswordHistory firstPassword;
     private PPasswordHistory prevPassword;
 
-    public PRepositoryPasswordImpl() {
+    public PRepositoryPasswordImpl(UniformSystemEditorKit editorKit) {
         this.vRepositoryPassword = new VRepositoryPasswordImpl();
+        this.editorKit = editorKit;
     }
 
-    public PRepositoryPasswordImpl(RepositoryPassword passwordDto) {
-        this();
+    public PRepositoryPasswordImpl(UniformSystemEditorKit editorKit, RepositoryPassword passwordDto) {
+        this(editorKit);
         this.passwordDto = passwordDto;
         this.updateView();
     }
@@ -32,6 +38,33 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
     @Override
     public void updateView() {
         this.vRepositoryPassword.setName(this.passwordDto.getName());
+        this.vRepositoryPassword.setOnSaveData(o -> {
+            if(this.lastPassword.getView().isChangeData(lastPassword.getModel())) {
+                if(lastPassword.getModel() == null) {
+                    final VPasswordHistory view = this.lastPassword.getView();
+                    final RepositoryPasswordHistoryBase passwordHistory = new RepositoryPasswordHistoryBase();
+                    passwordHistory.setLogin(view.getLogin());
+                    passwordHistory.setPassword(view.getPassword());
+
+                    this.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
+                            .getKolpassTable().addHistoryPasswordToRepository(this.passwordDto.getId(), passwordHistory));
+
+                    this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Информация!", "Сохранение прошло успешно!");
+                } else {
+                    VPasswordHistory view = this.lastPassword.getView();
+                    final RepositoryPasswordHistory passwordHistory = new RepositoryPasswordHistoryBase();
+                    passwordHistory.setLogin(view.getLogin());
+                    passwordHistory.setPassword(view.getPassword());
+
+                    this.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
+                            .getKolpassTable().addHistoryPasswordToRepository(this.passwordDto.getId(), passwordHistory));
+
+                    this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Информация!", "Сохранение прошло успешно!");
+                }
+            }
+
+            return null;
+        });
 
         final String url = this.passwordDto.getUrlImage() == null
                 ? this.getClass().getResource("/icon-security1.png").toString()
@@ -41,9 +74,6 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
 
         this.lastPassword = this.setIfExist(this.lastPassword, this.passwordDto.getLastPassword(), true);
         this.vRepositoryPassword.setLastPassword(this.lastPassword.getView());
-        /*Optional.ofNullable()
-                .map(dto -> )
-                .ifPresent(pass -> );*/
 
         Optional.ofNullable(this.passwordDto.getPrevPassword())
                 .filter(Objects::nonNull)
@@ -65,6 +95,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
     @Override
     public void setModel(RepositoryPassword model) {
         this.passwordDto = model;
+        this.updateView();
     }
 
     @Override
@@ -80,7 +111,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
     private PPasswordHistory setIfExist(PPasswordHistory pPass, RepositoryPasswordHistory dto, boolean edit) {
         PPasswordHistory pPasswordHistory = Optional.ofNullable(pPass).orElse(new PPasswordHistoryImpl());
         pPasswordHistory.setEditable(edit);
-        pPasswordHistory.setModel(Optional.ofNullable(dto).orElse(new RepositoryPasswordHistoryBase()));
+        pPasswordHistory.setModel(dto);
         return pPasswordHistory;
     }
 }

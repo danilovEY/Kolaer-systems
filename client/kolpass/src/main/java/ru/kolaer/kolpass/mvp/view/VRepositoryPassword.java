@@ -3,6 +3,8 @@ package ru.kolaer.kolpass.mvp.view;
 import javafx.scene.layout.BorderPane;
 import ru.kolaer.api.mvp.view.BaseView;
 
+import java.util.function.Function;
+
 /**
  * Created by danilovey on 09.02.2017.
  */
@@ -23,4 +25,6 @@ public interface VRepositoryPassword extends BaseView<BorderPane> {
 
     void addPasswordHistory(VPasswordHistory passwordHistory);
     void removePasswordHistory(VPasswordHistory passwordHistory);
+
+    void setOnSaveData(Function function);
 }

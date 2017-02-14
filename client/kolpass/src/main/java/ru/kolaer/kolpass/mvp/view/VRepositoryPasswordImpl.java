@@ -15,6 +15,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Created by danilovey on 09.02.2017.
@@ -32,9 +33,12 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
     private TitledPane titledPanePrev;
     private Stage stage;
     private VBox content;
+    private Button saveDataButton;
 
 
     public VRepositoryPasswordImpl() {
+        this.saveDataButton = new Button("Сохранить");
+
         this.labelName = new Label();
         this.labelName.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         this.labelName.setAlignment(Pos.CENTER);
@@ -69,31 +73,41 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
         openPass.setPrefHeight(30);
         openPass.setOnAction(e -> {
             if(this.stage == null) {
+                this.content = new VBox();
+
                 this.stage = new Stage();
                 this.stage.setTitle(this.labelName.getText());
 
-                this.content = new VBox();
-                stage.setScene(new Scene(content));
+                final BorderPane mainStagePane = new BorderPane();
+                mainStagePane.setPadding(new Insets(10));
+                mainStagePane.setCenter(this.content);
+                mainStagePane.setBottom(this.saveDataButton);
+                BorderPane.setAlignment(this.saveDataButton, Pos.CENTER_RIGHT);
+
+                stage.setScene(new Scene(mainStagePane));
 
                 this.titledPaneLast.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
                 this.titledPanePrev.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
                 this.titledPaneFirst.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
-
-                Optional.ofNullable(this.lastPass).ifPresent(pass -> {
-                    this.titledPaneLast.setContent(pass.getContent());
-                    content.getChildren().add(this.titledPaneLast);
-                });
-
-                Optional.ofNullable(this.prevPass).ifPresent(pass -> {
-                    this.titledPanePrev.setContent(pass.getContent());
-                    content.getChildren().add(this.titledPanePrev);
-                });
-
-                Optional.ofNullable(this.firstPass).ifPresent(pass -> {
-                    this.titledPaneFirst.setContent(pass.getContent());
-                    content.getChildren().add(this.titledPaneFirst);
-                });
             }
+
+            content.getChildren().clear();
+
+            Optional.ofNullable(this.lastPass).ifPresent(pass -> {
+                this.titledPaneLast.setContent(pass.getContent());
+                content.getChildren().add(this.titledPaneLast);
+            });
+
+            Optional.ofNullable(this.prevPass).ifPresent(pass -> {
+                this.titledPanePrev.setContent(pass.getContent());
+                content.getChildren().add(this.titledPanePrev);
+            });
+
+            Optional.ofNullable(this.firstPass).ifPresent(pass -> {
+                this.titledPaneFirst.setContent(pass.getContent());
+                content.getChildren().add(this.titledPaneFirst);
+            });
+
             stage.requestFocus();
             stage.sizeToScene();
             stage.centerOnScreen();
@@ -162,6 +176,14 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
     @Override
     public void removePasswordHistory(VPasswordHistory passwordHistory) {
 
+    }
+
+    @Override
+    public void setOnSaveData(Function function) {
+        this.saveDataButton.setOnAction(e -> {
+            function.apply(e);
+            this.stage.close();
+        });
     }
 
     @Override
