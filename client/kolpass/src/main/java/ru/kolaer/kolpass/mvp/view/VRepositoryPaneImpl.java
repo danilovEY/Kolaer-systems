@@ -1,6 +1,8 @@
 package ru.kolaer.kolpass.mvp.view;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 
@@ -12,10 +14,20 @@ public class VRepositoryPaneImpl implements VRepositoryPane {
     private FlowPane contentPane;
 
     public VRepositoryPaneImpl() {
-        this.contentPane = new FlowPane(5, 5);
-        this.mainPane = new BorderPane(this.contentPane);
-        this.mainPane.setStyle("-fx-background-image: url('" + this.getClass().getResource("/background.jpg").toString() + "')");
-        this.mainPane.setPadding(new Insets(10));
+        this.contentPane = new FlowPane(10, 10);
+        this.contentPane.setAlignment(Pos.TOP_CENTER);
+        this.contentPane.setPadding(new Insets(10));
+        this.contentPane.setStyle("-fx-background-image: url('" + this.getClass().getResource("/background.jpg").toString() + "')");
+
+        final ScrollPane scrollPane = new ScrollPane(this.contentPane);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+
+        this.mainPane = new BorderPane(scrollPane);
+        //this.mainPane.setStyle("-fx-background-image: url('" + this.getClass().getResource("/background.jpg").toString() + "')");
+        //this.mainPane.setPadding(new Insets(10));
     }
 
     @Override

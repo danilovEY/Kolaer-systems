@@ -48,7 +48,7 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
         this.imageView.setFitWidth(200);
 
         this.mainPane = new BorderPane();
-        this.mainPane.setStyle("-fx-background-color: lightskyblue");
+        this.mainPane.setStyle("-fx-background-color: lightskyblue; -fx-background-radius: 20");
         this.mainPane.setPadding(new Insets(5));
         this.mainPane.setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, new CornerRadii(20.0), new BorderWidths(3.0))));
