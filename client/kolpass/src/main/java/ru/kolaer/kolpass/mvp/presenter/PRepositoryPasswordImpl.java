@@ -39,6 +39,13 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
     @Override
     public void updateView() {
         this.vRepositoryPassword.setName(this.passwordDto.getName());
+        this.vRepositoryPassword.setOnReturnDefault(e -> {
+            Optional.ofNullable(this.lastPassword).ifPresent(PPasswordHistory::updateView);
+            Optional.ofNullable(this.prevPassword).ifPresent(PPasswordHistory::updateView);
+            Optional.ofNullable(this.firstPassword).ifPresent(PPasswordHistory::updateView);
+            return null;
+        });
+
         this.vRepositoryPassword.setOnSaveData(o -> {
             if(this.lastPassword.getView().isChangeData(lastPassword.getModel())) {
                 final VPasswordHistory view = this.lastPassword.getView();
@@ -49,15 +56,24 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
                 this.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
                         .getKolpassTable().addHistoryPasswordToRepository(this.passwordDto.getId(), passwordHistory));
 
-                this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Информация!", "Сохранение прошло успешно!");
+                this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!", "Сохранение прошло успешно!");
             }
 
             return null;
         });
 
-        this.vRepositoryPassword.setOnEditName(e -> {
+        this.vRepositoryPassword.setOnEditName(name -> {
+            if(name != null && !name.isEmpty() && !name.equals(this.passwordDto.getName())) {
+                final String oldName = this.passwordDto.getName();
+                this.passwordDto.setName(name);
 
+                this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
+                        .getKolpassTable().updateRepositoryPassword(this.passwordDto);
 
+                this.vRepositoryPassword.setName(name);
+                this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!",
+                        "Изменение имени с \"" + oldName + "\" на \"" + name + "\"!");
+            }
             return null;
         });
 

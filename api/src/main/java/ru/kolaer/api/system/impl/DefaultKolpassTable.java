@@ -6,6 +6,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordBase;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,15 +15,21 @@ import java.util.List;
  */
 @Slf4j
 public class DefaultKolpassTable implements KolpassTable {
+    private final List<RepositoryPassword> repositoryPasswords;
+
+    public DefaultKolpassTable() {
+        this.repositoryPasswords = new ArrayList<>(5);
+    }
 
     @Override
     public List<RepositoryPassword> getAllRepositoryPasswords() {
-        return Collections.emptyList();
+        return this.repositoryPasswords;
     }
 
     @Override
     public RepositoryPassword addRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
         log.info("Добавлен репозиторий паролей");
+        this.repositoryPasswords.add(repositoryPasswordDto);
         return repositoryPasswordDto;
     }
 

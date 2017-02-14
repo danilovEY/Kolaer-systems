@@ -38,6 +38,22 @@ public class PRepositoryPaneImpl implements PRepositoryPane {
         this.view.clear();
         this.repositoryPasswordList.clear();
 
+        this.view.setOnAddRepository(rep -> {
+            if(rep.getName() == null || rep.getName().isEmpty())
+                this.editorKit.getUISystemUS().getNotification()
+                        .showErrorNotifi("Ошибка!", "Имя не может быть пустым!");
+
+            RepositoryPassword repositoryPassword = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
+                    .getKolpassTable().addRepositoryPassword(rep);
+
+            this.addRepositoryPassword(new PRepositoryPasswordImpl(this.editorKit, repositoryPassword));
+
+            this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!",
+                    "Добавлен репозиторий \"" + repositoryPassword.getName() + "\"!");
+
+            return null;
+        });
+
         for (RepositoryPassword repositoryPassword : this.kolpassTable.getAllRepositoryPasswords()) {
             this.addRepositoryPassword(new PRepositoryPasswordImpl(this.editorKit, repositoryPassword));
         }

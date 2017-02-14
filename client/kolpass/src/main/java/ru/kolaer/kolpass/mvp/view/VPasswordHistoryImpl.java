@@ -89,9 +89,7 @@ public class VPasswordHistoryImpl implements VPasswordHistory {
     @Override
     public void setEditable(boolean edit) {
         this.loginField.setEditable(edit);
-        this.loginField.setDisable(!edit);
         this.passwordField.setEditable(edit);
-        this.passwordField.setDisable(!edit);
     }
 
     @Override

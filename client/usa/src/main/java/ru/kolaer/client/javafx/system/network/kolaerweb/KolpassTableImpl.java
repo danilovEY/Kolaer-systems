@@ -21,9 +21,10 @@ import java.util.List;
  */
 @Slf4j
 class KolpassTableImpl implements KolpassTable, TokenToHeader {
-    private final String DELETE_REPOSITORY_PASSWORD;
     private ObjectMapper mapper;
     private final String PATH;
+    private final String UPDATE_REPOSITORY_PASSWORD;
+    private final String DELETE_REPOSITORY_PASSWORD;
     private final String GET_ALL_MY_REPOSITORY_PASS;
     private final String ADD_REPOSITORY_PASSWORD;
     private final String ADD_HISTORY_PASSWORD_TO_REP;
@@ -37,6 +38,7 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
         this.ADD_REPOSITORY_PASSWORD = this.PATH + "/add";
         this.ADD_HISTORY_PASSWORD_TO_REP = this.PATH + "/passwords/add";
         this.DELETE_REPOSITORY_PASSWORD = this.PATH + "/delete";
+        this.UPDATE_REPOSITORY_PASSWORD = this.PATH + "/update";
     }
 
     @Override
@@ -79,8 +81,15 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
     }
 
     @Override
-    public RepositoryPassword updateRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
-        return null;
+    public RepositoryPassword updateRepositoryPassword(RepositoryPassword repositoryPassword) {
+        final RepositoryPassword request = new RepositoryPasswordBase();
+        request.setId(repositoryPassword.getId());
+        request.setName(repositoryPassword.getName());
+
+        return restTemplate.exchange(this.UPDATE_REPOSITORY_PASSWORD,
+                HttpMethod.POST,
+                new HttpEntity<>(request, this.getTokenToHeader()),
+                RepositoryPassword.class).getBody();
     }
 
     @Override

@@ -27,6 +27,7 @@ public interface VRepositoryPassword extends BaseView<BorderPane> {
     void removePasswordHistory(VPasswordHistory passwordHistory);
 
     void setOnSaveData(Function function);
-    void setOnEditName(Function function);
+    void setOnEditName(Function<String, Void> function);
     void setOnDelete(Function function);
+    void setOnReturnDefault(Function function);
 }

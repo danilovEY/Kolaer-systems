@@ -90,25 +90,6 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
         openPass.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         openPass.setPrefHeight(30);
         openPass.setOnAction(e -> {
-            if(this.stage == null) {
-                this.content = new VBox();
-
-                this.stage = new Stage();
-                this.stage.setTitle(this.labelName.getText());
-
-                final BorderPane mainStagePane = new BorderPane();
-                mainStagePane.setPadding(new Insets(10));
-                mainStagePane.setCenter(this.content);
-                mainStagePane.setBottom(this.saveDataButton);
-                BorderPane.setAlignment(this.saveDataButton, Pos.CENTER_RIGHT);
-
-                stage.setScene(new Scene(mainStagePane));
-
-                this.titledPaneLast.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
-                this.titledPanePrev.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
-                this.titledPaneFirst.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
-            }
-
             content.getChildren().clear();
 
             Optional.ofNullable(this.lastPass).ifPresent(pass -> {
@@ -131,6 +112,23 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
             stage.centerOnScreen();
             stage.show();
         });
+
+        this.content = new VBox();
+
+        this.stage = new Stage();
+        this.stage.setTitle(this.labelName.getText());
+
+        final BorderPane mainStagePane = new BorderPane();
+        mainStagePane.setPadding(new Insets(10));
+        mainStagePane.setCenter(this.content);
+        mainStagePane.setBottom(this.saveDataButton);
+        BorderPane.setAlignment(this.saveDataButton, Pos.CENTER_RIGHT);
+
+        stage.setScene(new Scene(mainStagePane));
+
+        this.titledPaneLast.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
+        this.titledPanePrev.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
+        this.titledPaneFirst.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
 
         this.mainPane.setBottom(openPass);
         BorderPane.setAlignment(openPass, Pos.CENTER);
@@ -206,13 +204,24 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
     }
 
     @Override
-    public void setOnEditName(Function function) {
-        this.editName.setOnAction(function::apply);
+    public void setOnEditName(Function<String, Void> function) {
+        this.editName.setOnAction(e -> {
+            TextInputDialog textInputDialog = new TextInputDialog(this.getName());
+            textInputDialog.setContentText("Введите новое имя");
+            textInputDialog.setHeaderText("");
+            textInputDialog.setTitle("Введите имя");
+            textInputDialog.showAndWait().ifPresent(function::apply);
+        });
     }
 
     @Override
     public void setOnDelete(Function function) {
         this.deleteItem.setOnAction(function::apply);
+    }
+
+    @Override
+    public void setOnReturnDefault(Function function) {
+        this.stage.setOnCloseRequest(function::apply);
     }
 
     @Override

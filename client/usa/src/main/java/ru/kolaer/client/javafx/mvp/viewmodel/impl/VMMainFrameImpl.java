@@ -14,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.ui.MenuBarUS;
@@ -105,7 +106,13 @@ public class VMMainFrameImpl extends Application {
         editorKit.setPluginsUS(explorer);
         editorKit.setAuthentication(authentication);
 
-        authentication.loginIsRemember();
+        CompletableFuture.runAsync(authentication::loginIsRemember,
+                Executors.newSingleThreadExecutor())
+                .exceptionally(ex -> {
+                    editorKit.getUISystemUS().getNotification()
+                            .showErrorNotifi("Ошибка!", "Не удалось авторизоватся!");
+                    return null;
+                });
 
         final SearchPlugins searchPlugins = new SearchPlugins();
         this.pluginManager = new PluginManager(searchPlugins);
@@ -173,7 +180,10 @@ public class VMMainFrameImpl extends Application {
             installPlugin(explorer, pluginManager, pluginBundle);
 
             threadInstallPlugin.shutdown();
-        }, threadInstallPlugin);
+        }, threadInstallPlugin).exceptionally(ex -> {
+            LOG.error("Ошибка при установки прагина: {}", pluginBundle.getNamePlugin(), ex);
+            return null;
+        });
     }
 
     public void installPlugin(final VMTabExplorerOSGi explorer, final PluginManager pluginManager, final PluginBundle pluginBundle) {

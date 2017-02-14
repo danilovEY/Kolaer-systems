@@ -16,6 +16,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordHistoryService;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordService;
@@ -75,15 +76,9 @@ public class KolpassController {
             throw new BadRequestException("Имя не может быть пустым!");
         }
 
-        final RepositoryPassword doubleRep = this.repPassService
-                .getByNameAndPnumber(repositoryPassword.getName(), employeeEntity.getPersonnelNumber());
-
-        if(doubleRep != null)
-            throw new BadRequestException("Хранилище с таким названием у вас уже существует!");
-
         repositoryPassword.setEmployee(employeeEntity);
 
-        this.repPassService.add(repositoryPassword);
+        this.repPassService.add(new RepositoryPasswordDecorator(repositoryPassword));
 
         return repositoryPassword;
     }
