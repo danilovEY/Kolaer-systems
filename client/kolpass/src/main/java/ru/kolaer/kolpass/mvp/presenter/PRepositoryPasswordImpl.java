@@ -1,6 +1,7 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryBase;
@@ -16,8 +17,8 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 09.02.2017.
  */
-@Slf4j
 public class PRepositoryPasswordImpl implements PRepositoryPassword {
+    private static final Logger log = LoggerFactory.getLogger(PRepositoryPasswordImpl.class);
     private final UniformSystemEditorKit editorKit;
     private VRepositoryPassword vRepositoryPassword;
     private RepositoryPassword passwordDto;

@@ -1,8 +1,8 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistoryImpl;
 
@@ -13,8 +13,8 @@ import java.util.Random;
 /**
  * Created by danilovey on 09.02.2017.
  */
-@Slf4j
 public class PPasswordHistoryImpl implements PPasswordHistory {
+    private static final Logger log = LoggerFactory.getLogger(PPasswordHistoryImpl.class);
     private static final char[] choices = ("abcdefghijklmnopqrstuvwxyz" +
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
             "0123456789" +

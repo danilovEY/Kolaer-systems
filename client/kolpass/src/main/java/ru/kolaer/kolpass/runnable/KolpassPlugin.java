@@ -3,7 +3,8 @@ package ru.kolaer.kolpass.runnable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
@@ -19,8 +20,8 @@ import java.util.Optional;
 /**
  * Created by danilovey on 09.02.2017.
  */
-@Slf4j
 public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserver {
+    private static final Logger log = LoggerFactory.getLogger(KolpassPlugin.class);
     private PRepositoryPaneImpl pRepositoryPane;
     private Button loginButton;
     private BorderPane mainPane;
