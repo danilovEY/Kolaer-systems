@@ -57,6 +57,8 @@ public class PRepositoryListImpl implements PRepositoryList {
 
         List<RepositoryPassword> allRepositoryPasswords = this.model.getAllRepositoryPasswords();
         allRepositoryPasswords.forEach(this::put);
+
+        this.employeeRepMap.keySet().forEach(this.view::addEmployee);
     }
 
     private void put(RepositoryPassword repositoryPassword) {
