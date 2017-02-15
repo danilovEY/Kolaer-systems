@@ -17,12 +17,12 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 09.02.2017.
  */
-public class VRepositoryPaneImpl implements VRepositoryPane {
+public class VRepositoryContentImpl implements VRepositoryContent {
     private final BorderPane mainPane;
     private final FlowPane contentPane;
     private final MenuItem addRepItem;
 
-    public VRepositoryPaneImpl() {
+    public VRepositoryContentImpl() {
         this.addRepItem = new MenuItem("Добавить репозиторий");
 
         final ContextMenu contextMenu = new ContextMenu(this.addRepItem);

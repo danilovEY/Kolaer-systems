@@ -68,6 +68,8 @@ public class KolpassController {
         List<Integer> idsChief = this.departmentService.getAll().stream()
                 .map(DepartmentEntity::getChiefEntity)
                 .filter(Objects::nonNull)
+                .filter(pNumber -> !pNumber.equals(this.serviceLDAP.getAccountByAuthentication()
+                        .getEmployeeEntity().getPersonnelNumber()))
                 .collect(Collectors.toList());
         return this.repPassService.getAllByPnumbers(idsChief);
     }

@@ -11,7 +11,7 @@ import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.kolpass.mvp.presenter.PRepositoryPaneImpl;
+import ru.kolaer.kolpass.mvp.presenter.PRepositoryContentImpl;
 
 import java.net.URL;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import java.util.Optional;
  */
 public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserver {
     private static final Logger log = LoggerFactory.getLogger(KolpassPlugin.class);
-    private PRepositoryPaneImpl pRepositoryPane;
+    private PRepositoryContentImpl pRepositoryPane;
     private Button loginButton;
     private BorderPane mainPane;
     private UniformSystemEditorKit editorKit;
@@ -49,7 +49,7 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
         this.loginButton = new Button("Авторизоваться");
         this.loginButton.setOnAction(e -> this.editorKit.getUISystemUS().getDialog().createAndShowLoginToSystemDialog());
 
-        this.pRepositoryPane = new PRepositoryPaneImpl(this.editorKit);
+        this.pRepositoryPane = new PRepositoryContentImpl(this.editorKit);
 
         if(editorKit.getAuthentication().isAuthentication())
             this.login(null);
