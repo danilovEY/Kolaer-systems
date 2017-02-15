@@ -4,6 +4,8 @@ import javafx.scene.layout.BorderPane;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.api.mvp.view.BaseView;
 
+import java.util.function.Function;
+
 /**
  * Created by danilovey on 09.02.2017.
  */
@@ -21,4 +23,6 @@ public interface VPasswordHistory extends BaseView<BorderPane> {
     boolean isEditable();
 
     boolean isChangeData(RepositoryPasswordHistory passwordHistory);
+
+    void setOnGeneratePass(Function function);
 }

@@ -48,16 +48,14 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public void removeAll() {
-        this.pluginTabMap.values().parallelStream().forEach(tab -> {
-            tab.closeTab();
-        });
+        this.pluginTabMap.values().parallelStream().forEach(PTab::closeTab);
     }
 
 
     @Override
     public void addTabPlugin(final String tabName, final PluginBundle uniformSystemPlugin) {
         if(uniformSystemPlugin == null || !uniformSystemPlugin.isInstall()) {
-            throw new IllegalArgumentException(uniformSystemPlugin.getSymbolicNamePlugin() + " - is null or not install!");
+            throw new IllegalArgumentException(tabName + " - is null or not install!");
         }
 
         final PTab tab = new PTabImpl(uniformSystemPlugin);

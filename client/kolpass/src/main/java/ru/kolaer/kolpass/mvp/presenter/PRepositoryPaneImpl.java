@@ -38,6 +38,8 @@ public class PRepositoryPaneImpl implements PRepositoryPane {
         this.view.clear();
         this.repositoryPasswordList.clear();
 
+
+
         this.view.setOnAddRepository(rep -> {
             if(rep.getName() == null || rep.getName().isEmpty())
                 this.editorKit.getUISystemUS().getNotification()

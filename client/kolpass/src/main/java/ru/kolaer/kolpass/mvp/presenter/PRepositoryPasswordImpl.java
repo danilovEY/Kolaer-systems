@@ -50,8 +50,8 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
             if(this.lastPassword.getView().isChangeData(lastPassword.getModel())) {
                 final VPasswordHistory view = this.lastPassword.getView();
                 final RepositoryPasswordHistoryBase passwordHistory = new RepositoryPasswordHistoryBase();
-                passwordHistory.setLogin(view.getLogin());
-                passwordHistory.setPassword(view.getPassword());
+                passwordHistory.setLogin(Optional.ofNullable(view.getLogin()).orElse(""));
+                passwordHistory.setPassword(Optional.ofNullable(view.getPassword()).orElse(""));
 
                 this.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
                         .getKolpassTable().addHistoryPasswordToRepository(this.passwordDto.getId(), passwordHistory));

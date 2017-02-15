@@ -198,7 +198,7 @@ public class VMMainFrameImpl extends Application {
             LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
             final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
             if (pluginServices != null) {
-                pluginServices.parallelStream().forEach(this.servicesManager::addService);
+                pluginServices.forEach(this.servicesManager::addService);
             }
         }
     }

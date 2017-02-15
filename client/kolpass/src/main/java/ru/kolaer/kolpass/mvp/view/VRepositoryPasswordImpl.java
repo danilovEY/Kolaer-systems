@@ -72,6 +72,7 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
         this.mainPane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> contextMenu.hide());
         this.mainPane.setTop(this.labelName);
         this.mainPane.setCenter(this.imageView);
+        BorderPane.setMargin(this.imageView, new Insets(10));
 
         this.titledPaneLast = new TitledPane("Последний пароль", null);
 
@@ -90,45 +91,53 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
         openPass.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         openPass.setPrefHeight(30);
         openPass.setOnAction(e -> {
-            content.getChildren().clear();
+            this.stage.setTitle(this.labelName.getText());
+
+            this.content.getChildren().clear();
 
             Optional.ofNullable(this.lastPass).ifPresent(pass -> {
                 this.titledPaneLast.setContent(pass.getContent());
-                content.getChildren().add(this.titledPaneLast);
+                this.content.getChildren().add(this.titledPaneLast);
             });
 
             Optional.ofNullable(this.prevPass).ifPresent(pass -> {
                 this.titledPanePrev.setContent(pass.getContent());
-                content.getChildren().add(this.titledPanePrev);
+                this.content.getChildren().add(this.titledPanePrev);
             });
 
             Optional.ofNullable(this.firstPass).ifPresent(pass -> {
                 this.titledPaneFirst.setContent(pass.getContent());
-                content.getChildren().add(this.titledPaneFirst);
+                this.content.getChildren().add(this.titledPaneFirst);
             });
 
-            stage.requestFocus();
-            stage.sizeToScene();
-            stage.centerOnScreen();
-            stage.show();
+            this.stage.sizeToScene();
+            this.stage.requestFocus();
+            this.stage.centerOnScreen();
+            this.stage.show();
         });
 
         this.content = new VBox();
+        this.content.setAlignment(Pos.TOP_CENTER);
 
-        this.stage = new Stage();
-        this.stage.setTitle(this.labelName.getText());
+        final ScrollPane scrollPane = new ScrollPane(this.content);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+        BorderPane.setMargin(scrollPane, new Insets(0,0,10,0));
 
         final BorderPane mainStagePane = new BorderPane();
         mainStagePane.setPadding(new Insets(10));
-        mainStagePane.setCenter(this.content);
+        mainStagePane.setCenter(scrollPane);
         mainStagePane.setBottom(this.saveDataButton);
         BorderPane.setAlignment(this.saveDataButton, Pos.CENTER_RIGHT);
 
-        stage.setScene(new Scene(mainStagePane));
+        this.stage = new Stage();
+        this.stage.setScene(new Scene(mainStagePane));
 
-        this.titledPaneLast.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
-        this.titledPanePrev.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
-        this.titledPaneFirst.heightProperty().addListener((obs, oldHeight, newHeight) -> stage.sizeToScene());
+        this.titledPaneLast.heightProperty().addListener((obs, oldHeight, newHeight) -> this.stage.sizeToScene());
+        this.titledPanePrev.heightProperty().addListener((obs, oldHeight, newHeight) -> this.stage.sizeToScene());
+        this.titledPaneFirst.heightProperty().addListener((obs, oldHeight, newHeight) -> this.stage.sizeToScene());
 
         this.mainPane.setBottom(openPass);
         BorderPane.setAlignment(openPass, Pos.CENTER);

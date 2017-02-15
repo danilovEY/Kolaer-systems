@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 
@@ -14,6 +15,8 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Created by danilovey on 09.02.2017.
@@ -23,15 +26,20 @@ public class VPasswordHistoryImpl implements VPasswordHistory {
     private final TextField passwordField;
     private final TextField loginField;
     private final Label labelDateWrite;
+    private final Button generatePass;
 
     public VPasswordHistoryImpl() {
         this.passwordField = new TextField();
+        this.passwordField.setText("");
         this.passwordField.setPrefWidth(300);
 
         this.loginField = new TextField();
+        this.loginField.setText("");
         this.loginField.setPrefWidth(300);
 
         this.labelDateWrite = new Label("Дата записи");
+
+        this.generatePass = new Button("Генерировать");
 
         final Button copyPass = new Button("Копировать");
         copyPass.setOnAction(e -> this.writeToClipboard(this.passwordField.getText()));
@@ -39,13 +47,13 @@ public class VPasswordHistoryImpl implements VPasswordHistory {
         final Button copyLogin = new Button("Копировать");
         copyLogin.setOnAction(e -> this.writeToClipboard(this.loginField.getText()));
 
-        FlowPane flowPane = new FlowPane(5, 5, this.loginField, copyLogin);
+        FlowPane flowPane = new FlowPane(5, 5, new Label("Логин: "), this.loginField, copyLogin);
         flowPane.setAlignment(Pos.CENTER);
-        FlowPane flowPane1 = new FlowPane(5, 5, this.passwordField, copyPass);
+        FlowPane flowPane1 = new FlowPane(5, 5, new Label("Пароль: "), this.passwordField, new HBox(copyPass, generatePass));
         flowPane1.setAlignment(Pos.CENTER);
 
-        VBox vBox = new VBox(5, flowPane, flowPane1);
-        vBox.setAlignment(Pos.CENTER);
+        VBox vBox = new VBox(15, flowPane, flowPane1);
+        //vBox.setAlignment(Pos.CENTER);
         //vBox.setStyle("-fx-background-color: red");
 
         this.mainPane = new BorderPane(vBox);
@@ -90,6 +98,7 @@ public class VPasswordHistoryImpl implements VPasswordHistory {
     public void setEditable(boolean edit) {
         this.loginField.setEditable(edit);
         this.passwordField.setEditable(edit);
+        this.generatePass.setDisable(!edit);
     }
 
     @Override
@@ -99,10 +108,16 @@ public class VPasswordHistoryImpl implements VPasswordHistory {
 
     @Override
     public boolean isChangeData(RepositoryPasswordHistory passwordHistory) {
-        return (passwordHistory == null && (!this.passwordField.getText().isEmpty() || !this.loginField.getText().isEmpty()))
+        return (passwordHistory == null && (!Optional.ofNullable(this.passwordField.getText()).orElse("").isEmpty()
+                || !Optional.ofNullable(this.loginField.getText()).orElse("").isEmpty()))
                 || passwordHistory == null
                 || !this.passwordField.getText().equals(passwordHistory.getPassword())
                 || !this.loginField.getText().equals(passwordHistory.getLogin());
+    }
+
+    @Override
+    public void setOnGeneratePass(Function function) {
+        this.generatePass.setOnAction(function::apply);
     }
 
     @Override
