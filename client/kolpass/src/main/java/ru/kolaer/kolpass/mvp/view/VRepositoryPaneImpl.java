@@ -18,9 +18,9 @@ import java.util.function.Function;
  * Created by danilovey on 09.02.2017.
  */
 public class VRepositoryPaneImpl implements VRepositoryPane {
-    private BorderPane mainPane;
-    private FlowPane contentPane;
-    private MenuItem addRepItem;
+    private final BorderPane mainPane;
+    private final FlowPane contentPane;
+    private final MenuItem addRepItem;
 
     public VRepositoryPaneImpl() {
         this.addRepItem = new MenuItem("Добавить репозиторий");

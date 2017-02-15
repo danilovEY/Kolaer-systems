@@ -7,7 +7,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.VBox;
-import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.dialog.LoginDialog;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
@@ -22,12 +21,6 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.tools.Resources;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Executors;
 
 /**
@@ -36,9 +29,8 @@ import java.util.concurrent.Executors;
  * @author danilovey
  * @version 0.1
  */
-@Slf4j
 public class DialogUSImpl implements DialogUS {
-	private final Logger LOG = LoggerFactory.getLogger(DialogUSImpl.class);
+	private final Logger log = LoggerFactory.getLogger(DialogUSImpl.class);
 
 	@Override
 	public Dialog<?> createSimpleDialog(final String title, final String text) {

@@ -3,7 +3,8 @@ package ru.kolaer.client.javafx.system.network.kolaerweb;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import ru.kolaer.api.exceptions.ServerException;
@@ -19,8 +20,8 @@ import java.util.List;
 /**
  * Created by danilovey on 13.02.2017.
  */
-@Slf4j
 class KolpassTableImpl implements KolpassTable, TokenToHeader {
+    private static final Logger log = LoggerFactory.getLogger(KolpassTableImpl.class);
     private ObjectMapper mapper;
     private final String PATH;
     private final String UPDATE_REPOSITORY_PASSWORD;
