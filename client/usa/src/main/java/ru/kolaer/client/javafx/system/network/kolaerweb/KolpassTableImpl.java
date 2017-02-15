@@ -16,6 +16,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
     private final String UPDATE_REPOSITORY_PASSWORD;
     private final String DELETE_REPOSITORY_PASSWORD;
     private final String GET_ALL_MY_REPOSITORY_PASS;
+    private final String GET_ALL_CHIEF_REPOSITORY_PASS;
     private final String ADD_REPOSITORY_PASSWORD;
     private final String ADD_HISTORY_PASSWORD_TO_REP;
 
@@ -39,6 +41,7 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
 
         this.PATH = path;
         this.GET_ALL_MY_REPOSITORY_PASS = this.PATH + "/get/all/personal";
+        this.GET_ALL_CHIEF_REPOSITORY_PASS = this.PATH + "/get/all/chief";
         this.ADD_REPOSITORY_PASSWORD = this.PATH + "/add";
         this.ADD_HISTORY_PASSWORD_TO_REP = this.PATH + "/passwords/add";
         this.DELETE_REPOSITORY_PASSWORD = this.PATH + "/delete";
@@ -61,6 +64,13 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
         }
     }
 
+    @Override
+    public List<RepositoryPassword> getAllRepositoryPasswordsChief() {
+         return Arrays.asList(this.restTemplate.exchange(this.GET_ALL_CHIEF_REPOSITORY_PASS,
+                HttpMethod.GET,
+                new HttpEntity<>(this.getTokenToHeader()),
+                RepositoryPassword[].class).getBody());
+    }
 
 
     @Override

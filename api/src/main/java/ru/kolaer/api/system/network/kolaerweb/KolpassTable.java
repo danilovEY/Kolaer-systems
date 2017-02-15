@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface KolpassTable {
     List<RepositoryPassword> getAllRepositoryPasswords();
+    List<RepositoryPassword> getAllRepositoryPasswordsChief();
     RepositoryPassword addRepositoryPassword(RepositoryPassword repositoryPasswordDto);
     RepositoryPassword addHistoryPasswordToRepository(Integer idRep,
                                                       RepositoryPasswordHistory repositoryPasswordHistory);

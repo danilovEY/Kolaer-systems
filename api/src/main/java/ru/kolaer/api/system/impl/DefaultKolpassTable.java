@@ -27,6 +27,11 @@ public class DefaultKolpassTable implements KolpassTable {
     }
 
     @Override
+    public List<RepositoryPassword> getAllRepositoryPasswordsChief() {
+        return this.repositoryPasswords;
+    }
+
+    @Override
     public RepositoryPassword addRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
         log.info("Добавлен репозиторий паролей");
         this.repositoryPasswords.add(repositoryPasswordDto);
