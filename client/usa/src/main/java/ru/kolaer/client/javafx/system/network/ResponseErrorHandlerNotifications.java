@@ -45,6 +45,8 @@ public class ResponseErrorHandlerNotifications extends DefaultResponseErrorHandl
                     .showErrorNotifi("Ошибка запроса!",
                             this.getMessage(this.getExceptionMessageRequest(response))); break;
         }
+
+        super.handleError(response);
     }
 
     private ExceptionMessageRequest getExceptionMessageRequest(ClientHttpResponse response) throws IOException {

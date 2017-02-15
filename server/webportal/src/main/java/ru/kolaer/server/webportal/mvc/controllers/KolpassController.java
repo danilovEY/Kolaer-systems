@@ -17,6 +17,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryDecorator;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
@@ -83,10 +84,10 @@ public class KolpassController {
         return this.repPassService.getAllByPnumber(employeeEntity.getPersonnelNumber(), number, pageSize);
     }
 
-    @ApiOperation(value = "Добавить новое хранилище")
-    @UrlDeclaration(description = "Добавить новое хранилище", isAccessUser = true)
-    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public RepositoryPassword addRepositoryPasswords(
+    @ApiOperation(value = "Добавить новое хранилище другому сотруднику")
+    @UrlDeclaration(description = "Добавить новое хранилище другому сотруднику")
+    @RequestMapping(value = "/add/employee", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public RepositoryPassword addRepositoryPasswordsWithEmployee(
             @ApiParam("Наименование хранилища") @RequestBody RepositoryPassword repositoryPassword
     ) {
         final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
@@ -95,11 +96,26 @@ public class KolpassController {
             throw new BadRequestException("Имя не может быть пустым!");
         }
 
-        repositoryPassword.setEmployee(employeeEntity);
+        if(repositoryPassword.getEmployee() != null) {
+            repositoryPassword.setEmployee(new EmployeeEntityDecorator(repositoryPassword.getEmployee()));
+        } else {
+            repositoryPassword.setEmployee(employeeEntity);
+        }
+
 
         this.repPassService.add(new RepositoryPasswordDecorator(repositoryPassword));
 
         return repositoryPassword;
+    }
+
+    @ApiOperation(value = "Добавить новое хранилище")
+    @UrlDeclaration(description = "Добавить новое хранилище", isAccessUser = true)
+    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public RepositoryPassword addRepositoryPasswords(
+            @ApiParam("Наименование хранилища") @RequestBody RepositoryPassword repositoryPassword
+    ) {
+        repositoryPassword.setEmployee(null);
+        return this.addRepositoryPasswordsWithEmployee(repositoryPassword);
     }
 
     @ApiOperation(value = "Добавить новый пароль в хранилище")
