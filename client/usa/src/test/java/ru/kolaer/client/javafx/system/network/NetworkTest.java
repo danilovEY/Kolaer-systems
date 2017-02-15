@@ -2,7 +2,6 @@ package ru.kolaer.client.javafx.system.network;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
@@ -19,7 +18,7 @@ import ru.kolaer.client.javafx.tools.Resources;
  */
 @Slf4j
 public class NetworkTest {
-    private NetworkUSImpl networkUS;
+    private NetworkUSRestTemplate networkUS;
     private Authentication authentication;
 
     @Before
@@ -30,7 +29,7 @@ public class NetworkTest {
         urlToKolaerWeb.append("localhost:8080");
 
         UniformSystemEditorKitSingleton instance = UniformSystemEditorKitSingleton.getInstance();
-        this.networkUS = new NetworkUSImpl();
+        this.networkUS = new NetworkUSRestTemplate();
         this.authentication = new AuthenticationOnNetwork();
         instance.setUSNetwork(this.networkUS);
         instance.setAuthentication(this.authentication);

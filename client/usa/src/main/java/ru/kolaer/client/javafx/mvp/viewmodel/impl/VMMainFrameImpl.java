@@ -1,7 +1,6 @@
 package ru.kolaer.client.javafx.mvp.viewmodel.impl;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,31 +13,24 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.Authentication;
-import ru.kolaer.api.system.ui.MenuBarUS;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.plugins.SearchPlugins;
 import ru.kolaer.client.javafx.services.AutoCeckingNotifyMessage;
 import ru.kolaer.client.javafx.services.AutoUpdatePlugins;
-import ru.kolaer.client.javafx.services.HideShowMainStage;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.javafx.system.network.AuthenticationOnNetwork;
-import ru.kolaer.client.javafx.system.network.NetworkUSImpl;
+import ru.kolaer.client.javafx.system.network.NetworkUSRestTemplate;
+import ru.kolaer.client.javafx.system.network.ResponseErrorHandlerNotifications;
 import ru.kolaer.client.javafx.system.ui.MenuBarUSImpl;
 import ru.kolaer.client.javafx.system.ui.NotificationPane;
 import ru.kolaer.client.javafx.system.ui.UISystemUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -91,7 +83,7 @@ public class VMMainFrameImpl extends Application {
 
         final MenuBarUSImpl menuBarUS = new MenuBarUSImpl(menuBar);
         final NotificationPane notify = new NotificationPane();
-        final NetworkUSImpl network = new NetworkUSImpl();
+        final NetworkUSRestTemplate network = new NetworkUSRestTemplate(new ResponseErrorHandlerNotifications());
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         uiSystemUS.setNotification(notify);
         splitPane.getItems().add(notify.getContent());

@@ -10,11 +10,12 @@ import java.time.LocalDate;
  * Created by danilovey on 02.11.2016.
  */
 public class HolidaysTableImpl implements HolidaysTable {
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private final String URL_GET;
     private final String URL_GET_ALL;
 
-    public HolidaysTableImpl(String path) {
+    public HolidaysTableImpl(RestTemplate globalRestTemplate, String path) {
+        this.restTemplate = globalRestTemplate;
         this.URL_GET = path + "/get";
         this.URL_GET_ALL = this.URL_GET + "/all";
     }

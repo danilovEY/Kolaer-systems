@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.system.network.kolaerweb;
 
+import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.api.system.network.kolaerweb.KolaerWebServer;
@@ -13,12 +14,15 @@ import java.net.URL;
  * Created by Danilov on 28.07.2016.
  */
 public class KolaerWebServerImpl implements KolaerWebServer {
+    private final RestTemplate globalRestTemplate;
     private ApplicationDataBase applicationDataBase;
     private ServerTools serverTools;
 
-    public KolaerWebServerImpl(StringBuilder path) {
-        this.applicationDataBase = new ApplicationDataBaseImpl(path.append("/rest").toString());
-        this.serverTools = new ServerToolsImpl(path.toString());
+    public KolaerWebServerImpl(RestTemplate globalRestTemplate, StringBuilder path) {
+        this.globalRestTemplate = globalRestTemplate;
+        this.applicationDataBase = new ApplicationDataBaseImpl(this.globalRestTemplate,
+                path.append("/rest").toString());
+        this.serverTools = new ServerToolsImpl(this.globalRestTemplate, path.toString());
     }
 
     @Override

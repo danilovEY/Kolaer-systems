@@ -7,11 +7,12 @@ import ru.kolaer.api.system.network.PublicHolidaysDateBase;
 import java.time.LocalDate;
 
 public class PublicHolidaysDateBaseImpl implements PublicHolidaysDateBase {
-	private final RestTemplate restTemplate = new RestTemplate();
+	private final RestTemplate restTemplate;
 	private final String URL_GET;
 	private final String URL_GET_ALL;
 
-	public PublicHolidaysDateBaseImpl(String path) {
+	public PublicHolidaysDateBaseImpl(RestTemplate globalRestTemplate, String path) {
+		this.restTemplate = globalRestTemplate;
 		this.URL_GET = path + "/get";
 		this.URL_GET_ALL = this.URL_GET + "/all";
 	}

@@ -18,14 +18,15 @@ import java.util.List;
  */
 public class PsrTableImpl implements PsrTable {
     private static final Logger LOG = LoggerFactory.getLogger(PsrTableImpl.class);
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private final PsrStatusTable psrStatusTable;
     private final String URL_GET_ALL;
     private final String URL_ADD;
     private final String URL_DELETE;
     private final String URL_UPDATE;
 
-    public PsrTableImpl(String path) {
+    public PsrTableImpl(RestTemplate globalRestTemplate, String path) {
+        this.restTemplate = globalRestTemplate;
         this.psrStatusTable = new PsrStatusTableImpl(path + "/status");
         this.URL_GET_ALL = path + "/get/all";
         this.URL_ADD = path + "/add";

@@ -76,4 +76,9 @@ public class RepositoryPasswordServiceImpl implements RepositoryPasswordService 
     public RepositoryPassword getRepositoryWithJoinById(Integer id) {
         return this.repositoryPasswordDao.findRepositoryWithJoinById(id);
     }
+
+    @Override
+    public List<RepositoryPassword> getAllByPnumbers(List<Integer> idsChief) {
+        return this.repositoryPasswordDao.findAllByPnumbers(idsChief);
+    }
 }

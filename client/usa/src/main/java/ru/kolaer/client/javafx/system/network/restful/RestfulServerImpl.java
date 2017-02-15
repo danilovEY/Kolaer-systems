@@ -9,10 +9,12 @@ import ru.kolaer.api.system.network.restful.RestfulServer;
  * Created by danilovey on 29.07.2016.
  */
 public class RestfulServerImpl implements RestfulServer {
+    private RestTemplate globalRestTemplate;
     private StringBuilder url;
     private final String urlToStatus;
 
-    public RestfulServerImpl(StringBuilder url) {
+    public RestfulServerImpl(RestTemplate globalRestTemplate, StringBuilder url) {
+        this.globalRestTemplate = globalRestTemplate;
         this.url = url;
         this.urlToStatus = url.toString() + "/system/server/status";
     }
@@ -20,9 +22,7 @@ public class RestfulServerImpl implements RestfulServer {
     @Override
     public ServerStatus getServerStatus() {
         try {
-            final RestTemplate webRes = new RestTemplate();
-
-            final String status = webRes.getForObject(this.urlToStatus, String.class);
+            final String status = this.globalRestTemplate.getForObject(this.urlToStatus, String.class);
             if(status == null)
                 return ServerStatus.NOT_AVAILABLE;
             switch (status) {

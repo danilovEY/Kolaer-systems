@@ -27,9 +27,10 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 	private final String URL_GET_USERS_BIRTHDAY;
 	private final String URL_GET_USERS_BIRTHDAY_TODAY;
 	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	private final RestTemplate restTemplate = new RestTemplate();
+	private final RestTemplate restTemplate;
 	
-	public EmployeeOtherOrganizationTableImpl(final String path) {
+	public EmployeeOtherOrganizationTableImpl(RestTemplate globalRestTemplate, final String path) {
+		this.restTemplate = globalRestTemplate;
 		this.URL_GET_USERS = path + "/get/users";
 		this.URL_GET_USERS_MAX = this.URL_GET_USERS + "/max";
 		this.URL_GET_USERS_BIRTHDAY = this.URL_GET_USERS + "/birthday";

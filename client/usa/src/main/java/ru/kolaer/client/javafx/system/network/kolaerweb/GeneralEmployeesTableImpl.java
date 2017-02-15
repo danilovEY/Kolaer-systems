@@ -19,10 +19,11 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable {
     private final String URL_GET_USERS_BIRTHDAY;
     private final String URL_GET_USERS_BIRTHDAY_TODAY;
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
 
-    public GeneralEmployeesTableImpl(String path) {
+    public GeneralEmployeesTableImpl(RestTemplate globalRestTemplate, String path) {
+        this.restTemplate = globalRestTemplate;
         this.URL_GET_ALL = path + "/get/all";
         this.URL_GET_USERS_MAX = path + "/get/max";
         this.URL_GET_USERS_BIRTHDAY = path + "/get/birthday";

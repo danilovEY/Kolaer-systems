@@ -17,8 +17,8 @@ public class ServerToolsImpl implements ServerTools {
     private final RestTemplate restTemplate;
     private final String URL_GET_TIME;
 
-    public ServerToolsImpl(String path) {
-        this.restTemplate = new RestTemplate();
+    public ServerToolsImpl(RestTemplate globalRestTemplate, String path) {
+        this.restTemplate = globalRestTemplate;
         this.URL_GET_TIME = path + "/non-security/tools/get/time";
     }
 

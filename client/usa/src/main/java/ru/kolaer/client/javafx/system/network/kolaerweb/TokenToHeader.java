@@ -11,8 +11,6 @@ import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
  * Created by danilovey on 13.02.2017.
  */
 public interface TokenToHeader {
-    RestTemplate restTemplate = new RestTemplate();
-
     default <T> ParameterizedTypeReference<Page<T>> getTypeFromPage(Class<T> cls) {
         return new ParameterizedTypeReference<Page<T>>() {};
     }

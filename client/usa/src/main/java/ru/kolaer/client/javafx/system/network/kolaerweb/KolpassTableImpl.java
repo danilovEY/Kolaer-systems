@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
@@ -22,7 +23,8 @@ import java.util.List;
  */
 class KolpassTableImpl implements KolpassTable, TokenToHeader {
     private static final Logger log = LoggerFactory.getLogger(KolpassTableImpl.class);
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
+    private final RestTemplate restTemplate;
     private final String PATH;
     private final String UPDATE_REPOSITORY_PASSWORD;
     private final String DELETE_REPOSITORY_PASSWORD;
@@ -30,7 +32,8 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
     private final String ADD_REPOSITORY_PASSWORD;
     private final String ADD_HISTORY_PASSWORD_TO_REP;
 
-    KolpassTableImpl(String path) {
+    KolpassTableImpl(RestTemplate globalRestTemplate, String path) {
+        this.restTemplate = globalRestTemplate;
         this.mapper = new ObjectMapper();
         this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 

@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.system.network.kolaerweb;
 
+import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.system.network.kolaerweb.*;
 import ru.kolaer.api.system.network.kolaerweb.EmployeeOtherOrganizationTable;
 
@@ -7,6 +8,7 @@ import ru.kolaer.api.system.network.kolaerweb.EmployeeOtherOrganizationTable;
  * Created by Danilov on 31.07.2016.
  */
 public class ApplicationDataBaseImpl implements ApplicationDataBase {
+    private final RestTemplate globalRestTemplate;
     private final GeneralEmployeesTable generalEmployeesTable;
     private final PsrTable psrTable;
     private final NotifyMessageTable notifyMessageTable;
@@ -14,13 +16,25 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
     private final EmployeeOtherOrganizationTable employeeOtherOrganizationTable;
     private final KolpassTable kolpassTable;
 
-    public ApplicationDataBaseImpl(String path) {
-        this.generalEmployeesTable = new GeneralEmployeesTableImpl(path + "/employees");
-        this.psrTable = new PsrTableImpl(path + "/psr");
-        this.notifyMessageTable = new NotifyMessageTableImpl(path + "/non-security/notify");
-        this.counterTable = new CounterTableImpl(path + "/non-security/counters");
-        this.employeeOtherOrganizationTable = new EmployeeOtherOrganizationTableImpl(path + "/organizations/employees");
-        this.kolpassTable = new KolpassTableImpl(path + "/kolpass");
+    public ApplicationDataBaseImpl(RestTemplate globalRestTemplate, String path) {
+        this.globalRestTemplate = globalRestTemplate;
+
+        this.generalEmployeesTable = new GeneralEmployeesTableImpl(this.globalRestTemplate,
+                path + "/employees");
+
+        this.psrTable = new PsrTableImpl(this.globalRestTemplate, path + "/psr");
+
+        this.notifyMessageTable = new NotifyMessageTableImpl(this.globalRestTemplate,
+                path + "/non-security/notify");
+
+        this.counterTable = new CounterTableImpl(this.globalRestTemplate,
+                path + "/non-security/counters");
+
+        this.employeeOtherOrganizationTable = new EmployeeOtherOrganizationTableImpl(this.globalRestTemplate,
+                path + "/organizations/employees");
+
+        this.kolpassTable = new KolpassTableImpl(this.globalRestTemplate,
+                path + "/kolpass");
     }
 
     @Override

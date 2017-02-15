@@ -26,8 +26,6 @@ public class ServiceControlManager {
 	private boolean autoRun = false;
 	
 	public ServiceControlManager() {
-		//Убираем лог REST'a (засоряет)
-		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.springframework.web.client.RestTemplate")).setLevel(Level.INFO);
 	}
 	
 	/**Запуск всех служб.*/

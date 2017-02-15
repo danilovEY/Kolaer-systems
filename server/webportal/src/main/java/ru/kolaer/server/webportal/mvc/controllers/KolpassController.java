@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
@@ -18,12 +19,15 @@ import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryDecorator;
+import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordHistoryService;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 20.01.2017.
@@ -45,11 +49,26 @@ public class KolpassController {
     @Autowired
     private ServiceLDAP serviceLDAP;
 
+    @Autowired
+    private DepartmentService departmentService;
+
+
     @ApiOperation(value = "Получить все хранилища")
     @UrlDeclaration(description = "Получить все хранилища")
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<RepositoryPassword> getAllRepositoryPasswords() {
-        return this.repPassService.getAll();
+            return this.repPassService.getAll();
+    }
+
+    @ApiOperation(value = "Получить все хранилища начальников")
+    @UrlDeclaration(description = "Получить все хранилища начальников")
+    @RequestMapping(value = "/get/all/chief", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<RepositoryPassword> getAllRepositoryPasswordsChief() {
+        List<Integer> idsChief = this.departmentService.getAll().stream()
+                .map(DepartmentEntity::getChiefEntity)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        return this.repPassService.getAllByPnumbers(idsChief);
     }
 
     @ApiOperation(value = "Получить все свои хранилища")
@@ -102,34 +121,35 @@ public class KolpassController {
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
-        if(!rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
-                || !accountByAuthentication.getRoles().stream()
+        if(rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
+                || accountByAuthentication.getRoles().stream()
                 .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
-            throw new AccessDeniedException("У вас нет доступа к хранилищу!");
+
+            final RepositoryPasswordHistory lastPassword =
+                    new RepositoryPasswordHistoryDecorator(repositoryPassword.getLastPassword());
+            lastPassword.setPasswordWriteDate(new Date());
+            lastPassword.setRepositoryPassword(rep);
+
+            this.repPassHistoryService.add(lastPassword);
+
+            if (rep.getFirstPassword() == null) {
+                rep.setFirstPassword(lastPassword);
+            }
+
+            if (rep.getPrevPassword() == null) {
+                rep.setPrevPassword(lastPassword);
+            } else {
+                rep.setPrevPassword(rep.getLastPassword());
+            }
+
+            rep.setLastPassword(lastPassword);
+
+            this.repPassService.update(rep);
+
+            return rep;
         }
 
-        final RepositoryPasswordHistory lastPassword =
-                new RepositoryPasswordHistoryDecorator(repositoryPassword.getLastPassword());
-        lastPassword.setPasswordWriteDate(new Date());
-        lastPassword.setRepositoryPassword(rep);
-
-        this.repPassHistoryService.add(lastPassword);
-
-        if(rep.getFirstPassword() == null) {
-            rep.setFirstPassword(lastPassword);
-        }
-
-        if(rep.getPrevPassword() == null) {
-            rep.setPrevPassword(lastPassword);
-        } else {
-            rep.setPrevPassword(rep.getLastPassword());
-        }
-
-        rep.setLastPassword(lastPassword);
-
-        this.repPassService.update(rep);
-
-        return rep;
+        throw new AccessDeniedException("У вас нет доступа к хранилищу!");
     }
 
     @ApiOperation(value = "Удалить хранилище")

@@ -1,5 +1,6 @@
 package ru.kolaer.client.javafx.system.network;
 
+import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.system.network.HolidaysTable;
 import ru.kolaer.api.system.network.OtherPublicAPI;
 import ru.kolaer.api.system.network.PublicHolidaysDateBase;
@@ -10,9 +11,12 @@ public class OtherPublicAPIImpl implements OtherPublicAPI {
 	private final PublicHolidaysDateBase publicHolidaysDateBase;
 	private HolidaysTable holidaysTable;
 
-	public OtherPublicAPIImpl() {
-		this.publicHolidaysDateBase = new PublicHolidaysDateBaseImpl(new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL).append("/other").append("/holidays").toString());
-		this.holidaysTable = new HolidaysTableImpl("http://" + Resources.URL_TO_KOLAER_WEB + "/rest/non-security/holidays");
+	public OtherPublicAPIImpl(RestTemplate globalRestTemplate) {
+		this.publicHolidaysDateBase = new PublicHolidaysDateBaseImpl(globalRestTemplate,
+				"http://" + Resources.URL_TO_KOLAER_RESTFUL + "/other" + "/holidays");
+
+		this.holidaysTable = new HolidaysTableImpl(globalRestTemplate,
+				"http://" + Resources.URL_TO_KOLAER_WEB + "/rest/non-security/holidays");
 	}
 
 	@Override

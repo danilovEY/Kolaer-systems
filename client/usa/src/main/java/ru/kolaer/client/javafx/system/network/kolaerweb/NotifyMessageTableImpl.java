@@ -10,13 +10,14 @@ import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
  * Created by danilovey on 18.08.2016.
  */
 public class NotifyMessageTableImpl implements NotifyMessageTable {
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private String URL_GET_LAST;
     private String URL_ADD;
 
-    public NotifyMessageTableImpl(String path) {
-            this.URL_GET_LAST = path + "/get/last";
-            this.URL_ADD = path + "/add";
+    public NotifyMessageTableImpl(RestTemplate globalRestTemplate, String path) {
+        this.restTemplate = globalRestTemplate;
+        this.URL_GET_LAST = path + "/get/last";
+        this.URL_ADD = path + "/add";
     }
 
     @Override

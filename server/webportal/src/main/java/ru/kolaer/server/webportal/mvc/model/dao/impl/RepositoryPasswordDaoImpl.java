@@ -127,4 +127,13 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
                 .setParameter("id", id).uniqueResult();
         return password;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RepositoryPassword> findAllByPnumbers(List<Integer> idsChief) {
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("FROM RepositoryPasswordDecorator r WHERE r.employee.personnelNumber IN :iDs")
+                .setParameterList("iDs", idsChief)
+                .list();
+    }
 }

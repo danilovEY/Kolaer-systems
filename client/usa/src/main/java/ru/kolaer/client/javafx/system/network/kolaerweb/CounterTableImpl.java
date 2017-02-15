@@ -11,8 +11,8 @@ public class CounterTableImpl implements CounterTable {
     private final RestTemplate restTemplate;
     private final String URL_GET_ALL;
 
-    public CounterTableImpl(String path) {
-        this.restTemplate = new RestTemplate();
+    public CounterTableImpl(RestTemplate globalRestTemplate, String path) {
+        this.restTemplate = globalRestTemplate;
         this.URL_GET_ALL = path + "/get/all";
     }
 
