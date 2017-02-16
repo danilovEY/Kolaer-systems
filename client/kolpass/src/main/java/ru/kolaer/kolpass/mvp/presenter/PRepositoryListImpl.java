@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -50,13 +51,10 @@ public class PRepositoryListImpl implements PRepositoryList {
 
     @Override
     public void updateView() {
-        this.view.setOnSelectEmployee(emp -> {
-            log.info("SELECT: {}", emp.getInitials());
-            return null;
-        });
-
         List<RepositoryPassword> allRepositoryPasswords = this.model.getAllRepositoryPasswords();
         allRepositoryPasswords.forEach(this::put);
+
+        this.model.getAllRepositoryPasswordsChief().forEach(this::put);
 
         this.employeeRepMap.keySet().forEach(this.view::addEmployee);
     }
@@ -69,5 +67,13 @@ public class PRepositoryListImpl implements PRepositoryList {
             repositoryPasswords.add(repositoryPassword);
             this.employeeRepMap.put(repositoryPassword.getEmployee(), repositoryPasswords);
         }
+    }
+
+    @Override
+    public void setOnSelectEmployee(Function<List<RepositoryPassword>, Void> function) {
+        this.view.setOnSelectEmployee(emp -> {
+            function.apply(this.employeeRepMap.get(emp));
+            return null;
+        });
     }
 }

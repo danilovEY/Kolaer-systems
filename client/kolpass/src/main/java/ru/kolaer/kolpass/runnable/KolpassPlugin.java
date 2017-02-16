@@ -12,6 +12,9 @@ import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.kolpass.mvp.presenter.PRepositoryContentImpl;
+import ru.kolaer.kolpass.mvp.presenter.PRepositoryListImpl;
+import ru.kolaer.kolpass.mvp.presenter.PSplitContentAndListRep;
+import ru.kolaer.kolpass.mvp.presenter.PSplitContentAndListRepImpl;
 
 import java.net.URL;
 import java.util.Collection;
@@ -22,7 +25,7 @@ import java.util.Optional;
  */
 public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserver {
     private static final Logger log = LoggerFactory.getLogger(KolpassPlugin.class);
-    private PRepositoryContentImpl pRepositoryPane;
+    private PSplitContentAndListRep pSplitContentAndListRep;
     private Button loginButton;
     private BorderPane mainPane;
     private UniformSystemEditorKit editorKit;
@@ -49,7 +52,9 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
         this.loginButton = new Button("Авторизоваться");
         this.loginButton.setOnAction(e -> this.editorKit.getUISystemUS().getDialog().createAndShowLoginToSystemDialog());
 
-        this.pRepositoryPane = new PRepositoryContentImpl(this.editorKit);
+        this.pSplitContentAndListRep = new PSplitContentAndListRepImpl(this.editorKit);
+        this.pSplitContentAndListRep.setContent(new PRepositoryContentImpl(this.editorKit));
+        this.pSplitContentAndListRep.setEmployeeList(new PRepositoryListImpl());
 
         if(editorKit.getAuthentication().isAuthentication())
             this.login(null);
@@ -79,10 +84,11 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
 
     @Override
     public void login(AccountEntity account) {
-        Optional.ofNullable(this.pRepositoryPane).ifPresent(pane ->
+        Optional.ofNullable(this.pSplitContentAndListRep).ifPresent(pane ->
             Tools.runOnWithOutThreadFX(() -> {
-                this.mainPane.setCenter(this.pRepositoryPane.getView().getContent());
-                this.pRepositoryPane.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getKolpassTable());
+                this.mainPane.setCenter(this.pSplitContentAndListRep.getView().getContent());
+                this.pSplitContentAndListRep.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getKolpassTable());
+                this.pSplitContentAndListRep.updateView();
             })
         );
     }

@@ -20,8 +20,9 @@ public class VEmployeeRepositoryListImpl implements VEmployeeRepositoryList {
         this.employeeEntityListView.setCellFactory(param -> new ListCell<EmployeeEntity>() {
             @Override
             protected void updateItem(EmployeeEntity item, boolean empty) {
+                super.updateItem(item, empty);
                 if(item != null) {
-                    this.setText(item.getInitials() + "(" + item.getDepartment().getAbbreviatedName() + ")");
+                    this.setText(item.getInitials() + " (" + item.getDepartment().getAbbreviatedName() + ")");
                 } else {
                     this.setText("");
                 }

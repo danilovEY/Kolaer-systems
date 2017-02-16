@@ -36,17 +36,13 @@ public class PRepositoryContentImpl implements PRepositoryContent {
     @Override
     public void updateView() {
         this.view.clear();
-        this.repositoryPasswordList.clear();
-
-
 
         this.view.setOnAddRepository(rep -> {
             if(rep.getName() == null || rep.getName().isEmpty())
                 this.editorKit.getUISystemUS().getNotification()
                         .showErrorNotifi("Ошибка!", "Имя не может быть пустым!");
 
-            RepositoryPassword repositoryPassword = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
-                    .getKolpassTable().addRepositoryPassword(rep);
+            RepositoryPassword repositoryPassword = this.kolpassTable.addRepositoryPassword(rep);
 
             this.addRepositoryPassword(new PRepositoryPasswordImpl(this.editorKit, repositoryPassword));
 
@@ -55,10 +51,6 @@ public class PRepositoryContentImpl implements PRepositoryContent {
 
             return null;
         });
-
-        for (RepositoryPassword repositoryPassword : this.kolpassTable.getAllRepositoryPasswords()) {
-            this.addRepositoryPassword(new PRepositoryPasswordImpl(this.editorKit, repositoryPassword));
-        }
     }
 
     @Override
@@ -69,6 +61,13 @@ public class PRepositoryContentImpl implements PRepositoryContent {
             return null;
         });
         this.view.addRepositoryPassword(pRepositoryPassword.getView());
+    }
+
+    @Override
+    public void setAllRepositoryPassword(List<PRepositoryPassword> pRepositoryPasswords) {
+        this.repositoryPasswordList.forEach(rep -> this.view.removeRepositoryPassword(rep.getView()));
+        this.repositoryPasswordList.clear();
+        pRepositoryPasswords.forEach(this::addRepositoryPassword);
     }
 
     @Override
