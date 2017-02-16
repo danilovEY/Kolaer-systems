@@ -5,6 +5,7 @@ import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.kolpass.mvp.view.VSplitContentAndListRep;
 import ru.kolaer.kolpass.mvp.view.VSplitContentAndListRepImpl;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -37,9 +38,11 @@ public class PSplitContentAndListRepImpl implements PSplitContentAndListRep {
     @Override
     public void updateView() {
         this.list.setOnSelectEmployee(repList -> {
-            this.content.setAllRepositoryPassword(repList.stream()
-                    .map(rep -> new PRepositoryPasswordImpl(this.editorKit, rep))
-                    .collect(Collectors.toList()));
+            if(repList != null) {
+                this.content.setAllRepositoryPassword(repList.stream()
+                        .map(rep -> new PRepositoryPasswordImpl(this.editorKit, rep))
+                        .collect(Collectors.toList()));
+            }
 
             return null;
         });
@@ -58,6 +61,12 @@ public class PSplitContentAndListRepImpl implements PSplitContentAndListRep {
     @Override
     public void setContent(PRepositoryContent content) {
         this.content = content;
+    }
+
+    @Override
+    public void clear() {
+        Optional.ofNullable(this.content).ifPresent(PRepositoryContent::clear);
+        Optional.ofNullable(this.list).ifPresent(PRepositoryList::clear);
     }
 
     @Override

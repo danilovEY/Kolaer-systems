@@ -5,13 +5,11 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.kolpass.mvp.view.VEmployeeRepositoryList;
 import ru.kolaer.kolpass.mvp.view.VEmployeeRepositoryListImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -54,7 +52,19 @@ public class PRepositoryListImpl implements PRepositoryList {
         List<RepositoryPassword> allRepositoryPasswords = this.model.getAllRepositoryPasswords();
         allRepositoryPasswords.forEach(this::put);
 
-        this.model.getAllRepositoryPasswordsChief().forEach(this::put);
+        this.view.setOnLoadOtherEmployee(e -> {
+            Tools.runOnThreadFX(() -> {
+                this.employeeRepMap.keySet().forEach(this.view::removeEmployee);
+
+                try {
+                    this.model.getAllRepositoryPasswordsChief().forEach(this::put);
+
+                } catch (Throwable ignore) {}
+
+                this.employeeRepMap.keySet().forEach(this.view::addEmployee);
+            });
+            return null;
+        });
 
         this.employeeRepMap.keySet().forEach(this.view::addEmployee);
     }
@@ -67,6 +77,12 @@ public class PRepositoryListImpl implements PRepositoryList {
             repositoryPasswords.add(repositoryPassword);
             this.employeeRepMap.put(repositoryPassword.getEmployee(), repositoryPasswords);
         }
+    }
+
+    @Override
+    public void clear() {
+        this.employeeRepMap.keySet().forEach(this.view::removeEmployee);
+        this.employeeRepMap.clear();
     }
 
     @Override

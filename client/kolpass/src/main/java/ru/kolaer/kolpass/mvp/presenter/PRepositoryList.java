@@ -13,5 +13,6 @@ import java.util.function.Function;
  * Created by danilovey on 15.02.2017.
  */
 public interface PRepositoryList extends BasePresenter<VEmployeeRepositoryList>, BaseModel<KolpassTable> {
+    void clear();
     void setOnSelectEmployee(Function<List<RepositoryPassword>, Void> function);
 }

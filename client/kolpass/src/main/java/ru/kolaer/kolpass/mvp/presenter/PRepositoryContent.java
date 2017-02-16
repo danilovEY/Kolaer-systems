@@ -14,4 +14,5 @@ public interface PRepositoryContent extends BasePresenter<VRepositoryContent>, B
     void addRepositoryPassword(PRepositoryPassword pRepositoryPassword);
     void setAllRepositoryPassword(List<PRepositoryPassword> pRepositoryPasswords);
     void removeRepositoryPassword(PRepositoryPassword pRepositoryPassword);
+    void clear();
 }

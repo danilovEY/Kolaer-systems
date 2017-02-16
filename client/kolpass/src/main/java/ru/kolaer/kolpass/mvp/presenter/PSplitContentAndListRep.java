@@ -12,4 +12,6 @@ public interface PSplitContentAndListRep extends BasePresenter<VSplitContentAndL
         BaseModel<KolpassTable> {
     void setEmployeeList(PRepositoryList list);
     void setContent(PRepositoryContent content);
+
+    void clear();
 }

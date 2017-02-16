@@ -7,6 +7,7 @@ import ru.kolaer.kolpass.mvp.view.VRepositoryContent;
 import ru.kolaer.kolpass.mvp.view.VRepositoryContentImpl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -74,6 +75,11 @@ public class PRepositoryContentImpl implements PRepositoryContent {
     public void removeRepositoryPassword(PRepositoryPassword pRepositoryPassword) {
         this.repositoryPasswordList.remove(pRepositoryPassword);
         this.view.removeRepositoryPassword(pRepositoryPassword.getView());
+    }
+
+    @Override
+    public void clear() {
+        this.setAllRepositoryPassword(Collections.emptyList());
     }
 
     @Override

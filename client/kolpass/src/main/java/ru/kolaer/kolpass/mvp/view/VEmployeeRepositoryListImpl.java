@@ -1,5 +1,6 @@
 package ru.kolaer.kolpass.mvp.view;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
@@ -12,10 +13,12 @@ import java.util.function.Function;
  */
 public class VEmployeeRepositoryListImpl implements VEmployeeRepositoryList {
     private final BorderPane mainPane;
+    private final Button loadEmployee;
     private final ListView<EmployeeEntity> employeeEntityListView;
 
     public VEmployeeRepositoryListImpl() {
         this.mainPane = new BorderPane();
+
         this.employeeEntityListView = new ListView<>();
         this.employeeEntityListView.setCellFactory(param -> new ListCell<EmployeeEntity>() {
             @Override
@@ -29,7 +32,12 @@ public class VEmployeeRepositoryListImpl implements VEmployeeRepositoryList {
             }
         });
 
+        this.loadEmployee = new Button("Загрузить пароли");
+        this.loadEmployee.setMaxWidth(Double.MAX_VALUE);
+
+        this.mainPane.setTop(this.loadEmployee);
         this.mainPane.setCenter(this.employeeEntityListView);
+
     }
 
     @Override
@@ -50,6 +58,11 @@ public class VEmployeeRepositoryListImpl implements VEmployeeRepositoryList {
     @Override
     public void removeEmployee(EmployeeEntity employeeEntity) {
         this.employeeEntityListView.getItems().remove(employeeEntity);
+    }
+
+    @Override
+    public void setOnLoadOtherEmployee(Function function) {
+        this.loadEmployee.setOnAction(function::apply);
     }
 
     @Override
