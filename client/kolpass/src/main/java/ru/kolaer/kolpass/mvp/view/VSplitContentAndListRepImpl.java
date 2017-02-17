@@ -31,6 +31,7 @@ public class VSplitContentAndListRepImpl implements VSplitContentAndListRep {
     @Override
     public void setEmployeeList(VEmployeeRepositoryList view) {
         this.listContentPane.getItems().set(0, view.getContent());
+        this.listContentPane.setDividerPosition(0, 0.2);
     }
 
     @Override
