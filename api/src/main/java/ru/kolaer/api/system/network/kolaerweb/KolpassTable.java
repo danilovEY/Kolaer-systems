@@ -16,4 +16,6 @@ public interface KolpassTable {
                                                       RepositoryPasswordHistory repositoryPasswordHistory);
     RepositoryPassword updateRepositoryPassword(RepositoryPassword repositoryPasswordDto);
     void deleteRepositoryPassword(RepositoryPassword repositoryPasswordDto);
+
+    RepositoryPassword addRepToOtherEmployee(RepositoryPassword rep);
 }

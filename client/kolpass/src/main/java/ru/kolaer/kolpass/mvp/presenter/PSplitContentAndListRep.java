@@ -10,7 +10,7 @@ import ru.kolaer.kolpass.mvp.view.VSplitContentAndListRep;
  */
 public interface PSplitContentAndListRep extends BasePresenter<VSplitContentAndListRep>,
         BaseModel<KolpassTable> {
-    void setEmployeeList(PRepositoryList list);
+    void setEmployeeList(PEmployeeRepositoryList list);
     void setContent(PRepositoryContent content);
 
     void clear();

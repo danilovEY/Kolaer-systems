@@ -33,6 +33,7 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
     private final String GET_ALL_CHIEF_REPOSITORY_PASS;
     private final String ADD_REPOSITORY_PASSWORD;
     private final String ADD_HISTORY_PASSWORD_TO_REP;
+    private final String ADD_REPOSITORY_PASSWORD_OTHER_EMP;
 
     KolpassTableImpl(RestTemplate globalRestTemplate, String path) {
         this.restTemplate = globalRestTemplate;
@@ -43,6 +44,7 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
         this.GET_ALL_MY_REPOSITORY_PASS = this.PATH + "/get/all/personal";
         this.GET_ALL_CHIEF_REPOSITORY_PASS = this.PATH + "/get/all/chief";
         this.ADD_REPOSITORY_PASSWORD = this.PATH + "/add";
+        this.ADD_REPOSITORY_PASSWORD_OTHER_EMP = this.PATH + "/add/employee";
         this.ADD_HISTORY_PASSWORD_TO_REP = this.PATH + "/passwords/add";
         this.DELETE_REPOSITORY_PASSWORD = this.PATH + "/delete";
         this.UPDATE_REPOSITORY_PASSWORD = this.PATH + "/update";
@@ -115,5 +117,17 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
                 HttpMethod.POST,
                 new HttpEntity<>(request, this.getTokenToHeader()),
                 String.class);
+    }
+
+    @Override
+    public RepositoryPassword addRepToOtherEmployee(RepositoryPassword rep) {
+        final RepositoryPassword repositoryPassword = new RepositoryPasswordBase();
+        repositoryPassword.setName(rep.getName());
+        repositoryPassword.setEmployee(rep.getEmployee());
+
+        return restTemplate.exchange(this.ADD_REPOSITORY_PASSWORD_OTHER_EMP,
+                HttpMethod.POST,
+                new HttpEntity<>(repositoryPassword, this.getTokenToHeader()),
+                RepositoryPassword.class).getBody();
     }
 }

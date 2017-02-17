@@ -58,4 +58,11 @@ public class DefaultKolpassTable implements KolpassTable {
     public void deleteRepositoryPassword(RepositoryPassword repositoryPasswordDto) {
         log.info("Удален репозиторий паролей");
     }
+
+    @Override
+    public RepositoryPassword addRepToOtherEmployee(RepositoryPassword rep) {
+        log.info("Добавлен репозиторий паролей");
+        this.repositoryPasswords.add(rep);
+        return rep;
+    }
 }

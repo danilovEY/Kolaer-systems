@@ -12,7 +12,7 @@ import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.kolpass.mvp.presenter.PRepositoryContentImpl;
-import ru.kolaer.kolpass.mvp.presenter.PRepositoryListImpl;
+import ru.kolaer.kolpass.mvp.presenter.PEmployeeRepositoryListImpl;
 import ru.kolaer.kolpass.mvp.presenter.PSplitContentAndListRep;
 import ru.kolaer.kolpass.mvp.presenter.PSplitContentAndListRepImpl;
 
@@ -54,7 +54,7 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
 
         this.pSplitContentAndListRep = new PSplitContentAndListRepImpl(this.editorKit);
         this.pSplitContentAndListRep.setContent(new PRepositoryContentImpl(this.editorKit));
-        this.pSplitContentAndListRep.setEmployeeList(new PRepositoryListImpl());
+        this.pSplitContentAndListRep.setEmployeeList(new PEmployeeRepositoryListImpl(this.editorKit));
 
         if(editorKit.getAuthentication().isAuthentication())
             this.login(null);
@@ -64,7 +64,7 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
 
     @Override
     public void stop() throws Exception {
-
+        this.pSplitContentAndListRep.clear();
     }
 
     @Override

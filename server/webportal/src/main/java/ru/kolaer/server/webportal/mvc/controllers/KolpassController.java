@@ -92,18 +92,14 @@ public class KolpassController {
     public RepositoryPassword addRepositoryPasswordsWithEmployee(
             @ApiParam("Наименование хранилища") @RequestBody RepositoryPassword repositoryPassword
     ) {
-        final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
-        final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
         if(repositoryPassword.getName() == null) {
             throw new BadRequestException("Имя не может быть пустым!");
         }
 
-        if(repositoryPassword.getEmployee() != null) {
-            repositoryPassword.setEmployee(new EmployeeEntityDecorator(repositoryPassword.getEmployee()));
-        } else {
-            repositoryPassword.setEmployee(employeeEntity);
-        }
+        if(repositoryPassword.getEmployee() == null)
+            throw new BadRequestException("Не указан сотрудник!");
 
+        repositoryPassword.setEmployee(new EmployeeEntityDecorator(repositoryPassword.getEmployee()));
 
         this.repPassService.add(new RepositoryPasswordDecorator(repositoryPassword));
 

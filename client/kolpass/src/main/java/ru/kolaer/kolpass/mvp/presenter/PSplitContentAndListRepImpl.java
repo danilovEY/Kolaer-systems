@@ -15,7 +15,7 @@ public class PSplitContentAndListRepImpl implements PSplitContentAndListRep {
     private final UniformSystemEditorKit editorKit;
     private KolpassTable kolpassTable;
     private VSplitContentAndListRep view;
-    private PRepositoryList list;
+    private PEmployeeRepositoryList list;
     private PRepositoryContent content;
 
     public PSplitContentAndListRepImpl(UniformSystemEditorKit editorKit) {
@@ -38,23 +38,27 @@ public class PSplitContentAndListRepImpl implements PSplitContentAndListRep {
     @Override
     public void updateView() {
         this.list.setOnSelectEmployee(repList -> {
-            if(repList != null) {
-                this.content.setAllRepositoryPassword(repList.stream()
+            Optional.ofNullable(repList).ifPresent(r -> {
+                this.content.clear();
+                this.content.updateView();
+                this.content.setEmployee(r.getKey());
+                this.content.setAllRepositoryPassword(r.getValue().stream()
                         .map(rep -> new PRepositoryPasswordImpl(this.editorKit, rep))
                         .collect(Collectors.toList()));
-            }
+            });
 
             return null;
         });
 
         this.list.setModel(this.kolpassTable);
+        this.content.setModel(this.kolpassTable);
 
         this.view.setContent(this.content.getView());
         this.view.setEmployeeList(this.list.getView());
     }
 
     @Override
-    public void setEmployeeList(PRepositoryList list) {
+    public void setEmployeeList(PEmployeeRepositoryList list) {
         this.list = list;
     }
 
@@ -66,7 +70,7 @@ public class PSplitContentAndListRepImpl implements PSplitContentAndListRep {
     @Override
     public void clear() {
         Optional.ofNullable(this.content).ifPresent(PRepositoryContent::clear);
-        Optional.ofNullable(this.list).ifPresent(PRepositoryList::clear);
+        Optional.ofNullable(this.list).ifPresent(PEmployeeRepositoryList::clear);
     }
 
     @Override

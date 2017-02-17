@@ -1,5 +1,6 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
@@ -18,6 +19,7 @@ public class PRepositoryContentImpl implements PRepositoryContent {
     private final UniformSystemEditorKit editorKit;
     private VRepositoryContent view;
     private KolpassTable kolpassTable;
+    private EmployeeEntity employeeEntity;
 
     public PRepositoryContentImpl(UniformSystemEditorKit editorKit) {
         this.view = new VRepositoryContentImpl();
@@ -39,11 +41,22 @@ public class PRepositoryContentImpl implements PRepositoryContent {
         this.view.clear();
 
         this.view.setOnAddRepository(rep -> {
-            if(rep.getName() == null || rep.getName().isEmpty())
+            if(rep.getName() == null || rep.getName().isEmpty()) {
                 this.editorKit.getUISystemUS().getNotification()
                         .showErrorNotifi("Ошибка!", "Имя не может быть пустым!");
+                return null;
+            }
 
-            RepositoryPassword repositoryPassword = this.kolpassTable.addRepositoryPassword(rep);
+            RepositoryPassword repositoryPassword = null;
+
+            if(this.employeeEntity.getPersonnelNumber().equals(this.editorKit.getAuthentication()
+                            .getAuthorizedUser().getEmployeeEntity().getPersonnelNumber())) {
+                repositoryPassword = this.kolpassTable.addRepositoryPassword(rep);
+            } else {
+                rep.setEmployee(this.employeeEntity);
+                repositoryPassword = this.kolpassTable.addRepToOtherEmployee(rep);
+            }
+
 
             this.addRepositoryPassword(new PRepositoryPasswordImpl(this.editorKit, repositoryPassword));
 
@@ -80,6 +93,11 @@ public class PRepositoryContentImpl implements PRepositoryContent {
     @Override
     public void clear() {
         this.setAllRepositoryPassword(Collections.emptyList());
+    }
+
+    @Override
+    public void setEmployee(EmployeeEntity key) {
+        this.employeeEntity = key;
     }
 
     @Override

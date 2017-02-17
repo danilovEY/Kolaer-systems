@@ -1,9 +1,11 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.kolpass.mvp.view.VEmployeeRepositoryList;
@@ -11,18 +13,19 @@ import ru.kolaer.kolpass.mvp.view.VEmployeeRepositoryListImpl;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 15.02.2017.
  */
-public class PRepositoryListImpl implements PRepositoryList {
-    private static final Logger log = LoggerFactory.getLogger(PRepositoryListImpl.class);
+public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
+    private static final Logger log = LoggerFactory.getLogger(PEmployeeRepositoryListImpl.class);
     private final Map<EmployeeEntity, List<RepositoryPassword>> employeeRepMap = new HashMap<>();
+    private final UniformSystemEditorKit editorKit;
     private KolpassTable model;
     private VEmployeeRepositoryList view;
 
-    public PRepositoryListImpl() {
+    public PEmployeeRepositoryListImpl(UniformSystemEditorKit editorKit) {
+        this.editorKit = editorKit;
         this.setView(new VEmployeeRepositoryListImpl());
     }
 
@@ -57,7 +60,14 @@ public class PRepositoryListImpl implements PRepositoryList {
                 this.employeeRepMap.keySet().forEach(this.view::removeEmployee);
 
                 try {
-                    this.model.getAllRepositoryPasswordsChief().forEach(this::put);
+                    final List<RepositoryPassword> allRepositoryPasswordsChief
+                            = this.model.getAllRepositoryPasswordsChief();
+
+                    allRepositoryPasswordsChief.stream()
+                            .map(RepositoryPassword::getEmployee)
+                            .forEach(this.employeeRepMap::remove);
+
+                    allRepositoryPasswordsChief.forEach(this::put);
 
                 } catch (Throwable ignore) {}
 
@@ -65,8 +75,10 @@ public class PRepositoryListImpl implements PRepositoryList {
             });
             return null;
         });
-
-        this.employeeRepMap.keySet().forEach(this.view::addEmployee);
+        if(this.employeeRepMap.keySet().size() > 0)
+            this.employeeRepMap.keySet().forEach(this.view::addEmployee);
+        else
+            this.view.addEmployee(this.editorKit.getAuthentication().getAuthorizedUser().getEmployeeEntity());
     }
 
     private void put(RepositoryPassword repositoryPassword) {
@@ -86,9 +98,11 @@ public class PRepositoryListImpl implements PRepositoryList {
     }
 
     @Override
-    public void setOnSelectEmployee(Function<List<RepositoryPassword>, Void> function) {
+    public void setOnSelectEmployee(Function<Pair<EmployeeEntity, List<RepositoryPassword>>, Void> function) {
         this.view.setOnSelectEmployee(emp -> {
-            function.apply(this.employeeRepMap.get(emp));
+            function.apply(new Pair<>(emp,
+                    Optional.ofNullable(this.employeeRepMap.get(emp))
+                            .orElse(Collections.emptyList())));
             return null;
         });
     }

@@ -1,6 +1,8 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
+import javafx.util.Pair;
 import ru.kolaer.api.mvp.model.BaseModel;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.presenter.BasePresenter;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
@@ -12,7 +14,7 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 15.02.2017.
  */
-public interface PRepositoryList extends BasePresenter<VEmployeeRepositoryList>, BaseModel<KolpassTable> {
+public interface PEmployeeRepositoryList extends BasePresenter<VEmployeeRepositoryList>, BaseModel<KolpassTable> {
     void clear();
-    void setOnSelectEmployee(Function<List<RepositoryPassword>, Void> function);
+    void setOnSelectEmployee(Function<Pair<EmployeeEntity, List<RepositoryPassword>>, Void> function);
 }
