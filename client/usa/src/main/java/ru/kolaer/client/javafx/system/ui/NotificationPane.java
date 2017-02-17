@@ -255,6 +255,7 @@ public class NotificationPane implements NotificationUS, BaseView {
                     .build()
                     .build();
             typePane.getChildren().add(border);
+            border.toBack();
         });
     }
 

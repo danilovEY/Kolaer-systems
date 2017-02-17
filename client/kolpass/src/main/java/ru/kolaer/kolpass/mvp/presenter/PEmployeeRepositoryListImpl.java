@@ -53,7 +53,13 @@ public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
     @Override
     public void updateView() {
         List<RepositoryPassword> allRepositoryPasswords = this.model.getAllRepositoryPasswords();
-        allRepositoryPasswords.forEach(this::put);
+        if(allRepositoryPasswords.size() > 0) {
+            allRepositoryPasswords.forEach(this::put);
+        } else {
+            this.employeeRepMap
+                    .put(this.editorKit.getAuthentication().getAuthorizedUser().getEmployeeEntity(),
+                            new ArrayList<>());
+        }
 
         this.view.setOnLoadOtherEmployee(e -> {
             Tools.runOnThreadFX(() -> {
@@ -75,10 +81,8 @@ public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
             });
             return null;
         });
-        if(this.employeeRepMap.keySet().size() > 0)
-            this.employeeRepMap.keySet().forEach(this.view::addEmployee);
-        else
-            this.view.addEmployee(this.editorKit.getAuthentication().getAuthorizedUser().getEmployeeEntity());
+
+        this.employeeRepMap.keySet().forEach(this.view::addEmployee);
     }
 
     private void put(RepositoryPassword repositoryPassword) {
