@@ -36,9 +36,11 @@ project(":client") {
             }
         } else {
             dependencies {
+                compileOnly "org.projectlombok:lombok:1.16.12"
                 compile(project(':api')) {
                     exclude group: 'com.fasterxml.jackson.core'
                 }
+
             }
         }
 

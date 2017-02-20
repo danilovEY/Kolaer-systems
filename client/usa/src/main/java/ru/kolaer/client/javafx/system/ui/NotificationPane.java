@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Created by danilovey on 18.08.2016.
  */
-public class NotificationPane implements NotificationUS, BaseView {
+public class NotificationPane implements NotificationUS, BaseView<Parent> {
     private static final Logger LOG = LoggerFactory.getLogger(NotificationPane.class);
     private final int SIMPLE_MESSAGE = 0;
     private final int INFO_MESSAGE = 1;

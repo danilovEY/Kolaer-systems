@@ -1,5 +1,7 @@
 package ru.kolaer.api.plugins;
 
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -13,7 +15,7 @@ import java.util.Collection;
  * @author danilovey
  * @version 1.0
  */
-public interface UniformSystemPlugin extends BaseView {
+public interface UniformSystemPlugin extends BaseView<Parent> {
 
 	/**Инициализация плагина */
 	void initialization(UniformSystemEditorKit editorKit) throws Exception;
