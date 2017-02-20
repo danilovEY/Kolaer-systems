@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachment;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -46,59 +47,6 @@ public class VPsrRegisterTableImpl implements VPsrRegisterTable {
         this.table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         this.table.setItems(this.tableData);
 
-
-        final ContextMenu contextMenu = new ContextMenu();
-
-        final MenuItem editMenuItem = new MenuItem("Редактировать");
-        editMenuItem.setOnAction(e -> {
-            Tools.runOnThreadFX(() -> {
-                final PsrRegister selectRegister = table.getSelectionModel().getSelectedItem();
-                final PDetailsOrEditPsrRegister detailsOrEditPsrRegister = new PDetailsOrEditPsrRegisterImpl(editorKit, selectRegister);
-                detailsOrEditPsrRegister.getView().initializationView();
-                detailsOrEditPsrRegister.showAndWait();
-                tableData.remove(selectRegister);
-                this.addPsrProject(selectRegister);
-                editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().updatePsrRegister(selectRegister);
-            });
-        });
-
-        final MenuItem removeMenuItem = new MenuItem("Удалить");
-        removeMenuItem.setOnAction(e -> {
-            final PsrRegister selectRegister = table.getSelectionModel().getSelectedItem();
-            table.getItems().remove(selectRegister);
-            editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getPsrTable().deletePsrRegister(selectRegister);
-        });
-        contextMenu.getItems().addAll(editMenuItem, removeMenuItem);
-
-        table.setContextMenu(contextMenu);
-        table.setOnContextMenuRequested(e -> {
-            if(!this.editorKit.getAuthentication().isAuthentication()){
-                this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка авторизации!", "Вы не авторизовались!");
-                return;
-            }
-
-
-            final PsrRegister selectPsr = table.getSelectionModel().getSelectedItem();
-            if(selectPsr == null) {
-                contextMenu.hide();
-                return;
-            }
-
-            final EmployeeEntity selectPsrEmployee = selectPsr.getAuthor();
-
-            final AccountEntity accountsEntity = editorKit.getAuthentication().getAuthorizedUser();
-            final EmployeeEntity authorizedEmployee = accountsEntity.getEmployeeEntity();
-            final EnumRole[] roles = this.editorKit.getAuthentication().getRoles();
-            for(EnumRole role : roles) {
-                if(role == EnumRole.PSR_ADMIN || role == EnumRole.SUPER_ADMIN) {
-                    return;
-                }
-            }
-
-            if(!selectPsrEmployee.getPersonnelNumber().equals(authorizedEmployee.getPersonnelNumber())) {
-                contextMenu.hide();
-            }
-        });
 
         final TableColumn<PsrRegister, Integer> psrRegisterIdColumn = new TableColumn<>("ID");
         psrRegisterIdColumn.setResizable(false);
