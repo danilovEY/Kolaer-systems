@@ -17,7 +17,6 @@ import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.asmc.service.AutoCheckDataService;
 import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
@@ -26,9 +25,7 @@ import ru.kolaer.asmc.ui.javafx.view.ImageViewPane;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -47,7 +44,7 @@ public class CMainFrame implements UniformSystemPlugin {
 	private BorderPane mainPanel;
 	private BorderPane contentPanel;
 	private CNavigationContentObserver observer;
-	private UniformSystemEditorKit uniformSystemEditorKit;
+	private UniformSystemEditorKit editorKit;
 
 	public void initialize() {
 		this.contentPanel = new BorderPane();
@@ -95,7 +92,7 @@ public class CMainFrame implements UniformSystemPlugin {
 			this.contentPanel.setCenter(splitPane);
 		});
 
-		this.observer = new CNavigationContentObserver(groupsPanel, labelsPanel, uniformSystemEditorKit);
+		this.observer = new CNavigationContentObserver(groupsPanel, labelsPanel, editorKit);
 		this.updateData();
 
 		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);
@@ -103,27 +100,28 @@ public class CMainFrame implements UniformSystemPlugin {
 		final MenuItem settingMenuItem = new MenuItem("Настройки");
 		final MenuItem getRootMenuItem = new MenuItem("Админ");
 
-		final Menu fileMenu = new Menu("Файл");
+		final Menu fileMenu = new Menu("АСУП");
+
+		this.editorKit.getUISystemUS().getMenuBar().addMenu(fileMenu);
 
 		Tools.runOnThreadFX(() -> {
 			fileMenu.getItems().addAll(getRootMenuItem, settingMenuItem);
 			groupsScrollPanel.setContextMenu(new ContextMenu(addGroupLabels));
 			labelsScrollPanel.setContextMenu(new ContextMenu(addLabel));
 
-			this.mainPanel.setTop(new MenuBar(fileMenu));
 			this.mainPanel.setCenter(this.contentPanel);
 		});
 
 		// =====Events======
 		getRootMenuItem.setOnAction(e -> {
 			Tools.runOnThreadFX(() -> {
-				final Dialog<?> loginDialog = this.uniformSystemEditorKit.getUISystemUS().getDialog().createLoginDialog();
+				final Dialog<?> loginDialog = this.editorKit.getUISystemUS().getDialog().createLoginDialog();
 				loginDialog.showAndWait();
 				final String[] logAndPass = loginDialog.getResult().toString().split("=");
 				if(logAndPass.length == 2 && logAndPass[0].equals("root") && logAndPass[1].equals(SettingSingleton.getInstance().getRootPass())) {
 					SettingSingleton.getInstance().setRoot(true);
 				} else {
-					this.uniformSystemEditorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Неправельный логин или пароль!").show();
+					this.editorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Неправельный логин или пароль!").show();
 				}
 			});
 		});
@@ -181,7 +179,7 @@ public class CMainFrame implements UniformSystemPlugin {
 			});
 		});
 	}
-	
+
 	private void updateBanner() {
 		final File imgCenter = new File(SettingSingleton.getInstance().getPathBanner());
 		final File imgLeft = new File(SettingSingleton.getInstance().getPathBannerLeft());
@@ -193,9 +191,9 @@ public class CMainFrame implements UniformSystemPlugin {
 			imagePane.setStyle("-fx-background-color: #FFFFFF"); //,linear-gradient(#f8f8f8, #e7e7e7);
 			imagePane.setMaxHeight(300);
 			imagePane.setMaxWidth(Double.MAX_VALUE);
-			
+
 			this.contentPanel.setTop(imagePane);
-			
+
 			if(imgLeft.exists() && imgLeft.isFile()) {
 				ImageView left = new ImageView(new Image("file:" + imgLeft.getAbsolutePath(), true));
 				left.setPreserveRatio(false);
@@ -231,7 +229,7 @@ public class CMainFrame implements UniformSystemPlugin {
 
 	@Override
 	public void initialization(UniformSystemEditorKit uniformSystemEditorKit) throws Exception {
-		this.uniformSystemEditorKit = uniformSystemEditorKit;
+		this.editorKit = uniformSystemEditorKit;
 		SettingSingleton.initialization();
 		this.mainPanel = new BorderPane();
 	}

@@ -44,6 +44,7 @@ public class MenuBarUSImpl implements MenuBarUS, AuthenticationObserver {
 
     @Override
     public void addMenu(Menu menu) {
+        System.out.println("AAAAAAA");
         Tools.runOnWithOutThreadFX(() -> this.menuBar.getMenus().add(menu));
     }
 

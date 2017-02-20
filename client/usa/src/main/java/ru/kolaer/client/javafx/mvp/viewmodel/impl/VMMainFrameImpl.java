@@ -86,6 +86,7 @@ public class VMMainFrameImpl extends Application {
         final NetworkUSRestTemplate network = new NetworkUSRestTemplate(new ResponseErrorHandlerNotifications());
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         uiSystemUS.setNotification(notify);
+        uiSystemUS.setMenuBarUS(menuBarUS);
         splitPane.getItems().add(notify.getContent());
 
 

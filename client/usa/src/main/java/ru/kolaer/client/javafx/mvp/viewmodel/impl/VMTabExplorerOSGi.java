@@ -38,17 +38,15 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public void removePlugin(final PluginBundle pluginBundle) {
-    	this.pluginTabMap.values().parallelStream().forEach(tab -> {
-    		if(tab.getModel() == pluginBundle)  {
-    			tab.closeTab();
-    			return;
-    		}
-    	});
+    	this.pluginTabMap.values().stream()
+                .filter(tab -> tab.getModel() == pluginBundle)
+                .findFirst()
+                .ifPresent(PTab::closeTab);
     }
 
     @Override
     public void removeAll() {
-        this.pluginTabMap.values().parallelStream().forEach(PTab::closeTab);
+        this.pluginTabMap.values().forEach(PTab::closeTab);
     }
 
 
