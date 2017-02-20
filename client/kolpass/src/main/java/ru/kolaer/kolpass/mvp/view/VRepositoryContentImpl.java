@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordBase;
+import ru.kolaer.api.tools.Tools;
 
 import java.util.function.Function;
 
@@ -59,12 +60,16 @@ public class VRepositoryContentImpl implements VRepositoryContent {
 
     @Override
     public void addRepositoryPassword(VRepositoryPassword vRepositoryPassword) {
-        this.contentPane.getChildren().add(vRepositoryPassword.getContent());
+        Tools.runOnWithOutThreadFX(() ->
+                this.contentPane.getChildren().add(vRepositoryPassword.getContent())
+        );
     }
 
     @Override
     public void removeRepositoryPassword(VRepositoryPassword vRepositoryPassword) {
-        this.contentPane.getChildren().remove(vRepositoryPassword.getContent());
+        Tools.runOnWithOutThreadFX(() ->
+            this.contentPane.getChildren().remove(vRepositoryPassword.getContent())
+        );
     }
 
     @Override
