@@ -22,7 +22,7 @@ public interface Resources
 	
 	
 	/**Стандарткая иконка для ярлыка.*/
-	public static final URL AER_ICON = Resources.class.getResource("/aerIcon.png");
+	public static final URL AER_ICON = Resources.class.getResource("/newLogo.png");
 	/**Иконка для приложения.*/
 	public static final URL AER_LOGO = Resources.class.getResource("/aerLogo.png");
 	/**Иконка для приложения.*/

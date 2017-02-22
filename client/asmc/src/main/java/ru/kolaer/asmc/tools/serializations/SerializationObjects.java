@@ -3,7 +3,7 @@ package ru.kolaer.asmc.tools.serializations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.asmc.tools.SettingSingleton;
-import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
+import ru.kolaer.asmc.mvp.model.MGroup;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class SerializationObjects {
 	private final String fileNameSerializeObjects = "objects.aer";
 	private final File settingFile = new File("setting.aer");
 	private File fileSer = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
-	private List<MGroupLabels> cacheObjects;
+	private List<MGroup> cacheObjects;
 	
 	public void setSerializeSetting(final SettingSingleton setting) {
 		if(!this.settingFile.exists()) {
@@ -67,13 +67,13 @@ public class SerializationObjects {
 		return SettingSingleton.getInstance();
 	}
 
-	public List<MGroupLabels> readGroups() {
+	public List<MGroup> readGroups() {
 		if(!this.fileSer.exists())
 			return new ArrayList<>();
 
 		try(FileInputStream fileInput = new FileInputStream(this.fileSer); ObjectInputStream objectInput = new ObjectInputStream(fileInput)){
 			if(objectInput.available() != -1){
-				return (List<MGroupLabels>) objectInput.readObject();
+				return (List<MGroup>) objectInput.readObject();
 			}
 			return this.cacheObjects;
 		}catch(final ClassNotFoundException e){
@@ -85,7 +85,7 @@ public class SerializationObjects {
 			return Collections.emptyList();
 		}
 	}
-	public synchronized List<MGroupLabels> getSerializeGroups(boolean fromFile) {
+	public synchronized List<MGroup> getSerializeGroups(boolean fromFile) {
 		if(fromFile) {
 			if(this.cacheObjects != null)
 				this.cacheObjects.clear();
@@ -103,12 +103,12 @@ public class SerializationObjects {
 
 	/**Получить сериализованные группы.*/
 	@SuppressWarnings("unchecked")
-	public synchronized List<MGroupLabels> getSerializeGroups() {
+	public synchronized List<MGroup> getSerializeGroups() {
 		return this.getSerializeGroups(false);
 	}
 
 	/**Сериализовать список групп.*/
-	public void setSerializeGroups(final List<MGroupLabels> groupModels) {
+	public void setSerializeGroups(final List<MGroup> groupModels) {
 		final File newSerObj = new File(pathDitSerializedObject + "/" + fileNameSerializeObjects);
 		if(newSerObj.exists()) {
 			newSerObj.delete();

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.asmc.tools.SettingSingleton;
-import ru.kolaer.asmc.ui.javafx.controller.CMainFrame;
+import ru.kolaer.asmc.mvp.presenter.CMainFrame;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;

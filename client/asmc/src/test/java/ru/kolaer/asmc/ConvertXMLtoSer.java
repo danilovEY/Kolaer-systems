@@ -6,8 +6,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import ru.kolaer.asmc.tools.serializations.SerializationObjects;
-import ru.kolaer.asmc.ui.javafx.model.MGroupLabels;
-import ru.kolaer.asmc.ui.javafx.model.MLabel;
+import ru.kolaer.asmc.mvp.model.MGroup;
+import ru.kolaer.asmc.mvp.model.MLabel;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -41,7 +41,7 @@ public class ConvertXMLtoSer {
 		NodeList desktopLabelList = document.getElementsByTagName(LABEL_GROUP);
 
 		SerializationObjects ser = new SerializationObjects();
-		List<MGroupLabels> listGroups = new ArrayList<>();
+		List<MGroup> listGroups = new ArrayList<>();
 		
 		// List of GroupLabel
 		for (int je = 0; je < desktopLabelList.getLength(); je++) {
@@ -50,7 +50,7 @@ public class ConvertXMLtoSer {
 			if (nodeGroup.getNodeType() == Node.ELEMENT_NODE) {
 				Element groupEl = (Element) nodeGroup;
 				String name = groupEl.getAttribute("name");
-				MGroupLabels group = new MGroupLabels(name, je);
+				MGroup group = new MGroup(name, je);
 				
 				System.out.println("Group name: " + name);
 				// List of Label
