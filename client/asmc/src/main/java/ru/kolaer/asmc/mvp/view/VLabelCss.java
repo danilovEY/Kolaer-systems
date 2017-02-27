@@ -133,17 +133,22 @@ public class VLabelCss implements VLabel {
     @Override
     public void setOnEdit(Function<MLabel, Void> function) {
         this.editLabel.setOnAction(e -> new CAddingLabelDialog(this.data)
-                .showAndWait().ifPresent(label -> {
-                    System.out.println("ZZZZZZZZZ");
-                    function.apply(label);
-
-                })
+                .showAndWait().ifPresent(function::apply)
         );
     }
 
     @Override
     public void setOnDelete(Function<MLabel, Void> function) {
+        this.deleteLabel.setOnAction(e ->
+            function.apply(this.data)
+        );
+    }
 
+    @Override
+    public void setOnAction(Function<MLabel, Void> function) {
+        this.button.setOnAction(e ->
+            function.apply(this.data)
+        );
     }
 
     @Override

@@ -12,6 +12,6 @@ import java.util.List;
 public interface MGroupDataService extends BaseModel<List<MGroup>> {
     void addGroup(MGroup group);
     void removeGroup(MGroup group);
-    void saveData() throws IOException;
-    void loadData() throws FileNotFoundException, IOException;
+    boolean saveData();
+    boolean loadData();
 }

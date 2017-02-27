@@ -1,12 +1,17 @@
 package ru.kolaer.asmc.mvp.presenter;
 
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,23 +29,18 @@ import java.util.ResourceBundle;
  * @author Danilov
  * @version 0.2
  */
-public class CAddingGroupLabelsDialog extends BaseController {
+public class CAddingGroupLabelsDialog {
 	private final Logger LOG = LoggerFactory.getLogger(CAddingGroupLabelsDialog.class);
-	
-	private Stage dialog;
-	private MGroup result;
-	
-	@FXML
-	private TextField groupNameText;
-	@FXML
-	private Button okButton;
-	@FXML
-	private Button cancelButton;
-	@FXML
-	private TextField textPriority;
+
+    private final Dialog<MGroup> dialog;
+    private final TextField groupNameText;
+    private final TextField textPriority;
+    private final BorderPane mainPane;
+
+    private MGroup result;
 	
 	public CAddingGroupLabelsDialog() {
-		super(Resources.V_ADDING_GROUP_LABELS);
+		this(null);
 	}
 
 	/**
@@ -48,58 +48,84 @@ public class CAddingGroupLabelsDialog extends BaseController {
 	 * @param groupModel - Редактировать группу.
 	 */
 	public CAddingGroupLabelsDialog(final MGroup groupModel) {
-		super(Resources.V_ADDING_GROUP_LABELS);
+		this.mainPane = new BorderPane();
+        this.dialog = new Dialog<>();
+		this.groupNameText = new TextField();
+		this.textPriority = new TextField();
+
 		this.result = groupModel;
+
+        this.initialize();
 	}
 
-	@Override
-	public void initialize(final URL location, final ResourceBundle resources) {
-		this.dialog = new Stage();
-		this.okButton.setOnAction(e -> {
-			if(!this.textPriority.getText().matches("[0-9]*")) {
-				final Alert alert = new Alert(AlertType.WARNING);
-				alert.setTitle("Внимание!");
-				alert.setHeaderText("Приоритет может быть только числом!");
-				alert.show();
-				return;
-			}
-			if(this.result == null) {
-				this.result = new MGroup(this.groupNameText.getText(), Integer.valueOf(this.textPriority.getText()));
-			}
-			else {
-				this.result.setNameGroup(this.groupNameText.getText());
-				this.result.setPriority(Integer.valueOf(this.textPriority.getText()));
-			}
-			
-			this.dialog.close();
-		});
-		
-		this.cancelButton.setOnAction(e -> {
-			this.dialog.close();
-		});
+	public void initialize() {
+        final GridPane contentPane = new GridPane();
+        contentPane.setHgap(10); //horizontal gap in pixels => that's what you are asking for
+        contentPane.setVgap(10); //vertical gap in pixels
+        contentPane.setPadding(new Insets(10));
+        contentPane.setAlignment(Pos.TOP_LEFT);
+
+        contentPane.add(new Label("Имя группы:"), 0, 0);
+        contentPane.add(this.groupNameText, 1, 0);
+
+        contentPane.add(new Label("Приоритет:"), 0, 1);
+        contentPane.add(this.textPriority, 1, 1);
+
+        ColumnConstraints columnConstraints = new ColumnConstraints();
+        columnConstraints.setHalignment(HPos.CENTER);
+        columnConstraints.setFillWidth(true);
+
+        contentPane.getColumnConstraints().add(columnConstraints);
+
+        columnConstraints = new ColumnConstraints();
+        columnConstraints.setFillWidth(true);
+
+        contentPane.getColumnConstraints().add(columnConstraints);
+
+        this.mainPane.setCenter(contentPane);
+
+        this.textPriority.setText("0");
+
+        if(this.result != null){
+            this.groupNameText.setText(this.result.getNameGroup());
+            this.textPriority.setText(String.valueOf(this.result.getPriority()));
+        }
+
+        final String title = this.result == null ? Resources.ADDING_GROUP_FRAME_TITLE : Resources.EDING_GROUP_FRAME_TITLE;
+        this.dialog.setTitle(title);
+        this.dialog.setResizable(true);
+        ((Stage)this.dialog.getDialogPane().getScene().getWindow())
+                .getIcons().add(new Image(Resources.AER_ICON.toString()));
+
+        final ButtonType ok = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        this.dialog.getDialogPane().getButtonTypes().add(ok);
+        this.dialog.getDialogPane().getButtonTypes().add(new ButtonType("Отмена", ButtonBar.ButtonData.CANCEL_CLOSE));
+        this.dialog.setResultConverter(callBack -> {
+            if(callBack == ok) {
+                if(!this.textPriority.getText().matches("[0-9]*")) {
+                    final Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("Внимание!");
+                    alert.setHeaderText("Приоритет может быть только числом!");
+                    alert.show();
+                    return null;
+                }
+                if(this.result == null) {
+                    this.result = new MGroup(this.groupNameText.getText(), Integer.valueOf(this.textPriority.getText()));
+                }
+                else {
+                    this.result.setNameGroup(this.groupNameText.getText());
+                    this.result.setPriority(Integer.valueOf(this.textPriority.getText()));
+                }
+                return this.result;
+            }
+
+            return null;
+        });
+
+        this.dialog.getDialogPane().setContent(this.mainPane);
 	}
 
 	public Optional<MGroup> showAndWait(){
-		this.textPriority.setText(String.valueOf(SettingSingleton.getInstance().getSerializationObjects().getSerializeGroups().size()));
-		if(this.result != null){
-			this.groupNameText.setText(this.result.getNameGroup());
-			this.textPriority.setText(String.valueOf(this.result.getPriority()));
-		}
-		
-		final String title = this.result == null ? Resources.ADDING_GROUP_FRAME_TITLE : Resources.EDING_GROUP_FRAME_TITLE;
-		this.dialog.setTitle(title);
-		this.dialog.setScene(new Scene(this));
-		this.dialog.setResizable(false);
-		this.dialog.centerOnScreen();
-		
-		try {
-			this.dialog.getIcons().add(new Image(Resources.AER_LOGO.toString()));
-		} catch(final IllegalArgumentException e) {
-			LOG.error("Не найден файл: {}", Resources.AER_LOGO);
-		}
-		
-		this.dialog.showAndWait();
-		
-		return Optional.ofNullable(this.result);
+		return this.dialog.showAndWait();
 	}
 }

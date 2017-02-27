@@ -6,8 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,23 +44,38 @@ public class MGroupDataServiceImpl implements MGroupDataService {
     }
 
     @Override
-    public void saveData() throws IOException {
+    public boolean saveData() {
         final File fileDir = new File(FILE_PATH);
         if(!fileDir.exists())
             fileDir.mkdirs();
-        this.xmlMapper.writeValue(new File(FILE_PATH + "/" + FILE_NAME), this.groups.stream().toArray(MGroup[]::new));
+        try {
+            this.xmlMapper.writeValue(new File(FILE_PATH + "/" + FILE_NAME),
+                    this.groups.stream().toArray(MGroup[]::new));
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     @Override
-    public void loadData() throws IOException {
+    public boolean loadData() {
         final File file = new File(FILE_PATH + "/" + FILE_NAME);
         if(!file.exists()) {
             log.warn("Файл: \"{}\" не найден!", FILE_PATH + "/" + FILE_NAME);
-            return;
+            return false;
         }
 
-        final MGroup[] mGroups = this.xmlMapper.readValue(file, MGroup[].class);
-        this.groups.addAll(Arrays.asList(mGroups));
+        try {
+            final MGroup[] mGroups = this.xmlMapper.readValue(file, MGroup[].class);
+            this.groups.addAll(Arrays.asList(mGroups));
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     @Override

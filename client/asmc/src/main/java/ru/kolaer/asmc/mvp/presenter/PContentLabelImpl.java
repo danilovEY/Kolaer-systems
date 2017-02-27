@@ -1,7 +1,11 @@
 package ru.kolaer.asmc.mvp.presenter;
 
+import ru.kolaer.asmc.mvp.model.MGroup;
+import ru.kolaer.asmc.mvp.model.MLabel;
 import ru.kolaer.asmc.mvp.view.VContentLabel;
 import ru.kolaer.asmc.mvp.view.VContentLabelImpl;
+
+import java.util.function.Function;
 
 /**
  * Created by danilovey on 21.02.2017.
@@ -26,6 +30,11 @@ public class PContentLabelImpl implements PContentLabel {
     @Override
     public void clear() {
         this.view.clear();
+    }
+
+    @Override
+    public void setOnAddLabel(Function<MLabel, Void> function) {
+        this.view.setOnAddLabel(function);
     }
 
     @Override

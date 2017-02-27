@@ -3,7 +3,6 @@ package ru.kolaer.asmc.mvp.presenter;
 import lombok.Data;
 import ru.kolaer.asmc.mvp.model.MLabel;
 import ru.kolaer.asmc.mvp.view.VLabel;
-import ru.kolaer.asmc.mvp.view.VLabelImpl;
 import ru.kolaer.asmc.mvp.view.VLabelCss;
 
 import java.util.function.Function;
@@ -23,11 +22,6 @@ public class PLabelImpl implements PLabel {
     public PLabelImpl(MLabel model) {
         this.view = new VLabelCss();
         this.view.setAccess(true);
-        this.view.setOnEdit(label -> {
-            this.model = label;
-            this.view.updateView(label);
-            return null;
-        });
         this.model = model;
         this.updateView();
     }
@@ -35,20 +29,27 @@ public class PLabelImpl implements PLabel {
     @Override
     public void updateView() {
         this.view.updateView(this.model);
-    }
+        this.view.setOnAction(label -> {
 
-    @Override
-    public void setOnEdit(Function<MLabel, Void> function) {
-        this.view.setOnEdit(label -> {
-            this.model = label;
-            this.view.updateView(label);
-            function.apply(label);
             return null;
         });
     }
 
     @Override
-    public void setOnDelete(Function<MLabel, Void> function) {
+    public void setOnEdit(Function<PLabel, Void> function) {
+        this.view.setOnEdit(label -> {
+            this.model = label;
+            this.view.updateView(label);
+            function.apply(this);
+            return null;
+        });
+    }
 
+    @Override
+    public void setOnDelete(Function<PLabel, Void> function) {
+        this.view.setOnDelete(label -> {
+            function.apply(this);
+            return null;
+        });
     }
 }
