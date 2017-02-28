@@ -1,8 +1,9 @@
 package ru.kolaer.client.javafx.system.network;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordBase;
@@ -16,8 +17,8 @@ import ru.kolaer.client.javafx.tools.Resources;
 /**
  * Created by danilovey on 13.02.2017.
  */
-@Slf4j
 public class NetworkTest {
+    private final Logger log = LoggerFactory.getLogger(NetworkTest.class);
     private NetworkUSRestTemplate networkUS;
     private Authentication authentication;
 
@@ -29,7 +30,7 @@ public class NetworkTest {
         urlToKolaerWeb.append("localhost:8080");
 
         UniformSystemEditorKitSingleton instance = UniformSystemEditorKitSingleton.getInstance();
-        this.networkUS = new NetworkUSRestTemplate();
+        this.networkUS = new NetworkUSRestTemplate(null);
         this.authentication = new AuthenticationOnNetwork();
         instance.setUSNetwork(this.networkUS);
         instance.setAuthentication(this.authentication);

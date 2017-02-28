@@ -8,7 +8,7 @@ import ru.kolaer.api.mvp.view.BaseView;
 /**
  * Created by danilovey on 06.09.2016.
  */
-public class VMainPage implements BaseView, InitializationView {
+public class VMainPage implements BaseView<Parent>, InitializationView {
     private BorderPane mainPane;
 
     @Override

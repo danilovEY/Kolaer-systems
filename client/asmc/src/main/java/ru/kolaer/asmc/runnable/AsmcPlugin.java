@@ -5,6 +5,9 @@ import javafx.scene.layout.BorderPane;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.asmc.mvp.model.MGroupDataService;
+import ru.kolaer.asmc.mvp.model.MGroupDataServiceImpl;
+import ru.kolaer.asmc.mvp.presenter.*;
 
 import java.net.URL;
 import java.util.Collection;
@@ -13,11 +16,12 @@ import java.util.Collection;
  * Created by danilovey on 20.02.2017.
  */
 public class AsmcPlugin implements UniformSystemPlugin {
+    private UniformSystemEditorKit editorKit;
     private BorderPane mainPane;
 
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
-
+        this.editorKit = editorKit;
     }
 
     @Override
@@ -33,6 +37,21 @@ public class AsmcPlugin implements UniformSystemPlugin {
     @Override
     public void start() throws Exception {
         this.mainPane = new BorderPane();
+
+        final MGroupDataService mGroupDataService = new MGroupDataServiceImpl();
+
+        final PGroupTree pGroupTree = new PGroupTreeImpl();
+        pGroupTree.setModel(mGroupDataService);
+
+        final PContentLabel pContentLabel = new PContentLabelImpl();
+
+        final PSplitListContent pSplitListContent = new PSplitListContentImpl(this.editorKit);
+        pSplitListContent.setPContentLabel(pContentLabel);
+        pSplitListContent.setPGroupList(pGroupTree);
+
+        this.mainPane.setCenter(pSplitListContent.getView().getContent());
+
+        mGroupDataService.loadData();
     }
 
     @Override

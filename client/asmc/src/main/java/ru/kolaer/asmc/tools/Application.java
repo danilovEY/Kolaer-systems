@@ -1,8 +1,5 @@
 package ru.kolaer.asmc.tools;
 
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
@@ -42,12 +39,15 @@ public class Application implements Runnable {
 	public void start() {
 		if (this.pathApp != null && !this.pathApp.equals("")) {
 			CompletableFuture.runAsync(this, threadForRunApp).exceptionally(t -> {
+				this.editorKit.getUISystemUS().getNotification()
+						.showErrorNotifi("Ошибка!", "Неудалось запустить: " + this.pathApp);
 				LOG.error("Неудалось запустить: {}", this.pathApp, t);
 				return null;
 			});
 			this.threadForRunApp.shutdown();
 		} else {
-			this.editorKit.getUISystemUS().getDialog().createErrorDialog("Ошибка!", "Не указан файл или ссылка!").show();
+			this.editorKit.getUISystemUS().getNotification()
+					.showErrorNotifi("Ошибка!", "Не указан файл или ссылка!");
 		}
 	}
 
@@ -100,7 +100,7 @@ public class Application implements Runnable {
 		}
 	}
 
-	private void operUrlInPluginBrowser(final String url) {
+	private void openUrlInPluginBrowser(final String url) {
 		for(final UniformSystemPlugin plugin : this.editorKit.getPluginsUS().getPlugins()) {
 			if(this.editorKit.getPluginsUS().getNamePlugin(plugin).equals("Браузер")) {
 				this.editorKit.getPluginsUS().showPlugin(plugin);
@@ -118,35 +118,20 @@ public class Application implements Runnable {
 			
 			if (Application.isWindows()) {
 				if (Application.isURL(pathApp)) {
-					String pathWeb = "";
-					if(SettingSingleton.getInstance().isAllLabels()) {
-						if (SettingSingleton.getInstance().isDefaultWebBrowser()) {
-							this.operUrlInPluginBrowser(this.pathApp);
-							return;
-						} else if(SettingSingleton.getInstance().isDefaultUserWebBrowser()) {
-							if(isWindowsXP()) {
-								this.operUrlInPluginBrowser(this.pathApp);
-							} else {
-								r.exec("cmd /C START \"\" \"" + this.pathApp + "\"");
-							}
-							return;
+					if(this.openWith == null || this.openWith.trim().isEmpty()) {
+						if (isWindowsXP()) {
+							this.openUrlInPluginBrowser(this.pathApp);
 						} else {
-							pathWeb = SettingSingleton.getInstance().getPathWebBrowser();
+							r.exec("cmd /C START \"\" \"" + this.pathApp + "\"");
 						}
 					} else {
-						pathWeb = this.openWith;
-					}
-					
-					final File simpleWebBrowser = new File(pathWeb);
-					if (simpleWebBrowser.exists() && simpleWebBrowser.isFile()) {
-						r.exec(simpleWebBrowser.getAbsolutePath() + " \"" + this.pathApp + "\"");
-					} else {
-						Platform.runLater(() -> {
-							Alert alert = new Alert(AlertType.ERROR);
-							alert.setTitle("Ошибка!");
-							alert.setHeaderText("Браузер \"" + simpleWebBrowser.getAbsolutePath() + "\" не найден.");
-							alert.show();
-						});
+						final File simpleWebBrowser = new File(this.openWith);
+						if (simpleWebBrowser.exists() && simpleWebBrowser.isFile()) {
+							r.exec(simpleWebBrowser.getAbsolutePath() + " \"" + this.pathApp + "\"");
+						} else {
+							this.editorKit.getUISystemUS().getNotification()
+									.showErrorNotifi("Ошибка!", "Браузер не найден!");
+						}
 					}
 				} else {		
 					final File file = new File(this.pathApp);
@@ -162,32 +147,14 @@ public class Application implements Runnable {
 							}
 						}
 					} else {
-						Platform.runLater(() -> {
-							Alert alert = new Alert(AlertType.ERROR);
-							alert.setTitle("Ошибка!");
-							alert.setHeaderText("Файл \"" + this.pathApp + "\" не найден.");
-							alert.setContentText("Если это ссылка, добавьте \"http://\"");
-							alert.show();
-						});
+						this.editorKit.getUISystemUS().getNotification()
+								.showErrorNotifi("Ошибка!", "Файл \"" + this.pathApp + "\" не найден.");
 					}
 				}
 			}
 		} catch (final IOException e) {
-			Platform.runLater(() -> {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка!");
-				alert.setHeaderText("Не удалось запустить \"" + this.pathApp);
-				alert.setContentText(e.getMessage());
-				alert.show();
-			});
+			this.editorKit.getUISystemUS().getNotification()
+					.showErrorNotifi("Ошибка!", "Не удалось запустить \"" + this.pathApp);
 		}
-	}
-
-	public String getPathApp() {
-		return pathApp;
-	}
-
-	public void setPathApp(final String pathApp) {
-		this.pathApp = pathApp;
 	}
 }

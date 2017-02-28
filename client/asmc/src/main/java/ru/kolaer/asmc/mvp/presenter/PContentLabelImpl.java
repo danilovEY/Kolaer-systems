@@ -1,6 +1,5 @@
 package ru.kolaer.asmc.mvp.presenter;
 
-import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.mvp.model.MLabel;
 import ru.kolaer.asmc.mvp.view.VContentLabel;
 import ru.kolaer.asmc.mvp.view.VContentLabelImpl;

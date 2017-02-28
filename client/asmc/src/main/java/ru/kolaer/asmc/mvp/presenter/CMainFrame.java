@@ -37,7 +37,7 @@ import java.util.concurrent.Executors;
  * @author Danilov
  * @version 0.2
  */
-public class CMainFrame implements UniformSystemPlugin {
+public class CMainFrame {
 	private final Logger LOG = LoggerFactory.getLogger(CMainFrame.class);
 
 	/** Панель с ярлыками. */
@@ -95,8 +95,8 @@ public class CMainFrame implements UniformSystemPlugin {
 		this.observer = new CNavigationContentObserver(groupsPanel, labelsPanel, editorKit);
 		this.updateData();
 
-		final MenuItem addGroupLabels = new MenuItem(Resources.MENU_ITEM_ADD_GROUP);
-		final MenuItem addLabel = new MenuItem(Resources.MENU_ITEM_ADD_LABEL);
+		final MenuItem addGroupLabels = new MenuItem("");
+		final MenuItem addLabel = new MenuItem("");
 		final MenuItem settingMenuItem = new MenuItem("Настройки");
 		final MenuItem getRootMenuItem = new MenuItem("Админ");
 
@@ -227,47 +227,4 @@ public class CMainFrame implements UniformSystemPlugin {
 		});
 	}
 
-	@Override
-	public void initialization(UniformSystemEditorKit uniformSystemEditorKit) throws Exception {
-		this.editorKit = uniformSystemEditorKit;
-		SettingSingleton.initialization();
-		this.mainPanel = new BorderPane();
-	}
-
-	@Override
-	public URL getIcon() {
-		return null;
-	}
-
-	@Override
-	public Collection<Service> getServices() {
-		return null;
-	}
-
-	@Override
-	public void start() throws Exception {
-		this.mainPanel.getStylesheets().add(this.getClass().getResource("/CSS/Default/Default.css").toExternalForm());
-
-		this.initialize();
-	}
-
-	@Override
-	public void stop() throws Exception {
-
-	}
-
-	@Override
-	public void updatePluginObjects(String s, Object o) {
-
-	}
-
-	@Override
-	public void setContent(Parent parent) {
-
-	}
-
-	@Override
-	public Parent getContent() {
-		return this.mainPanel;
-	}
 }

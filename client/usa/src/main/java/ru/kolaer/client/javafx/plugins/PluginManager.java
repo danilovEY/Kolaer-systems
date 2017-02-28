@@ -40,7 +40,7 @@ public class PluginManager {
         final File frameworkDir = new File(System.getProperty("java.io.tmpdir") , defaultPathCache);
 
         final Map<String, String> frameworkProperties = new HashMap<>();
-        frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath() + UUID.randomUUID());
+        frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath() + "/" + UUID.randomUUID());
         frameworkProperties.put("felix.log.level", "3");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
@@ -69,7 +69,7 @@ public class PluginManager {
                 ",org.controlsfx.control.textfield, org.controlsfx.dialog, org.controlsfx.dialog, org.controlsfx.validation, javafx.scene.web");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
-                "javafx.application, javafx.beans.property, " + "javafx.beans.value.ObservableValue," +
+                "javafx.application, javafx.beans.property, javax.xml.stream," + "javafx.beans.value.ObservableValue," +
                 "javafx.beans.value,  javafx.collections, javafx.collections.transformation, javafx.event, " + "javafx.beans.binding," +
                 "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.canvas, javafx.scene.image, " +
                 "javafx.scene.input , javafx.scene.layout, javafx.util, javafx.concurrent, javafx.scene.paint, " +

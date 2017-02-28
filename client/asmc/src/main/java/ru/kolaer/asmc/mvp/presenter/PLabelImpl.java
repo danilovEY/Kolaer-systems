@@ -29,10 +29,6 @@ public class PLabelImpl implements PLabel {
     @Override
     public void updateView() {
         this.view.updateView(this.model);
-        this.view.setOnAction(label -> {
-
-            return null;
-        });
     }
 
     @Override
@@ -48,6 +44,14 @@ public class PLabelImpl implements PLabel {
     @Override
     public void setOnDelete(Function<PLabel, Void> function) {
         this.view.setOnDelete(label -> {
+            function.apply(this);
+            return null;
+        });
+    }
+
+    @Override
+    public void setOnAction(Function<PLabel, Void> function) {
+        this.view.setOnAction(label -> {
             function.apply(this);
             return null;
         });

@@ -51,7 +51,6 @@ public class MGroupDataServiceImpl implements MGroupDataService {
         try {
             this.xmlMapper.writeValue(new File(FILE_PATH + "/" + FILE_NAME),
                     this.groups.stream().toArray(MGroup[]::new));
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -13,4 +13,5 @@ import java.util.function.Function;
 public interface PLabel extends BasePresenter<VLabel>, BaseModel<MLabel> {
     void setOnEdit(Function<PLabel, Void> function);
     void setOnDelete(Function<PLabel, Void> function);
+    void setOnAction(Function<PLabel, Void> function);
 }
