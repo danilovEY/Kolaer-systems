@@ -102,14 +102,14 @@ public class PSplitListContentImpl implements PSplitListContent {
         });
 
         pLabel.setOnAction(label1 -> {
-            final MLabel model = pLabel.getModel();
+            final MLabel model = label1.getModel();
             new Application(model.getPathApplication(), model.getPathOpenAppWith(), this.editorKit)
                     .start();
             return null;
         });
 
         pLabel.setOnCopy(label1 -> {
-            this.bufferLabel = pLabel.getModel();
+            this.bufferLabel = new MLabel(label1.getModel());
             return null;
         });
 
