@@ -2,7 +2,6 @@ package ru.kolaer.asmc.tools.serializations;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.mvp.model.MGroup;
 
 import java.io.*;

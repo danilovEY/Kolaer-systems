@@ -1,27 +1,21 @@
-package ru.kolaer.asmc.mvp.presenter;
+package ru.kolaer.asmc.mvp.view;
 
-import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.asmc.tools.Resources;
-import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.mvp.model.MGroup;
 
-import java.net.URL;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 /**
  * Окно для добавления группы.
@@ -29,8 +23,8 @@ import java.util.ResourceBundle;
  * @author Danilov
  * @version 0.2
  */
-public class CAddingGroupLabelsDialog {
-	private final Logger LOG = LoggerFactory.getLogger(CAddingGroupLabelsDialog.class);
+public class VAddingGroupLabelsDialog {
+	private final Logger LOG = LoggerFactory.getLogger(VAddingGroupLabelsDialog.class);
 
     private final Dialog<MGroup> dialog;
     private final TextField groupNameText;
@@ -39,15 +33,15 @@ public class CAddingGroupLabelsDialog {
 
     private MGroup result;
 	
-	public CAddingGroupLabelsDialog() {
+	public VAddingGroupLabelsDialog() {
 		this(null);
 	}
 
 	/**
-	 * {@linkplain CAddingGroupLabelsDialog}
+	 * {@linkplain VAddingGroupLabelsDialog}
 	 * @param groupModel - Редактировать группу.
 	 */
-	public CAddingGroupLabelsDialog(final MGroup groupModel) {
+	public VAddingGroupLabelsDialog(final MGroup groupModel) {
 		this.mainPane = new BorderPane();
         this.dialog = new Dialog<>();
 		this.groupNameText = new TextField();
@@ -91,7 +85,7 @@ public class CAddingGroupLabelsDialog {
             this.textPriority.setText(String.valueOf(this.result.getPriority()));
         }
 
-        final String title = this.result == null ? Resources.ADDING_GROUP_FRAME_TITLE : Resources.EDING_GROUP_FRAME_TITLE;
+        final String title = this.result == null ? "Добавить группу" : "Редактировать группу";
         this.dialog.setTitle(title);
         this.dialog.setResizable(true);
         ((Stage)this.dialog.getDialogPane().getScene().getWindow())

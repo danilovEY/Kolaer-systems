@@ -1,14 +1,17 @@
 package ru.kolaer.asmc.runnable;
 
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.asmc.mvp.model.MGroupDataService;
 import ru.kolaer.asmc.mvp.model.MGroupDataServiceImpl;
 import ru.kolaer.asmc.mvp.presenter.*;
+import ru.kolaer.asmc.mvp.view.ImageViewPane;
 
 import java.net.URL;
 import java.util.Collection;
@@ -39,6 +42,8 @@ public class AsmcPlugin implements UniformSystemPlugin {
     public void start() throws Exception {
         this.mainPane = new BorderPane();
 
+        this.updateBanner();
+
         final MGroupDataService mGroupDataService = new MGroupDataServiceImpl();
         mGroupDataService.loadData();
 
@@ -54,6 +59,34 @@ public class AsmcPlugin implements UniformSystemPlugin {
         pSplitListContent.updateView();
 
         this.mainPane.setCenter(pSplitListContent.getView().getContent());
+    }
+
+    private void updateBanner() {
+        //final File imgCenter = new File(SettingSingleton.getInstance().getPathBanner());
+        //final File imgLeft = new File(SettingSingleton.getInstance().getPathBannerLeft());
+        //final File imgRight = new File(SettingSingleton.getInstance().getPathBannerRigth());
+
+        Tools.runOnThreadFX(() -> {
+            final BorderPane imagePane = new BorderPane();
+
+            imagePane.setStyle("-fx-background-color: #FFFFFF"); //,linear-gradient(#f8f8f8, #e7e7e7);
+            imagePane.setMaxHeight(300);
+            imagePane.setMaxWidth(Double.MAX_VALUE);
+
+            final ImageView left = new ImageView(new Image(this.getClass().getResource("/LR.png").toString(), true));
+            left.setPreserveRatio(false);
+
+            final ImageView right = new ImageView(new Image(this.getClass().getResource("/LR.png").toString(), true));
+            right.setPreserveRatio(false);
+
+            final ImageViewPane center = new ImageViewPane(new ImageView(new Image(this.getClass().getResource("/Centr.png").toString(), true)));
+
+            imagePane.setCenter(center);
+            imagePane.setRight(right);
+            imagePane.setLeft(left);
+
+            this.mainPane.setTop(imagePane);
+        });
     }
 
     @Override

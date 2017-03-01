@@ -3,7 +3,6 @@ package ru.kolaer.asmc.mvp.view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -11,18 +10,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.tools.Tools;
-import ru.kolaer.asmc.mvp.presenter.CAddingLabelDialog;
-import ru.kolaer.asmc.mvp.view.VLabel;
 import ru.kolaer.asmc.tools.Resources;
-import ru.kolaer.asmc.tools.SettingSingleton;
 import ru.kolaer.asmc.mvp.model.MLabel;
 
 import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -132,7 +125,7 @@ public class VLabelCss implements VLabel {
 
     @Override
     public void setOnEdit(Function<MLabel, Void> function) {
-        this.editLabel.setOnAction(e -> new CAddingLabelDialog(this.data)
+        this.editLabel.setOnAction(e -> new VAddingLabelDialog(this.data)
                 .showAndWait().ifPresent(function::apply)
         );
     }

@@ -1,4 +1,4 @@
-package ru.kolaer.asmc.mvp.presenter;
+package ru.kolaer.asmc.mvp.view;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
@@ -25,8 +25,8 @@ import java.util.Optional;
  * @author Danilov
  * @version 0.1
  */
-public class CAddingLabelDialog {
-	private final Logger LOG = LoggerFactory.getLogger(CAddingLabelDialog.class);
+public class VAddingLabelDialog {
+	private final Logger LOG = LoggerFactory.getLogger(VAddingLabelDialog.class);
 	
 	private MLabel result;
 	private final BorderPane mainPane;
@@ -44,11 +44,11 @@ public class CAddingLabelDialog {
 	private final Button buttonSetAppWith;
     private final Dialog<MLabel> dialog;
 
-	public CAddingLabelDialog() {
+	public VAddingLabelDialog() {
 		this(null);
 	}
 
-	public CAddingLabelDialog(final MLabel model) {
+	public VAddingLabelDialog(final MLabel model) {
         this.mainPane = new BorderPane();
         this.buttonSetFile = new Button("Обзор...");
         this.buttonSetAppWith = new Button("Обзор...");

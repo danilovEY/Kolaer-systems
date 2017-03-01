@@ -1,6 +1,5 @@
 package ru.kolaer.asmc.mvp.view;
 
-import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
@@ -9,8 +8,6 @@ import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Pair;
 import ru.kolaer.asmc.mvp.model.MGroup;
-import ru.kolaer.asmc.mvp.presenter.CAddingGroupLabelsDialog;
-import ru.kolaer.asmc.mvp.presenter.CAddingLabelDialog;
 
 import java.util.function.Function;
 
@@ -98,10 +95,10 @@ public class VGroupTreeImpl implements VGroupTree {
         this.addGroup.setOnAction(e -> {
             final TreeItem<MGroup> selectedItem = this.treeView.getSelectionModel().getSelectedItem();
             if(selectedItem == this.rootNode.getContent()) {
-                new CAddingGroupLabelsDialog().showAndWait()
+                new VAddingGroupLabelsDialog().showAndWait()
                         .ifPresent(group -> function.apply(new Pair<>(null, group)));
             } else {
-                new CAddingGroupLabelsDialog().showAndWait()
+                new VAddingGroupLabelsDialog().showAndWait()
                         .ifPresent(group -> function.apply(new Pair<>(selectedItem.getValue(), group)));
             }
         });
@@ -112,7 +109,7 @@ public class VGroupTreeImpl implements VGroupTree {
         this.editGroup.setOnAction(e -> {
             final TreeItem<MGroup> selectedItem = this.treeView.getSelectionModel().getSelectedItem();
             if(selectedItem != this.rootNode.getContent()) {
-                new CAddingGroupLabelsDialog(selectedItem.getValue()).showAndWait()
+                new VAddingGroupLabelsDialog(selectedItem.getValue()).showAndWait()
                         .ifPresent(function::apply);
             }
         });

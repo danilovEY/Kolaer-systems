@@ -7,11 +7,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.mvp.model.MLabel;
-import ru.kolaer.asmc.mvp.presenter.CAddingLabelDialog;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -66,7 +63,7 @@ public class VContentLabelImpl implements VContentLabel {
     @Override
     public void setOnAddLabel(Function<MLabel, Void> function) {
         this.addLabel.setOnAction(e ->
-            new CAddingLabelDialog().showAndWait()
+            new VAddingLabelDialog().showAndWait()
                     .ifPresent(function::apply)
         );
     }
