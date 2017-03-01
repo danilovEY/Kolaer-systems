@@ -7,7 +7,13 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +28,7 @@ public class MGroupDataServiceImpl implements MGroupDataService {
 
     private final String FILE_PATH = "data";
     private final String FILE_NAME = "groups.xml";
+    private final String FILE_NAME_BACKUP = "groups_backup.xml";
 
     private final UniformSystemEditorKit editorKit;
     private final XmlMapper xmlMapper;
@@ -52,9 +59,23 @@ public class MGroupDataServiceImpl implements MGroupDataService {
     public boolean saveData() {
         final File fileDir = new File(FILE_PATH);
         if(fileDir.exists() || fileDir.mkdirs()) {
-            try {
-                this.xmlMapper.writeValue(new File(FILE_PATH + "/" + FILE_NAME),
-                        this.groups.stream().toArray(MGroup[]::new));
+            final File fileWithData = new File(FILE_PATH + "/" + FILE_NAME);
+            final File fileBackup = new File(FILE_PATH + "/" + FILE_NAME_BACKUP);
+            if(fileWithData.exists()) {
+                try {
+                    Files.copy(fileWithData.toPath(), fileBackup.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    log.error("Ошибка при создании бэкапа!", e);
+                    this.editorKit.getUISystemUS().getNotification()
+                            .showErrorNotifi("Ошибка!", "Ошибка при создании бэкапа!");
+                }
+            }
+            try(final FileOutputStream fileOutputStream =
+                        new FileOutputStream(fileWithData)) {
+                final byte[] bytes = this.xmlMapper
+                        .writeValueAsBytes(this.groups.stream().toArray(MGroup[]::new));
+                fileOutputStream.write(bytes);
+                fileOutputStream.flush();
                 return true;
             } catch (IOException e) {
                 log.error("Ошибка при сохранение данных!", e);
