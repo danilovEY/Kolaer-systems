@@ -48,10 +48,10 @@ public class AsmcPlugin implements UniformSystemPlugin {
     public void start() throws Exception {
         this.mainPane = new BorderPane();
 
-        final PGroupTree pGroupTree = new PGroupTreeImpl();
+        final PGroupTree pGroupTree = new PGroupTreeImpl(this.editorKit);
 
         CompletableFuture.runAsync(() -> {
-            final MGroupDataService mGroupDataService = new MGroupDataServiceImpl();
+            final MGroupDataService mGroupDataService = new MGroupDataServiceImpl(this.editorKit);
             if(mGroupDataService.loadData()) {
                 pGroupTree.setModel(mGroupDataService);
                 Tools.runOnWithOutThreadFX(pGroupTree::updateView);

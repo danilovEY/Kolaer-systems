@@ -13,5 +13,6 @@ public interface MGroupDataService extends BaseModel<List<MGroup>> {
     void addGroup(MGroup group);
     void removeGroup(MGroup group);
     boolean saveData();
+    void saveDataOnThread();
     boolean loadData();
 }

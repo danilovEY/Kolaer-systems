@@ -8,6 +8,7 @@ import ru.kolaer.asmc.mvp.view.VSplitListContentImpl;
 import ru.kolaer.asmc.tools.Application;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -55,16 +56,14 @@ public class PSplitListContentImpl implements PSplitListContent {
             this.contentLabel.setOnAddLabel(label -> {
                 group.addLabel(label);
                 this.contentLabel.addPLabel(this.createLabel(label, group));
-                this.groupList.getModel().saveData();
-                this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!",
-                        "Добавлен ярлык: \"" + label.getName() + "\"");
+                this.groupList.getModel().saveDataOnThread();
                 return null;
             });
 
             Optional.ofNullable(group.getLabelList())
                     .ifPresent(mLabels -> mLabels.stream()
                             .filter(Objects::nonNull)
-                            .sorted(((o1, o2) -> Integer.compare(o1.getPriority(), o2.getPriority())))
+                            .sorted((Comparator.comparingInt(MLabel::getPriority)))
                             .map(label -> this.createLabel(label, group))
                             .forEach(this.contentLabel::addPLabel)
                     );
@@ -79,12 +78,12 @@ public class PSplitListContentImpl implements PSplitListContent {
         pLabel.setOnDelete(labelForDel -> {
             group.getLabelList().remove(labelForDel.getModel());
             this.contentLabel.removePLabel(labelForDel);
-            this.groupList.getModel().saveData();
+            this.groupList.getModel().saveDataOnThread();
             return null;
         });
 
         pLabel.setOnEdit(label1 -> {
-            this.groupList.getModel().saveData();
+            this.groupList.getModel().saveDataOnThread();
             return null;
         });
 

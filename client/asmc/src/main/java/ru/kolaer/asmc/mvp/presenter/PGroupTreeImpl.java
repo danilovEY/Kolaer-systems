@@ -1,12 +1,17 @@
 package ru.kolaer.asmc.mvp.presenter;
 
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.mvp.model.MGroupDataService;
 import ru.kolaer.asmc.mvp.view.VGroupTree;
 import ru.kolaer.asmc.mvp.view.VGroupTreeImpl;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,11 +20,14 @@ import java.util.stream.Collectors;
  */
 @Data
 public class PGroupTreeImpl implements PGroupTree {
+    private static final Logger log = LoggerFactory.getLogger(PGroupTreeImpl.class);
     private final Map<MGroup, PGroupTreeItem> modelPresGroupMap = new HashMap<>();
+    private final UniformSystemEditorKit editorKit;
     private MGroupDataService model;
     private VGroupTree view;
 
-    public PGroupTreeImpl() {
+    public PGroupTreeImpl(UniformSystemEditorKit editorKit) {
+        this.editorKit = editorKit;
         this.view = new VGroupTreeImpl();
     }
 
@@ -47,13 +55,14 @@ public class PGroupTreeImpl implements PGroupTree {
                     this.modelPresGroupMap.put(group.getValue(), newPGroupTreeItem);
                     pGroupTreeItem.getView().addGroupTreeItem(newPGroupTreeItem.getView());
                 }
-                this.model.saveData();
+
+                this.model.saveDataOnThread();
                 return null;
             });
 
             this.view.setOnEditGroup(group -> {
                 this.view.sort();
-                this.model.saveData();
+                this.model.saveDataOnThread();
                 return null;
             });
 
@@ -64,7 +73,7 @@ public class PGroupTreeImpl implements PGroupTree {
                 } else {
                     this.model.removeGroup(group.getValue());
                 }
-                this.model.saveData();
+                this.model.saveDataOnThread();
                 return null;
             });
 
