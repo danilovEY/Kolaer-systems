@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class Launcher {
@@ -33,11 +34,10 @@ public class Launcher {
 	}
 
 	private static boolean delete(File pFile) {
-		boolean bResult = false;
-
 		if(pFile.exists()) {
 			if(pFile.isDirectory()) {
-				String[] strFiles = pFile.list();
+				final String[] strFiles = Optional.ofNullable(pFile.list())
+						.orElse(new String[0]);
 
 				for(String strFilename: strFiles) {
 					File fileToDelete = new File(pFile, strFilename);
@@ -45,8 +45,8 @@ public class Launcher {
 					delete(fileToDelete);
 					try {
 						Files.deleteIfExists(Paths.get(fileToDelete.getPath()));
-					} catch (IOException e) {
-						e.printStackTrace();
+					} catch (Throwable ignore) {
+						return false;
 					}
 				}
 
@@ -55,7 +55,7 @@ public class Launcher {
 			}
 		}
 
-		return bResult;
+		return true;
 	}
 
 	private static boolean appIsRun() {
