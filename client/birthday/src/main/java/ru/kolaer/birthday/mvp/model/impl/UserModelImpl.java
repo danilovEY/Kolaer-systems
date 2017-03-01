@@ -86,7 +86,7 @@ public class UserModelImpl implements UserModel {
 		PostEntity postEntity = user.getPostEntity();
 		String postName = postEntity.getName();
 		if(postEntity.getTypeRang() != null && !postEntity.getTypeRang().trim().isEmpty())
-			postName += postEntity.getRang() + " " + postEntity.getTypeRang();
+			postName += " " + postEntity.getRang() + " " + postEntity.getTypeRang();
 
 		this.setPost(postName);
 		this.setPhoneNumber(user.getPhoneNumber());
