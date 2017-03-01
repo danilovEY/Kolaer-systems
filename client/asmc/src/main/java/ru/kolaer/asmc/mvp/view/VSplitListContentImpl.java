@@ -18,7 +18,7 @@ public class VSplitListContentImpl implements VSplitListContent {
     }
 
     private void init() {
-        this.mainPane.getStylesheets().add("/CSS/Default/Default.css");
+        this.mainPane.getStylesheets().add(this.getClass().getResource("/CSS/Default/Default.css").toString());
 
         this.splitPane.setOrientation(Orientation.HORIZONTAL);
         this.splitPane.getItems().addAll(null, null);
@@ -40,7 +40,7 @@ public class VSplitListContentImpl implements VSplitListContent {
     public void setVGroupList(VGroupTree vGroupTree) {
         this.splitPane.getItems().set(0, vGroupTree.getContent());
         SplitPane.setResizableWithParent(vGroupTree.getContent(), Boolean.FALSE);
-        this.splitPane.setDividerPosition(0, 0.5f);
+        this.splitPane.setDividerPosition(0, 0.3f);
     }
 
     @Override
