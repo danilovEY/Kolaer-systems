@@ -49,8 +49,8 @@ public class VLabelCss implements VLabel {
         this.nameLabel = new Label();
         this.image = new ImageView();
         this.toolTip = new Tooltip();
-        this.editLabel = new MenuItem(Resources.MENU_ITEM_EDIT_LABEL);
-        this.deleteLabel = new MenuItem(Resources.MENU_ITEM_DELETE_LABEL);
+        this.editLabel = new MenuItem("Редактировать");
+        this.deleteLabel = new MenuItem("Удалить");
         this.labelContextMenu = new ContextMenu();
 
 		this.initialize();

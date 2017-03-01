@@ -125,7 +125,7 @@ public class VAddingLabelDialog {
 
         this.mainPane.setCenter(contentPane);
 
-        final String title = this.result == null ? Resources.ADDING_LABEL_FRAME_TITLE : Resources.EDDING_LABEL_FRAME_TITLE;
+        final String title = this.result == null ? "Добавить ярлык" : "Удалить ярлык";
         final ButtonType ok = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         this.dialog.getDialogPane().getButtonTypes().add(new ButtonType("Отмена", ButtonBar.ButtonData.CANCEL_CLOSE));
         this.dialog.getDialogPane().getButtonTypes().add(ok);

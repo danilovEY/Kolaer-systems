@@ -1,9 +1,12 @@
 package ru.kolaer.asmc.runnable;
 
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -15,11 +18,14 @@ import ru.kolaer.asmc.mvp.view.ImageViewPane;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 /**
  * Created by danilovey on 20.02.2017.
  */
 public class AsmcPlugin implements UniformSystemPlugin {
+    private final static Logger log = LoggerFactory.getLogger(AsmcPlugin.class);
     private UniformSystemEditorKit editorKit;
     private BorderPane mainPane;
 
@@ -42,14 +48,19 @@ public class AsmcPlugin implements UniformSystemPlugin {
     public void start() throws Exception {
         this.mainPane = new BorderPane();
 
-        this.updateBanner();
-
-        final MGroupDataService mGroupDataService = new MGroupDataServiceImpl();
-        mGroupDataService.loadData();
-
         final PGroupTree pGroupTree = new PGroupTreeImpl();
-        pGroupTree.setModel(mGroupDataService);
-        pGroupTree.updateView();
+
+        CompletableFuture.runAsync(() -> {
+            final MGroupDataService mGroupDataService = new MGroupDataServiceImpl();
+            if(mGroupDataService.loadData()) {
+                pGroupTree.setModel(mGroupDataService);
+                pGroupTree.updateView();
+            }
+        }, Executors.newSingleThreadExecutor()).exceptionally(t -> {
+            log.error("Ошибка при чтении данных!", t);
+            this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Ошибка при чтении данных!");
+            return null;
+        });
 
         final PContentLabel pContentLabel = new PContentLabelImpl();
 
@@ -59,16 +70,13 @@ public class AsmcPlugin implements UniformSystemPlugin {
         pSplitListContent.updateView();
 
         this.mainPane.setCenter(pSplitListContent.getView().getContent());
+
+        this.updateBanner();
     }
 
     private void updateBanner() {
-        //final File imgCenter = new File(SettingSingleton.getInstance().getPathBanner());
-        //final File imgLeft = new File(SettingSingleton.getInstance().getPathBannerLeft());
-        //final File imgRight = new File(SettingSingleton.getInstance().getPathBannerRigth());
-
         Tools.runOnThreadFX(() -> {
             final BorderPane imagePane = new BorderPane();
-
             imagePane.setStyle("-fx-background-color: #FFFFFF"); //,linear-gradient(#f8f8f8, #e7e7e7);
             imagePane.setMaxHeight(300);
             imagePane.setMaxWidth(Double.MAX_VALUE);
@@ -81,9 +89,9 @@ public class AsmcPlugin implements UniformSystemPlugin {
 
             final ImageViewPane center = new ImageViewPane(new ImageView(new Image(this.getClass().getResource("/Centr.png").toString(), true)));
 
-            imagePane.setCenter(center);
             imagePane.setRight(right);
             imagePane.setLeft(left);
+            imagePane.setCenter(center);
 
             this.mainPane.setTop(imagePane);
         });

@@ -70,9 +70,7 @@ public class PGroupTreeImpl implements PGroupTree {
 
             this.modelPresGroupMap.clear();
 
-            this.model.getModel()
-                    .stream()
-                    .forEach(group -> this.putGroup(group, null));
+            this.model.getModel().forEach(group -> this.putGroup(group, null));
 
             this.view.sort();
         });
@@ -83,8 +81,7 @@ public class PGroupTreeImpl implements PGroupTree {
             final PGroupTreeItemImpl newPGroupTreeItem = new PGroupTreeItemImpl(group);
             this.modelPresGroupMap.put(group, newPGroupTreeItem );
             Optional.ofNullable(group.getGroups())
-                    .ifPresent(groups -> groups.stream()
-                            .forEach(g -> this.putGroup(g, newPGroupTreeItem )));
+                    .ifPresent(groups -> groups.forEach(g -> this.putGroup(g, newPGroupTreeItem )));
             this.view.addVGroupTreeItem(newPGroupTreeItem.getView());
         } else {
             final PGroupTreeItemImpl newPGroupTreeItem = new PGroupTreeItemImpl(group);
