@@ -34,7 +34,8 @@ public class VContentLabelImpl implements VContentLabel {
     }
 
     private void init() {
-        this.contentPane.setStyle("-fx-background-image: url(/background-repiat.jpg);");
+        this.contentPane.setStyle("-fx-background-image: url(" +
+                this.getClass().getResource("/background-repiat.jpg").toString() + ");");
         this.contentPane.setAlignment(Pos.TOP_CENTER);
         this.contentPane.setPadding(new Insets(5,5,5,5));
         this.contentPane.setVgap(5);
