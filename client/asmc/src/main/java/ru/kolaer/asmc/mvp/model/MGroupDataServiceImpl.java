@@ -25,7 +25,6 @@ public class MGroupDataServiceImpl implements MGroupDataService {
     public MGroupDataServiceImpl(List<MGroup> groups) {
         this.groups = groups;
         this.xmlMapper = new XmlMapper();
-        this.xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     public MGroupDataServiceImpl() {
