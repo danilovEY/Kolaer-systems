@@ -18,4 +18,12 @@ public class MLabel implements Serializable {
 	private String pathOpenAppWith;
 	private String pathApplication;
 	private int priority = 0;
+
+    public MLabel(MLabel originModel) {
+        this.priority = originModel.getPriority();
+        this.info = originModel.getInfo();
+        this.name = originModel.getName();
+        this.pathApplication = originModel.getPathApplication();
+        this.pathOpenAppWith = originModel.getPathOpenAppWith();
+    }
 }

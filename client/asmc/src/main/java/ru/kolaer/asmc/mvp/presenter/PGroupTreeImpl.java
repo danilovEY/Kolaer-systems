@@ -23,6 +23,7 @@ public class PGroupTreeImpl implements PGroupTree {
     private static final Logger log = LoggerFactory.getLogger(PGroupTreeImpl.class);
     private final Map<MGroup, PGroupTreeItem> modelPresGroupMap = new HashMap<>();
     private final UniformSystemEditorKit editorKit;
+    private MGroup bufferGroup;
     private MGroupDataService model;
     private VGroupTree view;
 
@@ -43,18 +44,22 @@ public class PGroupTreeImpl implements PGroupTree {
                     final PGroupTreeItem pGroupTreeItem = new PGroupTreeItemImpl(group.getValue());
                     this.modelPresGroupMap.put(group.getValue(), pGroupTreeItem);
                     this.view.addVGroupTreeItem(pGroupTreeItem.getView());
-                    this.view.sort();
                 } else {
                     final PGroupTreeItem pGroupTreeItem = this.modelPresGroupMap.get(group.getKey());
+                    this.modelPresGroupMap.remove(group.getKey());
 
                     final List<MGroup> groupList = Optional.ofNullable(group.getKey().getGroups())
                             .orElse(new ArrayList<>());
                     groupList.add(group.getValue());
+                    group.getKey().setGroups(groupList);
+
+                    this.modelPresGroupMap.put(group.getKey(), pGroupTreeItem);
 
                     final PGroupTreeItem newPGroupTreeItem = new PGroupTreeItemImpl(group.getValue());
                     this.modelPresGroupMap.put(group.getValue(), newPGroupTreeItem);
                     pGroupTreeItem.getView().addGroupTreeItem(newPGroupTreeItem.getView());
                 }
+                this.view.sort();
 
                 this.model.saveDataOnThread();
                 return null;
@@ -74,6 +79,43 @@ public class PGroupTreeImpl implements PGroupTree {
                     this.model.removeGroup(group.getValue());
                 }
                 this.model.saveDataOnThread();
+                return null;
+            });
+
+            this.view.setOnCopyItem(mGroup -> {
+                this.bufferGroup = new MGroup(mGroup);
+                this.bufferGroup.setNameGroup(mGroup.getNameGroup() + " (Копия)");
+                return null;
+            });
+
+            this.view.setOnPlaceItem(mGroup -> {
+                if(this.bufferGroup != null) {
+                    if(mGroup == null) {
+                        model.addGroup(this.bufferGroup);
+
+                        final PGroupTreeItem pGroupTreeItem = new PGroupTreeItemImpl(this.bufferGroup);
+                        this.modelPresGroupMap.put(this.bufferGroup, pGroupTreeItem);
+                        this.view.addVGroupTreeItem(pGroupTreeItem.getView());
+                    } else {
+                        final PGroupTreeItem pGroupTreeItem = this.modelPresGroupMap.get(mGroup);
+                        this.modelPresGroupMap.remove(mGroup);
+
+                        final List<MGroup> groupList = Optional.ofNullable(mGroup.getGroups())
+                                .orElse(new ArrayList<>());
+                        groupList.add(this.bufferGroup);
+                        mGroup.setGroups(groupList);
+
+                        this.modelPresGroupMap.put(mGroup, pGroupTreeItem);
+
+                        final PGroupTreeItem newPGroupTreeItem = new PGroupTreeItemImpl(this.bufferGroup);
+                        this.modelPresGroupMap.put(this.bufferGroup, newPGroupTreeItem);
+                        pGroupTreeItem.getView().addGroupTreeItem(newPGroupTreeItem.getView());
+                    }
+
+                    this.view.sort();
+                    this.bufferGroup = null;
+                }
+
                 return null;
             });
 

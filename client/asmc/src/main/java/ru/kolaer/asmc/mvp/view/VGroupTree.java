@@ -20,4 +20,6 @@ public interface VGroupTree extends BaseView<BorderPane> {
     void setOnAddGroup(Function<Pair<MGroup, MGroup>, Void> function);
     void setOnEditGroup(Function<MGroup, Void> function);
     void setOnDeleteGroup(Function<Pair<MGroup, MGroup>, Void> function);
+    void setOnCopyItem(Function<MGroup, Void> function);
+    void setOnPlaceItem(Function<MGroup, Void> function);
 }

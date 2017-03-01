@@ -1,14 +1,12 @@
 package ru.kolaer.asmc.mvp.view;
 
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Pair;
 import ru.kolaer.asmc.mvp.model.MGroup;
 
+import java.util.Comparator;
 import java.util.function.Function;
 
 /**
@@ -22,6 +20,8 @@ public class VGroupTreeImpl implements VGroupTree {
     private final ContextMenu contextMenu;
     private final MenuItem deleteGroup;
     private final MenuItem editGroup;
+    private final MenuItem copyGroup;
+    private final MenuItem placeGroup;
 
     public VGroupTreeImpl() {
         this.rootNode = new VGroupTreeItemImpl(new MGroup("КолАЭР",0));
@@ -30,7 +30,10 @@ public class VGroupTreeImpl implements VGroupTree {
         this.addGroup = new MenuItem("Добавить группу");
         this.deleteGroup = new MenuItem("Удалить группу");
         this.editGroup = new MenuItem("Редактировать группу");
-        this.contextMenu = new ContextMenu(this.addGroup, this.editGroup, this.deleteGroup);
+        this.copyGroup = new MenuItem("Копировать группу");
+        this.placeGroup = new MenuItem("Вставить группу");
+        this.contextMenu = new ContextMenu(this.addGroup, this.editGroup, this.deleteGroup,
+                new SeparatorMenuItem(), this.copyGroup, this.placeGroup);
         this.init();
     }
 
@@ -80,7 +83,7 @@ public class VGroupTreeImpl implements VGroupTree {
     @Override
     public void sort() {
         this.rootNode.getContent().getChildren()
-                .sort((g1, g2) -> Integer.compare(g1.getValue().getPriority(), g2.getValue().getPriority()));
+                .sort(Comparator.comparingInt(g -> g.getValue().getPriority()));
     }
 
     @Override
@@ -124,6 +127,30 @@ public class VGroupTreeImpl implements VGroupTree {
                     function.apply(new Pair<>(null,selectedItem.getValue()));
                 else
                     function.apply(new Pair<>(selectedItem.getParent().getValue(),selectedItem.getValue()));
+            }
+        });
+    }
+
+    @Override
+    public void setOnCopyItem(Function<MGroup, Void> function) {
+        this.copyGroup.setOnAction(e -> {
+            final TreeItem<MGroup> selectedItem = this.treeView.getSelectionModel().getSelectedItem();
+            if(selectedItem == this.rootNode.getContent()) {
+                function.apply(null);
+            } else {
+                function.apply(selectedItem.getValue());
+            }
+        });
+    }
+
+    @Override
+    public void setOnPlaceItem(Function<MGroup, Void> function) {
+        this.placeGroup.setOnAction(e -> {
+            final TreeItem<MGroup> selectedItem = this.treeView.getSelectionModel().getSelectedItem();
+            if(selectedItem == this.rootNode.getContent()) {
+                function.apply(null);
+            } else {
+                function.apply(selectedItem.getValue());
             }
         });
     }
