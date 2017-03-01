@@ -84,7 +84,6 @@ public class PGroupTreeImpl implements PGroupTree {
 
             this.view.setOnCopyItem(mGroup -> {
                 this.bufferGroup = new MGroup(mGroup);
-                this.bufferGroup.setNameGroup(mGroup.getNameGroup() + " (Копия)");
                 return null;
             });
 
@@ -107,13 +106,13 @@ public class PGroupTreeImpl implements PGroupTree {
 
                         this.modelPresGroupMap.put(mGroup, pGroupTreeItem);
 
-                        final PGroupTreeItem newPGroupTreeItem = new PGroupTreeItemImpl(this.bufferGroup);
-                        this.modelPresGroupMap.put(this.bufferGroup, newPGroupTreeItem);
-                        pGroupTreeItem.getView().addGroupTreeItem(newPGroupTreeItem.getView());
+                        this.putGroup(this.bufferGroup, pGroupTreeItem);
                     }
 
                     this.view.sort();
                     this.bufferGroup = null;
+
+                    this.model.saveDataOnThread();
                 }
 
                 return null;
@@ -127,7 +126,7 @@ public class PGroupTreeImpl implements PGroupTree {
         });
     }
 
-    private void putGroup(MGroup group, PGroupTreeItemImpl pGroupTreeItem) {
+    private void putGroup(MGroup group, PGroupTreeItem pGroupTreeItem) {
         if(pGroupTreeItem == null) {
             final PGroupTreeItemImpl newPGroupTreeItem = new PGroupTreeItemImpl(group);
             this.modelPresGroupMap.put(group, newPGroupTreeItem );
@@ -141,8 +140,7 @@ public class PGroupTreeImpl implements PGroupTree {
             pGroupTreeItem.getView().addGroupTreeItem(newPGroupTreeItem.getView());
 
             Optional.ofNullable(group.getGroups())
-                    .ifPresent(groups -> groups.stream()
-                            .forEach(g -> this.putGroup(g, newPGroupTreeItem )));
+                    .ifPresent(groups -> groups.forEach(g -> this.putGroup(g, newPGroupTreeItem )));
         }
 
     }

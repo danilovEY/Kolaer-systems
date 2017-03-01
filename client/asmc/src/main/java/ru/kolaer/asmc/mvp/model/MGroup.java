@@ -27,7 +27,7 @@ public class MGroup implements Serializable {
 	}
 
 	public MGroup(MGroup mGroup) {
-		this.nameGroup =  mGroup.getNameGroup();
+		this.nameGroup =  mGroup.getNameGroup()  + " (Копия)";
 		this.priority = mGroup.getPriority();
 
 		Optional.ofNullable(mGroup.getLabelList())
