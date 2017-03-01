@@ -54,7 +54,7 @@ public class AsmcPlugin implements UniformSystemPlugin {
             final MGroupDataService mGroupDataService = new MGroupDataServiceImpl();
             if(mGroupDataService.loadData()) {
                 pGroupTree.setModel(mGroupDataService);
-                pGroupTree.updateView();
+                Tools.runOnWithOutThreadFX(pGroupTree::updateView);
             }
         }, Executors.newSingleThreadExecutor()).exceptionally(t -> {
             log.error("Ошибка при чтении данных!", t);

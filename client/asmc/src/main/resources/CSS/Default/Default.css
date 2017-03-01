@@ -113,10 +113,10 @@
     -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
     -fx-background-radius: 8;
     -fx-background-color:
-            linear-gradient(from 0% 93% to 0% 100%, rgb(46, 186, 60) 0%, rgb(79, 188, 51) 100%),
-            rgb(87, 190, 87),
-            rgb(121, 209, 112),
-            radial-gradient(center 50% 50%, radius 100%, rgb(136, 217, 129), rgb(137, 225, 140));
+            linear-gradient(from 0% 93% to 0% 100%, rgb(24, 112, 29) 0%, rgb(49, 113, 31) 100%),
+            rgb(52, 112, 52),
+            rgb(69, 120, 64),
+            radial-gradient(center 50% 50%, radius 100%, rgb(72, 120, 70), rgb(77, 122, 77));
     -fx-effect: dropshadow( gaussian , #868686  , 4,0,0,1 );
     -fx-font-weight: bold;
     -fx-font-size: 1.1em;

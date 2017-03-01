@@ -63,7 +63,7 @@ public class VLabelCss implements VLabel {
 
         this.button.setMaxWidth(Double.MAX_VALUE);
         this.button.setPrefHeight(60);
-        this.button.getStyleClass().add("record-sales-spring");
+        this.button.getStyleClass().add("record-sales");
         this.button.setWrapText(true);
 
         this.nameLabel.setTextAlignment(TextAlignment.CENTER);
