@@ -1,6 +1,7 @@
 package ru.kolaer.asmc.runnable;
 
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
@@ -39,19 +40,20 @@ public class AsmcPlugin implements UniformSystemPlugin {
         this.mainPane = new BorderPane();
 
         final MGroupDataService mGroupDataService = new MGroupDataServiceImpl();
+        mGroupDataService.loadData();
 
         final PGroupTree pGroupTree = new PGroupTreeImpl();
         pGroupTree.setModel(mGroupDataService);
+        pGroupTree.updateView();
 
         final PContentLabel pContentLabel = new PContentLabelImpl();
 
         final PSplitListContent pSplitListContent = new PSplitListContentImpl(this.editorKit);
         pSplitListContent.setPContentLabel(pContentLabel);
         pSplitListContent.setPGroupList(pGroupTree);
+        pSplitListContent.updateView();
 
         this.mainPane.setCenter(pSplitListContent.getView().getContent());
-
-        mGroupDataService.loadData();
     }
 
     @Override
