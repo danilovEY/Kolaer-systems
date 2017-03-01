@@ -1,7 +1,6 @@
 package ru.kolaer.asmc.mvp.presenter;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,9 +18,7 @@ import ru.kolaer.asmc.tools.Resources;
 import ru.kolaer.asmc.mvp.model.MLabel;
 
 import java.io.File;
-import java.net.URL;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 /**
  *
@@ -46,15 +43,12 @@ public class CAddingLabelDialog {
 	private final TextField pathOpenAppWith;
 	private final Button buttonSetAppWith;
     private final Dialog<MLabel> dialog;
-	
-	private FileChooser fileChooser;
 
 	public CAddingLabelDialog() {
 		this(null);
 	}
 
 	public CAddingLabelDialog(final MLabel model) {
-        this.fileChooser = new FileChooser();
         this.mainPane = new BorderPane();
         this.buttonSetFile = new Button("Обзор...");
         this.buttonSetAppWith = new Button("Обзор...");
@@ -76,12 +70,6 @@ public class CAddingLabelDialog {
 	}
 
 	private void init() {
-		this.fileChooser.setTitle("Выбор иконки ярлыка");
-		this.fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-		this.fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Images", "*.*"),
-				new FileChooser.ExtensionFilter("JPG", "*.jpg"), new FileChooser.ExtensionFilter("JPEG", "*.jpeg"),
-				new FileChooser.ExtensionFilter("PNG", "*.png"));
-
         this.mainPane.setPadding(new Insets(5,10,5,10));
 
         this.image.setFitHeight(100);
@@ -155,16 +143,15 @@ public class CAddingLabelDialog {
                 int prior = this.textPriority.getText().isEmpty() ? 0 : Integer.valueOf(textPriority.getText());
 
                 if (this.result == null) {
-                    this.result = new MLabel(this.nameLabelText.getText(), this.infoLabelText.getText(),
-                            this.pathIconText.getText(), this.pathAppText.getText(), this.pathOpenAppWith.getText(), prior);
-                } else {
-                    this.result.setName(this.nameLabelText.getText());
-                    this.result.setInfo(this.infoLabelText.getText());
-                    this.result.setPathImage(this.pathIconText.getText());
-                    this.result.setPathApplication(this.pathAppText.getText());
-                    this.result.setPriority(prior);
-                    this.result.setPathOpenAppWith(this.pathOpenAppWith.getText());
+                    this.result = new MLabel();
                 }
+
+                this.result.setName(this.nameLabelText.getText());
+                this.result.setInfo(this.infoLabelText.getText());
+                this.result.setPathImage(this.pathIconText.getText());
+                this.result.setPathApplication(this.pathAppText.getText());
+                this.result.setPriority(prior);
+                this.result.setPathOpenAppWith(this.pathOpenAppWith.getText());
 
                 return this.result;
             }
@@ -178,22 +165,8 @@ public class CAddingLabelDialog {
                 .getIcons().add(new Image(Resources.AER_ICON.toString()));
 
 		this.buttonSetAppWith.setOnAction(e -> {
-			final FileChooser fileC = new FileChooser();
-			fileC.setTitle("Выбор файла");
-			fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
-			
-			final String path = this.pathOpenAppWith.getText() == null ? System.getProperty("user.home") : this.pathOpenAppWith.getText();
-			
-			final File startDir = new File(path);
-			String startPath = System.getProperty("user.home");
-			if(startDir.isFile()) {
-				startPath = startDir.getAbsolutePath().substring(0, startDir.getAbsolutePath().length() - startDir.getName().length());
-			} else {
-				startPath = startDir.getAbsolutePath();
-			}
-			fileC.setInitialDirectory(new File(startPath));
-
-			final Optional<File> file = Optional.ofNullable(fileC.showOpenDialog(null));
+            final Optional<File> file = Optional
+                    .ofNullable(this.initFileChooser(this.pathOpenAppWith.getText()).showOpenDialog(null));
 
 			if (file.isPresent() && file.get().exists()) {
 				this.pathOpenAppWith.setText(file.get().getAbsolutePath());
@@ -201,22 +174,8 @@ public class CAddingLabelDialog {
 		});
 		
 		this.buttonSetFile.setOnAction(e -> {
-			final FileChooser fileC = new FileChooser();
-			fileC.setTitle("Выбор файла");
-			fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
-			
-			final String path = this.pathOpenAppWith.getText() == null ? System.getProperty("user.home") : this.pathOpenAppWith.getText();
-			
-			final File startDir = new File(path);
-			String startPath = System.getProperty("user.home");
-			if(startDir.isFile()) {
-				startPath = startDir.getAbsolutePath().substring(0, startDir.getAbsolutePath().length() - startDir.getName().length());
-			} else {
-				startPath = startDir.getAbsolutePath();
-			}
-			fileC.setInitialDirectory(new File(startPath));
-
-			final Optional<File> file = Optional.ofNullable(fileC.showOpenDialog(null));
+			final Optional<File> file = Optional
+                    .ofNullable(this.initFileChooser(this.pathAppText.getText()).showOpenDialog(null));
 
 			if (file.isPresent() && file.get().exists()) {
 				this.pathAppText.setText(file.get().getAbsolutePath());
@@ -224,29 +183,35 @@ public class CAddingLabelDialog {
 		});
 
 		this.pathIconText.setOnKeyPressed(key -> {
-
 			if (key.getCode() != KeyCode.ENTER)
 				return;
 
-			final Optional<File> file = Optional.of(new File(this.pathIconText.getText()));
-
-			if (file.isPresent() && (file.get().exists() && file.get().isFile())) {
-				this.rbDefaultIcon.setSelected(false);
-				this.rbNoneIcon.setSelected(false);
-				this.pathIconText.setText(file.get().getAbsolutePath());
-				try {
-					this.image.setImage(new Image(file.get().toURI().toURL().toString()));
-				} catch (final Exception e) {
-					LOG.error("Невозможно переконвертировать в URL файл: {}", file.get().getAbsolutePath());
-				}
-				fileChooser.setInitialDirectory(file.get());
-			}
+			Optional.of(new File(this.pathIconText.getText()))
+                    .filter(File::exists)
+                    .ifPresent(this::updateIcon);
 		});
 
         this.buttonSetPathIcon.setOnAction(this::actionButtonSetPathIcon);
         this.rbNoneIcon.setOnAction(this::actionRBNoneIcon);
         this.rbDefaultIcon.setOnAction(this::actionRBDefaultIcon);
 	}
+
+    private FileChooser initFileChooser(String path) {
+        final FileChooser fileC = new FileChooser();
+        fileC.setTitle("Выбор файла");
+        fileC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.*", "*.*"));
+
+        final String pathToApp = path == null ? System.getProperty("user.home") : path;
+
+        final File startDir = new File(pathToApp);
+        final String startPath = startDir.isFile()
+                ? startDir.getAbsolutePath().substring(0, startDir.getAbsolutePath().length() - startDir.getName().length())
+                : startDir.getAbsolutePath();
+
+        fileC.setInitialDirectory(new File(startPath));
+
+        return fileC;
+    }
 
     private void actionRBNoneIcon(final ActionEvent event) {
 		this.image.setImage(null);
@@ -259,29 +224,28 @@ public class CAddingLabelDialog {
 	}
 
     private void actionButtonSetPathIcon(final ActionEvent event) {
-		final File startDir = new File(this.pathIconText.getText());
-		String startPath = System.getProperty("user.home");
-		if(startDir.isFile()) {
-			startPath = startDir.getAbsolutePath().substring(0, startDir.getAbsolutePath().length() - startDir.getName().length());
-		} else {
-			startPath = startDir.getAbsolutePath();
-		}
-		this.fileChooser.setInitialDirectory(new File(startPath));
 
-		final Optional<File> file = Optional.ofNullable(this.fileChooser.showOpenDialog(null));
+        final FileChooser fileChooser = this.initFileChooser(this.pathIconText.getText());
+        fileChooser.setTitle("Выбор иконки ярлыка");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Images", "*.*"),
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"), new FileChooser.ExtensionFilter("JPEG", "*.jpeg"),
+                new FileChooser.ExtensionFilter("PNG", "*.png"));
 
-		if (file.isPresent() && (file.get().exists() && file.get().isFile())) {
-			this.rbDefaultIcon.setSelected(false);
-			this.rbNoneIcon.setSelected(false);
-			this.pathIconText.setText(file.get().getAbsolutePath());
-			try {
-				this.image.setImage(new Image(file.get().toURI().toURL().toString()));
-			} catch (final Exception e) {
-				LOG.error("Невозможно переконвертировать в URL файл: {}", file.get().getAbsolutePath());
-			}
-			fileChooser.setInitialDirectory(file.get());
-		}
+		Optional.ofNullable(fileChooser.showOpenDialog(null))
+                .filter(File::exists)
+                .ifPresent(this::updateIcon);
 	}
+
+	private void updateIcon(File file) {
+        this.rbDefaultIcon.setSelected(false);
+        this.rbNoneIcon.setSelected(false);
+        this.pathIconText.setText(file.getAbsolutePath());
+        try {
+            this.image.setImage(new Image(file.toURI().toURL().toString()));
+        } catch (final Exception e) {
+            LOG.error("Невозможно переконвертировать в URL файл: {}", file.getAbsolutePath());
+        }
+    }
 
     public Optional<MLabel> showAndWait() {
         if (this.result != null) {
@@ -300,18 +264,9 @@ public class CAddingLabelDialog {
                 this.rbDefaultIcon.setSelected(true);
                 this.rbNoneIcon.setSelected(false);
             } else {
-                final File file = new File(this.result.getPathImage());
-
-                if (file.exists() && file.isFile()) {
-                    this.rbDefaultIcon.setSelected(false);
-                    this.rbNoneIcon.setSelected(false);
-                    this.pathIconText.setText(file.getAbsolutePath());
-                    try {
-                        this.image.setImage(new Image(file.toURI().toURL().toString()));
-                    } catch (final Exception e) {
-                        LOG.error("Невозможно переконвертировать в URL файл: {}", file.getAbsolutePath());
-                    }
-                }
+                Optional.of(new File(this.result.getPathImage()))
+                        .filter(File::exists)
+                        .ifPresent(this::updateIcon);
             }
         }
 
