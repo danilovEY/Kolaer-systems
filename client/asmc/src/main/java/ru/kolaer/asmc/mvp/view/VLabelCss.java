@@ -92,7 +92,7 @@ public class VLabelCss implements VLabel {
 
         final BorderPane icon  = new BorderPane(this.image);
 
-        this.mainPane.setPrefWidth(500);
+        this.mainPane.setPrefWidth(450);
         this.mainPane.getStyleClass().add("lableMainPane");
         this.mainPane.setCenter(scrollBackPanel);
         this.mainPane.setLeft(icon);
