@@ -50,6 +50,7 @@ public class TestSpring {
 
 
     @Test
+    @Ignore
     public void updateEmployees() throws FileNotFoundException {
         System.out.println(this.employeeService.updateEmployees(new FileInputStream("D:\\L106_Data_26.XLSX")));
     }
