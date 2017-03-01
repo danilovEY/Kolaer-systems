@@ -29,6 +29,8 @@ public class VLabelCss implements VLabel {
     private final static Logger log = LoggerFactory.getLogger(VLabelCss.class);
     private final MenuItem editLabel;
     private final MenuItem deleteLabel;
+    private final MenuItem copyLabel;
+
     private final ContextMenu labelContextMenu;
 
     /** Список слушателей. */
@@ -40,6 +42,7 @@ public class VLabelCss implements VLabel {
 	/** Имя ярлыка. */
 	private final Label nameLabel;
 	private final Tooltip toolTip;
+
     private MLabel data;
 
 
@@ -51,6 +54,7 @@ public class VLabelCss implements VLabel {
         this.toolTip = new Tooltip();
         this.editLabel = new MenuItem("Редактировать");
         this.deleteLabel = new MenuItem("Удалить");
+        this.copyLabel = new MenuItem("Копировать");
         this.labelContextMenu = new ContextMenu();
 
 		this.initialize();
@@ -145,11 +149,20 @@ public class VLabelCss implements VLabel {
     }
 
     @Override
+    public void setOnCopy(Function<MLabel, Void> function) {
+        this.copyLabel.setOnAction(e ->
+            function.apply(this.data)
+        );
+    }
+
+    @Override
     public void setAccess(boolean access) {
-        if(access)
-            this.labelContextMenu.getItems().addAll(this.editLabel, this.deleteLabel);
-        else
+        if(access) {
+            this.labelContextMenu.getItems().addAll(this.editLabel, this.deleteLabel,
+                    new SeparatorMenuItem(), this.copyLabel);
+        } else {
             this.labelContextMenu.getItems().clear();
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ public interface VLabel extends BaseView<BorderPane> {
     void setOnEdit(Function<MLabel, Void> function);
     void setOnDelete(Function<MLabel, Void> function);
     void setOnAction(Function<MLabel, Void> function);
+    void setOnCopy(Function<MLabel, Void> function);
 
     void setAccess(boolean access);
 }

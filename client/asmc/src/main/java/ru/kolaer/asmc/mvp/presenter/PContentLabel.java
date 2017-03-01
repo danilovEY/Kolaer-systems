@@ -16,4 +16,5 @@ public interface PContentLabel extends BasePresenter<VContentLabel> {
     void clear();
 
     void setOnAddLabel(Function<MLabel, Void> function);
+    void setOnPlaceLabel(Function<Void, Void> function);
 }

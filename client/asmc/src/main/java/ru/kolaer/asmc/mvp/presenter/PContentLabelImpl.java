@@ -37,6 +37,11 @@ public class PContentLabelImpl implements PContentLabel {
     }
 
     @Override
+    public void setOnPlaceLabel(Function<Void, Void> function) {
+        this.view.setOnPlaceLabel(function);
+    }
+
+    @Override
     public VContentLabel getView() {
         return this.view;
     }

@@ -18,4 +18,5 @@ public interface VContentLabel extends BaseView<BorderPane> {
     void clear();
 
     void setOnAddLabel(Function<MLabel, Void> function);
+    void setOnPlaceLabel(Function<Void, Void> function);
 }

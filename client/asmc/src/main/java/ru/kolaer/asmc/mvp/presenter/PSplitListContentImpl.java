@@ -17,6 +17,7 @@ import java.util.Optional;
  */
 public class PSplitListContentImpl implements PSplitListContent {
     private final UniformSystemEditorKit editorKit;
+    private MLabel bufferLabel;
     private VSplitListContent view;
     private PGroupTree groupList;
     private PContentLabel contentLabel;
@@ -60,6 +61,19 @@ public class PSplitListContentImpl implements PSplitListContent {
                 return null;
             });
 
+            this.contentLabel.setOnPlaceLabel(v -> {
+                if(bufferLabel != null) {
+                    group.addLabel(bufferLabel);
+
+                    this.contentLabel.addPLabel(this.createLabel(this.bufferLabel, group));
+                    this.bufferLabel = null;
+
+                    this.groupList.getModel().saveDataOnThread();
+                }
+
+                return null;
+            });
+
             Optional.ofNullable(group.getLabelList())
                     .ifPresent(mLabels -> mLabels.stream()
                             .filter(Objects::nonNull)
@@ -91,6 +105,11 @@ public class PSplitListContentImpl implements PSplitListContent {
             final MLabel model = pLabel.getModel();
             new Application(model.getPathApplication(), model.getPathOpenAppWith(), this.editorKit)
                     .start();
+            return null;
+        });
+
+        pLabel.setOnCopy(label1 -> {
+            this.bufferLabel = pLabel.getModel();
             return null;
         });
 

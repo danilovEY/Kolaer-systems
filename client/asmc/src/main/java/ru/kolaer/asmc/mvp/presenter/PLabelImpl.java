@@ -43,17 +43,22 @@ public class PLabelImpl implements PLabel {
 
     @Override
     public void setOnDelete(Function<PLabel, Void> function) {
-        this.view.setOnDelete(label -> {
-            function.apply(this);
-            return null;
-        });
+        this.view.setOnDelete(label ->
+            function.apply(this)
+        );
     }
 
     @Override
     public void setOnAction(Function<PLabel, Void> function) {
-        this.view.setOnAction(label -> {
-            function.apply(this);
-            return null;
-        });
+        this.view.setOnAction(label ->
+            function.apply(this)
+        );
+    }
+
+    @Override
+    public void setOnCopy(Function<PLabel, Void> function) {
+        this.view.setOnCopy(mLabel ->
+            function.apply(this)
+        );
     }
 }

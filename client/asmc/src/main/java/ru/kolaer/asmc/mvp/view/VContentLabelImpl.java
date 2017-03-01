@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import ru.kolaer.asmc.mvp.model.MLabel;
@@ -19,6 +20,7 @@ public class VContentLabelImpl implements VContentLabel {
     private final BorderPane mainPane;
     private final FlowPane contentPane;
     private final MenuItem addLabel;
+    private final MenuItem placeLabel;
     private final ScrollPane scrollPane;
 
     public VContentLabelImpl() {
@@ -26,7 +28,8 @@ public class VContentLabelImpl implements VContentLabel {
         this.contentPane = new FlowPane();
         this.scrollPane = new ScrollPane(this.contentPane);
         this.addLabel = new MenuItem("Добавить ярлык");
-        this.contextMenu = new ContextMenu(this.addLabel);
+        this.placeLabel = new MenuItem("Вставить ярлык");
+        this.contextMenu = new ContextMenu(this.addLabel, new SeparatorMenuItem(), this.placeLabel);
         this.init();
     }
 
@@ -65,6 +68,13 @@ public class VContentLabelImpl implements VContentLabel {
         this.addLabel.setOnAction(e ->
             new VAddingLabelDialog().showAndWait()
                     .ifPresent(function::apply)
+        );
+    }
+
+    @Override
+    public void setOnPlaceLabel(Function<Void, Void> function) {
+        this.placeLabel.setOnAction(e ->
+            function.apply(null)
         );
     }
 
