@@ -8,6 +8,7 @@ import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.mvp.model.MGroupDataService;
 import ru.kolaer.asmc.mvp.view.VGroupTree;
 import ru.kolaer.asmc.mvp.view.VGroupTreeImpl;
+import ru.kolaer.asmc.mvp.view.VGroupTreeItem;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -72,11 +73,17 @@ public class PGroupTreeImpl implements PGroupTree {
             });
 
             this.view.setOnDeleteGroup(group -> {
-                this.view.removeVGroupTreeItem(this.modelPresGroupMap.get(group.getValue()).getView());
                 if(group.getKey() != null ) {
+                    final PGroupTreeItem groupToRemove = this.modelPresGroupMap.get(group.getValue());
+                    final PGroupTreeItem groupFromRemove = this.modelPresGroupMap.get(group.getKey());
+                    groupFromRemove.getView().removeGroupTreeItem(groupToRemove.getView());
+                    this.modelPresGroupMap.remove(group.getKey());
                     group.getKey().getGroups().remove(group.getValue());
+                    this.modelPresGroupMap.put(group.getKey(), groupFromRemove);
                 } else {
+                    this.view.removeVGroupTreeItem(this.modelPresGroupMap.get(group.getValue()).getView());
                     this.model.removeGroup(group.getValue());
+                    this.modelPresGroupMap.remove(group.getValue());
                 }
                 this.model.saveDataOnThread();
                 return null;
