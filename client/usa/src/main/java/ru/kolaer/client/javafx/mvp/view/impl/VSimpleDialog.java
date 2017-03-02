@@ -14,14 +14,12 @@ public class VSimpleDialog implements VDialog {
 	protected Alert dialog;
 	
 	public VSimpleDialog() {
-            Tools.runOnThreadFXAndWain(() -> {
-                this.dialog = new Alert(Alert.AlertType.NONE);
-            }, 5, TimeUnit.SECONDS);
+        this.dialog = new Alert(Alert.AlertType.NONE);
 	}
 	
 	@Override
 	public void show(boolean isDialog) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			if(isDialog) {
 				this.dialog.showAndWait();
 			} else {
@@ -32,14 +30,14 @@ public class VSimpleDialog implements VDialog {
 
 	@Override
 	public void close() {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			this.dialog.close();
 		});
 	}
 
 	@Override
 	public void setTitle(final String title) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			this.dialog.setTitle(title);
 			this.dialog.setHeaderText(title);
 		});
@@ -52,7 +50,7 @@ public class VSimpleDialog implements VDialog {
 
 	@Override
 	public void setText(final String text) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			this.dialog.setContentText(text);
 		});
 	}

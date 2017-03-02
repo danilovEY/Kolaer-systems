@@ -66,10 +66,8 @@ public class PTabImpl implements PTab {
 					this.isActive = true;
 				} catch (final Exception e) {
 					LOG.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), e);
-					Tools.runOnThreadFX(() -> {
-						UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), "Ошибка при запуске плагина!");
-						UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), e.getMessage());
-					});
+					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), "Ошибка при запуске плагина!");
+					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), e.getMessage());
 					this.closeTab();
 				}
 				threadRunPlugin.shutdown();
@@ -78,8 +76,6 @@ public class PTabImpl implements PTab {
 				threadRunPlugin.shutdownNow();
 				return null;
 			});
-
-
 		}
 	}
 

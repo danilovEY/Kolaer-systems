@@ -28,9 +28,7 @@ public class VTabImpl implements VTab {
 	private Node content;
 
 	public VTabImpl() {
-		Tools.runOnThreadFXAndWain(() -> {
-			this.init();
-		}, 20, TimeUnit.SECONDS);
+		this.init();
 	}
 	
 	private void init() {	
@@ -64,21 +62,21 @@ public class VTabImpl implements VTab {
 
 	@Override
 	public void setContent(final Node parent) {
-		Tools.runOnThreadFXAndWain(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			this.content = parent;
 			if(parent == null) {
 				this.tab.setContent(new Region());
 			} else {
 				this.tab.setContent(parent);
 			}
-		},20, TimeUnit.SECONDS);
+		});
 	}
 
 	@Override
 	public void setTitle(final String title) {
-		Tools.runOnThreadFXAndWain(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			this.tab.setText(title);
-		},20, TimeUnit.SECONDS);
+		});
 	}
 
 	@Override

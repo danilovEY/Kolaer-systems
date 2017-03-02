@@ -11,14 +11,12 @@ public class VProgressDialog implements VDialog {
 	
 	public VProgressDialog(final Service<?> service) {
 		this.service = service;
-		Tools.runOnThreadFX(() -> {
-			this.dialog = new ProgressDialog(service);
-		});
+		this.dialog = new ProgressDialog(service);
 	}
 
 	@Override
 	public void setText(final String text) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			this.setText(text);
 		});
 	}
@@ -30,7 +28,7 @@ public class VProgressDialog implements VDialog {
 
 	@Override
 	public void show(boolean isDialog) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			if(!service.isRunning())
 				service.start();
 			if(isDialog) {
@@ -43,7 +41,7 @@ public class VProgressDialog implements VDialog {
 
 	@Override
 	public void setTitle(final String title) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			this.dialog.setTitle(title);
 		});
 	}
@@ -55,7 +53,7 @@ public class VProgressDialog implements VDialog {
 
 	@Override
 	public void close() {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			if(service.isRunning())
 				service.cancel();
 			
