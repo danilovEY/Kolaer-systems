@@ -35,6 +35,7 @@ public class Tray {
            // } else {
                 final ExecutorService serviceThread = Executors.newSingleThreadExecutor();
                 CompletableFuture.runAsync(() -> {
+                    Thread.currentThread().setName("Завершение приложения");
                     LOG.info("Завершение служб...");
                     servicesManager.removeAllServices();
                 }, serviceThread).exceptionally(t -> {
