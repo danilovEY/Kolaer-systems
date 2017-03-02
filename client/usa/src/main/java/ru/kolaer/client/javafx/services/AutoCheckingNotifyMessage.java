@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by danilovey on 19.08.2016.
  */
-public class AutoCeckingNotifyMessage implements Service {
+public class AutoCheckingNotifyMessage implements Service {
     private boolean run = false;
     private boolean error = false;
     private NotifyMessage lastNotifyMessage;
@@ -31,16 +31,9 @@ public class AutoCeckingNotifyMessage implements Service {
 
     @Override
     public void run() {
-        this.run = false;
+        this.run = true;
 
         while (this.run) {
-            try {
-                TimeUnit.SECONDS.sleep(2);
-            } catch (InterruptedException e) {
-                UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showInformationNotifiAdmin("Ошибка!", e.getMessage());
-                this.run = false;
-                return;
-            }
             try {
                 final NotifyMessage lastNotifyMessage = UniformSystemEditorKitSingleton.getInstance().getUSNetwork().getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().getLastNotifyMessage();
                 if((this.lastNotifyMessage == null || !this.lastNotifyMessage.getMessage().equals(lastNotifyMessage.getMessage())) && lastNotifyMessage != null) {
@@ -52,6 +45,14 @@ public class AutoCeckingNotifyMessage implements Service {
                     UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi("Невозможно получить сообщение с сервера!", ex.getMessage());
                     this.error = true;
                 }
+            }
+
+            try {
+                TimeUnit.MINUTES.sleep(1);
+            } catch (InterruptedException e) {
+                UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showInformationNotifiAdmin("Ошибка!", e.getMessage());
+                this.run = false;
+                return;
             }
         }
     }

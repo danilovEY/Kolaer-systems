@@ -18,7 +18,7 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
 import ru.kolaer.client.javafx.plugins.SearchPlugins;
-import ru.kolaer.client.javafx.services.AutoCeckingNotifyMessage;
+import ru.kolaer.client.javafx.services.AutoCheckingNotifyMessage;
 import ru.kolaer.client.javafx.services.AutoUpdatePlugins;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
@@ -126,7 +126,7 @@ public class VMMainFrameImpl extends Application {
         CompletableFuture.runAsync(() -> {
             Thread.currentThread().setName("Добавление системны служб");
             this.servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, this.servicesManager), true);
-            this.servicesManager.addService(new AutoCeckingNotifyMessage(), true);
+            this.servicesManager.addService(new AutoCheckingNotifyMessage(), true);
             threadStartService.shutdown();
         }, threadStartService);
 
