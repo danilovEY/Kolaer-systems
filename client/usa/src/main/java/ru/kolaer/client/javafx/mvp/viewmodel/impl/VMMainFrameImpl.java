@@ -89,6 +89,10 @@ public class VMMainFrameImpl extends Application {
         uiSystemUS.setMenuBarUS(menuBarUS);
         splitPane.getItems().add(notify.getContent());
 
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            LOG.error("Ошибка в потоке: {}", t.getName(), e);
+            notify.showErrorNotifi("Ошибка!", e.toString());
+        });
 
         final AuthenticationOnNetwork authentication = new AuthenticationOnNetwork();
         authentication.registerObserver(menuBarUS);
