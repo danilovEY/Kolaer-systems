@@ -28,8 +28,8 @@ import java.util.Map;
 /**
  * Created by danilovey on 18.08.2016.
  */
-public class NotificationPane implements NotificationUS, BaseView<Parent> {
-    private static final Logger LOG = LoggerFactory.getLogger(NotificationPane.class);
+public class NotificationPaneExceptionHandler implements NotificationUS, BaseView<Parent>, Thread.UncaughtExceptionHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(NotificationPaneExceptionHandler.class);
     private final int SIMPLE_MESSAGE = 0;
     private final int INFO_MESSAGE = 1;
     private final int WARN_MESSAGE = 2;
@@ -39,7 +39,7 @@ public class NotificationPane implements NotificationUS, BaseView<Parent> {
     private VBox vBoxAdminNotify;
     private Map<Node, Node> notifiMap = new HashMap<>();
 
-    public NotificationPane() {
+    public NotificationPaneExceptionHandler() {
         this.vBoxUserNotify = new VBox();
         this.vBoxUserNotify.setSpacing(5);
         this.vBoxUserNotify.setAlignment(Pos.TOP_LEFT);
@@ -271,5 +271,13 @@ public class NotificationPane implements NotificationUS, BaseView<Parent> {
     @Override
     public Parent getContent() {
         return this.mainPane;
+    }
+
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        LOG.error("Ошибка в потоке: {}", t.getName(), e);
+        Tools.runOnThreadFX(() ->
+                this.showErrorNotifi("Ошибка!", e.toString())
+        );
     }
 }
