@@ -40,29 +40,16 @@ public class AutoUpdatePlugins implements Service {
 			}
 			
 			final List<PluginBundle> installPlugins = new ArrayList<>(this.pluginManager.getInstallPlugins());
-			final List<PluginBundle> pluginsInFoldes = this.pluginManager.getSearchPlugins().search();
-			
-			pluginsInFoldes.parallelStream().forEach(plugin -> {
-				installPlugins.parallelStream().forEach(pluginInstalls -> {	
-					if(plugin.getSymbolicNamePlugin().equals(pluginInstalls.getSymbolicNamePlugin())) {
-						if(plugin.getVersion().equals(pluginInstalls.getVersion())) {
-							if(plugin.getFirstModified() != pluginInstalls.getFirstModified()) {
-								this.unInstallPlugin(pluginInstalls);
-								this.installPlugin(plugin);
-							} 
-						}
-					}
-				});
-			});
-			
+			final List<PluginBundle> pluginsInFolders = this.pluginManager.getSearchPlugins().search();
 			
 			for(Iterator<PluginBundle> installPluginsIter = installPlugins.iterator(); installPluginsIter.hasNext(); ) {
 				final PluginBundle pluginInstall = installPluginsIter.next();
 				
-				for(Iterator<PluginBundle> pluginsInFolderIter = pluginsInFoldes.iterator(); pluginsInFolderIter.hasNext(); ) {
+				for(Iterator<PluginBundle> pluginsInFolderIter = pluginsInFolders.iterator(); pluginsInFolderIter.hasNext(); ) {
 					final PluginBundle pluginInFolder = pluginsInFolderIter.next();
 					
-					if(pluginInFolder.getSymbolicNamePlugin().equals(pluginInstall.getSymbolicNamePlugin())) {
+					if(pluginInFolder.getSymbolicNamePlugin().equals(pluginInstall.getSymbolicNamePlugin())
+                            && pluginInFolder.getVersion().equals(pluginInstall.getVersion())) {
 						installPluginsIter.remove();
 						pluginsInFolderIter.remove();
 						break;
@@ -70,8 +57,8 @@ public class AutoUpdatePlugins implements Service {
 				}
 			}	
 			
-			installPlugins.parallelStream().forEach(this::unInstallPlugin);
-			pluginsInFoldes.parallelStream().forEach(this::installPlugin);
+			installPlugins.forEach(this::unInstallPlugin);
+			pluginsInFolders.forEach(this::installPlugin);
 		}
 	}
 	
