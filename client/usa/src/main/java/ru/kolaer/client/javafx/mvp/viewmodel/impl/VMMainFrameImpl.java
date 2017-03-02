@@ -14,10 +14,10 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.javafx.plugins.PluginBundle;
 import ru.kolaer.client.javafx.plugins.PluginManager;
-import ru.kolaer.client.javafx.plugins.SearchPlugins;
 import ru.kolaer.client.javafx.services.AutoCheckingNotifyMessage;
 import ru.kolaer.client.javafx.services.AutoUpdatePlugins;
 import ru.kolaer.client.javafx.services.ServiceControlManager;
@@ -26,15 +26,13 @@ import ru.kolaer.client.javafx.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.javafx.system.network.NetworkUSRestTemplate;
 import ru.kolaer.client.javafx.system.network.ResponseErrorHandlerNotifications;
 import ru.kolaer.client.javafx.system.ui.MenuBarUSImpl;
-import ru.kolaer.client.javafx.system.ui.NotificationPane;
+import ru.kolaer.client.javafx.system.ui.NotificationPaneExceptionHandler;
 import ru.kolaer.client.javafx.system.ui.UISystemUSImpl;
 import ru.kolaer.client.javafx.tools.Resources;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * Главное окно приложения.
@@ -63,38 +61,119 @@ public class VMMainFrameImpl extends Application {
      * Главное окно приложения.
      */
     private static Stage stage;
+    private MenuBar menuBar;
+    private SplitPane splitPane;
 
     @FXML
     public void initialize() {
     	Thread.currentThread().setName("Главный поток");
-    	
-        this.servicesManager = new ServiceControlManager();
-        this.initApplicationParams();       
 
         //Инициализация вкладочного explorer'а.
         this.explorer = new VMTabExplorerOSGi();
-        final SplitPane splitPane = new SplitPane();
+        this.menuBar = new MenuBar();
+
+        this.splitPane = new SplitPane();
         splitPane.getItems().add(explorer.getContent());
         splitPane.setDividerPositions(1);
+
+        this.mainPane.setTop(menuBar);
         this.mainPane.setCenter(splitPane);
 
-        final MenuBar menuBar = new MenuBar();
-        this.mainPane.setTop(menuBar);
+        this.servicesManager = new ServiceControlManager();
+        this.pluginManager = new PluginManager();
+
+        this.initApplicationParams();
+
+        final ExecutorService mainApplicationThreadPool = Executors.newFixedThreadPool(5);
+
+        final Future<List<PluginBundle>> searchResult = mainApplicationThreadPool
+                .submit(this.pluginManager.getSearchPlugins()::search);
+
+        final Future<PluginManager> initializedPluginManager = mainApplicationThreadPool.submit(this::initPluginManager);
+
+        CompletableFuture
+                .supplyAsync(this::initUniformSystemEditorKit, mainApplicationThreadPool)
+        .thenRunAsync(() -> {
+            mainApplicationThreadPool.submit(this::autoLogin);
+            mainApplicationThreadPool.submit(this::initTray);
+            mainApplicationThreadPool.submit(this::initSystemServices);
+            mainApplicationThreadPool.submit(() -> this.installPlugins(initializedPluginManager, searchResult));
+            mainApplicationThreadPool.shutdown();
+        });
+    }
+
+    private void installPlugins(Future<PluginManager> pluginManager, Future<List<PluginBundle>> plugins) {
+        Thread.currentThread().setName("Чтение и установка плагинов");
+
+        try {
+            final PluginManager initPluginManager = pluginManager.get(30, TimeUnit.SECONDS);
+
+            final List<PluginBundle> pluginBundles = plugins.get(30, TimeUnit.SECONDS);
+
+            final Iterator<PluginBundle> iterPlugins = pluginBundles.iterator();
+
+            while (iterPlugins.hasNext()) {
+                PluginBundle pluginBundle = iterPlugins.next();
+                if(pluginBundle.getSymbolicNamePlugin().equals("ru.kolaer.asmc")) {
+                    this.installPlugin(this.explorer, initPluginManager, pluginBundle);
+                    iterPlugins.remove();
+                    break;
+                }
+            }
+
+            pluginBundles.forEach(pluginBundle -> this.installPluginInThread(this.explorer, initPluginManager, pluginBundle));
+            pluginBundles.clear();
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            LOG.error("Ошибка при инициализации и чтении плагинов!", e);
+            System.exit(-9);
+        }
+    }
+
+    private PluginManager initPluginManager() {
+        Thread.currentThread().setName("Инициализация менеджера плагинов");
+        try {
+            pluginManager.initialization();
+            return pluginManager;
+        } catch (final Exception e) {
+            LOG.error("Ошибка при инициализации менеджера плагинов!", e);
+            throw new RuntimeException("Ошибка при инициализации менеджера плагинов!");
+        }
+    }
+
+    private void initSystemServices() {
+        Thread.currentThread().setName("Добавление системны служб");
+
+        this.servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, this.servicesManager), true);
+        this.servicesManager.addService(new AutoCheckingNotifyMessage(), true);
+    }
+
+    private void initTray() {
+        Thread.currentThread().setName("Создание инонки для трея");
+
+        new Tray().createTrayIcon(stage, this.pluginManager, this.servicesManager, this.explorer);
+    }
+
+    private boolean autoLogin() {
+        Thread.currentThread().setName("Добавление системны служб");
+
+        return UniformSystemEditorKitSingleton.getInstance().getAuthentication().loginIsRemember();
+    }
+
+    private UniformSystemEditorKit initUniformSystemEditorKit() {
+        Thread.currentThread().setName("Инициализация UniformSystemEditorKit");
 
         final MenuBarUSImpl menuBarUS = new MenuBarUSImpl(menuBar);
-        final NotificationPane notify = new NotificationPane();
+        final NotificationPaneExceptionHandler notify = new NotificationPaneExceptionHandler();
         final NetworkUSRestTemplate network = new NetworkUSRestTemplate(new ResponseErrorHandlerNotifications());
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         uiSystemUS.setNotification(notify);
         uiSystemUS.setMenuBarUS(menuBarUS);
-        splitPane.getItems().add(notify.getContent());
 
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            LOG.error("Ошибка в потоке: {}", t.getName(), e);
-            Tools.runOnThreadFX(() ->
-                notify.showErrorNotifi("Ошибка!", e.toString())
-            );
-        });
+        Tools.runOnWithOutThreadFX(() ->
+            this.splitPane.getItems().add(notify.getContent())
+        );
+
+        Thread.setDefaultUncaughtExceptionHandler(notify);
 
         final AuthenticationOnNetwork authentication = new AuthenticationOnNetwork();
         authentication.registerObserver(menuBarUS);
@@ -105,75 +184,10 @@ public class VMMainFrameImpl extends Application {
         editorKit.setPluginsUS(explorer);
         editorKit.setAuthentication(authentication);
 
-        CompletableFuture.runAsync(authentication::loginIsRemember,
-                Executors.newSingleThreadExecutor())
-                .exceptionally(ex -> {
-                    editorKit.getUISystemUS().getNotification()
-                            .showErrorNotifi("Ошибка!", "Не удалось авторизоватся!");
-                    return null;
-                });
-
-        final SearchPlugins searchPlugins = new SearchPlugins();
-        this.pluginManager = new PluginManager(searchPlugins);
-
-        final ExecutorService threadOnCreateTray = Executors.newSingleThreadExecutor();
-        CompletableFuture.runAsync(() -> {
-            new Tray().createTrayIcon(stage, pluginManager, this.servicesManager, explorer);
-            threadOnCreateTray.shutdown();
-        }, threadOnCreateTray);
-
-        final ExecutorService threadStartService = Executors.newSingleThreadExecutor();
-        CompletableFuture.runAsync(() -> {
-            Thread.currentThread().setName("Добавление системны служб");
-            this.servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, this.servicesManager), true);
-            this.servicesManager.addService(new AutoCheckingNotifyMessage(), true);
-            threadStartService.shutdown();
-        }, threadStartService);
-
-        final ExecutorService threadScan = Executors.newSingleThreadExecutor();
-        CompletableFuture<List<PluginBundle>> resultSearch = CompletableFuture.supplyAsync(searchPlugins::search, threadScan);
-
-        final ExecutorService threadInstall = Executors.newSingleThreadExecutor();
-        CompletableFuture.runAsync(() -> {
-            Thread.currentThread().setName("Инициализация менеджера плагинов");
-
-            try {
-                pluginManager.initialization();
-            } catch (final Exception e) {
-                LOG.error("Ошибка при инициализации менеджера плагинов!", e);
-                throw new RuntimeException("Ошибка при инициализации менеджера плагинов!");
-            }
-
-            List<PluginBundle> plugins = Collections.emptyList();
-            try {
-                plugins = resultSearch.get();
-            } catch (Exception e) {
-                LOG.error("Ошибка при получении плагинов!", e);
-            }
-
-            final Iterator<PluginBundle> iterPlugins = plugins.iterator();
-
-            while (iterPlugins.hasNext()) {
-                PluginBundle pluginBundle = iterPlugins.next();
-                if(pluginBundle.getSymbolicNamePlugin().equals("ru.kolaer.asmc")) {
-                    this.installPlugin(explorer,pluginManager,pluginBundle);
-                    iterPlugins.remove();
-                    break;
-                }
-            }
-
-            plugins.forEach(pluginBundle -> this.installPluginInThread(explorer,pluginManager,pluginBundle));
-            plugins.clear();
-
-            threadInstall.shutdown();
-        }, threadInstall).exceptionally(t -> {
-            LOG.error("Ошибка при инициализации менеджера плагинов!", t);
-            threadInstall.shutdownNow();
-            return null;
-        });
+        return editorKit;
     }
 
-    public void installPluginInThread(final VMTabExplorerOSGi explorer, final PluginManager pluginManager, final PluginBundle pluginBundle) {
+    private void installPluginInThread(final VMTabExplorerOSGi explorer, final PluginManager pluginManager, final PluginBundle pluginBundle) {
         final ExecutorService threadInstallPlugin = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             installPlugin(explorer, pluginManager, pluginBundle);
@@ -185,14 +199,14 @@ public class VMMainFrameImpl extends Application {
         });
     }
 
-    public void installPlugin(final VMTabExplorerOSGi explorer, final PluginManager pluginManager, final PluginBundle pluginBundle) {
+    private void installPlugin(final VMTabExplorerOSGi explorer, final PluginManager pluginManager, final PluginBundle pluginBundle) {
         Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
         LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
 
         if (pluginManager.install(pluginBundle)) {
             LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
             final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
-            this.explorer.addTabPlugin(tabName, pluginBundle);
+            explorer.addTabPlugin(tabName, pluginBundle);
 
             LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
             final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
@@ -217,7 +231,6 @@ public class VMMainFrameImpl extends Application {
         final String service = PARAM.get("service");
         if (service == null || !service.equals("false")) {
             this.servicesManager.setAutoRun(true);
-            this.servicesManager.runAllServices();
             LOG.info("Service ON");
         }
         PARAM.clear();
@@ -226,15 +239,17 @@ public class VMMainFrameImpl extends Application {
     @Override
     public void start(final Stage stage) throws InterruptedException {
     	VMMainFrameImpl.stage = stage;
-
         stage.setMinHeight(650);
         stage.setMinWidth(850);
+        stage.setTitle("Единая система КолАЭР");
+        stage.setOnCloseRequest(event -> System.exit(0));
 
         PARAM.putAll(this.getParameters().getNamed());
 
         Tools.runOnThreadFX(() -> {
             try {
                 stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
+                stage.getIcons().add(new Image("/css/aerIcon.png"));
                 stage.setMaximized(true);
             } catch (IOException e) {
                 LOG.error("Не удалось загрузить: " + Resources.V_MAIN_FRAME, e);
@@ -242,9 +257,6 @@ public class VMMainFrameImpl extends Application {
             }
         });
 
-        Tools.runOnThreadFX(() -> {
-            stage.getIcons().add(new Image("/css/aerIcon.png"));
-        });
 
         stage.setFullScreen(false);
         stage.addEventHandler(KeyEvent.KEY_PRESSED, (e) -> {
@@ -252,7 +264,7 @@ public class VMMainFrameImpl extends Application {
                 stage.setFullScreen(true);
         });
 
-        stage.setTitle("Единая система КолАЭР");
+
 
         stage.centerOnScreen();
         stage.show();

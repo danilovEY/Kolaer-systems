@@ -24,10 +24,7 @@ public class ServiceControlManager {
 	private final ExecutorService readPluginsThread = Executors.newCachedThreadPool();
 	/**Флаг для автозапуска службы после добавления.*/
 	private boolean autoRun = false;
-	
-	public ServiceControlManager() {
-	}
-	
+
 	/**Запуск всех служб.*/
 	public void runAllServices() {
 		this.runnableService.keySet().parallelStream().forEach(this::runService);

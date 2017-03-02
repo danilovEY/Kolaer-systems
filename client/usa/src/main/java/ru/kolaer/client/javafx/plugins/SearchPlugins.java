@@ -16,8 +16,13 @@ public class SearchPlugins {
     }
 
     public SearchPlugins() {
-        new File(DEFAULT_PATH_DOR_PLUGINS).mkdir();
-        this.addDir(DEFAULT_PATH_DOR_PLUGINS);
+        if(this.initDefaultDir())
+            this.addDir(DEFAULT_PATH_DOR_PLUGINS);
+    }
+
+    private boolean initDefaultDir() {
+        final File defaultDir = new File(DEFAULT_PATH_DOR_PLUGINS);
+        return defaultDir.exists() || defaultDir.mkdir();
     }
 
     public void addDir(final String dir) {
