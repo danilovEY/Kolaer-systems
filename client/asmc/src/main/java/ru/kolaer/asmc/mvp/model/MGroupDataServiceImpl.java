@@ -106,7 +106,7 @@ public class MGroupDataServiceImpl implements MGroupDataService {
         final File file = new File(FILE_PATH + "/" + FILE_NAME);
         if(!file.exists()) {
             log.warn("Файл: \"{}\" не найден!", FILE_PATH + "/" + FILE_NAME);
-            return false;
+            return true;
         }
 
         try {
@@ -114,10 +114,11 @@ public class MGroupDataServiceImpl implements MGroupDataService {
             this.groups.addAll(Arrays.asList(mGroups));
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Ошибка при чтении файла!", e);
+            return false;
         }
 
-        return false;
+
     }
 
     @Override
