@@ -9,7 +9,7 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 21.02.2017.
  */
-public interface PContentLabel extends BasePresenter<VContentLabel> {
+public interface PContentLabel extends BasePresenter<VContentLabel>, Access {
     void addPLabel(PLabel label);
     void removePLabel(PLabel label);
 

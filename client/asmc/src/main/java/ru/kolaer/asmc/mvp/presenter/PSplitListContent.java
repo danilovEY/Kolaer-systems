@@ -6,7 +6,7 @@ import ru.kolaer.asmc.mvp.view.VSplitListContent;
 /**
  * Created by danilovey on 21.02.2017.
  */
-public interface PSplitListContent extends BasePresenter<VSplitListContent> {
+public interface PSplitListContent extends BasePresenter<VSplitListContent>, Access {
     void setPGroupList(PGroupTree groupList);
     void setPContentLabel (PContentLabel contentLabel);
 }

@@ -159,4 +159,14 @@ public class VGroupTreeImpl implements VGroupTree {
         item.getChildren().forEach(this::clearItem);
         item.getChildren().clear();
     }
+
+    @Override
+    public void setAccess(boolean access) {
+        this.treeView.setContextMenu(access ? this.contextMenu : null);
+    }
+
+    @Override
+    public boolean isAccess() {
+        return this.treeView.getContextMenu() != null;
+    }
 }

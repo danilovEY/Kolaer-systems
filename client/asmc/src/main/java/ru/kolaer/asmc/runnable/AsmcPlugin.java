@@ -1,12 +1,17 @@
 package ru.kolaer.asmc.runnable;
 
 import javafx.scene.Parent;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
+import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -18,15 +23,17 @@ import ru.kolaer.asmc.mvp.view.ImageViewPane;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 
 /**
  * Created by danilovey on 20.02.2017.
  */
-public class AsmcPlugin implements UniformSystemPlugin {
+public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
     private final static Logger log = LoggerFactory.getLogger(AsmcPlugin.class);
     private UniformSystemEditorKit editorKit;
+    private PSplitListContent splitListContent;
     private BorderPane mainPane;
 
     @Override
@@ -55,6 +62,8 @@ public class AsmcPlugin implements UniformSystemPlugin {
             if(mGroupDataService.loadData()) {
                 pGroupTree.setModel(mGroupDataService);
                 Tools.runOnWithOutThreadFX(pGroupTree::updateView);
+            } else {
+                this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Ошибка при чтении данных!");
             }
         }, Executors.newSingleThreadExecutor()).exceptionally(t -> {
             log.error("Ошибка при чтении данных!", t);
@@ -64,14 +73,56 @@ public class AsmcPlugin implements UniformSystemPlugin {
 
         final PContentLabel pContentLabel = new PContentLabelImpl();
 
-        final PSplitListContent pSplitListContent = new PSplitListContentImpl(this.editorKit);
-        pSplitListContent.setPContentLabel(pContentLabel);
-        pSplitListContent.setPGroupList(pGroupTree);
-        pSplitListContent.updateView();
+        this.splitListContent = new PSplitListContentImpl(this.editorKit);
+        this.splitListContent.setPContentLabel(pContentLabel);
+        this.splitListContent.setPGroupList(pGroupTree);
+        this.splitListContent.updateView();
+        if(this.editorKit.getAuthentication().isAuthentication()) {
+            this.login(this.editorKit.getAuthentication().getAuthorizedUser());
+        } else {
+            this.splitListContent.setAccess(false);
+        }
 
-        this.mainPane.setCenter(pSplitListContent.getView().getContent());
+        this.editorKit.getAuthentication().registerObserver(this);
+
+        this.mainPane.setCenter(this.splitListContent.getView().getContent());
 
         this.updateBanner();
+        this.initMenuBar();
+    }
+
+    private void initMenuBar() {
+        final MenuItem authMenuItem = new MenuItem("Вход");
+
+        final Menu asmcMenu = new Menu("АСУП");
+        asmcMenu.getItems().add(authMenuItem);
+
+        this.editorKit.getUISystemUS().getMenuBar().addMenu(asmcMenu);
+
+        asmcMenu.addEventHandler(Menu.ON_SHOWING, e ->
+            authMenuItem.setText( this.splitListContent.isAccess() ? "Выход" : "Вход")
+        );
+
+        authMenuItem.setOnAction(e -> {
+            if(!this.splitListContent.isAccess()) {
+                final Dialog<?> loginDialog = this.editorKit.getUISystemUS().getDialog().createLoginDialog();
+                loginDialog.showAndWait().ifPresent(result -> {
+                    final String[] logPass = result.toString().split("=");
+                    if(logPass.length == 2) {
+                        if(logPass[0].equals("root")
+                                && logPass[1].equals("\u0032\u0073\u0065\u0072\u0064\u0063\u0065\u0033")) {
+                            this.splitListContent.setAccess(true);
+
+                            return;
+                        }
+                    }
+                    this.editorKit.getUISystemUS().getNotification()
+                            .showErrorNotifi("Ошибка!", "Не верный логин или пароль!");
+                });
+            } else {
+                this.splitListContent.setAccess(false);
+            }
+        });
     }
 
     private void updateBanner() {
@@ -115,5 +166,21 @@ public class AsmcPlugin implements UniformSystemPlugin {
     @Override
     public Parent getContent() {
         return this.mainPane;
+    }
+
+    @Override
+    public void login(AccountEntity account) {
+        if(this.splitListContent != null) {
+            account.getRoles().stream()
+                    .filter(roleEntity -> roleEntity.getType().equals("OIT"))
+                    .findAny()
+                    .ifPresent(role -> this.splitListContent.setAccess(true));
+        }
+    }
+
+    @Override
+    public void logout(AccountEntity account) {
+      if(this.splitListContent != null)
+          this.splitListContent.setAccess(false);
     }
 }

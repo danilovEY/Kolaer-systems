@@ -4,13 +4,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.Pair;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.asmc.mvp.model.MGroup;
+import ru.kolaer.asmc.mvp.presenter.Access;
 
 import java.util.function.Function;
 
 /**
  * Created by danilovey on 20.02.2017.
  */
-public interface VGroupTree extends BaseView<BorderPane> {
+public interface VGroupTree extends BaseView<BorderPane>, Access {
     void addVGroupTreeItem(VGroupTreeItem item);
     void removeVGroupTreeItem(VGroupTreeItem item);
     void clear();

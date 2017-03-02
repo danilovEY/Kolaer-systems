@@ -88,4 +88,13 @@ public class VContentLabelImpl implements VContentLabel {
         return this.mainPane;
     }
 
+    @Override
+    public void setAccess(boolean access) {
+        this.scrollPane.setContextMenu(access ? this.contextMenu : null);
+    }
+
+    @Override
+    public boolean isAccess() {
+        return this.scrollPane.getContextMenu() != null;
+    }
 }

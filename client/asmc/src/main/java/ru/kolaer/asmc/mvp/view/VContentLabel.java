@@ -5,13 +5,14 @@ import ru.kolaer.api.mvp.model.BaseModel;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.mvp.model.MLabel;
+import ru.kolaer.asmc.mvp.presenter.Access;
 
 import java.util.function.Function;
 
 /**
  * Created by danilovey on 21.02.2017.
  */
-public interface VContentLabel extends BaseView<BorderPane> {
+public interface VContentLabel extends BaseView<BorderPane>, Access {
     void addVLabel(VLabel label);
     void removeVLabel(VLabel label);
 

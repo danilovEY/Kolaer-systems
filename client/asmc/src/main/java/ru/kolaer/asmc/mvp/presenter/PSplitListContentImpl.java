@@ -17,6 +17,7 @@ import java.util.Optional;
  */
 public class PSplitListContentImpl implements PSplitListContent {
     private final UniformSystemEditorKit editorKit;
+    private boolean isAccess = false;
     private MLabel bufferLabel;
     private VSplitListContent view;
     private PGroupTree groupList;
@@ -113,6 +114,20 @@ public class PSplitListContentImpl implements PSplitListContent {
             return null;
         });
 
+        pLabel.setAccess(this.isAccess);
+
         return pLabel;
+    }
+
+    @Override
+    public void setAccess(boolean access) {
+        this.contentLabel.setAccess(access);
+        this.groupList.setAccess(access);
+        this.isAccess = access;
+    }
+
+    @Override
+    public boolean isAccess() {
+        return this.isAccess;
     }
 }

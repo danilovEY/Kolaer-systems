@@ -10,7 +10,7 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 20.02.2017.
  */
-public interface PLabel extends BasePresenter<VLabel>, BaseModel<MLabel> {
+public interface PLabel extends BasePresenter<VLabel>, BaseModel<MLabel>, Access {
     void setOnEdit(Function<PLabel, Void> function);
     void setOnDelete(Function<PLabel, Void> function);
     void setOnAction(Function<PLabel, Void> function);

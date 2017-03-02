@@ -158,4 +158,14 @@ public class PGroupTreeImpl implements PGroupTree {
             view.setOnSelectItem(function)
         );
     }
+
+    @Override
+    public void setAccess(boolean access) {
+        this.view.setAccess(access);
+    }
+
+    @Override
+    public boolean isAccess() {
+        return this.view.isAccess();
+    }
 }

@@ -2,6 +2,7 @@ package ru.kolaer.asmc.mvp.view;
 
 import javafx.scene.layout.BorderPane;
 import ru.kolaer.api.mvp.view.BaseView;
+import ru.kolaer.asmc.mvp.presenter.Access;
 
 /**
  * Created by danilovey on 21.02.2017.

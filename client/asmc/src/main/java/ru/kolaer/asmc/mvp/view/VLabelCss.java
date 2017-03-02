@@ -42,12 +42,14 @@ public class VLabelCss implements VLabel {
 	/** Имя ярлыка. */
 	private final Label nameLabel;
 	private final Tooltip toolTip;
+    private ScrollPane scrollBackPanel;
 
     private MLabel data;
 
 
-	public VLabelCss() {
+    public VLabelCss() {
         this.mainPane = new BorderPane();
+        this.scrollBackPanel = new ScrollPane();
         this.button = new Button();
         this.nameLabel = new Label();
         this.image = new ImageView();
@@ -55,7 +57,8 @@ public class VLabelCss implements VLabel {
         this.editLabel = new MenuItem("Редактировать");
         this.deleteLabel = new MenuItem("Удалить");
         this.copyLabel = new MenuItem("Копировать");
-        this.labelContextMenu = new ContextMenu();
+        this.labelContextMenu = new ContextMenu(this.editLabel, this.deleteLabel,
+                new SeparatorMenuItem(), this.copyLabel);
 
 		this.initialize();
 	}
@@ -79,7 +82,6 @@ public class VLabelCss implements VLabel {
         this.image.setFitHeight(100);
         this.image.setFitWidth(100);
 
-        final ScrollPane scrollBackPanel = new ScrollPane();
         scrollBackPanel.setFitToWidth(true);
         scrollBackPanel.setFitToHeight(true);
         scrollBackPanel.setContextMenu(labelContextMenu);
@@ -157,12 +159,12 @@ public class VLabelCss implements VLabel {
 
     @Override
     public void setAccess(boolean access) {
-        if(access) {
-            this.labelContextMenu.getItems().addAll(this.editLabel, this.deleteLabel,
-                    new SeparatorMenuItem(), this.copyLabel);
-        } else {
-            this.labelContextMenu.getItems().clear();
-        }
+        this.scrollBackPanel.setContextMenu(access ? this.labelContextMenu : null);
+    }
+
+    @Override
+    public boolean isAccess() {
+        return this.scrollBackPanel.getContextMenu() != null;
     }
 
     @Override

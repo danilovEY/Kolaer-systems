@@ -61,4 +61,14 @@ public class PLabelImpl implements PLabel {
             function.apply(this)
         );
     }
+
+    @Override
+    public void setAccess(boolean access) {
+        this.view.setAccess(access);
+    }
+
+    @Override
+    public boolean isAccess() {
+        return this.view.isAccess();
+    }
 }
