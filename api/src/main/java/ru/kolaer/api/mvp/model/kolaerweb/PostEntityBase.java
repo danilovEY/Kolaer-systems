@@ -12,4 +12,5 @@ public class PostEntityBase implements PostEntity {
     private String abbreviatedName;
     private String typeRang;
     private Integer rang;
+    private String code;
 }

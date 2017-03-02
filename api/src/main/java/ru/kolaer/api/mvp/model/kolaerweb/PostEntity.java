@@ -23,6 +23,10 @@ public interface PostEntity extends Serializable {
     String getAbbreviatedName();
     void setAbbreviatedName(String abbreviatedName);
 
+    @ApiModelProperty(value = "Код должности")
+    String getCode();
+    void setCode(String code);
+
     @ApiModelProperty(value = "Тип ранга")
     String getTypeRang();
     void setTypeRang(String typeRang);

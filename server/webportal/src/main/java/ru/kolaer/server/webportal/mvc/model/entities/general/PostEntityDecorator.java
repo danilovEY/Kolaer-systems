@@ -57,6 +57,16 @@ public class PostEntityDecorator implements PostEntity {
         this.postEntity.setAbbreviatedName(abbreviatedName);
     }
 
+    @Column(name = "code", length = 15)
+    public String getCode() {
+        return this.postEntity.getCode();
+    }
+
+    @Override
+    public void setCode(String code) {
+        this.postEntity.setCode(code);
+    }
+
     @Column(name = "type_rang", length = 10)
     public String getTypeRang() {
         return this.postEntity.getTypeRang();
