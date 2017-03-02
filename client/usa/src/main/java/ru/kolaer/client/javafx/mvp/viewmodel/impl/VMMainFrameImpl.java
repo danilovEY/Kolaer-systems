@@ -91,7 +91,9 @@ public class VMMainFrameImpl extends Application {
 
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             LOG.error("Ошибка в потоке: {}", t.getName(), e);
-            notify.showErrorNotifi("Ошибка!", e.toString());
+            Tools.runOnThreadFX(() ->
+                notify.showErrorNotifi("Ошибка!", e.toString())
+            );
         });
 
         final AuthenticationOnNetwork authentication = new AuthenticationOnNetwork();
