@@ -41,8 +41,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
     private final static String FIRST_NAME = "Имя";
     private final static String THIRD_NAME = "Отчество";
     private final static String SEX = "Пол";
+    private final static String DEP_ID = "Подразделение";
     private final static String DEP_NAME = "Текст Подразделение";
-    private final static String POST_NAME = "Штатная должность";
+    private final static String POST_CODE = "Штатная должность(Код)";
+    private final static String POST_NAME = "Штатная должность(Название)";
     private final static String EMPLOYMENT_DATE = "Поступл.";
     private final static String DISMISSAL_DATE = "Дата увольнения";
     private final static String BIRTHDAY_DATE = "ДатаРожд";
@@ -216,7 +218,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
             firstRow.forEach(cell -> nameColumns.add(cell.getStringCellValue()));
 
             Map<String, PostEntity> postEntityMap = new HashMap<>();
-            Map<String, DepartmentEntity> departmentEntityMap = new HashMap<>();
+            Map<Integer, DepartmentEntity> departmentEntityMap = new HashMap<>();
             Map<Integer, EmployeeEntity> newEmployeesMap = new HashMap<>();
             List<PassportEntity> passportEntityList = new ArrayList<>();
 
@@ -248,12 +250,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
                     newEmployeeEntity.setPostEntity(postEntityMap.get(postKey));
                 }
 
-                if (!departmentEntityMap.containsKey(departmentEntity.getAbbreviatedName())) {
-                    departmentEntityMap.put(departmentEntity.getAbbreviatedName(), departmentEntity);
-                    newEmployeeEntity.setDepartment(departmentEntity);
-                } else {
-                    newEmployeeEntity.setDepartment(departmentEntityMap.get(departmentEntity.getAbbreviatedName()));
-                }
+                if (!departmentEntityMap.containsKey(departmentEntity.getId()))
+                    departmentEntityMap.put(departmentEntity.getId(), departmentEntity);
+
+                newEmployeeEntity.setDepartment(departmentEntityMap.get(departmentEntity.getId()));
+
+
+                newEmployeeEntity.setDepartment(departmentEntity);
 
                 newEmployeesMap.put(newEmployeeEntity.getPersonnelNumber(), newEmployeeEntity);
             }
@@ -342,7 +345,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     private ResultUpdateEmployeesDto saveOrUpdateEmployees(Session currentSession, int defaultBachSize,
                                                            Map<Integer, EmployeeEntity> newEmployeesMap,
-                                                           Map<String, DepartmentEntity> departmentEntityMap,
+                                                           Map<Integer, DepartmentEntity> departmentEntityMap,
                                                            Map<String, PostEntity> postEntityMap,
                                                            ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         List<DepartmentEntity> updatesDep = new ArrayList<>();
@@ -353,7 +356,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
             newEmployee.setPostEntity(postEntityMap.get(postName
                     + Optional.ofNullable(newEmployee.getPostEntity().getRang()).orElse(0)));
-            newEmployee.setDepartment(departmentEntityMap.get(newEmployee.getDepartment().getAbbreviatedName()));
+            newEmployee.setDepartment(departmentEntityMap.get(newEmployee.getDepartment().getId()));
 
             Integer idChief = newEmployee.getDepartment().getChiefEntity();
             if ((postName.contains("Начальник") || postName.equals("Директор")
@@ -415,7 +418,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     private ResultUpdateEmployeesDto saveOrUpdateDepartment(Session currentSession, int defaultBachSize,
-                                                            Map<String, DepartmentEntity> departmentEntityMap,
+                                                            Map<Integer, DepartmentEntity> departmentEntityMap,
                                                             ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         int countToAdd = 0;
         int i = 0;
@@ -462,7 +465,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     private ResultUpdateEmployeesDto getUpdateDeleteDepartment(Session currentSession,
-                                                               Map<String, DepartmentEntity> departmentEntityMap,
+                                                               Map<Integer, DepartmentEntity> departmentEntityMap,
                                                                ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         final List<DepartmentEntity> depListFromDb = currentSession
                 .createQuery("FROM DepartmentEntityDecorator d")
@@ -473,9 +476,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
         final Iterator<DepartmentEntity> iteratorDepEntity = depListFromDb.iterator();
         while (iteratorDepEntity.hasNext()) {
             final DepartmentEntity next = iteratorDepEntity.next();
-            final DepartmentEntity departmentEntity = departmentEntityMap.get(next.getName());
+            final DepartmentEntity departmentEntity = departmentEntityMap.get(next.getId());
             if (departmentEntity != null) {
-                departmentEntityMap.put(next.getAbbreviatedName(), next);
+                departmentEntityMap.put(next.getId(), next);
                 iteratorDepEntity.remove();
             }
         }
@@ -558,7 +561,12 @@ public class EmployeeDaoImpl implements EmployeeDao {
         final String rang = value.replaceAll("[\\D]", "");
         if (!rang.trim().isEmpty()) {
             final String rangInfo = value.substring(0, value.indexOf(rang));
-            postEntity = postEntityMap.getOrDefault(rangInfo + rang, new PostEntityDecorator());
+
+            final String key = rangInfo + rang;
+            if(postEntityMap.containsKey(key))
+                return postEntityMap.get(key);
+
+            postEntity = new PostEntityDecorator();
             if (postEntity.getName() == null) {
                 postEntity.setRang(Integer.valueOf(rang));
 
@@ -579,31 +587,43 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
             postEntity.setName(rangInfo.trim());
         } else {
-            postEntity = postEntityMap.getOrDefault(value + "0", new PostEntityDecorator());
-            if (postEntity.getName() == null) {
-                postEntity.setName(value);
-            }
+            final String key = value + "0";
+            if(postEntityMap.containsKey(key))
+                return postEntityMap.get(key);
+
+            postEntity = new PostEntityDecorator();
+            postEntity.setName(value);
         }
+
+        final String postCode = row.getCell(nameColumns.indexOf(POST_CODE)).getStringCellValue();
+        postEntity.setCode(postCode);
 
         return postEntity;
     }
 
-    private DepartmentEntity getOrCreateDepartment(Map<String, DepartmentEntity> departmentEntityMap,
+    private DepartmentEntity getOrCreateDepartment(Map<Integer, DepartmentEntity> departmentEntityMap,
                                                    XSSFRow row,
                                                    List<String> nameColumns) {
-        String value = row.getCell(nameColumns.indexOf(DEP_NAME)).getStringCellValue();
+        final Integer idDep = Integer
+                .valueOf(row.getCell(nameColumns.indexOf(DEP_ID)).getStringCellValue());
 
-        final DepartmentEntity departmentEntity = departmentEntityMap
-                .getOrDefault(value, new DepartmentEntityDecorator());
+        if(departmentEntityMap.containsKey(idDep)){
+            return departmentEntityMap.get(idDep);
+        }
+
+        final DepartmentEntity departmentEntity = new DepartmentEntityDecorator();
+        departmentEntity.setId(idDep);
+
+        final String depName = row.getCell(nameColumns.indexOf(DEP_NAME)).getStringCellValue();
 
         final Pattern pattern = Pattern.compile("[а-яА-Я ]*");
-        final Matcher matcher = pattern.matcher(value);
+        final Matcher matcher = pattern.matcher(depName);
 
-        departmentEntity.setName(value);
+        departmentEntity.setName(depName);
         if (matcher.find())
             departmentEntity.setAbbreviatedName(matcher.group().trim());
         else
-            departmentEntity.setAbbreviatedName(value);
+            departmentEntity.setAbbreviatedName(depName);
 
         return departmentEntity;
     }
@@ -641,13 +661,20 @@ public class EmployeeDaoImpl implements EmployeeDao {
         newEmployeeEntity.setGender(value);
 
         value = row.getCell(nameColumns.indexOf(PHONE_NUMBER)).getStringCellValue();
+        value = value.replaceAll("-", "").replaceAll("\\(", "");
+        if(value.contains(",")) {
+            value = value.split(",")[0];
+        }
         if (value.length() == 10)
             newEmployeeEntity.setMobileNumber(value);
         else
             newEmployeeEntity.setPhoneNumber(value);
 
-        value = row.getCell(nameColumns.indexOf(EMAIL)).getStringCellValue();
-        newEmployeeEntity.setEmail(value);
+        final int indexOfEmail = nameColumns.indexOf(EMAIL);
+        if(indexOfEmail > -1) {
+            value = row.getCell(indexOfEmail).getStringCellValue();
+            newEmployeeEntity.setEmail(value);
+        }
 
         try {
             newEmployeeEntity.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/o_"
