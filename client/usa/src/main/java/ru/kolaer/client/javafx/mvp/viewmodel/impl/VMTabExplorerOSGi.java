@@ -55,6 +55,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
         if(pluginBundle == null || !pluginBundle.isInstall()) {
             throw new IllegalArgumentException(tabName + " - is null or not install!");
         }
+
         Tools.runOnWithOutThreadFX(() -> {
             final PTab tab = new PTabImpl(pluginBundle);
             tab.getView().setTitle(tabName);
