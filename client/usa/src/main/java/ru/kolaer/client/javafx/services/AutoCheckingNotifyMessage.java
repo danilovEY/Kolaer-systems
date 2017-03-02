@@ -48,7 +48,7 @@ public class AutoCheckingNotifyMessage implements Service {
             }
 
             try {
-                TimeUnit.MINUTES.sleep(1);
+                TimeUnit.MINUTES.sleep(2);
             } catch (InterruptedException e) {
                 UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showInformationNotifiAdmin("Ошибка!", e.getMessage());
                 this.run = false;
