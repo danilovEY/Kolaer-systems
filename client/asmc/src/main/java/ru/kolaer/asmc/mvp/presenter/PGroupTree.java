@@ -11,6 +11,6 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 20.02.2017.
  */
-public interface PGroupTree extends BasePresenter<VGroupTree>, BaseModel<MGroupDataService> {
+public interface PGroupTree extends BasePresenter<VGroupTree>, BaseModel<MGroupDataService>, Access {
     void setOnSelectItem(Function<MGroup, Void> function);
 }
