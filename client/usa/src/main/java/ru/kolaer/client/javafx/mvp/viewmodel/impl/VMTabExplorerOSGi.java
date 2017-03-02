@@ -33,7 +33,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public void addAllPlugins(final Collection<PluginBundle> plugins) {
-        plugins.parallelStream().forEach(this::addPlugin);
+        plugins.forEach(this::addPlugin);
     }
 
     @Override
@@ -55,19 +55,19 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
         if(uniformSystemPlugin == null || !uniformSystemPlugin.isInstall()) {
             throw new IllegalArgumentException(tabName + " - is null or not install!");
         }
+        Tools.runOnWithOutThreadFX(() -> {
+            final PTab tab = new PTabImpl(uniformSystemPlugin);
+            tab.getView().setTitle(tabName);
 
-        final PTab tab = new PTabImpl(uniformSystemPlugin);
-        tab.getView().setTitle(tabName);
+            this.pluginTabMap.put(tabName, tab);
+            this.plugins.put(uniformSystemPlugin.getUniformSystemPlugin(), uniformSystemPlugin);
 
-        this.pluginTabMap.put(tabName, tab);
-        this.plugins.put(uniformSystemPlugin.getUniformSystemPlugin(), uniformSystemPlugin);
 
-        Tools.runOnThreadFX(() -> {
             LOG.info("{}: Добавление вкладки...", uniformSystemPlugin.getSymbolicNamePlugin());
             this.pluginsTabPane.getTabs().add(tab.getView().getContent());
-        });
 
-        this.notifyAddPlugin(tab);
+            this.notifyAddPlugin(tab);
+        });
     }
 
     @Override
@@ -105,23 +105,6 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
                 });
             }
         });
-    }
-
-    @Override
-    public void showPlugin(final UniformSystemPlugin uniformSystemPlugin) {
-    	this.pluginTabMap.values().parallelStream().forEach(tab -> {
-    		if(tab.getModel().getUniformSystemPlugin() == uniformSystemPlugin) {
-    			Tools.runOnThreadFX(() -> {
-    				this.pluginsTabPane.getSelectionModel().select(tab.getView().getContent());
-    			});
-    			return;
-    		}
-    	});
-    }
-
-    @Override
-    public void notifyPlugins(final String key, final Object object) {
-        super.notifyPlugins(key, object);
     }
 
     @Override

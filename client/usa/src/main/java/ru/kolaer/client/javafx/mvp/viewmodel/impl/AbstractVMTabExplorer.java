@@ -80,12 +80,12 @@ public abstract class AbstractVMTabExplorer extends LoadFXML implements PluginsU
 
     @Override
     public void showPlugin(final UniformSystemPlugin uniformSystemPlugin) {
-        this.pluginTabMap.values().parallelStream().forEach(pTab -> {
-            if(pTab.getModel().getUniformSystemPlugin() == uniformSystemPlugin) {
-                pluginsTabPane.getSelectionModel().select(pTab.getView().getContent());
-                return;
-            }
-        });
+        this.pluginTabMap.values().stream()
+                .filter(pTab -> pTab.getModel().getUniformSystemPlugin() == uniformSystemPlugin)
+                .findFirst()
+                .ifPresent(pTab ->
+                    pluginsTabPane.getSelectionModel().select(pTab.getView().getContent())
+                );
     }
 
     @Override
