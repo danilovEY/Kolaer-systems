@@ -78,7 +78,7 @@ public class PprService implements Service {
                     final StaticViewPPR ppr = iterator.next();
                     final LocalDateTime dateTimeJson = editorKit.getUSNetwork().getKolaerWebServer().getServerTools().getCurrentDataTime();
                     final Date dateEnd = ppr.getCounter().getEnd();
-                    final LocalDateTime ldt = LocalDateTime.ofInstant(dateEnd.toInstant(), ZoneId.of("Europe/Moscow"));
+                    final LocalDateTime ldt = LocalDateTime.ofInstant(dateEnd.toInstant(), ZoneId.of("+3"));
 
                     LocalDateTime tempDateTime = LocalDateTime.from(dateTimeJson);
 
