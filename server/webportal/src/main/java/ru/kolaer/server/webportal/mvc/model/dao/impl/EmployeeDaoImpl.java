@@ -51,7 +51,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
     private final static String PERSONNEL_NUMBER = "Таб.№";
     private final static String PHONE_NUMBER = "Телефон";
     private final static String EMAIL = "Эл. почта(MAIL)";
-    private final static String SERIAL_DOCUMENT = "Серия2";
+    private final static String SERIAL_2_DOCUMENT = "Серия2";
+    private final static String SERIAL_1_DOCUMENT = "Серия1";
     private final static String NUMBER_DOCUMENT = "Номер документа";
 
     @Autowired
@@ -255,9 +256,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
                 newEmployeeEntity.setDepartment(departmentEntityMap.get(departmentEntity.getId()));
 
-
-                newEmployeeEntity.setDepartment(departmentEntity);
-
                 newEmployeesMap.put(newEmployeeEntity.getPersonnelNumber(), newEmployeeEntity);
             }
 
@@ -323,15 +321,16 @@ public class EmployeeDaoImpl implements EmployeeDao {
         for (PassportEntity passportEntity : passportEntityList) {
             final String key = passportEntity.getSerial() + passportEntity.getNumber();
             if (!collectPassportMap.containsKey(key)) {
+                log.info(passportEntity.toString());
                 currentSession.persist(passportEntity);
+
+                if (++i % defaultBachSize == 0) {
+                    i = 0;
+                    currentSession.flush();
+                    currentSession.clear();
+                }
             } else {
                 collectPassportMap.remove(key);
-            }
-
-            if (++i % defaultBachSize == 0) {
-                i = 0;
-                currentSession.flush();
-                currentSession.clear();
             }
         }
 
@@ -339,6 +338,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 .setParameterList("iDs", collectPassportMap.values().stream()
                         .map(PassportEntity::getId)
                         .collect(Collectors.toList()));
+
+        currentSession.flush();
+        currentSession.clear();
 
         return resultUpdateEmployeesDto;
     }
@@ -374,6 +376,12 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 currentSession.flush();
                 currentSession.clear();
             }
+        }
+
+        if (defaultBachSize > 0) {
+            defaultBachSize = 1;
+            currentSession.flush();
+            currentSession.clear();
         }
 
         resultUpdateEmployeesDto.setAddPostCount(countToAdd);
@@ -539,14 +547,17 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     private PassportEntity createPassport(EmployeeEntity newEmployeeEntity,
                                           XSSFRow row, List<String> nameColumns) {
-        String value = row.getCell(nameColumns.indexOf(SERIAL_DOCUMENT)).getStringCellValue();
+        String serialFirst = row.getCell(nameColumns.indexOf(SERIAL_1_DOCUMENT)).getStringCellValue();
         PassportEntity passportEntity = null;
-        if (value != null && !value.trim().isEmpty()) {
+        if (serialFirst != null && !serialFirst.trim().isEmpty()) {
             passportEntity = new PassportEntity();
             passportEntity.setEmployee(newEmployeeEntity);
-            passportEntity.setSerial("47" + value);
-            value = row.getCell(nameColumns.indexOf(NUMBER_DOCUMENT)).getStringCellValue();
-            passportEntity.setNumber(value);
+
+            final String serialSecond = row.getCell(nameColumns.indexOf(SERIAL_2_DOCUMENT)).getStringCellValue();
+
+            passportEntity.setSerial(serialFirst + serialSecond);
+            serialFirst = row.getCell(nameColumns.indexOf(NUMBER_DOCUMENT)).getStringCellValue();
+            passportEntity.setNumber(serialFirst);
         }
 
         return passportEntity;
@@ -569,8 +580,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
             postEntity = new PostEntityDecorator();
             if (postEntity.getName() == null) {
                 postEntity.setRang(Integer.valueOf(rang));
-
-                switch (value.charAt(value.indexOf(rang) + 2)) {
+                final String postWithOutSpace = value.replaceAll(" ","");
+                switch (postWithOutSpace.charAt(postWithOutSpace.indexOf(rang) + 1)) {
                     case 'р':
                         postEntity.setTypeRang(TypeRangEnum.DISCHARGE.getName());
                         break;
@@ -656,6 +667,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         if (calendar.get(Calendar.YEAR) != YEAR_NOT_DISMISSAL)
             newEmployeeEntity.setDismissalDate(date);
+        else
+            newEmployeeEntity.setDismissalDate(null);
 
         value = row.getCell(nameColumns.indexOf(SEX)).getStringCellValue();
         newEmployeeEntity.setGender(value);
@@ -665,10 +678,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
         if(value.contains(",")) {
             value = value.split(",")[0];
         }
-        if (value.length() == 10)
+        if (value.length() == 10) {
+            newEmployeeEntity.setPhoneNumber(null);
             newEmployeeEntity.setMobileNumber(value);
-        else
+        } else {
+            newEmployeeEntity.setMobileNumber(null);
             newEmployeeEntity.setPhoneNumber(value);
+        }
 
         final int indexOfEmail = nameColumns.indexOf(EMAIL);
         if(indexOfEmail > -1) {

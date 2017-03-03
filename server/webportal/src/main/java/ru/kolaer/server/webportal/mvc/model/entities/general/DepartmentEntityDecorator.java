@@ -25,8 +25,6 @@ public class DepartmentEntityDecorator implements DepartmentEntity {
 
     @Id
     @Column(name = "id")
-    @SequenceGenerator(name = "departments.seq", sequenceName = "departments_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "departments.seq")
     public Integer getId() {
         return this.departmentEntity.getId();
     }
