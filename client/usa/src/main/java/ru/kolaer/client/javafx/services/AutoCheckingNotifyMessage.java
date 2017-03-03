@@ -38,7 +38,7 @@ public class AutoCheckingNotifyMessage implements Service {
                 final NotifyMessage lastNotifyMessage = UniformSystemEditorKitSingleton.getInstance().getUSNetwork().getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().getLastNotifyMessage();
                 if((this.lastNotifyMessage == null || !this.lastNotifyMessage.getMessage().equals(lastNotifyMessage.getMessage())) && lastNotifyMessage != null) {
                     this.lastNotifyMessage = lastNotifyMessage;
-                    UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showWarningNotifiAdmin("Сообщение!", lastNotifyMessage.getMessage());
+                    UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showInformationNotifiAdmin("Сообщение!", lastNotifyMessage.getMessage());
                 }
             } catch (HttpServerErrorException ex) {
                 if(!this.error) {
