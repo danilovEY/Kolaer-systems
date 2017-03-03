@@ -110,4 +110,9 @@ public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
             return null;
         });
     }
+
+    @Override
+    public void selectIndex(int index) {
+        this.view.selectIndex(index);
+    }
 }

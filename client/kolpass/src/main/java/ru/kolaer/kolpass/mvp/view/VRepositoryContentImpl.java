@@ -22,30 +22,26 @@ public class VRepositoryContentImpl implements VRepositoryContent {
     private final BorderPane mainPane;
     private final FlowPane contentPane;
     private final MenuItem addRepItem;
+    private final ScrollPane scrollPane;
+    private final ContextMenu contextMenu;
 
     public VRepositoryContentImpl() {
         this.addRepItem = new MenuItem("Добавить репозиторий");
 
-        final ContextMenu contextMenu = new ContextMenu(this.addRepItem);
+        this.contextMenu = new ContextMenu(this.addRepItem);
 
         this.contentPane = new FlowPane(10, 10);
         this.contentPane.setAlignment(Pos.TOP_CENTER);
         this.contentPane.setPadding(new Insets(10));
         this.contentPane.setStyle("-fx-background-image: url('" + this.getClass().getResource("/background.jpg").toString() + "')");
 
-        final ScrollPane scrollPane = new ScrollPane(this.contentPane);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(true);
+        this.scrollPane = new ScrollPane(this.contentPane);
+        this.scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        this.scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        this.scrollPane.setFitToHeight(true);
+        this.scrollPane.setFitToWidth(true);
 
-        this.mainPane = new BorderPane(scrollPane);
-        this.mainPane.setOnContextMenuRequested(e -> {
-            contextMenu.show(this.mainPane, e.getScreenX(), e.getScreenY());
-            e.consume();
-        });
-
-        this.mainPane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> contextMenu.hide());
+        this.mainPane = new BorderPane(this.scrollPane);
     }
 
     @Override
@@ -60,21 +56,22 @@ public class VRepositoryContentImpl implements VRepositoryContent {
 
     @Override
     public void addRepositoryPassword(VRepositoryPassword vRepositoryPassword) {
-        Tools.runOnWithOutThreadFX(() ->
-                this.contentPane.getChildren().add(vRepositoryPassword.getContent())
-        );
+        this.contentPane.getChildren().add(vRepositoryPassword.getContent());
     }
 
     @Override
     public void removeRepositoryPassword(VRepositoryPassword vRepositoryPassword) {
-        Tools.runOnWithOutThreadFX(() ->
-            this.contentPane.getChildren().remove(vRepositoryPassword.getContent())
-        );
+        this.contentPane.getChildren().remove(vRepositoryPassword.getContent());
     }
 
     @Override
     public void clear() {
         this.contentPane.getChildren().clear();
+    }
+
+    @Override
+    public void setContextMenu(boolean enable) {
+        this.scrollPane.setContextMenu(enable ? this.contextMenu : null);
     }
 
     @Override

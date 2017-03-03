@@ -15,4 +15,6 @@ public interface VEmployeeRepositoryList extends BaseView<BorderPane> {
 
     void setOnLoadOtherEmployee(Function function);
     void setOnSelectEmployee(Function<EmployeeEntity, Void> function);
+
+    void selectIndex(int index);
 }

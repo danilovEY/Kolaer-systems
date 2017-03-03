@@ -17,4 +17,5 @@ import java.util.function.Function;
 public interface PEmployeeRepositoryList extends BasePresenter<VEmployeeRepositoryList>, BaseModel<KolpassTable> {
     void clear();
     void setOnSelectEmployee(Function<Pair<EmployeeEntity, List<RepositoryPassword>>, Void> function);
+    void selectIndex(int index);
 }

@@ -72,4 +72,9 @@ public class VEmployeeRepositoryListImpl implements VEmployeeRepositoryList {
             function.apply(newValue);
         });
     }
+
+    @Override
+    public void selectIndex(int index) {
+        this.employeeEntityListView.getSelectionModel().selectFirst();
+    }
 }

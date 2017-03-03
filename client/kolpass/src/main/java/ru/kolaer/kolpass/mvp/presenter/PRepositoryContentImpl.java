@@ -98,6 +98,7 @@ public class PRepositoryContentImpl implements PRepositoryContent {
     @Override
     public void setEmployee(EmployeeEntity key) {
         this.employeeEntity = key;
+        this.view.setContextMenu(key != null);
     }
 
     @Override

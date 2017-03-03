@@ -55,6 +55,7 @@ public class PSplitContentAndListRepImpl implements PSplitContentAndListRep {
 
         this.view.setContent(this.content.getView());
         this.view.setEmployeeList(this.list.getView());
+        this.list.selectIndex(0);
     }
 
     @Override

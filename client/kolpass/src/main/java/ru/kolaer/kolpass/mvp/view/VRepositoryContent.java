@@ -13,6 +13,7 @@ public interface VRepositoryContent extends BaseView<BorderPane> {
     void addRepositoryPassword(VRepositoryPassword vRepositoryPassword);
     void removeRepositoryPassword(VRepositoryPassword vRepositoryPassword);
     void clear();
+    void setContextMenu(boolean enable);
 
     void setOnAddRepository(Function<RepositoryPassword, Void> function);
 }
