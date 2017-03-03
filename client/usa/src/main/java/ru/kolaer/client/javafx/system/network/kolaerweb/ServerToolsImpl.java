@@ -26,7 +26,7 @@ public class ServerToolsImpl implements ServerTools {
     public LocalDateTime getCurrentDataTime() {
         try {
             final DateTimeJson dateTimeJson = this.restTemplate.getForObject(this.URL_GET_TIME, DateTimeJson.class);
-            return LocalDateTime.parse(dateTimeJson.toString(),  DateTimeFormatter.ofPattern("dd-MM-yyyy|HH:mm:ss"));
+            return LocalDateTime.parse(dateTimeJson.toString(),  DateTimeFormatter.ofPattern("dd.MM.yyyy | HH:mm:ss"));
         } catch (Exception e) {
             LOG.error("Ошибка при получении времени!", e);
             return LocalDateTime.now();
