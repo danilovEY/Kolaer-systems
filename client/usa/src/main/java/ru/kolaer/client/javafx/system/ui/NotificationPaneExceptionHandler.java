@@ -106,7 +106,7 @@ public class NotificationPaneExceptionHandler implements NotificationUS, BaseVie
                     .build();
             notifiMap.put(pane, border);
             this.vBoxAdminNotify.getChildren().add(border);
-
+            border.toBack();
         });
     }
 
