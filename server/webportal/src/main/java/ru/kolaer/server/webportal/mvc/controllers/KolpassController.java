@@ -112,7 +112,7 @@ public class KolpassController {
     public RepositoryPassword addRepositoryPasswords(
             @ApiParam("Наименование хранилища") @RequestBody RepositoryPassword repositoryPassword
     ) {
-        repositoryPassword.setEmployee(null);
+        repositoryPassword.setEmployee(this.serviceLDAP.getAccountByAuthentication().getEmployeeEntity());
         return this.addRepositoryPasswordsWithEmployee(repositoryPassword);
     }
 
