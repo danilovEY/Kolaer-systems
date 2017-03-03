@@ -40,7 +40,7 @@ public class StaticViewPPR implements StaticView, PPR {
                 "    -fx-font-family: \"Arial\";\n" +
                 "    -fx-text-fill: linear-gradient(white, #d0d0d0);\n" +
                 "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 17px;\n" +
+                "    -fx-font-size: 15px;\n" +
                 "    -fx-padding: 5 10 5 10;";
 
 
