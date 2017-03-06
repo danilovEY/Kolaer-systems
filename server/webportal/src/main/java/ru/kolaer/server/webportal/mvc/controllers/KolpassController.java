@@ -137,7 +137,7 @@ public class KolpassController {
 
         if(rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
                 || accountByAuthentication.getRoles().stream()
-                .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
+                .anyMatch(role -> role.getType().equals(ADMIN))) {
 
             final RepositoryPasswordHistory lastPassword =
                     new RepositoryPasswordHistoryDecorator(repositoryPassword.getLastPassword());
@@ -181,8 +181,8 @@ public class KolpassController {
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
         if(!rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
-                || !accountByAuthentication.getRoles().stream()
-                .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
+                || accountByAuthentication.getRoles().stream()
+                .noneMatch(role -> role.getType().equals(ADMIN))) {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
         }
 
@@ -207,8 +207,8 @@ public class KolpassController {
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
         if(!rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
-                || !accountByAuthentication.getRoles().stream()
-                .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
+                || accountByAuthentication.getRoles().stream()
+                .noneMatch(role -> role.getType().equals(ADMIN))) {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
         }
 
@@ -236,8 +236,8 @@ public class KolpassController {
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
         if(!rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
-                || !accountByAuthentication.getRoles().stream()
-                .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
+                || accountByAuthentication.getRoles().stream()
+                .noneMatch(role -> role.getType().equals(ADMIN))) {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
         }
 
@@ -261,8 +261,8 @@ public class KolpassController {
         final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(id);
 
         if(!rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
-                || !accountByAuthentication.getRoles().stream()
-                .filter(role -> role.getType().equals(ADMIN)).findFirst().isPresent()) {
+                || accountByAuthentication.getRoles().stream()
+                .noneMatch(role -> role.getType().equals(ADMIN))) {
             throw new AccessDeniedException("У вас нет доступа к хранилищу!");
         }
 
