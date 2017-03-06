@@ -11,18 +11,25 @@
   2. Реализация и исполнение системных и кастомных служб
   3. Реализация API в виде Editor Kit'а
   4. Реализация автоматического сканера плагинов
-  5. Минимизация приложения
- * **Плагин "АСУП"** - CRUD для файлов и сторонних приложений.
- * **Плагин "Birthday"** - Уведомляет сотрудников о днях рождения
- * **Плагин "Admin Panel"** - Панель с разными инструментами для администраторов
+  5. Запуск только одной копии приложения
+ * **Плагин "АСУП"** - "Декстоп" организации
+ * **Плагин "Birthday"** - Календарь сотрудников 
+ * **Плагин "Admin Panel"** - Панель управления для администраторов
+ * **Плагин "Kolpass"** - Парольница
+ * **Плагин "PSR"** - Реестр ПСР-проектов
+ * **Плагин "JAPC"** - Реестр журналов нарушений
  * **Плагин "Browser"** - Реализация браузера на основе [Jxbrowser](https://www.teamdev.com/jxbrowser).
-* **Server (GlassFish/Tomcat):**
- * **RESTful** - RESTful сервер для работы и взаимодействия с клиентским приложение и БД через json объекты
- * **Kolaer-web (Alpha)** - Различного рода веб приложения
+* **Server (~~GlassFish/Tomcat~~ Jetty):**
+ * **RESTful** - Сервер для телеметрии
+ * **Kolaer-web** - RESTful сервер приложение и инструментов
 
 ## Стек технологий
 
-* **Uniform System Application (USA)** - *OSGi (Apache Felix)*,  *Jackson*, *Jersey (client)*, *JavaFX*, *ControlFX*
-* **RESTful** - *Spting-MVC (rest)*, *Hibernate (JPA)*
-* **Kolaer-web** - *Spting-MVC(rest/jsp)*, *Spting-Security*, *Hibernate*, *AngularJS*, *HTML5*, *CSS3*
+* **Uniform System Application (USA)** - *OSGi (Apache Felix)*,  *Jackson*, *SpringMVC (RestTemplate)*, *JavaFX*, *ControlFX*
+* **RESTful** - *Spting-MVC (rest)*
+* **Kolaer-web** - *Spting-MVC(rest/jsp)*, *Spting-Security*, *Hibernate*, *Swagger*, *Lombok*, *Apache POI*
 * **Build** - *Gradle (Multiproject)*, *Maven (Standalone)*
+
+## Скриншоты
+
+![](https://github.com/danilovEY/Kolaer-systems/blob/master/client/Screenshot.jpg)
