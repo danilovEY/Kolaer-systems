@@ -30,6 +30,18 @@
 * **Kolaer-web** - *Spting-MVC(rest/jsp)*, *Spting-Security*, *Hibernate*, *Swagger*, *Lombok*, *Apache POI*
 * **Build** - *Gradle (Multiproject)*, *Maven (Standalone)*
 
+## Архитектура
+
+На трех физических серверах развернуты Jetty с RESTful серверами. Первый сервер основной и использует основную базу данных. 
+Второй сервер резервный и использует основную базу данных. Третий сервер тестовый и использует тестувую базу данных.
+На еще одной физической машине развернут сервер с сервлетом, который дублирует запросы на основной или резервный сервер в зависимости от установленного флага.
+Отдельно был установлен Apache сервер и развернут на нем Web client на AngularJS.
+Desktop client + плагины лежита на файловом сервере. Пользователт скачивает через специальный лаунчер только основной клиент (без плагинов и доп. файлы)
+и при запуске использует рабочее простанство файлового сервера.
+
+![](https://github.com/danilovEY/Kolaer-systems/blob/master/Architecture.png)
+
 ## Скриншоты
 
 ![](https://github.com/danilovEY/Kolaer-systems/blob/master/client/Screenshot.jpg)
+![](https://github.com/danilovEY/Kolaer-systems/blob/master/server/Screenshot.jpg)
