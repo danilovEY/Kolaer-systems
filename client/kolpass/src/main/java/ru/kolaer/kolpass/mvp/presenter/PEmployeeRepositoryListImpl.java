@@ -52,7 +52,7 @@ public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
 
     @Override
     public void updateView() {
-        List<RepositoryPassword> allRepositoryPasswords = this.model.getAllRepositoryPasswords();
+        final List<RepositoryPassword> allRepositoryPasswords = this.model.getAllRepositoryPasswords();
         if(allRepositoryPasswords.size() > 0) {
             allRepositoryPasswords.forEach(this::put);
         } else {
@@ -61,28 +61,34 @@ public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
                             new ArrayList<>());
         }
 
+        this.employeeRepMap.keySet().forEach(this.view::addEmployee);
+
         this.view.setOnLoadOtherEmployee(e -> {
-            Tools.runOnThreadFX(() -> {
-                this.employeeRepMap.keySet().forEach(this.view::removeEmployee);
+            this.employeeRepMap.keySet().forEach(this.view::removeEmployee);
 
-                try {
-                    final List<RepositoryPassword> allRepositoryPasswordsChief
-                            = this.model.getAllRepositoryPasswordsChief();
+            this.employeeRepMap.keySet().clear();
 
-                    allRepositoryPasswordsChief.stream()
-                            .map(RepositoryPassword::getEmployee)
-                            .forEach(this.employeeRepMap::remove);
+            List<RepositoryPassword> allRep = this.model.getAllRepositoryPasswords();
+            if(allRep.size() > 0) {
+                allRep.forEach(this::put);
+            } else {
+                this.employeeRepMap
+                        .put(this.editorKit.getAuthentication().getAuthorizedUser().getEmployeeEntity(),
+                                new ArrayList<>());
+            }
 
-                    allRepositoryPasswordsChief.forEach(this::put);
+            final List<RepositoryPassword> allRepositoryPasswordsChief
+                    = this.model.getAllRepositoryPasswordsChief();
 
-                } catch (Throwable ignore) {}
+            allRepositoryPasswordsChief.stream()
+                    .map(RepositoryPassword::getEmployee)
+                    .forEach(this.employeeRepMap::remove);
 
-                this.employeeRepMap.keySet().forEach(this.view::addEmployee);
-            });
+            allRepositoryPasswordsChief.forEach(this::put);
+
+            this.employeeRepMap.keySet().forEach(this.view::addEmployee);
             return null;
         });
-
-        this.employeeRepMap.keySet().forEach(this.view::addEmployee);
     }
 
     private void put(RepositoryPassword repositoryPassword) {
