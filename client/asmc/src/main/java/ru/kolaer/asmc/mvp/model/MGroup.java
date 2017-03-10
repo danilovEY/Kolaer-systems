@@ -1,7 +1,8 @@
 package ru.kolaer.asmc.mvp.model;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,21 +10,27 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Data
 @NoArgsConstructor
 public class MGroup implements Serializable {
-
 	private static final long serialVersionUID = -178505769987411468L;
-	
+
+	@Getter @Setter
 	private String nameGroup = "name group";
+
+	@Getter @Setter
 	private int priority = 0;
 
-	private List<MLabel> labelList = new ArrayList<>();
-	private List<MGroup> groups = new ArrayList<>();
+	@Getter @Setter
+	private List<MLabel> labelList;
+
+	@Getter @Setter
+	private List<MGroup> groups;
 
 	public MGroup(final String text, final int priority) {
 		this.nameGroup = text;
 		this.priority = priority;
+		this.labelList = new ArrayList<>();
+		this.groups = new ArrayList<>();
 	}
 
 	public MGroup(MGroup mGroup) {
@@ -41,4 +48,21 @@ public class MGroup implements Serializable {
 		this.labelList.add(label);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		MGroup mGroup = (MGroup) o;
+
+		if (priority != mGroup.priority) return false;
+		return nameGroup.equals(mGroup.nameGroup);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = nameGroup.hashCode();
+		result = 31 * result + priority;
+		return result;
+	}
 }
