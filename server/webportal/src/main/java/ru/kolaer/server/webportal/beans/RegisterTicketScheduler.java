@@ -69,6 +69,7 @@ public class RegisterTicketScheduler {
 
             if (now.getDayOfMonth() == lastDay) {
                 this.generateZeroTicketDocument();
+                this.generateDefaultTicketDocument();
             }
         }
     }
@@ -83,7 +84,7 @@ public class RegisterTicketScheduler {
             allOpenRegister.stream().filter(t -> t.getTickets() != null).map(TicketRegister::getTickets)
                     .forEach(allTiskets::addAll);
 
-            if(this.sendMail(allTiskets, "DR", "Сформированные талоны ЛПП для зачисления. Файл во вложении!")) {
+            if(this.sendMail(allTiskets, "IMMEDIATE", "DR", "Сформированные талоны ЛПП для зачисления. Файл во вложении!")) {
                 this.lastSend = LocalDateTime.now();
                 return true;
             }
@@ -92,10 +93,20 @@ public class RegisterTicketScheduler {
     }
 
     public boolean generateZeroTicketDocument() {
-        return this.generateSetTicketDocument(0, "ZR", "Сформированные талоны ЛПП для обнуления. Файл во вложении!");
+        final LocalDateTime now = LocalDateTime.now();
+        final String dateToUpdate = DateTimeFormatter.ofPattern("yyyyMMdd hhmmss")
+                .format(LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 0).plusMonths(1));
+        return this.generateSetTicketDocument(0, String.format("IN-TIME  %s", dateToUpdate), "ZR", "Сформированные талоны ЛПП для обнуления. Файл во вложении!");
     }
 
-    public boolean generateSetTicketDocument(Integer count, String typeTicket, String textMail) {
+    public boolean generateDefaultTicketDocument() {
+        final LocalDateTime now = LocalDateTime.now();
+        final String dateToUpdate = DateTimeFormatter.ofPattern("yyyyMMdd hhmmss")
+                .format(LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 10).plusMonths(1));
+        return this.generateSetTicketDocument(25, String.format("IN-TIME  %s", dateToUpdate), "DR", "Сформированные талоны ЛПП для зачисления. Файл во вложении!");
+    }
+
+    public boolean generateSetTicketDocument(Integer count, String header, String typeTicket, String textMail) {
         List<Ticket> allTiskets = this.bankAccountDao.findAll().stream().map(bankAccount -> {
             final Ticket ticket = new Ticket();
             ticket.setEmployee(bankAccount.getEmployeeEntity());
@@ -103,13 +114,13 @@ public class RegisterTicketScheduler {
             return ticket;
         }).collect(Collectors.toList());
 
-        return this.sendMail(allTiskets, typeTicket, textMail);
+        return this.sendMail(allTiskets, header, typeTicket, textMail);
     }
 
-    private boolean sendMail(List<Ticket> tickets, String typeTiskets, String text) {
+    private boolean sendMail(List<Ticket> tickets, String header, String typeTiskets, String text) {
         if (tickets.size() > 0) {
             try {
-                final File genFile = this.generateTextFile(tickets, typeTiskets, text);
+                final File genFile = this.generateTextFile(tickets, header, typeTiskets, text);
                 if (genFile != null) {
                     this.mailSender.send(mimeMessage -> {
                         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -128,9 +139,9 @@ public class RegisterTicketScheduler {
         return false;
     }
 
-    private File generateTextFile(List<Ticket> tickets, String type, String text) throws IOException {
+    private File generateTextFile(List<Ticket> tickets, String header, String type, String text) throws IOException {
         final LocalDateTime now = LocalDateTime.now();
-        String fileName = "tickets/Z001000.KOLAER_ENROLL0010001." + now.getDayOfYear();
+        String fileName = "tickets/Z001000.KOLAER_ENROLL0010001." + String.format("%03d",now.getDayOfYear());
         final String[] dateTime = dateTimeFormatter.format(now).split("-");
 
         File dirTickets = new File("tickets");
@@ -148,7 +159,7 @@ public class RegisterTicketScheduler {
         PrintWriter printWriter = null;
         try {
             printWriter = new PrintWriter(fileName, "windows-1251");
-            printWriter.printf("H %s %s IMMEDIATE", dateTime[0], dateTime[1]);
+            printWriter.printf("H %s %s %s", dateTime[0], dateTime[1], header);
             printWriter.printf(System.lineSeparator());
             int countTickets = 0;
             for(final Ticket ticket : tickets) {

@@ -65,7 +65,7 @@ public class TicketsController extends BaseController {
     @RequestMapping(value = "/generate/execute/all", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public boolean generateAllAndMailSend(@ApiParam("Кол-во талонов") @RequestParam("count") Integer count) {
         return registerTicketScheduler
-                .generateSetTicketDocument(count, "DR", "Сформированные талоны ЛПП для зачисления для всех счетов. Файл во вложении!");
+                .generateSetTicketDocument(count, "IMMEDIATE", "DR", "Сформированные талоны ЛПП для зачисления для всех счетов. Файл во вложении!");
     }
 
     @ApiOperation(value = "Сформировать отчет для обнуления")
