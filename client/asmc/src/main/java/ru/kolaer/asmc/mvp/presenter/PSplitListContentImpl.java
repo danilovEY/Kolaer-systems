@@ -56,7 +56,7 @@ public class PSplitListContentImpl implements PSplitListContent {
             this.contentLabel.clear();
 
             this.contentLabel.setOnAddLabel(label -> {
-                group.addLabel(label);
+                group.getLabelList().add(label);
                 this.contentLabel.addPLabel(this.createLabel(label, group));
                 this.groupList.getModel().saveDataOnThread();
                 return null;
@@ -64,7 +64,7 @@ public class PSplitListContentImpl implements PSplitListContent {
 
             this.contentLabel.setOnPlaceLabel(v -> {
                 if(bufferLabel != null) {
-                    group.addLabel(bufferLabel);
+                    group.getLabelList().add(bufferLabel);
 
                     this.contentLabel.addPLabel(this.createLabel(this.bufferLabel, group));
                     this.bufferLabel = null;

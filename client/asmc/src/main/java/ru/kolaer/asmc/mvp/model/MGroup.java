@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor
 public class MGroup implements Serializable {
-	private static final long serialVersionUID = -178505769987411468L;
 
 	@Getter @Setter
 	private String nameGroup = "name group";
@@ -20,10 +19,10 @@ public class MGroup implements Serializable {
 	@Getter @Setter
 	private int priority = 0;
 
-	@Getter @Setter
+	@Getter
 	private List<MLabel> labelList;
 
-	@Getter @Setter
+	@Getter
 	private List<MGroup> groups;
 
 	public MGroup(final String text, final int priority) {
@@ -34,21 +33,26 @@ public class MGroup implements Serializable {
 	}
 
 	public MGroup(MGroup mGroup) {
-		this.nameGroup =  mGroup.getNameGroup()  + " (Копия)";
-		this.priority = mGroup.getPriority();
+	    this(mGroup.getNameGroup()  + " (Копия)", mGroup.getPriority());
 
-		Optional.ofNullable(mGroup.getLabelList())
-				.ifPresent(labels -> this.labelList = labels.stream().map(MLabel::new).collect(Collectors.toList()));
+        Optional.ofNullable(mGroup.getLabelList())
+                .ifPresent(labels -> this.labelList.addAll(labels.stream().map(MLabel::new)
+                        .collect(Collectors.toList())));
 
-		Optional.ofNullable(mGroup.getGroups())
-				.ifPresent(groups -> this.groups = groups.stream().map(MGroup::new).collect(Collectors.toList()));
+        Optional.ofNullable(mGroup.getGroups())
+                .ifPresent(groups -> this.groups.addAll(groups.stream().map(MGroup::new)
+                        .collect(Collectors.toList())));
 	}
 
-    public void addLabel(final MLabel label){
-		this.labelList.add(label);
-	}
+    public void setLabelList(List<MLabel> labelList) {
+        this.labelList = Optional.ofNullable(labelList).orElse(new ArrayList<>());
+    }
 
-	@Override
+    public void setGroups(List<MGroup> groups) {
+        this.groups = Optional.ofNullable(groups).orElse(new ArrayList<>());
+    }
+
+    @Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

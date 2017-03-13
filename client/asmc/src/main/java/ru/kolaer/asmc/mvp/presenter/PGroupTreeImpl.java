@@ -52,7 +52,7 @@ public class PGroupTreeImpl implements PGroupTree {
                     final List<MGroup> groupList = Optional.ofNullable(group.getKey().getGroups())
                             .orElse(new ArrayList<>());
                     groupList.add(group.getValue());
-                    group.getKey().setGroups(groupList);
+                    group.getKey().getGroups().addAll(groupList);
 
                     this.modelPresGroupMap.put(group.getKey(), pGroupTreeItem);
 
@@ -109,7 +109,7 @@ public class PGroupTreeImpl implements PGroupTree {
                         final List<MGroup> groupList = Optional.ofNullable(mGroup.getGroups())
                                 .orElse(new ArrayList<>());
                         groupList.add(this.bufferGroup);
-                        mGroup.setGroups(groupList);
+                        mGroup.getGroups().addAll(groupList);
 
                         this.modelPresGroupMap.put(mGroup, pGroupTreeItem);
 
