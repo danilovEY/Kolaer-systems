@@ -1,6 +1,5 @@
 package ru.kolaer.client.wer.mvp;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +7,6 @@ import lombok.Setter;
 /**
  * Created by danilovey on 14.03.2017.
  */
-@AllArgsConstructor
 @NoArgsConstructor
 public class CmdArguments {
 
@@ -20,6 +18,13 @@ public class CmdArguments {
     private String password;
     @Getter @Setter
     private int maxCountLoad;
+
+    public CmdArguments(String host, String username, String password, int maxCountLoad) {
+        this.setHost(host);
+        this.setUsername(username);
+        this.setPassword(password);
+        this.setMaxCountLoad(maxCountLoad);
+    }
 
     public void setHost(String host) {
         this.host = host == null ? "" : host;
