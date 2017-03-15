@@ -16,7 +16,7 @@ jar {
     archiveName = projectJarName
     baseName = project.name
     manifest {
-        name = 'АСУП'
+        name = 'Windows Event Reader'
         symbolicName = projectName
         instruction "Bundle-ClassPath", "."
     }
