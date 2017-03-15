@@ -1,4 +1,4 @@
-package ru.kolaer.client.wer.mvp;
+package ru.kolaer.client.wer.mvp.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,7 @@ import lombok.Setter;
  */
 @NoArgsConstructor
 public class CmdArguments {
+    public static final CmdArguments EMPTY = new CmdArguments(null, null, null, 0);
 
     @Getter
     private String host;
