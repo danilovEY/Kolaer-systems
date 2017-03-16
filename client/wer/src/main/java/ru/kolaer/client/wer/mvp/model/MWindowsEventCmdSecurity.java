@@ -103,7 +103,7 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
         log.trace("Console data: {}", text);
         final XmlWindowsEvents xmlWindowsEvents = this.xmlMapper.readValue(text, XmlWindowsEvents.class);
         Optional.ofNullable(xmlWindowsEvents).ifPresent(wE ->
-                log.debug("Count load events: {}", wE.getEvents().length)
+                log.debug("Count load events: {}", Optional.ofNullable(wE.getEvents()).orElse(new Event[0]).length)
         );
 
         return xmlWindowsEvents != null
