@@ -40,9 +40,8 @@ public class TestModel {
     }
 
     @Test
-    @Ignore
     public void testXmlModelEventByCmd() {
-        final CmdArguments cmdArguments = new CmdArguments("host", "username", "password", 50);
+        final CmdArguments cmdArguments = new CmdArguments(null, null, null, 50);
 
         final WindowsEventModelCmd windowsEventModelCmdSecurity = new WindowsEventModelCmdSecurity(cmdArguments);
         final List<Event> event = windowsEventModelCmdSecurity.loadWindowsEvent();
