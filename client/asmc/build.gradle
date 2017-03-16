@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '5.0.2'
+version '5.0.3'
 
 def projectName = "ru.kolaer.asmc"
 def projectNameWithVersion = projectName + "-" + version
@@ -20,8 +20,8 @@ jar {
         symbolicName = projectName
         instruction "Bundle-ClassPath", "."
         instruction "Import-Package", "javax.xml.stream,javax.xml.transform,javax.xml.namespace,javafx.beans,javax.xml.stream.util,org.w3c.dom", "*"
-        instruction "Export-Package", "com.fasterxml.jackson.databind", "com.fasterxml.jackson.dataformat.xml"
-
+        instruction "Export-Package", "com.fasterxml.jackson.databind", "com.fasterxml.jackson.dataformat.xml", "com.fasterxml.jackson.annotation",
+                "com.fasterxml.jackson.dataformat.xml.annotation"
     }
 }
 
