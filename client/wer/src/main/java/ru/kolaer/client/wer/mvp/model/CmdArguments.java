@@ -7,9 +7,8 @@ import lombok.Setter;
 /**
  * Created by danilovey on 14.03.2017.
  */
-@NoArgsConstructor
 public class CmdArguments {
-    public static final CmdArguments EMPTY = new CmdArguments(null, null, null, 0);
+    public static final CmdArguments EMPTY = new CmdArguments();
 
     @Getter
     private String host;
@@ -25,6 +24,10 @@ public class CmdArguments {
         this.setUsername(username);
         this.setPassword(password);
         this.setMaxCountLoad(maxCountLoad);
+    }
+
+    public CmdArguments() {
+        this(null, null, null, 0);
     }
 
     public void setHost(String host) {
