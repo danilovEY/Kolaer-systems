@@ -2,6 +2,7 @@ package ru.kolaer.client.wer.mvp.presenter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.wer.mvp.model.Event;
 import ru.kolaer.client.wer.mvp.model.MWindowsEvent;
 import ru.kolaer.client.wer.mvp.view.VEventTable;
@@ -18,16 +19,18 @@ import java.util.stream.Collectors;
  */
 public class PEventTableImpl implements PEventTable {
     private final Logger log = LoggerFactory.getLogger(PEventTableImpl.class);
+    private final UniformSystemEditorKit editorKit;
     private Integer lastLoadEventId;
     private VEventTable view;
     private MWindowsEvent model;
 
-    public PEventTableImpl() {
-        this(MWindowsEvent.EMPTY);
+    public PEventTableImpl(UniformSystemEditorKit editorKit) {
+        this(editorKit, MWindowsEvent.EMPTY);
     }
 
-    public PEventTableImpl(MWindowsEvent model) {
+    public PEventTableImpl(UniformSystemEditorKit editorKit, MWindowsEvent model) {
         this.view = new VEventTableImpl();
+        this.editorKit = editorKit;
 
         this.lastLoadEventId = 0;
 
@@ -76,6 +79,15 @@ public class PEventTableImpl implements PEventTable {
                 this.lastLoadEventId = event.getSystem().getEventRecordId()
             );
         }
+
+        events.stream()
+                .filter(event -> event.getSystem().getKeyword().equals("0x8010000000000000"))
+                .findFirst()
+                .ifPresent(event -> this.editorKit.getUISystemUS()
+                            .getPopupNotification()
+                            .showWarningNotifi("Внимание!", "Отказ в доступе с компьютера: \""
+                                    + event.getSystem().getComputer() + "\"")
+                );
 
         this.view.addEvents(events);
 

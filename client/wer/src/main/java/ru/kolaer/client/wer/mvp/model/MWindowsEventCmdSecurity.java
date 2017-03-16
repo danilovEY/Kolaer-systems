@@ -3,6 +3,7 @@ package ru.kolaer.client.wer.mvp.model;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,17 +19,19 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
     private static final Logger log = LoggerFactory.getLogger(MWindowsEventCmdSecurity.class);
     private static final String DEFAULT_CMD_COMMAND = "wevtutil qe Security /rd:true /f:xml";
     private final List<ObserverEventLoader> eventLoaders;
+    private final UniformSystemEditorKit editorKit;
     private boolean isAutoLoad = false;
     private final XmlMapper xmlMapper;
 
     private CmdArguments cmdArguments;
 
-    public MWindowsEventCmdSecurity() {
-        this(new CmdArguments());
+    public MWindowsEventCmdSecurity(UniformSystemEditorKit editorKit) {
+        this(editorKit, CmdArguments.EMPTY);
     }
 
-    public MWindowsEventCmdSecurity(CmdArguments cmdArguments) {
+    public MWindowsEventCmdSecurity(UniformSystemEditorKit editorKit, CmdArguments cmdArguments) {
         this.xmlMapper = new XmlMapper();
+        this.editorKit = editorKit;
         this.eventLoaders = new ArrayList<>();
         this.setModel(cmdArguments);
     }
@@ -45,8 +48,8 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
 
     @Override
     public Optional<Event> loadLastWindowsEvent() {
-        final CmdArguments cmdArguments = new CmdArguments(this.cmdArguments.getHost(),
-                this.cmdArguments.getUsername(), this.cmdArguments.getPassword(), 1);
+        this.cmdArguments.setMaxCountLoad(1);
+
         final List<Event> events = this.loadWindowsEvent(cmdArguments);
 
         return events.isEmpty() ? Optional.empty() : events.stream().findFirst();
@@ -54,8 +57,7 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
 
     @Override
     public List<Event> loadAllWindowsEvent() {
-        final CmdArguments cmdArguments = new CmdArguments(this.cmdArguments.getHost(),
-                this.cmdArguments.getUsername(), this.cmdArguments.getPassword(), 20);
+        this.cmdArguments.setMaxCountLoad(20);
 
         return this.loadWindowsEvent(cmdArguments);
     }
@@ -66,25 +68,31 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
     }
 
     private List<Event> loadWindowsEvent(CmdArguments cmdArguments) {
-        try {
-            final Runtime runtime = Runtime.getRuntime();
-            final Process process = runtime.exec(DEFAULT_CMD_COMMAND + " " + cmdArguments);
+        if(cmdArguments != CmdArguments.EMPTY) {
+            try {
+                final Runtime runtime = Runtime.getRuntime();
+                final Process process = runtime.exec(DEFAULT_CMD_COMMAND + " " + cmdArguments);
 
-            try(final InputStream inputStream = process.getInputStream();
-                final InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                final BufferedReader bufferedReader = new BufferedReader(inputStreamReader)){
-                final StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append("<Events>");
-                bufferedReader.lines().forEach(stringBuilder::append);
-                stringBuilder.append("</Events>");
+                try (final InputStream inputStream = process.getInputStream();
+                     final InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                     final BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+                    final StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("<Events>");
+                    bufferedReader.lines().forEach(stringBuilder::append);
+                    stringBuilder.append("</Events>");
 
-                return this.parseWindowsEvent(stringBuilder.toString());
-            } catch (Exception e) {
-                log.error("Невозможно загрузить данные!", e);
+                    return this.parseWindowsEvent(stringBuilder.toString());
+                } catch (Exception e) {
+                    log.error("Невозможно загрузить данные!", e);
+                    this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Невозможно загрузить данные!");
+                    this.setModel(CmdArguments.EMPTY);
+                }
+
+            } catch (IOException e) {
+                log.error("Невозможно выполнить комманду!", e);
+                this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Невозможно выполнить комманду!");
+                this.setModel(CmdArguments.EMPTY);
             }
-
-        } catch (IOException e) {
-            log.error("Невозможно выполнить комманду!", e);
         }
 
         return Collections.emptyList();
@@ -137,7 +145,7 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
 
         while (this.isAutoLoad) {
             try {
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException e) {
                 log.error("Прерывание windows event loader!");
                 this.isAutoLoad = false;

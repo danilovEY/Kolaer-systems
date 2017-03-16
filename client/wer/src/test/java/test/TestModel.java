@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.system.impl.DefaultUniformSystemEditorKit;
 import ru.kolaer.client.wer.mvp.model.CmdArguments;
 import ru.kolaer.client.wer.mvp.model.Event;
 import ru.kolaer.client.wer.mvp.model.MWindowsEventCmd;
@@ -20,7 +21,8 @@ public class TestModel {
 
     @Test
     public void testXmlModelLastEvent() {
-        final MWindowsEventCmd windowsEventModelCmdSecurity = new MWindowsEventCmdSecurity();
+        final MWindowsEventCmd windowsEventModelCmdSecurity =
+                new MWindowsEventCmdSecurity(new DefaultUniformSystemEditorKit());
         final Optional<Event> event = windowsEventModelCmdSecurity.loadLastWindowsEvent();
 
         Assert.assertTrue(event.isPresent());
@@ -30,7 +32,8 @@ public class TestModel {
 
     @Test
     public void testXmlModelAllEvent() {
-        final MWindowsEventCmd windowsEventModelCmdSecurity = new MWindowsEventCmdSecurity();
+        final MWindowsEventCmd windowsEventModelCmdSecurity =
+                new MWindowsEventCmdSecurity(new DefaultUniformSystemEditorKit());
         final List<Event> event = windowsEventModelCmdSecurity.loadAllWindowsEvent();
 
         Assert.assertFalse(event.isEmpty());
@@ -42,7 +45,8 @@ public class TestModel {
     public void testXmlModelEventByCmd() {
         final CmdArguments cmdArguments = new CmdArguments(null, null, null, 50);
 
-        final MWindowsEventCmd windowsEventModelCmdSecurity = new MWindowsEventCmdSecurity(cmdArguments);
+        final MWindowsEventCmd windowsEventModelCmdSecurity =
+                new MWindowsEventCmdSecurity(new DefaultUniformSystemEditorKit(), cmdArguments);
         final List<Event> event = windowsEventModelCmdSecurity.loadWindowsEvent();
 
         Assert.assertFalse(event.isEmpty());
