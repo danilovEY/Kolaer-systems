@@ -16,18 +16,18 @@ import java.util.Optional;
 /**
  * Created by danilovey on 14.03.2017.
  */
-public class WindowsEventModelCmdSecurity implements WindowsEventModelCmd {
-    private static final Logger log = LoggerFactory.getLogger(WindowsEventModelCmdSecurity.class);
+public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
+    private static final Logger log = LoggerFactory.getLogger(MWindowsEventCmdSecurity.class);
     private static final String DEFAULT_CMD_COMMAND = "wevtutil qe Security /rd:true /f:xml";
     private final XmlMapper xmlMapper;
 
     private CmdArguments cmdArguments;
 
-    public WindowsEventModelCmdSecurity() {
+    public MWindowsEventCmdSecurity() {
         this(new CmdArguments());
     }
 
-    public WindowsEventModelCmdSecurity(CmdArguments cmdArguments) {
+    public MWindowsEventCmdSecurity(CmdArguments cmdArguments) {
         this.xmlMapper = new XmlMapper();
         this.setModel(cmdArguments);
     }

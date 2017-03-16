@@ -1,14 +1,13 @@
 package test;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.client.wer.mvp.model.CmdArguments;
 import ru.kolaer.client.wer.mvp.model.Event;
-import ru.kolaer.client.wer.mvp.model.WindowsEventModelCmd;
-import ru.kolaer.client.wer.mvp.model.WindowsEventModelCmdSecurity;
+import ru.kolaer.client.wer.mvp.model.MWindowsEventCmd;
+import ru.kolaer.client.wer.mvp.model.MWindowsEventCmdSecurity;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +20,7 @@ public class TestModel {
 
     @Test
     public void testXmlModelLastEvent() {
-        final WindowsEventModelCmd windowsEventModelCmdSecurity = new WindowsEventModelCmdSecurity();
+        final MWindowsEventCmd windowsEventModelCmdSecurity = new MWindowsEventCmdSecurity();
         final Optional<Event> event = windowsEventModelCmdSecurity.loadLastWindowsEvent();
 
         Assert.assertTrue(event.isPresent());
@@ -31,7 +30,7 @@ public class TestModel {
 
     @Test
     public void testXmlModelAllEvent() {
-        final WindowsEventModelCmd windowsEventModelCmdSecurity = new WindowsEventModelCmdSecurity();
+        final MWindowsEventCmd windowsEventModelCmdSecurity = new MWindowsEventCmdSecurity();
         final List<Event> event = windowsEventModelCmdSecurity.loadAllWindowsEvent();
 
         Assert.assertFalse(event.isEmpty());
@@ -43,7 +42,7 @@ public class TestModel {
     public void testXmlModelEventByCmd() {
         final CmdArguments cmdArguments = new CmdArguments(null, null, null, 50);
 
-        final WindowsEventModelCmd windowsEventModelCmdSecurity = new WindowsEventModelCmdSecurity(cmdArguments);
+        final MWindowsEventCmd windowsEventModelCmdSecurity = new MWindowsEventCmdSecurity(cmdArguments);
         final List<Event> event = windowsEventModelCmdSecurity.loadWindowsEvent();
 
         Assert.assertFalse(event.isEmpty());
