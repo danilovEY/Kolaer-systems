@@ -14,6 +14,7 @@ import ru.kolaer.client.wer.mvp.presenter.PEventTableImpl;
 import ru.kolaer.client.wer.mvp.presenter.PSplitTableDetailedEventImpl;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -41,6 +42,10 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
         this.editorKit = editorKit;
+
+        this.mWindowsEvent = new MWindowsEventCmdSecurity();
+        this.mWindowsEvent.getModel().setMaxCountLoad(20);
+
         this.editorKit.getAuthentication().registerObserver(this);
     }
 
@@ -51,13 +56,13 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public Collection<Service> getServices() {
-        return null;
+        return Arrays.asList(this.mWindowsEvent);
     }
 
     @Override
     public void start() throws Exception {
         this.mainPane = new BorderPane();
-        this.mWindowsEvent = new MWindowsEventCmdSecurity();
+
         this.pEventTable = new PEventTableImpl(this.mWindowsEvent);
         this.detailedEvent = new PDetailedEventImpl();
 

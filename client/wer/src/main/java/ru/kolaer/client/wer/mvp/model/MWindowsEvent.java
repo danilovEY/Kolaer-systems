@@ -7,8 +7,22 @@ import java.util.Optional;
 /**
  * Created by danilovey on 14.03.2017.
  */
-public interface MWindowsEvent {
+public interface MWindowsEvent extends ObservableEventLoader {
+
+    Optional<Event> loadLastWindowsEvent();
+    List<Event> loadAllWindowsEvent();
+    List<Event> loadWindowsEvent();
+
     MWindowsEvent EMPTY = new MWindowsEvent() {
+        @Override
+        public void registerObserver(ObserverEventLoader observerEventLoader) {}
+
+        @Override
+        public void removeObserver(ObserverEventLoader observerEventLoader) {}
+
+        @Override
+        public void notifyObserver(List<Event> eventList) {}
+
         @Override
         public Optional<Event> loadLastWindowsEvent() {
             return Optional.empty();
@@ -24,8 +38,4 @@ public interface MWindowsEvent {
             return Collections.emptyList();
         }
     };
-
-    Optional<Event> loadLastWindowsEvent();
-    List<Event> loadAllWindowsEvent();
-    List<Event> loadWindowsEvent();
 }

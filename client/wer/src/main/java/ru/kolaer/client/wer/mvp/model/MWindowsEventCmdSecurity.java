@@ -8,10 +8,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by danilovey on 14.03.2017.
@@ -19,6 +17,8 @@ import java.util.Optional;
 public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
     private static final Logger log = LoggerFactory.getLogger(MWindowsEventCmdSecurity.class);
     private static final String DEFAULT_CMD_COMMAND = "wevtutil qe Security /rd:true /f:xml";
+    private final List<ObserverEventLoader> eventLoaders;
+    private boolean isAutoLoad = false;
     private final XmlMapper xmlMapper;
 
     private CmdArguments cmdArguments;
@@ -29,6 +29,7 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
 
     public MWindowsEventCmdSecurity(CmdArguments cmdArguments) {
         this.xmlMapper = new XmlMapper();
+        this.eventLoaders = new ArrayList<>();
         this.setModel(cmdArguments);
     }
 
@@ -98,5 +99,52 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
         return xmlWindowsEvents != null
                 ? Arrays.asList(xmlWindowsEvents.getEvents())
                 : Collections.emptyList();
+    }
+
+    @Override
+    public void registerObserver(ObserverEventLoader observerEventLoader) {
+        this.eventLoaders.add(observerEventLoader);
+    }
+
+    @Override
+    public void removeObserver(ObserverEventLoader observerEventLoader) {
+        this.eventLoaders.remove(observerEventLoader);
+    }
+
+    @Override
+    public void notifyObserver(List<Event> eventList) {
+        this.eventLoaders.forEach(o -> o.updateEvent(eventList));
+    }
+
+    @Override
+    public boolean isRunning() {
+        return this.isAutoLoad;
+    }
+
+    @Override
+    public String getName() {
+        return "Считываение windows events";
+    }
+
+    @Override
+    public void stop() {
+        this.isAutoLoad = false;
+    }
+
+    @Override
+    public void run() {
+        this.isAutoLoad = true;
+
+        while (this.isAutoLoad) {
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                log.error("Прерывание windows event loader!");
+                this.isAutoLoad = false;
+                return;
+            }
+
+            this.notifyObserver(this.loadWindowsEvent());
+        }
     }
 }

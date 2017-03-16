@@ -7,14 +7,18 @@ import ru.kolaer.client.wer.mvp.model.MWindowsEvent;
 import ru.kolaer.client.wer.mvp.view.VEventTable;
 import ru.kolaer.client.wer.mvp.view.VEventTableImpl;
 
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 16.03.2017.
  */
 public class PEventTableImpl implements PEventTable {
     private final Logger log = LoggerFactory.getLogger(PEventTableImpl.class);
-
+    private Integer lastLoadEventId;
     private VEventTable view;
     private MWindowsEvent model;
 
@@ -24,7 +28,11 @@ public class PEventTableImpl implements PEventTable {
 
     public PEventTableImpl(MWindowsEvent model) {
         this.view = new VEventTableImpl();
+
+        this.lastLoadEventId = 0;
+
         this.model = model == null ? MWindowsEvent.EMPTY : model;
+        this.model.registerObserver(this);
     }
 
     @Override
@@ -49,11 +57,31 @@ public class PEventTableImpl implements PEventTable {
 
     @Override
     public void updateView() {
-        this.view.setEvents(this.model.loadAllWindowsEvent());
+        this.updateEvent(this.model.loadAllWindowsEvent());
     }
 
     @Override
     public void setOnSelectEvent(Function<Event, Void> function) {
         this.view.setOnSelectEvent(function);
+    }
+
+    @Override
+    public void updateEvent(List<Event> eventList) {
+        List<Event> events = eventList.stream()
+                .filter(event -> event.getSystem().getEventRecordId() > this.lastLoadEventId)
+                .collect(Collectors.toList());
+
+        if(!events.isEmpty()) {
+            events.stream().findFirst().ifPresent(event ->
+                this.lastLoadEventId = event.getSystem().getEventRecordId()
+            );
+        }
+
+        this.view.addEvents(events);
+
+        this.view.sortByDate(Comparator
+                .comparing((Event e) -> e.getSystem().getTimeCreated().getSystemTime())
+                .reversed()
+        );
     }
 }

@@ -12,6 +12,7 @@ import ru.kolaer.client.wer.mvp.model.Event;
 import ru.kolaer.client.wer.mvp.model.System;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -19,7 +20,7 @@ import java.util.function.Function;
  * Created by danilovey on 16.03.2017.
  */
 public class VEventTableImpl implements VEventTable {
-    private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
     private final TableView<Event> eventTableView;
     private final BorderPane mainPane;
 
@@ -154,8 +155,13 @@ public class VEventTableImpl implements VEventTable {
     }
 
     @Override
-    public void setEvents(List<Event> eventList) {
-        this.eventTableView.getItems().setAll(eventList);
+    public void addEvents(List<Event> eventList) {
+        this.eventTableView.getItems().addAll(eventList);
+    }
+
+    @Override
+    public void sortByDate(Comparator<Event> comparator) {
+        this.eventTableView.getItems().sort(comparator);
     }
 
     @Override
