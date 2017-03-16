@@ -70,6 +70,7 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
     private List<Event> loadWindowsEvent(CmdArguments cmdArguments) {
         if(cmdArguments != CmdArguments.EMPTY) {
             try {
+                log.debug("CMD: {}", DEFAULT_CMD_COMMAND + " " + cmdArguments);
                 final Runtime runtime = Runtime.getRuntime();
                 final Process process = runtime.exec(DEFAULT_CMD_COMMAND + " " + cmdArguments);
 
@@ -99,6 +100,7 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
     }
 
     private List<Event> parseWindowsEvent(String text) throws IOException {
+        log.debug("Console data: {}", text);
         final XmlWindowsEvents xmlWindowsEvents = this.xmlMapper.readValue(text, XmlWindowsEvents.class);
         Optional.ofNullable(xmlWindowsEvents).ifPresent(wE ->
                 log.debug("Count load events: {}", wE.getEvents().length)

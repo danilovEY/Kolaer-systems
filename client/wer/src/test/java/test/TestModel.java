@@ -21,8 +21,9 @@ public class TestModel {
 
     @Test
     public void testXmlModelLastEvent() {
+        final CmdArguments arguments = new CmdArguments();
         final MWindowsEventCmd windowsEventModelCmdSecurity =
-                new MWindowsEventCmdSecurity(new DefaultUniformSystemEditorKit());
+                new MWindowsEventCmdSecurity(new DefaultUniformSystemEditorKit(), arguments);
         final Optional<Event> event = windowsEventModelCmdSecurity.loadLastWindowsEvent();
 
         Assert.assertTrue(event.isPresent());
@@ -32,8 +33,9 @@ public class TestModel {
 
     @Test
     public void testXmlModelAllEvent() {
+        final CmdArguments arguments = new CmdArguments();
         final MWindowsEventCmd windowsEventModelCmdSecurity =
-                new MWindowsEventCmdSecurity(new DefaultUniformSystemEditorKit());
+                new MWindowsEventCmdSecurity(new DefaultUniformSystemEditorKit(), arguments);
         final List<Event> event = windowsEventModelCmdSecurity.loadAllWindowsEvent();
 
         Assert.assertFalse(event.isEmpty());

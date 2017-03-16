@@ -25,7 +25,7 @@ public class TestXmlLoad {
     public void loadXml() {
 
         try {
-            final Process runtime = Runtime.getRuntime().exec("wevtutil qe Security /c:3 /rd:true /f:xml");
+            final Process runtime = Runtime.getRuntime().exec("wevtutil qe Security /rd:true /f:xml  /c:1");
 
             try(final InputStream inputStream = runtime.getInputStream();
                 final InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -52,6 +52,7 @@ public class TestXmlLoad {
         final XmlMapper xmlMapper = new XmlMapper();
         final XmlWindowsEvents xmlWindowsEvents = xmlMapper.readValue(this.xmlText, XmlWindowsEvents.class);
         Assert.assertNotNull(xmlWindowsEvents);
-        Assert.assertEquals(xmlWindowsEvents.getEvents().length, 3);
+        Assert.assertEquals(xmlWindowsEvents.getEvents().length, 1);
+        log.debug(xmlWindowsEvents.toString());
     }
 }
