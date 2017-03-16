@@ -8,6 +8,7 @@ import ru.kolaer.client.wer.mvp.model.MWindowsEvent;
 import ru.kolaer.client.wer.mvp.view.VEventTable;
 import ru.kolaer.client.wer.mvp.view.VEventTableImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -85,7 +86,8 @@ public class PEventTableImpl implements PEventTable {
                 .findFirst()
                 .ifPresent(event -> this.editorKit.getUISystemUS()
                             .getPopupNotification()
-                            .showWarningNotifi("Внимание!", "Отказ в доступе с компьютера: \""
+                            .showWarningNotifi("Отказ в доступе!",new SimpleDateFormat("dd.MM.yyyy HH:mm.ss")
+                                    .format(event.getSystem().getTimeCreated().getSystemTime()) + " - \""
                                     + event.getSystem().getComputer() + "\"")
                 );
 
