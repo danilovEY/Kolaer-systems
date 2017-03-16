@@ -1,23 +1,28 @@
 package ru.kolaer.client.wer.runnable;
 
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
+import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.wer.mvp.model.MWindowsEventCmdSecurity;
+import ru.kolaer.client.wer.mvp.presenter.PEventTableImpl;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 14.03.2017.
  */
-public class WerPlugin implements UniformSystemPlugin {
+public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
+    private UniformSystemEditorKit editorKit;
     private BorderPane mainPane;
+    private PEventTableImpl pEventTable;
+    private MWindowsEventCmdSecurity mWindowsEvent;
 
     @Override
     public void setContent(Parent content) {
@@ -31,7 +36,8 @@ public class WerPlugin implements UniformSystemPlugin {
 
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
-
+        this.editorKit = editorKit;
+        this.editorKit.getAuthentication().registerObserver(this);
     }
 
     @Override
@@ -46,26 +52,14 @@ public class WerPlugin implements UniformSystemPlugin {
 
     @Override
     public void start() throws Exception {
-        final VBox vBox = new VBox();
-        this.mainPane = new BorderPane(vBox);
-        /*Advapi32Util.EventLogIterator iter = new Advapi32Util.EventLogIterator("Security");
-        while(iter.hasNext()) {
-            Advapi32Util.EventLogRecord record = iter.next();
-            if(record.getType() != Advapi32Util.EventLogType.AuditFailure)
-                continue;
-            System.out.println(record.getRecordNumber()
-                    + ": Event ID: " + record.getEventId()
-                    + ", Event Type: " + record.getType()
-                    + ", Event Source: " + record.getSource());
+        this.mainPane = new BorderPane();
+        this.mWindowsEvent = new MWindowsEventCmdSecurity();
+        this.pEventTable = new PEventTableImpl(this.mWindowsEvent);
 
-            String dateAsText = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                    .format(new Date(record.getRecord().TimeWritten.longValue() * 1000L));
-            System.out.println(dateAsText);
-
-            vBox.getChildren().add(new Label(dateAsText));*/
-            /*for (String s : record.getStrings()) {
-                System.out.println(s);
-            }*/
+        if(this.editorKit.getAuthentication().isAuthentication()) {
+            this.login(this.editorKit.getAuthentication().getAuthorizedUser());
+            this.pEventTable.updateView();
+        }
     }
 
     @Override
@@ -76,5 +70,21 @@ public class WerPlugin implements UniformSystemPlugin {
     @Override
     public void updatePluginObjects(String key, Object object) {
 
+    }
+
+    @Override
+    public void login(AccountEntity account) {
+        Optional.ofNullable(this.mainPane).ifPresent(pane ->
+            Tools.runOnWithOutThreadFX(() ->
+                    pane.setCenter(this.pEventTable.getView().getContent())
+            )
+        );
+    }
+
+    @Override
+    public void logout(AccountEntity account) {
+        Optional.ofNullable(this.mainPane).ifPresent(pane -> {
+            pane.setCenter(null);
+        });
     }
 }
