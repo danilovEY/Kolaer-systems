@@ -18,6 +18,11 @@ public class DefaultUISystemUS implements UISystemUS {
     }
 
     @Override
+    public NotificationUS getPopupNotification() {
+        return this.notificationUS;
+    }
+
+    @Override
     public DialogUS getDialog() {
         return this.dialogUS;
     }

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @author danilovey
  * @version 0.1
  */
-public class NotificationUSImpl implements NotificationUS {
+public class NotificationPopup implements NotificationUS {
 
 	@Override
 	public void showParentNotifi(Parent pane) {
@@ -56,7 +56,7 @@ public class NotificationUSImpl implements NotificationUS {
 		Tools.runOnThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(Duration.seconds(15));
-			Notifi.position(Pos.BOTTOM_CENTER);
+			Notifi.position(Pos.BOTTOM_LEFT);
 			if(title != null)
 				Notifi.title(title);
 			if(text != null) {
@@ -76,7 +76,7 @@ public class NotificationUSImpl implements NotificationUS {
 		Tools.runOnThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(Duration.seconds(10));
-			Notifi.position(Pos.BOTTOM_CENTER);
+			Notifi.position(Pos.BOTTOM_LEFT);
 			if(title != null)
 				Notifi.title(title);
 			if(text != null) {

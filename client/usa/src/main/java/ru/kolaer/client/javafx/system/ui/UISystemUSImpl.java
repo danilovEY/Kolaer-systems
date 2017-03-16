@@ -10,6 +10,7 @@ import ru.kolaer.api.system.ui.*;
  */
 public class UISystemUSImpl implements UISystemUS {
 	private NotificationUS notification;
+	private NotificationUS popupNotification;
 	private DialogUS dialog = new DialogUSImpl();
 	private StatusBarUS statusBar;
 	private StaticUS staticUS;
@@ -18,6 +19,7 @@ public class UISystemUSImpl implements UISystemUS {
 	public UISystemUSImpl(final StatusBarUS statusBar) {
 		this.statusBar = statusBar;
 		this.staticUS = new StaricUSImpl();
+		this.popupNotification = new NotificationPopup();
 	}
 	
 	public UISystemUSImpl() {
@@ -27,6 +29,11 @@ public class UISystemUSImpl implements UISystemUS {
 	@Override
 	public NotificationUS getNotification() {
 		return this.notification;
+	}
+
+	@Override
+	public NotificationUS getPopupNotification() {
+		return this.popupNotification;
 	}
 
 	@Override
