@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface WindowsEventModel {
     Optional<Event> loadLastWindowsEvent();
     List<Event> loadAllWindowsEvent();
+    List<Event> loadWindowsEvent();
 }

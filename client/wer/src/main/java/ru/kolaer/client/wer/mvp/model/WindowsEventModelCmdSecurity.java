@@ -59,6 +59,11 @@ public class WindowsEventModelCmdSecurity implements WindowsEventModelCmd {
         return this.loadWindowsEvent(cmdArguments);
     }
 
+    @Override
+    public List<Event> loadWindowsEvent() {
+        return this.loadWindowsEvent(this.cmdArguments);
+    }
+
     private List<Event> loadWindowsEvent(CmdArguments cmdArguments) {
         try {
             final Runtime runtime = Runtime.getRuntime();
@@ -85,6 +90,7 @@ public class WindowsEventModelCmdSecurity implements WindowsEventModelCmd {
     }
 
     private List<Event> parseWindowsEvent(String text) throws IOException {
-        return Arrays.asList(this.xmlMapper.readValue(text, XmlWindowsEvents.class).getEvents());
+        final XmlWindowsEvents xmlWindowsEvents = this.xmlMapper.readValue(text, XmlWindowsEvents.class);
+        return xmlWindowsEvents != null ? Arrays.asList(xmlWindowsEvents.getEvents()) : Collections.emptyList();
     }
 }

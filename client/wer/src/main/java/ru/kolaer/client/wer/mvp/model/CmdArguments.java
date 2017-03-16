@@ -45,9 +45,9 @@ public class CmdArguments {
     @Override
     public String toString() {
         String result = this.host.isEmpty() ? "" : "/r:" + this.host;
-        result += this.username.isEmpty() ? "" : "/u:" + this.username;
-        result += this.password.isEmpty() ? "" : "/p:" + this.password;
-        result += this.maxCountLoad == 0 ? "" : "/c:" + this.maxCountLoad;
+        result += this.username.isEmpty() ? "" : " /u:" + this.username;
+        result += this.password.isEmpty() ? "" : " /p:" + this.password;
+        result += this.maxCountLoad == 0 ? "" : " /c:" + this.maxCountLoad;
         return result;
     }
 }
