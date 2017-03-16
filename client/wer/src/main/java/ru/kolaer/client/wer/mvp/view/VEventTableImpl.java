@@ -6,6 +6,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import ru.kolaer.client.wer.mvp.model.Event;
 import ru.kolaer.client.wer.mvp.model.System;
@@ -137,8 +138,8 @@ public class VEventTableImpl implements VEventTable {
 
     @Override
     public void setOnSelectEvent(Function<Event, Void> function) {
-        this.eventTableView.selectionModelProperty().addListener((observable, oldValue, newValue) -> {
-            function.apply(newValue.getSelectedItem());
+        this.eventTableView.setOnMouseClicked(e -> {
+            function.apply(this.eventTableView.getSelectionModel().getSelectedItem());
         });
     }
 
