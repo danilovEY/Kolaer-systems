@@ -9,7 +9,9 @@ import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.wer.mvp.model.MWindowsEventCmdSecurity;
+import ru.kolaer.client.wer.mvp.presenter.PDetailedEventImpl;
 import ru.kolaer.client.wer.mvp.presenter.PEventTableImpl;
+import ru.kolaer.client.wer.mvp.presenter.PSplitTableDetailedEventImpl;
 
 import java.net.URL;
 import java.util.Collection;
@@ -23,6 +25,8 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
     private BorderPane mainPane;
     private PEventTableImpl pEventTable;
     private MWindowsEventCmdSecurity mWindowsEvent;
+    private PDetailedEventImpl detailedEvent;
+    private PSplitTableDetailedEventImpl splitPresenter;
 
     @Override
     public void setContent(Parent content) {
@@ -55,6 +59,12 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
         this.mainPane = new BorderPane();
         this.mWindowsEvent = new MWindowsEventCmdSecurity();
         this.pEventTable = new PEventTableImpl(this.mWindowsEvent);
+        this.detailedEvent = new PDetailedEventImpl();
+
+        this.splitPresenter = new PSplitTableDetailedEventImpl();
+        this.splitPresenter.setDetailedEvent(this.detailedEvent);
+        this.splitPresenter.setEventTable(this.pEventTable);
+        this.splitPresenter.updateView();
 
         if(this.editorKit.getAuthentication().isAuthentication()) {
             this.login(this.editorKit.getAuthentication().getAuthorizedUser());
@@ -76,7 +86,7 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
     public void login(AccountEntity account) {
         Optional.ofNullable(this.mainPane).ifPresent(pane ->
             Tools.runOnWithOutThreadFX(() ->
-                    pane.setCenter(this.pEventTable.getView().getContent())
+                    pane.setCenter(this.splitPresenter.getView().getContent())
             )
         );
     }
