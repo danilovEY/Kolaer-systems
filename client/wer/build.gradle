@@ -1,7 +1,7 @@
 group 'ru.kolaer'
 version '0.1'
 
-def projectName = "ru.kolaer.japc"
+def projectName = "ru.kolaer.wer"
 def projectNameWithVersion = projectName + "-" + version
 def projectJarName = projectNameWithVersion + ".jar"
 
@@ -21,7 +21,8 @@ jar {
         symbolicName = projectName
         instruction "Bundle-ClassPath", "."
         instruction "Import-Package", "javax.xml.stream,javax.xml.transform,javax.xml.namespace,javafx.beans,javax.xml.stream.util,org.w3c.dom", "*"
-        instruction "Export-Package", "com.fasterxml.jackson.databind", "com.fasterxml.jackson.dataformat.xml"
+        instruction "Export-Package", "com.fasterxml.jackson.databind", "com.fasterxml.jackson.dataformat.xml", "com.fasterxml.jackson.annotation",
+                "com.fasterxml.jackson.dataformat.xml.annotation"
     }
 }
 
