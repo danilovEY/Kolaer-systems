@@ -56,7 +56,7 @@ public class NotificationPopup implements NotificationUS {
 		Tools.runOnThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(Duration.seconds(15));
-			Notifi.position(Pos.BOTTOM_LEFT);
+			Notifi.position(Pos.BOTTOM_RIGHT);
 			if(title != null)
 				Notifi.title(title);
 			if(text != null) {
@@ -76,7 +76,7 @@ public class NotificationPopup implements NotificationUS {
 		Tools.runOnThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(Duration.seconds(10));
-			Notifi.position(Pos.BOTTOM_LEFT);
+			Notifi.position(Pos.BOTTOM_RIGHT);
 			if(title != null)
 				Notifi.title(title);
 			if(text != null) {
