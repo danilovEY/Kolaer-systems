@@ -91,6 +91,12 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
 
     private List<Event> parseWindowsEvent(String text) throws IOException {
         final XmlWindowsEvents xmlWindowsEvents = this.xmlMapper.readValue(text, XmlWindowsEvents.class);
-        return xmlWindowsEvents != null ? Arrays.asList(xmlWindowsEvents.getEvents()) : Collections.emptyList();
+        Optional.ofNullable(xmlWindowsEvents).ifPresent(wE ->
+                log.debug("Count load events: {}", wE.getEvents().length)
+        );
+
+        return xmlWindowsEvents != null
+                ? Arrays.asList(xmlWindowsEvents.getEvents())
+                : Collections.emptyList();
     }
 }
