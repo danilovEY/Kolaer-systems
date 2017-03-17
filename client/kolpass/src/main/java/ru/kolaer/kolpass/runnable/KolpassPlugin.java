@@ -95,7 +95,9 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
 
     @Override
     public void logout(AccountEntity account) {
-        this.pSplitContentAndListRep.clear();
-        this.mainPane.setCenter(this.loginButton);
+        Optional.ofNullable(this.mainPane).ifPresent(pane -> {
+            this.pSplitContentAndListRep.clear();
+            pane.setCenter(this.loginButton);
+        });
     }
 }
