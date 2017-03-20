@@ -18,6 +18,7 @@
  * **Плагин "Kolpass"** - Парольница
  * **Плагин "PSR"** - Реестр ПСР-проектов
  * **Плагин "JAPC"** - Реестр журналов нарушений
+ * **Плагин "WER"** - Windows event reader
  * **Плагин "Browser"** - Реализация браузера на основе [Jxbrowser](https://www.teamdev.com/jxbrowser).
 * **Server (~~GlassFish/Tomcat~~ Jetty):**
  * **RESTful** - Сервер для телеметрии
