@@ -99,8 +99,8 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getRequiredProperty("db.driver"));
         dataSource.setUrl(env.getRequiredProperty("db.url_kolaer_base"));
-        dataSource.setUsername(env.getRequiredProperty("db.user"));
-        dataSource.setPassword(env.getRequiredProperty("db.pass"));
+        dataSource.setUsername(env.getRequiredProperty("db.user_kolaer_base"));
+        dataSource.setPassword(env.getRequiredProperty("db.pass_kolaer_base"));
         return dataSource;
     }
 
