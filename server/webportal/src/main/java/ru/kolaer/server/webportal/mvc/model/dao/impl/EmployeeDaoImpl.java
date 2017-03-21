@@ -283,7 +283,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 resultUpdateEmployeesDto = this.getUpdateDeleteEmployees(currentSession,
                         newEmployeesMap, resultUpdateEmployeesDto);
 
-
                 resultUpdateEmployeesDto = this.saveOrUpdateDepartment(currentSession, defaultBachSize,
                         departmentEntityMap, resultUpdateEmployeesDto);
 
@@ -296,6 +295,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 resultUpdateEmployeesDto = this.saveOrUpdatePassports(currentSession, passportEntityList,
                         defaultBachSize, resultUpdateEmployeesDto);
 
+                transaction.commit();
                 return resultUpdateEmployeesDto;
             } catch (Exception ex) {
                 transaction.rollback();
@@ -448,14 +448,18 @@ public class EmployeeDaoImpl implements EmployeeDao {
     private ResultUpdateEmployeesDto getUpdateDeleteEmployees(Session currentSession,
                                                               Map<Integer, EmployeeEntity> newEmployeesMap,
                                                               ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
-        final List<Integer> employeeFromDb
-                = currentSession.createQuery("SELECT e.personnelNumber FROM EmployeeEntityDecorator e")
+        final List<Object[]> resultEmployeeFromDb
+                = currentSession.createQuery("SELECT e.id, e.personnelNumber FROM EmployeeEntityDecorator e")
                 .list();
+
+        List<EmployeeEntity> employeeFromDb = resultEmployeeFromDb.stream()
+                .map(this::convertEmployee).collect(Collectors.toList());
 
         resultUpdateEmployeesDto.setAllEmployeeSize(employeeFromDb.size());
 
         final List<Integer> removeEmployees = employeeFromDb.stream()
-                .filter(key -> !newEmployeesMap.containsKey(key))
+                .filter(key -> !newEmployeesMap.containsKey(key.getPersonnelNumber()))
+                .map(EmployeeEntity::getPersonnelNumber)
                 .collect(Collectors.toList());
 
         resultUpdateEmployeesDto.setDeleteEmployeeCount(removeEmployees.size());
@@ -469,7 +473,21 @@ public class EmployeeDaoImpl implements EmployeeDao {
             currentSession.clear();
         }
 
+        employeeFromDb.forEach(epm -> {
+            final EmployeeEntity employeeEntity = newEmployeesMap.get(epm.getPersonnelNumber());
+            if(employeeEntity != null)
+                employeeEntity.setId(epm.getId());
+        });
+
         return resultUpdateEmployeesDto;
+    }
+
+    private EmployeeEntity convertEmployee(Object[] objects) {
+        EmployeeEntity employeeEntity = new EmployeeEntityDecorator();
+        employeeEntity.setId((Integer) objects[0]);
+        employeeEntity.setPersonnelNumber((Integer) objects[1]);
+
+        return employeeEntity;
     }
 
     private ResultUpdateEmployeesDto getUpdateDeleteDepartment(Session currentSession,
