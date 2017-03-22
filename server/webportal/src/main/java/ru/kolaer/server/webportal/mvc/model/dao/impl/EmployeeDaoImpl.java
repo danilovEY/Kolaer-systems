@@ -465,8 +465,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
         resultUpdateEmployeesDto.setDeleteEmployeeCount(removeEmployees.size());
 
         if (removeEmployees.size() > 0) {
-            currentSession.createQuery("DELETE FROM EmployeeEntityDecorator e WHERE e.personnelNumber IN (:personnelNumbers)")
+            currentSession.createQuery("UPDATE FROM EmployeeEntityDecorator e SET e.dismissalDate = :dismissalDate WHERE e.personnelNumber IN (:personnelNumbers)")
                     .setParameterList("personnelNumbers", removeEmployees)
+                    .setParameter("dismissalDate", new Date())
                     .executeUpdate();
 
             currentSession.flush();
