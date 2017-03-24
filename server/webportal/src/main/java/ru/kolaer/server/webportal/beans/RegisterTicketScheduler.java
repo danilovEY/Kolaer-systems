@@ -80,11 +80,11 @@ public class RegisterTicketScheduler {
             allOpenRegister.forEach(ticketRegister -> ticketRegister.setClose(true));
             this.ticketRegisterService.update(allOpenRegister);
 
-            List<Ticket> allTiskets = new ArrayList<>();
+            List<Ticket> allTickets = new ArrayList<>();
             allOpenRegister.stream().filter(t -> t.getTickets() != null).map(TicketRegister::getTickets)
-                    .forEach(allTiskets::addAll);
+                    .forEach(allTickets::addAll);
 
-            if(this.sendMail(allTiskets, "IMMEDIATE", "DR", "Сформированные талоны ЛПП для зачисления. Файл во вложении!")) {
+            if(this.sendMail(allTickets, "IMMEDIATE", "DR", "Сформированные талоны ЛПП для зачисления. Файл во вложении!")) {
                 this.lastSend = LocalDateTime.now();
                 return true;
             }
@@ -96,14 +96,16 @@ public class RegisterTicketScheduler {
         final LocalDateTime now = LocalDateTime.now();
         final String dateToUpdate = DateTimeFormatter.ofPattern("yyyyMMdd hhmmss")
                 .format(LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 0).plusMonths(1));
-        return this.generateSetTicketDocument(0, String.format("IN-TIME  %s", dateToUpdate), "ZR", "Сформированные талоны ЛПП для обнуления. Файл во вложении!");
+        return this.generateSetTicketDocument(0, String.format("IN-TIME  %s", dateToUpdate), "ZR",
+                "Сформированные талоны ЛПП для обнуления. Файл во вложении!");
     }
 
     public boolean generateDefaultTicketDocument() {
         final LocalDateTime now = LocalDateTime.now();
         final String dateToUpdate = DateTimeFormatter.ofPattern("yyyyMMdd hhmmss")
                 .format(LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 10).plusMonths(1));
-        return this.generateSetTicketDocument(25, String.format("IN-TIME  %s", dateToUpdate), "DR", "Сформированные талоны ЛПП для зачисления. Файл во вложении!");
+        return this.generateSetTicketDocument(25, String.format("IN-TIME  %s", dateToUpdate), "DR",
+                "Сформированные талоны ЛПП для зачисления. Файл во вложении!");
     }
 
     public boolean generateSetTicketDocument(Integer count, String header, String typeTicket, String textMail) {
@@ -117,10 +119,10 @@ public class RegisterTicketScheduler {
         return this.sendMail(allTiskets, header, typeTicket, textMail);
     }
 
-    private boolean sendMail(List<Ticket> tickets, String header, String typeTiskets, String text) {
+    private boolean sendMail(List<Ticket> tickets, String header, String typeTickets, String text) {
         if (tickets.size() > 0) {
             try {
-                final File genFile = this.generateTextFile(tickets, header, typeTiskets, text);
+                final File genFile = this.generateTextFile(tickets, header, typeTickets, text);
                 if (genFile != null) {
                     this.mailSender.send(mimeMessage -> {
                         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
