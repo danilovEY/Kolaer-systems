@@ -14,6 +14,7 @@ import ru.kolaer.client.wer.mvp.model.System;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -139,9 +140,9 @@ public class VEventTableImpl implements VEventTable {
 
     @Override
     public void setOnSelectEvent(Function<Event, Void> function) {
-        this.eventTableView.setOnMouseClicked(e -> {
-            function.apply(this.eventTableView.getSelectionModel().getSelectedItem());
-        });
+        this.eventTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+                Optional.ofNullable(newSelection).ifPresent(function::apply)
+        );
     }
 
     @Override
