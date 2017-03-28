@@ -1,34 +1,48 @@
 package ru.kolaer.client.wer.mvp.view;
 
-import javafx.beans.binding.Binding;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import lombok.extern.slf4j.Slf4j;
+import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.wer.mvp.model.Data;
 import ru.kolaer.client.wer.mvp.model.Event;
 import ru.kolaer.client.wer.mvp.model.System;
 
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Created by danilovey on 16.03.2017.
  */
+@Slf4j
 public class VEventTableImpl implements VEventTable {
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    private final ObservableList<Event> observableList;
     private final TableView<Event> eventTableView;
     private final BorderPane mainPane;
+    private final TextField textFilter;
+    private FilteredList<Event> filteredList;
+    private SortedList<Event> events;
 
     public VEventTableImpl() {
         this.mainPane = new BorderPane();
         this.eventTableView = new TableView<>();
-
+        this.textFilter = new TextField();
+        this.observableList = FXCollections.observableArrayList();
         this.init();
     }
 
@@ -44,12 +58,15 @@ public class VEventTableImpl implements VEventTable {
                 if(empty || item == null) {
                     this.setText("");
                 } else {
-                    this.setText(convertKeyword(item.getKeyword()));
+                    this.setText(item.getKeyword());
                 }
             }
         });
 
         final TableColumn<Event, System> dateTimeTC = new TableColumn<>("Дата и время");
+        dateTimeTC.setComparator(Comparator
+                .comparing((System s) -> s.getTimeCreated().getSystemTime())
+                .reversed());
         dateTimeTC.setCellValueFactory(new PropertyValueFactory<>("system"));
         dateTimeTC.setCellFactory(param -> new TableCell<Event, System>(){
             @Override
@@ -112,15 +129,32 @@ public class VEventTableImpl implements VEventTable {
         columns.add(eventIdTC);
         columns.add(taskTC);
 
-        this.mainPane.setCenter(this.eventTableView);
-    }
+        this.eventTableView.setItems(this.observableList);
 
-    private String convertKeyword(String keyword) {
-        switch (keyword) {
-            case "0x8020000000000000": return "Аудит успеха";
-            case "0x8010000000000000": return "Аудит отказа";
-            default: return keyword;
-        }
+        this.textFilter.textProperty().addListener((observable, oldValue, newValue) ->
+            Optional.ofNullable(this.filteredList).ifPresent(filteredList ->
+                filteredList.setPredicate(event -> {
+                    if(newValue == null || newValue.trim().isEmpty()) {
+                        return true;
+                    }
+
+                    final String findText = newValue.toLowerCase();
+
+                    final System system = event.getSystem();
+                    Stream<Data> datas = Stream.of(event.getEventData().getDatas());
+
+                    return system.getComputer().toLowerCase().contains(findText)
+                            || system.getEventID().toString().contains(findText)
+                            || system.getKeyword().toLowerCase().contains(findText)
+                            || datas.map(Data::getValue).filter(Objects::nonNull)
+                            .anyMatch(value -> value.toLowerCase().contains(findText));
+
+                })
+            )
+        );
+
+        this.mainPane.setTop(this.textFilter);
+        this.mainPane.setCenter(this.eventTableView);
     }
 
     private String convertTask(Integer task) {
@@ -140,8 +174,9 @@ public class VEventTableImpl implements VEventTable {
 
     @Override
     public void setOnSelectEvent(Function<Event, Void> function) {
-        this.eventTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-                Optional.ofNullable(newSelection).ifPresent(function::apply)
+        this.eventTableView.getSelectionModel().selectedItemProperty()
+                .addListener((obs, oldSelection, newSelection) ->
+                        Optional.ofNullable(newSelection).ifPresent(function::apply)
         );
     }
 
@@ -157,12 +192,26 @@ public class VEventTableImpl implements VEventTable {
 
     @Override
     public void addEvents(List<Event> eventList) {
-        this.eventTableView.getItems().addAll(eventList);
+        Tools.runOnWithOutThreadFX(() -> {
+            this.observableList.addAll(eventList);
+
+            Predicate<? super Event> predicate = e -> true;
+            if(this.filteredList != null)
+                predicate = this.filteredList.getPredicate();
+
+            this.filteredList = new FilteredList<>(this.observableList, e -> true);
+            this.filteredList.setPredicate(predicate);
+
+            this.events = new SortedList<>(this.filteredList);
+            this.events.comparatorProperty().bind(this.eventTableView.comparatorProperty());
+
+            this.eventTableView.setItems(this.events);
+        });
     }
 
     @Override
     public void sortByDate(Comparator<Event> comparator) {
-        this.eventTableView.getItems().sort(comparator);
+        this.eventTableView.sort();
     }
 
     @Override

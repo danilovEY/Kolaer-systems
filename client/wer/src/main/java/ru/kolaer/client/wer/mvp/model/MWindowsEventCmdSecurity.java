@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by danilovey on 14.03.2017.
@@ -107,8 +109,20 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
         );
 
         return xmlWindowsEvents != null
-                ? Arrays.asList(xmlWindowsEvents.getEvents())
+                ? Stream.of(xmlWindowsEvents.getEvents())
+                    .map(this::convertKeyword).collect(Collectors.toList())
                 : Collections.emptyList();
+    }
+
+    private Event convertKeyword(Event event) {
+        final System system = event.getSystem();
+        switch (system.getKeyword()) {
+            case "0x8020000000000000": system.setKeyword("Аудит успеха"); break;
+            case "0x8010000000000000": system.setKeyword("Аудит отказа"); break;
+            default: break;
+        }
+
+        return event;
     }
 
     @Override
