@@ -59,7 +59,7 @@ public class RegisterTicketScheduler {
             this.generateAddTicketDocument();
     }
 
-    @Scheduled(cron = "0 0 13 26-31 * ?", zone = "Europe/Moscow")
+    @Scheduled(cron = "0 0 9 26-31 * ?", zone = "Europe/Moscow")
     public void generateZeroTicketsLastDayOfMonthScheduled() {
         if(!typeServer.isTest()) {
             final LocalDate now = LocalDate.now();
