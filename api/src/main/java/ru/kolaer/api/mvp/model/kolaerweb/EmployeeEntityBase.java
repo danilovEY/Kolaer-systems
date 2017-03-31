@@ -13,8 +13,8 @@ public class EmployeeEntityBase implements EmployeeEntity {
     private Integer id;
     private Integer personnelNumber;
     private String initials;
-    private String mobileNumber;
-    private String phoneNumber;
+    private String workPhoneNumber;
+    private String homePhoneNumber;
     private String gender;
     private DepartmentEntity department;
     private PostEntity postEntity;

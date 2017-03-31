@@ -153,7 +153,7 @@ public class VTableWithUsersBirthdayImpl implements VTableWithUsersBirthday {
 	    userInitialsColumn.setCellValueFactory(new PropertyValueFactory<>("initials"));
 	    
 	    final TableColumn<UserModel, String> userPhoneColumn = new TableColumn<>("Телефон");
-	    userPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+	    userPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("homePhoneNumber"));
 	    
 	    final TableColumn<UserModel, String> userPostColumn = new TableColumn<>("Должность");
 	    userPostColumn.setCellValueFactory(new PropertyValueFactory<>("post"));

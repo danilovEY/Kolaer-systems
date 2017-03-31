@@ -89,7 +89,7 @@ public class UserModelImpl implements UserModel {
 			postName += " " + postEntity.getRang() + " " + postEntity.getTypeRang();
 
 		this.setPost(postName);
-		this.setPhoneNumber(user.getPhoneNumber());
+		this.setPhoneNumber(user.getHomePhoneNumber());
 		this.setEmail("");
 		this.setIcon(user.getInitials() + ".jpg");
 	}

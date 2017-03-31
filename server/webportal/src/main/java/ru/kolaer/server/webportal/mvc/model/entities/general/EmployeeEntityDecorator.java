@@ -89,24 +89,22 @@ public class EmployeeEntityDecorator implements EmployeeEntity {
         this.employeeEntity.setPostEntity(postEntity);
     }
 
-    @Column(name = "mobile_number", length = 15)
-    public String getMobileNumber() {
-        return this.employeeEntity.getMobileNumber();
+    @Column(name = "work_phone_number")
+    public String getWorkPhoneNumber() {
+        return this.employeeEntity.getWorkPhoneNumber();
     }
 
-    @Override
-    public void setMobileNumber(String number) {
-        this.employeeEntity.setMobileNumber(number);
+    public void setWorkPhoneNumber(String number) {
+        this.employeeEntity.setWorkPhoneNumber(number);
     }
 
-    @Column(name = "phone_number", length = 30)
-    public String getPhoneNumber() {
-        return this.employeeEntity.getPhoneNumber();
+    @Column(name = "home_phone_number")
+    public String getHomePhoneNumber() {
+        return this.employeeEntity.getHomePhoneNumber();
     }
 
-    @Override
-    public void setPhoneNumber(String number) {
-        this.employeeEntity.setPhoneNumber(number);
+    public void setHomePhoneNumber(String number) {
+        this.employeeEntity.setHomePhoneNumber(number);
     }
 
     @Column(name = "birthday")

@@ -38,12 +38,12 @@ public interface EmployeeEntity extends Serializable {
      void setPostEntity(PostEntity postEntity);
 
      @ApiModelProperty(value = "Мобильный номер")
-     String getMobileNumber();
-     void setMobileNumber(String number);
+     String getWorkPhoneNumber();
+     void setWorkPhoneNumber(String number);
 
      @ApiModelProperty(value = "Телефоный номер")
-     String getPhoneNumber();
-     void setPhoneNumber(String number);
+     String getHomePhoneNumber();
+     void setHomePhoneNumber(String number);
 
      @ApiModelProperty(value = "День рождения")
      Date getBirthday();

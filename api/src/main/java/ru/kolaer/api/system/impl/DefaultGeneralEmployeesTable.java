@@ -29,8 +29,8 @@ public class DefaultGeneralEmployeesTable implements GeneralEmployeesTable {
         EmployeeEntityBase employeeEntityBase = new EmployeeEntityBase();
         employeeEntityBase.setPersonnelNumber(1);
         employeeEntityBase.setId(1);
-        employeeEntityBase.setMobileNumber("79876543210");
-        employeeEntityBase.setPhoneNumber("76543");
+        employeeEntityBase.setWorkPhoneNumber("79876543210");
+        employeeEntityBase.setHomePhoneNumber("76543");
         employeeEntityBase.setGender("Неизвестный");
         employeeEntityBase.setBirthday(new Date());
         employeeEntityBase.setDepartment(departmentEntity);
