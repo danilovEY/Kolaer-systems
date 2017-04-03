@@ -366,12 +366,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
                         (rs, rowNum) -> {
                             EmployeeEntityBase employeeEntityBase = new EmployeeEntityBase();
                             String workPhone = Optional.ofNullable(rs.getString("phone")).orElse("");
-                            if (StringUtils.hasText(workPhone))
-                                workPhone += "; ";
+                            String mobilePhone = Optional.ofNullable(rs.getString("mobile_phone")).orElse("");
+                            if (StringUtils.hasText(mobilePhone))
+                                workPhone += "; " + mobilePhone;
 
                             employeeEntityBase.setEmail(rs.getString("email"));
                             employeeEntityBase.setPersonnelNumber(rs.getInt("person_number"));
-                            employeeEntityBase.setWorkPhoneNumber(workPhone + Optional.ofNullable(rs.getString("mobile_phone")).orElse(""));
+                            employeeEntityBase.setWorkPhoneNumber(workPhone);
                             return employeeEntityBase;
                         });
 
