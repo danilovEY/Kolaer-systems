@@ -17,7 +17,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.beans.TypeServer;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
-import ru.kolaer.server.webportal.mvc.model.dto.BankAccount;
+import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccount;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 

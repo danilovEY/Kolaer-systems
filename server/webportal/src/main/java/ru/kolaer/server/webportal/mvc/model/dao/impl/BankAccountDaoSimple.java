@@ -4,7 +4,7 @@ import org.springframework.stereotype.Repository;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
-import ru.kolaer.server.webportal.mvc.model.dto.BankAccount;
+import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccount;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +23,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
         final EmployeeEntity entity = new EmployeeEntityBase();
         entity.setInitials(initials);
 
-        final BankAccount bankAccount = new BankAccount(entity, "null");
+        final BankAccount bankAccount = new BankAccount(-1, entity, "null");
 
         for (Map.Entry<String, String> entry : initialsAccountMap.entrySet()) {
             if(entry.getValue().equals(initials)) {
@@ -41,13 +41,18 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
+    public void updateOrSave(List<BankAccount> bankAccountList) {
+
+    }
+
+    @Override
     public List<BankAccount> findAll() {
         return this.initialsAccountMap.entrySet().stream()
                 .map(stringStringEntry -> {
                     final EmployeeEntity entity = new EmployeeEntityBase();
                     entity.setInitials(stringStringEntry.getValue());
 
-                    return new BankAccount(entity, stringStringEntry.getKey());
+                    return new BankAccount(-1, entity, stringStringEntry.getKey());
                 }).collect(Collectors.toList());
     }
 
