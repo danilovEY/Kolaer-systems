@@ -37,7 +37,7 @@ public class PluginManager {
     }
 
     public void initialization() throws Exception {
-        final File frameworkDir = new File(System.getProperty("java.io.tmpdir") , defaultPathCache);
+        final File frameworkDir = new File("D:\\Документы", defaultPathCache);
 
         final Map<String, String> frameworkProperties = new HashMap<>();
         frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath() + "/" + UUID.randomUUID());
