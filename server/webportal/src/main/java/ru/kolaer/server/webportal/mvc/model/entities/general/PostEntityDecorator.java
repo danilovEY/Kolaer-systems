@@ -26,8 +26,7 @@ public class PostEntityDecorator implements PostEntity {
 
     @Id
     @Column(name = "id", length = 3)
-    @SequenceGenerator(name = "post.seq", sequenceName = "post_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post.seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return this.postEntity.getId();
     }

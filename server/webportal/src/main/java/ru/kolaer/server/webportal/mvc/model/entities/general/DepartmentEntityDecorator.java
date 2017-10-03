@@ -25,6 +25,7 @@ public class DepartmentEntityDecorator implements DepartmentEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return this.departmentEntity.getId();
     }

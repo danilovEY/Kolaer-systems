@@ -23,8 +23,7 @@ public class NotifyMessageDecorator implements NotifyMessage {
     }
 
     @Id
-    @SequenceGenerator(name = "notifications.seq", sequenceName = "notifications_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notifications.seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @Override
     public Integer getId() {

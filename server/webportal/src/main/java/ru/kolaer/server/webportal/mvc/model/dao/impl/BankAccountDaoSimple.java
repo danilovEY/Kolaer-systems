@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Created by danilovey on 13.12.2016.
  */
-@Repository
+//@Repository
 public class BankAccountDaoSimple implements BankAccountDao {
     private Map<String, String> initialsAccountMap = new HashMap<>();
 

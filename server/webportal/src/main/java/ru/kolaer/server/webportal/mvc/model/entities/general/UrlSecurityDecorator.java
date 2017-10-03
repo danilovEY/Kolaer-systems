@@ -25,8 +25,7 @@ public class UrlSecurityDecorator implements UrlSecurity {
     }
 
     @Id
-    @SequenceGenerator(name = "url_security.seq", sequenceName = "url_security_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "url_security.seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return this.urlSecurity.getId();

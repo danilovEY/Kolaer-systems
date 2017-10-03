@@ -30,20 +30,17 @@ import java.io.IOException;
 @Repository
 @Slf4j
 public class DataBaseInitialization {
-    @Autowired
-    @Qualifier(value = "dataSourceKolaerBase")
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    @Autowired
-    private BankAccountDao bankAccountDao;
+    //@Autowired
+    //private BankAccountDao bankAccountDao;
 
     @Autowired
     private TypeServer typeServer;
 
-    @PostConstruct
+    /*@PostConstruct
     private void initOtherData() {
         if(typeServer.isTest())
             return;
@@ -63,7 +60,7 @@ public class DataBaseInitialization {
                     if(!initials.isEmpty() && !cache.isEmpty()) {
                         final EmployeeEntity entity = new EmployeeEntityBase();
                         entity.setInitials(initials);
-                        final BankAccount account = new BankAccount(entity , cache);
+                        final BankAccount account = new BankAccount(null, entity , cache);
                         this.bankAccountDao.persist(account);
                     }
                 }
@@ -80,7 +77,7 @@ public class DataBaseInitialization {
                 }
             }
         }
-    }
+    }*/
 
     public void initDB() {
         //==============PSR=====================

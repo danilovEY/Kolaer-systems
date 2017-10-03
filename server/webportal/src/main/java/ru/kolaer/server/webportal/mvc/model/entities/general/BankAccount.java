@@ -16,11 +16,12 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel("(Банк) Данные банка")
+@Entity
 @Table(name = "bank_account")
 public class BankAccount {
     @Id
-    @SequenceGenerator(name = "bank_account.seq", sequenceName = "bank_account_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_account.seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Integer id;
 
     @ApiModelProperty("Сотрудник")

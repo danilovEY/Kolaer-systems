@@ -27,8 +27,7 @@ public class RepositoryPasswordHistoryDecorator implements RepositoryPasswordHis
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
-    @SequenceGenerator(name = "repository_pass_history.seq", sequenceName = "repository_pass_history_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "repository_pass_history.seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Override
     public Long getId() {
         return this.repositoryPasswordHistory.getId();

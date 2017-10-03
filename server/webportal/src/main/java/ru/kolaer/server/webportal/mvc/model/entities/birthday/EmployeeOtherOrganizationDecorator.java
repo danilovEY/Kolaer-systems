@@ -21,8 +21,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 	}
 
 	@Id
-	@SequenceGenerator(name = "employee_other_organization.seq", sequenceName = "employee_other_organization_seq")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_other_organization.seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	public short getId() {
 		return this.employeeOtherOrganization.getId();
@@ -31,7 +30,6 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 	public void setId(short id) {
 		this.employeeOtherOrganization.setId(id);
 	}
-
 
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)

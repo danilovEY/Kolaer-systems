@@ -22,6 +22,7 @@ public class TicketRegister implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Integer id;
 
     @Column(name = "close")
