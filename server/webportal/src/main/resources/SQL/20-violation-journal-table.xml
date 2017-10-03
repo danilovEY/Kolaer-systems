@@ -16,6 +16,12 @@
             <column name="department_id" type="BIGINT"/>
         </createTable>
         <addPrimaryKey tableName="violation_journal" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="violation" baseColumnNames="writer_id" constraintName="violation_writer_fk"
+                                 referencedTableName="employee"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="violation" baseColumnNames="department_id" constraintName="violation_department_fk"
+                                 referencedTableName="department"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

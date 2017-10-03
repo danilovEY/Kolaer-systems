@@ -25,6 +25,9 @@
             </column>
         </createTable>
         <addPrimaryKey tableName="psr_state" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="psr_state" baseColumnNames="psr_project_id" constraintName="psr_state_project_fk"
+                                 referencedTableName="psr_register"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

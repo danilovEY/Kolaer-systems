@@ -19,6 +19,9 @@
             </column>
         </createTable>
         <addPrimaryKey tableName="url_security_access" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="url_security_access" baseColumnNames="url_id" constraintName="access_url_fk"
+                                 referencedTableName="url_security"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

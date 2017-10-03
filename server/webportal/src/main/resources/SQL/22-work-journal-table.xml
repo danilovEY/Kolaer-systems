@@ -19,6 +19,9 @@
             <column name="executor_id" type="BIGINT"/>
         </createTable>
         <addPrimaryKey tableName="work_journal" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="work_journal" baseColumnNames="executor_id" constraintName="journal_executor_fk"
+                                 referencedTableName="employee"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

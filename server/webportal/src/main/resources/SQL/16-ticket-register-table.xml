@@ -20,6 +20,9 @@
             <column name="department_id" type="BIGINT"/>
         </createTable>
         <addPrimaryKey tableName="ticket_register" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="ticket_register" baseColumnNames="department_id" constraintName="ticket_register_department_fk"
+                                 referencedTableName="department"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

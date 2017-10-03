@@ -28,6 +28,12 @@
             </column>
         </createTable>
         <addPrimaryKey tableName="psr_register" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="psr_register" baseColumnNames="author_id" constraintName="psr_register_author_fk"
+                                 referencedTableName="employee"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="psr_register" baseColumnNames="admin_id" constraintName="psr_register_admin_fk"
+                                 referencedTableName="employee"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

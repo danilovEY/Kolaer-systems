@@ -22,6 +22,9 @@
             </column>
         </createTable>
         <addPrimaryKey tableName="psr_attachment" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="psr_attachment" baseColumnNames="psr_project_id" constraintName="psr_attachment_project_fk"
+                                 referencedTableName="psr_register"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

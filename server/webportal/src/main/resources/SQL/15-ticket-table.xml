@@ -22,6 +22,12 @@
             </column>
         </createTable>
         <addPrimaryKey tableName="ticket" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="ticket" baseColumnNames="employee_id" constraintName="ticket_employee_fk"
+                                 referencedTableName="employee"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="ticket" baseColumnNames="register_id" constraintName="ticket_register_fk"
+                                 referencedTableName="ticket_register"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

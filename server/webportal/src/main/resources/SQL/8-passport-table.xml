@@ -22,6 +22,9 @@
             </column>
         </createTable>
         <addPrimaryKey tableName="passport" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="passport" baseColumnNames="employee_id" constraintName="passport_employee_fk"
+                                 referencedTableName="employee"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>
