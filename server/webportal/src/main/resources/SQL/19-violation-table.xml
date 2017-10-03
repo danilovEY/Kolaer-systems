@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="19" author="Danilov">
+        <createTable tableName="violation">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="date_end_elimination" type="TIMESTAMP"/>
+            <column name="date_limit_elimination" type="TIMESTAMP"/>
+            <column name="start_making" type="TIMESTAMP"/>
+            <column name="effective" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stage" type="VARCHAR(5)" defaultValue="I">
+                <constraints nullable="false"/>
+            </column>
+            <column name="todo" type="VARCHAR(255)"/>
+            <column name="violation" type="VARCHAR(255)"/>
+            <column name="executor_id" type="BIGINT"/>
+            <column name="type_id" type="BIGINT"/>
+            <column name="writer_id" type="BIGINT"/>
+            <column name="journal_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="violation" columnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

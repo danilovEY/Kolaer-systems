@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="9" author="Danilov">
+        <createTable tableName="post">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="abbreviated_name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="rang" type="INT"/>
+            <column name="type" type="VARCHAR(10)"/>
+            <column name="code" type="VARCHAR(15)"/>
+        </createTable>
+        <addPrimaryKey tableName="post" columnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>
