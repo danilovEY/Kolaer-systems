@@ -6,10 +6,28 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <include file="classpath:/SQL/1-accounts-table.xml"/>
-    <include file="classpath:/SQL/2-roles-table.xml"/>
-    <include file="classpath:/SQL/3-counters-table.xml"/>
-    <include file="classpath:/SQL/4-departments-table.xml"/>
+    <include file="classpath:SQL/6-employee-other-organization-table.xml"/>
+    <include file="classpath:SQL/3-counter-table.xml"/>
+    <include file="classpath:SQL/7-notification-table.xml"/>
+    <include file="classpath:SQL/9-post-table.xml"/>
+    <include file="classpath:SQL/21-violation-type-table.xml"/>
 
+    <include file="classpath:SQL/4-department-table.xml"/>
+    <include file="classpath:SQL/5-employee-table.xml"/>
+    <include file="classpath:SQL/1-account-table.xml"/>
+    <include file="classpath:SQL/2-role-table.xml"/>
+    <include file="classpath:SQL/8-passport-table.xml"/>
+    <include file="classpath:SQL/11-psr-register-table.xml"/>
+    <include file="classpath:SQL/10-psr-attachment-table.xml"/>
+    <include file="classpath:SQL/12-psr-state-table.xml"/>
+    <include file="classpath:SQL/14-repository-password-history-table.xml"/>
+    <include file="classpath:SQL/13-repository-password-table.xml"/>
+    <include file="classpath:SQL/16-ticket-register-table.xml"/>
+    <include file="classpath:SQL/15-ticket-table.xml"/>
+    <include file="classpath:SQL/17-url-security-table.xml"/>
+    <include file="classpath:SQL/18-url-security-assess-table.xml"/>
+    <include file="classpath:SQL/20-violation-journal-table.xml"/>
+    <include file="classpath:SQL/19-violation-table.xml"/>
+    <include file="classpath:SQL/22-work-journal-table.xml"/>
 
 </databaseChangeLog>

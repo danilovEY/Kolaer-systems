@@ -20,9 +20,9 @@
             <column name="id_chief_employee" type="BIGINT"/>
         </createTable>
         <addPrimaryKey tableName="department" columnNames="id"/>
-        <addForeignKeyConstraint baseTableName="department" baseColumnNames="id_chief_employee" constraintName="department_employee_fk"
-                                 referencedTableName="employee"
-                                 referencedColumnNames="id"/>
+        <!--<addForeignKeyConstraint baseTableName="department" baseColumnNames="id_chief_employee" constraintName="department_employee_fk"-->
+                                 <!--referencedTableName="employee"-->
+                                 <!--referencedColumnNames="id"/>-->
     </changeSet>
 
 </databaseChangeLog>
