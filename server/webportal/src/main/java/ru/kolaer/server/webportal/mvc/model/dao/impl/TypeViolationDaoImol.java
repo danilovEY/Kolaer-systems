@@ -4,11 +4,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
 import ru.kolaer.server.webportal.mvc.model.dao.TypeViolationDao;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationEntity;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -21,41 +19,41 @@ public class TypeViolationDaoImol implements TypeViolationDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TypeViolation> findAll() {
-        return this.sessionFactory.getCurrentSession().createCriteria(TypeViolationDecorator.class).list();
+    public List<TypeViolationEntity> findAll() {
+        return this.sessionFactory.getCurrentSession().createCriteria(TypeViolationEntity.class).list();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public TypeViolation findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(TypeViolationDecorator.class, id);
+    public TypeViolationEntity findByID(Integer id) {
+        return this.sessionFactory.getCurrentSession().get(TypeViolationEntity.class, id);
     }
 
     @Override
     @Transactional
-    public void persist(TypeViolation obj) {
+    public void persist(TypeViolationEntity obj) {
         this.sessionFactory.getCurrentSession().persist(obj);
     }
 
     @Override
     @Transactional
-    public void delete(TypeViolation obj) {
+    public void delete(TypeViolationEntity obj) {
         this.sessionFactory.getCurrentSession().delete(obj);
     }
 
     @Override
-    public void delete(List<TypeViolation> objs) {
+    public void delete(List<TypeViolationEntity> objs) {
 
     }
 
     @Override
     @Transactional
-    public void update(TypeViolation entity) {
+    public void update(TypeViolationEntity entity) {
         this.sessionFactory.getCurrentSession().update(entity);
     }
 
     @Override
-    public void update(List<TypeViolation> objs) {
+    public void update(List<TypeViolationEntity> objs) {
 
     }
 }

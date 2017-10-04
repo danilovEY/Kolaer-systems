@@ -20,7 +20,6 @@ public class EmployeeOtherOrganizationDto implements BaseDto {
 	private String secondName;
 	private String thirdName;
 	private String mobilePhone;
-	private String phone;
 	private String post;
 	private String photo;
 	private String workPhoneNumber;

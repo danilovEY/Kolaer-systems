@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccount;
+import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,15 +32,15 @@ public class BankAccountController extends BaseController {
     private final EmployeeDao employeeDao;
 
     @RequestMapping(value = "add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public BankAccount addAccount(@RequestBody BankAccount bankAccount) {
+    public BankAccountEntity addAccount(@RequestBody BankAccountEntity bankAccount) {
         bankAccountDao.persist(bankAccount);
         return bankAccount;
     }
 
 
     @RequestMapping(value = "update", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BankAccount> updateAccount() {
-        List<BankAccount> accounts = new ArrayList<>();
+    public List<BankAccountEntity> updateAccount() {
+        List<BankAccountEntity> accounts = new ArrayList<>();
 
         XSSFWorkbook myExcelBook = null;
         try {
@@ -58,7 +58,7 @@ public class BankAccountController extends BaseController {
                         List<EmployeeEntity> employeeByInitials = employeeDao.findEmployeeByInitials(initials);
                         if(!employeeByInitials.isEmpty()) {
                             EmployeeEntity employeeEntity = employeeByInitials.stream().findFirst().get();
-                            final BankAccount account = new BankAccount(null, employeeEntity, cache);
+                            final BankAccountEntity account = new BankAccountEntity(null, employeeEntity, cache);
                             this.bankAccountDao.persist(account);
                             accounts.add(account);
                         }

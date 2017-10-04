@@ -1,11 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.*;
 
@@ -15,21 +13,21 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel("(Банк) Данные банка")
 @Entity
 @Table(name = "bank_account")
-public class BankAccount {
+public class BankAccountEntity implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Integer id;
+    @Column(name = "id")
+    private Long id;
 
-    @ApiModelProperty("Сотрудник")
-    @OneToOne(targetEntity = EmployeeEntityDecorator.class)
     @JoinColumn(name = "employee_id", nullable = false)
+    private Long employeeId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
     private EmployeeEntity employeeEntity;
 
-    @ApiModelProperty("Счет")
     @Column(name = "check", nullable = false, length = 16)
     private String check;
 }

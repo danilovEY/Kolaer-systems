@@ -2,9 +2,7 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="5" author="Danilov">
         <createTable tableName="employee">
@@ -12,8 +10,8 @@
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="birthday" type="DATE"/>
-            <column name="dismissal_date" type="TIMESTAMP"/>
-            <column name="employment_date" type="TIMESTAMP"/>
+            <column name="dismissal_date" type="DATE"/>
+            <column name="employment_date" type="DATE"/>
             <column name="gender" type="VARCHAR(8)">
                 <constraints nullable="false"/>
             </column>
@@ -33,7 +31,7 @@
             <column name="personnel_number" type="BIGINT(100)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="photo" type="VARCHAR(255)"/>
+            <column name="photo" type="VARCHAR(300)"/>
             <column name="department_id" type="BIGINT"/>
             <column name="post_id" type="BIGINT"/>
             <column name="home_phone_number" type="VARCHAR(255)"/>

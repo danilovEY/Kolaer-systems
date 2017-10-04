@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccount;
+import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,11 +18,11 @@ public class BankAccountDaoSimple implements BankAccountDao {
     private Map<String, String> initialsAccountMap = new HashMap<>();
 
     @Override
-    public BankAccount findByInitials(String initials) {
+    public BankAccountEntity findByInitials(String initials) {
         final EmployeeEntity entity = new EmployeeDto();
         entity.setInitials(initials);
 
-        final BankAccount bankAccount = new BankAccount(-1, entity, "null");
+        final BankAccountEntity bankAccount = new BankAccountEntity(-1, entity, "null");
 
         for (Map.Entry<String, String> entry : initialsAccountMap.entrySet()) {
             if(entry.getValue().equals(initials)) {
@@ -40,48 +40,48 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
-    public void updateOrSave(List<BankAccount> bankAccountList) {
+    public void updateOrSave(List<BankAccountEntity> bankAccountList) {
 
     }
 
     @Override
-    public List<BankAccount> findAll() {
+    public List<BankAccountEntity> findAll() {
         return this.initialsAccountMap.entrySet().stream()
                 .map(stringStringEntry -> {
                     final EmployeeEntity entity = new EmployeeDto();
                     entity.setInitials(stringStringEntry.getValue());
 
-                    return new BankAccount(-1, entity, stringStringEntry.getKey());
+                    return new BankAccountEntity(-1, entity, stringStringEntry.getKey());
                 }).collect(Collectors.toList());
     }
 
     @Override
-    public BankAccount findByID(Integer id) {
+    public BankAccountEntity findByID(Integer id) {
         return null;
     }
 
     @Override
-    public void persist(BankAccount obj) {
+    public void persist(BankAccountEntity obj) {
         this.initialsAccountMap.put(obj.getCheck(), obj.getEmployeeEntity().getInitials());
     }
 
     @Override
-    public void delete(BankAccount obj) {
+    public void delete(BankAccountEntity obj) {
 
     }
 
     @Override
-    public void delete(List<BankAccount> objs) {
+    public void delete(List<BankAccountEntity> objs) {
 
     }
 
     @Override
-    public void update(BankAccount obj) {
+    public void update(BankAccountEntity obj) {
 
     }
 
     @Override
-    public void update(List<BankAccount> objs) {
+    public void update(List<BankAccountEntity> objs) {
 
     }
 }

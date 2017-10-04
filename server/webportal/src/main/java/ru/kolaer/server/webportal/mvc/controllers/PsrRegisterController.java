@@ -9,17 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.dto.PsrAccess;
 import ru.kolaer.server.webportal.mvc.model.dto.PsrRegisterAccess;
-import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStateDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStateEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
@@ -116,7 +116,7 @@ public class PsrRegisterController extends BaseController {
         final List<PsrState> stateDecorators = new ArrayList<>();
         psrRegister.getStateList().forEach(psrState -> {
             if (psrState.getDate() != null && psrState.getComment() != null)
-                stateDecorators.add(new PsrStateDecorator(psrState));
+                stateDecorators.add(new PsrStateEntity(psrState));
         });
         List<PsrState> states = Optional.ofNullable(updateRegister.getStateList()).orElse(new ArrayList<>());
         states.addAll(stateDecorators);
@@ -199,7 +199,7 @@ public class PsrRegisterController extends BaseController {
     @UrlDeclaration(description = "Добавить ПСР-проект", isAccessUser = true)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PsrRegister addPsrRegister(@ApiParam(value = "ПСР-проект", required = true) @RequestBody PsrRegister register) {
-        PsrRegister registerDto = new PsrRegisterDecorator(register);
+        PsrRegister registerDto = new PsrRegisterEntity(register);
 
         if(this.psrRegisterService.uniquePsrRegister(register)) {
             registerDto.setStatus(this.psrStatusService.getStatusByType("Новый"));

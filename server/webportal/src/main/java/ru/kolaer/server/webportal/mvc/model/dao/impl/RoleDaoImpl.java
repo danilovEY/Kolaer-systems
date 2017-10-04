@@ -4,9 +4,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.RoleEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.RoleEntity;
 
 import java.util.List;
 
@@ -22,13 +21,13 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     @Transactional(readOnly = true)
     public List<RoleEntity> findAll() {
-        return sessionFactory.getCurrentSession().createCriteria(RoleEntityDecorator.class).list();
+        return sessionFactory.getCurrentSession().createCriteria(RoleEntity.class).list();
     }
 
     @Override
     @Transactional(readOnly = true)
     public RoleEntity findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(RoleEntityDecorator.class, id);
+        return this.sessionFactory.getCurrentSession().get(RoleEntity.class, id);
     }
 
     @Override

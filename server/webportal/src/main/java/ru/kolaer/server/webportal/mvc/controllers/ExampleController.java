@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
 import java.util.Arrays;
@@ -38,16 +37,16 @@ public class ExampleController extends BaseController {
     )
     @UrlDeclaration(description = "Пример нарушений", isAccessUser = true)
     @RequestMapping(value = "/violations/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<JournalViolation> insertViolations() {
+    public ResponseEntity<JournalViolationEntity> insertViolations() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         final EmployeeEntity employeeEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()).getEmployeeEntity();
 
-        final TypeViolationDecorator typeViolationDecorator = new TypeViolationDecorator();
+        final TypeViolationEntity typeViolationDecorator = new TypeViolationEntity();
         typeViolationDecorator.setId(0);
         typeViolationDecorator.setName("Тип нарушения1");
 
-        final ViolationDecorator violationDecorator = new ViolationDecorator();
+        final ViolationEntity violationDecorator = new ViolationEntity();
         violationDecorator.setTypeViolation(typeViolationDecorator);
         violationDecorator.setStageEnum(StageEnum.I);
         violationDecorator.setEffective(false);
@@ -59,7 +58,7 @@ public class ExampleController extends BaseController {
         violationDecorator.setStartMakingViolation(new Date());
         violationDecorator.setTodo("<p>Todo1</p>");
 
-        final JournalViolationDecorator journalViolationDecorator = new JournalViolationDecorator();
+        final JournalViolationEntity journalViolationDecorator = new JournalViolationEntity();
         journalViolationDecorator.setName("Новый журнал нарушений1");
         journalViolationDecorator.setViolations(Arrays.asList(violationDecorator));
 

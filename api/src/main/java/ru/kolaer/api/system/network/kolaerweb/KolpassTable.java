@@ -1,7 +1,7 @@
 package ru.kolaer.api.system.network.kolaerweb;
 
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryDto;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ import java.util.List;
  * Created by danilovey on 09.02.2017.
  */
 public interface KolpassTable {
-    List<RepositoryPassword> getAllRepositoryPasswords();
-    List<RepositoryPassword> getAllRepositoryPasswordsChief();
-    RepositoryPassword addRepositoryPassword(RepositoryPassword repositoryPasswordDto);
-    RepositoryPassword addHistoryPasswordToRepository(Integer idRep,
-                                                      RepositoryPasswordHistory repositoryPasswordHistory);
-    RepositoryPassword updateRepositoryPassword(RepositoryPassword repositoryPasswordDto);
-    void deleteRepositoryPassword(RepositoryPassword repositoryPasswordDto);
+    List<RepositoryPasswordDto> getAllRepositoryPasswords();
+    List<RepositoryPasswordDto> getAllRepositoryPasswordsChief();
+    RepositoryPasswordDto addRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
+    RepositoryPasswordDto addHistoryPasswordToRepository(Integer idRep,
+                                                      RepositoryPasswordHistoryDto repositoryPasswordHistory);
+    RepositoryPasswordDto updateRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
+    void deleteRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
 
-    RepositoryPassword addRepToOtherEmployee(RepositoryPassword rep);
+    RepositoryPasswordDto addRepToOtherEmployee(RepositoryPasswordDto rep);
 }

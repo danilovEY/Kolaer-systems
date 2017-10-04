@@ -16,10 +16,9 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.config.PathMapping;
-import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurity;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
 import java.lang.reflect.Method;
@@ -107,7 +106,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                         final String key = url + requestMethodName + description;
                         UrlSecurity urlPath = mapUrlPaths.get(key);
                         if (urlPath == null) {
-                            urlPath = new UrlSecurityDecorator();
+                            urlPath = new UrlSecurity();
 
                             final List<String> accessList = new ArrayList<>();
 

@@ -11,15 +11,13 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordHistoryService;
 import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordService;
@@ -57,14 +55,14 @@ public class KolpassController {
     @ApiOperation(value = "Получить все хранилища")
     @UrlDeclaration(description = "Получить все хранилища")
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<RepositoryPassword> getAllRepositoryPasswords() {
+    public List<RepositoryPasswordEntity> getAllRepositoryPasswords() {
             return this.repPassService.getAll();
     }
 
     @ApiOperation(value = "Получить все хранилища начальников")
     @UrlDeclaration(description = "Получить все хранилища начальников")
     @RequestMapping(value = "/get/all/chief", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<RepositoryPassword> getAllRepositoryPasswordsChief() {
+    public List<RepositoryPasswordEntity> getAllRepositoryPasswordsChief() {
         List<Integer> idsChief = this.departmentService.getAll().stream()
                 .map(DepartmentEntity::getChiefEntity)
                 .filter(Objects::nonNull)
@@ -77,7 +75,7 @@ public class KolpassController {
     @ApiOperation(value = "Получить все свои хранилища")
     @UrlDeclaration(description = "Получить все свои хранилища", isAccessUser = true)
     @RequestMapping(value = "/get/all/personal", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<RepositoryPassword> getAllPersonalRepositoryPasswords(
+    public Page<RepositoryPasswordEntity> getAllPersonalRepositoryPasswords(
             @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize
     ) {
@@ -89,8 +87,8 @@ public class KolpassController {
     @ApiOperation(value = "Добавить новое хранилище другому сотруднику")
     @UrlDeclaration(description = "Добавить новое хранилище другому сотруднику")
     @RequestMapping(value = "/add/employee", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public RepositoryPassword addRepositoryPasswordsWithEmployee(
-            @ApiParam("Наименование хранилища") @RequestBody RepositoryPassword repositoryPassword
+    public RepositoryPasswordEntity addRepositoryPasswordsWithEmployee(
+            @ApiParam("Наименование хранилища") @RequestBody RepositoryPasswordEntity repositoryPassword
     ) {
         if(repositoryPassword.getName() == null) {
             throw new BadRequestException("Имя не может быть пустым!");
@@ -99,9 +97,9 @@ public class KolpassController {
         if(repositoryPassword.getEmployee() == null)
             throw new BadRequestException("Не указан сотрудник!");
 
-        repositoryPassword.setEmployee(new EmployeeEntityDecorator(repositoryPassword.getEmployee()));
+        repositoryPassword.setEmployee(new EmployeeEntity(repositoryPassword.getEmployee()));
 
-        this.repPassService.add(new RepositoryPasswordDecorator(repositoryPassword));
+        this.repPassService.add(new RepositoryPasswordEntity(repositoryPassword));
 
         return repositoryPassword;
     }
@@ -109,8 +107,8 @@ public class KolpassController {
     @ApiOperation(value = "Добавить новое хранилище")
     @UrlDeclaration(description = "Добавить новое хранилище", isAccessUser = true)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public RepositoryPassword addRepositoryPasswords(
-            @ApiParam("Наименование хранилища") @RequestBody RepositoryPassword repositoryPassword
+    public RepositoryPasswordEntity addRepositoryPasswords(
+            @ApiParam("Наименование хранилища") @RequestBody RepositoryPasswordEntity repositoryPassword
     ) {
         repositoryPassword.setEmployee(this.serviceLDAP.getAccountByAuthentication().getEmployeeEntity());
         return this.addRepositoryPasswordsWithEmployee(repositoryPassword);
@@ -119,8 +117,8 @@ public class KolpassController {
     @ApiOperation(value = "Добавить новый пароль в хранилище")
     @UrlDeclaration(description = "Добавить новый пароль в хранилище", isAccessUser = true)
     @RequestMapping(value = "/passwords/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public RepositoryPassword addRepositoryPasswordHistory(
-            @ApiParam("Хринилище и пароль (Пароль записывать в lastPassword!)") @RequestBody RepositoryPassword repositoryPassword
+    public RepositoryPasswordEntity addRepositoryPasswordHistory(
+            @ApiParam("Хринилище и пароль (Пароль записывать в lastPassword!)") @RequestBody RepositoryPasswordEntity repositoryPassword
     ) {
         if(repositoryPassword.getId() == null) {
             throw new BadRequestException("ID не может быть пустым!");
@@ -133,14 +131,14 @@ public class KolpassController {
 
         final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
-        final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
+        final RepositoryPasswordEntity rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
         if(rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
                 || accountByAuthentication.getRoles().stream()
                 .anyMatch(role -> role.getType().equals(ADMIN))) {
 
             final RepositoryPasswordHistory lastPassword =
-                    new RepositoryPasswordHistoryDecorator(repositoryPassword.getLastPassword());
+                    new RepositoryPasswordHistoryEntity(repositoryPassword.getLastPassword());
             lastPassword.setPasswordWriteDate(new Date());
             lastPassword.setRepositoryPassword(rep);
 
@@ -170,7 +168,7 @@ public class KolpassController {
     @UrlDeclaration(description = "Удалить хранилище", isAccessUser = true)
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity deleteRepositoryPassword(
-            @ApiParam("Хринилище") @RequestBody RepositoryPassword repositoryPassword
+            @ApiParam("Хринилище") @RequestBody RepositoryPasswordEntity repositoryPassword
     ) {
         if(repositoryPassword.getId() == null) {
             throw new BadRequestException("ID не может быть пустым!");
@@ -178,7 +176,7 @@ public class KolpassController {
 
         final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
-        final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
+        final RepositoryPasswordEntity rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
         if(!rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
                 || accountByAuthentication.getRoles().stream()
@@ -195,8 +193,8 @@ public class KolpassController {
     @ApiOperation(value = "Очистить хранилище")
     @UrlDeclaration(description = "Очистить хранилище", isAccessUser = true)
     @RequestMapping(value = "/clear", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public RepositoryPassword clearRepositoryPassword(
-            @ApiParam("Хринилище") @RequestBody RepositoryPassword repositoryPassword
+    public RepositoryPasswordEntity clearRepositoryPassword(
+            @ApiParam("Хринилище") @RequestBody RepositoryPasswordEntity repositoryPassword
     ) {
         if(repositoryPassword.getId() == null) {
             throw new BadRequestException("ID не может быть пустым!");
@@ -204,7 +202,7 @@ public class KolpassController {
 
         final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
-        final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
+        final RepositoryPasswordEntity rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
         if(!rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
                 || accountByAuthentication.getRoles().stream()
@@ -225,15 +223,15 @@ public class KolpassController {
     @ApiOperation(value = "Обновить хранилище")
     @UrlDeclaration(description = "Обновить хранилище", isAccessUser = true)
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public RepositoryPassword updateRepositoryPassword(
-            @ApiParam("Хринилище") @RequestBody RepositoryPassword repositoryPassword
+    public RepositoryPasswordEntity updateRepositoryPassword(
+            @ApiParam("Хринилище") @RequestBody RepositoryPasswordEntity repositoryPassword
     ) {
         if(repositoryPassword.getId() == null)
             throw new BadRequestException("ID не может быть пустым!");
 
         final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
-        final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
+        final RepositoryPasswordEntity rep = this.repPassService.getRepositoryWithJoinById(repositoryPassword.getId());
 
         if(!rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
                 || accountByAuthentication.getRoles().stream()
@@ -258,7 +256,7 @@ public class KolpassController {
     ) {
         final AccountEntity accountByAuthentication = this.serviceLDAP.getAccountByAuthentication();
         final EmployeeEntity employeeEntity = accountByAuthentication.getEmployeeEntity();
-        final RepositoryPassword rep = this.repPassService.getRepositoryWithJoinById(id);
+        final RepositoryPasswordEntity rep = this.repPassService.getRepositoryWithJoinById(id);
 
         if(!rep.getEmployee().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
                 || accountByAuthentication.getRoles().stream()

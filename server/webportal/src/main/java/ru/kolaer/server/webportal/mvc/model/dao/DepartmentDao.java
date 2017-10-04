@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
-import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
+
+import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 
 /**
  * Created by danilovey on 12.09.2016.

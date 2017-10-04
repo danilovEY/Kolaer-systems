@@ -8,13 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
 import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.Ticket;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
@@ -126,7 +125,7 @@ public class TicketsController extends BaseController {
     @ApiOperation(value = "Добавить талон в реестр")
     @UrlDeclaration(description = "Добавить талон в реестр по ID", isAccessUser = true)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Ticket> addTicketToRegister(@ApiParam(value = "ID реестра", required = true) @RequestBody TicketRegister ticketRegister) {
+    public List<TicketEntity> addTicketToRegister(@ApiParam(value = "ID реестра", required = true) @RequestBody TicketRegister ticketRegister) {
         //Очищаем из запроса пустые объекты
         ticketRegister.setTickets(ticketRegister.getTickets().stream()
                 .filter(ticket -> ticket.getEmployee() != null && ticket.getCount() != null)
@@ -138,9 +137,9 @@ public class TicketsController extends BaseController {
         }
 
         List<Integer> pnumberUpdate = ticketRegister.getTickets().stream().map(ticket -> ticket.getEmployee().getPersonnelNumber()).collect(Collectors.toList());
-        List<Ticket> tickets = Optional.ofNullable(updateTicketRegister.getTickets()).orElse(new ArrayList<>());
+        List<TicketEntity> tickets = Optional.ofNullable(updateTicketRegister.getTickets()).orElse(new ArrayList<>());
 
-        List<Ticket> ticketsDoulbes = tickets.stream().filter(ticket ->
+        List<TicketEntity> ticketsDoulbes = tickets.stream().filter(ticket ->
                 pnumberUpdate.contains(ticket.getEmployee().getPersonnelNumber())).collect(Collectors.toList());
 
         if(ticketsDoulbes.size() > 0){
@@ -149,7 +148,7 @@ public class TicketsController extends BaseController {
             throw new BadRequestException("Найдены дубли: " + initials);
         }
 
-        List<Ticket> ticketsToAdd = ticketRegister.getTickets().stream().map(ticket -> {
+        List<TicketEntity> ticketsToAdd = ticketRegister.getTickets().stream().map(ticket -> {
             ticket.setEmployee(employeeService.getByPersonnelNumber(ticket.getEmployee().getPersonnelNumber()));
             return ticket;
         }).collect(Collectors.toList());
@@ -163,8 +162,8 @@ public class TicketsController extends BaseController {
     @ApiOperation(value = "Обновить талон")
     @UrlDeclaration(description = "Обновить талон по ID", isAccessUser = true)
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Ticket updateTicketToRegister(@ApiParam(value = "ID талона и данные", required = true) @RequestBody Ticket ticket) {
-        Ticket updateTicket = this.ticketService.getById(ticket.getId());
+    public TicketEntity updateTicketToRegister(@ApiParam(value = "ID талона и данные", required = true) @RequestBody TicketEntity ticket) {
+        TicketEntity updateTicket = this.ticketService.getById(ticket.getId());
         updateTicket.setCount(Optional.ofNullable(ticket.getCount()).orElse(updateTicket.getCount()));
         if(ticket.getEmployee() != null && !updateTicket.getEmployee().getPersonnelNumber().equals(ticket.getEmployee().getPersonnelNumber())) {
             updateTicket.setEmployee(this.employeeService.getByPersonnelNumber(ticket.getEmployee().getPersonnelNumber()));
@@ -183,7 +182,7 @@ public class TicketsController extends BaseController {
     @ApiOperation(value = "Удалить талоны из реестра")
     @UrlDeclaration(description = "Удалить талоны из реестра", isAccessUser = true)
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void deleteTicketFromRegister(@ApiParam(value = "ID талонов", required = true) @RequestBody List<Ticket> tickets) {
+    public void deleteTicketFromRegister(@ApiParam(value = "ID талонов", required = true) @RequestBody List<TicketEntity> tickets) {
         tickets.forEach(this.ticketService::delete);
     }
 
@@ -210,7 +209,7 @@ public class TicketsController extends BaseController {
     @ApiOperation(value = "Получить талоны по ID реестра")
     @UrlDeclaration(description = "Получить талоны по ID реестра", isAccessUser = true)
     @RequestMapping(value = "/get/by/register", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Ticket> getTickets(@ApiParam(value = "ID реестра", required = true) @RequestParam(value = "id") Integer id) {
+    public List<TicketEntity> getTickets(@ApiParam(value = "ID реестра", required = true) @RequestParam(value = "id") Integer id) {
         return this.ticketService.getTicketsByRegisterId(id);
     }
 

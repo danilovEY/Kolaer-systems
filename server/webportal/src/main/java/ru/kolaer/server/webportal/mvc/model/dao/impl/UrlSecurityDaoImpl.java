@@ -4,9 +4,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlSecurityDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurity;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,8 +25,8 @@ public class UrlSecurityDaoImpl implements UrlSecurityDao {
 
     @Override
     @Transactional(readOnly = true)
-    public UrlSecurityDecorator findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(UrlSecurityDecorator.class, id);
+    public UrlSecurity findByID(Integer id) {
+        return this.sessionFactory.getCurrentSession().get(UrlSecurity.class, id);
     }
 
     @Override

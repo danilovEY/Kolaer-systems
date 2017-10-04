@@ -1,20 +1,21 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
+
+import ru.kolaer.server.webportal.mvc.model.entities.birthday.EmployeeOtherOrganizationEntity;
 
 import java.util.Date;
 import java.util.List;
 
-public interface EmployeeOtherOrganizationDao extends BirthdayDao<EmployeeOtherOrganization> {
-	List<EmployeeOtherOrganization> getUsersByBirthdayAndOrg(Date date, String organization);
+public interface EmployeeOtherOrganizationDao extends BirthdayDao<EmployeeOtherOrganizationEntity> {
+	List<EmployeeOtherOrganizationEntity> getUsersByBirthdayAndOrg(Date date, String organization);
 	int getCountUserBirthdayAndOrg(Date date, String organization);
 
-	List<EmployeeOtherOrganization> getAll();
-	List<EmployeeOtherOrganization> getAllMaxCount(final int count);
+	List<EmployeeOtherOrganizationEntity> getAll();
+	List<EmployeeOtherOrganizationEntity> getAllMaxCount(final int count);
 	int getRowCount();
 
-	void insertData(EmployeeOtherOrganization data);
-	void insertDataList(List<EmployeeOtherOrganization> dataList);
+	void insertData(EmployeeOtherOrganizationEntity data);
+	void insertDataList(List<EmployeeOtherOrganizationEntity> dataList);
 
-	void update(List<EmployeeOtherOrganization> entity);
+	void update(List<EmployeeOtherOrganizationEntity> entity);
 }

@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
 import lombok.NonNull;
+import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * Created by Danilov on 24.07.2016.
  * Дао с методами входящие в большенство других дао.
  */
-public interface DefaultDao<T> {
+public interface DefaultDao<T extends BaseEntity> {
     /**Получить все объекты.*/
     List<T> findAll();
 

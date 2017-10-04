@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.entities.other.NotifyMessageDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.other.NotifyMessageEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.NotifyMessageService;
 
 /**
@@ -41,7 +41,7 @@ public class NotifyMessageController extends BaseController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void addNotifyMessage(@ApiParam(value = "Сообщение", required = true) @RequestBody NotifyMessage notifyMessage) {
         notifyMessage.setId(1);
-        this.notifyMessageService.update(new NotifyMessageDecorator(notifyMessage));
+        this.notifyMessageService.update(new NotifyMessageEntity(notifyMessage));
     }
 
 }

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.beans.TypeServer;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
 
 /**
@@ -47,7 +47,7 @@ public class DataBaseInitialization {
                     if(!initials.isEmpty() && !cache.isEmpty()) {
                         final EmployeeEntity entity = new EmployeeDto();
                         entity.setInitials(initials);
-                        final BankAccount account = new BankAccount(null, entity , cache);
+                        final BankAccountEntity account = new BankAccountEntity(null, entity , cache);
                         this.bankAccountDao.persist(account);
                     }
                 }
@@ -96,7 +96,7 @@ public class DataBaseInitialization {
             currentSession.flush();
             currentSession.clear();
 
-            TypeViolationDecorator defaultTypeViolation = new TypeViolationDecorator();
+            TypeViolationEntity defaultTypeViolation = new TypeViolationEntity();
             defaultTypeViolation.setName("Состояние ОТ соответствует требованиям");
             currentSession.persist(defaultTypeViolation);
 

@@ -1,13 +1,13 @@
 package ru.kolaer.api.system.network.kolaerweb;
 
-import ru.kolaer.api.mvp.model.kolaerweb.Counter;
+import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 
 /**
  * Created by danilovey on 25.08.2016.
  */
 public interface CounterTable {
-    Counter[] getAllCounters();
-    void addCounter(Counter counter);
-    void updateCounter(Counter counter);
-    void deleteCounter(Counter counter);
+    CounterDto[] getAllCounters();
+    void addCounter(CounterDto counter);
+    void updateCounter(CounterDto counter);
+    void deleteCounter(CounterDto counter);
 }

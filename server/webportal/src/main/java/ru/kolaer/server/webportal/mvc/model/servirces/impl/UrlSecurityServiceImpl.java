@@ -3,9 +3,8 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlSecurityDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurity;
 import ru.kolaer.server.webportal.mvc.model.servirces.RoleService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
@@ -57,7 +56,7 @@ public class UrlSecurityServiceImpl implements UrlSecurityService {
             final UrlSecurity path = this.urlSecurityDao
                     .getPathByUrlAndMethod(urlPath.getUrl(), urlPath.getRequestMethod());
             if(path == null) {
-                this.urlSecurityDao.persist(new UrlSecurityDecorator(urlPath));
+                this.urlSecurityDao.persist(new UrlSecurity(urlPath));
             } else {
                 if(path.getDescription().equals(urlPath.getDescription()) ||
                         path.getAccesses().containsAll(urlPath.getAccesses())) {
@@ -92,7 +91,7 @@ public class UrlSecurityServiceImpl implements UrlSecurityService {
 
     @Override
     public void add(UrlSecurity entity) {
-        this.urlSecurityDao.persist(new UrlSecurityDecorator(entity));
+        this.urlSecurityDao.persist(new UrlSecurity(entity));
     }
 
     @Override

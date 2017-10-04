@@ -1,7 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
 import java.util.List;
 

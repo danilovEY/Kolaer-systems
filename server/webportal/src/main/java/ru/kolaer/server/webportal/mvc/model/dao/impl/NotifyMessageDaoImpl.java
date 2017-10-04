@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.server.webportal.mvc.model.dao.NotifyMessageDao;
-import ru.kolaer.server.webportal.mvc.model.entities.other.NotifyMessageDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.other.NotifyMessageEntity;
 
 import java.util.List;
 
@@ -28,13 +28,13 @@ public class NotifyMessageDaoImpl implements NotifyMessageDao {
     @Override
     @Transactional(readOnly = true)
     public List<NotifyMessage> findAll() {
-        return this.sessionFactory.getCurrentSession().createCriteria(NotifyMessageDecorator.class).list();
+        return this.sessionFactory.getCurrentSession().createCriteria(NotifyMessageEntity.class).list();
     }
 
     @Override
     @Transactional(readOnly = true)
     public NotifyMessage findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(NotifyMessageDecorator.class, id);
+        return this.sessionFactory.getCurrentSession().get(NotifyMessageEntity.class, id);
     }
 
     @Override

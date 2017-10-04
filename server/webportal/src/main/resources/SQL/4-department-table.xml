@@ -2,9 +2,7 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="4" author="Danilov">
         <createTable tableName="department">
@@ -17,7 +15,7 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="id_chief_employee" type="BIGINT"/>
+            <column name="chief_employee_id" type="BIGINT"/>
         </createTable>
         <addPrimaryKey tableName="department" columnNames="id"/>
         <!--<addForeignKeyConstraint baseTableName="department" baseColumnNames="id_chief_employee" constraintName="department_employee_fk"-->

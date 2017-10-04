@@ -6,9 +6,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.Counter;
 import ru.kolaer.server.webportal.mvc.model.dao.CounterDao;
-import ru.kolaer.server.webportal.mvc.model.entities.other.CounterDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.other.CounterEntity;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -23,13 +22,13 @@ public class CounterDaoImpl implements CounterDao {
     @Override
     @Transactional(readOnly = true)
     public List<Counter> findAll() {
-        return this.sessionFactory.getCurrentSession().createCriteria(CounterDecorator.class).list();
+        return this.sessionFactory.getCurrentSession().createCriteria(CounterEntity.class).list();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Counter findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(CounterDecorator.class, id);
+        return this.sessionFactory.getCurrentSession().get(CounterEntity.class, id);
     }
 
     @Override

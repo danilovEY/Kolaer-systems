@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 
+import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 
 /**
  * Created by danilovey on 27.07.2016.

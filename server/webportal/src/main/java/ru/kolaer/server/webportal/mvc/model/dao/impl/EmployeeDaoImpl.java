@@ -22,10 +22,10 @@ import ru.kolaer.api.mvp.model.kolaerweb.TypeRangEnum;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
-import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
-import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PassportEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntity;
 
 import java.io.*;
 import java.net.URLEncoder;
@@ -517,7 +517,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     private EmployeeEntity convertEmployee(Object[] objects) {
-        EmployeeEntity employeeEntity = new EmployeeEntityDecorator();
+        EmployeeEntity employeeEntity = new EmployeeEntity();
         employeeEntity.setId((Integer) objects[0]);
         employeeEntity.setPersonnelNumber((Integer) objects[1]);
 
@@ -629,7 +629,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
             if(postEntityMap.containsKey(key))
                 return postEntityMap.get(key);
 
-            postEntity = new PostEntityDecorator();
+            postEntity = new PostEntity();
             if (postEntity.getName() == null) {
                 postEntity.setRang(Integer.valueOf(rang));
                 final String postWithOutSpace = value.replaceAll(" ","");
@@ -654,7 +654,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
             if(postEntityMap.containsKey(key))
                 return postEntityMap.get(key);
 
-            postEntity = new PostEntityDecorator();
+            postEntity = new PostEntity();
             postEntity.setName(value);
         }
 
@@ -674,7 +674,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
             return departmentEntityMap.get(idDep);
         }
 
-        final DepartmentEntity departmentEntity = new DepartmentEntityDecorator();
+        final DepartmentEntity departmentEntity = new DepartmentEntity();
         departmentEntity.setId(idDep);
 
         final String depName = row.getCell(nameColumns.indexOf(DEP_NAME)).getStringCellValue();
@@ -699,7 +699,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 || newEmployeesMap.containsKey(Integer.valueOf(value)))
             return null;
 
-        EmployeeEntity newEmployeeEntity = new EmployeeEntityDecorator();
+        EmployeeEntity newEmployeeEntity = new EmployeeEntity();
         newEmployeeEntity.setPersonnelNumber(Integer.valueOf(value));
 
         value = row.getCell(nameColumns.indexOf(SECOND_NAME)).getStringCellValue();

@@ -6,18 +6,15 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
@@ -26,14 +23,18 @@ import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dto.JournalAccess;
 import ru.kolaer.server.webportal.mvc.model.dto.JournalViolationAccess;
 import ru.kolaer.server.webportal.mvc.model.dto.ViolationAccess;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.*;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -141,7 +142,7 @@ public class ViolationController extends BaseController {
         access.setAddAnyJournal(isAdmin);
 
         if(gettingAll) {
-            List<JournalViolation> journalViolations;
+            List<JournalViolationEntity> journalViolations;
             if(isAdmin) {
                 journalViolations = this.journalViolationService.getAll();
             } else {
@@ -166,7 +167,7 @@ public class ViolationController extends BaseController {
     @UrlDeclaration(description = "Получить доступы для нарушений в журнале", isAccessUser  = true)
     @RequestMapping(value = "/access", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ViolationAccess> getViolationAccess(@ApiParam("ID журнала") @RequestParam("id") Integer id) {
-        JournalViolation journalViolation = this.journalViolationService.getById(id);
+        JournalViolationEntity journalViolation = this.journalViolationService.getById(id);
 
         if(journalViolation != null) {
             final AccountEntity account = this.serviceLDAP.getAccountByAuthentication();
@@ -196,7 +197,7 @@ public class ViolationController extends BaseController {
     )
     @UrlDeclaration(description = "Добавить журнал для нарушений", isAccessUser = true)
     @RequestMapping(value = "/journal/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public JournalViolation addJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody JournalViolation violation) {
+    public JournalViolationEntity addJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody JournalViolationEntity violation) {
         if(violation.getName()== null)
             throw new BadRequestException("Имя не может быть пустым!");
 
@@ -210,7 +211,7 @@ public class ViolationController extends BaseController {
             }
         }
 
-        JournalViolation journalViolation = new JournalViolationDecorator(violation);
+        JournalViolationEntity journalViolation = new JournalViolationEntity(violation);
         journalViolation.setWriter(accountByAuthentication.getEmployeeEntity());
         if(journalViolation.getDepartment() == null) {
             journalViolation.setDepartment(accountByAuthentication.getEmployeeEntity().getDepartment());
@@ -228,8 +229,8 @@ public class ViolationController extends BaseController {
     )
     @UrlDeclaration(description = "Обновить журнал для нарушений", isAccessUser = true)
     @RequestMapping(value = "/journal/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public JournalViolation updateJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody JournalViolation violation) {
-        JournalViolation journalViolation = this.journalViolationService.getById(violation.getId());
+    public JournalViolationEntity updateJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody JournalViolationEntity violation) {
+        JournalViolationEntity journalViolation = this.journalViolationService.getById(violation.getId());
         if(violation.getDepartment() != null) {
             journalViolation.setDepartment(departmentService.getById(violation.getDepartment().getId()));
         }
@@ -258,10 +259,10 @@ public class ViolationController extends BaseController {
     )
     @UrlDeclaration(description = "Удалить журнал для нарушений", isAccessUser = true)
     @RequestMapping(value = "/journal/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void deleteJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody List<JournalViolation> journalViolations) {
+    public void deleteJournalViolation(@ApiParam(value = "Журнал нарушений") @RequestBody List<JournalViolationEntity> journalViolations) {
         journalViolations.stream().filter(journalViolation -> journalViolation.getId() != null)
                 .forEach(journalViolation -> {
-                    JournalViolation journal = this.journalViolationService.getById(journalViolation.getId());
+                    JournalViolationEntity journal = this.journalViolationService.getById(journalViolation.getId());
                     this.violationService.deleteByJournalId(journal.getId());
                     this.journalViolationService.delete(journal);
         });
@@ -274,7 +275,7 @@ public class ViolationController extends BaseController {
     )
     @UrlDeclaration(description = "Получить все журналы с нарушениями", isAccessUser = true)
     @RequestMapping(value = "/journal/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<JournalViolation> getAllJournal(
+    public Page<JournalViolationEntity> getAllJournal(
             @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         final AccountEntity account = this.serviceLDAP.getAccountByAuthentication();
@@ -399,10 +400,10 @@ public class ViolationController extends BaseController {
     )
     @UrlDeclaration(description = "Добавить нарушение в журнал", isAccessUser = true)
     @RequestMapping(value = "/add/journal", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Violation addViolation(@ApiParam(value = "Журнал с нарушением") @RequestBody JournalViolation journalViolation) {
+    public Violation addViolation(@ApiParam(value = "Журнал с нарушением") @RequestBody JournalViolationEntity journalViolation) {
         EmployeeEntity employeeEntity = serviceLDAP.getAccountByAuthentication().getEmployeeEntity();
 
-        JournalViolation generalJournalViolation = this.journalViolationService.getById(journalViolation.getId());
+        JournalViolationEntity generalJournalViolation = this.journalViolationService.getById(journalViolation.getId());
         if(generalJournalViolation == null)
             throw new BadRequestException("Не найден журнал с ID: " + journalViolation.getId());
 
@@ -417,7 +418,7 @@ public class ViolationController extends BaseController {
             if (v.getExecutor() != null)
                 v.setExecutor(this.employeeService.getByPersonnelNumber(v.getExecutor().getPersonnelNumber()));
             v.setJournalViolation(generalJournalViolation);
-            lastAdd = new ViolationDecorator(v);
+            lastAdd = new ViolationEntity(v);
 
             this.violationService.add(lastAdd);
             lastAdd.setJournalViolation(null);
@@ -432,7 +433,7 @@ public class ViolationController extends BaseController {
     )
     @UrlDeclaration(description = "Получить все типы нарушений", isAccessUser = true)
     @RequestMapping(value = "/type/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<TypeViolation> getAllTypes() {
+    public List<TypeViolationEntity> getAllTypes() {
         return this.typeViolationService.getAll();
     }
 
@@ -457,7 +458,7 @@ public class ViolationController extends BaseController {
         if(isAdmin) {
             return this.violationService.getByIdJournal(id, number, pageSize);
         } else {
-            final JournalViolation journal = this.journalViolationService.getById(id);
+            final JournalViolationEntity journal = this.journalViolationService.getById(id);
             if(journal.getWriter().getPersonnelNumber().equals(employeeEntity.getPersonnelNumber())
                     || (journal.getDepartment().getId().equals(employeeEntity.getDepartment().getId())
                     && roleStream.contains(COURATOR_VIOLATION))) {

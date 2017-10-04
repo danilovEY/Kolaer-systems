@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.Ticket;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -20,43 +19,43 @@ public class TicketDaoImpl implements TicketDao {
     private SessionFactory sessionFactory;
 
     @Transactional(readOnly = true)
-    public List<Ticket> findAll() {
-        return this.sessionFactory.getCurrentSession().createCriteria(Ticket.class).list();
+    public List<TicketEntity> findAll() {
+        return this.sessionFactory.getCurrentSession().createCriteria(TicketEntity.class).list();
     }
 
     @Transactional(readOnly = true)
-    public Ticket findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(Ticket.class, id);
+    public TicketEntity findByID(Integer id) {
+        return this.sessionFactory.getCurrentSession().get(TicketEntity.class, id);
     }
 
     @Transactional
-    public void persist(Ticket obj) {
+    public void persist(TicketEntity obj) {
         this.sessionFactory.getCurrentSession().persist(obj);
     }
 
     @Transactional
-    public void delete(Ticket obj) {
+    public void delete(TicketEntity obj) {
         this.sessionFactory.getCurrentSession().delete(obj);
     }
 
     @Override
-    public void delete(List<Ticket> objs) {
+    public void delete(List<TicketEntity> objs) {
 
     }
 
     @Transactional
-    public void update(Ticket obj) {
+    public void update(TicketEntity obj) {
         this.sessionFactory.getCurrentSession().update(obj);
     }
 
     @Override
-    public void update(List<Ticket> objs) {
+    public void update(List<TicketEntity> objs) {
 
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Ticket> findAllByRegisterId(Integer id) {
+    public List<TicketEntity> findAllByRegisterId(Integer id) {
         return this.sessionFactory.getCurrentSession()
                 .createQuery("FROM Ticket t WHERE t.ticketRegister.id = :id")
                 .setParameter("id", id)

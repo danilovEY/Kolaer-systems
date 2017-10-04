@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.mvc.model.dao.RepositoryPasswordHistoryDao;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,8 +37,8 @@ public class RepositoryPasswordHistoryDaoImpl implements RepositoryPasswordHisto
 
     @Override
     @Transactional(readOnly = true)
-    public RepositoryPasswordHistoryDecorator findByID(@NonNull Integer id) {
-        return (RepositoryPasswordHistoryDecorator) this.sessionFactory.getCurrentSession()
+    public RepositoryPasswordHistoryEntity findByID(@NonNull Integer id) {
+        return (RepositoryPasswordHistoryEntity) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM RepositoryPasswordHistoryDecorator r WHERE r.id = :id")
                 .setParameter("id", id)
                 .uniqueResult();
@@ -104,7 +104,7 @@ public class RepositoryPasswordHistoryDaoImpl implements RepositoryPasswordHisto
                 .setParameter("id", id)
                 .uniqueResult();
 
-        List<RepositoryPasswordHistoryDecorator> result = currentSession
+        List<RepositoryPasswordHistoryEntity> result = currentSession
                 .createQuery("FROM RepositoryPasswordHistoryDecorator p WHERE p.repositoryPassword.id = :id")
                 .setParameter("id", id)
                 .setFirstResult((number - 1) * pageSize)

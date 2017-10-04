@@ -10,7 +10,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.server.webportal.mvc.model.dao.ViolationDao;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -28,13 +28,13 @@ public class ViolationDaoImpl implements ViolationDao {
     @Override
     @Transactional(readOnly = true)
     public List<Violation> findAll() {
-        return this.sessionFactory.getCurrentSession().createCriteria(ViolationDecorator.class).list();
+        return this.sessionFactory.getCurrentSession().createCriteria(ViolationEntity.class).list();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Violation findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(ViolationDecorator.class, id);
+        return this.sessionFactory.getCurrentSession().get(ViolationEntity.class, id);
     }
 
     @Override

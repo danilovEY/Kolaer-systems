@@ -2,9 +2,7 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="12" author="Danilov">
         <createTable tableName="psr_state">
@@ -20,12 +18,12 @@
             <column name="plan" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
-            <column name="psr_project_id" type="BIGINT">
+            <column name="psr_register_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <addPrimaryKey tableName="psr_state" columnNames="id"/>
-        <addForeignKeyConstraint baseTableName="psr_state" baseColumnNames="psr_project_id" constraintName="psr_state_project_fk"
+        <addForeignKeyConstraint baseTableName="psr_state" baseColumnNames="psr_register_id" constraintName="psr_state_project_fk"
                                  referencedTableName="psr_register"
                                  referencedColumnNames="id"/>
     </changeSet>

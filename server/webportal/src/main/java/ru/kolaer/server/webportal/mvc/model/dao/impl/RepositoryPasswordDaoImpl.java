@@ -10,9 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.server.webportal.mvc.model.dao.RepositoryPasswordDao;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,50 +28,50 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<RepositoryPassword> findAll() {
+    public List<RepositoryPasswordEntity> findAll() {
         return this.sessionFactory.getCurrentSession().createQuery("FROM RepositoryPasswordDecorator").list();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public RepositoryPassword findByID(@NonNull Integer id) {
-        return (RepositoryPasswordDecorator) this.sessionFactory.getCurrentSession()
+    public RepositoryPasswordEntity findByID(@NonNull Integer id) {
+        return (RepositoryPasswordEntity) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM RepositoryPasswordDecorator r WHERE r.id = :id")
                 .setParameter("id", id).uniqueResult();
     }
 
     @Override
     @Transactional
-    public void persist(@NonNull RepositoryPassword obj) {
+    public void persist(@NonNull RepositoryPasswordEntity obj) {
         this.sessionFactory.getCurrentSession().persist(obj);
     }
 
     @Override
     @Transactional
-    public void delete(@NonNull RepositoryPassword obj) {
+    public void delete(@NonNull RepositoryPasswordEntity obj) {
         this.sessionFactory.getCurrentSession().delete(obj);
     }
 
     @Override
     @Transactional
-    public void delete(@NonNull List<RepositoryPassword> objs) {
+    public void delete(@NonNull List<RepositoryPasswordEntity> objs) {
         this.sessionFactory.getCurrentSession()
                 .createQuery("DELETE FROM RepositoryPasswordDecorator r WHERE r.id IN :objIds")
                 .setParameterList("objIds", objs.stream()
                         .filter(pass -> pass.getId() != null)
-                        .map(RepositoryPassword::getId)
+                        .map(RepositoryPasswordEntity::getId)
                         .collect(Collectors.toList())
                 ).executeUpdate();
     }
 
     @Override
     @Transactional
-    public void update(@NonNull RepositoryPassword obj) {
+    public void update(@NonNull RepositoryPasswordEntity obj) {
         this.sessionFactory.getCurrentSession().update(obj);
     }
 
     @Override
-    public void update(@NonNull List<RepositoryPassword> objs) {
+    public void update(@NonNull List<RepositoryPasswordEntity> objs) {
         final Session currentSession = this.sessionFactory.getCurrentSession();
         final Transaction transaction = currentSession.getTransaction();
         try {
@@ -97,12 +96,12 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<RepositoryPassword> findAllByPnumber(Integer pnumber, Integer number, Integer pageSize) {
+    public Page<RepositoryPasswordEntity> findAllByPnumber(Integer pnumber, Integer number, Integer pageSize) {
         final Long count = (Long) this.sessionFactory.getCurrentSession()
                 .createQuery("SELECT COUNT(r.id) FROM RepositoryPasswordDecorator r WHERE r.employee.personnelNumber = :pnumber")
                 .setParameter("pnumber", pnumber).uniqueResult();
 
-        List<RepositoryPassword> repositories = this.sessionFactory.getCurrentSession()
+        List<RepositoryPasswordEntity> repositories = this.sessionFactory.getCurrentSession()
                 .createQuery("FROM RepositoryPasswordDecorator r WHERE r.employee.personnelNumber = :pnumber")
                 .setParameter("pnumber", pnumber)
                 .setFirstResult((number - 1) * pageSize)
@@ -112,8 +111,8 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
     }
 
     @Transactional(readOnly = true)
-    public RepositoryPassword findByNameAndPnumber(String name, Integer pnumber) {
-        return (RepositoryPasswordDecorator) this.sessionFactory.getCurrentSession()
+    public RepositoryPasswordEntity findByNameAndPnumber(String name, Integer pnumber) {
+        return (RepositoryPasswordEntity) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM RepositoryPasswordDecorator r WHERE r.employee.personnelNumber = :pnumber AND r.name = :name")
                 .setParameter("pnumber", pnumber)
                 .setParameter("name", name)
@@ -121,8 +120,8 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
     }
 
     @Transactional(readOnly = true)
-    public RepositoryPassword findRepositoryWithJoinById(Integer id) {
-        RepositoryPasswordDecorator password = (RepositoryPasswordDecorator) this.sessionFactory.getCurrentSession()
+    public RepositoryPasswordEntity findRepositoryWithJoinById(Integer id) {
+        RepositoryPasswordEntity password = (RepositoryPasswordEntity) this.sessionFactory.getCurrentSession()
                 .createQuery("SELECT r FROM RepositoryPasswordDecorator r JOIN r.employee WHERE r.id = :id")
                 .setParameter("id", id).uniqueResult();
         return password;
@@ -130,7 +129,7 @@ public class RepositoryPasswordDaoImpl implements RepositoryPasswordDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<RepositoryPassword> findAllByPnumbers(List<Integer> idsChief) {
+    public List<RepositoryPasswordEntity> findAllByPnumbers(List<Integer> idsChief) {
         return this.sessionFactory.getCurrentSession()
                 .createQuery("FROM RepositoryPasswordDecorator r WHERE r.employee.personnelNumber IN :iDs")
                 .setParameterList("iDs", idsChief)

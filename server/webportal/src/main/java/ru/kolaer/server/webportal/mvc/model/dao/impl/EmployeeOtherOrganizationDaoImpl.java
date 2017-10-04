@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeOtherOrganizationDao;
-import ru.kolaer.server.webportal.mvc.model.entities.birthday.EmployeeOtherOrganizationDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.birthday.EmployeeOtherOrganizationEntity;
 
 import java.util.*;
 
@@ -105,7 +105,7 @@ public class EmployeeOtherOrganizationDaoImpl implements EmployeeOtherOrganizati
 			final String key = entity.getInitials() + entity.getOrganization() + entity.getPost();
 			EmployeeOtherOrganization dbEmp = mapEmp.get(key);
 			if(dbEmp == null) {
-				dbEmp = new EmployeeOtherOrganizationDecorator(entity);
+				dbEmp = new EmployeeOtherOrganizationEntity(entity);
 				this.sessionFactory.getCurrentSession().persist(dbEmp);
 			} else {
 				dbEmp.setBirthday(entity.getBirthday());

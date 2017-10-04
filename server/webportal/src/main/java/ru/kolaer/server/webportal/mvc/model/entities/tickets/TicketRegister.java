@@ -1,10 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.tickets;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,28 +15,28 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "ticket_register")
-@ApiModel("(Талоны) Реестр талонов")
-public class TicketRegister implements Serializable {
+public class TicketRegister implements Serializable, BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Integer id;
+    private Long id;
 
-    @Column(name = "close")
+    @Column(name = "close", nullable = false)
     private boolean close;
 
-    @ApiModelProperty(value = "Список талонов")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ticketRegister")
-    private List<Ticket> tickets;
+    @Column(name = "department_id")
+    private Long departmentId;
 
-    @ApiModelProperty(value = "Подразделение")
-    @OneToOne(targetEntity = DepartmentEntityDecorator.class, cascade = CascadeType.DETACH)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticketRegister")
+    private List<TicketEntity> tickets;
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_department")
     private DepartmentEntity department;
 
-    @ApiModelProperty(value = "Дата создания")
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_register")
     private Date createRegister;
 
 }

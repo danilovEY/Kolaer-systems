@@ -1,19 +1,19 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterEntity;
 
 import java.util.List;
 
 /**
  * Created by danilovey on 29.07.2016.
  */
-public interface PsrRegisterDao extends DefaultDao<PsrRegister> {
-    List<PsrRegister> getIdAndNamePsrRegister();
+public interface PsrRegisterDao extends DefaultDao<PsrRegisterEntity> {
+    List<PsrRegisterEntity> getIdAndNamePsrRegister();
     void deleteById(Integer ID);
-    PsrRegister getPsrRegisterByName(String name);
-    Object getCountEqualsPsrRegister(PsrRegister psrRegister);
+    PsrRegisterEntity getPsrRegisterByName(String name);
+    Object getCountEqualsPsrRegister(PsrRegisterEntity psrRegister);
     List getPsrRegisterByStatusTitleComment(Integer status, String name, String comment);
 
-    Page<PsrRegister> findAll(Integer number, Integer pageSize);
+    Page<PsrRegisterEntity> findAll(Integer number, Integer pageSize);
 }

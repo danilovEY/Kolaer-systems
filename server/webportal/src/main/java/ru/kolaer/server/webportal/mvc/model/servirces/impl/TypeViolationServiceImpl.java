@@ -33,21 +33,21 @@ public class TypeViolationServiceImpl implements TypeViolationService {
     @Override
     public void add(TypeViolation entity) {
         if(entity == null)
-            throw new IllegalArgumentException("TypeViolation is null!");
+            throw new IllegalArgumentException("TypeViolationEntity is null!");
         this.typeViolationDao.persist(entity);
     }
 
     @Override
     public void delete(TypeViolation entity) {
         if(entity == null)
-            throw new IllegalArgumentException("TypeViolation is null!");
+            throw new IllegalArgumentException("TypeViolationEntity is null!");
         this.typeViolationDao.delete(entity);
     }
 
     @Override
     public void update(TypeViolation entity) {
         if(entity == null)
-            throw new IllegalArgumentException("TypeViolation is null!");
+            throw new IllegalArgumentException("TypeViolationEntity is null!");
         this.typeViolationDao.update(entity);
     }
 

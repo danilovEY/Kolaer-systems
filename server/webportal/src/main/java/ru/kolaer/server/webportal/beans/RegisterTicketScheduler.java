@@ -3,14 +3,13 @@ package ru.kolaer.server.webportal.beans;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTimeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.Ticket;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 
@@ -20,7 +19,8 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -80,7 +80,7 @@ public class RegisterTicketScheduler {
             allOpenRegister.forEach(ticketRegister -> ticketRegister.setClose(true));
             this.ticketRegisterService.update(allOpenRegister);
 
-            List<Ticket> allTickets = new ArrayList<>();
+            List<TicketEntity> allTickets = new ArrayList<>();
             allOpenRegister.stream().filter(t -> t.getTickets() != null).map(TicketRegister::getTickets)
                     .forEach(allTickets::addAll);
 
@@ -109,8 +109,8 @@ public class RegisterTicketScheduler {
     }
 
     public boolean generateSetTicketDocument(Integer count, String header, String typeTicket, String textMail) {
-        List<Ticket> allTiskets = this.bankAccountDao.findAll().stream().map(bankAccount -> {
-            final Ticket ticket = new Ticket();
+        List<TicketEntity> allTiskets = this.bankAccountDao.findAll().stream().map(bankAccount -> {
+            final TicketEntity ticket = new TicketEntity();
             ticket.setEmployee(bankAccount.getEmployeeEntity());
             ticket.setCount(count);
             return ticket;
@@ -119,7 +119,7 @@ public class RegisterTicketScheduler {
         return this.sendMail(allTiskets, header, typeTicket, textMail);
     }
 
-    private boolean sendMail(List<Ticket> tickets, String header, String typeTickets, String text) {
+    private boolean sendMail(List<TicketEntity> tickets, String header, String typeTickets, String text) {
         if (tickets.size() > 0) {
             try {
                 final File genFile = this.generateTextFile(tickets, header, typeTickets, text);
@@ -141,7 +141,7 @@ public class RegisterTicketScheduler {
         return false;
     }
 
-    private File generateTextFile(List<Ticket> tickets, String header, String type, String text) throws IOException {
+    private File generateTextFile(List<TicketEntity> tickets, String header, String type, String text) throws IOException {
         final LocalDateTime now = LocalDateTime.now();
         String fileName = "tickets/Z001000.KOLAER_ENROLL0010001." + String.format("%03d",now.getDayOfYear());
         final String[] dateTime = dateTimeFormatter.format(now).split("-");
@@ -164,7 +164,7 @@ public class RegisterTicketScheduler {
             printWriter.printf("H %s %s %s", dateTime[0], dateTime[1], header);
             printWriter.printf(System.lineSeparator());
             int countTickets = 0;
-            for(final Ticket ticket : tickets) {
+            for(final TicketEntity ticket : tickets) {
                 final String initials = ticket.getEmployee().getInitials().toUpperCase();
                 String check = bankAccountDao.findByInitials(initials).getCheck();
                 if(check != null) {

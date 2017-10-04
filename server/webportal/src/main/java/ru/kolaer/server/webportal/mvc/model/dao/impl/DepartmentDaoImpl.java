@@ -4,9 +4,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 
 import java.util.List;
 
@@ -21,13 +20,13 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
     @Transactional(readOnly = true)
     public List<DepartmentEntity> findAll() {
-        return sessionFactory.getCurrentSession().createCriteria(DepartmentEntityDecorator.class).list();
+        return sessionFactory.getCurrentSession().createCriteria(DepartmentEntity.class).list();
     }
 
     @Override
     @Transactional(readOnly = true)
     public DepartmentEntity findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(DepartmentEntityDecorator.class, id);
+        return this.sessionFactory.getCurrentSession().get(DepartmentEntity.class, id);
     }
 
     @Override

@@ -7,12 +7,11 @@ import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterDecorator;
+import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterEntity;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     @Override
     @Transactional(readOnly = true)
     public PsrRegister findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(PsrRegisterDecorator.class, id);
+        return this.sessionFactory.getCurrentSession().get(PsrRegisterEntity.class, id);
     }
 
     @Override
@@ -68,11 +67,11 @@ public class PsrRegisterDaoImpl implements PsrRegisterDao {
     @Override
     @Transactional(readOnly = true)
     public List<PsrRegister> getIdAndNamePsrRegister() {
-        return this.sessionFactory.getCurrentSession().createCriteria(PsrRegisterDecorator.class)
+        return this.sessionFactory.getCurrentSession().createCriteria(PsrRegisterEntity.class)
                 .setProjection(Projections.projectionList()
                         .add(Projections.property("id"), "id")
                         .add(Projections.property("name"), "name"))
-                .setResultTransformer(Transformers.aliasToBean(PsrRegisterDecorator.class)).list();
+                .setResultTransformer(Transformers.aliasToBean(PsrRegisterEntity.class)).list();
     }
 
     @Override
