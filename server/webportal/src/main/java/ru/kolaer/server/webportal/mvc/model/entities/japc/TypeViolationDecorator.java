@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.japc;
 
 import org.hibernate.annotations.Immutable;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolationBase;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolationDto;
 
 import javax.persistence.*;
 
@@ -16,7 +16,7 @@ public class TypeViolationDecorator implements TypeViolation {
     private TypeViolation typeViolation;
 
     public TypeViolationDecorator() {
-        this(new TypeViolationBase());
+        this(new TypeViolationDto());
     }
 
     public TypeViolationDecorator(TypeViolation typeViolation) {

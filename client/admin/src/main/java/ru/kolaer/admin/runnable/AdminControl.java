@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox;
 import ru.kolaer.admin.service.PprService;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageBase;
+import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
@@ -105,7 +105,7 @@ public class AdminControl implements UniformSystemPlugin {
 	}
 
 	private void sendMessage(String message) {
-		final NotifyMessage notifyMessage = new NotifyMessageBase();
+		final NotifyMessage notifyMessage = new NotifyMessageDto();
 		notifyMessage.setMessage(message);
 		try {
 			editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().addNotifyMessage(notifyMessage);

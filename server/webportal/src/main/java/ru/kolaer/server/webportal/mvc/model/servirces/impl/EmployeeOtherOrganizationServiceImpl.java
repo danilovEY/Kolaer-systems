@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeOtherOrganizationDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeOtherOrganizationService;
 
@@ -64,7 +64,7 @@ public class EmployeeOtherOrganizationServiceImpl implements EmployeeOtherOrgani
                     final String email = element.getAttribute("ows_EMail");
                     final String birthday = element.getAttribute("ows_Birthday");
 
-                    final EmployeeOtherOrganization employee = new EmployeeOtherOrganizationBase();
+                    final EmployeeOtherOrganization employee = new EmployeeOtherOrganizationDto();
                     employee.setInitials(name);
                     employee.setPost(post);
                     employee.setDepartment(department);

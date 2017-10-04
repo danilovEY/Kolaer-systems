@@ -9,64 +9,59 @@ import java.util.Date;
  * Created by danilovey on 13.02.2017.
  */
 public class DefaultGeneralEmployeesTable implements GeneralEmployeesTable {
-    private final EmployeeEntity[] entities = new EmployeeEntity[1];
+    private final EmployeeDto[] entities = new EmployeeDto[1];
 
 
     public DefaultGeneralEmployeesTable() {
-        PostEntity postEntity = new PostEntityBase();
-        postEntity.setId(1);
+        PostDto postEntity = new PostDto();
         postEntity.setAbbreviatedName("Должность");
         postEntity.setName("Моя должность");
         postEntity.setTypeRang(TypeRangEnum.CATEGORY.getName());
         postEntity.setRang(1);
 
-        DepartmentEntity departmentEntity = new DepartmentEntityBase();
-        departmentEntity.setId(1);
+        DepartmentDto departmentEntity = new DepartmentDto();
         departmentEntity.setAbbreviatedName("Подразделение");
         departmentEntity.setName("Мое подразделение");
-        departmentEntity.setChiefEntity(1);
 
-        EmployeeEntityBase employeeEntityBase = new EmployeeEntityBase();
-        employeeEntityBase.setPersonnelNumber(1);
-        employeeEntityBase.setId(1);
-        employeeEntityBase.setWorkPhoneNumber("79876543210");
-        employeeEntityBase.setHomePhoneNumber("76543");
-        employeeEntityBase.setGender("Неизвестный");
-        employeeEntityBase.setBirthday(new Date());
-        employeeEntityBase.setDepartment(departmentEntity);
-        employeeEntityBase.setPostEntity(postEntity);
+        EmployeeDto employeeDto = new EmployeeDto();
+        employeeDto.setWorkPhoneNumber("79876543210");
+        employeeDto.setHomePhoneNumber("76543");
+        employeeDto.setGender(EnumGender.MALE);
+        employeeDto.setBirthday(new Date());
+        employeeDto.setDepartment(departmentEntity);
+        employeeDto.setPost(postEntity);
 
-        this.entities[0] = employeeEntityBase;
+        this.entities[0] = employeeDto;
 
     }
 
     @Override
-    public EmployeeEntity[] getAllUser() {
+    public EmployeeDto[] getAllUser() {
         return this.entities;
     }
 
     @Override
-    public EmployeeEntity[] getUsersMax(int maxCount) {
+    public EmployeeDto[] getUsersMax(int maxCount) {
         return this.entities;
     }
 
     @Override
-    public EmployeeEntity[] getUsersByBirthday(Date date) {
+    public EmployeeDto[] getUsersByBirthday(Date date) {
         return this.entities;
     }
 
     @Override
-    public EmployeeEntity[] getUsersByRangeBirthday(Date dateBegin, Date dateEnd) {
+    public EmployeeDto[] getUsersByRangeBirthday(Date dateBegin, Date dateEnd) {
         return this.entities;
     }
 
     @Override
-    public EmployeeEntity[] getUsersBirthdayToday() {
+    public EmployeeDto[] getUsersBirthdayToday() {
         return this.entities;
     }
 
     @Override
-    public EmployeeEntity[] getUsersByInitials(String initials) {
+    public EmployeeDto[] getUsersByInitials(String initials) {
         return this.entities;
     }
 

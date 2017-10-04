@@ -18,41 +18,34 @@ public class DefaultAuthentication implements Authentication {
     private final List<AuthenticationObserver> observers = new ArrayList<>();
     private final TokenJson tokenJson;
     private boolean isAuth = false;
-    private final AccountEntity ACCOUNT;
+    private final AccountDto ACCOUNT;
 
     public DefaultAuthentication() {
-        final RoleEntityBase roleEntityBase = new RoleEntityBase();
-        roleEntityBase.setId(1);
-        roleEntityBase.setType(EnumRole.ANONYMOUS.name());
+        final RoleDto roleDto = new RoleDto();
+        roleDto.setType(EnumRole.ANONYMOUS.name());
 
-        final DepartmentEntity departmentEntity = new DepartmentEntityBase();
-        departmentEntity.setId(0);
-        departmentEntity.setAbbreviatedName("Подразделение");
-        departmentEntity.setName("Мое подразделение");
-        departmentEntity.setChiefEntity(0);
+        final DepartmentDto department = new DepartmentDto();
+        department.setAbbreviatedName("Подразделение");
+        department.setName("Мое подразделение");
 
-        final PostEntity postEntity = new PostEntityBase();
-        postEntity.setId(0);
-        postEntity.setTypeRang(TypeRangEnum.CATEGORY.getName());
-        postEntity.setRang(0);
-        postEntity.setName("Моя долждность");
-        postEntity.setAbbreviatedName("Долждность");
+        final PostDto post = new PostDto();
+        post.setTypeRang(TypeRangEnum.CATEGORY.getName());
+        post.setRang(0);
+        post.setName("Моя долждность");
+        post.setAbbreviatedName("Долждность");
 
-        final EmployeeEntity employeeEntity = new EmployeeEntityBase();
-        employeeEntity.setId(0);
-        employeeEntity.setPersonnelNumber(0);
-        employeeEntity.setBirthday(new Date());
-        employeeEntity.setGender("Неизвестный");
-        employeeEntity.setPostEntity(postEntity);
-        employeeEntity.setDepartment(departmentEntity);
+        final EmployeeDto employee = new EmployeeDto();
+        employee.setBirthday(new Date());
+        employee.setGender(EnumGender.MALE);
+        employee.setPost(post);
+        employee.setDepartment(department);
 
-        this.ACCOUNT = new AccountEntityBase();
-        this.ACCOUNT.setId(1);
+        this.ACCOUNT = new AccountDto();
         this.ACCOUNT.setEmail("test@test.ru");
         this.ACCOUNT.setPassword(PASSWORD);
         this.ACCOUNT.setUsername(LOGIN);
-        this.ACCOUNT.setRoles(Collections.singletonList(roleEntityBase));
-        this.ACCOUNT.setEmployeeEntity(employeeEntity);
+        this.ACCOUNT.setRoles(Collections.singletonList(roleDto));
+        this.ACCOUNT.setEmployee(employee);
 
         this.tokenJson = new TokenJson();
         this.tokenJson.setToken("token_test");
@@ -80,7 +73,7 @@ public class DefaultAuthentication implements Authentication {
     }
 
     @Override
-    public AccountEntity getAuthorizedUser() {
+    public AccountDto getAuthorizedUser() {
         return this.isAuth ? this.ACCOUNT : null;
     }
 
@@ -90,10 +83,10 @@ public class DefaultAuthentication implements Authentication {
     }
 
     @Override
-    public RoleEntity[] getRoles() {
+    public RoleDto[] getRoles() {
         return this.isAuth
-                ? this.ACCOUNT.getRoles().toArray(new RoleEntity[this.ACCOUNT.getRoles().size()])
-                : new RoleEntity[0];
+                ? this.ACCOUNT.getRoles().toArray(new RoleDto[this.ACCOUNT.getRoles().size()])
+                : new RoleDto[0];
     }
 
     @Override

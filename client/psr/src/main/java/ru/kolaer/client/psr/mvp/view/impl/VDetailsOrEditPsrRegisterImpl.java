@@ -15,7 +15,8 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegisterDto;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStateDto;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.psr.mvp.view.VDetailsOrEditPsrRegister;
@@ -201,7 +202,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
         this.wizard.showAndWait().ifPresent(result -> {
             if (result == ButtonType.FINISH) {
                 if(this.psrRegister == null) {
-                    this.psrRegister = new PsrRegisterBase();
+                    this.psrRegister = new PsrRegisterDto();
                     this.psrRegister.setStateList(Collections.emptyList());
                 }
 
@@ -213,7 +214,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
                 if(!this.stateComment.getText().isEmpty() && this.datePickerState.getValue() != null) {
                     PsrState psrState;
                     if(states.size() == 0) {
-                        psrState = new PsrStateBase();
+                        psrState = new PsrStateDto();
                         states.add(psrState);
 
                     } else {
@@ -228,7 +229,7 @@ public class VDetailsOrEditPsrRegisterImpl implements VDetailsOrEditPsrRegister 
                 if(!this.planComment.getText().isEmpty() && this.datePickerPlan.getValue() != null) {
                     PsrState psrStatePlan;
                     if(this.psrRegister.getStateList().size() < 2) {
-                        psrStatePlan = new PsrStateBase();
+                        psrStatePlan = new PsrStateDto();
                         states.add(psrStatePlan);
 
                     } else {

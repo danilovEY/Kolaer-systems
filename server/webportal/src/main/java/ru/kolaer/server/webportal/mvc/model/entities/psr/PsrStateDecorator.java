@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStateBase;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStateDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,7 +15,7 @@ public class PsrStateDecorator implements PsrState {
     private PsrState psrProjectState;
 
     public PsrStateDecorator() {
-        this.psrProjectState = new PsrStateBase();
+        this.psrProjectState = new PsrStateDto();
     }
 
     public PsrStateDecorator(PsrState psrState) {

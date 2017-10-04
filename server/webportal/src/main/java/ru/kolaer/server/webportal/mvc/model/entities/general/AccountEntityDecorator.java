@@ -1,8 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 
@@ -14,15 +13,14 @@ import java.util.List;
  * Структура аккаунта в БД.
  */
 
-//@Entity
-//@Table(name = "general_accounts")
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Deprecated
+@Entity
+@Table(name = "account")
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountEntityDecorator implements AccountEntity {
     private AccountEntity accountEntity;
 
     public AccountEntityDecorator() {
-        this.accountEntity = new AccountEntityBase();
+        this.accountEntity = new AccountDto();
     }
 
     public AccountEntityDecorator(AccountEntity accountEntity) {

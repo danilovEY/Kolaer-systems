@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 
@@ -42,7 +42,7 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
         try {
             final NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(& (userPrincipalName=" + login + "@kolaer.local" + ")(objectClass=person))", controls);
 
-            final EmployeeEntity employeeEntity = new EmployeeEntityBase();
+            final EmployeeEntity employeeEntity = new EmployeeDto();
             final Attributes attributes = answer.next().getAttributes();
             final Attribute name = attributes.get("employeeID");
             if(name != null) {

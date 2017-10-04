@@ -8,10 +8,7 @@ import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.exceptions.ServerException;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
+import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.network.ServerStatus;
@@ -74,7 +71,7 @@ public class PMainPaneImpl implements PMainPane {
     }
 
     @Override
-    public void login(AccountEntity account) {
+    public void login(AccountDto account) {
         this.view.setUserName("Вошли как: (" + account.getUsername() + ") | Выход");
         this.view.logoutAction(e -> this.editorKit.getAuthentication().logout());
 

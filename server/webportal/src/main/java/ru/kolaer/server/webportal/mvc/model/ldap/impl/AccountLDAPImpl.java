@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Repository;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleEntityBase;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
 import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
 
@@ -46,14 +46,14 @@ public class AccountLDAPImpl implements AccountLDAP {
         try {
             final NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(& (userPrincipalName=" + login + "@kolaer.local" + ")(objectClass=person))", controls);
 
-            final AccountEntity generalAccountEntity = new AccountEntityBase();
+            final AccountEntity generalAccountEntity = new AccountDto();
             final Attributes attributes = answer.next().getAttributes();
             generalAccountEntity.setUsername(attributes.get("samaccountname").get().toString());
             generalAccountEntity.setEmail(attributes.get("userprincipalname").get().toString());
             final Collection<? extends GrantedAuthority> rolesFromAttributes = ToolsLDAP.getRolesFromAttributes(attributes);
 
             generalAccountEntity.setRoles(rolesFromAttributes.stream().map(role -> {
-                final RoleEntity roleEntity = new RoleEntityBase();
+                final RoleEntity roleEntity = new RoleDto();
                 roleEntity.setType(role.getAuthority());
                 return roleEntity;
             }).collect(Collectors.toList()));

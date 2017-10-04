@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import lombok.ToString;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntityBase;
 
 import javax.persistence.*;
 
@@ -16,7 +16,7 @@ public class DepartmentEntityDecorator implements DepartmentEntity {
     private DepartmentEntity departmentEntity;
 
     public DepartmentEntityDecorator() {
-        this(new DepartmentEntityBase());
+        this(new DepartmentDto());
     }
 
     public DepartmentEntityDecorator(DepartmentEntity departmentEntity) {

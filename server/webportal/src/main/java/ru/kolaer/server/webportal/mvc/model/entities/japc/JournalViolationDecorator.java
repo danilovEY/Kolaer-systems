@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.japc;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolationBase;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolationDto;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntityDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
@@ -20,7 +20,7 @@ public class JournalViolationDecorator implements JournalViolation {
     private JournalViolation journalViolation;
 
     public JournalViolationDecorator() {
-        this(new JournalViolationBase());
+        this(new JournalViolationDto());
     }
 
     public JournalViolationDecorator(JournalViolation journalViolation) {

@@ -1,10 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.entities.kolpass;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryBase;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -22,7 +21,7 @@ public class RepositoryPasswordHistoryDecorator implements RepositoryPasswordHis
     }
 
     public RepositoryPasswordHistoryDecorator() {
-        this(new RepositoryPasswordHistoryBase());
+        this(new RepositoryPasswordHistoryDto());
     }
 
     @Id

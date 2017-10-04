@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.birthday;
 
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationBase;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,7 +17,7 @@ public class EmployeeOtherOrganizationDecorator implements EmployeeOtherOrganiza
 	}
 
 	public EmployeeOtherOrganizationDecorator() {
-		this(new EmployeeOtherOrganizationBase());
+		this(new EmployeeOtherOrganizationDto());
 	}
 
 	@Id

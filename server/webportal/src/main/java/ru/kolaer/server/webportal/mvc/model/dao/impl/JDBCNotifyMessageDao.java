@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageBase;
+import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
 import ru.kolaer.server.webportal.mvc.model.dao.NotifyMessageDao;
 
 import javax.annotation.PostConstruct;
@@ -40,7 +40,7 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     @Transactional(readOnly = true)
     public List<NotifyMessage> findAll() {
         return this.jdbcTemplate.query("SELECT id, message FROM notifications", (rs, rowNum) -> {
-            final NotifyMessage notifyMessage = new NotifyMessageBase();
+            final NotifyMessage notifyMessage = new NotifyMessageDto();
             notifyMessage.setId(rs.getInt("id"));
             notifyMessage.setMessage(rs.getString("message"));
             return notifyMessage;
@@ -51,7 +51,7 @@ public class JDBCNotifyMessageDao implements NotifyMessageDao {
     @Transactional(readOnly = true)
     public NotifyMessage findByID(Integer id) {
         List<NotifyMessage> query = this.jdbcTemplate.query("SELECT id, message FROM notifications WHERE id = " + id, (rs, rowNum) -> {
-            final NotifyMessage notifyMessage = new NotifyMessageBase();
+            final NotifyMessage notifyMessage = new NotifyMessageDto();
             notifyMessage.setId(rs.getInt("id"));
             notifyMessage.setMessage(rs.getString("message"));
             return notifyMessage;

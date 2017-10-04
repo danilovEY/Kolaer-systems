@@ -1,9 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import lombok.ToString;
-import org.hibernate.annotations.Immutable;
+import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
 import ru.kolaer.api.mvp.model.kolaerweb.PostEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.PostEntityBase;
 
 import javax.persistence.*;
 
@@ -17,7 +16,7 @@ public class PostEntityDecorator implements PostEntity {
     private PostEntity postEntity;
 
     public PostEntityDecorator() {
-        this(new PostEntityBase());
+        this(new PostDto());
     }
 
     public PostEntityDecorator(PostEntity postEntity) {

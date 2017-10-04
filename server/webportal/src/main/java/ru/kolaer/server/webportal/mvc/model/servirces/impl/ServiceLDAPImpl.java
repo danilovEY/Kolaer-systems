@@ -8,8 +8,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.*;
-import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
 import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
 import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
@@ -40,12 +42,12 @@ public class ServiceLDAPImpl implements ServiceLDAP {
 
     @PostConstruct
     public void init() {
-        DepartmentEntity departamentEntity = new DepartmentEntityBase();
+        DepartmentEntity departamentEntity = new DepartmentDto();
         departamentEntity.setAbbreviatedName("Anonymous");
         departamentEntity.setName("Anonymous");
         departamentEntity.setId(-1);
 
-        EmployeeEntity employeesEntity = new EmployeeEntityBase();
+        EmployeeEntity employeesEntity = new EmployeeDto();
         employeesEntity.setPersonnelNumber(-1);
         employeesEntity.setInitials("Anon");
         employeesEntity.setDepartment(departamentEntity);
@@ -53,10 +55,10 @@ public class ServiceLDAPImpl implements ServiceLDAP {
         employeesEntity.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/no_photo.jpg");
         employeesEntity.setGender("Unknow");
 
-        this.accountsEntity = new AccountEntityBase();
+        this.accountsEntity = new AccountDto();
         this.accountsEntity.setEmployeeEntity(employeesEntity);
         this.accountsEntity.setUsername("empty");
-        this.accountsEntity.setRoles(Arrays.asList(new RoleEntityBase("ALL"), new RoleEntityBase("Anonymous")));
+        this.accountsEntity.setRoles(Arrays.asList(new RoleDto("ALL"), new RoleDto("Anonymous")));
     }
 
     @Override

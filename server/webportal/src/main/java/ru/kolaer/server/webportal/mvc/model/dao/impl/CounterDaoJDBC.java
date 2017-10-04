@@ -7,10 +7,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.Counter;
-import ru.kolaer.api.mvp.model.kolaerweb.CounterBase;
+import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 import ru.kolaer.server.webportal.mvc.model.dao.CounterDao;
 
-import javax.validation.constraints.NotNull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -67,7 +66,7 @@ class CounterMapping implements RowMapper<Counter> {
 
     @Override
     public Counter mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final Counter counter = new CounterBase();
+        final Counter counter = new CounterDto();
         counter.setId(rs.getInt("id"));
         counter.setTitle(rs.getString("title"));
         counter.setStart(rs.getDate("start"));

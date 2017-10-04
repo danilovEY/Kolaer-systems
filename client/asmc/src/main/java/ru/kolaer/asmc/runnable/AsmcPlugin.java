@@ -2,7 +2,6 @@ package ru.kolaer.asmc.runnable;
 
 import javafx.scene.Parent;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
@@ -10,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
@@ -23,7 +23,6 @@ import ru.kolaer.asmc.mvp.view.ImageViewPane;
 
 import java.net.URL;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 
@@ -169,7 +168,7 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
     }
 
     @Override
-    public void login(AccountEntity account) {
+    public void login(AccountDto account) {
         if(this.splitListContent != null) {
             account.getRoles().stream()
                     .filter(roleEntity -> roleEntity.getType().equals("OIT"))

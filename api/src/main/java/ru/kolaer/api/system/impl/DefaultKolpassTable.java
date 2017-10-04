@@ -2,12 +2,11 @@ package ru.kolaer.api.system.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordBase;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,7 +41,7 @@ public class DefaultKolpassTable implements KolpassTable {
     public RepositoryPassword addHistoryPasswordToRepository(Integer idRep,
                                                              RepositoryPasswordHistory repositoryPasswordHistory) {
         log.info("Добавлен пароль");
-        RepositoryPassword repositoryPasswordBase = new RepositoryPasswordBase();
+        RepositoryPassword repositoryPasswordBase = new RepositoryPasswordDto();
         repositoryPasswordBase.setId(idRep);
         repositoryPasswordBase.setLastPassword(repositoryPasswordHistory);
         return repositoryPasswordBase;

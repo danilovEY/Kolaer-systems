@@ -13,11 +13,12 @@ import org.hibernate.dialect.Dialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import ru.kolaer.api.mvp.model.kolaerweb.*;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.TypeRangEnum;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
@@ -28,8 +29,6 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntityDecorator
 
 import java.io.*;
 import java.net.URLEncoder;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -364,16 +363,16 @@ public class EmployeeDaoImpl implements EmployeeDao {
         final List<EmployeeEntity> employeeEntityWorkPhone = this.jdbcTemplateKolaerBase
                 .query("SELECT person_number, phone, mobile_phone, email FROM db_data_all",
                         (rs, rowNum) -> {
-                            EmployeeEntityBase employeeEntityBase = new EmployeeEntityBase();
+                            EmployeeDto employeeDto = new EmployeeDto();
                             String workPhone = Optional.ofNullable(rs.getString("phone")).orElse("");
                             String mobilePhone = Optional.ofNullable(rs.getString("mobile_phone")).orElse("");
                             if (StringUtils.hasText(mobilePhone))
                                 workPhone += "; " + mobilePhone;
 
-                            employeeEntityBase.setEmail(rs.getString("email"));
-                            employeeEntityBase.setPersonnelNumber(rs.getInt("person_number"));
-                            employeeEntityBase.setWorkPhoneNumber(workPhone);
-                            return employeeEntityBase;
+                            employeeDto.setEmail(rs.getString("email"));
+                            employeeDto.setPersonnelNumber(rs.getInt("person_number"));
+                            employeeDto.setWorkPhoneNumber(workPhone);
+                            return employeeDto;
                         });
 
         employeeEntityWorkPhone.forEach(empBase -> {

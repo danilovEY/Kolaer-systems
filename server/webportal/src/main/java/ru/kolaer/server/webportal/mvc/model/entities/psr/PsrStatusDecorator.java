@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
 import org.hibernate.annotations.Immutable;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatusBase;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatusDto;
 
 import javax.persistence.*;
 
@@ -16,7 +16,7 @@ public class PsrStatusDecorator implements PsrStatus {
     private PsrStatus psrProjectStatus;
 
     public PsrStatusDecorator() {
-        this.psrProjectStatus = new PsrStatusBase();
+        this.psrProjectStatus = new PsrStatusDto();
     }
 
     public PsrStatusDecorator(PsrStatus psrStatus) {

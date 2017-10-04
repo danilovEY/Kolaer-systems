@@ -3,6 +3,7 @@ package ru.kolaer.client.javafx.system.ui;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
@@ -53,7 +54,7 @@ public class MenuBarUSImpl implements MenuBarUS, AuthenticationObserver {
     }
 
     @Override
-    public void login(AccountEntity account) {
+    public void login(AccountDto account) {
         authorizationItem.setText("Выход (" + account.getUsername() + ")");
     }
 

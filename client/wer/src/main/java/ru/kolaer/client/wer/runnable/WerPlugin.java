@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
@@ -94,7 +95,7 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
     }
 
     @Override
-    public void login(AccountEntity account) {
+    public void login(AccountDto account) {
         if(account.getRoles().stream().anyMatch(role -> role.getType().equals("OIT"))
                 && this.mainPane != null) {
             Tools.runOnWithOutThreadFX(() -> {

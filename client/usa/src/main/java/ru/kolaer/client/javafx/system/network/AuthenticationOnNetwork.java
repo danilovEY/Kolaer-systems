@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
-import ru.kolaer.api.mvp.model.kolaerweb.*;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
+import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
+import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
@@ -128,7 +131,7 @@ public class AuthenticationOnNetwork implements Authentication {
         return false;
     }
 
-    public AccountEntity getAuthorizedUser() {
+    public AccountDto getAuthorizedUser() {
         return this.accountsEntity;
     }
 
@@ -138,7 +141,7 @@ public class AuthenticationOnNetwork implements Authentication {
     }
 
     @Override
-    public RoleEntity[] getRoles() {
+    public RoleDto[] getRoles() {
         if(this.isAuth) {
             return this.restTemplate.getForObject(this.URL_TO_GET_USER_ROLE + "?token=" + this.tokenJson.getToken(), RoleEntity[].class);
         }

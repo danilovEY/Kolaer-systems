@@ -1,8 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
-import org.hibernate.annotations.GenericGenerator;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurityBase;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurityDto;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,7 +16,7 @@ public class UrlSecurityDecorator implements UrlSecurity {
     private UrlSecurity urlSecurity;
 
     public UrlSecurityDecorator() {
-        this.urlSecurity = new UrlSecurityBase();
+        this.urlSecurity = new UrlSecurityDto();
     }
 
     public UrlSecurityDecorator(UrlSecurity urlSecurity) {

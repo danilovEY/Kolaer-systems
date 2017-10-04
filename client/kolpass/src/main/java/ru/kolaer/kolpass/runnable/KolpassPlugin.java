@@ -5,14 +5,15 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.kolpass.mvp.presenter.PRepositoryContentImpl;
 import ru.kolaer.kolpass.mvp.presenter.PEmployeeRepositoryListImpl;
+import ru.kolaer.kolpass.mvp.presenter.PRepositoryContentImpl;
 import ru.kolaer.kolpass.mvp.presenter.PSplitContentAndListRep;
 import ru.kolaer.kolpass.mvp.presenter.PSplitContentAndListRepImpl;
 
@@ -83,7 +84,7 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
     }
 
     @Override
-    public void login(AccountEntity account) {
+    public void login(AccountDto account) {
         Optional.ofNullable(this.pSplitContentAndListRep).ifPresent(pane ->
             Tools.runOnWithOutThreadFX(() -> {
                 this.mainPane.setCenter(this.pSplitContentAndListRep.getView().getContent());

@@ -1,7 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.japc;
 
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.*;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.ViolationDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class ViolationDecorator implements Violation {
     private Violation violation;
 
     public ViolationDecorator() {
-        this(new ViolationBase());
+        this(new ViolationDto());
     }
 
     public ViolationDecorator(Violation violation) {

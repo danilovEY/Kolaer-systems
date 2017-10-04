@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleEntityBase;
 import ru.kolaer.server.webportal.mvc.model.ldap.RoleLDAP;
 
 import javax.naming.NamingEnumeration;
@@ -43,7 +43,7 @@ public class RoleLDAPImpl implements RoleLDAP {
             final List<RoleEntity> roles = new ArrayList<>();
             while (answer.hasMoreElements()) {
                 final String groupName = answer.next().getAttributes().get("cn").get().toString();
-                final RoleEntity roleEntity = new RoleEntityBase();
+                final RoleEntity roleEntity = new RoleDto();
                 roleEntity.setId(i++);
                 roleEntity.setType(groupName);
 

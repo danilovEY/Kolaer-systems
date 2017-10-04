@@ -2,8 +2,8 @@ package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import lombok.ToString;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.PostEntity;
 
 import javax.persistence.*;
@@ -20,7 +20,7 @@ public class EmployeeEntityDecorator implements EmployeeEntity {
     private EmployeeEntity employeeEntity;
 
     public EmployeeEntityDecorator() {
-        this.employeeEntity = new EmployeeEntityBase();
+        this.employeeEntity = new EmployeeDto();
     }
 
     public EmployeeEntityDecorator(EmployeeEntity employeeEntity) {

@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.kolpass;
 
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordBase;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
@@ -18,7 +18,7 @@ public class RepositoryPasswordDecorator implements RepositoryPassword {
     private RepositoryPassword repositoryPassword;
 
     public RepositoryPasswordDecorator() {
-        this(new RepositoryPasswordBase());
+        this(new RepositoryPasswordDto());
     }
 
     public RepositoryPasswordDecorator(RepositoryPassword repositoryPassword) {

@@ -1,28 +1,15 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
 import ru.kolaer.server.webportal.beans.TypeServer;
-import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccount;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationDecorator;
 import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStatusDecorator;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
 
 /**
  * Created by danilovey on 03.08.2016.
@@ -58,7 +45,7 @@ public class DataBaseInitialization {
                     initials = initials.trim();
                     cache = cache.trim();
                     if(!initials.isEmpty() && !cache.isEmpty()) {
-                        final EmployeeEntity entity = new EmployeeEntityBase();
+                        final EmployeeEntity entity = new EmployeeDto();
                         entity.setInitials(initials);
                         final BankAccount account = new BankAccount(null, entity , cache);
                         this.bankAccountDao.persist(account);

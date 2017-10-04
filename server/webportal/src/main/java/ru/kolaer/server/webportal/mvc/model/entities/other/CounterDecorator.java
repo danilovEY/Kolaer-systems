@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.other;
 
 import ru.kolaer.api.mvp.model.kolaerweb.Counter;
-import ru.kolaer.api.mvp.model.kolaerweb.CounterBase;
+import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,7 +19,7 @@ public class CounterDecorator implements Counter {
     }
 
     public CounterDecorator() {
-        this(new CounterBase());
+        this(new CounterDto());
     }
 
     @Id

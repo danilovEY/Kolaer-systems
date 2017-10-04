@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleEntityBase;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -20,7 +20,7 @@ public class RoleEntityDecorator implements RoleEntity {
     private RoleEntity roleEntity;
 
     public RoleEntityDecorator() {
-        this.roleEntity = new RoleEntityBase();
+        this.roleEntity = new RoleDto();
     }
 
     public RoleEntityDecorator(RoleEntity roleEntity) {

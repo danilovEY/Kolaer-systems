@@ -9,15 +9,18 @@ import java.util.Date;
  * Структура сотрудника в БД.
  */
 @Data
-public class EmployeeEntityBase implements EmployeeEntity {
-    private Integer id;
-    private Integer personnelNumber;
+public class EmployeeDto implements BaseDto {
+    private Long id;
+    private Long personnelNumber;
     private String initials;
+    private String firstName;
+    private String secondName;
+    private String thirdName;
     private String workPhoneNumber;
     private String homePhoneNumber;
-    private String gender;
-    private DepartmentEntity department;
-    private PostEntity postEntity;
+    private EnumGender gender;
+    private DepartmentDto department;
+    private PostDto post;
     private Date birthday;
     private Date employmentDate;
     private Date dismissalDate;

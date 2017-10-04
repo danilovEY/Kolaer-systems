@@ -1,8 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
-import org.springframework.stereotype.Repository;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntityBase;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccount;
 
@@ -20,7 +19,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
 
     @Override
     public BankAccount findByInitials(String initials) {
-        final EmployeeEntity entity = new EmployeeEntityBase();
+        final EmployeeEntity entity = new EmployeeDto();
         entity.setInitials(initials);
 
         final BankAccount bankAccount = new BankAccount(-1, entity, "null");
@@ -49,7 +48,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
     public List<BankAccount> findAll() {
         return this.initialsAccountMap.entrySet().stream()
                 .map(stringStringEntry -> {
-                    final EmployeeEntity entity = new EmployeeEntityBase();
+                    final EmployeeEntity entity = new EmployeeDto();
                     entity.setInitials(stringStringEntry.getValue());
 
                     return new BankAccount(-1, entity, stringStringEntry.getKey());

@@ -1,8 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.other;
 
-import io.swagger.annotations.ApiModel;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageBase;
+import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
 
 import javax.persistence.*;
 
@@ -15,7 +14,7 @@ public class NotifyMessageDecorator implements NotifyMessage {
     private NotifyMessage notifyMessage;
 
     public NotifyMessageDecorator() {
-        this(new NotifyMessageBase());
+        this(new NotifyMessageDto());
     }
 
     public NotifyMessageDecorator(NotifyMessage notifyMessage) {

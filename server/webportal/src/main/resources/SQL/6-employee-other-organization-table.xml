@@ -2,9 +2,7 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="6" author="Danilov">
         <createTable tableName="employee_other_organization">
@@ -29,9 +27,6 @@
             </column>
             <column name="third_name" type="VARCHAR(100)">
                 <constraints nullable="false"/>
-            </column>
-            <column name="personnel_number" type="BIGINT(100)">
-                <constraints nullable="false" unique="true"/>
             </column>
             <column name="photo" type="VARCHAR(255)"/>
             <column name="post" type="VARCHAR(255)"/>

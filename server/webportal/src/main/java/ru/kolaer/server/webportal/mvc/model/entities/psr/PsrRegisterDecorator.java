@@ -2,16 +2,13 @@ package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.*;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegisterDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 29.07.2016.
@@ -22,7 +19,7 @@ public class PsrRegisterDecorator implements PsrRegister {
     private PsrRegister psrRegister;
 
     public PsrRegisterDecorator() {
-        this.psrRegister = new PsrRegisterBase();
+        this.psrRegister = new PsrRegisterDto();
     }
 
     public PsrRegisterDecorator(PsrRegister psrRegister) {

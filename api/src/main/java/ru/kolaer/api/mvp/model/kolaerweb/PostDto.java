@@ -6,8 +6,8 @@ import lombok.Data;
  * Created by danilovey on 24.01.2017.
  */
 @Data
-public class PostEntityBase implements PostEntity {
-    private Integer id;
+public class PostDto implements BaseDto {
+    private Long id;
     private String name;
     private String abbreviatedName;
     private String typeRang;

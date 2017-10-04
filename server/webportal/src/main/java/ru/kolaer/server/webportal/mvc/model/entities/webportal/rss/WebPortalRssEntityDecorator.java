@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.webportal.rss;
 
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.rss.WebPortalRssDto;
 import ru.kolaer.api.mvp.model.kolaerweb.webportal.rss.WebPortalRssEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.rss.WebPortalRssEntityBase;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntityDecorator;
 
 import javax.persistence.*;
@@ -18,7 +18,7 @@ public class WebPortalRssEntityDecorator implements WebPortalRssEntity {
     private WebPortalRssEntity webPortalRssEntity;
 
     public WebPortalRssEntityDecorator() {
-        this.webPortalRssEntity = new WebPortalRssEntityBase();
+        this.webPortalRssEntity = new WebPortalRssDto();
     }
 
     @Id

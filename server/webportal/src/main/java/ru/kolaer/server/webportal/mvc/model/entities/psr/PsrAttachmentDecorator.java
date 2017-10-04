@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.psr;
 
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachment;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachmentBase;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrAttachmentDto;
 
 import javax.persistence.*;
 
@@ -14,7 +14,7 @@ public class PsrAttachmentDecorator implements PsrAttachment {
     private PsrAttachment psrAttachment;
 
     public PsrAttachmentDecorator() {
-        this.psrAttachment = new PsrAttachmentBase();
+        this.psrAttachment = new PsrAttachmentDto();
     }
 
     public PsrAttachmentDecorator(PsrAttachment psrAttachment) {

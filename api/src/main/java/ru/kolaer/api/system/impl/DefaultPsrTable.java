@@ -3,7 +3,7 @@ package ru.kolaer.api.system.impl;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegisterBase;
+import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegisterDto;
 import ru.kolaer.api.system.network.kolaerweb.PsrStatusTable;
 import ru.kolaer.api.system.network.kolaerweb.PsrTable;
 
@@ -28,17 +28,17 @@ public class DefaultPsrTable implements PsrTable {
 
     @Override
     public PsrRegister persistPsrRegister(PsrRegister psrRegister) throws ServerException {
-        log.info("Добавлен ПСР реестр: {}", Optional.ofNullable(psrRegister).orElse(new PsrRegisterBase()).getName());
+        log.info("Добавлен ПСР реестр: {}", Optional.ofNullable(psrRegister).orElse(new PsrRegisterDto()).getName());
         return null;
     }
 
     @Override
     public void deletePsrRegister(PsrRegister psrRegister) throws ServerException {
-        log.info("Удален ПСР реестр: {}", Optional.ofNullable(psrRegister).orElse(new PsrRegisterBase()).getName());
+        log.info("Удален ПСР реестр: {}", Optional.ofNullable(psrRegister).orElse(new PsrRegisterDto()).getName());
     }
 
     @Override
     public void updatePsrRegister(PsrRegister psrRegister) throws ServerException {
-        log.info("Обновлен ПСР реестр: {}", Optional.ofNullable(psrRegister).orElse(new PsrRegisterBase()).getName());
+        log.info("Обновлен ПСР реестр: {}", Optional.ofNullable(psrRegister).orElse(new PsrRegisterDto()).getName());
     }
 }
