@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "url_security")
 @Data
-public class UrlSecurity implements BaseEntity {
+public class UrlSecurityEntity implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

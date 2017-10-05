@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Table(name = "violation_type")
 @Immutable
 @Data
-public class TypeViolationEntity implements BaseEntity {
+public class ViolationTypeEntity implements BaseEntity {
 
     @Id
     @Column(name = "id")

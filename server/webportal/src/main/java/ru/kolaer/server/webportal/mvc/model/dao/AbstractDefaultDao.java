@@ -3,6 +3,9 @@ package ru.kolaer.server.webportal.mvc.model.dao;
 import lombok.NonNull;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.dialect.Dialect;
+import org.springframework.beans.factory.annotation.Value;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.criteria.CriteriaQuery;
@@ -14,20 +17,11 @@ import java.util.List;
 public abstract class AbstractDefaultDao<T extends BaseEntity> implements DefaultDao<T> {
     protected final SessionFactory sessionFactory;
     protected final Class<T> entityClass;
-    protected final int batchSize;
+    protected int batchSize = Integer.valueOf(Dialect.DEFAULT_BATCH_SIZE);
 
-    protected AbstractDefaultDao(SessionFactory sessionFactory, int batchSize, Class<T> entityClass) {
+    protected AbstractDefaultDao(SessionFactory sessionFactory, Class<T> entityClass) {
         this.sessionFactory = sessionFactory;
         this.entityClass = entityClass;
-        this.batchSize = batchSize;
-    }
-
-    protected Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
-    protected CriteriaQuery<T> createQuery() {
-        return getSession().getCriteriaBuilder().createQuery(getEntityClass());
     }
 
     @Override
@@ -39,7 +33,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     }
 
     @Override
-    public T findByID(@NonNull Integer id) {
+    public T findByID(@NonNull Long id) {
         if(id < 1) {
             return null;
         }
@@ -66,6 +60,18 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     }
 
     @Override
+    public int delete(@NonNull Long id) {
+        if(id < 1) {
+            return 0;
+        }
+
+        return getSession()
+                .createNamedQuery("DELETE FROM " + getEntityName() + " WHERE id = :id", getEntityClass())
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    @Override
     public List<T> delete(@NonNull List<T> objs) {
         Session currentSession = getSession();
         return batchForeach(objs, batchSize, currentSession, currentSession::delete);
@@ -83,8 +89,36 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
         return batchForeach(objs, batchSize, currentSession, currentSession::update);
     }
 
+    public Page<T> findAll(Integer number, Integer pageSize) {
+        Session currentSession = getSession();
+
+        final Long count = currentSession
+                .createNamedQuery("SELECT COUNT(id) FROM " + getEntityName(), Long.class)
+                .uniqueResult();
+
+        List<T> list = currentSession.createNamedQuery("FROM " + getEntityName(), getEntityClass())
+                .setFirstResult((number - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .list();
+
+        return new Page<>(list, number, count, pageSize);
+
+    }
+
     @Override
     public Class<T> getEntityClass() {
         return entityClass;
+    }
+
+    public void setBatchSize(@Value("${hibernate.batch.size}") int batchSize) {
+        this.batchSize = batchSize;
+    }
+
+    protected Session getSession() {
+        return sessionFactory.getCurrentSession();
+    }
+
+    protected CriteriaQuery<T> createQuery() {
+        return getSession().getCriteriaBuilder().createQuery(getEntityClass());
     }
 }

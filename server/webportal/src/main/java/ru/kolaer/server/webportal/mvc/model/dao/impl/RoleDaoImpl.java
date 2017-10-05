@@ -1,59 +1,18 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.RoleDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.RoleEntity;
-
-import java.util.List;
 
 /**
  * Created by danilovey on 28.07.2016.
  */
 @Repository(value = "roleDao")
-public class RoleDaoImpl implements RoleDao {
+public class RoleDaoImpl extends AbstractDefaultDao<RoleEntity> implements RoleDao {
 
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<RoleEntity> findAll() {
-        return sessionFactory.getCurrentSession().createCriteria(RoleEntity.class).list();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public RoleEntity findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(RoleEntity.class, id);
-    }
-
-    @Override
-    @Transactional
-    public void persist(RoleEntity obj) {
-        if(obj != null)
-            this.sessionFactory.getCurrentSession().persist(obj);
-    }
-
-    @Override
-    public void delete(RoleEntity obj) {
-
-    }
-
-    @Override
-    public void delete(List<RoleEntity> objs) {
-
-    }
-
-    @Override
-    public void update(RoleEntity entity) {
-
-    }
-
-    @Override
-    public void update(List<RoleEntity> objs) {
-
+    protected RoleDaoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory, RoleEntity.class);
     }
 }

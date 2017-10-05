@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 
 import javax.annotation.PostConstruct;
@@ -75,13 +75,13 @@ public class RegisterTicketScheduler {
     }
 
     public boolean generateAddTicketDocument() {
-        final List<TicketRegister> allOpenRegister = this.ticketRegisterService.getAllOpenRegister();
+        final List<TicketRegisterEntity> allOpenRegister = this.ticketRegisterService.getAllOpenRegister();
         if(allOpenRegister.size() > 0) {
             allOpenRegister.forEach(ticketRegister -> ticketRegister.setClose(true));
             this.ticketRegisterService.update(allOpenRegister);
 
             List<TicketEntity> allTickets = new ArrayList<>();
-            allOpenRegister.stream().filter(t -> t.getTickets() != null).map(TicketRegister::getTickets)
+            allOpenRegister.stream().filter(t -> t.getTickets() != null).map(TicketRegisterEntity::getTickets)
                     .forEach(allTickets::addAll);
 
             if(this.sendMail(allTickets, "IMMEDIATE", "DR", "Сформированные талоны ЛПП для зачисления. Файл во вложении!")) {

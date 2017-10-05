@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "ticket_register")
-public class TicketRegister implements Serializable, BaseEntity {
+public class TicketRegisterEntity implements Serializable, BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

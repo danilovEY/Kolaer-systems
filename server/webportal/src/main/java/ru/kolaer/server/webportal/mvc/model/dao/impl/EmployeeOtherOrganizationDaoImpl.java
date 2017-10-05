@@ -1,168 +1,110 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
+import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeOtherOrganizationDao;
 import ru.kolaer.server.webportal.mvc.model.entities.birthday.EmployeeOtherOrganizationEntity;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @Repository(value = "employeeOtherOrganizationDao")
-public class EmployeeOtherOrganizationDaoImpl implements EmployeeOtherOrganizationDao {
+public class EmployeeOtherOrganizationDaoImpl extends AbstractDefaultDao<EmployeeOtherOrganizationEntity> implements EmployeeOtherOrganizationDao {
 	
-	@Autowired
-	private SessionFactory sessionFactory;
-	
-	@Override
-	@Transactional(readOnly = true)
-	public List<EmployeeOtherOrganization> getAll() {
-		final List<EmployeeOtherOrganization> result = sessionFactory.getCurrentSession().createQuery("from EmployeeOtherOrganizationDecorator").list();
-		return result;
-	}
-	
-	@Override
-	@Transactional(readOnly = true)
-	public List<EmployeeOtherOrganization> getAllMaxCount(final int count) {
-		final List<EmployeeOtherOrganization> result = sessionFactory.getCurrentSession().createQuery("from EmployeeOtherOrganizationDecorator").setMaxResults(count).list();
-		return result;
+	protected EmployeeOtherOrganizationDaoImpl(SessionFactory sessionFactory) {
+		super(sessionFactory, EmployeeOtherOrganizationEntity.class);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	public List<EmployeeOtherOrganizationEntity> getAllMaxCount(final int count) {
+		return getSession().createQuery("FROM " + getEntityName(), getEntityClass())
+				.setMaxResults(count)
+				.list();
+	}
+
+	@Override
 	public int getRowCount() {
-		final Long result = (Long)  sessionFactory.getCurrentSession().createQuery("SELECT count(x.id) FROM EmployeeOtherOrganizationDecorator x").uniqueResult();
-		return result.intValue();
+		return getSession().createQuery("SELECT count(id) FROM " + getEntityName(), Long.class)
+				.uniqueResult()
+				.intValue();
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public List<EmployeeOtherOrganization> getUserRangeBirthday(final Date startDate, final Date endDate) {
-		final List<EmployeeOtherOrganization> result = sessionFactory.getCurrentSession().createQuery("SELECT t FROM EmployeeOtherOrganizationDecorator t where t.birthday BETWEEN :startDate AND :endDate")
+	public List<EmployeeOtherOrganizationEntity> getUserRangeBirthday(final Date startDate, final Date endDate) {
+		return getSession()
+				.createQuery("FROM " + getEntityName() + " t where t.birthday BETWEEN :startDate AND :endDate", getEntityClass())
 	            .setParameter("startDate", startDate)
 	            .setParameter("endDate", endDate)
 	            .list();
-		return result;
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
-	public List<EmployeeOtherOrganization> getUsersByBirthday(final Date date) {
+	public List<EmployeeOtherOrganizationEntity> getUsersByBirthday(final Date date) {
 
-		final List<EmployeeOtherOrganization> result = sessionFactory.getCurrentSession().createQuery("SELECT t FROM EmployeeOtherOrganizationDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+		return getSession()
+				.createQuery("FROM " +
+								getEntityClass() +
+								" t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)",
+						getEntityClass())
 	            .setParameter("date", date)
 	            .list();
-		return result;
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public List<EmployeeOtherOrganization> getUserBirthdayToday() {
-		final List<EmployeeOtherOrganization> result = sessionFactory.getCurrentSession().createQuery("FROM EmployeeOtherOrganizationDecorator t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE)")
+	public List<EmployeeOtherOrganizationEntity> getUserBirthdayToday() {
+		return getSession()
+				.createQuery("FROM " +
+								getEntityName() +
+								" t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE)",
+						getEntityClass())
 	            .list();
-		return result;
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public int getCountUserBirthday(final Date date) {
-		final Long result = (Long) sessionFactory.getCurrentSession().createQuery("SELECT count(t.id) FROM EmployeeOtherOrganizationDecorator t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+		return getSession()
+				.createQuery("SELECT count(t.id) FROM " + getEntityName() + " t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", Long.class)
 				.setParameter("date", date)
-				.uniqueResult();
-		return result.intValue();
+				.uniqueResult()
+				.intValue();
 	}
 
 	@Override
-	@Transactional
-	public void insertData(final EmployeeOtherOrganization data) {
-		sessionFactory.getCurrentSession().persist(data);
-		sessionFactory.getCurrentSession().flush();
-		sessionFactory.getCurrentSession().clear();
-	}
-
-	@Override
-	@Transactional
-	public void insertDataList(final List<EmployeeOtherOrganization> dataList) {
-        for (Iterator<EmployeeOtherOrganization> it = dataList.iterator(); it.hasNext();) {
-        	EmployeeOtherOrganization enquiry = it.next();
-			sessionFactory.getCurrentSession().persist(enquiry);
-			sessionFactory.getCurrentSession().flush();
-			sessionFactory.getCurrentSession().clear();
-        }	
-	}
-
-	@Override
-	@Transactional
-	public void update(List<EmployeeOtherOrganization> entities) {
-		final List<EmployeeOtherOrganization> dbList = sessionFactory.getCurrentSession().createQuery("FROM EmployeeOtherOrganizationDecorator").list();
-		Map<String, EmployeeOtherOrganization> mapEmp = new HashMap<>();
-		dbList.forEach(emp -> mapEmp.put(emp.getInitials() + emp.getOrganization() + emp.getPost(), emp));
-
-		int i =0;
-		for(EmployeeOtherOrganization entity : entities) {
-			final String key = entity.getInitials() + entity.getOrganization() + entity.getPost();
-			EmployeeOtherOrganization dbEmp = mapEmp.get(key);
-			if(dbEmp == null) {
-				dbEmp = new EmployeeOtherOrganizationEntity(entity);
-				this.sessionFactory.getCurrentSession().persist(dbEmp);
-			} else {
-				dbEmp.setBirthday(entity.getBirthday());
-				dbEmp.setPost(entity.getPost());
-				dbEmp.setDepartment(entity.getDepartment());
-				dbEmp.setCategoryUnit(entity.getCategoryUnit());
-				dbEmp.setEmail(entity.getEmail());
-				dbEmp.setMobilePhone(entity.getMobilePhone());
-				dbEmp.setPhone(entity.getPhone());
-				dbEmp.setInitials(entity.getInitials());
-				dbEmp.setOrganization(entity.getOrganization());
-				dbEmp.setPhoto(entity.getPhoto());
-				mapEmp.remove(key);
-				this.sessionFactory.getCurrentSession().update(dbEmp);
-			}
-
-			i++;
-			if(i == 50)
-				this.sessionFactory.getCurrentSession().flush();
-		}
-
-		mapEmp.values().forEach(this.sessionFactory.getCurrentSession()::delete);
-
-		this.sessionFactory.getCurrentSession().flush();
-		this.sessionFactory.getCurrentSession().clear();
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public List<EmployeeOtherOrganization> getUsersByBirthdayAndOrg(Date date, String organization) {
-		final List<EmployeeOtherOrganization> result = sessionFactory.getCurrentSession().createQuery("SELECT t FROM EmployeeOtherOrganizationDecorator t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+	public List<EmployeeOtherOrganizationEntity> getUsersByBirthdayAndOrg(Date date, String organization) {
+		return getSession()
+				.createQuery("SELECT t FROM " +
+								getEntityName() +
+								" t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)",
+						getEntityClass())
 				.setParameter("org", organization)
 				.setParameter("date", date)
 	            .list();
-		return result;
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public int getCountUserBirthdayAndOrg(Date date, String organization) {
-		final Long result = (Long) sessionFactory.getCurrentSession().createQuery("SELECT count(t.id) FROM EmployeeOtherOrganizationDecorator t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+		return getSession()
+				.createQuery("SELECT count(t.id) FROM " +
+								getEntityName() +
+								" t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)",
+				Long.class)
 				.setParameter("org", organization)
 				.setParameter("date", date)
-				.uniqueResult();
-		return result.intValue();
+				.uniqueResult()
+				.intValue();
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public List<EmployeeOtherOrganization> getUsersByInitials(String initials) {
+	public List<EmployeeOtherOrganizationEntity> getUsersByInitials(String initials) {
 		if(initials == null || initials.isEmpty())
 			return Collections.emptyList();
 			
-		final List<EmployeeOtherOrganization> result = sessionFactory.getCurrentSession().createQuery("FROM EmployeeOtherOrganizationDecorator t where t.initials like :initials")
+		return getSession()
+				.createQuery("FROM " + getEntityName() + " t where t.initials like :initials", getEntityClass())
 				.setParameter("initials", "%" + initials + "%")
 				.list();
-		return result;
 	}
 
 }

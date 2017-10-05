@@ -32,5 +32,5 @@ public class TicketEntity implements Serializable, BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "register_id")
-    private TicketRegister ticketRegister;
+    private TicketRegisterEntity ticketRegister;
 }

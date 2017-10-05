@@ -2,14 +2,12 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
+import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
+import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -17,95 +15,55 @@ import java.util.List;
  * Created by danilovey on 30.11.2016.
  */
 @Repository
-public class TicketRegisterDaoImpl implements TicketRegisterDao {
+public class TicketRegisterDaoImpl extends AbstractDefaultDao<TicketRegisterEntity> implements TicketRegisterDao {
 
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    @Transactional(readOnly = true)
-    public List<TicketRegister> findAll() {
-        return this.sessionFactory.getCurrentSession().createQuery("FROM TicketRegister").list();
-    }
-
-    @Transactional(readOnly = true)
-    public TicketRegister findByID(Integer id) {
-        return this.sessionFactory.getCurrentSession().get(TicketRegister.class, id);
+    protected TicketRegisterDaoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory, TicketRegisterEntity.class);
     }
 
     @Override
-    @Transactional
-    public void persist(TicketRegister obj) {
-        this.sessionFactory.getCurrentSession().persist(obj);
+    public List<TicketRegisterEntity> findAllByDepName(String depName) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " tr WHERE tr.department.name = :depName", getEntityClass())
+                .setParameter("depName", depName)
+                .list();
     }
 
     @Override
-    @Transactional
-    public Integer save(TicketRegister obj) {
-        return (Integer) this.sessionFactory.getCurrentSession().save(obj);
-    }
+    public Page<TicketRegisterEntity> findAllByDepName(int number, int pageSize, String depName) {
+        final Session currentSession = getSession();
 
-    @Transactional(readOnly = true)
-    public List<TicketRegister> findAllByDepName(String depName) {
-        return this.sessionFactory.getCurrentSession()
-                .createQuery("FROM TicketRegister tr WHERE tr.department.name = :depName")
-                .setParameter("depName", depName).list();
-    }
+        final Long total = currentSession
+                .createQuery("SELECT COUNT(tr.id) FROM " + getEntityName() + " tr WHERE tr.department.name = :depName", Long.class)
+                .setParameter("depName", depName)
+                .uniqueResult();
 
-    @Transactional(readOnly = true)
-    public Page<TicketRegister> findAllByDepName(int number, int pageSize, String depName) {
-        final Session currentSession = this.sessionFactory.getCurrentSession();
-
-        final Long total = (Long) currentSession
-                .createQuery("SELECT COUNT(tr.id) FROM TicketRegister tr WHERE tr.department.name = :depName")
-                .setParameter("depName", depName).uniqueResult();
-
-        final List<TicketRegister> registers = currentSession
-                .createQuery("FROM TicketRegister tr WHERE tr.department.name = :depName")
+        final List<TicketRegisterEntity> registers = currentSession
+                .createQuery("FROM " + getEntityName() + " tr WHERE tr.department.name = :depName", getEntityClass())
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
-                .setParameter("depName", depName).list();
+                .setParameter("depName", depName)
+                .list();
 
         return new Page<>(registers, number, total, pageSize);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<TicketRegister> getTicketRegisterByDateAndDep(Date date, String depName) {
-        return this.sessionFactory.getCurrentSession()
-                .createQuery("FROM TicketRegister tr" +
-                        " WHERE MONTH(tr.createRegister) = MONTH(:createRegister)" +
+    public List<TicketRegisterEntity> getTicketRegisterByDateAndDep(Date date, String depName) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() +
+                        " tr WHERE MONTH(tr.createRegister) = MONTH(:createRegister)" +
                         " AND YEAR(tr.createRegister) = YEAR(:createRegister)" +
-                        " AND tr.department.name = :depName")
+                        " AND tr.department.name = :depName", getEntityClass())
                 .setParameter("createRegister", date)
                 .setParameter("depName", depName)
                 .list();
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<TicketRegister> findAllOpenRegister() {
-        return this.sessionFactory.getCurrentSession()
-                .createQuery("FROM TicketRegister tr WHERE tr.close = false")
+    public List<TicketRegisterEntity> findAllOpenRegister() {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " tr WHERE tr.close = false", getEntityClass())
                 .list();
-    }
-
-    @Transactional
-    public void delete(TicketRegister obj) {
-        this.sessionFactory.getCurrentSession().delete(obj);
-    }
-
-    @Override
-    public void delete(List<TicketRegister> objs) {
-
-    }
-
-    @Transactional
-    public void update(TicketRegister obj) {
-        this.sessionFactory.getCurrentSession().update(obj);
-    }
-
-    @Override
-    public void update(List<TicketRegister> objs) {
-
     }
 }

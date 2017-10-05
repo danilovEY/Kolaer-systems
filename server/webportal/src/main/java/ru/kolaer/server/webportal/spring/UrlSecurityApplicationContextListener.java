@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.config.PathMapping;
-import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurityEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
 import java.lang.reflect.Method;
@@ -57,13 +57,13 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
 
         final Session session = this.sessionFactory.openSession();
 
-        final List<UrlSecurity> urlToAdd = new ArrayList<>();
-        final List<UrlSecurity> urlToUpdate = new ArrayList<>();
+        final List<UrlSecurityEntity> urlToAdd = new ArrayList<>();
+        final List<UrlSecurityEntity> urlToUpdate = new ArrayList<>();
 
         final Transaction transaction = session.beginTransaction();
 
         try {
-            final Map<String, UrlSecurity> mapUrlPaths = this.urlSecurityService.getAll().stream()
+            final Map<String, UrlSecurityEntity> mapUrlPaths = this.urlSecurityService.getAll().stream()
                     .collect(Collectors.toMap(w -> w.getUrl() + w.getRequestMethod() + w.getDescription(), w -> w));
 
             for (String beanName : event.getApplicationContext().getBeanDefinitionNames()) {
@@ -104,9 +104,9 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                         final String description = urlDeclaration.description();
                         final String requestMethodName = urlDeclaration.requestMethod().name();
                         final String key = url + requestMethodName + description;
-                        UrlSecurity urlPath = mapUrlPaths.get(key);
+                        UrlSecurityEntity urlPath = mapUrlPaths.get(key);
                         if (urlPath == null) {
-                            urlPath = new UrlSecurity();
+                            urlPath = new UrlSecurityEntity();
 
                             final List<String> accessList = new ArrayList<>();
 
@@ -136,7 +136,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
 
             int i = 0;
             final int defaultBatchSize = Integer.valueOf(Dialect.DEFAULT_BATCH_SIZE);
-            for (UrlSecurity urlSecurity : urlToAdd) {
+            for (UrlSecurityEntity urlSecurity : urlToAdd) {
                 session.persist(urlSecurity);
 
                 if(++i % defaultBatchSize == 0) {
@@ -148,7 +148,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
 
             i = 0;
 
-            for (UrlSecurity urlSecurity : urlToUpdate) {
+            for (UrlSecurityEntity urlSecurity : urlToUpdate) {
                 session.update(urlSecurity);
 
                 if(++i % defaultBatchSize == 0) {
@@ -159,7 +159,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
             }
 
             List<Integer> idToRemove = mapUrlPaths.values().stream()
-                    .map(UrlSecurity::getId)
+                    .map(UrlSecurityEntity::getId)
                     .collect(Collectors.toList());
 
             if(idToRemove.size() > 0) {

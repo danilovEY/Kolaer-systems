@@ -72,5 +72,5 @@ public class ViolationEntity implements BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
-    private TypeViolationEntity type;
+    private ViolationTypeEntity type;
 }

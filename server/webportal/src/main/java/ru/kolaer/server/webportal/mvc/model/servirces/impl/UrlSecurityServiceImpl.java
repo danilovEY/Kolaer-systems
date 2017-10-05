@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlSecurityDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurityEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.RoleService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class UrlSecurityServiceImpl implements UrlSecurityService {
     @Override
-    public void delete(List<UrlSecurity> entites) {
+    public void delete(List<UrlSecurityEntity> entites) {
 
     }
 
@@ -30,7 +30,7 @@ public class UrlSecurityServiceImpl implements UrlSecurityService {
     private RoleService roleService;
 
     @Override
-    public UrlSecurity getPathByUrl(String userUrl) {
+    public UrlSecurityEntity getPathByUrl(String userUrl) {
         String url = userUrl;
         if(userUrl.contains("?")) {
             url = userUrl.substring(0, userUrl.indexOf("?"));
@@ -40,7 +40,7 @@ public class UrlSecurityServiceImpl implements UrlSecurityService {
     }
 
     @Override
-    public List<RoleEntity> getRoles(UrlSecurity urlPath) {
+    public List<RoleEntity> getRoles(UrlSecurityEntity urlPath) {
         if(urlPath.getAccesses().contains("ALL")) {
             return Collections.emptyList();
         }
@@ -51,12 +51,12 @@ public class UrlSecurityServiceImpl implements UrlSecurityService {
     }
 
     @Override
-    public void createOrUpdate(UrlSecurity urlPath) {
+    public void createOrUpdate(UrlSecurityEntity urlPath) {
         if(urlPath != null) {
-            final UrlSecurity path = this.urlSecurityDao
+            final UrlSecurityEntity path = this.urlSecurityDao
                     .getPathByUrlAndMethod(urlPath.getUrl(), urlPath.getRequestMethod());
             if(path == null) {
-                this.urlSecurityDao.persist(new UrlSecurity(urlPath));
+                this.urlSecurityDao.persist(new UrlSecurityEntity(urlPath));
             } else {
                 if(path.getDescription().equals(urlPath.getDescription()) ||
                         path.getAccesses().containsAll(urlPath.getAccesses())) {
@@ -74,38 +74,38 @@ public class UrlSecurityServiceImpl implements UrlSecurityService {
     }
 
     @Override
-    public void removeAll(Collection<UrlSecurity> values) {
+    public void removeAll(Collection<UrlSecurityEntity> values) {
         if(values.size() > 0)
             this.urlSecurityDao.removeAll(values);
     }
 
     @Override
-    public List<UrlSecurity> getAll() {
+    public List<UrlSecurityEntity> getAll() {
         return urlSecurityDao.findAll();
     }
 
     @Override
-    public UrlSecurity getById(Integer id) {
+    public UrlSecurityEntity getById(Integer id) {
         return this.urlSecurityDao.findByID(id);
     }
 
     @Override
-    public void add(UrlSecurity entity) {
-        this.urlSecurityDao.persist(new UrlSecurity(entity));
+    public void add(UrlSecurityEntity entity) {
+        this.urlSecurityDao.persist(new UrlSecurityEntity(entity));
     }
 
     @Override
-    public void delete(UrlSecurity entity) {
+    public void delete(UrlSecurityEntity entity) {
 
     }
 
     @Override
-    public void update(UrlSecurity entity) {
+    public void update(UrlSecurityEntity entity) {
         this.urlSecurityDao.update(entity);
     }
 
     @Override
-    public void update(List<UrlSecurity> entity) {
+    public void update(List<UrlSecurityEntity> entity) {
 
     }
 }

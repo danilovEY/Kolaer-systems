@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import lombok.Data;
+import ru.kolaer.api.mvp.model.kolaerweb.TypeRangEnum;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.*;
@@ -28,7 +29,8 @@ public class PostEntity implements BaseEntity {
     private String code;
 
     @Column(name = "type", length = 10)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private TypeRangEnum type;
 
     @Column(name = "rang")
     private Integer rang;

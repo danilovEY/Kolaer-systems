@@ -14,7 +14,7 @@ import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
@@ -108,8 +108,8 @@ public class TicketsController extends BaseController {
     @ApiOperation(value = "Получить все реестры талонов")
     @UrlDeclaration(description = "Получить все реестры талонов", isAccessUser = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<TicketRegister> getAllRegister(@RequestParam(value = "page", defaultValue = "0") Integer number,
-                                               @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+    public Page<TicketRegisterEntity> getAllRegister(@RequestParam(value = "page", defaultValue = "0") Integer number,
+                                                     @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         final AccountEntity accountByAuthentication = serviceLDAP.getAccountByAuthentication();
         if(accountByAuthentication.getRoles().stream()
                 .map(RoleEntity::getType)
@@ -125,13 +125,13 @@ public class TicketsController extends BaseController {
     @ApiOperation(value = "Добавить талон в реестр")
     @UrlDeclaration(description = "Добавить талон в реестр по ID", isAccessUser = true)
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<TicketEntity> addTicketToRegister(@ApiParam(value = "ID реестра", required = true) @RequestBody TicketRegister ticketRegister) {
+    public List<TicketEntity> addTicketToRegister(@ApiParam(value = "ID реестра", required = true) @RequestBody TicketRegisterEntity ticketRegister) {
         //Очищаем из запроса пустые объекты
         ticketRegister.setTickets(ticketRegister.getTickets().stream()
                 .filter(ticket -> ticket.getEmployee() != null && ticket.getCount() != null)
                 .collect(Collectors.toList()));
 
-        TicketRegister updateTicketRegister = this.ticketRegisterService.getById(ticketRegister.getId());
+        TicketRegisterEntity updateTicketRegister = this.ticketRegisterService.getById(ticketRegister.getId());
         if(updateTicketRegister.isClose()) {
             throw new BadRequestException("Добавлять в реестр запрещено!");
         }
@@ -175,7 +175,7 @@ public class TicketsController extends BaseController {
     @ApiOperation(value = "Удалить реестр")
     @UrlDeclaration(description = "Удалить реестра", isAccessUser = true)
     @RequestMapping(value = "/register/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void deleteRegister(@ApiParam(value = "ID реестра", required = true) @RequestBody TicketRegister ticket) {
+    public void deleteRegister(@ApiParam(value = "ID реестра", required = true) @RequestBody TicketRegisterEntity ticket) {
         this.ticketRegisterService.delete(ticket);
     }
 
@@ -189,8 +189,8 @@ public class TicketsController extends BaseController {
     @ApiOperation(value = "Добавить реестр талонов")
     @UrlDeclaration(description = "Добавить реестр талонов", isAccessUser = true)
     @RequestMapping(value = "/register/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public TicketRegister addTicketRegister() {
-        TicketRegister ticketRegister = new TicketRegister();
+    public TicketRegisterEntity addTicketRegister() {
+        TicketRegisterEntity ticketRegister = new TicketRegisterEntity();
         ticketRegister.setCreateRegister(new Date());
         ticketRegister.setDepartment(this.serviceLDAP.getAccountByAuthentication()
                 .getEmployeeEntity().getDepartment());
@@ -202,7 +202,7 @@ public class TicketsController extends BaseController {
     @ApiOperation(value = "Получить реестр талонов по ID")
     @UrlDeclaration(description = "Получить реестр талонов по ID", isAccessUser = true)
     @RequestMapping(value = "/register/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public TicketRegister getTicketRegister(@ApiParam(value = "ID реестра", required = true) @RequestParam(value = "id") Integer id) {
+    public TicketRegisterEntity getTicketRegister(@ApiParam(value = "ID реестра", required = true) @RequestParam(value = "id") Integer id) {
         return this.ticketRegisterService.getById(id);
     }
 

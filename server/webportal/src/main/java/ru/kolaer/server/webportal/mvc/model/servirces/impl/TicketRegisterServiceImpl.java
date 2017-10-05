@@ -2,11 +2,11 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegister;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 
 import java.time.ZoneId;
@@ -26,21 +26,21 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
     private TicketDao ticketDao;
 
     @Override
-    public List<TicketRegister> getAll() {
+    public List<TicketRegisterEntity> getAll() {
         return this.ticketRegisterDao.findAll();
     }
 
     @Override
-    public TicketRegister getById(Integer id) {
+    public TicketRegisterEntity getById(Integer id) {
         return this.ticketRegisterDao.findByID(id);
     }
 
     @Override
-    public void add(TicketRegister entity) {
-        List<TicketRegister> ticketRegisterByDateAndDep = ticketRegisterDao.
+    public void add(TicketRegisterEntity entity) {
+        List<TicketRegisterEntity> ticketRegisterByDateAndDep = ticketRegisterDao.
                 getTicketRegisterByDateAndDep(entity.getCreateRegister(), entity.getDepartment().getName());
 
-        List<TicketRegister> collect = ticketRegisterByDateAndDep.stream().filter(ticketRegister ->
+        List<TicketRegisterEntity> collect = ticketRegisterByDateAndDep.stream().filter(ticketRegister ->
                 !ticketRegister.isClose()
         ).collect(Collectors.toList());
         if(collect.size() > 0) {
@@ -61,36 +61,36 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
     }
 
     @Override
-    public void delete(TicketRegister entity) {
+    public void delete(TicketRegisterEntity entity) {
         if (entity.getTickets() != null)
             entity.getTickets().forEach(ticketDao::delete);
         this.ticketRegisterDao.delete(entity);
     }
 
     @Override
-    public void update(TicketRegister entity) {
+    public void update(TicketRegisterEntity entity) {
         this.ticketRegisterDao.update(entity);
     }
 
     @Override
-    public void update(List<TicketRegister> entity) {
+    public void update(List<TicketRegisterEntity> entity) {
         entity.forEach(this::update);
     }
 
     @Override
-    public void delete(List<TicketRegister> entites) {
+    public void delete(List<TicketRegisterEntity> entites) {
 
     }
 
     @Override
-    public List<TicketRegister> getAllByDepName(String name) {
+    public List<TicketRegisterEntity> getAllByDepName(String name) {
         return this.ticketRegisterDao.findAllByDepName(name);
     }
 
     @Override
-    public Page<TicketRegister> getAllByDepName(int page, int pageSize, String name) {
+    public Page<TicketRegisterEntity> getAllByDepName(int page, int pageSize, String name) {
         if(page == 0) {
-            List<TicketRegister> allByDepName = this.getAllByDepName(name);
+            List<TicketRegisterEntity> allByDepName = this.getAllByDepName(name);
             return new Page<>(allByDepName, 0, 0, allByDepName.size());
         }
 
@@ -98,7 +98,7 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
     }
 
     @Override
-    public List<TicketRegister> getAllOpenRegister() {
+    public List<TicketRegisterEntity> getAllOpenRegister() {
         return this.ticketRegisterDao.findAllOpenRegister();
     }
 }

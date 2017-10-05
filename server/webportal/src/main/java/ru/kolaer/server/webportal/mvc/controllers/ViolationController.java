@@ -24,8 +24,8 @@ import ru.kolaer.server.webportal.mvc.model.dto.JournalAccess;
 import ru.kolaer.server.webportal.mvc.model.dto.JournalViolationAccess;
 import ru.kolaer.server.webportal.mvc.model.dto.ViolationAccess;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationTypeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -433,7 +433,7 @@ public class ViolationController extends BaseController {
     )
     @UrlDeclaration(description = "Получить все типы нарушений", isAccessUser = true)
     @RequestMapping(value = "/type/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<TypeViolationEntity> getAllTypes() {
+    public List<ViolationTypeEntity> getAllTypes() {
         return this.typeViolationService.getAll();
     }
 

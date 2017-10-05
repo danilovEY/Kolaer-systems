@@ -14,8 +14,8 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.TypeViolationEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationTypeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
 import java.util.Arrays;
@@ -42,7 +42,7 @@ public class ExampleController extends BaseController {
 
         final EmployeeEntity employeeEntity = this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName()).getEmployeeEntity();
 
-        final TypeViolationEntity typeViolationDecorator = new TypeViolationEntity();
+        final ViolationTypeEntity typeViolationDecorator = new ViolationTypeEntity();
         typeViolationDecorator.setId(0);
         typeViolationDecorator.setName("Тип нарушения1");
 

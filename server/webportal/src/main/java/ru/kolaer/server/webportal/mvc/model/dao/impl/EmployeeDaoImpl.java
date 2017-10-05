@@ -10,16 +10,15 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.dialect.Dialect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeRangEnum;
 import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
@@ -38,9 +37,9 @@ import java.util.stream.Collectors;
  * Created by Danilov on 27.07.2016.
  *
  */
-@Repository(value = "employeeDao")
+@Repository
 @Slf4j
-public class EmployeeDaoImpl implements EmployeeDao {
+public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implements EmployeeDao {
     private final static int YEAR_NOT_DISMISSAL = 9999;
     private final static String SECOND_NAME = "Фамилия";
     private final static String FIRST_NAME = "Имя";
@@ -60,85 +59,41 @@ public class EmployeeDaoImpl implements EmployeeDao {
     private final static String SERIAL_1_DOCUMENT = "Серия1";
     private final static String NUMBER_DOCUMENT = "Номер документа";
 
-    @Autowired
-    @Qualifier(value = "jdbcTemplateKolaerBase")
-    private JdbcTemplate jdbcTemplateKolaerBase;
+    private final JdbcTemplate jdbcTemplateKolaerBase;
 
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<EmployeeEntity> findAll() {
-        return sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator emp ORDER BY emp.initials")
-                .list();
+    protected EmployeeDaoImpl(@Qualifier(value = "jdbcTemplateKolaerBase") JdbcTemplate jdbcTemplateKolaerBase,
+                              SessionFactory sessionFactory) {
+        super(sessionFactory, EmployeeEntity.class);
+        this.jdbcTemplateKolaerBase = jdbcTemplateKolaerBase;
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public EmployeeEntity findByID(@NonNull Integer id) {
-        return (EmployeeEntity) this.sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.id = :id")
-                .setParameter("id", id)
-                .uniqueResult();
-    }
-
-    @Override
-    @Transactional
-    public void persist(@NonNull EmployeeEntity obj) {
-        this.sessionFactory.getCurrentSession().persist(obj);
-    }
-
-    @Override
-    @Transactional
-    public void delete(@NonNull EmployeeEntity obj) {
-
-    }
-
-    @Override
-    public void delete(@NonNull List<EmployeeEntity> objs) {
-
-    }
-
-    @Override
-    @Transactional
-    public void update(@NonNull EmployeeEntity entity) {
-
-    }
-
-    @Override
-    public void update(@NonNull List<EmployeeEntity> objs) {
-
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<EmployeeEntity> findEmployeeByInitials(@NonNull String initials) {
-        return this.sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.initials LIKE :initials ORDER BY emp.initials")
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " emp WHERE emp.initials LIKE :initials ORDER BY emp.initials", EmployeeEntity.class)
                 .setParameter("initials", "%" + initials + "%")
                 .list();
     }
 
-    @Transactional(readOnly = true)
+    @Override
     public List<EmployeeEntity> findByDepartmentById(@NonNull Integer id) {
-        return this.sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.department.id = :id ORDER BY emp.initials")
-                .setParameter("id", id).list();
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " emp WHERE emp.department.id = :id ORDER BY emp.initials", EmployeeEntity.class)
+                .setParameter("id", id)
+                .list();
     }
 
-    @Transactional(readOnly = true)
+    @Override
     public Page<EmployeeEntity> findByDepartmentById(int page, int pageSize, @NonNull Integer id) {
-        Session currentSession = this.sessionFactory.getCurrentSession();
-        final Long count = (Long) currentSession.createQuery("SELECT COUNT(emp.personnelNumber) " +
-                "FROM EmployeeEntityDecorator emp " +
-                "WHERE emp.department.id = :id")
+        Session currentSession = getSession();
+        final Long count = currentSession.createQuery("SELECT COUNT(emp.personnelNumber) FROM " + getEntityName() +
+                " emp WHERE emp.department.id = :id", Long.class)
                 .setParameter("id", id)
                 .uniqueResult();
 
-        final List<EmployeeEntity> result = this.sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.department.id = :id ORDER BY emp.initials")
+        final List<EmployeeEntity> result = currentSession
+                .createQuery("FROM " + getEntityName() + " emp WHERE emp.department.id = :id ORDER BY emp.initials",
+                        EmployeeEntity.class)
                 .setParameter("id", id)
                 .setFirstResult((page - 1) * pageSize)
                 .setMaxResults(pageSize)
@@ -148,63 +103,58 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public EmployeeEntity findByPersonnelNumber(Integer id) {
-        return (EmployeeEntity) this.sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator emp WHERE emp.personnelNumber = :id")
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " emp WHERE emp.personnelNumber = :id", EmployeeEntity.class)
                 .setParameter("id", id)
                 .uniqueResult();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<EmployeeEntity> getUserRangeBirthday(@NonNull final Date startDate, @NonNull final Date endDate) {
-        return sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator t " +
-                        "where t.birthday BETWEEN :startDate AND :endDate " +
-                        "ORDER BY t.initials")
+        return getSession()
+                .createQuery("FROM " + getEntityName() +
+                        " t where t.birthday BETWEEN :startDate AND :endDate " +
+                        "ORDER BY t.initials", EmployeeEntity.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .list();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<EmployeeEntity> getUsersByBirthday(@NonNull final Date date) {
-        return sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator t " +
-                        "where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) " +
-                        "ORDER BY t.initials")
+        return getSession()
+                .createQuery("FROM " + getEntityName() +
+                        " t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) " +
+                        "ORDER BY t.initials", EmployeeEntity.class)
                 .setParameter("date", date)
                 .list();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<EmployeeEntity> getUserBirthdayToday() {
-        return sessionFactory.getCurrentSession()
-                .createQuery("FROM EmployeeEntityDecorator t " +
-                        "where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) " +
-                        "ORDER BY t.initials")
+        return getSession()
+                .createQuery("FROM " + getEntityName() +
+                        " t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) " +
+                        "ORDER BY t.initials", EmployeeEntity.class)
                 .list();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public int getCountUserBirthday(@NonNull final Date date) {
-        final Long result = (Long) sessionFactory.getCurrentSession()
-                .createQuery("SELECT count(t.personnelNumber) FROM EmployeeEntityDecorator t " +
-                        "where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)")
+        return getSession()
+                .createQuery("SELECT count(t.personnelNumber) FROM " + getEntityName() +
+                        " t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", Long.class)
                 .setParameter("date", date)
-                .uniqueResult();
-        return result.intValue();
+                .uniqueResult()
+                .intValue();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<EmployeeEntity> getUsersByInitials(@NonNull final String initials) {
-        return sessionFactory.getCurrentSession().createQuery("FROM EmployeeEntityDecorator t " +
-                "where t.initials like :initials ORDER BY t.initials")
+        return getSession()
+                .createQuery("FROM " + getEntityName() +
+                " t where t.initials like :initials ORDER BY t.initials", EmployeeEntity.class)
                 .setParameter("initials", "%" + initials + "%")
                 .list();
     }
@@ -228,8 +178,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
             firstRow.forEach(cell -> nameColumns.add(cell.getStringCellValue()));
 
             Map<String, PostEntity> postEntityMap = new HashMap<>();
-            Map<Integer, DepartmentEntity> departmentEntityMap = new HashMap<>();
-            Map<Integer, EmployeeEntity> newEmployeesMap = new HashMap<>();
+            Map<Long, DepartmentEntity> departmentEntityMap = new HashMap<>();
+            Map<Long, EmployeeEntity> newEmployeesMap = new HashMap<>();
             List<PassportEntity> passportEntityList = new ArrayList<>();
 
             for (int i = 1; i < sheetAt.getLastRowNum(); i++) {
@@ -255,9 +205,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
                 if (!postEntityMap.containsKey(postKey)) {
                     postEntityMap.put(postKey, postEntity);
-                    newEmployeeEntity.setPostEntity(postEntity);
+                    newEmployeeEntity.setPost(postEntity);
                 } else {
-                    newEmployeeEntity.setPostEntity(postEntityMap.get(postKey));
+                    newEmployeeEntity.setPost(postEntityMap.get(postKey));
                 }
 
                 if (!departmentEntityMap.containsKey(departmentEntity.getId()))
@@ -323,7 +273,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                                                            ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         int i = 0;
 
-        List<PassportEntity> passportEntities = currentSession.createQuery("FROM PassportEntity").list();
+        List<PassportEntity> passportEntities = currentSession.createQuery("FROM PassportEntity", PassportEntity.class).list();
         Map<String, PassportEntity> collectPassportMap = passportEntities.stream()
                 .collect(Collectors.toMap(p -> p.getSerial() + p.getNumber(), p -> p));
 
@@ -355,22 +305,22 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     private ResultUpdateEmployeesDto saveOrUpdateEmployees(Session currentSession, int defaultBachSize,
-                                                           Map<Integer, EmployeeEntity> newEmployeesMap,
-                                                           Map<Integer, DepartmentEntity> departmentEntityMap,
+                                                           Map<Long, EmployeeEntity> newEmployeesMap,
+                                                           Map<Long, DepartmentEntity> departmentEntityMap,
                                                            Map<String, PostEntity> postEntityMap,
                                                            ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
 
         final List<EmployeeEntity> employeeEntityWorkPhone = this.jdbcTemplateKolaerBase
                 .query("SELECT person_number, phone, mobile_phone, email FROM db_data_all",
                         (rs, rowNum) -> {
-                            EmployeeDto employeeDto = new EmployeeDto();
+                            EmployeeEntity employeeDto = new EmployeeEntity();
                             String workPhone = Optional.ofNullable(rs.getString("phone")).orElse("");
                             String mobilePhone = Optional.ofNullable(rs.getString("mobile_phone")).orElse("");
                             if (StringUtils.hasText(mobilePhone))
                                 workPhone += "; " + mobilePhone;
 
                             employeeDto.setEmail(rs.getString("email"));
-                            employeeDto.setPersonnelNumber(rs.getInt("person_number"));
+                            employeeDto.setPersonnelNumber(rs.getLong("person_number"));
                             employeeDto.setWorkPhoneNumber(workPhone);
                             return employeeDto;
                         });
@@ -387,18 +337,18 @@ public class EmployeeDaoImpl implements EmployeeDao {
         int countToAdd = 0;
         int i = 0;
         for (EmployeeEntity newEmployee : newEmployeesMap.values()) {
-            final String postName = newEmployee.getPostEntity().getName();
+            final String postName = newEmployee.getPost().getName();
 
-            newEmployee.setPostEntity(postEntityMap.get(postName
-                    + Optional.ofNullable(newEmployee.getPostEntity().getRang()).orElse(0)));
+            newEmployee.setPost(postEntityMap.get(postName
+                    + Optional.ofNullable(newEmployee.getPost().getRang()).orElse(0)));
             newEmployee.setDepartment(departmentEntityMap.get(newEmployee.getDepartment().getId()));
 
-            Integer idChief = newEmployee.getDepartment().getChiefEntity();
+            Long idChief = newEmployee.getDepartment().getChiefEmployeeId();
             if ((postName.contains("Начальник") || postName.equals("Директор")
                     || postName.equals("Руководитель") || postName.equals("Ведущий")
                     || postName.equals("Главный"))
                     && (idChief == null || !idChief.equals(newEmployee.getPersonnelNumber()))) {
-                newEmployee.getDepartment().setChiefEntity(newEmployee.getPersonnelNumber());
+                newEmployee.getDepartment().setChiefEmployeeId(newEmployee.getPersonnelNumber());
                 updatesDep.add(newEmployee.getDepartment());
             }
 
@@ -425,7 +375,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         for (DepartmentEntity departmentEntity : updatesDep) {
             currentSession.createQuery(hql)
                     .setParameter("id", departmentEntity.getId())
-                    .setParameter("idCief", departmentEntity.getChiefEntity())
+                    .setParameter("idCief", departmentEntity.getChiefEmployeeId())
                     .executeUpdate();
 
             if (++i % defaultBachSize == 0) {
@@ -459,7 +409,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     private ResultUpdateEmployeesDto saveOrUpdateDepartment(Session currentSession, int defaultBachSize,
-                                                            Map<Integer, DepartmentEntity> departmentEntityMap,
+                                                            Map<Long, DepartmentEntity> departmentEntityMap,
                                                             ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         int countToAdd = 0;
         int i = 0;
@@ -479,7 +429,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     private ResultUpdateEmployeesDto getUpdateDeleteEmployees(Session currentSession,
-                                                              Map<Integer, EmployeeEntity> newEmployeesMap,
+                                                              Map<Long, EmployeeEntity> newEmployeesMap,
                                                               ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         final List<Object[]> resultEmployeeFromDb
                 = currentSession.createQuery("SELECT e.id, e.personnelNumber FROM EmployeeEntityDecorator e")
@@ -490,7 +440,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         resultUpdateEmployeesDto.setAllEmployeeSize(employeeFromDb.size());
 
-        final List<Integer> removeEmployees = employeeFromDb.stream()
+        final List<Long> removeEmployees = employeeFromDb.stream()
                 .filter(key -> !newEmployeesMap.containsKey(key.getPersonnelNumber()))
                 .map(EmployeeEntity::getPersonnelNumber)
                 .collect(Collectors.toList());
@@ -498,7 +448,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         resultUpdateEmployeesDto.setDeleteEmployeeCount(removeEmployees.size());
 
         if (removeEmployees.size() > 0) {
-            currentSession.createQuery("UPDATE FROM EmployeeEntityDecorator e SET e.dismissalDate = :dismissalDate WHERE e.personnelNumber IN (:personnelNumbers)")
+            currentSession.createQuery("UPDATE FROM EmployeeEntity SET dismissalDate = :dismissalDate WHERE personnelNumber IN (:personnelNumbers)")
                     .setParameterList("personnelNumbers", removeEmployees)
                     .setParameter("dismissalDate", new Date())
                     .executeUpdate();
@@ -518,17 +468,17 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     private EmployeeEntity convertEmployee(Object[] objects) {
         EmployeeEntity employeeEntity = new EmployeeEntity();
-        employeeEntity.setId((Integer) objects[0]);
-        employeeEntity.setPersonnelNumber((Integer) objects[1]);
+        employeeEntity.setId((Long) objects[0]);
+        employeeEntity.setPersonnelNumber((Long) objects[1]);
 
         return employeeEntity;
     }
 
     private ResultUpdateEmployeesDto getUpdateDeleteDepartment(Session currentSession,
-                                                               Map<Integer, DepartmentEntity> departmentEntityMap,
+                                                               Map<Long, DepartmentEntity> departmentEntityMap,
                                                                ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         final List<DepartmentEntity> depListFromDb = currentSession
-                .createQuery("FROM DepartmentEntityDecorator d")
+                .createQuery("FROM DepartmentEntity d")
                 .list();
 
         resultUpdateEmployeesDto.setAllDepSize(depListFromDb.size());
@@ -545,7 +495,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         resultUpdateEmployeesDto.setDeleteDepCount(depListFromDb.size());
 
-        final List<Integer> postIds = depListFromDb.stream().map(DepartmentEntity::getId)
+        final List<Long> postIds = depListFromDb.stream().map(DepartmentEntity::getId)
                 .collect(Collectors.toList());
 
         if (postIds.size() > 0) {
@@ -564,7 +514,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                                                          Map<String, PostEntity> postEntityMap,
                                                          ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
         final List<PostEntity> postEntitiesFromDb = currentSession
-                .createQuery("FROM PostEntityDecorator")
+                .createQuery("FROM PostEntity")
                 .list();
 
         resultUpdateEmployeesDto.setAllPostSize(postEntitiesFromDb.size());
@@ -582,10 +532,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         resultUpdateEmployeesDto.setDeletePostCount(postEntitiesFromDb.size());
 
-        final List<Integer> postIds = postEntitiesFromDb.stream().map(PostEntity::getId)
+        final List<Long> postIds = postEntitiesFromDb.stream().map(PostEntity::getId)
                 .collect(Collectors.toList());
         if (postIds.size() > 0) {
-            currentSession.createQuery("DELETE FROM PostEntityDecorator p WHERE p.id IN (:idList)")
+            currentSession.createQuery("DELETE FROM PostEntity p WHERE p.id IN (:idList)")
                     .setParameterList("idList", postIds)
                     .executeUpdate();
 
@@ -635,13 +585,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 final String postWithOutSpace = value.replaceAll(" ","");
                 switch (postWithOutSpace.charAt(postWithOutSpace.indexOf(rang) + 1)) {
                     case 'р':
-                        postEntity.setTypeRang(TypeRangEnum.DISCHARGE.getName());
+                        postEntity.setType(TypeRangEnum.DISCHARGE);
                         break;
                     case 'к':
-                        postEntity.setTypeRang(TypeRangEnum.CATEGORY.getName());
+                        postEntity.setType(TypeRangEnum.CATEGORY);
                         break;
                     case 'г':
-                        postEntity.setTypeRang(TypeRangEnum.GROUP.getName());
+                        postEntity.setType(TypeRangEnum.GROUP);
                         break;
                     default:
                         break;
@@ -664,10 +614,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
         return postEntity;
     }
 
-    private DepartmentEntity getOrCreateDepartment(Map<Integer, DepartmentEntity> departmentEntityMap,
+    private DepartmentEntity getOrCreateDepartment(Map<Long, DepartmentEntity> departmentEntityMap,
                                                    XSSFRow row,
                                                    List<String> nameColumns) {
-        final Integer idDep = Integer
+        final Long idDep = Long
                 .valueOf(row.getCell(nameColumns.indexOf(DEP_ID)).getStringCellValue());
 
         if(departmentEntityMap.containsKey(idDep)){
@@ -691,16 +641,16 @@ public class EmployeeDaoImpl implements EmployeeDao {
         return departmentEntity;
     }
 
-    private EmployeeEntity createEmployeeByRow(Map<Integer, EmployeeEntity> newEmployeesMap,
+    private EmployeeEntity createEmployeeByRow(Map<Long, EmployeeEntity> newEmployeesMap,
                                                XSSFRow row, List<String> nameColumns) {
         String value = row.getCell(nameColumns.indexOf(PERSONNEL_NUMBER)).getStringCellValue();
 
         if (value == null || value.trim().isEmpty()
-                || newEmployeesMap.containsKey(Integer.valueOf(value)))
+                || newEmployeesMap.containsKey(Long.valueOf(value)))
             return null;
 
         EmployeeEntity newEmployeeEntity = new EmployeeEntity();
-        newEmployeeEntity.setPersonnelNumber(Integer.valueOf(value));
+        newEmployeeEntity.setPersonnelNumber(Long.valueOf(value));
 
         value = row.getCell(nameColumns.indexOf(SECOND_NAME)).getStringCellValue();
         value += " " + row.getCell(nameColumns.indexOf(FIRST_NAME)).getStringCellValue();
@@ -723,7 +673,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
             newEmployeeEntity.setDismissalDate(null);
 
         value = row.getCell(nameColumns.indexOf(SEX)).getStringCellValue();
-        newEmployeeEntity.setGender(value);
+        if("мужской".equals(value.toLowerCase())) {
+            newEmployeeEntity.setGender(EnumGender.MALE);
+        } else {
+            newEmployeeEntity.setGender(EnumGender.FEMALE);
+        }
 
         value = row.getCell(nameColumns.indexOf(PHONE_NUMBER)).getStringCellValue();
         newEmployeeEntity.setHomePhoneNumber(value);
@@ -735,7 +689,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         }
 
         try {
-            newEmployeeEntity.setPhoto("http://asupkolaer/app_ie8/assets/images/vCard/o_"
+            newEmployeeEntity.setPhoto("http://asupkolaer.local/app_ie8/assets/images/vCard/o_"
                     + URLEncoder.encode(newEmployeeEntity.getInitials(), "UTF-8")
                     .replace("+", "%20") + ".jpg");
         } catch (UnsupportedEncodingException ignore) {

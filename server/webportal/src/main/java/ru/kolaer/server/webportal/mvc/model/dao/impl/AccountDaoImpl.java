@@ -3,7 +3,6 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
@@ -17,15 +16,15 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 public class AccountDaoImpl extends AbstractDefaultDao<AccountEntity> implements AccountDao {
 
     @Autowired
-    public AccountDaoImpl(SessionFactory sessionFactory, @Value("${hibernate.batch.size}") int batchSize) {
-        super(sessionFactory, batchSize, AccountEntity.class);
+    public AccountDaoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory, AccountEntity.class);
     }
 
     @Override
     public AccountEntity findName(String username) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " ac WHERE ac.username=:username ")
+                .createQuery("FROM " + getEntityName() + " ac WHERE ac.username=:username", getEntityClass())
                 .setParameter("username", username)
-                .unwrap(getEntityClass());
+                .uniqueResult();
     }
 }

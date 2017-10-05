@@ -10,12 +10,6 @@ public interface EmployeeOtherOrganizationDao extends BirthdayDao<EmployeeOtherO
 	List<EmployeeOtherOrganizationEntity> getUsersByBirthdayAndOrg(Date date, String organization);
 	int getCountUserBirthdayAndOrg(Date date, String organization);
 
-	List<EmployeeOtherOrganizationEntity> getAll();
 	List<EmployeeOtherOrganizationEntity> getAllMaxCount(final int count);
 	int getRowCount();
-
-	void insertData(EmployeeOtherOrganizationEntity data);
-	void insertDataList(List<EmployeeOtherOrganizationEntity> dataList);
-
-	void update(List<EmployeeOtherOrganizationEntity> entity);
 }

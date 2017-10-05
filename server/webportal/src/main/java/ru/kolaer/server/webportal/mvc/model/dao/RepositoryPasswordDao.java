@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
-
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordEntity;
 
@@ -13,8 +12,6 @@ public interface RepositoryPasswordDao extends DefaultDao<RepositoryPasswordEnti
     Page<RepositoryPasswordEntity> findAllByPnumber(Integer pnumber, Integer number, Integer pageSize);
 
     RepositoryPasswordEntity findByNameAndPnumber(String name, Integer pnumber);
-
-    RepositoryPasswordEntity findRepositoryWithJoinById(Integer id);
 
     List<RepositoryPasswordEntity> findAllByPnumbers(List<Integer> idsChief);
 }
