@@ -1,9 +1,13 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
 import lombok.NonNull;
+import org.hibernate.Session;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Danilov on 24.07.2016.
@@ -17,17 +21,68 @@ public interface DefaultDao<T extends BaseEntity> {
     T findByID(@NonNull Integer id);
 
     /**Добавить объект в БД.*/
-    void persist(@NonNull T obj);
+    T persist(@NonNull T obj);
+    /**Добавить объект в БД.*/
+    List<T> persist(@NonNull List<T> obj);
 
     /**Удалить объект в БД.*/
-    void delete(@NonNull T obj);
-
+    T delete(@NonNull T obj);
     /**Удалить объекты в БД.*/
-    void delete(@NonNull List<T> objs);
+    List<T> delete(@NonNull List<T> objs);
 
     /**Обновить объект в БД.*/
-    void update(@NonNull T obj);
-
+    T update(@NonNull T obj);
     /**Обновить объекты в БД.*/
-    void update(@NonNull List<T> objs);
+    List<T> update(@NonNull List<T> objs);
+
+    default T save(@NonNull T entity) {
+        return entity.getId() == null
+                ? persist(entity)
+                : update(entity);
+    }
+
+    default List<T> save(@NonNull List<T> entities) {
+        if(entities.isEmpty()) {
+            return entities;
+        }
+
+        List<T> notNullId = entities.stream()
+                .filter(entity -> entity.getId() != null)
+                .collect(Collectors.toList());
+
+        List<T> nullId = entities.stream()
+                .filter(entity -> entity.getId() == null)
+                .collect(Collectors.toList());
+
+        return Stream.of(persist(nullId), update(notNullId))
+                .flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    default List<T> batchForeach(List<T> entities,
+                                 int batchSize,
+                                 Session session,
+                                 Consumer<Object> consumer) {
+        if(entities.isEmpty()) {
+            return entities;
+        }
+
+        for (int i=0; i < entities.size(); i++) {
+            consumer.accept(entities.get(i));
+            if(i % batchSize == 0){
+                session.flush();
+                session.clear();
+            }
+        }
+
+        session.flush();
+        session.clear();
+
+        return entities;
+    }
+
+    default String getEntityName() {
+        return getEntityClass().getSimpleName();
+    }
+
+    Class<T> getEntityClass();
 }

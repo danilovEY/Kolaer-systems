@@ -9,5 +9,4 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
  */
 public interface AccountDao extends DefaultDao<AccountEntity> {
     AccountEntity findName(String username);
-    AccountEntity getAccountByNameWithEmployee(String username);
 }

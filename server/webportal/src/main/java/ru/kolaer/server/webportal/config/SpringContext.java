@@ -1,20 +1,16 @@
 package ru.kolaer.server.webportal.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import liquibase.integration.spring.SpringLiquibase;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
-import org.hibernate.dialect.Dialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -141,7 +137,7 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         sessionFactoryBean.setProperty("hibernate.format_sql", env.getRequiredProperty("hibernate.format_sql"));
         sessionFactoryBean.setProperty("hibernate.use_sql_comments", env.getRequiredProperty("hibernate.use_sql_comments"));
         sessionFactoryBean.setProperty("hibernate.hbm2ddl.auto", env.getRequiredProperty("hibernate.hbm2ddl.auto"));
-        sessionFactoryBean.setProperty("hibernate.jdbc.batch_size", Dialect.DEFAULT_BATCH_SIZE);
+        sessionFactoryBean.setProperty("hibernate.jdbc.batch_size", env.getRequiredProperty("hibernate.batch.size"));
         sessionFactoryBean.setProperty("hibernate.order_inserts", "true");
         sessionFactoryBean.setProperty("hibernate.order_updates", "true");
         return sessionFactoryBean.buildSessionFactory();
