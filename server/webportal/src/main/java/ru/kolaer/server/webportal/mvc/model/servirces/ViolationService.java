@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
+import ru.kolaer.api.mvp.model.kolaerweb.jpac.ViolationDto;
 
 import java.util.Date;
 import java.util.List;
@@ -10,12 +10,12 @@ import java.util.List;
 /**
  * Created by danilovey on 14.09.2016.
  */
-public interface ViolationService extends ServiceBase<Violation> {
+public interface ViolationService extends ServiceBase<ViolationDto> {
     void deleteByJournalId(Integer idJournal);
-    List<Violation> getAllByJournalAndWriter(Integer idJournal, Integer pnumber);
-    List<Violation> getAllByJournalAndEffective(Integer idJournal, Date createStart, Date createEnd);
-    List<Violation> getAllEffective(Date createStart, Date createEnd);
-    Page<Violation> getByIdJournal(Integer id);
-    Page<Violation> getByIdJournal(Integer id, Integer number, Integer pageSize);
+    List<ViolationDto> getAllByJournalAndWriter(Integer idJournal, Integer pnumber);
+    List<ViolationDto> getAllByJournalAndEffective(Integer idJournal, Date createStart, Date createEnd);
+    List<ViolationDto> getAllEffective(Date createStart, Date createEnd);
+    Page<ViolationDto> getByIdJournal(Integer id);
+    Page<ViolationDto> getByIdJournal(Integer id, Integer number, Integer pageSize);
     Long getCountViolationEffectiveByTypeBetween(Integer idType, StageEnum stage, Date createStart, Date createEnd);
 }

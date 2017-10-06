@@ -1,9 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
+import org.springframework.stereotype.Service;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 
@@ -12,21 +12,20 @@ import java.util.List;
 /**
  * Created by danilovey on 09.08.2016.
  */
-//@Service
-@Deprecated
+@Service
+@Slf4j
 public class AccountServiceImpl implements AccountService{
-    private static final Logger LOG = LoggerFactory.getLogger(AccountServiceImpl.class);
 
     @Autowired
     private AccountDao accountDao;
 
     @Override
-    public List<AccountEntity> getAll() {
+    public List<AccountDto> getAll() {
         return this.accountDao.findAll();
     }
 
     @Override
-    public AccountEntity getByLogin(String login) {
+    public AccountDto getByLogin(String login) {
         if(login != null &&!login.isEmpty())
             return this.accountDao.findName(login);
 
@@ -35,7 +34,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public AccountEntity getById(Integer id) {
+    public AccountDto getById(Integer id) {
         if(id != null && id >= 0)
             return this.accountDao.findByID(id);
 
@@ -44,7 +43,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void add(AccountEntity accountsEntity) {
+    public void add(AccountDto accountsEntity) {
         if(accountsEntity == null) {
             LOG.error("Account is NULL!");
             return;
@@ -53,30 +52,6 @@ public class AccountServiceImpl implements AccountService{
         }
 
         this.accountDao.persist(accountsEntity);
-
-    }
-
-    @Override
-    public void delete(AccountEntity entity) {
-        if(entity != null) {
-            this.accountDao.delete(entity);
-        }
-    }
-
-    @Override
-    public void update(AccountEntity entity) {
-        if(entity != null) {
-            this.accountDao.persist(entity);
-        }
-    }
-
-    @Override
-    public void update(List<AccountEntity> entity) {
-
-    }
-
-    @Override
-    public void delete(List<AccountEntity> entites) {
 
     }
 }
