@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.PersonalPageData;
+import ru.kolaer.server.webportal.mvc.model.dto.PersonalPageDataDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.PersonalPageService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
 
@@ -34,7 +34,7 @@ public class PersonalPageController extends BaseController {
     )
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @UrlDeclaration(description = "Получить данные для персональной страници", isAccessUser = true)
-    public PersonalPageData getPersonalPageData() {
+    public PersonalPageDataDto getPersonalPageData() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null)
             throw new AuthenticationCredentialsNotFoundException("Вы не авторизовались!");

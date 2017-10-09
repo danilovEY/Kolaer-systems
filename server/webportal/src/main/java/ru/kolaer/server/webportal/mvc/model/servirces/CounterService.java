@@ -5,5 +5,5 @@ import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 /**
  * Created by danilovey on 25.08.2016.
  */
-public interface CounterService extends ServiceBase<CounterDto> {
+public interface CounterService extends DefaultService<CounterDto> {
 }

@@ -6,7 +6,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolationDto;
 /**
  * Created by danilovey on 14.09.2016.
  */
-public interface JournalViolationService extends ServiceBase<JournalViolationDto> {
+public interface JournalViolationService extends DefaultService<JournalViolationDto> {
     Page<JournalViolationDto> getAllJournal(Integer number, Integer pageSize);
     Page<JournalViolationDto> getAllByDep(Integer id);
     Page<JournalViolationDto> getByPnumberWriter(Integer id);

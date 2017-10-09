@@ -6,7 +6,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.birthday.EmployeeOtherOrgan
 import java.util.Date;
 import java.util.List;
 
-public interface EmployeeOtherOrganizationDao extends BirthdayDao<EmployeeOtherOrganizationEntity> {
+public interface EmployeeOtherOrganizationDao extends BirthdayDao<EmployeeOtherOrganizationEntity>, DefaultDao<EmployeeOtherOrganizationEntity> {
 	List<EmployeeOtherOrganizationEntity> getUsersByBirthdayAndOrg(Date date, String organization);
 	int getCountUserBirthdayAndOrg(Date date, String organization);
 

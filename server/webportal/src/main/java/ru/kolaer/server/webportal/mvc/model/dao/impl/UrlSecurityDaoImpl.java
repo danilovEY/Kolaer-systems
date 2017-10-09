@@ -6,7 +6,9 @@ import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlSecurityDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurityEntity;
 
-@Repository("urlPathDao")
+import java.util.List;
+
+@Repository
 public class UrlSecurityDaoImpl extends AbstractDefaultDao<UrlSecurityEntity> implements UrlSecurityDao {
 
     protected UrlSecurityDaoImpl(SessionFactory sessionFactory) {
@@ -37,5 +39,14 @@ public class UrlSecurityDaoImpl extends AbstractDefaultDao<UrlSecurityEntity> im
         getSession()
                 .createQuery("DELETE FROM " + getEntityName())
                 .executeUpdate();
+    }
+
+    @Override
+    public List<String> findAllAccessByUrlAndMethod(String url, String requestMethod) {
+        return getSession()
+                .createQuery("SELECT access FROM " + getEntityName() + " path WHERE path.url = :url AND path.requestMethod = :requestMethod", String.class)
+                .setParameter("url", url)
+                .setParameter("requestMethod", requestMethod)
+                .list();
     }
 }

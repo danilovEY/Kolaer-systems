@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by danilovey on 20.01.2017.
  */
-public interface RepositoryPasswordService extends ServiceBase<RepositoryPasswordDto> {
+public interface RepositoryPasswordService extends DefaultService<RepositoryPasswordDto> {
     Page<RepositoryPasswordDto> getAllByPnumber(Integer pnumber, Integer number, Integer pageSize);
 
     RepositoryPasswordDto getByNameAndPnumber(String name, Integer pnumber);

@@ -1,17 +1,17 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.server.webportal.mvc.model.converter.EmployeeOtherOrganizationConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeOtherOrganizationDao;
+import ru.kolaer.server.webportal.mvc.model.entities.birthday.EmployeeOtherOrganizationEntity;
+import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeOtherOrganizationService;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,19 +22,27 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 03.11.2016.
  */
 @Service
-public class EmployeeOtherOrganizationServiceImpl implements EmployeeOtherOrganizationService {
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeOtherOrganizationServiceImpl.class);
+@Slf4j
+public class EmployeeOtherOrganizationServiceImpl
+        extends AbstractDefaultService<EmployeeOtherOrganizationDto, EmployeeOtherOrganizationEntity>
+        implements EmployeeOtherOrganizationService {
 
-    @Autowired
-    private EmployeeOtherOrganizationDao employeeOtherOrganizationDao;
+    private final EmployeeOtherOrganizationDao employeeOtherOrganizationDao;
+
+    protected EmployeeOtherOrganizationServiceImpl(EmployeeOtherOrganizationDao employeeOtherOrganizationDao,
+                                                   EmployeeOtherOrganizationConverter converter) {
+        super(employeeOtherOrganizationDao, converter);
+        this.employeeOtherOrganizationDao = employeeOtherOrganizationDao;
+    }
 
 
     @Override
@@ -48,7 +56,7 @@ public class EmployeeOtherOrganizationServiceImpl implements EmployeeOtherOrgani
 
         NodeList elementsByTagName = parse.getElementsByTagName("z:row");
 
-        final List<EmployeeOtherOrganization> result = new ArrayList<>();
+        final List<EmployeeOtherOrganizationEntity> result = new ArrayList<>();
 
         for(int i = 0; i < elementsByTagName.getLength(); i++) {
             final Node item = elementsByTagName.item(i);
@@ -64,18 +72,18 @@ public class EmployeeOtherOrganizationServiceImpl implements EmployeeOtherOrgani
                     final String email = element.getAttribute("ows_EMail");
                     final String birthday = element.getAttribute("ows_Birthday");
 
-                    final EmployeeOtherOrganization employee = new EmployeeOtherOrganizationDto();
+                    final EmployeeOtherOrganizationEntity employee = new EmployeeOtherOrganizationEntity();
                     employee.setInitials(name);
                     employee.setPost(post);
                     employee.setDepartment(department);
-                    employee.setMobilePhone(mobilePhone);
-                    employee.setPhone(phone);
+                    employee.setWorkPhoneNumber(Optional.ofNullable(mobilePhone).map(mPhone -> mPhone + "; " + phone).orElse(phone));
                     employee.setEmail(email);
                     employee.setOrganization(organization);
 
-                    if(post.contains("Руководитель") || post.contains("Начальник")
-                            || post.contains("Заместитель") || post.contains("заместитель")
-                            || post.contains("Главный") || post.contains("Директор")
+                    String postToLower = post.toLowerCase();
+
+                    if(postToLower.contains("руководитель") || postToLower.contains("начальник")
+                            || postToLower.contains("заместитель") || post.contains("главный")
                             || post.contains("директора")) {
                         employee.setCategoryUnit("Руководитель");
                     } else {
@@ -84,40 +92,51 @@ public class EmployeeOtherOrganizationServiceImpl implements EmployeeOtherOrgani
 
                     try {
                         final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                        if(birthday == null || birthday.trim().isEmpty())
-                            employee.setBirthday(new Calendar.Builder().setDate(9999,1,1).build().getTime());
-                        else
+                        if(birthday != null && !birthday.trim().isEmpty()) {
                             employee.setBirthday(df.parse(birthday));
+                        }
                     } catch (ParseException e) {
-                        logger.error("Невозможно преобразовать строку: {} в дату!", birthday);
+                        log.error("Невозможно преобразовать строку: {} в дату!", birthday);
                     }
 
                     result.add(employee);
                 }
             }
         }
-        logger.info("Employees size: {}", result.size());
+        log.info("Employees size: {}", result.size());
         this.employeeOtherOrganizationDao.update(result);
     }
 
     @Override
-    public List<EmployeeOtherOrganization> getUserRangeBirthday(Date startData, Date endData) {
-        return employeeOtherOrganizationDao.getUserRangeBirthday(startData, endData);
+    public List<EmployeeOtherOrganizationDto> getUserRangeBirthday(Date startData, Date endData) {
+        return employeeOtherOrganizationDao.getUserRangeBirthday(startData, endData)
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<EmployeeOtherOrganization> getUsersByBirthday(Date date) {
-        return employeeOtherOrganizationDao.getUsersByBirthday(date);
+    public List<EmployeeOtherOrganizationDto> getUsersByBirthday(Date date) {
+        return employeeOtherOrganizationDao.getUsersByBirthday(date)
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<EmployeeOtherOrganization> getUserBirthdayToday() {
-        return employeeOtherOrganizationDao.getUserBirthdayToday();
+    public List<EmployeeOtherOrganizationDto> getUserBirthdayToday() {
+        return employeeOtherOrganizationDao.getUserBirthdayToday()
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<EmployeeOtherOrganization> getUsersByInitials(String initials) {
-        return employeeOtherOrganizationDao.getUsersByInitials(initials);
+    public List<EmployeeOtherOrganizationDto> getUsersByInitials(String initials) {
+        return employeeOtherOrganizationDao.getUsersByInitials(initials)
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -125,40 +144,4 @@ public class EmployeeOtherOrganizationServiceImpl implements EmployeeOtherOrgani
         return employeeOtherOrganizationDao.getCountUserBirthday(date);
     }
 
-    @Override
-    public List<EmployeeOtherOrganization> getAll() {
-        return employeeOtherOrganizationDao.getAll();
-    }
-
-    @Override
-    public EmployeeOtherOrganization getById(Integer id) {
-        return null;
-    }
-
-    @Override
-    public void add(EmployeeOtherOrganization entity) {
-        employeeOtherOrganizationDao.insertData(entity);
-    }
-
-    @Override
-    public void delete(EmployeeOtherOrganization entity) {
-
-    }
-
-    @Override
-    public void update(EmployeeOtherOrganization entity) {
-
-    }
-
-    @Override
-    public void update(List<EmployeeOtherOrganization> entity) {
-        if(entity.size() > 0) {
-            this.employeeOtherOrganizationDao.update(entity);
-        }
-    }
-
-    @Override
-    public void delete(List<EmployeeOtherOrganization> entites) {
-
-    }
 }

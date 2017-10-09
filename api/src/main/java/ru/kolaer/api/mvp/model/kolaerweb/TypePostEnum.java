@@ -3,12 +3,12 @@ package ru.kolaer.api.mvp.model.kolaerweb;
 /**
  * Created by danilovey on 25.01.2017.
  */
-public enum TypeRangEnum {
+public enum TypePostEnum {
     CATEGORY("Категория"), GROUP("Группа"), DISCHARGE("Разряд");
 
     private String name;
 
-    TypeRangEnum(String name) {
+    TypePostEnum(String name) {
         this.name = name;
     }
 

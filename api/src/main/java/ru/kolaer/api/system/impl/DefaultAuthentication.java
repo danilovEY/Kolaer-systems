@@ -29,7 +29,7 @@ public class DefaultAuthentication implements Authentication {
         department.setName("Мое подразделение");
 
         final PostDto post = new PostDto();
-        post.setTypeRang(TypeRangEnum.CATEGORY.getName());
+        post.setTypeRang(TypePostEnum.CATEGORY.getName());
         post.setRang(0);
         post.setName("Моя долждность");
         post.setAbbreviatedName("Долждность");

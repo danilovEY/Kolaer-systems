@@ -1,67 +1,28 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
+import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
+import ru.kolaer.server.webportal.mvc.model.converter.NotifyMessageConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.NotifyMessageDao;
+import ru.kolaer.server.webportal.mvc.model.entities.other.NotifyMessageEntity;
+import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.NotifyMessageService;
-
-import java.util.List;
 
 /**
  * Created by danilovey on 18.08.2016.
  */
-@Service("notifyMessageService")
-public class NotifyMessageImpl implements NotifyMessageService {
+@Service
+public class NotifyMessageImpl extends AbstractDefaultService<NotifyMessageDto, NotifyMessageEntity> implements NotifyMessageService {
 
-    @Autowired
-    @Qualifier(value = "notifyMessageDao")
-    private NotifyMessageDao notifyMessageDao;
+    private final NotifyMessageDao notifyMessageDao;
 
-    @Override
-    public List<NotifyMessage> getAll() {
-        return this.notifyMessageDao.findAll();
+    protected NotifyMessageImpl(NotifyMessageDao notifyMessageDao, NotifyMessageConverter converter) {
+        super(notifyMessageDao, converter);
+        this.notifyMessageDao = notifyMessageDao;
     }
 
     @Override
-    public NotifyMessage getById(Integer id) {
-        if(id != null && id >= 0)
-            return this.notifyMessageDao.findByID(id);
-        else
-            return null;
-    }
-
-    @Override
-    public void add(NotifyMessage entity) {
-        if(entity != null)
-            this.notifyMessageDao.persist(entity);
-    }
-
-    @Override
-    public void delete(NotifyMessage entity) {
-        if(entity != null)
-            this.notifyMessageDao.delete(entity);
-    }
-
-    @Override
-    public void update(NotifyMessage entity) {
-        if(entity != null)
-            this.notifyMessageDao.update(entity);
-    }
-
-    @Override
-    public void update(List<NotifyMessage> entity) {
-
-    }
-
-    @Override
-    public void delete(List<NotifyMessage> entites) {
-
-    }
-
-    @Override
-    public NotifyMessage getLastNotifyMessage() {
-        return this.notifyMessageDao.getLastNotifyMessage();
+    public NotifyMessageDto getLastNotifyMessage() {
+        return baseConverter.convertToDto(notifyMessageDao.getLastNotifyMessage());
     }
 }

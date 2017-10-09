@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
 
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
 import java.util.List;
@@ -13,9 +12,10 @@ import java.util.List;
 public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<EmployeeEntity>, UpdateEmployeesDao {
     List<EmployeeEntity> findEmployeeByInitials(String initials);
 
-    List<EmployeeEntity> findByDepartmentById(Integer id);
+    List<EmployeeEntity> findByDepartmentById(Long id);
 
-    Page<EmployeeEntity> findByDepartmentById(int page, int pageSize, Integer id);
+    List<EmployeeEntity> findByDepartmentById(int page, int pageSize, Long id);
+    Long findCountByDepartmentById(Long id);
 
-    EmployeeEntity findByPersonnelNumber(Integer id);
+    EmployeeEntity findByPersonnelNumber(Long id);
 }

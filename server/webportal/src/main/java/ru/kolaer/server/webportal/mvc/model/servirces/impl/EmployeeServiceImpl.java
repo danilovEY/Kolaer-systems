@@ -1,14 +1,14 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
+import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
+import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
@@ -16,104 +16,92 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 09.08.2016.
  */
 @Service
-public class EmployeeServiceImpl implements EmployeeService, UpdateEmployeesService {
-    private static final Logger LOG = LoggerFactory.getLogger(EmployeeServiceImpl.class);
+@Slf4j
+public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, EmployeeEntity>
+        implements EmployeeService, UpdateEmployeesService {
+    private final EmployeeDao employeeDao;
 
-    @Autowired
-    private EmployeeDao employeeDao;
-
-    @Override
-    public List<EmployeeEntity> getAll() {
-        return this.employeeDao.findAll();
+    protected EmployeeServiceImpl(EmployeeDao employeeDao,
+                                  EmployeeConverter converter) {
+        super(employeeDao, converter);
+        this.employeeDao = employeeDao;
     }
 
     @Override
-    public EmployeeEntity getById(Integer id) {
-        if(id != null && id >= 0)
-            return this.employeeDao.findByID(id);
-
-        throw new BadRequestException("ID is NULL or < 0!");
-    }
-
-    @Override
-    public EmployeeEntity getByPersonnelNumber(Integer id) {
-        if(id != null && id >= 0)
-            return this.employeeDao.findByPersonnelNumber(id);
-
-        throw new BadRequestException("Персональный номер NULL или < 0!");
-    }
-
-    @Override
-    public void add(EmployeeEntity accountsEntity) {
-        if(accountsEntity == null) {
-            throw new IllegalArgumentException("Account is NULL");
+    public EmployeeDto getByPersonnelNumber(Long id) {
+        if(id == null || id < 1) {
+            return null;
         }
 
-        this.employeeDao.persist(accountsEntity);
+        return baseConverter.convertToDto(employeeDao.findByPersonnelNumber(id));
     }
 
     @Override
-    public void delete(EmployeeEntity entity) {
-
+    public List<EmployeeDto> getUserRangeBirthday(Date startData, Date endData) {
+        return employeeDao.getUserRangeBirthday(startData, endData)
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void update(EmployeeEntity entity) {
-
+    public List<EmployeeDto> getUsersByBirthday(Date date) {
+        return employeeDao.getUsersByBirthday(date)
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void update(List<EmployeeEntity> entity) {
-
+    public List<EmployeeDto> getUserBirthdayToday() {
+        return employeeDao.getUserBirthdayToday()
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void delete(List<EmployeeEntity> entites) {
-
+    public List<EmployeeDto> getUsersByInitials(String initials) {
+        return employeeDao.getUsersByInitials(initials)
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<EmployeeEntity> getUserRangeBirthday(Date startData, Date endData) {
-        return this.employeeDao.getUserRangeBirthday(startData, endData);
+    public List<EmployeeDto> getUsersByDepartmentId(Long id) {
+        return employeeDao.findByDepartmentById(id)
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<EmployeeEntity> getUsersByBirthday(Date date) {
-        return this.employeeDao.getUsersByBirthday(date);
-    }
-
-    @Override
-    public List<EmployeeEntity> getUserBirthdayToday() {
-        return this.employeeDao.getUserBirthdayToday();
-    }
-
-    @Override
-    public List<EmployeeEntity> getUsersByInitials(String initials) {
-        return this.employeeDao.getUsersByInitials(initials);
-    }
-
-    @Override
-    public List<EmployeeEntity> getUsersByDepartmentId(Integer id) {
-        return this.employeeDao.findByDepartmentById(id);
-    }
-
-    @Override
-    public Page<EmployeeEntity> getUsersByDepartmentId(int page, int pageSize, Integer id) {
+    public Page<EmployeeDto> getUsersByDepartmentId(int page, int pageSize, Long id) {
         if(page == 0) {
-            List<EmployeeEntity> usersByDepartamentId = this.getUsersByDepartmentId(id);
-            return new Page<>(usersByDepartamentId, 0, 0, usersByDepartamentId.size());
+            List<EmployeeDto> employees = this.getUsersByDepartmentId(id);
+            return new Page<>(employees, page, 0, employees.size());
         }
-        return this.employeeDao.findByDepartmentById(page, pageSize, id);
+
+        Long count = employeeDao.findCountByDepartmentById(id);
+
+        List<EmployeeDto> result = employeeDao.findByDepartmentById(page, pageSize, id)
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
+
+        return new Page<>(result, page, count, pageSize);
     }
 
     @Override
     public int getCountUserBirthday(Date date) {
-        return this.employeeDao.getCountUserBirthday(date);
+        return employeeDao.getCountUserBirthday(date);
     }
 
     @Override

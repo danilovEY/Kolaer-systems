@@ -1,18 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
-import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.dao.PsrStatusDao;
-import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
-
-import java.util.List;
-
 /**
  * Created by danilovey on 23.08.2016.
  */
-@Service("psrStatusService")
+/*
+@Service
 public class PsrStatusServiceImpl implements PsrStatusService {
 
     @Autowired
@@ -61,3 +53,4 @@ public class PsrStatusServiceImpl implements PsrStatusService {
         return this.psrStatusDao.getStatusByType(type);
     }
 }
+*/

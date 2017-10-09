@@ -6,7 +6,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryDto;
 /**
  * Created by danilovey on 20.01.2017.
  */
-public interface RepositoryPasswordHistoryService extends ServiceBase<RepositoryPasswordHistoryDto> {
+public interface RepositoryPasswordHistoryService extends DefaultService<RepositoryPasswordHistoryDto> {
     Page<RepositoryPasswordHistoryDto> getHistoryByIdRepository(Integer id, Integer number, Integer pageSize);
 
     void deleteByIdRep(Integer id);

@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,8 +28,12 @@ import java.util.*;
 public class HolidayServiceImpl implements HolidayService {
     private static Logger logger = LoggerFactory.getLogger(HolidayServiceImpl.class);
 
+    private final HolidayDao holidayDao;
+
     @Autowired
-    private HolidayDao holidayDao;
+    public HolidayServiceImpl(HolidayDao holidayDao) {
+        this.holidayDao = holidayDao;
+    }
 
     @Override
     public List<Holiday> getAllHolidays() {

@@ -1,21 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
-import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
-import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
-
-import java.time.ZoneId;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * Created by danilovey on 30.11.2016.
  */
+/*
 @Service
 public class TicketRegisterServiceImpl implements TicketRegisterService {
 
@@ -101,4 +89,4 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
     public List<TicketRegisterEntity> getAllOpenRegister() {
         return this.ticketRegisterDao.findAllOpenRegister();
     }
-}
+}*/

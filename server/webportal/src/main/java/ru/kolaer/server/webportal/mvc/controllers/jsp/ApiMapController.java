@@ -18,9 +18,12 @@ import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 @RequestMapping("/api")
 @Api(value = "API", tags = "JSP")
 public class ApiMapController {
+    private final UrlSecurityService urlSecurityService;
 
     @Autowired
-    private UrlSecurityService urlSecurityService;
+    public ApiMapController(UrlSecurityService urlSecurityService) {
+        this.urlSecurityService = urlSecurityService;
+    }
 
     @UrlDeclaration(description = "Получить все ссылки.", isAccessAll = true)
     @RequestMapping(value = "/mapping", method = RequestMethod.GET)

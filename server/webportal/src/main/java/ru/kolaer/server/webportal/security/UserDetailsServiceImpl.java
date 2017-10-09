@@ -1,13 +1,12 @@
 package ru.kolaer.server.webportal.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
+import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 
 import java.util.stream.Collectors;
 
@@ -16,9 +15,11 @@ import java.util.stream.Collectors;
  * Сервис позволяющий проверить пользолвателя на наличии в БД.
  */
 public class UserDetailsServiceImpl implements UserDetailsService {
+    private final AccountDao accountDao;
 
-    @Autowired
-    private AccountDao accountDao;
+    public UserDetailsServiceImpl(AccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

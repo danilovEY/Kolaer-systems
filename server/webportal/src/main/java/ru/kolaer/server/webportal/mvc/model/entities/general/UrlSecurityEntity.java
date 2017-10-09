@@ -4,7 +4,6 @@ import lombok.Data;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by danilovey on 28.07.2016.
@@ -29,8 +28,6 @@ public class UrlSecurityEntity implements BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "url_security_access", joinColumns=@JoinColumn(name="id_url"))
-    @Column(name="name_role")
-    public List<String> accesses;
+    @Column(name="access")
+    public String access;
 }

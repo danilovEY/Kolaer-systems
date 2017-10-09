@@ -1,8 +1,6 @@
 package ru.kolaer.server.webportal.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,11 +20,9 @@ import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
 /**
  * Created by danilovey on 26.08.2016.
  */
+@Slf4j
 public class UserDetailsServiceLDAP implements UserDetailsService {
-    private final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceLDAP.class);
-
-    @Autowired
-    private InitialLdapContext ldapContext;
+    private final InitialLdapContext ldapContext;
 
     private String server;
     private String dc;
@@ -38,6 +34,10 @@ public class UserDetailsServiceLDAP implements UserDetailsService {
             "sn","givenname","memberOf","samaccountname",
             "userPrincipalName"
     };
+
+    public UserDetailsServiceLDAP(InitialLdapContext ldapContext) {
+        this.ldapContext = ldapContext;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -55,11 +55,10 @@ public class UserDetailsServiceLDAP implements UserDetailsService {
             roles = ToolsLDAP.getRolesFromAttributes(answer.next().getAttributes());
 
             answer.close();
-            final UserDetails userDetails = new User(username, "123", true,true,true,true, roles);
-            return userDetails;
+            return new User(username, "123", true,true,true,true, roles);
         }
         catch(NamingException e){
-            LOG.error("Ошибка при парсинге атрибутов!", e);
+            log.error("Ошибка при парсинге атрибутов!", e);
         }
 
         return null;

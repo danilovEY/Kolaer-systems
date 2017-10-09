@@ -5,7 +5,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.dialect.Dialect;
 import org.springframework.beans.factory.annotation.Value;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.criteria.CriteriaQuery;
@@ -89,20 +88,18 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
         return batchForeach(objs, batchSize, currentSession, currentSession::update);
     }
 
-    public Page<T> findAll(Integer number, Integer pageSize) {
-        Session currentSession = getSession();
-
-        final Long count = currentSession
-                .createNamedQuery("SELECT COUNT(id) FROM " + getEntityName(), Long.class)
+    @Override
+    public long findAllCount() {
+        return getSession().createNamedQuery("SELECT COUNT(id) FROM " + getEntityName(), Long.class)
                 .uniqueResult();
+    }
 
-        List<T> list = currentSession.createNamedQuery("FROM " + getEntityName(), getEntityClass())
+    @Override
+    public List<T> findAll(Integer number, Integer pageSize) {
+        return getSession().createNamedQuery("FROM " + getEntityName(), getEntityClass())
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .list();
-
-        return new Page<>(list, number, count, pageSize);
-
     }
 
     @Override

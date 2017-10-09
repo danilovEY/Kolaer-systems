@@ -1,16 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
-import ru.kolaer.server.webportal.mvc.model.servirces.TicketService;
-
-import java.util.List;
-
 /**
  * Created by danilovey on 02.12.2016.
  */
+/*
 @Service
 public class TicketServiceImpl implements TicketService {
 
@@ -56,4 +49,4 @@ public class TicketServiceImpl implements TicketService {
     public List<TicketEntity> getTicketsByRegisterId(Integer id) {
         return this.ticketDao.findAllByRegisterId(id);
     }
-}
+}*/

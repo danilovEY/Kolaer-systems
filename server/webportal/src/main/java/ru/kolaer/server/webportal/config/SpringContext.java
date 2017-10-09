@@ -50,6 +50,7 @@ import java.util.List;
 @EnableCaching
 @ComponentScan({"ru.kolaer.server.webportal.spring",
         "ru.kolaer.server.webportal.beans",
+        "ru.kolaer.server.webportal.mvc.model.converter",
         "ru.kolaer.server.webportal.mvc.model.dao.impl",
         "ru.kolaer.server.webportal.mvc.model.ldap.impl",
         "ru.kolaer.server.webportal.mvc.model.servirces.impl",

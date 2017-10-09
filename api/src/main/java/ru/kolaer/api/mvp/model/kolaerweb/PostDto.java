@@ -10,7 +10,7 @@ public class PostDto implements BaseDto {
     private Long id;
     private String name;
     private String abbreviatedName;
-    private String typeRang;
     private Integer rang;
+    private TypePostEnum type;
     private String code;
 }

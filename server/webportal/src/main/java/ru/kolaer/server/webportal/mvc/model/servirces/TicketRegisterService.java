@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by danilovey on 30.11.2016.
  */
-public interface TicketRegisterService extends ServiceBase<TicketRegisterEntity>{
+public interface TicketRegisterService extends DefaultService<TicketRegisterEntity> {
     List<TicketRegisterEntity> getAllByDepName(String name);
     Page<TicketRegisterEntity> getAllByDepName(int number, int pageSize, String name);
     List<TicketRegisterEntity> getAllOpenRegister();

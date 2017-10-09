@@ -2,7 +2,6 @@ package ru.kolaer.server.webportal.mvc.model.dao;
 
 import lombok.NonNull;
 import org.hibernate.Session;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import java.util.List;
@@ -37,8 +36,6 @@ public interface DefaultDao<T extends BaseEntity> {
     T update(@NonNull T obj);
     /**Обновить объекты в БД.*/
     List<T> update(@NonNull List<T> objs);
-
-    Page<T> findAll(Integer number, Integer pageSize);
 
     default T save(@NonNull T entity) {
         return entity.getId() == null
@@ -90,4 +87,8 @@ public interface DefaultDao<T extends BaseEntity> {
     }
 
     Class<T> getEntityClass();
+
+    long findAllCount();
+
+    List<T> findAll(Integer number, Integer pageSize);
 }

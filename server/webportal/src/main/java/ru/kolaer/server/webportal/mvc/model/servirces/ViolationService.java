@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by danilovey on 14.09.2016.
  */
-public interface ViolationService extends ServiceBase<ViolationDto> {
+public interface ViolationService extends DefaultService<ViolationDto> {
     void deleteByJournalId(Integer idJournal);
     List<ViolationDto> getAllByJournalAndWriter(Integer idJournal, Integer pnumber);
     List<ViolationDto> getAllByJournalAndEffective(Integer idJournal, Date createStart, Date createEnd);

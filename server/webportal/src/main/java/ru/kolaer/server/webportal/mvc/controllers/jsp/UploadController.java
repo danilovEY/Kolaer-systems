@@ -23,12 +23,15 @@ import java.io.IOException;
 @RequestMapping(value = "/upload")
 @Api(value = "Обновление данных", tags = "JSP")
 public class UploadController {
+    private final EmployeeOtherOrganizationService employeeOtherOrganizationService;
+    private final UpdateEmployeesService employeeService;
 
     @Autowired
-    private EmployeeOtherOrganizationService employeeOtherOrganizationService;
-
-    @Autowired
-    private UpdateEmployeesService employeeService;
+    public UploadController(EmployeeOtherOrganizationService employeeOtherOrganizationService,
+                            UpdateEmployeesService employeeService) {
+        this.employeeOtherOrganizationService = employeeOtherOrganizationService;
+        this.employeeService = employeeService;
+    }
 
     @RequestMapping(value = "/emp", method = RequestMethod.GET)
     @ApiOperation("Получить страницу")

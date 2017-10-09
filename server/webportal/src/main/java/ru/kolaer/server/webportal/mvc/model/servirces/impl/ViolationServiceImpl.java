@@ -1,20 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
-import ru.kolaer.server.webportal.mvc.model.dao.ViolationDao;
-import ru.kolaer.server.webportal.mvc.model.servirces.ViolationService;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 /**
  * Created by danilovey on 21.09.2016.
  */
+/*
 @Service
 public class ViolationServiceImpl implements ViolationService {
 
@@ -97,3 +86,4 @@ public class ViolationServiceImpl implements ViolationService {
         return this.violationDao.findCountViolationEffectiveByTypeBetween(idType, stageEnum, createStart, createEnd);
     }
 }
+*/

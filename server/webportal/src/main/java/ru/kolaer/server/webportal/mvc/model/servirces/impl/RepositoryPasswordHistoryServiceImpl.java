@@ -1,18 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
-import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.dao.RepositoryPasswordHistoryDao;
-import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordHistoryService;
-
-import java.util.List;
-
 /**
  * Created by danilovey on 20.01.2017.
  */
+/*
 @Service
 public class RepositoryPasswordHistoryServiceImpl implements RepositoryPasswordHistoryService {
 
@@ -67,3 +58,4 @@ public class RepositoryPasswordHistoryServiceImpl implements RepositoryPasswordH
         this.repositoryPasswordHistoryDao.deleteByIdRep(id);
     }
 }
+*/

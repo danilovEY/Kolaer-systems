@@ -10,5 +10,5 @@ public class DepartmentDto implements BaseDto {
     private Long id;
     private String name;
     private String abbreviatedName;
-    private EmployeeDto chief;
+    private Long chiefId;
 }

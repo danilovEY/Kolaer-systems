@@ -1,20 +1,11 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
-import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.dao.PsrRegisterDao;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
-
-import java.util.List;
-
 /**
  * Created by danilovey on 09.08.2016.
  */
+/*
 @Service
-public class PsrRegisterServiceImpl implements PsrRegisterService {
+public class PsrRegisterServiceImpl { implements PsrRegisterService {
 
     @Autowired
     private PsrRegisterDao psrRegisterDao;
@@ -112,3 +103,4 @@ public class PsrRegisterServiceImpl implements PsrRegisterService {
         return this.psrRegisterDao.findAll(number, pageSize);
     }
 }
+*/

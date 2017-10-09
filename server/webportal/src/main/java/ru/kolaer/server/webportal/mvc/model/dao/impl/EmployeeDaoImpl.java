@@ -15,8 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.TypeRangEnum;
+import ru.kolaer.api.mvp.model.kolaerweb.TypePostEnum;
 import ru.kolaer.server.webportal.errors.BadRequestException;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
@@ -76,7 +75,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     }
 
     @Override
-    public List<EmployeeEntity> findByDepartmentById(@NonNull Integer id) {
+    public List<EmployeeEntity> findByDepartmentById(@NonNull Long id) {
         return getSession()
                 .createQuery("FROM " + getEntityName() + " emp WHERE emp.department.id = :id ORDER BY emp.initials", EmployeeEntity.class)
                 .setParameter("id", id)
@@ -84,26 +83,26 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     }
 
     @Override
-    public Page<EmployeeEntity> findByDepartmentById(int page, int pageSize, @NonNull Integer id) {
-        Session currentSession = getSession();
-        final Long count = currentSession.createQuery("SELECT COUNT(emp.personnelNumber) FROM " + getEntityName() +
-                " emp WHERE emp.department.id = :id", Long.class)
-                .setParameter("id", id)
-                .uniqueResult();
-
-        final List<EmployeeEntity> result = currentSession
+    public List<EmployeeEntity> findByDepartmentById(int page, int pageSize, @NonNull Long id) {
+        return getSession()
                 .createQuery("FROM " + getEntityName() + " emp WHERE emp.department.id = :id ORDER BY emp.initials",
                         EmployeeEntity.class)
                 .setParameter("id", id)
                 .setFirstResult((page - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .list();
-
-        return new Page<>(result, page, count, pageSize);
     }
 
     @Override
-    public EmployeeEntity findByPersonnelNumber(Integer id) {
+    public Long findCountByDepartmentById(Long id) {
+        return getSession().createQuery("SELECT COUNT(emp.personnelNumber) FROM " + getEntityName() +
+                " emp WHERE emp.department.id = :id", Long.class)
+                .setParameter("id", id)
+                .uniqueResult();
+    }
+
+    @Override
+    public EmployeeEntity findByPersonnelNumber(Long id) {
         return getSession()
                 .createQuery("FROM " + getEntityName() + " emp WHERE emp.personnelNumber = :id", EmployeeEntity.class)
                 .setParameter("id", id)
@@ -585,13 +584,13 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 final String postWithOutSpace = value.replaceAll(" ","");
                 switch (postWithOutSpace.charAt(postWithOutSpace.indexOf(rang) + 1)) {
                     case 'р':
-                        postEntity.setType(TypeRangEnum.DISCHARGE);
+                        postEntity.setType(TypePostEnum.DISCHARGE);
                         break;
                     case 'к':
-                        postEntity.setType(TypeRangEnum.CATEGORY);
+                        postEntity.setType(TypePostEnum.CATEGORY);
                         break;
                     case 'г':
-                        postEntity.setType(TypeRangEnum.GROUP);
+                        postEntity.setType(TypePostEnum.GROUP);
                         break;
                     default:
                         break;

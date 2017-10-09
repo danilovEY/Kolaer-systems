@@ -1,17 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
-import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.dao.TypeViolationDao;
-import ru.kolaer.server.webportal.mvc.model.servirces.TypeViolationService;
-
-import java.util.List;
-
 /**
  * Created by danilovey on 14.09.2016.
  */
+/*
 @Service
 public class TypeViolationServiceImpl implements TypeViolationService {
 
@@ -60,4 +52,4 @@ public class TypeViolationServiceImpl implements TypeViolationService {
     public void delete(List<TypeViolation> entites) {
 
     }
-}
+}*/
