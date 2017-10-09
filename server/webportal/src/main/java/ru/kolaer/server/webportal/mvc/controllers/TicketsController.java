@@ -1,32 +1,9 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
-import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
-import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
-import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
-import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
-import ru.kolaer.server.webportal.mvc.model.servirces.TicketService;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by danilovey on 30.11.2016.
@@ -36,7 +13,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/tickets")
 @Slf4j
 public class TicketsController extends BaseController {
-
+/*
     @Autowired
     private TicketRegisterService ticketRegisterService;
 
@@ -44,7 +21,7 @@ public class TicketsController extends BaseController {
     private TicketService ticketService;
 
     @Autowired
-    private ServiceLDAP serviceLDAP;
+    private AuthenticationService serviceLDAP;
 
     @Autowired
     private EmployeeService employeeService;
@@ -212,5 +189,5 @@ public class TicketsController extends BaseController {
     public List<TicketEntity> getTickets(@ApiParam(value = "ID реестра", required = true) @RequestParam(value = "id") Integer id) {
         return this.ticketService.getTicketsByRegisterId(id);
     }
-
+*/
 }

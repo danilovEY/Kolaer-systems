@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.Counter;
+import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.CounterService;
 
@@ -21,15 +21,19 @@ import java.util.List;
 @Api(tags = "Счетчик")
 public class CounterControllers extends BaseController {
 
+    private final CounterService counterService;
+
     @Autowired
-    private CounterService counterService;
+    public CounterControllers(CounterService counterService) {
+        this.counterService = counterService;
+    }
 
     @ApiOperation(
             value = "Получить все счетчики"
     )
     @UrlDeclaration(description = "Получить все счетчики", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Counter> getAllCounters() {
+    public List<CounterDto> getAllCounters() {
         return  this.counterService.getAll();
     }
 

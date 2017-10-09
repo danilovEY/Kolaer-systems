@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -12,6 +11,7 @@ import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
+import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
@@ -48,22 +49,29 @@ import java.util.Hashtable;
 @PropertySource("classpath:ldap.properties")
 @EnableWebSecurity
 @EnableScheduling
+@Slf4j
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final Logger logger = LoggerFactory.getLogger(SpringSecurityConfig.class);
-
-    @Autowired
-    private UrlSecurityService urlSecurityService;
+    private final AuthenticationProvider authenticationProvider;
+    private final FilterSecurityInterceptor filter;
 
     /**Секретный ключ для шифрования пароля.*/
-    @Value("${secret_key}")
     private String secretKey;
 
     @Resource
     private Environment env;
 
+    @Autowired
+    public SpringSecurityConfig(@Value("${secret_key}") String secretKey,
+                                AuthenticationProvider authenticationProvider,
+                                FilterSecurityInterceptor filter) {
+        this.secretKey = secretKey;
+        this.authenticationProvider = authenticationProvider;
+        this.filter = filter;
+    }
+
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(this.authProviderLDAP());
+        auth.authenticationProvider(authenticationProvider);
     }
 
     @Override
@@ -81,7 +89,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         //Фильтер для проверки http request'а на наличие правильного токена
         .addFilterBefore(authenticationTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
         //Фильтер для проверки URL'ов.
-        .addFilter(filter());
+        .addFilter(filter);
     }
 
     @Bean
@@ -97,13 +105,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**Фильтер для проверки URL'ов.*/
     @Bean
-    public FilterSecurityInterceptor filter() throws Exception {
+    @Autowired
+    public FilterSecurityInterceptor filter(UrlSecurityService urlSecurityService) throws Exception {
         FilterSecurityInterceptor filter = new FilterSecurityInterceptor();
         filter.setAuthenticationManager(authenticationManagerBean());
         RoleVoter role = new RoleVoter();
         role.setRolePrefix("");
         filter.setAccessDecisionManager(new AffirmativeBased(Arrays.asList(role, new AuthenticatedVoter())));
-        filter.setSecurityMetadataSource(new SecurityMetadataSourceFilter(this.urlSecurityService));
+        filter.setSecurityMetadataSource(new SecurityMetadataSourceFilter(urlSecurityService));
 
         return filter;
     }
@@ -137,14 +146,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         try {
             return new InitialLdapContext(props, null);
         } catch (NamingException e) {
-            this.logger.error("Ошибка при создании LDAP конфигурации!", e);
+            log.error("Ошибка при создании LDAP конфигурации!", e);
             return null;
         }
     }
 
-    @Bean
-    public UserDetailsService userDetailsServiceLDAP() {
-        UserDetailsServiceLDAP userDetailsServiceLDAP = new UserDetailsServiceLDAP();
+    private UserDetailsService userDetailsServiceLDAP(InitialLdapContext context) {
+        UserDetailsServiceLDAP userDetailsServiceLDAP = new UserDetailsServiceLDAP(context);
         userDetailsServiceLDAP.setDc(this.env.getProperty("ldap.dc"));
         userDetailsServiceLDAP.setServer(this.env.getProperty("ldap.server"));
         userDetailsServiceLDAP.setAdmin(this.env.getProperty("ldap.server.admin"));
@@ -153,8 +161,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return userDetailsServiceLDAP;
     }
 
-    @Bean
-    public CustomLdapAuthenticationProvider authProviderLDAP() {
+    private UserDetailsService userDetailsServiceSQL(AccountDao context) {
+        return new UserDetailsServiceImpl(context);
+    }
+
+    private CustomLdapAuthenticationProvider authProviderLDAP() {
         final CustomLdapAuthenticationProvider authProvider = new CustomLdapAuthenticationProvider();
         authProvider.setDc(this.env.getProperty("ldap.dc"));
         authProvider.setServer(this.env.getProperty("ldap.server"));
@@ -162,17 +173,31 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
-    @Deprecated
-    public UserDetailsService userDetailsServiceSQL() {
-        return new UserDetailsServiceImpl();
-    }
-
     /**Создание provider для проверки пользователей из БД с шифрованием пароля.*/
-    @Deprecated
-    public DaoAuthenticationProvider authProviderSQL() {
+    private DaoAuthenticationProvider authProviderSQL(UserDetailsService userDetailsService) {
         final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(this.userDetailsServiceSQL());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(new StandardPasswordEncoder(this.secretKey));
         return authProvider;
+    }
+
+    @Bean
+    @Autowired
+    public UserDetailsService userDetailsService(@Value("${server.type.auth}") ServerAuthType serverAuthType,
+                                                 AccountDao accountDao,
+                                                 InitialLdapContext context) {
+        switch (serverAuthType) {
+            case LDAP: return userDetailsServiceLDAP(context);
+            default: return userDetailsServiceSQL(accountDao);
+        }
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(@Value("${server.type.auth}") ServerAuthType serverAuthType,
+                                                         UserDetailsService userDetailsService) {
+        switch (serverAuthType) {
+            case LDAP: return authProviderLDAP();
+            default: return authProviderSQL(userDetailsService);
+        }
     }
 }

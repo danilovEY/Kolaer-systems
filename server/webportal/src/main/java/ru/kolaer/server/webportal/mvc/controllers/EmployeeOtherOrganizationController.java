@@ -3,15 +3,14 @@ package ru.kolaer.server.webportal.mvc.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dao.EmployeeOtherOrganizationDao;
 import ru.kolaer.server.webportal.mvc.model.dto.RequestDbBirthdayAllList;
+import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeOtherOrganizationService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,28 +21,22 @@ import java.util.List;
 @RestController
 @RequestMapping(value="/organizations/employees")
 @Api(tags = "Содрудники филиалов")
+@Slf4j
 public class EmployeeOtherOrganizationController extends BaseController {
-	private final Logger LOG = LoggerFactory.getLogger(EmployeeOtherOrganizationController.class);
-	
+	private final EmployeeOtherOrganizationService employeeOtherOrganizationService;
+
 	@Autowired
-	protected EmployeeOtherOrganizationDao employeeOtherOrganizationDao;
+	public EmployeeOtherOrganizationController(EmployeeOtherOrganizationService employeeOtherOrganizationService) {
+		this.employeeOtherOrganizationService = employeeOtherOrganizationService;
+	}
 
 	@ApiOperation(
 			value = "Получить всех сотрудников"
 	)
 	@UrlDeclaration(description = "Получить всех сотрудников", isAccessAll = true)
 	@RequestMapping(value = "/get/users/max", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<EmployeeOtherOrganization> getUsers() {
-		return employeeOtherOrganizationDao.getAll();
-	}
-
-	@ApiOperation(
-			value = "Получить ограниченное число сотрудников"
-	)
-	@UrlDeclaration(description = "Получить ограниченное число сотрудников", isAccessAll = true)
-	@RequestMapping(value = "/get/users/max/{max}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<EmployeeOtherOrganization> getUsers(final @ApiParam(value = "Ограничение", required = true) @PathVariable int max) {
-		return employeeOtherOrganizationDao.getAllMaxCount(max);
+	public List<EmployeeOtherOrganizationDto> getUsers() {
+		return employeeOtherOrganizationService.getAll();
 	}
 
 	@ApiOperation(
@@ -52,8 +45,8 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	)
 	@UrlDeclaration(description = "Получить число строк общего колличества сотрудников", isAccessAll = true)
 	@RequestMapping(value = "/get/users/сount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public int getRowCount() {
-		return employeeOtherOrganizationDao.getRowCount();
+	public Long getRowCount() {
+		return 1L;//employeeOtherOrganizationService.getRowCount(); TODO !!!!
 	}
 
 	@ApiOperation(
@@ -62,7 +55,7 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	)
 	@UrlDeclaration(description = "Получить сотрудников в периоде числа", isAccessAll = true)
 	@RequestMapping(value = "/get/users/birthday/{startDate}/{endDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<EmployeeOtherOrganization> getUsersRangeBirthday(
+	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthday(
 			final @ApiParam(value = "Дата с", required = true) @PathVariable String startDate,
 			final @ApiParam(value = "Дата по", required = true) @PathVariable String endDate) {
 		final SimpleDateFormat sdf = startDate.contains("-")
@@ -72,9 +65,9 @@ public class EmployeeOtherOrganizationController extends BaseController {
 		try {
 			final Date startDatePasre = sdf.parse(startDate);
 			final Date endDatePasre = sdf.parse(endDate);
-			return employeeOtherOrganizationDao.getUserRangeBirthday(startDatePasre, endDatePasre);
+			return employeeOtherOrganizationService.getUserRangeBirthday(startDatePasre, endDatePasre);
 		} catch (ParseException e) {
-			LOG.error("Ошибка! Не коректные данные: ({}, {})", startDate, endDate);
+			log.error("Ошибка! Не коректные данные: ({}, {})", startDate, endDate);
 			return Collections.emptyList();
 		}
 	}
@@ -85,8 +78,8 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	)
 	@UrlDeclaration(description = "Получить сотрудников у кого сегодня день рождения", isAccessAll = true)
 	@RequestMapping(value = "/get/users/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<EmployeeOtherOrganization> getUsersRangeBirthday() {
-		return employeeOtherOrganizationDao.getUserBirthdayToday();
+	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthday() {
+		return employeeOtherOrganizationService.getUserBirthdayToday();
 	}
 
 	@ApiOperation(
@@ -95,7 +88,7 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	)
 	@UrlDeclaration(description = "Получить сотрудников у кого день рождения в указанный день", isAccessAll = true)
 	@RequestMapping(value = "/get/users/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<EmployeeOtherOrganization> getUsersRangeBirthday(
+	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthday(
 			final @ApiParam(value = "Дата", required = true) @PathVariable String date) {
 		final SimpleDateFormat sdf = date.contains("-")
 				? new SimpleDateFormat("yyyy-MM-dd")
@@ -103,9 +96,9 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	    
 		try {
 			final Date datePasre = sdf.parse(date);
-			return employeeOtherOrganizationDao.getUsersByBirthday(datePasre);
+			return employeeOtherOrganizationService.getUsersByBirthday(datePasre);
 		} catch (ParseException e) {
-			LOG.error("Ошибка! Не коректные данные: ({})", date);
+			log.error("Ошибка! Не коректные данные: ({})", date);
 			return Collections.emptyList();
 		}
 	}
@@ -116,7 +109,7 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	)
 	@UrlDeclaration(description = "Получить сотрудников у кого день рождения в указанный день из указанной организации", isAccessAll = true)
 	@RequestMapping(value = "/get/users/{orgainzation}/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<EmployeeOtherOrganization> getUsersRangeBirthdayAndOrg(
+	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthdayAndOrg(
 			final @ApiParam(value = "Дата", required = true) @PathVariable String date,
 			final @ApiParam(value = "Название организации", required = true) @PathVariable String orgainzation) {
 		final SimpleDateFormat sdf = date.contains("-")
@@ -125,9 +118,9 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	    
 		try {
 			final Date datePasre = sdf.parse(date);
-			return employeeOtherOrganizationDao.getUsersByBirthdayAndOrg(datePasre, orgainzation);
+			return Collections.emptyList(); //employeeOtherOrganizationService.getUsersByBirthdayAndOrg(datePasre, orgainzation); TODO !!!!
 		} catch (ParseException e) {
-			LOG.error("Ошибка! Не коректные данные: ({})", date);
+			log.error("Ошибка! Не коректные данные: ({})", date);
 			return Collections.emptyList();
 		}
 	}
@@ -139,7 +132,7 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	@UrlDeclaration(description = "Задать сотрудников из других организаций", requestMethod = RequestMethod.POST)
 	@RequestMapping(value = "/set/users/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public void setUsers(final @ApiParam(value = "Список сотрудников", required = true) @RequestBody RequestDbBirthdayAllList usersList) {
-		this.employeeOtherOrganizationDao.insertDataList(usersList.getBirthdayList());
+		//employeeOtherOrganizationService.insertDataList(usersList.getBirthdayList()); //TODO !!!!
 	}
 
 	@ApiOperation(
@@ -155,9 +148,9 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	    
 		try {
 			final Date datePasre = sdf.parse(date);
-			return employeeOtherOrganizationDao.getCountUserBirthday(datePasre);
+			return employeeOtherOrganizationService.getCountUserBirthday(datePasre);
 		} catch (ParseException e) {
-			LOG.error("Ошибка! Не коректные данные: ({})", date);
+			log.error("Ошибка! Не коректные данные: ({})", date);
 			return 0;
 		}
 	}
@@ -177,9 +170,9 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	    
 		try {
 			final Date datePasre = sdf.parse(date);
-			return employeeOtherOrganizationDao.getCountUserBirthdayAndOrg(datePasre, organization);
+			return 1;//employeeOtherOrganizationService.getCountUserBirthdayAndOrg(datePasre, organization); TODO: !!
 		} catch (ParseException e) {
-			LOG.error("Ошибка! Не коректные данные: ({})", date);
+			log.error("Ошибка! Не коректные данные: ({})", date);
 			return 0;
 		}
 	}
@@ -190,8 +183,8 @@ public class EmployeeOtherOrganizationController extends BaseController {
 	)
 	@UrlDeclaration(description = "Получить сотрудников по инициалам", isAccessAll = true)
 	@RequestMapping(value = "/get/users/by/initials/{initials}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<EmployeeOtherOrganization> getUsersByInitials(
+	public List<EmployeeOtherOrganizationDto> getUsersByInitials(
 			final @ApiParam(value = "Иничиалы", required = true) @PathVariable String initials) {
-			return employeeOtherOrganizationDao.getUsersByInitials(initials);
+			return employeeOtherOrganizationService.getUsersByInitials(initials);
 	}
 }

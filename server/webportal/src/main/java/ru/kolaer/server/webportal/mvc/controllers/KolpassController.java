@@ -1,32 +1,9 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.DepartmentEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
-import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryEntity;
-import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
-import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordHistoryService;
-import ru.kolaer.server.webportal.mvc.model.servirces.RepositoryPasswordService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by danilovey on 20.01.2017.
@@ -36,7 +13,7 @@ import java.util.stream.Collectors;
 @Api("Хранилища паролей (Парольница)")
 @Slf4j
 public class KolpassController {
-
+/*
     private static final String ADMIN = "OIT";
 
     @Autowired
@@ -46,7 +23,7 @@ public class KolpassController {
     private RepositoryPasswordHistoryService repPassHistoryService;
 
     @Autowired
-    private ServiceLDAP serviceLDAP;
+    private AuthenticationService serviceLDAP;
 
     @Autowired
     private DepartmentService departmentService;
@@ -266,5 +243,5 @@ public class KolpassController {
 
         return this.repPassHistoryService.getHistoryByIdRepository(rep.getId(), number, pageSize);
     }
-
+*/
 }

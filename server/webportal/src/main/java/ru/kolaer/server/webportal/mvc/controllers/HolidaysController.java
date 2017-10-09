@@ -23,9 +23,12 @@ import java.util.List;
 @RequestMapping(value = "/non-security/holidays")
 @Api(tags = "Праздники", description = "Праздники в России")
 public class HolidaysController extends BaseController {
+    private final HolidayService holidayService;
 
     @Autowired
-    private HolidayService holidayService;
+    public HolidaysController(HolidayService holidayService) {
+        this.holidayService = holidayService;
+    }
 
     @ApiOperation(
             value = "Получить все праздники"

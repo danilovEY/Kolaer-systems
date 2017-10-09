@@ -1,35 +1,8 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrRegister;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrState;
-import ru.kolaer.api.mvp.model.kolaerweb.psr.PsrStatus;
-import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.dto.PsrAccess;
-import ru.kolaer.server.webportal.mvc.model.dto.PsrRegisterAccess;
-import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrRegisterEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.psr.PsrStateEntity;
-import ru.kolaer.server.webportal.mvc.model.servirces.PsrRegisterService;
-import ru.kolaer.server.webportal.mvc.model.servirces.PsrStatusService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
-import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by danilovey on 29.07.2016.
@@ -38,6 +11,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/psr")
 @Api(description = "Работа с ПСР-проектами", tags = "ПСР-проект")
 public class PsrRegisterController extends BaseController {
+    /*
     private static final Logger LOG = LoggerFactory.getLogger(PsrRegisterController.class);
 
     @Autowired
@@ -47,7 +21,7 @@ public class PsrRegisterController extends BaseController {
     private PsrStatusService psrStatusService;
 
     @Autowired
-    private ServiceLDAP serviceLDAP;
+    private AuthenticationService authenticationService;
 
     @Autowired
     private UrlSecurityService pathService;
@@ -60,7 +34,7 @@ public class PsrRegisterController extends BaseController {
     public PsrAccess getAllPsrAccess() {
         final PsrAccess psrAccess = new PsrAccess();
 
-        final AccountEntity entity = this.serviceLDAP.getAccountByAuthentication();
+        final AccountEntity entity = this.authenticationService.getAccountByAuthentication();
 
         final List<String> roles = entity.getRoles().stream()
                 .map(RoleEntity::getType).collect(Collectors.toList());
@@ -203,7 +177,7 @@ public class PsrRegisterController extends BaseController {
 
         if(this.psrRegisterService.uniquePsrRegister(register)) {
             registerDto.setStatus(this.psrStatusService.getStatusByType("Новый"));
-            registerDto.setAuthor(serviceLDAP.getAccountByAuthentication().getEmployeeEntity());
+            registerDto.setAuthor(authenticationService.getAccountByAuthentication().getEmployeeEntity());
 
             this.psrRegisterService.add(registerDto);
             return registerDto;
@@ -258,4 +232,5 @@ public class PsrRegisterController extends BaseController {
         List<PsrRegister> list = this.psrRegisterService.getIdAndNamePsrRegisters();
         return list;
     }
+    */
 }

@@ -3,8 +3,7 @@ package ru.kolaer.server.webportal.mvc.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
+import ru.kolaer.server.webportal.security.ServerAuthType;
 import ru.kolaer.server.webportal.security.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,20 +34,24 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "/authentication")
 @Api(description = "Работа с авторизацией", tags = "Аутентификация")
+@Slf4j
 public class AuthenticationController extends BaseController {
-    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationController.class);
+    private final ServerAuthType serverAuthType;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsServiceLDAP;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Value("${secret_key}")
     private String secretKey;
 
     @Autowired
-    private UserDetailsService userDetailsServiceLDAP;
-
-    @Autowired
-    private ServiceLDAP serviceLDAP;
+    public AuthenticationController(@Value("${secret_key}") String secretKey,
+                                    @Value("${sever.auth.type}") ServerAuthType serverAuthType,
+                                    AuthenticationManager authenticationManager,
+                                    UserDetailsService userDetailsServiceLDAP) {
+        this.secretKey = secretKey;
+        this.serverAuthType = serverAuthType;
+        this.authenticationManager = authenticationManager;
+        this.userDetailsServiceLDAP = userDetailsServiceLDAP;
+    }
 
     @ApiOperation(
             value = "Выйти"
@@ -120,8 +123,14 @@ public class AuthenticationController extends BaseController {
             throw new UsernameNotFoundException("Пользователь " + username + " не найден!");
         }
 
-        final String tokenJson = TokenUtils.createTokenLDAP(userDetails);
-        return new TokenJson(tokenJson);
+        return new TokenJson(getToken(userDetails));
+    }
+
+    private String getToken(UserDetails userDetails) {
+        switch (serverAuthType) {
+            case LDAP: return  TokenUtils.createTokenLDAP(userDetails);
+            default: return  TokenUtils.createToken(userDetails);
+        }
     }
 
 }

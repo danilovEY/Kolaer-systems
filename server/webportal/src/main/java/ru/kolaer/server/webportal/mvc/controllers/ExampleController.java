@@ -1,25 +1,9 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
-import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.JournalViolationEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.japc.ViolationTypeEntity;
-import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
-
-import java.util.Arrays;
-import java.util.Date;
 
 /**
  * Created by danilovey on 18.11.2016.
@@ -28,9 +12,9 @@ import java.util.Date;
 @RequestMapping(value = "/examples")
 @Api( tags = "Примеры", description = "Примеры объектов", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ExampleController extends BaseController {
-
+/*
     @Autowired
-    private ServiceLDAP serviceLDAP;
+    private AuthenticationService serviceLDAP;
 
     @ApiOperation(
             value = "Получить пример журнала нарушений"
@@ -64,5 +48,5 @@ public class ExampleController extends BaseController {
 
         return ResponseEntity.ok(journalViolationDecorator);
     }
-
+*/
 }

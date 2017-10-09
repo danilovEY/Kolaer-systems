@@ -2,8 +2,7 @@ package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -13,10 +12,10 @@ import org.springframework.security.crypto.codec.Base64;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
+import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -33,22 +32,25 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/user")
 @Api(tags = "Аккаунт")
+@Slf4j
 public class UserController extends BaseController {
-    private final Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    private ServiceLDAP serviceLDAP;
+    public UserController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @ApiOperation(
             value = "Получить авторизированный аккаунт"
     )
     @UrlDeclaration(description = "Получить авторизированный аккаунт", isAccessUser = true)
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public AccountEntity getUser() {
+    public AccountDto getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null)
             return null;
-        return this.serviceLDAP.getAccountWithEmployeeByLogin(authentication.getName());
+        return this.authenticationService.getAccountWithEmployeeByLogin(authentication.getName());
     }
 
     @ApiOperation(
@@ -56,13 +58,13 @@ public class UserController extends BaseController {
     )
     @UrlDeclaration(description = "Получить роли авторизированного аккаунта", isAccessUser = true)
     @RequestMapping(value = "/roles/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<RoleEntity> getUserRoles() {
+    public List<RoleDto> getUserRoles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication == null)
             return Collections.emptyList();
 
-        final AccountEntity accountEntity = this.serviceLDAP
+        final AccountDto accountEntity = this.authenticationService
                 .getAccountWithEmployeeByLogin(authentication.getName());
 
         return accountEntity.getRoles();
@@ -74,12 +76,12 @@ public class UserController extends BaseController {
         if(authentication == null)
             throw new UsernameNotFoundException("Не авторизовались!");
 
-        byte[] imgByte = this.serviceLDAP.getAccountPhoto(authentication.getName());
+        byte[] imgByte = this.authenticationService.getAccountPhoto(authentication.getName());
 
         if(imgByte == null) {
-            AccountEntity user = this.getUser();
+            AccountDto user = this.getUser();
 
-            final String url = user.getEmployeeEntity().getPhoto();
+            final String url = user.getEmployee().getPhoto();
             InputStream inputStream = URI.create(url).toURL().openStream();
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();

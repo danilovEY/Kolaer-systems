@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class BankAccountController extends BaseController {
                         List<EmployeeEntity> employeeByInitials = employeeDao.findEmployeeByInitials(initials);
                         if(!employeeByInitials.isEmpty()) {
                             EmployeeEntity employeeEntity = employeeByInitials.stream().findFirst().get();
-                            final BankAccountEntity account = new BankAccountEntity(null, employeeEntity, cache);
+                            final BankAccountEntity account = new BankAccountEntity(null, null, employeeEntity, cache);
                             this.bankAccountDao.persist(account);
                             accounts.add(account);
                         }

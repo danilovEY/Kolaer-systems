@@ -5,8 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurityDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
@@ -21,15 +24,19 @@ import java.util.List;
 @Api(tags = "URL пути", description = "Описание URL: путь и доступы.")
 public class UrlSecurityController extends BaseController {
 
+    private final UrlSecurityService urlSecurityService;
+
     @Autowired
-    private UrlSecurityService urlSecurityService;
+    public UrlSecurityController(UrlSecurityService urlSecurityService) {
+        this.urlSecurityService = urlSecurityService;
+    }
 
     @ApiOperation(
             value = "Получить все URL"
     )
     @UrlDeclaration(description = "Получить все URL")
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<UrlSecurity> getAllUrl() {
+    public List<UrlSecurityDto> getAllUrl() {
         return urlSecurityService.getAll();
     }
 
@@ -38,7 +45,7 @@ public class UrlSecurityController extends BaseController {
     )
     @UrlDeclaration(description = "Получить роли по URL")
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public UrlSecurity getRoleByUrl(
+    public UrlSecurityDto getRoleByUrl(
             @ApiParam(value = "Путь от корня", required = true) @RequestParam(value = "path") String path) {
         if(path == null || path.isEmpty())
             throw new IllegalArgumentException("Path is null!");

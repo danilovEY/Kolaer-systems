@@ -1,29 +1,7 @@
 package ru.kolaer.server.webportal.beans;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.jsoup.Jsoup;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.JournalViolation;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.StageEnum;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.TypeViolation;
-import ru.kolaer.api.mvp.model.kolaerweb.jpac.Violation;
-import ru.kolaer.server.webportal.errors.BadRequestException;
-import ru.kolaer.server.webportal.mvc.model.servirces.JournalViolationService;
-import ru.kolaer.server.webportal.mvc.model.servirces.TypeViolationService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ViolationService;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 /**
  * Created by danilovey on 18.01.2017.
@@ -31,7 +9,7 @@ import java.util.stream.Stream;
 @Component
 @Slf4j
 public class ViolationReport {
-    @Autowired
+    /*@Autowired
     private ViolationService violationService;
 
     @Autowired
@@ -380,5 +358,5 @@ public class ViolationReport {
                     break;
             }
         }
-    }
+    }*/
 }

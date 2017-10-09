@@ -1,27 +1,7 @@
 package ru.kolaer.server.webportal.beans;
 
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTimeConstants;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
-import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import java.io.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 13.12.2016.
@@ -29,7 +9,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class RegisterTicketScheduler {
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
+    /*private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
     private final List<String> emails = new ArrayList<>();
     private LocalDateTime lastSend;
 
@@ -201,6 +181,6 @@ public class RegisterTicketScheduler {
 
     public List<String> getEmails() {
         return this.emails;
-    }
+    }*/
 
 }

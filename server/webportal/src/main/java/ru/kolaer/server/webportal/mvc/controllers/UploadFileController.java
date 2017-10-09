@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.UploadFile;
-import ru.kolaer.server.webportal.mvc.model.servirces.ServiceLDAP;
+import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -30,8 +29,12 @@ public class UploadFileController extends BaseController {
     @Resource
     private Environment env;
 
+    private final AuthenticationService authenticationService;
+
     @Autowired
-    private ServiceLDAP serviceLDAP;
+    public UploadFileController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @RequestMapping(value = "/file", method = RequestMethod.POST)
     @UrlDeclaration(description = "Загрузить файл на сервер", isAccessUser = true)
@@ -40,7 +43,7 @@ public class UploadFileController extends BaseController {
         final String pathToResources = env.getProperty("path.to_resources");
         final String urlToResources = env.getProperty("url.to_resources");
 
-        final String userName = this.serviceLDAP.getAccountByAuthentication().getUsername();
+        final String userName = this.authenticationService.getAccountByAuthentication().getUsername();
 
         String resourceDirPath = pathToResources + userName;
 
