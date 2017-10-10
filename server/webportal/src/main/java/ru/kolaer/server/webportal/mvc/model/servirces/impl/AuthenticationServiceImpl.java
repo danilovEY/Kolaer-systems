@@ -37,12 +37,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final EmployeeLDAP employeeLDAP;
 
     @Autowired
-    public AuthenticationServiceImpl(@Value("${sever.auth.type}") ServerAuthType serverAuthType,
+    public AuthenticationServiceImpl(@Value("${server.auth.type}") String serverAuthType,
                                      AccountService accountService,
                                      EmployeeService employeeService,
                                      AccountLDAP accountLDAP,
                                      EmployeeLDAP employeeLDAP) {
-        this.serverAuthType = serverAuthType;
+        this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.accountService = accountService;
         this.employeeService = employeeService;
         this.accountLDAP = accountLDAP;

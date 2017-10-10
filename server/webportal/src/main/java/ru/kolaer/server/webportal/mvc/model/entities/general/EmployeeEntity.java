@@ -46,11 +46,11 @@ public class EmployeeEntity implements BaseEntity {
     private Long postId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_id", insertable=false, updatable=false)
     private DepartmentEntity department;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", insertable=false, updatable=false)
     private PostEntity post;
 
     @Column(name = "work_phone_number")

@@ -11,5 +11,5 @@ public class PsrAttachmentDto implements BaseDto {
     private Long id;
     private String pathFile;
     private String name;
-    private PsrRegisterDto psrRegister;
+    private Long psrRegisterId;
 }

@@ -19,7 +19,7 @@ public class PassportEntity implements Serializable {
     private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", insertable=false, updatable=false)
     private EmployeeEntity employee;
 
     @Column(name = "employee_id", nullable = false)

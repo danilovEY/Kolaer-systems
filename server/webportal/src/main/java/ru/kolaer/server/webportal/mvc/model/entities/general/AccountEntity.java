@@ -25,11 +25,11 @@ public class AccountEntity implements BaseEntity {
     private Long employeeId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", updatable = false)
+    @JoinColumn(name = "employee_id", insertable=false, updatable=false)
     private EmployeeEntity employeeEntity;
 
     /**Список ролей пользователя.*/
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<RoleEntity> roles;
 
     @Column(name = "username", nullable = false)

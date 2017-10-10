@@ -32,7 +32,7 @@ public class PsrStateEntity implements BaseEntity {
     @Column(name = "pst_register_id", nullable = false)
     private Long psrRegisterId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "psr_register_id", nullable = false)
-    private PsrRegisterEntity psrRegister;
+    /*@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "psr_register_id", nullable = false, insertable=false, updatable=false)*/
+    //private PsrRegisterEntity psrRegister;
 }

@@ -12,8 +12,8 @@ public interface KolpassTable {
     List<RepositoryPasswordDto> getAllRepositoryPasswords();
     List<RepositoryPasswordDto> getAllRepositoryPasswordsChief();
     RepositoryPasswordDto addRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
-    RepositoryPasswordDto addHistoryPasswordToRepository(Integer idRep,
-                                                      RepositoryPasswordHistoryDto repositoryPasswordHistory);
+    RepositoryPasswordDto addHistoryPasswordToRepository(Long idRep,
+                                                         RepositoryPasswordHistoryDto repositoryPasswordHistory);
     RepositoryPasswordDto updateRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
     void deleteRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
 

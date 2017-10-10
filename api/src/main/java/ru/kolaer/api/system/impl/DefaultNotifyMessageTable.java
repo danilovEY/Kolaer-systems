@@ -2,7 +2,6 @@ package ru.kolaer.api.system.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.exceptions.ServerException;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
 import ru.kolaer.api.system.network.kolaerweb.NotifyMessageTable;
 
@@ -15,12 +14,12 @@ import java.util.Optional;
 public class DefaultNotifyMessageTable implements NotifyMessageTable {
 
     @Override
-    public NotifyMessage getLastNotifyMessage() throws ServerException {
+    public NotifyMessageDto getLastNotifyMessage() throws ServerException {
         return null;
     }
 
     @Override
-    public void addNotifyMessage(NotifyMessage notifyMessage) throws ServerException {
+    public void addNotifyMessage(NotifyMessageDto notifyMessage) throws ServerException {
         log.info("Добавлено сообщение: {}", Optional.ofNullable(notifyMessage)
                 .orElse(new NotifyMessageDto()).getMessage());
     }

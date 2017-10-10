@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.RoleEntity;
 
@@ -19,8 +18,7 @@ public class RoleConverterImpl implements RoleConverter {
         roleEntity.setId(dto.getId());
         roleEntity.setType(dto.getType());
 
-        Optional.ofNullable(dto.getAccount())
-                .map(AccountDto::getId)
+        Optional.ofNullable(dto.getAccountId())
                 .ifPresent(roleEntity::setAccountId);
 
         return roleEntity;

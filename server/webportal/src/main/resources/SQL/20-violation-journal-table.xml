@@ -6,7 +6,7 @@
 
     <changeSet id="20" author="Danilov">
         <createTable tableName="violation_journal">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="name" type="VARCHAR(255)">

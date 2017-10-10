@@ -24,17 +24,20 @@ public class JournalViolationEntity implements BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "journalViolation", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<ViolationEntity> violations;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_id", insertable=false, updatable=false)
     private DepartmentEntity department;
 
     @Column(name = "department_id")
     private Long departmentId;
 
+    @Column(name = "writer_id")
+    private Long writerId;
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_writer", nullable = false)
+    @JoinColumn(name = "id_writer", nullable = false, insertable=false, updatable=false)
     private EmployeeEntity writer;
 }

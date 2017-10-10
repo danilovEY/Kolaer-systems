@@ -14,5 +14,5 @@ import lombok.NoArgsConstructor;
 public class RoleDto implements BaseDto {
     private Long id;
     private String type;
-    private AccountDto account;
+    private Long accountId;
 }

@@ -6,7 +6,7 @@
 
     <changeSet id="10" author="Danilov">
         <createTable tableName="psr_attachment">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="path_file" type="VARCHAR(255)">

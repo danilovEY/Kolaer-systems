@@ -14,5 +14,5 @@ public class PsrStateDto implements BaseDto {
     private String comment;
     private Date date;
     private boolean plan;
-    private PsrRegisterDto psrRegister;
+    private Long psrRegisterId;
 }

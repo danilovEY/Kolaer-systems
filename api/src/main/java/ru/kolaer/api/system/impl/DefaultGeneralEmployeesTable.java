@@ -16,7 +16,7 @@ public class DefaultGeneralEmployeesTable implements GeneralEmployeesTable {
         PostDto postEntity = new PostDto();
         postEntity.setAbbreviatedName("Должность");
         postEntity.setName("Моя должность");
-        postEntity.setTypeRang(TypePostEnum.CATEGORY.getName());
+        postEntity.setType(TypePostEnum.CATEGORY);
         postEntity.setRang(1);
 
         DepartmentDto departmentEntity = new DepartmentDto();

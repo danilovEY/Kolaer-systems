@@ -22,5 +22,5 @@ public class ViolationDto implements BaseDto {
     private boolean effective;
     private StageEnum stage;
     private TypeViolationDto type;
-    private JournalViolationDto journalViolation;
+    private Long journalViolationId;
 }

@@ -28,11 +28,11 @@ public class TicketRegisterEntity implements Serializable, BaseEntity {
     @Column(name = "department_id")
     private Long departmentId;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticketRegister")
+    @OneToMany(fetch = FetchType.LAZY)
     private List<TicketEntity> tickets;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_department")
+    @JoinColumn(name = "id_department", insertable=false, updatable=false)
     private DepartmentEntity department;
 
     @Temporal(TemporalType.TIMESTAMP)

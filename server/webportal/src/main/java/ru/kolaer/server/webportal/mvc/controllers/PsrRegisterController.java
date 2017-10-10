@@ -1,14 +1,12 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by danilovey on 29.07.2016.
  */
-@RestController
-@RequestMapping(value = "/psr")
+//@RestController
+//@RequestMapping(value = "/psr")
 @Api(description = "Работа с ПСР-проектами", tags = "ПСР-проект")
 public class PsrRegisterController extends BaseController {
     /*

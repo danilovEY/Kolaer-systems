@@ -24,7 +24,7 @@ public class RepositoryPasswordEntity implements BaseEntity {
     private String name;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", insertable=false, updatable=false)
     private EmployeeEntity employee;
 
     @Column(name = "url_image", length = 300)
@@ -40,17 +40,17 @@ public class RepositoryPasswordEntity implements BaseEntity {
     private Long prevPassId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "first_pass_id")
+    @JoinColumn(name = "first_pass_id", insertable=false, updatable=false)
     private RepositoryPasswordHistoryEntity firstPassword;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_pass_id")
+    @JoinColumn(name = "last_pass_id", insertable=false, updatable=false)
     private RepositoryPasswordHistoryEntity lastPassword;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prev_pass_id")
+    @JoinColumn(name = "prev_pass_id", insertable=false, updatable=false)
     private RepositoryPasswordHistoryEntity prevPassword;
 
-    @OneToMany(mappedBy = "repositoryPassword", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<RepositoryPasswordHistoryEntity> passwords;
 }

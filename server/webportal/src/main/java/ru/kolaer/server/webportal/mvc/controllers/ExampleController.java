@@ -2,14 +2,12 @@ package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by danilovey on 18.11.2016.
  */
-@RestController
-@RequestMapping(value = "/examples")
+//@RestController
+//@RequestMapping(value = "/examples")
 @Api( tags = "Примеры", description = "Примеры объектов", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ExampleController extends BaseController {
 /*

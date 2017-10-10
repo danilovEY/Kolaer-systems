@@ -26,7 +26,7 @@ public class DepartmentEntity implements BaseEntity {
     @Column(name = "chief_employee_id")
     private Long chiefEmployeeId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chief_employee_id")
-    private EmployeeEntity chief;
+    /*@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chief_employee_id", insertable=false, updatable=false)
+    private EmployeeEntity chief;*/
 }

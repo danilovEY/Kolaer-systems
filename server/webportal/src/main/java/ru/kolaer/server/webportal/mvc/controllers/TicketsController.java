@@ -2,15 +2,13 @@ package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by danilovey on 30.11.2016.
  */
 @Api(tags = "Талоны")
-@RestController
-@RequestMapping(value = "/tickets")
+//@RestController
+//@RequestMapping(value = "/tickets")
 @Slf4j
 public class TicketsController extends BaseController {
 /*

@@ -2,11 +2,9 @@ package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping(value = "/violations")
+//@RestController
+//@RequestMapping(value = "/violations")
 @Api(tags = "Нарушения")
 @Slf4j
 public class ViolationController extends BaseController {

@@ -51,12 +51,12 @@ public class ViolationEntity implements BaseEntity {
     @Column(name = "type_id", nullable = false)
     private Long typeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_journal", nullable = false)
-    private JournalViolationEntity journalViolation;
+    /*@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_journal", nullable = false, insertable=false, updatable=false)*/
+    //private JournalViolationEntity journalViolation;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_writer", nullable = false)
+    @JoinColumn(name = "id_writer", nullable = false, insertable=false, updatable=false)
     private EmployeeEntity writer;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -71,6 +71,6 @@ public class ViolationEntity implements BaseEntity {
     private StageEnum stageEnum;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id")
+    @JoinColumn(name = "type_id", insertable=false, updatable=false)
     private ViolationTypeEntity type;
 }

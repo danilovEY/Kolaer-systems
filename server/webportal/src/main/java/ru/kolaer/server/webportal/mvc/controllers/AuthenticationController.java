@@ -44,11 +44,11 @@ public class AuthenticationController extends BaseController {
 
     @Autowired
     public AuthenticationController(@Value("${secret_key}") String secretKey,
-                                    @Value("${sever.auth.type}") ServerAuthType serverAuthType,
+                                    @Value("${server.auth.type}") String serverAuthType,
                                     AuthenticationManager authenticationManager,
                                     UserDetailsService userDetailsServiceLDAP) {
         this.secretKey = secretKey;
-        this.serverAuthType = serverAuthType;
+        this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.authenticationManager = authenticationManager;
         this.userDetailsServiceLDAP = userDetailsServiceLDAP;
     }

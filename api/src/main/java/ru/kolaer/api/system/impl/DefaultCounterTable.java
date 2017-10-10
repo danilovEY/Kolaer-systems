@@ -1,7 +1,6 @@
 package ru.kolaer.api.system.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.kolaer.api.mvp.model.kolaerweb.Counter;
 import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 import ru.kolaer.api.system.network.kolaerweb.CounterTable;
 
@@ -13,22 +12,22 @@ import java.util.Optional;
 @Slf4j
 public class DefaultCounterTable implements CounterTable {
     @Override
-    public Counter[] getAllCounters() {
-        return new Counter[0];
+    public CounterDto[] getAllCounters() {
+        return new CounterDto[0];
     }
 
     @Override
-    public void addCounter(Counter counter) {
+    public void addCounter(CounterDto counter) {
         log.info("Добавлен счетчик: {}", Optional.ofNullable(counter).orElse(new CounterDto()).getTitle());
     }
 
     @Override
-    public void updateCounter(Counter counter) {
+    public void updateCounter(CounterDto counter) {
         log.info("Обновлен счетчик: {}", Optional.ofNullable(counter).orElse(new CounterDto()).getTitle());
     }
 
     @Override
-    public void deleteCounter(Counter counter) {
+    public void deleteCounter(CounterDto counter) {
         log.info("Удален счетчик: {}", Optional.ofNullable(counter).orElse(new CounterDto()).getTitle());
     }
 }

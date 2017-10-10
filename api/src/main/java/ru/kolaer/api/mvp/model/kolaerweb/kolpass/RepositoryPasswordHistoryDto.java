@@ -14,5 +14,5 @@ public class RepositoryPasswordHistoryDto implements BaseDto {
     private String login;
     private String password;
     private Date passwordWriteDate;
-    private RepositoryPasswordDto repositoryPassword;
+    private Long repositoryPasswordId;
 }

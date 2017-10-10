@@ -25,7 +25,7 @@ public class RoleEntity implements BaseEntity {
     @Column(name = "account_id", nullable = false)
     private Long accountId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    private AccountEntity account;
+    /*@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", insertable=false, updatable=false)*/
+    //private AccountEntity account;
 }

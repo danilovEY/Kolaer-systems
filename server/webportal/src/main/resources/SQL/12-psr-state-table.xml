@@ -6,7 +6,7 @@
 
     <changeSet id="12" author="Danilov">
         <createTable tableName="psr_state">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="comment" type="VARCHAR(255)">

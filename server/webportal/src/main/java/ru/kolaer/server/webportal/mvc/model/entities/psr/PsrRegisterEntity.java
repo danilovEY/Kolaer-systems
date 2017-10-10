@@ -31,11 +31,11 @@ public class PsrRegisterEntity implements BaseEntity{
     private Long adminId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name = "author_id", nullable = false, insertable=false, updatable=false)
     private EmployeeEntity author;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_id")
+    @JoinColumn(name = "admin_id", insertable=false, updatable=false)
     private EmployeeEntity admin;
 
     @Column(name = "name", nullable = false)
@@ -52,10 +52,10 @@ public class PsrRegisterEntity implements BaseEntity{
     @Column(name = "comment", length = 1000, nullable = false)
     private String comment;
 
-    @OneToMany(mappedBy = "psrRegister", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     public List<PsrStateEntity> states;
 
-    @OneToMany(mappedBy = "psrRegister", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     public List<PsrAttachmentEntity> attachments;
 
 }

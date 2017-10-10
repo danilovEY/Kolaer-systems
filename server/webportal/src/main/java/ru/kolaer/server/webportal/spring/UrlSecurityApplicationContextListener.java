@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.spring;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import java.util.List;
  * Created by danilovey on 11.08.2016.
  */
 @Component
+@Slf4j
 public class UrlSecurityApplicationContextListener implements ApplicationListener<ContextRefreshedEvent>, Ordered {
     private static final Logger LOG = LoggerFactory.getLogger(UrlSecurityApplicationContextListener.class);
 

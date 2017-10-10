@@ -23,6 +23,7 @@ public class UrlSecurityConverterImpl implements UrlSecurityConverter {
         entity.setId(dto.getId());
         entity.setAccess(dto.getAccess());
         entity.setDescription(dto.getDescription());
+        entity.setUrl(dto.getUrl());
         entity.setRequestMethod(dto.getRequestMethod());
         return entity;
     }
@@ -33,6 +34,7 @@ public class UrlSecurityConverterImpl implements UrlSecurityConverter {
         dto.setId(model.getId());
         dto.setRequestMethod(model.getRequestMethod());
         dto.setDescription(model.getDescription());
+        dto.setUrl(model.getUrl());
         dto.setAccess(model.getAccess());
         return dto;
     }
@@ -42,6 +44,7 @@ public class UrlSecurityConverterImpl implements UrlSecurityConverter {
         oldDto.setId(newModel.getId());
         oldDto.setRequestMethod(newModel.getRequestMethod());
         oldDto.setDescription(newModel.getDescription());
+        oldDto.setUrl(newModel.getUrl());
         oldDto.setAccess(newModel.getAccess());
         return oldDto;
     }

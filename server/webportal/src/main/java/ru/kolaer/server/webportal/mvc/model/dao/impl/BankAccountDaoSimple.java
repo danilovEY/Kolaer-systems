@@ -1,11 +1,11 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import lombok.NonNull;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,12 +92,17 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
-    public Page<BankAccountEntity> findAll(Integer number, Integer pageSize) {
-        return null;
+    public Class<BankAccountEntity> getEntityClass() {
+        return BankAccountEntity.class;
     }
 
     @Override
-    public Class<BankAccountEntity> getEntityClass() {
-        return BankAccountEntity.class;
+    public long findAllCount() {
+        return 0;
+    }
+
+    @Override
+    public List<BankAccountEntity> findAll(Integer number, Integer pageSize) {
+        return Collections.emptyList();
     }
 }

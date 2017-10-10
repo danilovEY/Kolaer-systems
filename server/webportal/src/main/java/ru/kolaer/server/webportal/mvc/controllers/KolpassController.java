@@ -2,14 +2,12 @@ package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by danilovey on 20.01.2017.
  */
-@RestController
-@RequestMapping(value = "/kolpass")
+//@RestController
+//@RequestMapping(value = "/kolpass")
 @Api("Хранилища паролей (Парольница)")
 @Slf4j
 public class KolpassController {

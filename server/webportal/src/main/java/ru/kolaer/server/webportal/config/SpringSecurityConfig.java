@@ -51,27 +51,30 @@ import java.util.Hashtable;
 @EnableScheduling
 @Slf4j
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final AuthenticationProvider authenticationProvider;
-    private final FilterSecurityInterceptor filter;
 
     /**Секретный ключ для шифрования пароля.*/
-    private String secretKey;
+    private final String secretKey;
+    private final ServerAuthType serverAuthType;
+    private final AccountDao accountDao;
+    private final UrlSecurityService urlSecurityService;
 
     @Resource
     private Environment env;
 
     @Autowired
     public SpringSecurityConfig(@Value("${secret_key}") String secretKey,
-                                AuthenticationProvider authenticationProvider,
-                                FilterSecurityInterceptor filter) {
+                                @Value("${server.auth.type}") String serverAuthType,
+                                AccountDao accountDao,
+                                UrlSecurityService urlSecurityService) {
         this.secretKey = secretKey;
-        this.authenticationProvider = authenticationProvider;
-        this.filter = filter;
+        this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
+        this.accountDao = accountDao;
+        this.urlSecurityService = urlSecurityService;
     }
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider);
+        auth.authenticationProvider(authenticationProvider(userDetailsService(accountDao, ldapContext())));
     }
 
     @Override
@@ -89,7 +92,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         //Фильтер для проверки http request'а на наличие правильного токена
         .addFilterBefore(authenticationTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
         //Фильтер для проверки URL'ов.
-        .addFilter(filter);
+        .addFilter(filter(urlSecurityService));
     }
 
     @Bean
@@ -183,8 +186,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Autowired
-    public UserDetailsService userDetailsService(@Value("${server.type.auth}") ServerAuthType serverAuthType,
-                                                 AccountDao accountDao,
+    public UserDetailsService userDetailsService(AccountDao accountDao,
                                                  InitialLdapContext context) {
         switch (serverAuthType) {
             case LDAP: return userDetailsServiceLDAP(context);
@@ -193,8 +195,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(@Value("${server.type.auth}") ServerAuthType serverAuthType,
-                                                         UserDetailsService userDetailsService) {
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
         switch (serverAuthType) {
             case LDAP: return authProviderLDAP();
             default: return authProviderSQL(userDetailsService);
