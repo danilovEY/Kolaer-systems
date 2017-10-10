@@ -15,12 +15,6 @@ buildscript {
             url "https://plugins.gradle.org/m2/"
         }
     }
-    dependencies {
-        classpath 'io.github.robwin:swagger2markup-gradle-plugin:0.9.2'
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.10.1'
-        classpath "gradle.plugin.org.detoeuf:swagger-codegen-plugin:1.5.1"
-    }
 }
 
 dependencies {
@@ -44,8 +38,8 @@ dependencies {
     compile "net.sourceforge.jexcelapi:jxl:2.6.12"
     compile "org.apache.poi:poi:3.15"
     compile "org.apache.poi:poi-ooxml:3.15"
-    compile "io.swagger:swagger-jaxrs:1.5.10"
     compile "io.springfox:springfox-swagger2:2.6.1"
+    compile "io.springfox:springfox-swagger-ui:2.4.0"
     compile "net.sf.ehcache:ehcache:2.10.3"
     compile "com.sun.mail:javax.mail:1.5.4"
     compile "org.jsoup:jsoup:1.10.2"
@@ -61,33 +55,6 @@ war {
     webXml = file('src/main/webapp/WEB-INF/web.xml')
 }
 
-apply plugin: 'io.github.robwin.swagger2markup'
-apply plugin: 'org.asciidoctor.convert'
-
-convertSwagger2markup {
-    inputDir file("docs/swagger")
-    outputDir file("docs/asciidoc")
-    pathsGroupedBy io.github.robwin.swagger2markup.GroupBy.TAGS
-}
-
-asciidoctor {
-    dependsOn convertSwagger2markup
-    backends = ['html5']
-    outputDir file("src/main/webapp/asciidoc")
-    sourceDir file("docs/asciidoc")
-    attributes = [
-            doctype: 'book',
-            toc: 'left',
-            toclevels: '3',
-            numbered: '',
-            sectlinks: '',
-            sectanchors: '',
-            hardbreaks: '',
-            generated: file("docs/asciidoc")
-    ]
-}
-
-
 task renameResources(dependsOn: processResources) {
     doLast{
         file("build/resources/main/database.properties").delete()
@@ -101,7 +68,7 @@ task renameResources(dependsOn: processResources) {
     }
 }
 
-task buildApp(dependsOn: [clean, asciidoctor, renameResources, war]) {
+task buildApp(dependsOn: [clean, renameResources, war]) {
     doLast {
         /*copy {
             from 'build/libs/' + nameWarFile
@@ -116,7 +83,7 @@ task renameProject(dependsOn: clean) {
     }
 }
 
-task buildAppForTest(dependsOn: [war, asciidoctor, renameProject]) {
+task buildAppForTest(dependsOn: [war, renameProject]) {
     doLast {
         /*copy {
             from 'build/libs/' + testName
