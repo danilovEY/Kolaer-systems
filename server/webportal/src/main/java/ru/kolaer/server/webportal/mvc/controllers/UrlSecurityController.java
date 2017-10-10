@@ -46,7 +46,8 @@ public class UrlSecurityController extends BaseController {
     @UrlDeclaration(description = "Получить роли по URL")
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public UrlSecurityDto getRoleByUrl(
-            @ApiParam(value = "Путь от корня", required = true) @RequestParam(value = "path") String path) {
+            @ApiParam(value = "Путь от корня", required = true) @RequestParam(value = "path") String path,
+            @ApiParam(value = "Метод", required = true) @RequestParam(value = "method") String method) {
         if(path == null || path.isEmpty())
             throw new IllegalArgumentException("Path is null!");
 
@@ -56,7 +57,7 @@ public class UrlSecurityController extends BaseController {
         if(path.indexOf("/rest") != 0)
             path = "/rest" + path;
 
-        return this.urlSecurityService.getPathByUrl(path);
+        return this.urlSecurityService.getPathByUrlAndMethod(path, method);
     }
 
 }

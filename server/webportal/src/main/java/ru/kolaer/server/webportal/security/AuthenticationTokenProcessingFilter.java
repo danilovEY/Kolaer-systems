@@ -1,8 +1,6 @@
 package ru.kolaer.server.webportal.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,11 +20,15 @@ import java.io.IOException;
  *
  * Created by Danilov on 24.07.2016.
  */
+@Slf4j
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
-    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationTokenProcessingFilter.class);
+    private final ServerAuthType serverAuthType;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private UserDetailsService userDetailsServiceLDAP;
+    public AuthenticationTokenProcessingFilter(ServerAuthType serverAuthType, UserDetailsService userDetailsService) {
+        this.serverAuthType = serverAuthType;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -35,10 +37,9 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
         String authToken = this.extractAuthTokenFromRequest(httpRequest);
         String userName = TokenUtils.getUserNameFromToken(authToken);
         if (userName != null) {
-            final UserDetails userDetails = this.userDetailsServiceLDAP.loadUserByUsername(userName);
+            final UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
             if(userDetails != null){
-                boolean tokenVal = TokenUtils.validateTokenLDAP(authToken, userDetails);
-                if (tokenVal) {
+                if (tokenIsValidate(authToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -48,6 +49,13 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 
         request.setCharacterEncoding("UTF-8");
         chain.doFilter(request, response);
+    }
+
+    private boolean tokenIsValidate(String authToken, UserDetails userDetails) {
+        switch (serverAuthType) {
+            case LDAP: return TokenUtils.validateTokenLDAP(authToken, userDetails);
+            default: return TokenUtils.validateToken(authToken, userDetails);
+        }
     }
 
     private HttpServletRequest getAsHttpRequest(ServletRequest request) {

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 
@@ -23,8 +22,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by danilovey on 31.08.2016.
@@ -44,30 +41,13 @@ public class UserController extends BaseController {
     @ApiOperation(
             value = "Получить авторизированный аккаунт"
     )
-    @UrlDeclaration(description = "Получить авторизированный аккаунт", isAccessUser = true)
+    @UrlDeclaration(description = "Получить авторизированный аккаунт", isUser = true)
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public AccountDto getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null)
             return null;
         return this.authenticationService.getAccountWithEmployeeByLogin(authentication.getName());
-    }
-
-    @ApiOperation(
-            value = "Получить роли авторизированного аккаунта"
-    )
-    @UrlDeclaration(description = "Получить роли авторизированного аккаунта", isAccessUser = true)
-    @RequestMapping(value = "/roles/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<RoleDto> getUserRoles() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if(authentication == null)
-            return Collections.emptyList();
-
-        final AccountDto accountEntity = this.authenticationService
-                .getAccountWithEmployeeByLogin(authentication.getName());
-
-        return accountEntity.getRoles();
     }
 
     private byte[] getImageByte() throws IOException {
@@ -103,7 +83,7 @@ public class UserController extends BaseController {
     @ApiOperation(
             value = "Получить фото аккаунта"
     )
-    @UrlDeclaration(description = "Получить фото аккаунта", isAccessUser = true)
+    @UrlDeclaration(description = "Получить фото аккаунта", isUser = true)
     @RequestMapping(value = "/photo/get", method = RequestMethod.GET)
     public void showImage(HttpServletResponse response) throws Exception {
         final byte[] imgByte = this.getImageByte();
@@ -121,7 +101,7 @@ public class UserController extends BaseController {
     @ApiOperation(
             value = "Получить массив байт фото аккаунта"
     )
-    @UrlDeclaration(description = "Получить массив байт фото аккаунта", isAccessUser = true)
+    @UrlDeclaration(description = "Получить массив байт фото аккаунта", isUser = true)
     @RequestMapping(value = "/photo/get/byte", method = RequestMethod.GET)
     public String getByteImage() throws Exception {
         final byte[] imgByte = this.getImageByte();

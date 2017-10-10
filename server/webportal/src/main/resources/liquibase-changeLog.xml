@@ -13,7 +13,6 @@
     <include file="classpath:SQL/4-department-table.xml"/>
     <include file="classpath:SQL/5-employee-table.xml"/>
     <include file="classpath:SQL/1-account-table.xml"/>
-    <include file="classpath:SQL/2-role-table.xml"/>
     <include file="classpath:SQL/8-passport-table.xml"/>
     <include file="classpath:SQL/11-psr-register-table.xml"/>
     <include file="classpath:SQL/10-psr-attachment-table.xml"/>

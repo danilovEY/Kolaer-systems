@@ -13,6 +13,4 @@ public interface UrlSecurityConverter extends BaseConverter<UrlSecurityDto, UrlS
     List<String> convertToAccesses(UrlSecurityDto urlPath);
 
     List<String> convertToAccesses(UrlSecurityEntity urlPath);
-
-    String convertToAccess(List<String> assesses);
 }

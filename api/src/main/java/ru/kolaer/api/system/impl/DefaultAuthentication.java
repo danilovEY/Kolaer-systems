@@ -6,7 +6,10 @@ import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 13.02.2017.
@@ -21,9 +24,6 @@ public class DefaultAuthentication implements Authentication {
     private final AccountDto ACCOUNT;
 
     public DefaultAuthentication() {
-        final RoleDto roleDto = new RoleDto();
-        roleDto.setType(EnumRole.ANONYMOUS.name());
-
         final DepartmentDto department = new DepartmentDto();
         department.setAbbreviatedName("Подразделение");
         department.setName("Мое подразделение");
@@ -44,7 +44,6 @@ public class DefaultAuthentication implements Authentication {
         this.ACCOUNT.setEmail("test@test.ru");
         this.ACCOUNT.setPassword(PASSWORD);
         this.ACCOUNT.setUsername(LOGIN);
-        this.ACCOUNT.setRoles(Collections.singletonList(roleDto));
         this.ACCOUNT.setEmployee(employee);
 
         this.tokenJson = new TokenJson();
@@ -80,13 +79,6 @@ public class DefaultAuthentication implements Authentication {
     @Override
     public TokenJson getToken() {
         return this.isAuth ? this.tokenJson : null;
-    }
-
-    @Override
-    public RoleDto[] getRoles() {
-        return this.isAuth
-                ? this.ACCOUNT.getRoles().toArray(new RoleDto[this.ACCOUNT.getRoles().size()])
-                : new RoleDto[0];
     }
 
     @Override

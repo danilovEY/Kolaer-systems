@@ -16,7 +16,6 @@ public @interface UrlDeclaration {
     String description();
     RequestMethod requestMethod() default RequestMethod.GET;
     boolean isAccessAll() default false;
-    boolean isAccessSuperAdmin() default true;
-    boolean isAccessUser() default false;
-    boolean isAccessAnonymous() default false;
+    boolean isOit() default true;
+    boolean isUser() default true;
 }

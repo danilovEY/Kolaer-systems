@@ -28,6 +28,12 @@ public class UrlSecurityEntity implements BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name="access")
-    public String access;
+    @Column(name="access_oit", nullable = false)
+    private boolean accessOit;
+
+    @Column(name="access_all", nullable = false)
+    private boolean accessAll;
+
+    @Column(name="access_user", nullable = false)
+    private boolean accessUser = true;
 }

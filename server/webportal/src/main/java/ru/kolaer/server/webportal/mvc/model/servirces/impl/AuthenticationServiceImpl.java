@@ -8,7 +8,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.*;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
 import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
 import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
@@ -18,7 +21,6 @@ import ru.kolaer.server.webportal.security.ServerAuthType;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -66,10 +68,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         employeeDto.setBirthday(new Date());
         employeeDto.setPhoto("http://asupkolaer.local/app_ie8/assets/images/vCard/no_photo.jpg");
 
-        this.defaultAccount = new AccountDto();
-        this.defaultAccount.setEmployee(employeeDto);
-        this.defaultAccount.setUsername("empty");
-        this.defaultAccount.setRoles(Arrays.asList(new RoleDto(null, "ALL", null), new RoleDto(null, "Anonymous", null)));
+        defaultAccount = new AccountDto();
+        defaultAccount.setEmployee(employeeDto);
+        defaultAccount.setUsername("empty");
+        defaultAccount.setAccessUser(true);
     }
 
     @Override

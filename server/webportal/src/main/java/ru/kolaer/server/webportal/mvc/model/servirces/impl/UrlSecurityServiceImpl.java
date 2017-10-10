@@ -30,13 +30,13 @@ public class UrlSecurityServiceImpl extends AbstractDefaultService<UrlSecurityDt
 
     @Override
     @Transactional(readOnly = true)
-    public UrlSecurityDto getPathByUrl(String userUrl) {
+    public UrlSecurityDto getPathByUrlAndMethod(String userUrl, String method) {
         String url = userUrl;
         if(userUrl.contains("?")) {
             url = userUrl.substring(0, userUrl.indexOf("?"));
         }
 
-        return converter.convertToDto(urlSecurityDao.getPathByUrl(url));
+        return converter.convertToDto(urlSecurityDao.findPathByUrlAndMethod(url, method));
     }
 
     @Override

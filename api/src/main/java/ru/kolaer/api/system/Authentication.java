@@ -2,7 +2,6 @@ package ru.kolaer.api.system;
 
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.observers.AuthenticationObservable;
@@ -17,7 +16,6 @@ public interface Authentication extends AuthenticationObservable {
     boolean loginIsRemember() throws ServerException;
     AccountDto getAuthorizedUser();
     TokenJson getToken();
-    RoleDto[] getRoles();
     boolean isAuthentication();
     boolean logout() throws ServerException;
 }

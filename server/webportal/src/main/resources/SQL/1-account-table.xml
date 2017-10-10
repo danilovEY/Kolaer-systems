@@ -17,6 +17,13 @@
             </column>
             <column name="email" type="VARCHAR(255)"/>
             <column name="employee_id" type="BIGINT"/>
+
+            <column name="access_oit" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="access_user" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addPrimaryKey tableName="account" columnNames="id"/>
         <addForeignKeyConstraint baseTableName="account" baseColumnNames="employee_id" constraintName="account_employee_fk"

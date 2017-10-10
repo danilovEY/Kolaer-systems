@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -13,6 +14,7 @@ import java.util.Date;
 @ApiModel(value = "(Общее) Информация об ошибки")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ExceptionMessageRequest {
     @ApiModelProperty(value = "Сообщение")
     private String message;

@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumRole;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;

@@ -97,16 +97,10 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     final String requestMethodName = urlDeclaration.requestMethod().name();
 
                     UrlSecurityDto urlPath = new UrlSecurityDto();
-
-                    final List<String> accessList = new ArrayList<>();
-                    if (urlDeclaration.isAccessSuperAdmin())
-                        accessList.add("OIT");
-                    if (urlDeclaration.isAccessUser())
-                        accessList.add("Domain users");
-                    if (urlDeclaration.isAccessAll())
-                        accessList.add("ALL");
-
-                    urlPath.setAccess(urlSecurityConverter.convertToAccess(accessList));
+                    urlPath.setAccessOit(urlDeclaration.isOit());
+                    urlPath.setAccessUser(urlDeclaration.isUser());
+                    urlPath.setAccessOit(urlDeclaration.isOit());
+                    urlPath.setAccessAll(urlDeclaration.isAccessAll());
                     urlPath.setUrl(url);
                     urlPath.setDescription(description);
                     urlPath.setRequestMethod(requestMethodName);

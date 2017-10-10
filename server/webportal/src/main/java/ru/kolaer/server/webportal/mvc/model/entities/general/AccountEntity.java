@@ -4,7 +4,6 @@ import lombok.Data;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by Danilov on 24.07.2016.
@@ -28,10 +27,6 @@ public class AccountEntity implements BaseEntity {
     @JoinColumn(name = "employee_id", insertable=false, updatable=false)
     private EmployeeEntity employeeEntity;
 
-    /**Список ролей пользователя.*/
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<RoleEntity> roles;
-
     @Column(name = "username", nullable = false)
     private String username;
 
@@ -40,4 +35,11 @@ public class AccountEntity implements BaseEntity {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "access_oit", nullable = false)
+    private boolean accessOit;
+
+    @Column(name = "access_user", nullable = false)
+    private boolean accessUser = true;
+
 }

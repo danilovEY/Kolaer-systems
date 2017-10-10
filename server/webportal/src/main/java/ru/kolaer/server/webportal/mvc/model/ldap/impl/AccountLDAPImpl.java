@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
 import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
 
@@ -17,7 +16,6 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
 
@@ -51,11 +49,11 @@ public class AccountLDAPImpl implements AccountLDAP {
             generalAccountEntity.setEmail(attributes.get("userprincipalname").get().toString());
             final Collection<? extends GrantedAuthority> rolesFromAttributes = ToolsLDAP.getRolesFromAttributes(attributes);
 
-            generalAccountEntity.setRoles(rolesFromAttributes.stream().map(role -> {
+            /*generalAccountEntity.setRoles(rolesFromAttributes.stream().map(role -> {
                 final RoleDto roleEntity = new RoleDto();
                 roleEntity.setType(role.getAuthority());
                 return roleEntity;
-            }).collect(Collectors.toList()));
+            }).collect(Collectors.toList()));*/ //TODO !!!!
 
             answer.close();
             return generalAccountEntity;

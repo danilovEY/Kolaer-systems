@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.ldap.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
+import ru.kolaer.server.webportal.mvc.model.dto.RoleDto;
 import ru.kolaer.server.webportal.mvc.model.ldap.RoleLDAP;
 
 import javax.naming.NamingEnumeration;
@@ -40,12 +40,10 @@ public class RoleLDAPImpl implements RoleLDAP {
 
         try {
             final NamingEnumeration<SearchResult> answer = this.ldapContext.search("", "(objectclass=group)", controls);
-            long i=0;
             final List<RoleDto> roles = new ArrayList<>();
             while (answer.hasMoreElements()) {
                 final String groupName = answer.next().getAttributes().get("cn").get().toString();
                 final RoleDto roleEntity = new RoleDto();
-                roleEntity.setId(i++);
                 roleEntity.setType(groupName);
 
                 roles.add(roleEntity);

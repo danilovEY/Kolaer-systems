@@ -37,7 +37,7 @@ public class UploadFileController extends BaseController {
     }
 
     @RequestMapping(value = "/file", method = RequestMethod.POST)
-    @UrlDeclaration(description = "Загрузить файл на сервер", isAccessUser = true)
+    @UrlDeclaration(description = "Загрузить файл на сервер", isUser = true)
     @ApiOperation("Загрузить файл на сервер")
     public UploadFile uploadFile(@ApiParam("Файл") @RequestParam("file") MultipartFile file) throws IOException {
         final String pathToResources = env.getProperty("path.to_resources");

@@ -9,6 +9,8 @@ import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurityDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -24,22 +26,23 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
         this.urlSecurityService = urlSecurityService;
     }
 
-    public Collection<ConfigAttribute> getAttributes(Object object)
-            throws IllegalArgumentException {
+    public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         FilterInvocation fi=(FilterInvocation)object;
-        String url=fi.getRequestUrl();
-
-        final UrlSecurityDto urlPth = urlSecurityService.getPathByUrl(url);
+        String url = fi.getRequestUrl();
+        String method = fi.getHttpRequest().getMethod();
+        final UrlSecurityDto urlPth = urlSecurityService.getPathByUrlAndMethod(url, method);
         if(urlPth != null) {
             return this.getRoles(urlPth);
         }
 
-        return SecurityConfig.createList();
+        return Collections.emptyList();
     }
 
     private Collection<ConfigAttribute> getRoles(UrlSecurityDto urlPath) {
-        return this.urlSecurityService.getAccesses(urlPath)
-                .stream()
+        List<String> accesses = urlSecurityService.getAccesses(urlPath);
+        return accesses.contains("ALL")
+                ? Collections.emptyList()
+                : accesses.stream()
                 .map(SecurityConfig::new)
                 .collect(Collectors.toList());
     }

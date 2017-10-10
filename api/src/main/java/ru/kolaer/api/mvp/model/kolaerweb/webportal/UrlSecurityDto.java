@@ -13,6 +13,7 @@ public class UrlSecurityDto implements BaseDto {
     private String url;
     private String description;
     private String requestMethod;
-    /**Имеют ли доступ к URL все пользователи*/
-    private String access;
+    private boolean accessOit;
+    private boolean accessAll;
+    private boolean accessUser = true;
 }

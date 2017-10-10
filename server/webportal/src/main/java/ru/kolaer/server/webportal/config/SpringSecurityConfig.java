@@ -90,14 +90,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new SimpleCORSFilter()).and()
         //Фильтер для проверки http request'а на наличие правильного токена
-        .addFilterBefore(authenticationTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(authenticationTokenProcessingFilter(userDetailsService(accountDao, ldapContext())),
+                UsernamePasswordAuthenticationFilter.class)
         //Фильтер для проверки URL'ов.
         .addFilter(filter(urlSecurityService));
-    }
-
-    @Bean
-    public AuthenticationTokenProcessingFilter authenticationTokenProcessingFilter() {
-        return new AuthenticationTokenProcessingFilter();
     }
 
     @Bean
@@ -154,6 +150,28 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
+    @Bean
+    @Autowired
+    public UserDetailsService userDetailsService(AccountDao accountDao,
+                                                 InitialLdapContext context) {
+        switch (serverAuthType) {
+            case LDAP: return userDetailsServiceLDAP(context);
+            default: return userDetailsServiceSQL(accountDao);
+        }
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+        switch (serverAuthType) {
+            case LDAP: return authProviderLDAP();
+            default: return authProviderSQL(userDetailsService);
+        }
+    }
+
+    private AuthenticationTokenProcessingFilter authenticationTokenProcessingFilter(UserDetailsService userDetailsService) {
+        return new AuthenticationTokenProcessingFilter(serverAuthType, userDetailsService);
+    }
+
     private UserDetailsService userDetailsServiceLDAP(InitialLdapContext context) {
         UserDetailsServiceLDAP userDetailsServiceLDAP = new UserDetailsServiceLDAP(context);
         userDetailsServiceLDAP.setDc(this.env.getProperty("ldap.dc"));
@@ -182,23 +200,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(new StandardPasswordEncoder(this.secretKey));
         return authProvider;
-    }
-
-    @Bean
-    @Autowired
-    public UserDetailsService userDetailsService(AccountDao accountDao,
-                                                 InitialLdapContext context) {
-        switch (serverAuthType) {
-            case LDAP: return userDetailsServiceLDAP(context);
-            default: return userDetailsServiceSQL(accountDao);
-        }
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
-        switch (serverAuthType) {
-            case LDAP: return authProviderLDAP();
-            default: return authProviderSQL(userDetailsService);
-        }
     }
 }

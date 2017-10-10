@@ -16,7 +16,15 @@
             <column name="url" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="access" type="VARCHAR(255)"/>
+            <column name="access_oit" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="access_user" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="access_all" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addPrimaryKey tableName="url_security" columnNames="id"/>
     </changeSet>

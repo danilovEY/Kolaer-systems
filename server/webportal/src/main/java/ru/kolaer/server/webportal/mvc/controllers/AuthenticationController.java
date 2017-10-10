@@ -56,7 +56,7 @@ public class AuthenticationController extends BaseController {
     @ApiOperation(
             value = "Выйти"
     )
-    @UrlDeclaration(description = "Выйти", requestMethod = RequestMethod.POST, isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Выйти", requestMethod = RequestMethod.POST, isAccessAll = true)
     @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String logout(HttpServletResponse response, HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -70,7 +70,7 @@ public class AuthenticationController extends BaseController {
     @ApiOperation(
             value = "Выйти"
     )
-    @UrlDeclaration(description = "Выйти", requestMethod = RequestMethod.GET, isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Выйти", requestMethod = RequestMethod.GET, isAccessAll = true)
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logoutGet(HttpServletResponse response, HttpServletRequest request) {
         return this.logout(response, request);
@@ -90,7 +90,7 @@ public class AuthenticationController extends BaseController {
             value = "Авторизация",
             notes = "Генерация токена по имени и паролю пользователя."
     )
-    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAll = true)
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getTokenPost(@ApiParam(value = "Логин и пароль", required = true) @RequestBody UserAndPassJson userAndPassJson){
         return this.getToken(userAndPassJson.getUsername(), Optional.ofNullable(userAndPassJson.getPassword()).orElse(""));
@@ -101,7 +101,7 @@ public class AuthenticationController extends BaseController {
             value = "Авторизация",
             notes = "Генерация токена по имени и паролю пользователя"
     )
-    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", isAccessAll = true, isAccessAnonymous = true, isAccessUser = true)
+    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", isAccessAll = true)
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TokenJson getToken(@ApiParam(value = "Логин", required = true) @RequestParam(value = "username", defaultValue = "anonymous") String username,
                               @ApiParam(value = "Пароль") @RequestParam(value = "password", defaultValue = "") String password){
