@@ -12,7 +12,7 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurityDto;
+import ru.kolaer.api.mvp.model.kolaerweb.UrlSecurityDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.config.PathMapping;
 import ru.kolaer.server.webportal.mvc.model.converter.UrlSecurityConverter;

@@ -1,6 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurityDto;
+import ru.kolaer.api.mvp.model.kolaerweb.UrlSecurityDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurityEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.BaseConverter;
 

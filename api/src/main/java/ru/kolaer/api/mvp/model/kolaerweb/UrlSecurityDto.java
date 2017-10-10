@@ -1,7 +1,6 @@
-package ru.kolaer.api.mvp.model.kolaerweb.webportal;
+package ru.kolaer.api.mvp.model.kolaerweb;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
 
 /**
  * Created by danilovey on 28.07.2016.

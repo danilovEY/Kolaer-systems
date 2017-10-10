@@ -8,7 +8,6 @@ import ru.kolaer.api.system.network.kolaerweb.*;
 public class DefaultApplicationDataBase implements ApplicationDataBase {
     private final GeneralEmployeesTable generalEmployeesTable = new DefaultGeneralEmployeesTable();
     private final NotifyMessageTable notifyMessageTable = new DefaultNotifyMessageTable();
-    private final PsrTable psrTable = new DefaultPsrTable();
     private final CounterTable counterTable = new DefaultCounterTable();
     private final KolpassTable kolpassTable = new DefaultKolpassTable();
     private final EmployeeOtherOrganizationTable employeeOtherOrganizationTable = new DefaultEmployeeOtherOrganizationTable();
@@ -21,11 +20,6 @@ public class DefaultApplicationDataBase implements ApplicationDataBase {
     @Override
     public NotifyMessageTable getNotifyMessageTable() {
         return this.notifyMessageTable;
-    }
-
-    @Override
-    public PsrTable getPsrTable() {
-        return this.psrTable;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
-import ru.kolaer.api.mvp.model.kolaerweb.webportal.UrlSecurityDto;
+import ru.kolaer.api.mvp.model.kolaerweb.UrlSecurityDto;
 
 import java.util.List;
 
