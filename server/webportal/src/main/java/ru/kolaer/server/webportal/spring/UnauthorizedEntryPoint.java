@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.security;
+package ru.kolaer.server.webportal.spring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;

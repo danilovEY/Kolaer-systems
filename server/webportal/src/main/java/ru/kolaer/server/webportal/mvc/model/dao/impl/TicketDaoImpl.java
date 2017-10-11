@@ -19,7 +19,7 @@ public class TicketDaoImpl extends AbstractDefaultDao<TicketEntity> implements T
     }
 
     @Override
-    public List<TicketEntity> findAllByRegisterId(Integer id) {
+    public List<TicketEntity> findAllByRegisterId(Long id) {
         return getSession()
                 .createQuery("FROM " + getEntityName() + " t WHERE t.ticketRegister.id = :id", getEntityClass())
                 .setParameter("id", id)

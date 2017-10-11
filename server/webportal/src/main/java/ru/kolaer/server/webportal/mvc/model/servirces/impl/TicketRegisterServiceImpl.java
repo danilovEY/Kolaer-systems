@@ -1,30 +1,38 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
+import org.springframework.stereotype.Service;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.webportal.mvc.model.converter.TicketRegisterConverter;
+import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
+import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
+import ru.kolaer.server.webportal.mvc.model.dto.TicketRegisterDto;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
+import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
+import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
+
+import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by danilovey on 30.11.2016.
  */
-/*
 @Service
-public class TicketRegisterServiceImpl implements TicketRegisterService {
+public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegisterDto, TicketRegisterEntity> implements TicketRegisterService {
+    private final TicketRegisterConverter defaultConverter;
+    private final TicketRegisterDao ticketRegisterDao;
+    private final TicketDao ticketDao;
 
-    @Autowired
-    private TicketRegisterDao ticketRegisterDao;
-
-    @Autowired
-    private TicketDao ticketDao;
-
-    @Override
-    public List<TicketRegisterEntity> getAll() {
-        return this.ticketRegisterDao.findAll();
+    public TicketRegisterServiceImpl(TicketRegisterConverter defaultConverter, TicketRegisterDao ticketRegisterDao, TicketDao ticketDao) {
+        super(ticketRegisterDao, defaultConverter);
+        this.defaultConverter = defaultConverter;
+        this.ticketRegisterDao = ticketRegisterDao;
+        this.ticketDao = ticketDao;
     }
 
     @Override
-    public TicketRegisterEntity getById(Integer id) {
-        return this.ticketRegisterDao.findByID(id);
-    }
-
-    @Override
-    public void add(TicketRegisterEntity entity) {
+    public TicketRegisterDto save(TicketRegisterDto entity) {
         List<TicketRegisterEntity> ticketRegisterByDateAndDep = ticketRegisterDao.
                 getTicketRegisterByDateAndDep(entity.getCreateRegister(), entity.getDepartment().getName());
 
@@ -32,7 +40,7 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
                 !ticketRegister.isClose()
         ).collect(Collectors.toList());
         if(collect.size() > 0) {
-            throw new BadRequestException("Открытый реестр уже существует в этом месяце и году!");
+            throw new UnexpectedRequestParams("Открытый реестр уже существует в этом месяце и году!");
         } else {
             int day = entity.getCreateRegister()
                     .toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
@@ -41,52 +49,42 @@ public class TicketRegisterServiceImpl implements TicketRegisterService {
                     if(ticketRegister.getCreateRegister()
                             .toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
                             .getDayOfMonth() == day)
-                        throw new BadRequestException("Реестр существует!");
+                        throw new UnexpectedRequestParams("Реестр существует!");
             });
         }
 
-        this.ticketRegisterDao.persist(entity);
+        return defaultConverter.convertToDto(ticketRegisterDao.persist(defaultConverter.convertToModel(entity)));
     }
 
     @Override
-    public void delete(TicketRegisterEntity entity) {
-        if (entity.getTickets() != null)
-            entity.getTickets().forEach(ticketDao::delete);
-        this.ticketRegisterDao.delete(entity);
+    public List<TicketRegisterDto> getAllByDepName(String name) {
+        return ticketRegisterDao.findAllByDepName(name)
+                .stream()
+                .map(defaultConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void update(TicketRegisterEntity entity) {
-        this.ticketRegisterDao.update(entity);
-    }
+    public Page<TicketRegisterDto> getAllByDepName(int page, int pageSize, String name) {
+        if(pageSize == 0) {
+            List<TicketRegisterDto> all = this.getAll();
+            return new Page<>(all, 0, 0, all.size());
+        } else {
+            Long count = ticketRegisterDao.findCountAllByDepName(page, pageSize, name);
+            List<TicketRegisterDto> result = ticketRegisterDao.findAllByDepName(page, pageSize, name)
+                    .stream()
+                    .map(defaultConverter::convertToDto)
+                    .collect(Collectors.toList());
 
-    @Override
-    public void update(List<TicketRegisterEntity> entity) {
-        entity.forEach(this::update);
-    }
-
-    @Override
-    public void delete(List<TicketRegisterEntity> entites) {
-
-    }
-
-    @Override
-    public List<TicketRegisterEntity> getAllByDepName(String name) {
-        return this.ticketRegisterDao.findAllByDepName(name);
-    }
-
-    @Override
-    public Page<TicketRegisterEntity> getAllByDepName(int page, int pageSize, String name) {
-        if(page == 0) {
-            List<TicketRegisterEntity> allByDepName = this.getAllByDepName(name);
-            return new Page<>(allByDepName, 0, 0, allByDepName.size());
+            return new Page<>(result, page, count, pageSize);
         }
-
-        return this.ticketRegisterDao.findAllByDepName(page, pageSize, name);
     }
 
     @Override
-    public List<TicketRegisterEntity> getAllOpenRegister() {
-        return this.ticketRegisterDao.findAllOpenRegister();
+    public List<TicketRegisterDto> getAllOpenRegister() {
+        return ticketRegisterDao.findAllOpenRegister()
+                .stream()
+                .map(defaultConverter::convertToDto)
+                .collect(Collectors.toList());
     }
-}*/
+}

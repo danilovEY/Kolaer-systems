@@ -8,5 +8,5 @@ import java.util.List;
  * Created by danilovey on 02.12.2016.
  */
 public interface TicketDao extends DefaultDao<TicketEntity> {
-    List<TicketEntity> findAllByRegisterId(Integer id);
+    List<TicketEntity> findAllByRegisterId(Long id);
 }

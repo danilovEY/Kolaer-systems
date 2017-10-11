@@ -21,7 +21,7 @@ public class TicketEntity implements Serializable, BaseEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", insertable = false, updatable = false)
     private EmployeeEntity employee;
 
     @Column(name = "count", nullable = false)
@@ -30,7 +30,7 @@ public class TicketEntity implements Serializable, BaseEntity {
     @Column(name = "register_id", nullable = false)
     private Long registerId;
 
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "register_id", insertable=false, updatable=false)*/
-    //private TicketRegisterEntity ticketRegister;
+    @Column(name = "employee_id", nullable = false)
+    private Long employeeId;
+
 }

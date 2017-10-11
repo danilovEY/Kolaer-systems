@@ -28,7 +28,9 @@ import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
+import ru.kolaer.server.webportal.spring.ExceptionHandlerFilter;
 import ru.kolaer.server.webportal.spring.SimpleCorsFilter;
+import ru.kolaer.server.webportal.spring.UnauthorizedEntryPoint;
 
 import javax.annotation.Resource;
 import javax.naming.Context;

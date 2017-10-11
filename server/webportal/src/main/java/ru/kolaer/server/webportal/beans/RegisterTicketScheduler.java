@@ -1,7 +1,24 @@
 package ru.kolaer.server.webportal.beans;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
+import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
+
+import javax.annotation.PostConstruct;
+import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 13.12.2016.
@@ -9,24 +26,27 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class RegisterTicketScheduler {
-    /*private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
     private final List<String> emails = new ArrayList<>();
     private LocalDateTime lastSend;
 
-    @Resource
     private TypeServer typeServer;
-
-    @Autowired
-    private TicketRegisterService ticketRegisterService;
-
-    @Autowired
+    private TicketRegisterDao ticketRegisterDao;
     private JavaMailSender mailSender;
-
-    @Autowired
     private SimpleMailMessage mailMessage;
-
-    @Autowired
     private BankAccountDao bankAccountDao;
+
+    public RegisterTicketScheduler(TypeServer typeServer,
+                                   TicketRegisterDao ticketRegisterDao,
+                                   JavaMailSender mailSender,
+                                   SimpleMailMessage mailMessage,
+                                   BankAccountDao bankAccountDao) {
+        this.typeServer = typeServer;
+        this.ticketRegisterDao = ticketRegisterDao;
+        this.mailSender = mailSender;
+        this.mailMessage = mailMessage;
+        this.bankAccountDao = bankAccountDao;
+    }
 
     @PostConstruct
     public void init() {
@@ -44,8 +64,8 @@ public class RegisterTicketScheduler {
         if(!typeServer.isTest()) {
             final LocalDate now = LocalDate.now();
             final LocalDate end = now.withDayOfMonth(now.lengthOfMonth());
-            final int lastDay = end.getDayOfWeek().getValue() == DateTimeConstants.SUNDAY
-                    || end.getDayOfWeek().getValue() == DateTimeConstants.SATURDAY ? 6 :  end.getDayOfMonth();
+            final int lastDay = end.getDayOfWeek().getValue() == 7
+                    || end.getDayOfWeek().getValue() == 6 ? 6 :  end.getDayOfMonth();
 
             if (now.getDayOfMonth() == lastDay) {
                 this.generateZeroTicketDocument();
@@ -55,10 +75,10 @@ public class RegisterTicketScheduler {
     }
 
     public boolean generateAddTicketDocument() {
-        final List<TicketRegisterEntity> allOpenRegister = this.ticketRegisterService.getAllOpenRegister();
+        final List<TicketRegisterEntity> allOpenRegister = ticketRegisterDao.findAllOpenRegister();
         if(allOpenRegister.size() > 0) {
             allOpenRegister.forEach(ticketRegister -> ticketRegister.setClose(true));
-            this.ticketRegisterService.update(allOpenRegister);
+            ticketRegisterDao.update(allOpenRegister);
 
             List<TicketEntity> allTickets = new ArrayList<>();
             allOpenRegister.stream().filter(t -> t.getTickets() != null).map(TicketRegisterEntity::getTickets)
@@ -181,6 +201,6 @@ public class RegisterTicketScheduler {
 
     public List<String> getEmails() {
         return this.emails;
-    }*/
+    }
 
 }

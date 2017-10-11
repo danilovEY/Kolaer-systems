@@ -1,9 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
@@ -30,22 +28,21 @@ public class TicketRegisterDaoImpl extends AbstractDefaultDao<TicketRegisterEnti
     }
 
     @Override
-    public Page<TicketRegisterEntity> findAllByDepName(int number, int pageSize, String depName) {
-        final Session currentSession = getSession();
-
-        final Long total = currentSession
-                .createQuery("SELECT COUNT(tr.id) FROM " + getEntityName() + " tr WHERE tr.department.name = :depName", Long.class)
-                .setParameter("depName", depName)
-                .uniqueResult();
-
-        final List<TicketRegisterEntity> registers = currentSession
+    public List<TicketRegisterEntity> findAllByDepName(int number, int pageSize, String depName) {
+        return getSession()
                 .createQuery("FROM " + getEntityName() + " tr WHERE tr.department.name = :depName", getEntityClass())
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .setParameter("depName", depName)
                 .list();
+    }
 
-        return new Page<>(registers, number, total, pageSize);
+    @Override
+    public Long findCountAllByDepName(int number, int pageSize, String depName) {
+        return getSession()
+                .createQuery("SELECT COUNT(tr.id) FROM " + getEntityName() + " tr WHERE tr.department.name = :depName", Long.class)
+                .setParameter("depName", depName)
+                .uniqueResult();
     }
 
     @Override
