@@ -1,8 +1,8 @@
 package ru.kolaer.api.system.network.kolaerweb;
 
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 
 import java.util.List;
 
@@ -10,13 +10,13 @@ import java.util.List;
  * Created by danilovey on 09.02.2017.
  */
 public interface KolpassTable {
-    ServerResponse<List<RepositoryPasswordDto>> getAllRepositoryPasswords();
-    ServerResponse<List<RepositoryPasswordDto>> getAllRepositoryPasswordsChief();
-    ServerResponse<RepositoryPasswordDto> addRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
-    ServerResponse<RepositoryPasswordDto> addHistoryPasswordToRepository(Long idRep,
-                                                         RepositoryPasswordHistoryDto repositoryPasswordHistory);
-    ServerResponse<RepositoryPasswordDto> updateRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
-    ServerResponse deleteRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto);
+    ServerResponse<List<PasswordRepositoryDto>> getAllRepositoryPasswords();
+    ServerResponse<List<PasswordRepositoryDto>> getAllRepositoryPasswordsChief();
+    ServerResponse<PasswordRepositoryDto> addRepositoryPassword(PasswordRepositoryDto passwordRepositoryDto);
+    ServerResponse<PasswordRepositoryDto> addHistoryPasswordToRepository(Long idRep,
+                                                                         PasswordHistoryDto repositoryPasswordHistory);
+    ServerResponse<PasswordRepositoryDto> updateRepositoryPassword(PasswordRepositoryDto passwordRepositoryDto);
+    ServerResponse deleteRepositoryPassword(PasswordRepositoryDto passwordRepositoryDto);
 
-    ServerResponse<RepositoryPasswordDto> addRepToOtherEmployee(RepositoryPasswordDto rep);
+    ServerResponse<PasswordRepositoryDto> addRepToOtherEmployee(PasswordRepositoryDto rep);
 }

@@ -10,13 +10,13 @@ import java.util.List;
  * Created by danilovey on 20.01.2017.
  */
 @Data
-public class RepositoryPasswordDto implements BaseDto {
+public class PasswordRepositoryDto implements BaseDto {
     private Long id;
     private String name;
     private EmployeeDto employee;
     private String urlImage;
-    private RepositoryPasswordHistoryDto lastPassword;
-    private RepositoryPasswordHistoryDto firstPassword;
-    private RepositoryPasswordHistoryDto prevPassword;
-    private List<RepositoryPasswordHistoryDto> historyPasswords;
+    private PasswordHistoryDto lastPassword;
+    private PasswordHistoryDto firstPassword;
+    private PasswordHistoryDto prevPassword;
+    private List<PasswordHistoryDto> historyPasswords;
 }

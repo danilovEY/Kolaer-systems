@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "repository_pass")
 @Data
-public class RepositoryPasswordEntity implements BaseEntity {
+public class PasswordRepositoryEntity implements BaseEntity {
 
     @Id
     @Column(name = "id")
@@ -22,10 +22,6 @@ public class RepositoryPasswordEntity implements BaseEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", insertable=false, updatable=false)
-    private EmployeeEntity employee;
 
     @Column(name = "url_image", length = 300)
     private String urlImage;
@@ -40,17 +36,21 @@ public class RepositoryPasswordEntity implements BaseEntity {
     private Long prevPassId;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", insertable=false, updatable=false)
+    private EmployeeEntity employee;
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "first_pass_id", insertable=false, updatable=false)
-    private RepositoryPasswordHistoryEntity firstPassword;
+    private PasswordHistoryEntity firstPassword;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_pass_id", insertable=false, updatable=false)
-    private RepositoryPasswordHistoryEntity lastPassword;
+    private PasswordHistoryEntity lastPassword;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prev_pass_id", insertable=false, updatable=false)
-    private RepositoryPasswordHistoryEntity prevPassword;
+    private PasswordHistoryEntity prevPassword;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<RepositoryPasswordHistoryEntity> passwords;
+    private List<PasswordHistoryEntity> passwords;
 }

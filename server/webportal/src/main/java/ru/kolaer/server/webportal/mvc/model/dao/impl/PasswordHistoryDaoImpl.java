@@ -1,13 +1,11 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
-import ru.kolaer.server.webportal.mvc.model.dao.RepositoryPasswordHistoryDao;
-import ru.kolaer.server.webportal.mvc.model.entities.kolpass.RepositoryPasswordHistoryEntity;
+import ru.kolaer.server.webportal.mvc.model.dao.PasswordHistoryDao;
+import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordHistoryEntity;
 
 import java.util.List;
 
@@ -16,32 +14,40 @@ import java.util.List;
  */
 @Repository
 @Slf4j
-public class RepositoryPasswordHistoryDaoImpl extends AbstractDefaultDao<RepositoryPasswordHistoryEntity> implements RepositoryPasswordHistoryDao {
+public class PasswordHistoryDaoImpl extends AbstractDefaultDao<PasswordHistoryEntity> implements PasswordHistoryDao {
 
-    protected RepositoryPasswordHistoryDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, RepositoryPasswordHistoryEntity.class);
+    protected PasswordHistoryDaoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory, PasswordHistoryEntity.class);
     }
 
     @Override
-    public Page<RepositoryPasswordHistoryEntity> findHistoryByIdRepository(Integer id, Integer number, Integer pageSize) {
-        final Session currentSession = getSession();
-        final Long count = currentSession
+    public Long findCountHistoryByIdRepository(Long id, Integer number, Integer pageSize) {
+        return getSession()
                 .createQuery("SELECT COUNT(p.id) FROM " + getEntityName() + " p WHERE p.repositoryPassword.id = :id", Long.class)
                 .setParameter("id", id)
                 .uniqueResult();
+    }
 
-        List<RepositoryPasswordHistoryEntity> result = currentSession
+    @Override
+    public List<PasswordHistoryEntity> findHistoryByIdRepository(Long id, Integer number, Integer pageSize) {
+        return getSession()
                 .createQuery("FROM " + getEntityName() + " p WHERE p.repositoryPassword.id = :id", getEntityClass())
                 .setParameter("id", id)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .list();
-
-        return new Page<>(result, number, count, pageSize);
     }
 
     @Override
-    public void deleteByIdRep(Integer id) {
+    public List<PasswordHistoryEntity> findAllHistoryByIdRepository(Long id) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " p WHERE p.repositoryPassword.id = :id", getEntityClass())
+                .setParameter("id", id)
+                .list();
+    }
+
+    @Override
+    public void deleteByIdRep(Long id) {
         getSession()
                 .createQuery("DELETE FROM " + getEntityName() + " r WHERE r.repositoryPassword.id = :id")
                 .setParameter("id", id)

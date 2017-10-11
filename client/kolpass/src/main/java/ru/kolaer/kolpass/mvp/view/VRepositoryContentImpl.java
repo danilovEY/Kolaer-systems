@@ -8,8 +8,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
 
 import java.util.function.Function;
 
@@ -86,7 +86,7 @@ public class VRepositoryContentImpl implements VRepositoryContent {
     }
 
     private RepositoryPassword createRep(String nameRep) {
-        RepositoryPassword repositoryPassword = new RepositoryPasswordDto();
+        RepositoryPassword repositoryPassword = new PasswordRepositoryDto();
         repositoryPassword.setName(nameRep);
         return repositoryPassword;
     }

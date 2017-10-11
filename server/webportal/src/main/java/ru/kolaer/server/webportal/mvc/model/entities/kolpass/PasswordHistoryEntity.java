@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name = "repository_pass_history")
 @Data
-public class RepositoryPasswordHistoryEntity implements BaseEntity {
+public class PasswordHistoryEntity implements BaseEntity {
 
     @Id
     @Column(name = "id")
@@ -32,7 +32,4 @@ public class RepositoryPasswordHistoryEntity implements BaseEntity {
     @Column(name = "repository_pass_id", nullable = false)
     private Long repositoryPassId;
 
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "repository_pass_id", nullable = false, insertable=false, updatable=false)*/
-    //private RepositoryPasswordEntity repositoryPassword;
 }

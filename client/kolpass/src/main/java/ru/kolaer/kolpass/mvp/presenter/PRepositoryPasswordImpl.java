@@ -2,9 +2,9 @@ package ru.kolaer.kolpass.mvp.presenter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryDto;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPassword;
@@ -50,7 +50,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
         this.vRepositoryPassword.setOnSaveData(o -> {
             if(this.lastPassword.getView().isChangeData(lastPassword.getModel())) {
                 final VPasswordHistory view = this.lastPassword.getView();
-                final RepositoryPasswordHistoryDto passwordHistory = new RepositoryPasswordHistoryDto();
+                final PasswordHistoryDto passwordHistory = new PasswordHistoryDto();
                 passwordHistory.setLogin(Optional.ofNullable(view.getLogin()).orElse(""));
                 passwordHistory.setPassword(Optional.ofNullable(view.getPassword()).orElse(""));
 

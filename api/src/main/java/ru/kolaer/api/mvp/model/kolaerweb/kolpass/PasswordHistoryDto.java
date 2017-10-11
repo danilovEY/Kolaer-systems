@@ -9,7 +9,7 @@ import java.util.Date;
  * Created by danilovey on 20.01.2017.
  */
 @Data
-public class RepositoryPasswordHistoryDto implements BaseDto {
+public class PasswordHistoryDto implements BaseDto {
     private Long id;
     private String login;
     private String password;

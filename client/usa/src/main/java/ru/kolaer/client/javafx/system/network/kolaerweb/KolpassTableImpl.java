@@ -10,8 +10,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 
@@ -86,7 +86,7 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
     @Override
     public RepositoryPassword addHistoryPasswordToRepository(Integer idRep,
                                                              RepositoryPasswordHistory repositoryPasswordHistory) {
-        final RepositoryPassword repositoryPassword = new RepositoryPasswordDto();
+        final RepositoryPassword repositoryPassword = new PasswordRepositoryDto();
         repositoryPassword.setId(idRep);
         repositoryPassword.setLastPassword(repositoryPasswordHistory);
 
@@ -98,7 +98,7 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
 
     @Override
     public RepositoryPassword updateRepositoryPassword(RepositoryPassword repositoryPassword) {
-        final RepositoryPassword request = new RepositoryPasswordDto();
+        final RepositoryPassword request = new PasswordRepositoryDto();
         request.setId(repositoryPassword.getId());
         request.setName(repositoryPassword.getName());
 
@@ -110,7 +110,7 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
 
     @Override
     public void deleteRepositoryPassword(RepositoryPassword repositoryPassword) {
-        final RepositoryPassword request = new RepositoryPasswordDto();
+        final RepositoryPassword request = new PasswordRepositoryDto();
         request.setId(repositoryPassword.getId());
 
         restTemplate.exchange(this.DELETE_REPOSITORY_PASSWORD,
@@ -121,7 +121,7 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader {
 
     @Override
     public RepositoryPassword addRepToOtherEmployee(RepositoryPassword rep) {
-        final RepositoryPassword repositoryPassword = new RepositoryPasswordDto();
+        final RepositoryPassword repositoryPassword = new PasswordRepositoryDto();
         repositoryPassword.setName(rep.getName());
         repositoryPassword.setEmployee(rep.getEmployee());
 

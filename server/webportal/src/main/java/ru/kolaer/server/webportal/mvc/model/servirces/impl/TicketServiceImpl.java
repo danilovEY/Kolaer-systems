@@ -2,7 +2,6 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.stereotype.Service;
 import ru.kolaer.server.webportal.mvc.model.converter.TicketConverter;
-import ru.kolaer.server.webportal.mvc.model.dao.DefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
 import ru.kolaer.server.webportal.mvc.model.dto.TicketDto;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
@@ -20,10 +19,9 @@ public class TicketServiceImpl extends AbstractDefaultService<TicketDto, TicketE
     private final TicketDao ticketDao;
     private final TicketConverter ticketConverter;
 
-    public TicketServiceImpl(DefaultDao<TicketEntity> defaultEntityDao, TicketConverter converter,
-                                TicketDao ticketDao) {
+    public TicketServiceImpl(TicketDao defaultEntityDao, TicketConverter converter) {
         super(defaultEntityDao, converter);
-        this.ticketDao = ticketDao;
+        this.ticketDao = defaultEntityDao;
         this.ticketConverter = converter;
     }
 
