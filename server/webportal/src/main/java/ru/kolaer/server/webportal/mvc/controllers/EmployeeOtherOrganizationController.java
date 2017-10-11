@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping(value="/organizations/employees")
 @Api(tags = "Содрудники филиалов")
 @Slf4j
-public class EmployeeOtherOrganizationController extends BaseController {
+public class EmployeeOtherOrganizationController {
 	private final EmployeeOtherOrganizationService employeeOtherOrganizationService;
 
 	@Autowired

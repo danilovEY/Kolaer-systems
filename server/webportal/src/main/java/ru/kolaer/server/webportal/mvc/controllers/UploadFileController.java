@@ -24,7 +24,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/upload")
 @Slf4j
-public class UploadFileController extends BaseController {
+public class UploadFileController {
 
     @Resource
     private Environment env;

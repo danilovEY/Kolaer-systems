@@ -24,10 +24,11 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
+import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
-import ru.kolaer.server.webportal.spring.SimpleCORSFilter;
+import ru.kolaer.server.webportal.spring.SimpleCorsFilter;
 
 import javax.annotation.Resource;
 import javax.naming.Context;
@@ -57,6 +58,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private final ServerAuthType serverAuthType;
     private final AccountDao accountDao;
     private final UrlSecurityService urlSecurityService;
+    private final ExceptionHandlerService exceptionHandlerService;
 
     @Resource
     private Environment env;
@@ -65,11 +67,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public SpringSecurityConfig(@Value("${secret_key}") String secretKey,
                                 @Value("${server.auth.type}") String serverAuthType,
                                 AccountDao accountDao,
-                                UrlSecurityService urlSecurityService) {
+                                UrlSecurityService urlSecurityService,
+                                ExceptionHandlerService exceptionHandlerService) {
         this.secretKey = secretKey;
         this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.accountDao = accountDao;
         this.urlSecurityService = urlSecurityService;
+        this.exceptionHandlerService = exceptionHandlerService;
     }
 
     @Override
@@ -92,15 +96,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //Отключаем csrf хак
         http.csrf().disable()
-        .httpBasic()
-                .authenticationEntryPoint(new UnauthorizedEntryPoint())
+                .httpBasic()
+                .authenticationEntryPoint(new SimpleCorsFilter())
                 .and()
-                .exceptionHandling().authenticationEntryPoint(new SimpleCORSFilter()).and()
-        //Фильтер для проверки http request'а на наличие правильного токена
-        .addFilterBefore(authenticationTokenProcessingFilter(userDetailsService(accountDao, ldapContext())),
-                UsernamePasswordAuthenticationFilter.class)
-        //Фильтер для проверки URL'ов.
-        .addFilter(filter(urlSecurityService));
+                .exceptionHandling().authenticationEntryPoint(new UnauthorizedEntryPoint(exceptionHandlerService))
+                .and()
+                //Фильтер для проверки http request'а на наличие правильного токена
+                .addFilterBefore(authenticationTokenProcessingFilter(userDetailsService(accountDao, ldapContext())), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(exceptionHandlerService), AuthenticationTokenProcessingFilter.class)
+                //Фильтер для проверки URL'ов.
+                .addFilter(filter(urlSecurityService));
     }
 
     @Bean

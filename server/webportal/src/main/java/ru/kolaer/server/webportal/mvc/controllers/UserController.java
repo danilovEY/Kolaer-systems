@@ -30,7 +30,7 @@ import java.net.URI;
 @RequestMapping(value = "/user")
 @Api(tags = "Аккаунт")
 @Slf4j
-public class UserController extends BaseController {
+public class UserController {
     private final AuthenticationService authenticationService;
 
     @Autowired

@@ -42,6 +42,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                                .collect(Collectors.toList()));
         }
 
-        throw new UsernameNotFoundException(username + " is not found accessUser!");
+        throw new UsernameNotFoundException("Пользователь: " + username + " не найден!");
     }
 }

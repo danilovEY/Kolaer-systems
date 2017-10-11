@@ -35,7 +35,7 @@ import java.util.Optional;
 @RequestMapping(value = "/authentication")
 @Api(description = "Работа с авторизацией", tags = "Аутентификация")
 @Slf4j
-public class AuthenticationController extends BaseController {
+public class AuthenticationController {
     private final ServerAuthType serverAuthType;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsServiceLDAP;

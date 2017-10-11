@@ -1,7 +1,7 @@
 package ru.kolaer.client.javafx.system.network;
 
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.restful.PublicHolidays;
+import ru.kolaer.api.mvp.model.other.PublicHolidays;
 import ru.kolaer.api.system.network.PublicHolidaysDateBase;
 
 import java.time.LocalDate;

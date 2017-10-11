@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.kolaer.api.mvp.model.restful;
+package ru.kolaer.api.mvp.model.other;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;

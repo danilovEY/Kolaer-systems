@@ -1,7 +1,6 @@
 package ru.kolaer.api.system.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
@@ -51,7 +50,7 @@ public class DefaultAuthentication implements Authentication {
     }
 
     @Override
-    public boolean login(UserAndPassJson userAndPassJson) throws ServerException {
+    public boolean login(UserAndPassJson userAndPassJson) {
         final boolean isLogin =  userAndPassJson != null && Optional.ofNullable(userAndPassJson.getUsername()).orElse("").equals(LOGIN)
                     && Optional.ofNullable(userAndPassJson.getPassword()).orElse("").equals(PASSWORD);
         if(isLogin) {
@@ -62,12 +61,12 @@ public class DefaultAuthentication implements Authentication {
     }
 
     @Override
-    public boolean login(UserAndPassJson userAndPassJson, boolean remember) throws ServerException {
+    public boolean login(UserAndPassJson userAndPassJson, boolean remember) {
         return this.login(userAndPassJson);
     }
 
     @Override
-    public boolean loginIsRemember() throws ServerException {
+    public boolean loginIsRemember() {
         return this.login(new UserAndPassJson(LOGIN, PASSWORD));
     }
 
@@ -87,7 +86,7 @@ public class DefaultAuthentication implements Authentication {
     }
 
     @Override
-    public boolean logout() throws ServerException {
+    public boolean logout() {
         this.isAuth = false;
         return true;
     }

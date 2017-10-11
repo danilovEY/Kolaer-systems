@@ -1,7 +1,9 @@
 package ru.kolaer.server.webportal.config;
 
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.ServletContext;
@@ -14,7 +16,7 @@ public class InitializationMVC extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        //servletContext.addListener(new RequestContextListener());
+        //servletContext.addListener(new ContextLoaderListener());
         //Фильтр для Spring Security.
         servletContext
                 .addFilter("securityFilter", new DelegatingFilterProxy("springSecurityFilterChain"))
@@ -26,6 +28,17 @@ public class InitializationMVC extends AbstractAnnotationConfigDispatcherServlet
                 .addMappingForUrlPatterns(null, true, PathMapping.DISPATCHER_SERVLET + "/*");
 
         super.onStartup(servletContext);
+    }
+
+    @Override
+    protected DispatcherServlet createDispatcherServlet(WebApplicationContext servletAppContext) {
+        final DispatcherServlet dispatcherServlet = new DispatcherServlet(servletAppContext);
+        dispatcherServlet.setDetectAllHandlerAdapters(true);
+        dispatcherServlet.setDetectAllHandlerExceptionResolvers(true);
+        dispatcherServlet.setDetectAllHandlerMappings(true);
+        dispatcherServlet.setDetectAllViewResolvers(true);
+        dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
+        return dispatcherServlet;
     }
 
     @Override
@@ -42,5 +55,7 @@ public class InitializationMVC extends AbstractAnnotationConfigDispatcherServlet
     protected String[] getServletMappings() {
         return new String[] { PathMapping.DISPATCHER_SERVLET + "/*" };
     }
+
+
  
 }

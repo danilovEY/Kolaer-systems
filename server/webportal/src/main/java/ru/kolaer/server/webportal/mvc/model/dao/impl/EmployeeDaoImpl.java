@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.api.mvp.model.kolaerweb.TypePostEnum;
-import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.exception.ServerException;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
@@ -262,7 +262,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
             }
         } catch (Exception e) {
             log.error("Ошибка при чтении файла!", e);
-            throw new BadRequestException("Невозможно прочитать файл!");
+            throw new ServerException("Невозможно прочитать файл!");
         }
     }
 

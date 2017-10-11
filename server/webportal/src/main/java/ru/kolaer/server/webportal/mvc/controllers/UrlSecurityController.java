@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @Api(tags = "URL пути", description = "Описание URL: путь и доступы.")
-public class UrlSecurityController extends BaseController {
+public class UrlSecurityController {
 
     private final UrlSecurityService urlSecurityService;
 

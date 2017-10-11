@@ -3,7 +3,7 @@ package ru.kolaer.server.restful.controller.system;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.restful.PackageNetwork;
+import ru.kolaer.api.mvp.model.other.PackageNetwork;
 import ru.kolaer.server.dao.entities.DbKolaerUser;
 import ru.kolaer.server.restful.tools.UsersManager;
 

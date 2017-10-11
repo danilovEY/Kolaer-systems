@@ -1,6 +1,7 @@
 package ru.kolaer.api.system.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistoryDto;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
@@ -20,47 +21,48 @@ public class DefaultKolpassTable implements KolpassTable {
     }
 
     @Override
-    public List<RepositoryPasswordDto> getAllRepositoryPasswords() {
-        return this.repositoryPasswords;
+    public ServerResponse<List<RepositoryPasswordDto>> getAllRepositoryPasswords() {
+        return ServerResponse.createServerResponse(repositoryPasswords);
     }
 
     @Override
-    public List<RepositoryPasswordDto> getAllRepositoryPasswordsChief() {
-        return this.repositoryPasswords;
+    public ServerResponse<List<RepositoryPasswordDto>> getAllRepositoryPasswordsChief() {
+        return ServerResponse.createServerResponse(repositoryPasswords);
     }
 
     @Override
-    public RepositoryPasswordDto addRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
+    public ServerResponse<RepositoryPasswordDto> addRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
         log.info("Добавлен репозиторий паролей");
         this.repositoryPasswords.add(repositoryPasswordDto);
-        return repositoryPasswordDto;
+        return ServerResponse.createServerResponse(repositoryPasswordDto);
     }
 
     @Override
-    public RepositoryPasswordDto addHistoryPasswordToRepository(Long idRep,
+    public ServerResponse<RepositoryPasswordDto> addHistoryPasswordToRepository(Long idRep,
                                                                 RepositoryPasswordHistoryDto repositoryPasswordHistory) {
         log.info("Добавлен пароль");
         RepositoryPasswordDto repositoryPasswordBase = new RepositoryPasswordDto();
         repositoryPasswordBase.setId(idRep);
         repositoryPasswordBase.setLastPassword(repositoryPasswordHistory);
-        return repositoryPasswordBase;
+        return ServerResponse.createServerResponse(repositoryPasswordBase);
     }
 
     @Override
-    public RepositoryPasswordDto updateRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
+    public ServerResponse<RepositoryPasswordDto> updateRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
         log.info("Обновлен репозиторий паролей");
-        return repositoryPasswordDto;
+        return ServerResponse.createServerResponse(repositoryPasswordDto);
     }
 
     @Override
-    public void deleteRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
+    public ServerResponse deleteRepositoryPassword(RepositoryPasswordDto repositoryPasswordDto) {
         log.info("Удален репозиторий паролей");
+        return ServerResponse.createServerResponse();
     }
 
     @Override
-    public RepositoryPasswordDto addRepToOtherEmployee(RepositoryPasswordDto rep) {
+    public ServerResponse<RepositoryPasswordDto> addRepToOtherEmployee(RepositoryPasswordDto rep) {
         log.info("Добавлен репозиторий паролей");
         this.repositoryPasswords.add(rep);
-        return rep;
+        return ServerResponse.createServerResponse(rep);
     }
 }

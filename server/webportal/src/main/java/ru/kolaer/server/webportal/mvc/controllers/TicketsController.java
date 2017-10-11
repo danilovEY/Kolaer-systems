@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 //@RestController
 //@RequestMapping(value = "/tickets")
 @Slf4j
-public class TicketsController extends BaseController {
+public class TicketsController {
 /*
     @Autowired
     private TicketRegisterService ticketRegisterService;

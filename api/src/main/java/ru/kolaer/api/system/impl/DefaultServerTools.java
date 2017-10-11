@@ -1,5 +1,6 @@
 package ru.kolaer.api.system.impl;
 
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.system.network.kolaerweb.ServerTools;
 
 import java.time.LocalDateTime;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
  */
 public class DefaultServerTools implements ServerTools {
     @Override
-    public LocalDateTime getCurrentDataTime() {
-        return LocalDateTime.now();
+    public ServerResponse<LocalDateTime> getCurrentDataTime() {
+        return ServerResponse.createServerResponse(LocalDateTime.now());
     }
 }

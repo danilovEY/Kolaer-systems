@@ -3,13 +3,15 @@ package ru.kolaer.api.system.impl;
 import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.api.system.network.kolaerweb.GeneralEmployeesTable;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by danilovey on 13.02.2017.
  */
 public class DefaultGeneralEmployeesTable implements GeneralEmployeesTable {
-    private final EmployeeDto[] entities = new EmployeeDto[1];
+    private final List<EmployeeDto> entities;
 
 
     public DefaultGeneralEmployeesTable() {
@@ -31,42 +33,43 @@ public class DefaultGeneralEmployeesTable implements GeneralEmployeesTable {
         employeeDto.setDepartment(departmentEntity);
         employeeDto.setPost(postEntity);
 
-        this.entities[0] = employeeDto;
+        this.entities = Collections.singletonList(employeeDto);
 
     }
 
+
     @Override
-    public EmployeeDto[] getAllUser() {
-        return this.entities;
+    public ServerResponse<List<EmployeeDto>> getAllUser() {
+        return ServerResponse.createServerResponse(entities);
     }
 
     @Override
-    public EmployeeDto[] getUsersMax(int maxCount) {
-        return this.entities;
+    public ServerResponse<List<EmployeeDto>> getUsersMax(int maxCount) {
+        return ServerResponse.createServerResponse(entities);
     }
 
     @Override
-    public EmployeeDto[] getUsersByBirthday(Date date) {
-        return this.entities;
+    public ServerResponse<List<EmployeeDto>> getUsersByBirthday(Date date) {
+        return ServerResponse.createServerResponse(entities);
     }
 
     @Override
-    public EmployeeDto[] getUsersByRangeBirthday(Date dateBegin, Date dateEnd) {
-        return this.entities;
+    public ServerResponse<List<EmployeeDto>> getUsersByRangeBirthday(Date dateBegin, Date dateEnd) {
+        return ServerResponse.createServerResponse(entities);
     }
 
     @Override
-    public EmployeeDto[] getUsersBirthdayToday() {
-        return this.entities;
+    public ServerResponse<List<EmployeeDto>> getUsersBirthdayToday() {
+        return ServerResponse.createServerResponse(entities);
     }
 
     @Override
-    public EmployeeDto[] getUsersByInitials(String initials) {
-        return this.entities;
+    public ServerResponse<List<EmployeeDto>> getUsersByInitials(String initials) {
+            return ServerResponse.createServerResponse(entities);
     }
 
     @Override
-    public int getCountUsersBirthday(Date date) {
-        return 1;
+    public ServerResponse<Integer> getCountUsersBirthday(Date date) {
+        return ServerResponse.createServerResponse(0);
     }
 }

@@ -19,7 +19,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.NotifyMessageService;
 @RestController
 @RequestMapping("/non-security/notify")
 @Api(tags = "Нотификация", description = "Пуш уведомления")
-public class NotifyMessageController extends BaseController {
+public class NotifyMessageController {
 
     private final NotifyMessageService notifyMessageService;
 

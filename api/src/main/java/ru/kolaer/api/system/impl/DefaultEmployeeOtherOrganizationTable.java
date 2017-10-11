@@ -1,8 +1,10 @@
 package ru.kolaer.api.system.impl;
 
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.api.system.network.kolaerweb.EmployeeOtherOrganizationTable;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -11,52 +13,52 @@ import java.util.List;
  */
 public class DefaultEmployeeOtherOrganizationTable implements EmployeeOtherOrganizationTable {
     @Override
-    public void insertUserList(List<EmployeeOtherOrganizationDto> userList) {
-
+    public ServerResponse insertUserList(List<EmployeeOtherOrganizationDto> userList) {
+        return ServerResponse.createServerResponse();
     }
 
     @Override
-    public EmployeeOtherOrganizationDto[] getUsersByBirthday(Date date, String organization) {
-        return new EmployeeOtherOrganizationDto[0];
+    public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByBirthday(Date date, String organization) {
+        return ServerResponse.createServerResponse(Collections.emptyList());
     }
 
     @Override
-    public int getCountUsersBirthday(Date date, String organization) {
-        return 0;
+    public ServerResponse<Integer> getCountUsersBirthday(Date date, String organization) {
+        return ServerResponse.createServerResponse(0);
     }
 
     @Override
-    public EmployeeOtherOrganizationDto[] getAllUser() {
-        return new EmployeeOtherOrganizationDto[0];
+    public ServerResponse<List<EmployeeOtherOrganizationDto>> getAllUser() {
+        return ServerResponse.createServerResponse(Collections.emptyList());
     }
 
     @Override
-    public EmployeeOtherOrganizationDto[] getUsersMax(int maxCount) {
-        return new EmployeeOtherOrganizationDto[0];
+    public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersMax(int maxCount) {
+        return ServerResponse.createServerResponse(Collections.emptyList());
     }
 
     @Override
-    public EmployeeOtherOrganizationDto[] getUsersByBirthday(Date date) {
-        return new EmployeeOtherOrganizationDto[0];
+    public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByBirthday(Date date) {
+        return ServerResponse.createServerResponse(Collections.emptyList());
     }
 
     @Override
-    public EmployeeOtherOrganizationDto[] getUsersByRangeBirthday(Date dateBegin, Date dateEnd) {
-        return new EmployeeOtherOrganizationDto[0];
+    public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByRangeBirthday(Date dateBegin, Date dateEnd) {
+        return ServerResponse.createServerResponse(Collections.emptyList());
     }
 
     @Override
-    public EmployeeOtherOrganizationDto[] getUsersBirthdayToday() {
-        return new EmployeeOtherOrganizationDto[0];
+    public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersBirthdayToday() {
+        return ServerResponse.createServerResponse(Collections.emptyList());
     }
 
     @Override
-    public EmployeeOtherOrganizationDto[] getUsersByInitials(String initials) {
-        return new EmployeeOtherOrganizationDto[0];
+    public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByInitials(String initials) {
+        return ServerResponse.createServerResponse(Collections.emptyList());
     }
 
     @Override
-    public int getCountUsersBirthday(Date date) {
-        return 0;
+    public ServerResponse<Integer> getCountUsersBirthday(Date date) {
+        return ServerResponse.createServerResponse(0);
     }
 }

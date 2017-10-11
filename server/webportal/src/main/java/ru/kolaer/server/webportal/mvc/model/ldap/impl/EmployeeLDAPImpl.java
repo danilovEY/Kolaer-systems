@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
-import ru.kolaer.server.webportal.errors.BadRequestException;
+import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 
 import javax.naming.NamingEnumeration;
@@ -56,7 +56,7 @@ public class EmployeeLDAPImpl implements EmployeeLDAP {
             return employeeEntity;
         } catch (NamingException e) {
             log.error("Ошибка при получении аккаунта!", e);
-            throw new BadRequestException("Аккаунт: " + login + " не найден!");
+            throw new NotFoundDataException("Аккаунт: " + login + " не найден!");
         }
     }
 }

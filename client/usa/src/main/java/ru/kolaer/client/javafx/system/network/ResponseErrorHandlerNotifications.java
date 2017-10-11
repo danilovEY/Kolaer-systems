@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
-import ru.kolaer.api.mvp.model.kolaerweb.ExceptionMessageRequest;
+import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.system.ui.NotificationUS;
 import ru.kolaer.client.javafx.system.UniformSystemEditorKitSingleton;
 
@@ -49,11 +49,11 @@ public class ResponseErrorHandlerNotifications extends DefaultResponseErrorHandl
         super.handleError(response);
     }
 
-    private ExceptionMessageRequest getExceptionMessageRequest(ClientHttpResponse response) throws IOException {
-        return this.objectMapper.readValue(response.getBody(), ExceptionMessageRequest.class);
+    private ServerExceptionMessage getExceptionMessageRequest(ClientHttpResponse response) throws IOException {
+        return this.objectMapper.readValue(response.getBody(), ServerExceptionMessage.class);
     }
 
-    private String getMessage(ExceptionMessageRequest ex) {
+    private String getMessage(ServerExceptionMessage ex) {
         log.error("Status: \"{}\". Message: \"{}\"",ex.getStatus(), ex.getMessage());
         return ex.getMessage();
     }

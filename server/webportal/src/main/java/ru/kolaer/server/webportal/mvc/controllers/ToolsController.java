@@ -20,7 +20,7 @@ import java.time.temporal.ChronoUnit;
 @RestController
 @RequestMapping("/non-security/tools")
 @Api(tags = "Инструментарий")
-public class ToolsController extends BaseController {
+public class ToolsController {
 
     @ApiOperation(
             value = "Получить серверное время"

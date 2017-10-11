@@ -1,87 +1,128 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.ExceptionMessageRequest;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
+import ru.kolaer.server.webportal.exception.CustomHttpCodeException;
+import ru.kolaer.server.webportal.exception.NotFoundDataException;
+import ru.kolaer.server.webportal.exception.ServerException;
+import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by danilovey on 10.11.2016.
  */
-@RestController
+@ControllerAdvice
 @RequestMapping(value = "/non-security/errors")
 @Api(tags = "Ошибки", description = "Контроллер с ошибками")
-public class ErrorsController {
-    private static final Logger logger = LoggerFactory.getLogger(ErrorsController.class);
+@Slf4j
+public class ErrorsController /*extends ResponseEntityExceptionHandler*/ {
+    private ExceptionHandlerService exceptionHandlerService;
 
-    @ApiOperation(
-            value = "404",
-            notes = "Страница не найдена"
-    )
+    public ErrorsController(ExceptionHandlerService exceptionHandlerService) {
+        this.exceptionHandlerService = exceptionHandlerService;
+    }
+
+    /**Перехват всех ошибко на сервере.*/
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public @ResponseBody ServerExceptionMessage defaultExceptionHandler(HttpServletRequest hRequest,
+                                                                        Exception exception) {
+        return exceptionHandlerService.defaultExceptionHandler(hRequest, exception);
+    }
+
+    /**Перехват {@link ServerException} на сервере.*/
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = ServerException.class)
+    public @ResponseBody ServerExceptionMessage serverExceptionHandler(HttpServletRequest hRequest,
+                                                                       ServerException exception) {
+        return exceptionHandlerService.serverExceptionHandler(hRequest, exception);
+    }
+
+    /**Перехват {@link DataIntegrityViolationException} на сервере.*/
+    /*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public @ResponseBody ServerExceptionMessage sqlException(HttpServletRequest hRequest,
+                                                             DataIntegrityViolationException exception) {
+        return exceptionHandlerService.sqlException(hRequest, exception);
+    }*/
+
+    /**Перехват {@link UnexpectedRequestParams}*/
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = UnexpectedRequestParams.class)
+    public @ResponseBody ServerExceptionMessage unExpectedParamExceptionHandler(
+            HttpServletRequest hRequest, HttpServletResponse hResponse, UnexpectedRequestParams exception) {
+        return exceptionHandlerService.unExpectedParamExceptionHandler(hRequest, hResponse, exception);
+    }
+
+    /**Перехват {@link NotFoundDataException}*/
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @RequestMapping(value = "/404")
-    public ExceptionMessageRequest notFound(HttpServletRequest request) {
-        final String origialUri = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
-        final ExceptionMessageRequest exep = new ExceptionMessageRequest("Страница '" + origialUri + "' не найдена!",
-                "404", new Date());
-        logger.error("Error: {}", exep);
-        return exep;
+    @ExceptionHandler(value = NotFoundDataException.class)
+    public @ResponseBody ServerExceptionMessage notFoundDataExceptionHandler(
+            HttpServletRequest hRequest, HttpServletResponse hResponse, NotFoundDataException exception) {
+        return exceptionHandlerService.notFoundDataExceptionHandler(hRequest, hResponse, exception);
     }
 
-    @ApiOperation(
-            value = "401",
-            notes = "Не авторизовался"
-    )
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @RequestMapping(value = "/401")
-    public ExceptionMessageRequest unAuthorized() {
-        final ExceptionMessageRequest exep = new ExceptionMessageRequest("Вы не авторизовались!",
-                "401", new Date());
-        logger.error("Error: {}", exep);
-        return exep;
-    }
-
-    @ApiOperation(
-            value = "503",
-            notes = "Ошибка на сервере"
-    )
-    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
-    @RequestMapping(value = "/503")
-    @ExceptionHandler
-    private ExceptionMessageRequest exception(HttpServletRequest request) throws JsonProcessingException {
-        final String origialUri = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
-        final Exception exception = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
-        logger.error("Error on controller: {}", origialUri, exception);
-
-        return new ExceptionMessageRequest(exception.getCause().getMessage(),
-                "503", new Date());
-    }
-
-    @ApiOperation(
-            value = "403",
-            notes = "Нет доступа"
-    )
+    /**Перехват {@link AuthenticationException}*/
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @RequestMapping(value = "/403")
-    private ExceptionMessageRequest forbidden(HttpServletRequest request) throws JsonProcessingException {
-        final String origialUri = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
-        final String message = request.getAttribute(RequestDispatcher.ERROR_MESSAGE).toString();
-        logger.error("Error on controller: {}", origialUri);
-        logger.error("Error message: {}", message);
-
-        return new ExceptionMessageRequest(message,
-                "403", new Date());
+    @ExceptionHandler(value = AuthenticationException.class)
+    public @ResponseBody ServerExceptionMessage authExceptionHandler(
+            HttpServletRequest hRequest, HttpServletResponse hResponse, AuthenticationException exception) {
+        return exceptionHandlerService.authExceptionHandler(hRequest, hResponse, exception);
     }
 
+    /**Перехват {@link CustomHttpCodeException}*/
+    @ExceptionHandler(value = CustomHttpCodeException.class)
+    public @ResponseBody ServerExceptionMessage authExceptionHandler(
+            HttpServletRequest hRequest, HttpServletResponse hResponse, CustomHttpCodeException exception) {
+        return exceptionHandlerService.customExceptionHandler(hRequest, hResponse, exception);
+    }
+
+    /**403*/
+    @ApiOperation(value = "", hidden = true)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @RequestMapping(value = "403", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public @ResponseBody ServerExceptionMessage forbidden(HttpServletRequest hRequest) {
+        return exceptionHandlerService.forbidden(hRequest);
+    }
+
+    /**401*/
+    @ApiOperation(value = "", hidden = true)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @RequestMapping(value = "401", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public @ResponseBody ServerExceptionMessage authorization(HttpServletRequest hRequest) {
+        return exceptionHandlerService.authorization(hRequest);
+    }
+
+    /**404*/
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @RequestMapping(value = "404", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public @ResponseBody ServerExceptionMessage notFound(NoHandlerFoundException ex, HttpServletRequest hRequest) {
+        return exceptionHandlerService.notFound(ex, hRequest);
+    }
+
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public @ResponseBody ServerExceptionMessage notFound(HttpRequestMethodNotSupportedException ex, WebRequest request) {
+        return exceptionHandlerService.handleHttpRequestMethodNotSupported(ex, request);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public @ResponseBody ServerExceptionMessage notFound(HttpMessageNotReadableException ex, WebRequest request) {
+        return exceptionHandlerService.handleHttpMessageNotReadable(ex, request);
+    }
 }

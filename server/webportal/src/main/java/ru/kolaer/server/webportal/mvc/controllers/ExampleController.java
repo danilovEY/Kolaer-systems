@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 //@RestController
 //@RequestMapping(value = "/examples")
 @Api( tags = "Примеры", description = "Примеры объектов", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class ExampleController extends BaseController {
+public class ExampleController {
 /*
     @Autowired
     private AuthenticationService serviceLDAP;

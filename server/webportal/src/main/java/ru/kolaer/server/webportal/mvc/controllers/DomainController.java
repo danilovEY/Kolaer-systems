@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/dc")
 @Api(tags = "Домен")
-public class DomainController extends BaseController {
+public class DomainController {
     private final RoleLDAP roleLDAP;
 
     @Autowired

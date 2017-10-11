@@ -3,7 +3,7 @@ package ru.kolaer.birthday.mvp.model.impl;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.PostEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
-import ru.kolaer.api.mvp.model.restful.DbDataAll;
+import ru.kolaer.api.mvp.model.other.DbDataAll;
 import ru.kolaer.birthday.mvp.model.UserModel;
 
 import java.util.Date;

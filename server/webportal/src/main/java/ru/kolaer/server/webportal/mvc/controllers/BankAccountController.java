@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping("/bank")
 @RequiredArgsConstructor
 @Slf4j
-public class BankAccountController extends BaseController {
+public class BankAccountController {
     private final BankAccountDao bankAccountDao;
     private final EmployeeDao employeeDao;
 

@@ -13,11 +13,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import ru.kolaer.server.webportal.config.SpringContext;
 import ru.kolaer.server.webportal.config.SpringSecurityConfig;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ViolationService;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.*;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,9 +40,6 @@ public class TestSpring {
 
     @Autowired
     private SimpleMailMessage templateMessage;
-
-    @Autowired
-    private ViolationService violationService;
 
     @Autowired
     private UpdateEmployeesService employeeService;

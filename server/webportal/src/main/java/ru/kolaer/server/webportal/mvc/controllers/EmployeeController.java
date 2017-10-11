@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping(value = "/employees")
 @Api(tags = "Сотрудники КолАЭР", description = "Сотрудники из организации КолАЭР.")
 @Slf4j
-public class EmployeeController extends BaseController {
+public class EmployeeController {
 
     private final EmployeeService employeeService;
 

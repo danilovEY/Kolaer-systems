@@ -1,5 +1,6 @@
 package ru.kolaer.api.system.impl;
 
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.network.restful.RestfulServer;
 
@@ -8,7 +9,7 @@ import ru.kolaer.api.system.network.restful.RestfulServer;
  */
 public class DefaultRestfulServer implements RestfulServer {
     @Override
-    public ServerStatus getServerStatus() {
-        return ServerStatus.AVAILABLE;
+    public ServerResponse<ServerStatus> getServerStatus() {
+        return ServerResponse.createServerResponse(ServerStatus.AVAILABLE);
     }
 }
