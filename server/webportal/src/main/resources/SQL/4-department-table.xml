@@ -10,12 +10,15 @@
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="abbreviated_name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="chief_employee_id" type="BIGINT"/>
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addPrimaryKey tableName="department" columnNames="id"/>
         <!--<addForeignKeyConstraint baseTableName="department" baseColumnNames="id_chief_employee" constraintName="department_employee_fk"-->

@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
 import lombok.Data;
+import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,12 +12,12 @@ import java.io.Serializable;
 @Entity
 @Table(name = "passport")
 @Data
-public class PassportEntity implements Serializable {
+public class PassportEntity implements Serializable, BaseEntity {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", insertable=false, updatable=false)

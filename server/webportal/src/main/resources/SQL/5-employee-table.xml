@@ -32,8 +32,13 @@
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="photo" type="VARCHAR(300)"/>
-            <column name="department_id" type="BIGINT"/>
-            <column name="post_id" type="BIGINT"/>
+
+            <column name="department_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="home_phone_number" type="VARCHAR(255)"/>
             <column name="work_phone_number" type="VARCHAR(255)"/>
         </createTable>

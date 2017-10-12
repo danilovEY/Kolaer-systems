@@ -1,6 +1,7 @@
 package ru.kolaer.api.mvp.model.kolaerweb;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  * Структура сотрудника в БД.
  */
 @Data
+@NoArgsConstructor
 public class EmployeeDto implements BaseDto {
     private Long id;
     private Long personnelNumber;
@@ -26,4 +28,8 @@ public class EmployeeDto implements BaseDto {
     private Date dismissalDate;
     private String email;
     private String photo;
+
+    public EmployeeDto(Long id) {
+        this.id = id;
+    }
 }

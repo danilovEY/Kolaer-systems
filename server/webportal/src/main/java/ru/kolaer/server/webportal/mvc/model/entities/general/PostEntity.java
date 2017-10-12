@@ -34,4 +34,7 @@ public class PostEntity implements BaseEntity {
 
     @Column(name = "rang")
     private Integer rang;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
 }

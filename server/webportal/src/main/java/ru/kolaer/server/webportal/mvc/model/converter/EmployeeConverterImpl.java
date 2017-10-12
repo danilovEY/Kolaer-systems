@@ -122,4 +122,32 @@ public class EmployeeConverterImpl implements EmployeeConverter {
 
         return oldDto;
     }
+
+    @Override
+    public EmployeeDto convertToDtoWithOutSubEntity(EmployeeEntity model) {
+        EmployeeDto employeeDto = new EmployeeDto();
+        employeeDto.setId(model.getId());
+        employeeDto.setEmail(model.getEmail());
+        employeeDto.setFirstName(model.getFirstName());
+        employeeDto.setSecondName(model.getSecondName());
+        employeeDto.setThirdName(model.getThirdName());
+        employeeDto.setBirthday(model.getBirthday());
+        employeeDto.setDismissalDate(model.getDismissalDate());
+        employeeDto.setEmploymentDate(model.getEmploymentDate());
+        employeeDto.setHomePhoneNumber(model.getHomePhoneNumber());
+        employeeDto.setWorkPhoneNumber(model.getWorkPhoneNumber());
+        employeeDto.setGender(model.getGender());
+        employeeDto.setInitials(model.getInitials());
+        employeeDto.setPhoto(model.getPhoto());
+
+        Optional.ofNullable(model.getDepartmentId())
+                .map(DepartmentDto::new)
+                .ifPresent(employeeDto::setDepartment);
+
+        Optional.ofNullable(model.getPostId())
+                .map(PostDto::new)
+                .ifPresent(employeeDto::setPost);
+
+        return employeeDto;
+    }
 }

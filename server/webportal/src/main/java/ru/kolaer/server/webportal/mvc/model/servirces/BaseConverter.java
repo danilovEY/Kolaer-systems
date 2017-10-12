@@ -10,4 +10,8 @@ public interface BaseConverter<T extends BaseDto, K extends BaseEntity> {
     K convertToModel(T dto);
     T convertToDto(K model);
     T updateData(T oldDto, K newModel);
+
+    default T convertToDtoWithOutSubEntity(K model){
+        return convertToDto(model);
+    }
 }

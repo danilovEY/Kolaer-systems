@@ -12,7 +12,7 @@ import java.util.Date;
  * Структура сотрудника в БД.
  */
 @Entity
-@Table(name = "employees")
+@Table(name = "employee")
 @Data
 public class EmployeeEntity implements BaseEntity {
 

@@ -42,40 +42,38 @@ public class AccountConverterImpl implements AccountConverter {
             return null;
         }
 
-        AccountDto accountDto = new AccountDto();
+        return updateData(new AccountDto(), model);
+    }
+
+    @Override
+    public AccountDto updateData(AccountDto accountDto, AccountEntity model) {
         accountDto.setId(model.getId());
         accountDto.setEmail(model.getEmail());
         accountDto.setPassword(model.getPassword());
         accountDto.setUsername(model.getUsername());
 
         if(model.getEmployeeId() != null) {
-            Optional.ofNullable(model.getEmployeeEntity())
-                    .map(employeeConverter::convertToDto)
-                    .ifPresent(accountDto::setEmployee);
+            accountDto.setEmployee(employeeConverter.convertToDto(model.getEmployeeEntity()));
+        } else {
+            accountDto.setEmployee(null);
         }
 
         return accountDto;
     }
 
     @Override
-    public AccountDto updateData(AccountDto oldDto, AccountEntity newModel) {
-        oldDto.setId(newModel.getId());
-        oldDto.setEmail(newModel.getEmail());
-        oldDto.setPassword(newModel.getPassword());
-        oldDto.setUsername(newModel.getUsername());
+    public AccountDto convertToDtoWithOutSubEntity(AccountEntity model) {
+        AccountDto accountDto = new AccountDto();
+        accountDto.setId(model.getId());
+        accountDto.setEmail(model.getEmail());
+        accountDto.setPassword(model.getPassword());
+        accountDto.setUsername(model.getUsername());
 
-        if(newModel.getEmployeeId() != null && !newModel.getEmployeeId().equals(Optional
-                .ofNullable(oldDto.getEmployee())
-                .map(EmployeeDto::getId)
-                .orElse(null))) {
-            Optional.ofNullable(newModel.getEmployeeEntity())
-                    .map(employeeConverter::convertToDto)
-                    .ifPresent(oldDto::setEmployee);
-        } else {
-            oldDto.setEmployee(null);
-        }
+        Optional.ofNullable(model.getEmployeeId())
+                .map(EmployeeDto::new)
+                .ifPresent(accountDto::setEmployee);
 
-        return oldDto;
+        return accountDto;
     }
 
 }

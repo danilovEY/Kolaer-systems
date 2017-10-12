@@ -6,8 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by danilovey on 26.01.2017.
@@ -18,25 +23,19 @@ import java.io.Serializable;
 @ToString
 @ApiModel("Результат обновления сотрудников")
 public class ResultUpdateEmployeesDto implements Serializable {
-    @ApiModelProperty("Общее кол-во должностей")
-    private Integer allPostSize;
     @ApiModelProperty("Кол-во удаленных должностей")
-    private Integer deletePostCount;
+    private List<PostEntity> deletePost = new ArrayList<>();
     @ApiModelProperty("Кол-во добавленных должностей")
-    private Integer addPostCount;
+    private List<PostEntity> addPost = new ArrayList<>();
 
-    @ApiModelProperty("Общее кол-во подразделений")
-    private Integer allDepSize;
     @ApiModelProperty("Кол-во удаленных подразделений")
-    private Integer deleteDepCount;
+    private List<DepartmentEntity> deleteDep = new ArrayList<>();
     @ApiModelProperty("Кол-во добавленных подразделений")
-    private Integer addDepCount;
+    private List<DepartmentEntity> addDep = new ArrayList<>();
 
-    @ApiModelProperty("Общее кол-во сотрудников")
-    private Integer allEmployeeSize;
     @ApiModelProperty("Кол-во уволенных сотрудников")
-    private Integer deleteEmployeeCount;
+    private List<EmployeeEntity> deleteEmployee = new ArrayList<>();
     @ApiModelProperty("Кол-во добавленных сотрудников")
-    private Integer addEmployeeCount;
+    private List<EmployeeEntity> addEmployee = new ArrayList<>();
 
 }

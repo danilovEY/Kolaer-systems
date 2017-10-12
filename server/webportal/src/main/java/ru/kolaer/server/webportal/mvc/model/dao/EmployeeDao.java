@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Danilov on 27.07.2016.
  * Доа для работы с сотрудниками.
  */
-public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<EmployeeEntity>, UpdateEmployeesDao {
+public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<EmployeeEntity> {
     List<EmployeeEntity> findEmployeeByInitials(String initials);
 
     List<EmployeeEntity> findByDepartmentById(Long id);

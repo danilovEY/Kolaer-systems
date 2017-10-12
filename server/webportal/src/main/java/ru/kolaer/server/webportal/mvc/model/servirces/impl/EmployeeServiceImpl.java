@@ -6,14 +6,10 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
-import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
-import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, EmployeeEntity>
-        implements EmployeeService, UpdateEmployeesService {
+        implements EmployeeService {
     private final EmployeeDao employeeDao;
 
     protected EmployeeServiceImpl(EmployeeDao employeeDao,
@@ -102,15 +98,5 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
     @Override
     public int getCountUserBirthday(Date date) {
         return employeeDao.getCountUserBirthday(date);
-    }
-
-    @Override
-    public ResultUpdateEmployeesDto updateEmployees(File file) {
-        return this.employeeDao.updateEmployeesFromXlsx(file);
-    }
-
-    @Override
-    public ResultUpdateEmployeesDto updateEmployees(InputStream inputStream) {
-        return this.employeeDao.updateEmployeesFromXlsx(inputStream);
     }
 }
