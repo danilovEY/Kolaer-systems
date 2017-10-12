@@ -10,7 +10,7 @@ import java.util.Date;
  * Created by danilovey on 20.01.2017.
  */
 @Entity
-@Table(name = "repository_pass_history")
+@Table(name = "password_history")
 @Data
 public class PasswordHistoryEntity implements BaseEntity {
 

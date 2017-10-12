@@ -13,8 +13,8 @@
     <include file="classpath:SQL/5-employee-table.xml"/>
     <include file="classpath:SQL/1-account-table.xml"/>
     <include file="classpath:SQL/8-passport-table.xml"/>
-    <include file="classpath:SQL/14-repository-password-history-table.xml"/>
-    <include file="classpath:SQL/13-repository-password-table.xml"/>
+    <include file="classpath:SQL/14-password-history-table.xml"/>
+    <include file="classpath:SQL/13-password-repository-table.xml"/>
     <include file="classpath:SQL/16-ticket-register-table.xml"/>
     <include file="classpath:SQL/15-ticket-table.xml"/>
     <include file="classpath:SQL/17-url-security-table.xml"/>

@@ -11,7 +11,7 @@ import java.util.List;
  * Created by danilovey on 20.01.2017.
  */
 @Entity
-@Table(name = "repository_pass")
+@Table(name = "password_repository")
 @Data
 public class PasswordRepositoryEntity implements BaseEntity {
 
