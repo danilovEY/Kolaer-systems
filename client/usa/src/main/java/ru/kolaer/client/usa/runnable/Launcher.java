@@ -1,10 +1,8 @@
 package ru.kolaer.client.usa.runnable;
 
-import javafx.application.Application;
-import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.client.usa.mvp.viewmodel.impl.VMMainFrameImpl;
+import ru.kolaer.client.usa.mvp.view.javafx.JavaFxUiRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class Launcher {
 	private static final Logger LOG = LoggerFactory.getLogger(Launcher.class);
 
+	private static final String applicationUiTypeKey = "ui";
 	public static final String pathToCache = System.getProperty("java.io.tmpdir") + "\\KolaerCache";
 	public static final String pathToRunFile = pathToCache + "\\runnable.usa";
 	public static final String pathToShowAppFile = pathToCache + "\\runnable_show.usa";
@@ -23,8 +22,12 @@ public class Launcher {
 	public static void main(final String[] args) {
 		//if(!appIsRun()) {
 		//delete(new File(pathToCache));
-		Platform.setImplicitExit(false);
-		Application.launch(VMMainFrameImpl.class ,args);
+
+		if(args.length == 0) {
+			new JavaFxUiRunner().run(args);
+		}
+
+
 		//} else {
 		//	LOG.warn("Приложение уже запущенно!");
 		//	System.exit(0);

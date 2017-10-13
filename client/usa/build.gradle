@@ -7,11 +7,13 @@ def projectJarName = projectNameWithVersion + ".jar"
 
 dependencies {
     compile("org.springframework:spring-web:4.3.2.RELEASE") {
+        exclude module: 'spring-beans'
         exclude module: 'spring-aop'
         exclude module: 'spring-context'
     }
 
     compile "org.controlsfx:controlsfx:8.40.11"
+    compileOnly "org.projectlombok:lombok:1.16.12"
     testCompile "junit:junit:4.11"
 }
 
@@ -19,7 +21,7 @@ task createJar(type: Jar) {
     archiveName = projectJarName
     baseName = project.name
     manifest {
-        attributes 'Main-Class': 'ru.kolaer.client.javafx.runnable.Launcher'
+        attributes 'Main-Class': 'ru.kolaer.client.usa.runnable.Launcher'
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
