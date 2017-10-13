@@ -2,30 +2,34 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
+import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.error.ErrorCode;
 import ru.kolaer.api.mvp.model.kolaerweb.TypePostEnum;
-import ru.kolaer.server.webportal.exception.ServerException;
+import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
+import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PostDao;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
+import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.general.PassportEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
-import java.io.*;
-import java.net.URLEncoder;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -34,35 +38,37 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
-    private static int YEAR_NOT_DISMISSAL = 9999;
-    private static String SECOND_NAME = "Фамилия";
-    private static String FIRST_NAME = "Имя";
-    private static String THIRD_NAME = "Отчество";
-    private static String SEX = "Пол";
-    private static String DEP_ID = "Подразделение";
-    private static String DEP_NAME = "Текст Подразделение";
-    private static String POST_CODE = "Штатная должность(Код)";
-    private static String POST_NAME = "Штатная должность(Название)";
-    private static String EMPLOYMENT_DATE = "Поступл.";
-    private static String DISMISSAL_DATE = "Дата увольнения";
-    private static String BIRTHDAY_DATE = "ДатаРожд";
-    private static String PERSONNEL_NUMBER = "Таб.№";
-    private static String PHONE_NUMBER = "Телефон";
-    private static String EMAIL = "Эл. почта(MAIL)";
-    private static String SERIAL_2_DOCUMENT = "Серия2";
-    private static String SERIAL_1_DOCUMENT = "Серия1";
-    private static String NUMBER_DOCUMENT = "Номер документа";
 
-    private EmployeeDao employeeDao;
-    private PostDao postDao;
-    private DepartmentDao departmentDao;
+    private final JdbcTemplate jdbcTemplateKolaerBase;
 
-    public UpdateEmployeesServiceImpl(EmployeeDao employeeDao,
+    private final EmployeeDao employeeDao;
+    private final PostDao postDao;
+    private final DepartmentDao departmentDao;
+    private final AccountDao accountDao;
+    private final AccountConverter accountConverter;
+
+    private final ExcelReaderEmployee excelReaderEmployee;
+    private final ExcelReaderDepartment excelReaderDepartment;
+    private final ExcelReaderPost excelReaderPost;
+
+    public UpdateEmployeesServiceImpl(@Qualifier("dataSourceKolaerBase") JdbcTemplate jdbcTemplateKolaerBase,
+                                      EmployeeDao employeeDao,
                                       PostDao postDao,
-                                      DepartmentDao departmentDao) {
+                                      DepartmentDao departmentDao,
+                                      AccountDao accountDao,
+                                      AccountConverter accountConverter,
+                                      ExcelReaderEmployee excelReaderEmployee,
+                                      ExcelReaderDepartment excelReaderDepartment,
+                                      ExcelReaderPost excelReaderPost) {
+        this.jdbcTemplateKolaerBase = jdbcTemplateKolaerBase;
         this.employeeDao = employeeDao;
         this.postDao = postDao;
         this.departmentDao = departmentDao;
+        this.accountDao = accountDao;
+        this.accountConverter = accountConverter;
+        this.excelReaderEmployee = excelReaderEmployee;
+        this.excelReaderDepartment = excelReaderDepartment;
+        this.excelReaderPost = excelReaderPost;
     }
 
     @Override
@@ -78,7 +84,6 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
     @Override
     @Transactional
     public ResultUpdateEmployeesDto updateEmployees(InputStream inputStream) {
-        List<String> messages = new ArrayList<>();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             XSSFSheet sheetAt = workbook.getSheetAt(0);
@@ -96,27 +101,13 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             for (int i = 1; i < sheetAt.getLastRowNum(); i++) {
                 XSSFRow row = sheetAt.getRow(i);
 
-                EmployeeEntity newEmployeeEntity = null;
-                DepartmentEntity departmentEntity = null;
-                PostEntity postEntity = null;
-                try {
-                    newEmployeeEntity = readEmployee(row, nameColumns);
-                    if(newEmployeesMap.containsKey(generateKey(newEmployeeEntity))) {
-                        continue;
-                    }
-                    departmentEntity = readDepartment(row, nameColumns);
-                    postEntity = readPost(row, nameColumns);
-                } catch (Exception ex) {
-                    messages.add(generateMessage(row, ex));
-                }
-
-                if(newEmployeeEntity == null || departmentEntity == null || postEntity == null) {
+                EmployeeEntity newEmployeeEntity = excelReaderEmployee.process(row, nameColumns);
+                if(newEmployeesMap.containsKey(generateKey(newEmployeeEntity))) {
                     continue;
                 }
 
-                log.debug("Read post: {}", postEntity);
-                log.debug("Read dep: {}", departmentEntity);
-                log.debug("Read entity: {}", newEmployeeEntity);
+                DepartmentEntity departmentEntity = excelReaderDepartment.process(row, nameColumns);;
+                PostEntity postEntity = excelReaderPost.parse(row, nameColumns);;
 
                 String postKey = generateKey(postEntity);
                 String depKey = generateKey(departmentEntity);
@@ -143,62 +134,69 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             resultUpdateEmployeesDto = updateDepMap(departmentEntityMap, resultUpdateEmployeesDto);
             resultUpdateEmployeesDto = updateEmployeeMap(newEmployeesMap, resultUpdateEmployeesDto);
 
-            resultUpdateEmployeesDto = saveDepartment(departmentEntityMap);
-            resultUpdateEmployeesDto = savePost(postEntityMap);
-            resultUpdateEmployeesDto = saveEmployees(newEmployeesMap, employeeKeyDepMap, employeeKeyPostMap, departmentEntityMap, postEntityMap);
+            saveDepartment(departmentEntityMap);
+            savePost(postEntityMap);
+            saveEmployees(newEmployeesMap, employeeKeyDepMap, employeeKeyPostMap, departmentEntityMap, postEntityMap);
+
+            saveAccounts(resultUpdateEmployeesDto.getAddEmployee());
 
             return resultUpdateEmployeesDto;
-
-        } catch (Exception e) {
-            log.error("Ошибка при чтении файла!", e);
-            throw new ServerException("Невозможно прочитать файл!");
+        } catch (Exception ex) {
+            log.error("Ошибка при чтении файла!", ex);
+            throw new UnexpectedRequestParams(ex.getMessage(), ex, ErrorCode.PARSE_EXCEPTION);
         }
     }
 
-    private String generateMessage(XSSFRow row, Exception ex) {
-        String message = "Невозможно прочитать строку :" + row.getRowNum()
-                + ". Сообщение ошибки: " + ex.getLocalizedMessage();
-        log.error(message, ex);
-        return message;
+    private void saveAccounts(List<EmployeeEntity> employee) {
+        List<AccountEntity> accounts = employee
+                .stream()
+                .map(accountConverter::convertToModel)
+                .collect(Collectors.toList());
+
+        accountDao.save(accounts);
     }
 
     private ResultUpdateEmployeesDto saveEmployees(Map<String, EmployeeEntity> newEmployeesMap,
-                                                   Map<String, String> departmentEntityMap,
-                                                   Map<String, String> postEntityMap,
+                                                   Map<String, String> employeeKeyDepMap,
+                                                   Map<String, String> employeeKeyPostMap,
                                                    Map<String, DepartmentEntity> depMap,
                                                    Map<String, PostEntity> postMap) {
 
-        /*List<EmployeeEntity> employeeEntityWorkPhone = jdbcTemplateKolaerBase
-                .query("SELECT person_number, phone, mobile_phone, email FROM db_data_all",
-                        (rs, rowNum) -> {
-                            EmployeeEntity employeeDto = new EmployeeEntity();
-                            String workPhone = Optional.ofNullable(rs.getString("phone")).orElse("");
-                            String mobilePhone = Optional.ofNullable(rs.getString("mobile_phone")).orElse("");
-                            if (StringUtils.hasText(mobilePhone))
-                                workPhone += "; " + mobilePhone;
+        Map<String, EmployeeEntity> kolaerBaseEmployeeMap = jdbcTemplateKolaerBase
+                .query("SELECT person_number, phone, mobile_phone, email FROM db_data_all", (rs, rowNum) -> {
+                    EmployeeEntity employeeEntity = new EmployeeEntity();
+                    String workPhone = Optional.ofNullable(rs.getString("phone")).orElse("");
+                    String mobilePhone = Optional.ofNullable(rs.getString("mobile_phone")).orElse("");
+                    if (StringUtils.hasText(mobilePhone))
+                        workPhone += "; " + mobilePhone;
 
-                            employeeDto.setEmail(rs.getString("email"));
-                            employeeDto.setPersonnelNumber(rs.getLong("person_number"));
-                            employeeDto.setWorkPhoneNumber(workPhone);
-                            return employeeDto;
-                        });
-
-        employeeEntityWorkPhone.forEach(empBase -> {
-            EmployeeEntity employeeEntity = newEmployeesMap.get(17240000 + empBase.getPersonnelNumber());
-            if(employeeEntity != null) {
-                employeeEntity.setEmail(empBase.getEmail());
-                employeeEntity.setWorkPhoneNumber(empBase.getWorkPhoneNumber());
-            }
-        });*/
+                    employeeEntity.setEmail(rs.getString("email"));
+                    employeeEntity.setPersonnelNumber(rs.getLong("person_number"));
+                    employeeEntity.setWorkPhoneNumber(workPhone);
+                    return employeeEntity;
+                }).stream()
+                .collect(Collectors.toMap(e -> String.valueOf(17240000L + e.getPersonnelNumber()), e -> e));
 
         for (Map.Entry<String, EmployeeEntity> employeeEntityEntry : newEmployeesMap.entrySet()) {
             String employeeKey = employeeEntityEntry.getKey();
             EmployeeEntity employeeEntity = employeeEntityEntry.getValue();
 
-            String postKey = postEntityMap.get(employeeKey);
-            String depKey = departmentEntityMap.get(employeeKey);
-            employeeEntity.setPostId(postMap.get(postKey).getId());
-            employeeEntity.setDepartmentId(depMap.get(depKey).getId());
+            String postKey = employeeKeyPostMap.get(employeeKey);
+            String depKey = employeeKeyDepMap.get(employeeKey);
+
+            Optional.ofNullable(postMap.get(postKey))
+                    .map(PostEntity::getId)
+                    .ifPresent(employeeEntity::setPostId);
+
+            Optional.ofNullable(depMap.get(depKey))
+                    .map(DepartmentEntity::getId)
+                    .ifPresent(employeeEntity::setDepartmentId);
+
+            EmployeeEntity kolaerBaseEntity = kolaerBaseEmployeeMap.get(employeeKey);
+            if(kolaerBaseEntity != null) {
+                employeeEntity.setEmail(kolaerBaseEntity.getEmail());
+                employeeEntity.setWorkPhoneNumber(kolaerBaseEntity.getWorkPhoneNumber());
+            }
         }
 
         employeeDao.save(newEmployeesMap.values().stream().collect(Collectors.toList()));
@@ -209,8 +207,8 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             String employeeKey = employeeEntityEntry.getKey();
             EmployeeEntity employeeEntity = employeeEntityEntry.getValue();
 
-            String postKey = postEntityMap.get(employeeKey);
-            String depKey = departmentEntityMap.get(employeeKey);
+            String postKey = employeeKeyPostMap.get(employeeKey);
+            String depKey = employeeKeyDepMap.get(employeeKey);
             employeeEntity.setPostId(postMap.get(postKey).getId());
 
             DepartmentEntity departmentEntity = depMap.get(depKey);
@@ -256,8 +254,6 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 deletedEmployee.add(employeeEntityFromDb);
             } else {
                 EmployeeEntity employeeEntity = newEmployeesMap.get(originKey);
-                employeeEntity.setId(employeeEntityFromDb.getId());
-
                 employeeEntityFromDb.setInitials(employeeEntity.getInitials());
                 employeeEntityFromDb.setFirstName(employeeEntity.getFirstName());
                 employeeEntityFromDb.setSecondName(employeeEntity.getSecondName());
@@ -345,142 +341,6 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
         return resultUpdateEmployeesDto;
     }
 
-    private PassportEntity readPassport(XSSFRow row, List<String> nameColumns) {
-        String serialFirst = getStringValue(nameColumns, SERIAL_1_DOCUMENT, row);
-
-        if (serialFirst != null && !serialFirst.trim().isEmpty()) {
-            String serialSecond = getStringValue(nameColumns, SERIAL_2_DOCUMENT, row);
-            String number = getStringValue(nameColumns, NUMBER_DOCUMENT, row);
-
-            PassportEntity passportEntity = new PassportEntity();
-            passportEntity.setSerial(serialFirst + serialSecond);
-            passportEntity.setNumber(number);
-            return passportEntity;
-        }
-
-        return null;
-    }
-
-    private PostEntity readPost(XSSFRow row, List<String> nameColumns) {
-        PostEntity postEntity = new PostEntity();
-
-        String value = getStringValue(nameColumns, POST_NAME, row);
-        postEntity.setName(value);
-        postEntity.setAbbreviatedName(value);
-
-        String rang = value.replaceAll("[\\D]", "");
-        if (!rang.trim().isEmpty()) {
-            String name = value.substring(0, value.indexOf(rang));
-
-            postEntity.setName(name.trim());
-            postEntity.setRang(Integer.valueOf(rang));
-            postEntity.setType(getTypePostFromName(value));
-        }
-
-        String postCode = getStringValue(nameColumns, POST_CODE, row);
-        postEntity.setCode(postCode);
-
-        return postEntity;
-    }
-
-    private TypePostEnum getTypePostFromName(String name) {
-        Pattern compile = Pattern.compile("\\d(\\s.*)");
-        Matcher matcher = compile.matcher(name);
-        if(matcher.find()) {
-            String group = matcher.group(1).trim();
-            switch (group.charAt(0)) {
-                case 'р': return TypePostEnum.DISCHARGE;
-                case 'к': return TypePostEnum.CATEGORY;
-                case 'г': return TypePostEnum.GROUP;
-                default: return null;
-            }
-        }
-
-        return null;
-    }
-
-    private DepartmentEntity readDepartment(XSSFRow row, List<String> nameColumns) {
-        String value = getStringValue(nameColumns, DEP_ID, row);
-        Long idDep = Optional.ofNullable(value).map(Long::valueOf).orElse(null);
-
-        DepartmentEntity departmentEntity = new DepartmentEntity();
-        //departmentEntity.setId(idDep);
-
-        String depName = row.getCell(nameColumns.indexOf(DEP_NAME)).getStringCellValue();
-
-        Pattern pattern = Pattern.compile("[а-яА-Я ]*");
-        Matcher matcher = pattern.matcher(depName);
-
-        departmentEntity.setName(depName);
-        if (matcher.find())
-            departmentEntity.setAbbreviatedName(matcher.group().trim());
-        else
-            departmentEntity.setAbbreviatedName(depName);
-
-        return departmentEntity;
-    }
-
-    private EmployeeEntity readEmployee(XSSFRow row, List<String> nameColumns) {
-        String value = getStringValue(nameColumns, PERSONNEL_NUMBER, row);
-
-        Long pNumber = Long.valueOf(value);
-
-        EmployeeEntity newEmployeeEntity = new EmployeeEntity();
-        newEmployeeEntity.setPersonnelNumber(pNumber);
-
-        value = getStringValue(nameColumns, FIRST_NAME, row);
-        newEmployeeEntity.setFirstName(value);
-
-        value = getStringValue(nameColumns, SECOND_NAME, row);
-        newEmployeeEntity.setSecondName(value);
-
-        value = getStringValue(nameColumns, THIRD_NAME, row);
-        newEmployeeEntity.setThirdName(value);
-
-        newEmployeeEntity.setInitials(newEmployeeEntity.getFirstName() + " "
-                + newEmployeeEntity.getSecondName() + " "
-                + newEmployeeEntity.getThirdName());
-
-        Date date = getDateValue(nameColumns, BIRTHDAY_DATE, row);
-        newEmployeeEntity.setBirthday(date);
-
-        date = getDateValue(nameColumns, EMPLOYMENT_DATE, row);
-        newEmployeeEntity.setEmploymentDate(date);
-
-        date = getDateValue(nameColumns, DISMISSAL_DATE, row);
-        if(date != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-
-            if (calendar.get(Calendar.YEAR) != YEAR_NOT_DISMISSAL) {
-                newEmployeeEntity.setDismissalDate(date);
-            }
-        }
-
-        value = getStringValue(nameColumns, SEX, row);
-        if("мужской".equals(value.toLowerCase())) {
-            newEmployeeEntity.setGender(EnumGender.MALE);
-        } else {
-            newEmployeeEntity.setGender(EnumGender.FEMALE);
-        }
-
-        value = getStringValue(nameColumns, PHONE_NUMBER, row);
-        newEmployeeEntity.setHomePhoneNumber(value);
-
-        value = getStringValue(nameColumns, EMAIL, row);
-        newEmployeeEntity.setEmail(value);
-
-        try {
-            newEmployeeEntity.setPhoto("http://asupkolaer.local/app_ie8/assets/images/vCard/o_"
-                    + URLEncoder.encode(newEmployeeEntity.getInitials(), "UTF-8")
-                    .replace("+", "%20") + ".jpg");
-        } catch (UnsupportedEncodingException ignore) {
-            log.warn("User initials can't encode to UTF-8", newEmployeeEntity.getInitials());
-        }
-
-        return newEmployeeEntity;
-    }
-
     private String generateKey(PostEntity entity) {
         if (entity == null) {
             return null;
@@ -508,28 +368,5 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
         }
 
         return entity.getAbbreviatedName();
-    }
-
-    private String getStringValue(List<String> columns, String nameColumns, XSSFRow row) {
-        return Optional.ofNullable(getCell(columns, nameColumns, row))
-                .map(XSSFCell::getStringCellValue)
-                .orElse(null);
-    }
-
-    private Date getDateValue(List<String> columns, String nameColumns, XSSFRow row) {
-        return Optional.ofNullable(getCell(columns, nameColumns, row))
-                .map(XSSFCell::getDateCellValue)
-                .orElse(null);
-    }
-
-    private XSSFCell getCell(List<String> columns, String nameColumns, XSSFRow row) {
-        int indexColumn = columns.indexOf(nameColumns);
-        if(indexColumn > -1) {
-            return row.getCell(indexColumn);
-        } else {
-            log.warn("Column: {} not found!", nameColumns);
-        }
-
-        return null;
     }
 }

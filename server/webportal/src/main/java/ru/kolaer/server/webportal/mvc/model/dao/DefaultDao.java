@@ -4,6 +4,7 @@ import lombok.NonNull;
 import org.hibernate.Session;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -36,6 +37,18 @@ public interface DefaultDao<T extends BaseEntity> {
     T update(@NonNull T obj);
     /**Обновить объекты в БД.*/
     List<T> update(@NonNull List<T> objs);
+
+    default T checkValue(T entity) {
+        return entity;
+    }
+
+    default List<T> checkValue(List<T> entities) {
+        return entities == null || entities.isEmpty()
+                ? Collections.emptyList()
+                : entities.stream()
+                .map(this::checkValue)
+                .collect(Collectors.toList());
+    }
 
     default T save(@NonNull T entity) {
         return entity.getId() == null

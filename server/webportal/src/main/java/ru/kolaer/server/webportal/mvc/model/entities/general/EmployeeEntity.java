@@ -36,6 +36,7 @@ public class EmployeeEntity implements BaseEntity {
     @Column(name = "third_name", nullable = false, length = 100)
     private String thirdName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender", length = 8, nullable = false)
     private EnumGender gender;
 

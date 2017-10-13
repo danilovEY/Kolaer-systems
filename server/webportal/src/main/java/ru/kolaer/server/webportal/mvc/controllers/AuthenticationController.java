@@ -14,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
@@ -39,15 +39,14 @@ public class AuthenticationController {
     private final ServerAuthType serverAuthType;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsServiceLDAP;
-
-    private String secretKey;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthenticationController(@Value("${secret_key}") String secretKey,
-                                    @Value("${server.auth.type}") String serverAuthType,
+    public AuthenticationController(@Value("${server.auth.type}") String serverAuthType,
                                     AuthenticationManager authenticationManager,
-                                    UserDetailsService userDetailsServiceLDAP) {
-        this.secretKey = secretKey;
+                                    UserDetailsService userDetailsServiceLDAP,
+                                    PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
         this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.authenticationManager = authenticationManager;
         this.userDetailsServiceLDAP = userDetailsServiceLDAP;
@@ -83,7 +82,7 @@ public class AuthenticationController {
     @UrlDeclaration(description = "Генерация пароля по строке")
     @RequestMapping(value = "/genpass", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String getPass(@ApiParam(value = "Пароль", required = true) @RequestParam("pass") String pass) {
-        return new StandardPasswordEncoder(secretKey).encode(pass);
+        return passwordEncoder.encode(pass);
     }
 
     @ApiOperation(

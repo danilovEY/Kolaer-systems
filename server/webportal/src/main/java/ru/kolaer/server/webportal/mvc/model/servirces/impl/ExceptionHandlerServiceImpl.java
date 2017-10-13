@@ -44,25 +44,6 @@ public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
                 new Date());
     }
 
-    /*@Override
-    public ServerExceptionMessage sqlException(HttpServletRequest hRequest, DataIntegrityViolationException exception) {
-        log.error("SQL Exception: ", exception);
-
-        PSQLException sqlException = (PSQLException) exception.getCause();
-        ServerErrorMessage serverErrorMessage = sqlException.getServerErrorMessage();
-
-        String errorMessage = "In \'" + serverErrorMessage.getTable() + "\' " + serverErrorMessage.getMessage();
-
-        final String urlPath = this.getOriginForwardUrlPath(hRequest);
-
-        return new ServerExceptionMessage(SERVER_EXCEPTION_CODE, ErrorCode.SQL_ERROR.name(),
-                urlPath,
-                errorMessage,
-                serverErrorMessage.getDetail(),
-                serverErrorMessage,
-                new Date());
-    }*/
-
     @Override
     public ServerExceptionMessage unExpectedParamExceptionHandler(
             HttpServletRequest hRequest, HttpServletResponse hResponse, UnexpectedRequestParams exception) {

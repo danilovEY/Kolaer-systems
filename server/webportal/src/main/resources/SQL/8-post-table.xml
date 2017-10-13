@@ -4,26 +4,25 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="4" author="Danilov">
-        <createTable tableName="department">
+    <changeSet id="8" author="Danilov">
+        <createTable tableName="post">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="abbreviated_name" type="VARCHAR(255)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
-            <column name="chief_employee_id" type="BIGINT"/>
+            <column name="rang" type="INT"/>
+            <column name="type" type="VARCHAR(10)"/>
+            <column name="code" type="VARCHAR(15)"/>
             <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addPrimaryKey tableName="department" columnNames="id"/>
-        <!--<addForeignKeyConstraint baseTableName="department" baseColumnNames="id_chief_employee" constraintName="department_employee_fk"-->
-                                 <!--referencedTableName="employee"-->
-                                 <!--referencedColumnNames="id"/>-->
+        <addPrimaryKey tableName="post" columnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

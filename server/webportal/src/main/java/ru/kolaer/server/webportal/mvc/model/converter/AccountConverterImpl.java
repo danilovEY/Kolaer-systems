@@ -1,10 +1,12 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
 import java.util.Optional;
 
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class AccountConverterImpl implements AccountConverter {
 
     private final EmployeeConverterImpl employeeConverter;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public AccountEntity convertToModel(AccountDto dto) {
@@ -76,4 +79,23 @@ public class AccountConverterImpl implements AccountConverter {
         return accountDto;
     }
 
+    @Override
+    public AccountEntity convertToModel(EmployeeEntity employeeEntity) {
+        if(employeeEntity == null) {
+            return null;
+        }
+
+        AccountEntity accountEntity = new AccountEntity();
+        accountEntity.setEmployeeId(employeeEntity.getId());
+        accountEntity.setEmail(employeeEntity.getEmail());
+        accountEntity.setUsername(employeeEntity.getPersonnelNumber().toString());
+
+        Optional.ofNullable(accountEntity.getUsername())
+                .map(passwordEncoder::encode)
+                .ifPresent(accountEntity::setPassword);
+
+        accountEntity.setAccessUser(true);
+
+        return accountEntity;
+    }
 }

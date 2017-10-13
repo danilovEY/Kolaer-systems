@@ -4,6 +4,9 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.error.ErrorCode;
+import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
@@ -113,5 +116,22 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 " t where t.initials like :initials ORDER BY t.initials", EmployeeEntity.class)
                 .setParameter("initials", "%" + initials + "%")
                 .list();
+    }
+
+    @Override
+    public EmployeeEntity checkValue(EmployeeEntity entity) {
+        if(entity == null) {
+            throw new IllegalArgumentException("Сотрудник NULL");
+        }
+
+        if(StringUtils.isEmpty(entity.getInitials()) || StringUtils.isEmpty(entity.getFirstName())
+                || StringUtils.isEmpty(entity.getSecondName()) || StringUtils.isEmpty(entity.getThirdName())
+                || entity.getPersonnelNumber() == null || entity.getGender() == null
+                || entity.getDepartmentId() == null || entity.getPostId() == null) {
+            throw new UnexpectedRequestParams("У сотрудника пустое Ф.И.О, табельный, пол, подразделение или должность: "
+                    + entity.toString(), ErrorCode.PRE_SQL_EXCEPTION);
+        }
+
+        return entity;
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -182,6 +183,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new StandardPasswordEncoder(secretKey);
+    }
+
     private AuthenticationTokenProcessingFilter authenticationTokenProcessingFilter(UserDetailsService userDetailsService) {
         return new AuthenticationTokenProcessingFilter(serverAuthType, userDetailsService);
     }
@@ -212,7 +218,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private DaoAuthenticationProvider authProviderSQL(UserDetailsService userDetailsService) {
         final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(new StandardPasswordEncoder(this.secretKey));
+        authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 }

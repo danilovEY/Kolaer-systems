@@ -4,21 +4,23 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="14" author="Danilov">
-        <createTable tableName="password_history">
+    <changeSet id="2" author="Danilov">
+        <createTable tableName="counter">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="login" type="VARCHAR(255)"/>
-            <column name="password" type="VARCHAR(255)"/>
-            <column name="password_write_date" type="TIMESTAMP">
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="counter_start" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="password_repository_id" type="BIGINT">
+            <column name="counter_end" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addPrimaryKey tableName="password_history" columnNames="id"/>
+        <addPrimaryKey tableName="counter" columnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>
