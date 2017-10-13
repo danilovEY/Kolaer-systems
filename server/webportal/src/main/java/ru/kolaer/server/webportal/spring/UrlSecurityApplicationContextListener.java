@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.UrlSecurityDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.config.PathMapping;
-import ru.kolaer.server.webportal.mvc.model.converter.UrlSecurityConverter;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Считывание всех методов у бинов для поиска аннотации {@link UrlDeclaration}.
@@ -38,17 +40,14 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
 
     /***Сервис для работы с url.*/
     private final UrlSecurityService urlSecurityService;
-    private final UrlSecurityConverter urlSecurityConverter;
 
     private boolean isInit = false;
 
     @Autowired
     public UrlSecurityApplicationContextListener(ConfigurableListableBeanFactory beanFactory,
-                                                 UrlSecurityService urlSecurityService,
-                                                 UrlSecurityConverter urlSecurityConverter) {
+                                                 UrlSecurityService urlSecurityService) {
         this.beanFactory = beanFactory;
         this.urlSecurityService = urlSecurityService;
-        this.urlSecurityConverter = urlSecurityConverter;
     }
 
     @Override
@@ -56,7 +55,10 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
         if(isInit)
             return;
 
-        final List<UrlSecurityDto> urlToAdd = new ArrayList<>();
+        List<UrlSecurityDto> urlToAdd = new ArrayList<>();
+        Map<String, UrlSecurityDto> allUrlMap = urlSecurityService.getAll()
+                .stream()
+                .collect(Collectors.toMap(this::generateKey, Function.identity()));
 
         for (String beanName : event.getApplicationContext().getBeanDefinitionNames()) {
             final BeanDefinition bean = beanFactory.getBeanDefinition(beanName);
@@ -105,15 +107,29 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     urlPath.setDescription(description);
                     urlPath.setRequestMethod(requestMethodName);
 
-                    urlToAdd.add(urlPath);
+                    String urlKey = generateKey(urlPath);
+
+                    if(!allUrlMap.containsKey(urlKey)) {
+                        urlToAdd.add(urlPath);
+                    } else {
+                        allUrlMap.remove(urlKey);
+                    }
                 }
             }
         }
 
-        urlSecurityService.clear();
+        urlSecurityService.delete(allUrlMap.values().stream().collect(Collectors.toList()));
         urlSecurityService.save(urlToAdd);
 
         this.isInit = true;
+    }
+
+    private String generateKey(UrlSecurityDto urlSecurityDto) {
+        if(urlSecurityDto == null) {
+            return null;
+        }
+
+        return urlSecurityDto.getUrl() + urlSecurityDto.getRequestMethod();
     }
 
     @Override
