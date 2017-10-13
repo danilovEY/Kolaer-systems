@@ -77,7 +77,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
         }
 
         return getSession()
-                .createNamedQuery("DELETE FROM " + getEntityName() + " WHERE id = :id", getEntityClass())
+                .createQuery("DELETE FROM " + getEntityName() + " WHERE id = :id", getEntityClass())
                 .setParameter("id", id)
                 .executeUpdate();
     }
@@ -102,13 +102,13 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
     @Override
     public long findAllCount() {
-        return getSession().createNamedQuery("SELECT COUNT(id) FROM " + getEntityName(), Long.class)
+        return getSession().createQuery("SELECT COUNT(id) FROM " + getEntityName(), Long.class)
                 .uniqueResult();
     }
 
     @Override
     public List<T> findAll(Integer number, Integer pageSize) {
-        return getSession().createNamedQuery("FROM " + getEntityName(), getEntityClass())
+        return getSession().createQuery("FROM " + getEntityName(), getEntityClass())
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .list();

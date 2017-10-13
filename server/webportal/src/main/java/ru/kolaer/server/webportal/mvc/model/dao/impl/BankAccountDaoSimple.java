@@ -112,4 +112,9 @@ public class BankAccountDaoSimple implements BankAccountDao {
     public List<BankAccountEntity> findAll(Integer number, Integer pageSize) {
         return Collections.emptyList();
     }
+
+    @Override
+    public List<BankAccountEntity> findById(List<Long> ids) {
+        return null;
+    }
 }
