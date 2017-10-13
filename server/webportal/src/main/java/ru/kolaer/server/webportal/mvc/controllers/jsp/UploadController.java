@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.controllers.jsp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.xml.sax.SAXException;
-import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeOtherOrganizationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,12 +23,13 @@ import java.io.IOException;
 @RequestMapping(value = "/upload")
 @Api(value = "Обновление данных", tags = "JSP")
 public class UploadController {
-    private final EmployeeOtherOrganizationService employeeOtherOrganizationService;
+
+    private final UpdateEmployeesService employeeOtherOrganizationService;
     private final UpdateEmployeesService employeeService;
 
     @Autowired
-    public UploadController(EmployeeOtherOrganizationService employeeOtherOrganizationService,
-                            UpdateEmployeesService employeeService) {
+    public UploadController(@Qualifier("updateEmployeesOtherOrgService") UpdateEmployeesService employeeOtherOrganizationService,
+            @Qualifier("updateEmployeesServiceImpl") UpdateEmployeesService employeeService) {
         this.employeeOtherOrganizationService = employeeOtherOrganizationService;
         this.employeeService = employeeService;
     }
@@ -49,7 +50,7 @@ public class UploadController {
     @ApiOperation(value = "Обновить сотрудников из из других организация в xml", hidden = true)
     public String uploadEmployeeOtherOrganization(@RequestParam("file")MultipartFile file, RedirectAttributes redirectAttributes)
             throws IOException, ParserConfigurationException, SAXException {
-        this.employeeOtherOrganizationService.updateFromXml(file.getInputStream());
+        employeeOtherOrganizationService.updateEmployees(file.getInputStream());
         redirectAttributes.addFlashAttribute("message","You successfully uploaded " + file.getOriginalFilename() + "!");
         return "update-emp";
     }

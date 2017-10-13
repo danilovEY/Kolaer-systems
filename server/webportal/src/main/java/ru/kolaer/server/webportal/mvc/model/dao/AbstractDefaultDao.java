@@ -103,6 +103,13 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     }
 
     @Override
+    public int clear() {
+        return getSession()
+                .createQuery("DELETE FROM " + getEntityName())
+                .executeUpdate();
+    }
+
+    @Override
     public Class<T> getEntityClass() {
         return entityClass;
     }

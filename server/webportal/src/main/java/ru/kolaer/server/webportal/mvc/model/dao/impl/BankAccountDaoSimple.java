@@ -92,6 +92,13 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
+    public int clear() {
+        int size = initialsAccountMap.size();
+        initialsAccountMap.clear();
+        return size;
+    }
+
+    @Override
     public Class<BankAccountEntity> getEntityClass() {
         return BankAccountEntity.class;
     }

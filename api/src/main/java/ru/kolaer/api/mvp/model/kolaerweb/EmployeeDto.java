@@ -28,6 +28,7 @@ public class EmployeeDto implements BaseDto {
     private Date dismissalDate;
     private String email;
     private String photo;
+    private EnumCategory category;
 
     public EmployeeDto(Long id) {
         this.id = id;

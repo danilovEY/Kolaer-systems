@@ -34,6 +34,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         employeeEntity.setGender(dto.getGender());
         employeeEntity.setInitials(dto.getInitials());
         employeeEntity.setPhoto(dto.getPhoto());
+        employeeEntity.setCategory(dto.getCategory());
 
         employeeEntity.setPostId(Optional.ofNullable(dto.getPost())
                 .map(PostDto::getId)
@@ -62,6 +63,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         employeeDto.setGender(model.getGender());
         employeeDto.setInitials(model.getInitials());
         employeeDto.setPhoto(model.getPhoto());
+        employeeDto.setCategory(model.getCategory());
 
         if(model.getPostId() != null) {
             Optional.ofNullable(model.getPost())
@@ -97,6 +99,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         oldDto.setGender(newModel.getGender());
         oldDto.setInitials(newModel.getInitials());
         oldDto.setPhoto(newModel.getPhoto());
+        oldDto.setCategory(newModel.getCategory());
 
         if(newModel.getPostId() != null && !newModel.getPostId().equals(Optional
                 .ofNullable(oldDto.getPost())
@@ -139,6 +142,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         employeeDto.setGender(model.getGender());
         employeeDto.setInitials(model.getInitials());
         employeeDto.setPhoto(model.getPhoto());
+        employeeDto.setCategory(model.getCategory());
 
         Optional.ofNullable(model.getDepartmentId())
                 .map(DepartmentDto::new)

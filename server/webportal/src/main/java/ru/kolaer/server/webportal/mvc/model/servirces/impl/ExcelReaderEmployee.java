@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
@@ -30,6 +31,16 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
     private static String PERSONNEL_NUMBER = "Таб.№";
     private static String PHONE_NUMBER = "Телефон";
     private static String EMAIL = "Эл. почта(MAIL)";
+    private static String CATEGORY = "Категория сотрудников";
+
+    private static String WORKER_CATEGORY = "РабочийОкладЧас";
+    private static String SPEC_CATEGORY = "СпециалистОкладЧас";
+    private static String LEADER_CATEGORY = "РуководитОкладЧас";
+
+
+
+
+
 
     @Override
     public EmployeeEntity parse(XSSFRow row, List<String> nameColumns) {
@@ -79,6 +90,12 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
         value = getStringValue(nameColumns, PHONE_NUMBER, row);
         newEmployeeEntity.setHomePhoneNumber(value);
 
+        value = getStringValue(nameColumns, CATEGORY, row);
+        if(value != null) {
+            newEmployeeEntity.setCategory(getCategory(value));
+        }
+        newEmployeeEntity.setHomePhoneNumber(value);
+
         value = getStringValue(nameColumns, EMAIL, row);
         newEmployeeEntity.setEmail(value);
 
@@ -91,6 +108,13 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
         }
 
         return newEmployeeEntity;
+    }
+
+    private EnumCategory getCategory(String category) {
+        if(WORKER_CATEGORY.equals(category)) return EnumCategory.WORKER;
+        if(SPEC_CATEGORY.equals(category)) return EnumCategory.SPECIALIST;
+        if(LEADER_CATEGORY.equals(category)) return EnumCategory.LEADER;
+        return null;
     }
 
     @Override

@@ -38,6 +38,8 @@ public interface DefaultDao<T extends BaseEntity> {
     /**Обновить объекты в БД.*/
     List<T> update(@NonNull List<T> objs);
 
+    int clear();
+
     default T checkValue(T entity) {
         return entity;
     }

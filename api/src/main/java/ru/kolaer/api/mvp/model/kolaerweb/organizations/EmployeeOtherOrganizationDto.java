@@ -2,6 +2,7 @@ package ru.kolaer.api.mvp.model.kolaerweb.organizations;
 
 import lombok.Data;
 import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 
 import java.util.Date;
@@ -13,7 +14,7 @@ public class EmployeeOtherOrganizationDto implements BaseDto {
 	private Long id;
 	private String organization;
 	private Date birthday;
-	private String categoryUnit;
+	private EnumCategory category;
 	private String department;
 	private String email;
 	private String initials;

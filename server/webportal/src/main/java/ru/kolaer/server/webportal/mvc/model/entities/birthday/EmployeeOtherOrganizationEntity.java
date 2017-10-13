@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.birthday;
 
 import lombok.Data;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
@@ -25,8 +26,9 @@ public class EmployeeOtherOrganizationEntity implements BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private EnumGender gender;
 
-	@Column(name="category_unit", length=50)
-	private String categoryUnit;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "category_unit", length = 50)
+	private EnumCategory category;
 
 	@Column(name = "department")
 	private String department;

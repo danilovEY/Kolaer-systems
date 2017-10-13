@@ -24,13 +24,6 @@ public class UrlSecurityDaoImpl extends AbstractDefaultDao<UrlSecurityEntity> im
     }
 
     @Override
-    public void clear() {
-        getSession()
-                .createQuery("DELETE FROM " + getEntityName())
-                .executeUpdate();
-    }
-
-    @Override
     public String findAccessByUrlAndMethod(String url, String requestMethod) {
         return getSession()
                 .createQuery("SELECT access FROM " + getEntityName() + " path WHERE path.url = :url AND path.requestMethod = :requestMethod", String.class)

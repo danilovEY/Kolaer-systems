@@ -20,7 +20,7 @@ public class EmployeeOtherOrganizationConverterImpl implements EmployeeOtherOrga
         employeeEntity.setBirthday(dto.getBirthday());
         employeeEntity.setWorkPhoneNumber(dto.getWorkPhoneNumber());
         employeeEntity.setInitials(dto.getInitials());
-        employeeEntity.setCategoryUnit(dto.getCategoryUnit());
+        employeeEntity.setCategory(dto.getCategory());
         employeeEntity.setDepartment(dto.getDepartment());
         employeeEntity.setPost(dto.getPost());
         employeeEntity.setGender(dto.getGender());
@@ -39,7 +39,7 @@ public class EmployeeOtherOrganizationConverterImpl implements EmployeeOtherOrga
         dto.setBirthday(model.getBirthday());
         dto.setWorkPhoneNumber(model.getWorkPhoneNumber());
         dto.setInitials(model.getInitials());
-        dto.setCategoryUnit(model.getCategoryUnit());
+        dto.setCategory(model.getCategory());
         dto.setDepartment(model.getDepartment());
         dto.setPost(model.getPost());
         dto.setGender(model.getGender());
@@ -56,7 +56,7 @@ public class EmployeeOtherOrganizationConverterImpl implements EmployeeOtherOrga
         oldDto.setBirthday(newModel.getBirthday());
         oldDto.setWorkPhoneNumber(newModel.getWorkPhoneNumber());
         oldDto.setInitials(newModel.getInitials());
-        oldDto.setCategoryUnit(newModel.getCategoryUnit());
+        oldDto.setCategory(newModel.getCategory());
         oldDto.setDepartment(newModel.getDepartment());
         oldDto.setPost(newModel.getPost());
         oldDto.setGender(newModel.getGender());

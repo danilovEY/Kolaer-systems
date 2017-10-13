@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.error.ErrorCode;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
 import ru.kolaer.api.mvp.model.kolaerweb.TypePostEnum;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
@@ -185,8 +186,22 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             String depKey = employeeKeyDepMap.get(employeeKey);
 
             Optional.ofNullable(postMap.get(postKey))
-                    .map(PostEntity::getId)
-                    .ifPresent(employeeEntity::setPostId);
+                    .ifPresent(post -> {
+                        employeeEntity.setPostId(post.getId());
+
+                        String postName = post.getName().toLowerCase();
+                        if (postName.contains("начальник") || postName.contains("директор")
+                                || postName.contains("руководитель") || postName.contains("ведущий")
+                                || postName.contains("главный")) {
+                            employeeEntity.setCategory(EnumCategory.LEADER);
+                        } else if(postName.contains("инженер") || postName.contains("специалист")
+                                || postName.contains("техник") || postName.contains("экономист")
+                                || postName.contains("юрисконсульт")) {
+                            employeeEntity.setCategory(EnumCategory.SPECIALIST);
+                        } else {
+                            employeeEntity.setCategory(EnumCategory.WORKER);
+                        }
+                    });
 
             Optional.ofNullable(depMap.get(depKey))
                     .map(DepartmentEntity::getId)
@@ -213,11 +228,12 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             DepartmentEntity departmentEntity = depMap.get(depKey);
             PostEntity postEntity = postMap.get(postKey);
             if(departmentEntity != null && postEntity != null) {
-                String postName = postEntity.getName();
+                String postName = postEntity.getName().toLowerCase();
                 Long idChief = departmentEntity.getChiefEmployeeId();
-                if ((postName.contains("Начальник") || postName.contains("Директор")
-                        || postName.contains("Руководитель") || postName.contains("Ведущий")
-                        || postName.contains("Главный"))
+                if ((employeeEntity.getCategory() != null && employeeEntity.getCategory() == EnumCategory.LEADER)
+                        || (postName.contains("начальник") || postName.contains("директор")
+                        || postName.contains("руководитель") || postName.contains("ведущий")
+                        || postName.contains("главный"))
                         && (idChief == null || !idChief.equals(employeeEntity.getId()))) {
                     departmentEntity.setChiefEmployeeId(employeeEntity.getId());
                     updateChifDep.add(departmentEntity);

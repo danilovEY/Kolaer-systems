@@ -9,7 +9,5 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurityEntity;
 public interface UrlSecurityDao extends DefaultDao<UrlSecurityEntity> {
     UrlSecurityEntity findPathByUrlAndMethod(String url, String method);
 
-    void clear();
-
     String findAccessByUrlAndMethod(String url, String requestMethod);
 }
