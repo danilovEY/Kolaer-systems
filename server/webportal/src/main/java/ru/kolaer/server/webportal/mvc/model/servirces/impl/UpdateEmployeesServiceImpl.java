@@ -209,19 +209,19 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
 
             String postKey = employeeKeyPostMap.get(employeeKey);
             String depKey = employeeKeyDepMap.get(employeeKey);
-            employeeEntity.setPostId(postMap.get(postKey).getId());
 
             DepartmentEntity departmentEntity = depMap.get(depKey);
             PostEntity postEntity = postMap.get(postKey);
-
-            String postName = postEntity.getName();
-            Long idChief = departmentEntity.getChiefEmployeeId();
-            if ((postName.contains("Начальник") || postName.contains("Директор")
-                    || postName.contains("Руководитель") || postName.contains("Ведущий")
-                    || postName.contains("Главный"))
-                    && (idChief == null || !idChief.equals(employeeEntity.getId()))) {
-                departmentEntity.setChiefEmployeeId(employeeEntity.getId());
-                updateChifDep.add(departmentEntity);
+            if(departmentEntity != null && postEntity != null) {
+                String postName = postEntity.getName();
+                Long idChief = departmentEntity.getChiefEmployeeId();
+                if ((postName.contains("Начальник") || postName.contains("Директор")
+                        || postName.contains("Руководитель") || postName.contains("Ведущий")
+                        || postName.contains("Главный"))
+                        && (idChief == null || !idChief.equals(employeeEntity.getId()))) {
+                    departmentEntity.setChiefEmployeeId(employeeEntity.getId());
+                    updateChifDep.add(departmentEntity);
+                }
             }
         }
 

@@ -18,7 +18,8 @@ import java.util.regex.Pattern;
 @Service
 public class ExcelReaderDepartment implements ExcelReader<DepartmentEntity> {
     private static String DEP_ID = "Подразделение";
-    private static String DEP_NAME = "Текст Подразделение";
+    private static String DEP_NAME_TEXT = "Текст Подразделение";
+    private static String DEP_NAME_FULL = "Подразделение (полное)";
 
     @Override
     public DepartmentEntity parse(XSSFRow row, List<String> nameColumns) {
@@ -28,7 +29,10 @@ public class ExcelReaderDepartment implements ExcelReader<DepartmentEntity> {
         DepartmentEntity departmentEntity = new DepartmentEntity();
         //departmentEntity.setId(idDep);
 
-        String depName = row.getCell(nameColumns.indexOf(DEP_NAME)).getStringCellValue();
+        String depName = getStringValue(nameColumns, DEP_NAME_TEXT, row);
+        if(depName == null) {
+            depName = getStringValue(nameColumns, DEP_NAME_FULL, row);
+        }
 
         Pattern pattern = Pattern.compile("[а-яА-Я ]*");
         Matcher matcher = pattern.matcher(depName);
