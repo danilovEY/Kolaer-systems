@@ -37,11 +37,6 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
     private static String SPEC_CATEGORY = "СпециалистОкладЧас";
     private static String LEADER_CATEGORY = "РуководитОкладЧас";
 
-
-
-
-
-
     @Override
     public EmployeeEntity parse(XSSFRow row, List<String> nameColumns) {
         String value = getStringValue(nameColumns, PERSONNEL_NUMBER, row);
@@ -60,8 +55,8 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
         value = getStringValue(nameColumns, THIRD_NAME, row);
         newEmployeeEntity.setThirdName(value);
 
-        newEmployeeEntity.setInitials(newEmployeeEntity.getFirstName() + " "
-                + newEmployeeEntity.getSecondName() + " "
+        newEmployeeEntity.setInitials(newEmployeeEntity.getSecondName() + " "
+                + newEmployeeEntity.getFirstName() + " "
                 + newEmployeeEntity.getThirdName());
 
         Date date = getDateValue(nameColumns, BIRTHDAY_DATE, row);
@@ -94,7 +89,6 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
         if(value != null) {
             newEmployeeEntity.setCategory(getCategory(value));
         }
-        newEmployeeEntity.setHomePhoneNumber(value);
 
         value = getStringValue(nameColumns, EMAIL, row);
         newEmployeeEntity.setEmail(value);

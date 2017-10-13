@@ -278,6 +278,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 employeeEntityFromDb.setBirthday(employeeEntity.getBirthday());
                 employeeEntityFromDb.setHomePhoneNumber(employeeEntity.getHomePhoneNumber());
                 employeeEntityFromDb.setEmploymentDate(employeeEntity.getEmploymentDate());
+                employeeEntityFromDb.setCategory(employeeEntity.getCategory());
             }
 
             newEmployeesMap.put(originKey, employeeEntityFromDb);
