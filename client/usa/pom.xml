@@ -79,7 +79,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>ru.kolaer.client.javafx.runnable.Launcher</mainClass>
+							<mainClass>ru.kolaer.client.usa.runnable.Launcher</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
