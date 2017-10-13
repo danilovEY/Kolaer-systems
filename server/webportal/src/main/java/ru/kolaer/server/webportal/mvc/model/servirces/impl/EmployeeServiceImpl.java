@@ -12,7 +12,6 @@ import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 09.08.2016.
@@ -40,42 +39,27 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
 
     @Override
     public List<EmployeeDto> getUserRangeBirthday(Date startData, Date endData) {
-        return employeeDao.getUserRangeBirthday(startData, endData)
-                .stream()
-                .map(baseConverter::convertToDto)
-                .collect(Collectors.toList());
+        return baseConverter.convertToDto(employeeDao.getUserRangeBirthday(startData, endData));
     }
 
     @Override
     public List<EmployeeDto> getUsersByBirthday(Date date) {
-        return employeeDao.getUsersByBirthday(date)
-                .stream()
-                .map(baseConverter::convertToDto)
-                .collect(Collectors.toList());
+        return baseConverter.convertToDto(employeeDao.getUsersByBirthday(date));
     }
 
     @Override
     public List<EmployeeDto> getUserBirthdayToday() {
-        return employeeDao.getUserBirthdayToday()
-                .stream()
-                .map(baseConverter::convertToDto)
-                .collect(Collectors.toList());
+        return baseConverter.convertToDto(employeeDao.getUserBirthdayToday());
     }
 
     @Override
     public List<EmployeeDto> getUsersByInitials(String initials) {
-        return employeeDao.getUsersByInitials(initials)
-                .stream()
-                .map(baseConverter::convertToDto)
-                .collect(Collectors.toList());
+        return baseConverter.convertToDto(employeeDao.getUsersByInitials(initials));
     }
 
     @Override
     public List<EmployeeDto> getUsersByDepartmentId(Long id) {
-        return employeeDao.findByDepartmentById(id)
-                .stream()
-                .map(baseConverter::convertToDto)
-                .collect(Collectors.toList());
+        return baseConverter.convertToDto(employeeDao.findByDepartmentById(id));
     }
 
     @Override
@@ -87,10 +71,8 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
 
         Long count = employeeDao.findCountByDepartmentById(id);
 
-        List<EmployeeDto> result = employeeDao.findByDepartmentById(page, pageSize, id)
-                .stream()
-                .map(baseConverter::convertToDto)
-                .collect(Collectors.toList());
+        List<EmployeeDto> result = baseConverter
+                .convertToDto(employeeDao.findByDepartmentById(page, pageSize, id));
 
         return new Page<>(result, page, count, pageSize);
     }

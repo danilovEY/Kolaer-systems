@@ -7,7 +7,6 @@ import ru.kolaer.server.webportal.mvc.model.dao.DefaultDao;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 09.10.2017.
@@ -26,16 +25,19 @@ public abstract class AbstractDefaultService<T extends BaseDto, K extends BaseEn
     @Override
     @Transactional(readOnly = true)
     public List<T> getAll() {
-        return defaultEntityDao.findAll()
-                .stream()
-                .map(baseConverter::convertToDto)
-                .collect(Collectors.toList());
+        return baseConverter.convertToDto(defaultEntityDao.findAll());
     }
 
     @Override
     @Transactional(readOnly = true)
     public T getById(Long id) {
-        return baseConverter.convertToDto(defaultEntityDao.findByID(id));
+        return baseConverter.convertToDto(defaultEntityDao.findById(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<T> getById(List<Long> ids) {
+        return baseConverter.convertToDto(defaultEntityDao.findById(ids));
     }
 
     @Override
@@ -47,12 +49,7 @@ public abstract class AbstractDefaultService<T extends BaseDto, K extends BaseEn
     @Override
     @Transactional
     public List<T> save(List<T> dtos) {
-        return defaultEntityDao.save(dtos.stream()
-                .map(baseConverter::convertToModel)
-                .collect(Collectors.toList()))
-                .stream()
-                .map(baseConverter::convertToDto)
-                .collect(Collectors.toList());
+        return baseConverter.convertToDto(defaultEntityDao.save(baseConverter.convertToModel(dtos)));
     }
 
     @Override
@@ -64,15 +61,12 @@ public abstract class AbstractDefaultService<T extends BaseDto, K extends BaseEn
     @Override
     @Transactional
     public void delete(List<T> dtos) {
-        defaultEntityDao.delete(dtos.stream()
-                .map(baseConverter::convertToModel)
-                .collect(Collectors.toList())
-        );
+        defaultEntityDao.delete(baseConverter.convertToModel(dtos));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<T> findAll(Integer number, Integer pageSize) {
+    public Page<T> getAll(Integer number, Integer pageSize) {
         Long count;
         List<T> results;
 
@@ -82,10 +76,7 @@ public abstract class AbstractDefaultService<T extends BaseDto, K extends BaseEn
             pageSize = count.intValue();
         } else {
             count = defaultEntityDao.findAllCount();
-            results = defaultEntityDao.findAll(number, pageSize)
-                    .stream()
-                    .map(baseConverter::convertToDto)
-                    .collect(Collectors.toList());
+            results = baseConverter.convertToDto(defaultEntityDao.findAll(number, pageSize));
         }
 
         return new Page<>(results, number, count, pageSize);

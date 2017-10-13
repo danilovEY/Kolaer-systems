@@ -11,10 +11,11 @@ import java.util.List;
 public interface DefaultService<T extends BaseDto> {
     List<T> getAll();
     T getById(Long id);
+    List<T> getById(List<Long> ids);
     T save(T dto);
     List<T> save(List<T> dtos);
     void delete(T dto);
     void delete(List<T> dtos);
-    Page<T> findAll(Integer number, Integer pageSize);
+    Page<T> getAll(Integer number, Integer pageSize);
 
 }

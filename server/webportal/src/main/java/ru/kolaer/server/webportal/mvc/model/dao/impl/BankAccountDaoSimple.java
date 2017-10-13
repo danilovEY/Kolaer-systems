@@ -51,7 +51,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
-    public BankAccountEntity findByID(@NonNull Long id) {
+    public BankAccountEntity findById(@NonNull Long id) {
         return null;
     }
 

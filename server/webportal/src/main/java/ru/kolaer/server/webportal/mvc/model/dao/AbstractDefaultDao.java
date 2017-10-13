@@ -32,7 +32,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     }
 
     @Override
-    public T findByID(@NonNull Long id) {
+    public T findById(@NonNull Long id) {
         if(id < 1) {
             return null;
         }
@@ -41,8 +41,20 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     }
 
     @Override
+    public List<T> findById(List<Long> ids) {
+        if(ids == null || ids.isEmpty()) {
+            return null;
+        }
+
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " WHERE id IN(:ids)", getEntityClass())
+                .setParameter("ids", ids)
+                .list();
+    }
+
+    @Override
     public T persist(@NonNull T obj) {
-        sessionFactory.getCurrentSession().persist(checkValue(obj));
+        getSession().persist(checkValue(obj));
         return obj;
     }
 

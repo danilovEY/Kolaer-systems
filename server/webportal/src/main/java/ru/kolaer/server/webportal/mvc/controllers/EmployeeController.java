@@ -39,8 +39,9 @@ public class EmployeeController {
     )
     @UrlDeclaration(description = "Получить всех сотрудников.", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<EmployeeDto> getAllEmployees() {
-        return this.employeeService.getAll();
+    public Page<EmployeeDto> getAllEmployees(@RequestParam(value = "page", defaultValue = "0") Integer number,
+                                             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+        return this.employeeService.getAll(number, pageSize);
     }
 
     @ApiOperation(

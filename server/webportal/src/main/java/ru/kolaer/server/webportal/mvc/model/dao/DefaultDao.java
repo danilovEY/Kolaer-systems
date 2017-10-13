@@ -19,7 +19,7 @@ public interface DefaultDao<T extends BaseEntity> {
     List<T> findAll();
 
     /**Получить объект по ID.*/
-    T findByID(@NonNull Long id);
+    T findById(@NonNull Long id);
 
     /**Добавить объект в БД.*/
     T persist(@NonNull T obj);
@@ -106,4 +106,6 @@ public interface DefaultDao<T extends BaseEntity> {
     long findAllCount();
 
     List<T> findAll(Integer number, Integer pageSize);
+
+    List<T> findById(List<Long> ids);
 }

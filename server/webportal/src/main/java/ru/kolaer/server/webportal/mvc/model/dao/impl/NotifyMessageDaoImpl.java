@@ -18,6 +18,6 @@ public class NotifyMessageDaoImpl extends AbstractDefaultDao<NotifyMessageEntity
 
     @Override
     public NotifyMessageEntity getLastNotifyMessage() {
-        return findByID(1L);
+        return findById(1L);
     }
 }
