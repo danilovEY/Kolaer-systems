@@ -1,5 +1,8 @@
 package ru.kolaer.client.usa.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.plugins.services.Service;
@@ -11,9 +14,11 @@ import java.util.concurrent.TimeUnit;
  * Created by danilovey on 19.08.2016.
  */
 public class AutoCheckingNotifyMessage implements Service {
+    private static final Logger log = LoggerFactory.getLogger(AutoCheckingNotifyMessage.class);
+
     private boolean run = false;
-    private boolean error = false;
     private NotifyMessageDto lastNotifyMessage;
+
     @Override
     public boolean isRunning() {
         return this.run;
@@ -34,24 +39,27 @@ public class AutoCheckingNotifyMessage implements Service {
         run = true;
 
         while (run) {
-                ServerResponse<NotifyMessageDto> responseLastNotifyMessage = UniformSystemEditorKitSingleton.getInstance()
-                        .getUSNetwork()
-                        .getKolaerWebServer()
-                        .getApplicationDataBase()
-                        .getNotifyMessageTable()
-                        .getLastNotifyMessage();
-                if(!responseLastNotifyMessage.isServerError()) {
-                    NotifyMessageDto response = responseLastNotifyMessage.getResponse();
-                    if(lastNotifyMessage == null || !lastNotifyMessage.getMessage().equals(response.getMessage())) {
-                        lastNotifyMessage = response;
-                        UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showInformationNotifiAdmin("Сообщение!", lastNotifyMessage.getMessage());
-                    }
-                } else {
-                    if(!error) {
-                        UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi("Невозможно получить сообщение с сервера!", ""); //TODO: !!!
-                        error = true;
-                    }
+            ServerResponse<NotifyMessageDto> responseLastNotifyMessage = UniformSystemEditorKitSingleton.getInstance()
+                    .getUSNetwork()
+                    .getKolaerWebServer()
+                    .getApplicationDataBase()
+                    .getNotifyMessageTable()
+                    .getLastNotifyMessage();
+
+            if(!responseLastNotifyMessage.isServerError()) {
+                NotifyMessageDto response = responseLastNotifyMessage.getResponse();
+                if(lastNotifyMessage == null || !lastNotifyMessage.getMessage().equals(response.getMessage())) {
+                    lastNotifyMessage = response;
+                    UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
+                            .showInformationNotifiAdmin("Сообщение!", lastNotifyMessage.getMessage());
                 }
+            } else {
+                ServerExceptionMessage exceptionMessage = responseLastNotifyMessage.getExceptionMessage();
+                log.error(exceptionMessage.toString());
+                UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
+                        .showErrorNotifi("Невозможно получить сообщение с сервера!", exceptionMessage.getMessage());
+            }
+
             try {
                 TimeUnit.MINUTES.sleep(2);
             } catch (InterruptedException e) {

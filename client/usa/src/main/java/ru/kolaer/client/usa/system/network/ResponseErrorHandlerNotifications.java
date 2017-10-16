@@ -27,7 +27,6 @@ public class ResponseErrorHandlerNotifications extends DefaultResponseErrorHandl
         final NotificationUS notification = UniformSystemEditorKitSingleton.getInstance()
                 .getUISystemUS().getNotification();
 
-
         switch (response.getStatusCode().value()) {
             case 400 : notification
                     .showErrorNotifi("Неверные данные!",

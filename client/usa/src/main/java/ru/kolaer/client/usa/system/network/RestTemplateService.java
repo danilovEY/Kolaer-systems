@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.mvp.model.error.ErrorCode;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
@@ -17,6 +20,14 @@ import java.util.List;
  * Created by danilovey on 16.10.2017.
  */
 public interface RestTemplateService {
+
+    default <T> ServerResponse<T> getServerResponse(RestTemplate restTemplate, String url, Class<T> dtoClass, ObjectMapper objectMapper) {
+        try {
+            return getServerResponse(restTemplate.getForEntity(url, String.class), dtoClass, objectMapper);
+        } catch (RestClientException ex) {
+            return createServerExceptionMessage(url);
+        }
+    }
 
     default <T> ServerResponse<T> getServerResponse(ResponseEntity<String> response, Class<T> dtoClass, ObjectMapper objectMapper) {
         ServerResponse<T> serverResponse = new ServerResponse<>();
@@ -91,5 +102,9 @@ public interface RestTemplateService {
 
     default ServerExceptionMessage readException(ObjectMapper objectMapper, String content) throws IOException {
         return objectMapper.readValue(content, ServerExceptionMessage.class);
+    }
+
+    default <T> ServerResponse<T> createServerExceptionMessage(String url) {
+        return new ServerResponse<T>(true, new ServerExceptionMessage(0, url, ErrorCode.CONNECT), null);
     }
 }

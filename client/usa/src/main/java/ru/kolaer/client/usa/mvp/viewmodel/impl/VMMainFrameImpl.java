@@ -99,6 +99,9 @@ public class VMMainFrameImpl extends Application {
             mainApplicationThreadPool.submit(this::initSystemServices);
             mainApplicationThreadPool.submit(() -> this.installPlugins(initializedPluginManager, searchResult));
             mainApplicationThreadPool.shutdown();
+        }).exceptionally(throwable -> {
+            throwable.printStackTrace();
+            return null;
         });
     }
 

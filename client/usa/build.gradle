@@ -7,7 +7,6 @@ def projectJarName = projectNameWithVersion + ".jar"
 
 dependencies {
     compile("org.springframework:spring-web:4.3.2.RELEASE") {
-        exclude module: 'spring-beans'
         exclude module: 'spring-aop'
         exclude module: 'spring-context'
     }

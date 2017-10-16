@@ -26,8 +26,7 @@ public class NotifyMessageTableImpl implements NotifyMessageTable, RestTemplateS
 
     @Override
     public ServerResponse<NotifyMessageDto> getLastNotifyMessage() {
-        return getServerResponse(restTemplate.getForEntity(this.URL_GET_LAST, String.class), NotifyMessageDto.class, objectMapper);
-
+        return getServerResponse(restTemplate, URL_GET_LAST, NotifyMessageDto.class, objectMapper);
     }
 
     @Override
