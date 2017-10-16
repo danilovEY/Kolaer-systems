@@ -248,10 +248,10 @@ public class VMMainFrameImpl extends Application {
         stage.setTitle("Единая система КолАЭР");
         stage.setOnCloseRequest(event -> System.exit(0));
 
-        PARAM.putAll(this.getParameters().getNamed());
+        PARAM.putAll(getParameters().getNamed());
 
         stage.setScene(new Scene(mainPane));
-        stage.getIcons().add(new Image("/css/aerIcon.png"));
+        stage.getIcons().add(new Image("/css/aerIcon.png", true));
         stage.setMaximized(true);
 
         stage.setFullScreen(false);
