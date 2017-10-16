@@ -1,11 +1,11 @@
 package ru.kolaer.client.usa.system.network;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.exceptions.ServerException;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.RoleDto;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.observers.AuthenticationObserver;
@@ -26,28 +26,28 @@ import java.util.Optional;
 /**
  * Created by danilovey on 02.08.2016.
  */
-public class AuthenticationOnNetwork implements Authentication {
+public class AuthenticationOnNetwork implements Authentication, RestTemplateService {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationOnNetwork.class);
     private final List<AuthenticationObserver> authenticationObserverList;
     private final RestTemplate restTemplate;
     private final String pathToServer;
-    private AccountEntity accountsEntity;
+    private final ObjectMapper objectMapper;
+    private AccountDto accountsEntity;
     private TokenJson tokenJson;
     private boolean isAuth = false;
     private final String URL_TO_GET_TOKEN;
     private final String URL_TO_GET_USER;
-    private final String URL_TO_GET_USER_ROLE;
 
-    public AuthenticationOnNetwork() {
+    public AuthenticationOnNetwork(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
         this.restTemplate = new RestTemplate();
         this.authenticationObserverList = new ArrayList<>();
         this.pathToServer = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/authentication";
         this.URL_TO_GET_TOKEN = this.pathToServer + "/login";
         this.URL_TO_GET_USER = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/user/get";
-        this.URL_TO_GET_USER_ROLE = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/user/roles/get";
     }
 
-    public boolean login(UserAndPassJson userAndPassJson) throws ServerException {
+    public boolean login(UserAndPassJson userAndPassJson) {
         if (userAndPassJson == null) {
             throw new IllegalArgumentException("UserAndPassJson can't be a null!");
         } else if (this.isAuth) {
@@ -60,12 +60,18 @@ public class AuthenticationOnNetwork implements Authentication {
         LOG.info("Авторизация для: {}", userAndPassJson.getUsername());
 
         try {
-            this.tokenJson  = this.restTemplate.postForObject(this.URL_TO_GET_TOKEN, userAndPassJson, TokenJson.class);
-            if(this.tokenJson != null)
+            ServerResponse<TokenJson> response = getServerResponse(restTemplate.postForEntity(URL_TO_GET_TOKEN, userAndPassJson, String.class),
+                    TokenJson.class, objectMapper);
+            if(response.isServerError()) {
+                LOG.error("EROOR!");
+            } else {
+                this.tokenJson = response.getResponse();
                 LOG.info("Токен получен...");
+            }
+
 
             LOG.info(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken());
-            this.accountsEntity = this.restTemplate.getForObject(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken(), AccountEntity.class);
+            this.accountsEntity = this.restTemplate.getForObject(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken(), AccountDto.class);
             if(this.accountsEntity != null) {
                 LOG.info("Пользователь получен...");
                 this.isAuth = true;
@@ -77,16 +83,16 @@ public class AuthenticationOnNetwork implements Authentication {
                 return true;
             } else {
                 LOG.info("Авторизация не прошла!");
-                return false;
             }
         } catch (Exception ex) {
             LOG.error("Не удалось авторизоваться!", ex);
-            throw new ServerException(ex);
         }
+
+        return false;
     }
 
     @Override
-    public boolean login(UserAndPassJson userAndPassJson, boolean remember) throws ServerException {
+    public boolean login(UserAndPassJson userAndPassJson, boolean remember) {
         if(remember) {
             try {
                 final List<String> loginAndPassList =
@@ -107,7 +113,7 @@ public class AuthenticationOnNetwork implements Authentication {
     }
 
     @Override
-    public boolean loginIsRemember() throws ServerException {
+    public boolean loginIsRemember() {
         if(new File(Authentication.TEMP_NAME).exists()) {
             try {
                 final List<String> strings = Files
@@ -140,19 +146,11 @@ public class AuthenticationOnNetwork implements Authentication {
         return this.tokenJson;
     }
 
-    @Override
-    public RoleDto[] getRoles() {
-        if(this.isAuth) {
-            return this.restTemplate.getForObject(this.URL_TO_GET_USER_ROLE + "?token=" + this.tokenJson.getToken(), RoleEntity[].class);
-        }
-        return new RoleEntity[0];
-    }
-
     public boolean isAuthentication() {
         return this.isAuth;
     }
 
-    public boolean logout() throws ServerException {
+    public boolean logout() {
         this.isAuth = false;
         this.accountsEntity = null;
         this.tokenJson = null;

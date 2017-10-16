@@ -18,8 +18,8 @@ public class ResponseErrorHandlerNotifications extends DefaultResponseErrorHandl
     private static final Logger log = LoggerFactory.getLogger(ResponseErrorHandlerNotifications.class);
     private final ObjectMapper objectMapper;
 
-    public ResponseErrorHandlerNotifications() {
-        this.objectMapper = new ObjectMapper();
+    public ResponseErrorHandlerNotifications(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     @Override

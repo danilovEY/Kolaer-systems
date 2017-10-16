@@ -1,5 +1,6 @@
 package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +25,6 @@ import ru.kolaer.client.usa.services.ServiceControlManager;
 import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.usa.system.network.NetworkUSRestTemplate;
-import ru.kolaer.client.usa.system.network.ResponseErrorHandlerNotifications;
 import ru.kolaer.client.usa.system.ui.MenuBarUSImpl;
 import ru.kolaer.client.usa.system.ui.NotificationPaneExceptionHandler;
 import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
@@ -162,9 +162,11 @@ public class VMMainFrameImpl extends Application {
     private UniformSystemEditorKit initUniformSystemEditorKit() {
         Thread.currentThread().setName("Инициализация UniformSystemEditorKit");
 
+        ObjectMapper objectMapper = new ObjectMapper();
+
         final MenuBarUSImpl menuBarUS = new MenuBarUSImpl(menuBar);
         final NotificationPaneExceptionHandler notify = new NotificationPaneExceptionHandler();
-        final NetworkUSRestTemplate network = new NetworkUSRestTemplate(new ResponseErrorHandlerNotifications());
+        final NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
         final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         uiSystemUS.setNotification(notify);
         uiSystemUS.setMenuBarUS(menuBarUS);
@@ -175,7 +177,7 @@ public class VMMainFrameImpl extends Application {
 
         Thread.setDefaultUncaughtExceptionHandler(notify);
 
-        final AuthenticationOnNetwork authentication = new AuthenticationOnNetwork();
+        final AuthenticationOnNetwork authentication = new AuthenticationOnNetwork(objectMapper);
         authentication.registerObserver(menuBarUS);
 
         final UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();

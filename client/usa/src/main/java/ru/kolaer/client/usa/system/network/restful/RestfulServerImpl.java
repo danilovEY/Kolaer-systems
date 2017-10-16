@@ -1,37 +1,35 @@
 package ru.kolaer.client.usa.system.network.restful;
 
-import org.springframework.web.client.RestClientException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.network.restful.RestfulServer;
+import ru.kolaer.client.usa.system.network.RestTemplateService;
 
 /**
  * Created by danilovey on 29.07.2016.
  */
-public class RestfulServerImpl implements RestfulServer {
+public class RestfulServerImpl implements RestfulServer, RestTemplateService {
+    private final ObjectMapper objectMapper;
     private RestTemplate globalRestTemplate;
-    private StringBuilder url;
     private final String urlToStatus;
 
-    public RestfulServerImpl(RestTemplate globalRestTemplate, StringBuilder url) {
+    public RestfulServerImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, StringBuilder url) {
+        this.objectMapper = objectMapper;
         this.globalRestTemplate = globalRestTemplate;
-        this.url = url;
         this.urlToStatus = url.toString() + "/system/server/status";
     }
 
     @Override
-    public ServerStatus getServerStatus() {
-        try {
-            final String status = this.globalRestTemplate.getForObject(this.urlToStatus, String.class);
-            if(status == null)
-                return ServerStatus.NOT_AVAILABLE;
-            switch (status) {
-                case "available": return ServerStatus.AVAILABLE;
-                case "not available": return ServerStatus.NOT_AVAILABLE;
-                default: return ServerStatus.UNKNOWN;
-            }
-        } catch(final RestClientException ex) {
-            return ServerStatus.NOT_AVAILABLE;
+    public ServerResponse<ServerStatus> getServerStatus() {
+        ServerResponse<String> serverResponse = getServerResponse(globalRestTemplate.getForEntity(urlToStatus, String.class),
+                String.class, objectMapper);
+
+        if (serverResponse.isServerError()) {
+            return ServerResponse.createServerResponse(ServerStatus.NOT_AVAILABLE);
+        } else {
+            return ServerResponse.createServerResponse(ServerStatus.AVAILABLE);
         }
     }
 }

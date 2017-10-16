@@ -1,42 +1,46 @@
 package ru.kolaer.client.usa.system.network.kolaerweb;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.system.network.HolidaysTable;
+import ru.kolaer.client.usa.system.network.RestTemplateService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by danilovey on 02.11.2016.
  */
-public class HolidaysTableImpl implements HolidaysTable {
+public class HolidaysTableImpl implements HolidaysTable, RestTemplateService {
+    private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
     private final String URL_GET;
     private final String URL_GET_ALL;
 
-    public HolidaysTableImpl(RestTemplate globalRestTemplate, String path) {
+    public HolidaysTableImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, String path) {
+        this.objectMapper = objectMapper;
         this.restTemplate = globalRestTemplate;
         this.URL_GET = path + "/get";
-        this.URL_GET_ALL = this.URL_GET + "/all";
+        this.URL_GET_ALL = URL_GET + "/all";
     }
 
-
     @Override
-    public Holiday[] getHolidaysInThisMonth() {
-        final LocalDate date = LocalDate.now();
+    public ServerResponse<List<Holiday>> getHolidaysInThisMonth() {
+        LocalDate date = LocalDate.now();
         return this.getHolidays(date.getMonthValue(), date.getYear());
     }
 
     @Override
-    public Holiday[] getHolidays(final int month, final int year) {
-        final Holiday[] holidays = restTemplate.getForObject(this.URL_GET + "/" + String.valueOf(month) + "/" + String.valueOf(year), Holiday[].class);
-
-        return holidays;
+    public ServerResponse<List<Holiday>> getHolidays(final int month, final int year) {
+        return getServerResponses(restTemplate.getForEntity(URL_GET + "/" + String.valueOf(month) + "/" + String.valueOf(year), String.class),
+                Holiday[].class, objectMapper);
     }
 
     @Override
-    public Holiday[] getHolidaysAll() {
-        final Holiday[] holidays = restTemplate.getForObject(this.URL_GET_ALL, Holiday[].class);
-        return holidays;
+    public ServerResponse<List<Holiday>> getHolidaysAll() {
+        return getServerResponses(restTemplate.getForEntity(URL_GET_ALL, String.class),
+                Holiday[].class, objectMapper);
     }
 }

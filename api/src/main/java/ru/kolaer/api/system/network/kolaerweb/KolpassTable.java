@@ -13,10 +13,8 @@ public interface KolpassTable {
     ServerResponse<List<PasswordRepositoryDto>> getAllRepositoryPasswords();
     ServerResponse<List<PasswordRepositoryDto>> getAllRepositoryPasswordsChief();
     ServerResponse<PasswordRepositoryDto> addRepositoryPassword(PasswordRepositoryDto passwordRepositoryDto);
-    ServerResponse<PasswordRepositoryDto> addHistoryPasswordToRepository(Long idRep,
-                                                                         PasswordHistoryDto repositoryPasswordHistory);
+    ServerResponse<PasswordRepositoryDto> addHistoryPasswordToRepository(Long idRep, PasswordHistoryDto passwordHistoryDto);
+    ServerResponse<PasswordRepositoryDto> addRepToOtherEmployee(PasswordRepositoryDto rep);
     ServerResponse<PasswordRepositoryDto> updateRepositoryPassword(PasswordRepositoryDto passwordRepositoryDto);
     ServerResponse deleteRepositoryPassword(PasswordRepositoryDto passwordRepositoryDto);
-
-    ServerResponse<PasswordRepositoryDto> addRepToOtherEmployee(PasswordRepositoryDto rep);
 }

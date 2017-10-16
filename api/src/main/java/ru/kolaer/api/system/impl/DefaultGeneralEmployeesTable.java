@@ -37,10 +37,9 @@ public class DefaultGeneralEmployeesTable implements GeneralEmployeesTable {
 
     }
 
-
     @Override
-    public ServerResponse<List<EmployeeDto>> getAllUser() {
-        return ServerResponse.createServerResponse(entities);
+    public ServerResponse<Page<EmployeeDto>> getAllUser() {
+        return ServerResponse.createServerResponse(Page.createPage(entities));
     }
 
     @Override

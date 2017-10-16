@@ -4,7 +4,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.ui.MenuBarUS;
@@ -38,9 +37,11 @@ public class MenuBarUSImpl implements MenuBarUS, AuthenticationObserver {
         });
 
 
-        fileMenu.getItems().add(authorizationItem);
+        Tools.runOnWithOutThreadFX(() -> {
+            fileMenu.getItems().add(authorizationItem);
 
-        this.menuBar.getMenus().add(fileMenu);
+            menuBar.getMenus().add(fileMenu);
+        });
     }
 
     @Override
@@ -59,7 +60,7 @@ public class MenuBarUSImpl implements MenuBarUS, AuthenticationObserver {
     }
 
     @Override
-    public void logout(AccountEntity account) {
+    public void logout(AccountDto account) {
         authorizationItem.setText("Авторизоваться");
 
         UniformSystemEditorKitSingleton.getInstance().getUISystemUS()

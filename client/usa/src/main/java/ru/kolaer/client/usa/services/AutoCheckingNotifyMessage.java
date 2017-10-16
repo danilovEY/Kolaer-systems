@@ -1,7 +1,7 @@
 package ru.kolaer.client.usa.services;
 
-import org.springframework.web.client.HttpServerErrorException;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
+import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class AutoCheckingNotifyMessage implements Service {
     private boolean run = false;
     private boolean error = false;
-    private NotifyMessage lastNotifyMessage;
+    private NotifyMessageDto lastNotifyMessage;
     @Override
     public boolean isRunning() {
         return this.run;
@@ -26,31 +26,36 @@ public class AutoCheckingNotifyMessage implements Service {
 
     @Override
     public void stop() {
-        this.run = false;
+        run = false;
     }
 
     @Override
     public void run() {
-        this.run = true;
+        run = true;
 
-        while (this.run) {
-            try {
-                final NotifyMessage lastNotifyMessage = UniformSystemEditorKitSingleton.getInstance().getUSNetwork().getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().getLastNotifyMessage();
-                if((this.lastNotifyMessage == null || !this.lastNotifyMessage.getMessage().equals(lastNotifyMessage.getMessage())) && lastNotifyMessage != null) {
-                    this.lastNotifyMessage = lastNotifyMessage;
-                    UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showInformationNotifiAdmin("Сообщение!", lastNotifyMessage.getMessage());
+        while (run) {
+                ServerResponse<NotifyMessageDto> responseLastNotifyMessage = UniformSystemEditorKitSingleton.getInstance()
+                        .getUSNetwork()
+                        .getKolaerWebServer()
+                        .getApplicationDataBase()
+                        .getNotifyMessageTable()
+                        .getLastNotifyMessage();
+                if(!responseLastNotifyMessage.isServerError()) {
+                    NotifyMessageDto response = responseLastNotifyMessage.getResponse();
+                    if(lastNotifyMessage == null || !lastNotifyMessage.getMessage().equals(response.getMessage())) {
+                        lastNotifyMessage = response;
+                        UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showInformationNotifiAdmin("Сообщение!", lastNotifyMessage.getMessage());
+                    }
+                } else {
+                    if(!error) {
+                        UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi("Невозможно получить сообщение с сервера!", ""); //TODO: !!!
+                        error = true;
+                    }
                 }
-            } catch (HttpServerErrorException ex) {
-                if(!this.error) {
-                    UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi("Невозможно получить сообщение с сервера!", ex.getMessage());
-                    this.error = true;
-                }
-            }
-
             try {
                 TimeUnit.MINUTES.sleep(2);
             } catch (InterruptedException e) {
-                this.run = false;
+                run = false;
                 return;
             }
         }

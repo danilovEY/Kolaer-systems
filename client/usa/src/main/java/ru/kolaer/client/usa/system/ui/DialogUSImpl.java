@@ -11,7 +11,7 @@ import org.controlsfx.dialog.LoginDialog;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.exceptions.ServerException;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.network.ServerStatus;
@@ -80,8 +80,10 @@ public class DialogUSImpl implements DialogUS {
 			protected Boolean call() throws Exception {
 				this.updateTitle("Подключение к серверу");
 				this.updateMessage("Проверка доступности сервера...");
-				if (UniformSystemEditorKitSingleton.getInstance().getUSNetwork()
-						.getKolaerWebServer().getServerStatus() == ServerStatus.AVAILABLE) {
+				ServerResponse<ServerStatus> responceServerStatus = UniformSystemEditorKitSingleton.getInstance().getUSNetwork()
+						.getKolaerWebServer().getServerStatus();
+				if (!responceServerStatus.isServerError()
+						&& responceServerStatus.getResponse() == ServerStatus.AVAILABLE) { // TODO: !!!
 					this.updateMessage("Авторизация...");
 					try {
 						String login = "";
@@ -103,7 +105,7 @@ public class DialogUSImpl implements DialogUS {
 							uiSystemUS.getNotification().showErrorNotifi("Ошибка!",
 									"Авторизироватся не удалось!");
 						}
-					} catch (ServerException ex) {
+					} catch (Exception ex) {
 						updateMessage("Не удалось авторизоваться!!");
 						this.setException(ex);
 						Tools.runOnWithOutThreadFX(() ->

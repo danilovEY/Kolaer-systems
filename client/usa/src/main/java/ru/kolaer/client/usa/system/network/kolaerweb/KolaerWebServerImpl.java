@@ -1,6 +1,8 @@
 package ru.kolaer.client.usa.system.network.kolaerweb;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.api.system.network.kolaerweb.KolaerWebServer;
@@ -14,32 +16,34 @@ import java.net.URL;
  * Created by Danilov on 28.07.2016.
  */
 public class KolaerWebServerImpl implements KolaerWebServer {
+    private final ObjectMapper objectMapper;
     private final RestTemplate globalRestTemplate;
     private ApplicationDataBase applicationDataBase;
     private ServerTools serverTools;
 
-    public KolaerWebServerImpl(RestTemplate globalRestTemplate, StringBuilder path) {
+    public KolaerWebServerImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, StringBuilder path) {
+        this.objectMapper = objectMapper;
         this.globalRestTemplate = globalRestTemplate;
-        this.applicationDataBase = new ApplicationDataBaseImpl(this.globalRestTemplate,
+        this.applicationDataBase = new ApplicationDataBaseImpl(objectMapper, globalRestTemplate,
                 path.append("/rest").toString());
-        this.serverTools = new ServerToolsImpl(this.globalRestTemplate, path.toString());
+        this.serverTools = new ServerToolsImpl(objectMapper, globalRestTemplate, path.toString());
     }
 
     @Override
-    public ServerStatus getServerStatus() {
+    public ServerResponse<ServerStatus> getServerStatus() {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("http://"+Resources.URL_TO_KOLAER_WEB.toString()).openConnection();
             connection.setRequestMethod("HEAD");
             int responseCode = connection.getResponseCode();
             connection.disconnect();
             if(200 >= responseCode && responseCode <= 399) {
-                return ServerStatus.AVAILABLE;
+                return ServerResponse.createServerResponse(ServerStatus.AVAILABLE);
             }
         } catch (Exception ex) {
-            return ServerStatus.NOT_AVAILABLE;
+            return ServerResponse.createServerResponse(ServerStatus.NOT_AVAILABLE);
         }
 
-        return ServerStatus.UNKNOWN;
+        return ServerResponse.createServerResponse(ServerStatus.UNKNOWN);
     }
 
     @Override

@@ -2,14 +2,17 @@ package ru.kolaer.api.mvp.model.kolaerweb;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by danilovey on 07.12.2016.
  */
 @ApiModel("Страница с данными")
+@Data
 public class Page<T> implements Serializable {
     @ApiModelProperty("Список объектов")
     private List<T> data;
@@ -43,35 +46,11 @@ public class Page<T> implements Serializable {
         this(data, number, count.intValue(), pageSize);
     }
 
-    public List<T> getData() {
-        return data;
+    public static <T> Page<T> createPage() {
+        return new Page<>(Collections.emptyList(), 0, 0, 0);
     }
 
-    public void setData(List<T> data) {
-        this.data = data;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public static <T> Page<T> createPage(List<T> objects) {
+        return new Page<>(objects, 0, 0, 0);
     }
 }

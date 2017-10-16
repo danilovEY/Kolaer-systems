@@ -1,8 +1,8 @@
 package ru.kolaer.client.usa.system.network;
 
 import ch.qos.logback.classic.Level;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.system.network.NetworkUS;
 import ru.kolaer.api.system.network.OtherPublicAPI;
@@ -25,15 +25,15 @@ public class NetworkUSRestTemplate implements NetworkUS {
 	/**БД через RESTful.*/
 	private OtherPublicAPI otherPublicAPI;
 
-	public NetworkUSRestTemplate(ResponseErrorHandler responseErrorHandler) {
+	public NetworkUSRestTemplate(ObjectMapper objectMapper) {
 		this.globalRestTemplate = new RestTemplate();
 		//Убираем лог REST'a (засоряет)
 		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.springframework.web.client.RestTemplate")).setLevel(Level.INFO);
-		this.globalRestTemplate.setErrorHandler(responseErrorHandler);
+		this.globalRestTemplate.setErrorHandler(new ResponseErrorHandlerNotifications(objectMapper));
 
-		this.restfulServer = new RestfulServerImpl(this.globalRestTemplate, new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL));
-		this.kolaerWebServer = new KolaerWebServerImpl(this.globalRestTemplate, new StringBuilder("http://").append(Resources.URL_TO_KOLAER_WEB));
-		this.otherPublicAPI = new OtherPublicAPIImpl(this.globalRestTemplate);
+		this.restfulServer = new RestfulServerImpl(objectMapper, globalRestTemplate, new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL));
+		this.kolaerWebServer = new KolaerWebServerImpl(objectMapper, globalRestTemplate, new StringBuilder("http://").append(Resources.URL_TO_KOLAER_WEB));
+		this.otherPublicAPI = new OtherPublicAPIImpl(objectMapper, globalRestTemplate);
 	}
 
 	@Override

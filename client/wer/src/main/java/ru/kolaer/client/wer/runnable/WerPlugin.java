@@ -9,7 +9,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
@@ -22,8 +21,8 @@ import ru.kolaer.client.wer.mvp.presenter.PEventTableImpl;
 import ru.kolaer.client.wer.mvp.presenter.PSplitTableDetailedEventImpl;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -64,7 +63,7 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public Collection<Service> getServices() {
-        return Arrays.asList(this.mWindowsEvent);
+        return Collections.singletonList(this.mWindowsEvent);
     }
 
     @Override
@@ -96,8 +95,7 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public void login(AccountDto account) {
-        if(account.getRoles().stream().anyMatch(role -> role.getType().equals("OIT"))
-                && this.mainPane != null) {
+        if(account.isAccessOit() && this.mainPane != null) {
             Tools.runOnWithOutThreadFX(() -> {
                 final TextField hostNameText = new TextField();
                 final TextField userNameText = new TextField();
@@ -131,7 +129,7 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
     }
 
     @Override
-    public void logout(AccountEntity account) {
+    public void logout(AccountDto account) {
         Optional.ofNullable(this.mainPane).ifPresent(pane -> {
             pane.setCenter(null);
         });

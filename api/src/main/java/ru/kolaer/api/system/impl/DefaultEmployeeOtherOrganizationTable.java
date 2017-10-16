@@ -1,5 +1,6 @@
 package ru.kolaer.api.system.impl;
 
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.api.system.network.kolaerweb.EmployeeOtherOrganizationTable;
@@ -28,8 +29,8 @@ public class DefaultEmployeeOtherOrganizationTable implements EmployeeOtherOrgan
     }
 
     @Override
-    public ServerResponse<List<EmployeeOtherOrganizationDto>> getAllUser() {
-        return ServerResponse.createServerResponse(Collections.emptyList());
+    public ServerResponse<Page<EmployeeOtherOrganizationDto>> getAllUser() {
+        return ServerResponse.createServerResponse(Page.createPage());
     }
 
     @Override
