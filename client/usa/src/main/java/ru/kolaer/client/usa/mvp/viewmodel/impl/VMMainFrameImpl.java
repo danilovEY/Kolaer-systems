@@ -2,8 +2,6 @@ package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
@@ -30,7 +28,6 @@ import ru.kolaer.client.usa.system.ui.NotificationPaneExceptionHandler;
 import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
 import ru.kolaer.client.usa.tools.Resources;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -50,7 +47,8 @@ public class VMMainFrameImpl extends Application {
     /**
      * Панель с контентом главного окна.
      */
-    @FXML private BorderPane mainPane;
+    private BorderPane mainPane;
+
     /**
      * Менеджер служб.
      */
@@ -64,8 +62,7 @@ public class VMMainFrameImpl extends Application {
     private MenuBar menuBar;
     private SplitPane splitPane;
 
-    @FXML
-    public void initialize() {
+    private void initialize() {
     	Thread.currentThread().setName("Главный поток");
 
         //Инициализация вкладочного explorer'а.
@@ -243,6 +240,8 @@ public class VMMainFrameImpl extends Application {
 
     @Override
     public void start(final Stage stage) throws InterruptedException {
+        mainPane = new BorderPane();
+
     	VMMainFrameImpl.stage = stage;
         stage.setMinHeight(650);
         stage.setMinWidth(850);
@@ -251,17 +250,9 @@ public class VMMainFrameImpl extends Application {
 
         PARAM.putAll(this.getParameters().getNamed());
 
-        Tools.runOnThreadFX(() -> {
-            try {
-                stage.setScene(new Scene(FXMLLoader.load(Resources.V_MAIN_FRAME)));
-                stage.getIcons().add(new Image("/css/aerIcon.png"));
-                stage.setMaximized(true);
-            } catch (IOException e) {
-                LOG.error("Не удалось загрузить: " + Resources.V_MAIN_FRAME, e);
-                System.exit(-9);
-            }
-        });
-
+        stage.setScene(new Scene(mainPane));
+        stage.getIcons().add(new Image("/css/aerIcon.png"));
+        stage.setMaximized(true);
 
         stage.setFullScreen(false);
         stage.addEventHandler(KeyEvent.KEY_PRESSED, (e) -> {
@@ -269,10 +260,10 @@ public class VMMainFrameImpl extends Application {
                 stage.setFullScreen(true);
         });
 
-
-
         stage.centerOnScreen();
         stage.show();
+
+        initialize();
     }
 
 

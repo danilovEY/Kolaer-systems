@@ -8,9 +8,7 @@ import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.presenter.impl.PTabImpl;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 
-import java.net.URL;
 import java.util.Collection;
-import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,9 +18,8 @@ import java.util.concurrent.Executors;
  */
 public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerOSGi.class);
-    
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+
+    public VMTabExplorerOSGi() {
         this.initSelectionModel();
     }
 
