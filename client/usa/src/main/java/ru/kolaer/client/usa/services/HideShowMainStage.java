@@ -8,6 +8,7 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.runnable.Launcher;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +22,7 @@ public class HideShowMainStage implements Service {
 	private final File pathToShowAppFile = new File(Launcher.pathToShowAppFile);
 	private final Stage mainStage;
 	private boolean isRun = false;
+	private FileInputStream lockFile;
 
 	public HideShowMainStage(final Stage mainStage) {
 		if(mainStage == null)
@@ -31,7 +33,7 @@ public class HideShowMainStage implements Service {
 
 	@Override
 	public boolean isRunning() {
-		return this.isRun;
+		return isRun;
 	}
 
 	@Override
@@ -41,39 +43,53 @@ public class HideShowMainStage implements Service {
 
 	@Override
 	public void stop() {
+		if(lockFile != null) {
+			try {
+				lockFile.close();
+			} catch (IOException ex) {
+				LOG.error("Не удалось закрыть поток файла: {}", pathToFile.getAbsoluteFile());
+			}
+		}
 		pathToFile.delete();
-		this.isRun = false;
+		isRun = false;
 	}
 
 	@Override
 	public void run() {
-		if(!this.pathToFile.exists()){
-			try{
-				LOG.info("Создание файла: {}", this.pathToFile.getAbsoluteFile());
-				this.pathToFile.createNewFile();
-			}catch(IOException e){
-				LOG.error("Невозможно создать файл: {}", this.pathToFile.getAbsoluteFile());
+		if(!pathToFile.exists()){
+			try {
+				LOG.info("Создание файла: {}", pathToFile.getAbsoluteFile());
+
+				if(pathToShowAppFile.exists()) {
+					pathToShowAppFile.delete();
+				}
+
+				if(pathToFile.createNewFile()) {
+					lockFile = new FileInputStream(pathToFile);
+				}
+			} catch(IOException e){
+				LOG.error("Невозможно создать файл: {}", pathToFile.getAbsoluteFile());
 				return;
 			}
 		}
 
-		this.isRun = true;
+		isRun = true;
 
-		while(this.isRun){
+		while(isRun){
 			try{
 				TimeUnit.MILLISECONDS.sleep(200);
 			}catch(InterruptedException e){
 				LOG.error("Прерывание операции!");
-				this.stop();
+				stop();
 				return;
 			}
 
-			if(this.pathToShowAppFile.exists()){
-				this.pathToShowAppFile.delete();
+			if(pathToShowAppFile.exists()){
+				pathToShowAppFile.delete();
 				Tools.runOnThreadFX(() -> {
-					this.mainStage.setMaximized(true);
-					this.mainStage.requestFocus();
-					this.mainStage.show();
+					mainStage.show();
+					mainStage.setMaximized(false); //JRE BUG
+					mainStage.setMaximized(true);
 				});
 			}
 		}

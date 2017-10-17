@@ -4,7 +4,10 @@ import java.io.InputStream;
 import java.net.URL;
 
 public interface Resources {
-	String VERSION = "1.2";
+
+	String CACHE_PATH = "D:\\Документы\\KolaerCache";
+
+	String VERSION = "3.1";
 	
 	String PATH_TO_DIR_WITH_PLUGINS = "plugins";
 	StringBuilder URL_TO_KOLAER_RESTFUL = new StringBuilder("localhost:8080/ru.kolaer.server.restful");

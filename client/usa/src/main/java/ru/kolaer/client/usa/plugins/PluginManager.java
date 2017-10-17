@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.usa.tools.Resources;
 
 import java.io.File;
 import java.net.URL;
@@ -25,7 +26,6 @@ public class PluginManager {
     private final List<PluginBundle> installPlugins = new ArrayList<>();
     private BundleContext context;
     private boolean isInit = false;
-    private String defaultPathCache = "KolaerCache";
     private Framework framework;
 
     public PluginManager() {
@@ -37,10 +37,10 @@ public class PluginManager {
     }
 
     public void initialization() throws Exception {
-        final File frameworkDir = new File("D:\\Документы", defaultPathCache);
+        final File frameworkDir = new File(Resources.CACHE_PATH, "plugins");
 
         final Map<String, String> frameworkProperties = new HashMap<>();
-        frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath() + "/" + UUID.randomUUID());
+        frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
         frameworkProperties.put("felix.log.level", "3");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 

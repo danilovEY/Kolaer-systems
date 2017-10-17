@@ -19,6 +19,7 @@ import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
 import ru.kolaer.client.usa.services.AutoCheckingNotifyMessage;
 import ru.kolaer.client.usa.services.AutoUpdatePlugins;
+import ru.kolaer.client.usa.services.HideShowMainStage;
 import ru.kolaer.client.usa.services.ServiceControlManager;
 import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.system.network.AuthenticationOnNetwork;
@@ -145,6 +146,7 @@ public class VMMainFrameImpl extends Application {
 
         this.servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, this.servicesManager), true);
         this.servicesManager.addService(new AutoCheckingNotifyMessage(), true);
+        this.servicesManager.addService(new HideShowMainStage(stage), true);
     }
 
     private void initTray() {
@@ -246,7 +248,10 @@ public class VMMainFrameImpl extends Application {
         stage.setMinHeight(650);
         stage.setMinWidth(850);
         stage.setTitle("Единая система КолАЭР");
-        stage.setOnCloseRequest(event -> System.exit(0));
+        stage.setOnCloseRequest(event -> {
+            LOG.info("AAAAAAA");
+            System.exit(0);
+        });
 
         PARAM.putAll(getParameters().getNamed());
 

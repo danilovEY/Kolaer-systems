@@ -23,84 +23,81 @@ import java.util.concurrent.Executors;
 public class Tray {
     private final Logger LOG = LoggerFactory.getLogger(Tray.class);
 
-    private Stage mainStage;
     private boolean firstTime = true;
     private TrayIcon trayIcon;
 
-    public void createTrayIcon(final Stage stage, final PluginManager pluginManager, final ServiceControlManager servicesManager, final VMExplorer explorer) {
+    public void createTrayIcon(Stage stage, PluginManager pluginManager, ServiceControlManager servicesManager, VMExplorer explorer) {
         stage.setOnCloseRequest(event -> {
-           // if (trayIcon != null) {
-           //     Tools.runOnThreadFX(() -> {
-           //         stage.hide();
-           //     });
-           //     this.showProgramIsMinimizedMsg();
-           // } else {
-                final ExecutorService serviceThread = Executors.newSingleThreadExecutor();
-                CompletableFuture.runAsync(() -> {
-                    Thread.currentThread().setName("Завершение приложения");
-                    LOG.info("Завершение служб...");
-                    servicesManager.removeAllServices();
-                }, serviceThread).exceptionally(t -> {
-                    LOG.error("Ошибка при завершении всех активных служб!", t);
-                    return null;
-                }).thenAccept(aVoid -> {
-                    LOG.info("Завершение вкладок...");
-                    explorer.removeAll();
-                }).exceptionally(t -> {
-                    LOG.error("Ошибка при завершении всех активных плагинов!", t);
-                    return null;
-                }).thenAccept(aVoid -> {
-                    try {
-                        pluginManager.shutdown();
-                    } catch (InterruptedException e1) {
-                        LOG.error("Ошибка при закрытии OSGi!", e1);
-                    }
-                }).thenAccept(aVoid -> {
-                    Platform.runLater(() -> {
-                        LOG.info("Завершение JavaFX...");
-                        stage.close();
-                        Platform.exit();
-                        System.exit(0);
-                    });
-                    LOG.info("Завершение приложения...");
-                }).exceptionally(t -> {
-                    LOG.error("Ошибка при завершении всего приложения!", t);
-                    System.exit(-9);
-                    return null;
+            final ExecutorService serviceThread = Executors.newSingleThreadExecutor();
+            CompletableFuture.runAsync(() -> {
+                Thread.currentThread().setName("Завершение приложения");
+                LOG.info("Завершение служб...");
+                servicesManager.removeAllServices();
+            }, serviceThread).exceptionally(t -> {
+                LOG.error("Ошибка при завершении всех активных служб!", t);
+                return null;
+            }).thenAccept(aVoid -> {
+                LOG.info("Завершение вкладок...");
+                explorer.removeAll();
+            }).exceptionally(t -> {
+                LOG.error("Ошибка при завершении всех активных плагинов!", t);
+                return null;
+            }).thenAccept(aVoid -> {
+                try {
+                    pluginManager.shutdown();
+                } catch (InterruptedException e1) {
+                    LOG.error("Ошибка при закрытии OSGi!", e1);
+                }
+            }).thenAccept(aVoid -> {
+                Platform.runLater(() -> {
+                    LOG.info("Завершение JavaFX...");
+                    stage.close();
+                    Platform.exit();
+                    System.exit(0);
                 });
-            //}
+                LOG.info("Завершение приложения...");
+            }).exceptionally(t -> {
+                LOG.error("Ошибка при завершении всего приложения!", t);
+                System.exit(-9);
+                return null;
+            });
+        });
+
+        stage.iconifiedProperty().addListener((observable, oldValue, newValue) -> {
+            if (trayIcon != null && newValue) {
+                Tools.runOnThreadFX(stage::hide);
+                showProgramIsMinimizedMsg();
+            }
         });
 
         if (SystemTray.isSupported()) {
-        	this.mainStage = stage;
+            SystemTray tray = SystemTray.getSystemTray();
 
-            final SystemTray tray = SystemTray.getSystemTray();
+            PopupMenu popup = new PopupMenu();
 
-            final PopupMenu popup = new PopupMenu();
+            MenuItem showItem = new MenuItem("Открыть");
+            MenuItem closeItem = new MenuItem("Закрыть");
 
-            final MenuItem showItem = new MenuItem("Открыть");
-            final MenuItem closeItem = new MenuItem("Закрыть");
-
-            final ActionListener showStage = e1 -> {
+            ActionListener showStage = e1 -> {
                 Tools.runOnThreadFX(() -> {
-                	this.mainStage.show();
+                    LOG.info("AAAAAA");
+                    stage.show();
+                    stage.setMaximized(false); //JRE BUG
+                    stage.setMaximized(true);
                 });
             };
 
             showItem.addActionListener(showStage);
-
-            closeItem.addActionListener(e -> {
-                stage.getOnCloseRequest().handle(null);
-            });
+            closeItem.addActionListener(e -> stage.getOnCloseRequest().handle(null));
 
             popup.add(showItem);
             popup.add(closeItem);
 
             try {
-                this.trayIcon = new TrayIcon(ImageIO.read(this.getClass().getResource("/css/aerIcon.gif")), "Единая система приложений", popup);
-                this.trayIcon.addActionListener(showStage);
+                trayIcon = new TrayIcon(ImageIO.read(getClass().getResource("/css/aerIcon.gif")), "Единая система приложений", popup);
+                trayIcon.addActionListener(showStage);
 
-                tray.add(this.trayIcon);
+                tray.add(trayIcon);
             } catch (AWTException e) {
                 LOG.error("Ошибка при добавлении иконки в трей!", e);
             } catch (IOException e) {
