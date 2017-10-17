@@ -1,10 +1,9 @@
 package ru.kolaer.client.usa.services;
 
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.usa.mvp.viewmodel.VMainFrame;
 import ru.kolaer.client.usa.runnable.Launcher;
 
 import java.io.File;
@@ -20,11 +19,11 @@ public class HideShowMainStage implements Service {
 
 	private final File pathToFile = new File(Launcher.pathToRunFile);
 	private final File pathToShowAppFile = new File(Launcher.pathToShowAppFile);
-	private final Stage mainStage;
+	private final VMainFrame mainStage;
 	private boolean isRun = false;
 	private FileInputStream lockFile;
 
-	public HideShowMainStage(final Stage mainStage) {
+	public HideShowMainStage(VMainFrame mainStage) {
 		if(mainStage == null)
 			throw new IllegalArgumentException("Stage == null!");
 		
@@ -86,11 +85,7 @@ public class HideShowMainStage implements Service {
 
 			if(pathToShowAppFile.exists()){
 				pathToShowAppFile.delete();
-				Tools.runOnThreadFX(() -> {
-					mainStage.show();
-					mainStage.setMaximized(false); //JRE BUG
-					mainStage.setMaximized(true);
-				});
+				mainStage.show();
 			}
 		}
 	}

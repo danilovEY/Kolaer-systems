@@ -1,4 +1,4 @@
-package ru.kolaer.client.usa.mvp.view.impl;
+package ru.kolaer.client.usa.mvp.view.javafx;
 
 import javafx.concurrent.Service;
 import org.controlsfx.dialog.ProgressDialog;

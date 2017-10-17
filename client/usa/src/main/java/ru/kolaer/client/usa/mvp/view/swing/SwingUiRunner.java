@@ -1,6 +1,9 @@
 package ru.kolaer.client.usa.mvp.view.swing;
 
-import ru.kolaer.client.usa.mvp.view.ApplicationUiRunner;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.client.usa.mvp.view.AbstractApplicationUiRunner;
+import ru.kolaer.client.usa.mvp.viewmodel.VMainFrame;
+import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,9 +11,10 @@ import java.awt.*;
 /**
  * Created by danilovey on 13.10.2017.
  */
-public class SwingUiRunner implements ApplicationUiRunner {
+public class SwingUiRunner extends AbstractApplicationUiRunner {
+
     @Override
-    public void run(String[] args) {
+    public boolean initializeUi() {
         JFrame frame = new JFrame();
 
         JPanel panel = new JPanel();
@@ -21,5 +25,26 @@ public class SwingUiRunner implements ApplicationUiRunner {
 
         frame.pack();
         frame.setVisible(true);
+        return true;
+    }
+
+    @Override
+    public UniformSystemEditorKit initializeUniformSystemEditorKit() {
+        return null;
+    }
+
+    @Override
+    public VMainFrame getFrame() {
+        return null;
+    }
+
+    @Override
+    public VTabExplorer getExplorer() {
+        return null;
+    }
+
+    @Override
+    public void shutdown() {
+
     }
 }

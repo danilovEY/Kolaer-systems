@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.view.VTab;
-import ru.kolaer.client.usa.mvp.view.impl.VTabImpl;
+import ru.kolaer.client.usa.mvp.view.javafx.VTabImpl;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 

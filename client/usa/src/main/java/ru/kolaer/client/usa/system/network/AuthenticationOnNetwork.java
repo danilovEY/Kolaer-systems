@@ -42,9 +42,9 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
         this.objectMapper = objectMapper;
         this.restTemplate = new RestTemplate();
         this.authenticationObserverList = new ArrayList<>();
-        this.pathToServer = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/authentication";
+        this.pathToServer = "http://" + Resources.URL_TO_PUBLIC_SERVER + "/rest/authentication";
         this.URL_TO_GET_TOKEN = this.pathToServer + "/login";
-        this.URL_TO_GET_USER = "http://" + Resources.URL_TO_KOLAER_WEB + "/rest/user/get";
+        this.URL_TO_GET_USER = "http://" + Resources.URL_TO_PUBLIC_SERVER + "/rest/user/get";
     }
 
     public boolean login(UserAndPassJson userAndPassJson) {

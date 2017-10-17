@@ -113,7 +113,7 @@ public class DialogUSImpl implements DialogUS {
 						);
 					}
 				} else {
-					log.warn("Сервер {} недоступен!", Resources.URL_TO_KOLAER_WEB);
+					log.warn("Сервер {} недоступен!", Resources.URL_TO_PUBLIC_SERVER);
 					uiSystemUS.getNotification().showErrorNotifi("Ошибка!",
 							"Сервер недоступен!");
 				}

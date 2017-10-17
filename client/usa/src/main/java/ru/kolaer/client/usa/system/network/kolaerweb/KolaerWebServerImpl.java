@@ -32,7 +32,7 @@ public class KolaerWebServerImpl implements KolaerWebServer {
     @Override
     public ServerResponse<ServerStatus> getServerStatus() {
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("http://"+Resources.URL_TO_KOLAER_WEB.toString()).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL("http://"+Resources.URL_TO_PUBLIC_SERVER.toString()).openConnection();
             connection.setRequestMethod("HEAD");
             int responseCode = connection.getResponseCode();
             connection.disconnect();

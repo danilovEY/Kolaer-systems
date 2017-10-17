@@ -31,8 +31,8 @@ public class NetworkUSRestTemplate implements NetworkUS {
 		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.springframework.web.client.RestTemplate")).setLevel(Level.INFO);
 		this.globalRestTemplate.setErrorHandler(new ResponseErrorHandlerNotifications(objectMapper));
 
-		this.restfulServer = new RestfulServerImpl(objectMapper, globalRestTemplate, new StringBuilder("http://").append(Resources.URL_TO_KOLAER_RESTFUL));
-		this.kolaerWebServer = new KolaerWebServerImpl(objectMapper, globalRestTemplate, new StringBuilder("http://").append(Resources.URL_TO_KOLAER_WEB));
+		this.restfulServer = new RestfulServerImpl(objectMapper, globalRestTemplate, new StringBuilder("http://").append(Resources.URL_TO_PRIVATE_SERVER));
+		this.kolaerWebServer = new KolaerWebServerImpl(objectMapper, globalRestTemplate, new StringBuilder("http://").append(Resources.URL_TO_PUBLIC_SERVER));
 		this.otherPublicAPI = new OtherPublicAPIImpl(objectMapper, globalRestTemplate);
 	}
 

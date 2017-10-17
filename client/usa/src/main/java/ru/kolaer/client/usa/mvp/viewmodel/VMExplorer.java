@@ -1,6 +1,5 @@
 package ru.kolaer.client.usa.mvp.viewmodel;
 
-import javafx.scene.Parent;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 
@@ -11,7 +10,7 @@ import java.util.Collection;
  * @author Danilov
  * @version 0.2
  */
-public interface VMExplorer extends BaseView<Parent> {
+public interface VMExplorer<T> extends BaseView<T> {
 	/**Добавить плагин.*/
 	void addPlugin(PluginBundle plugin);
 	/**Добавить плагин.*/

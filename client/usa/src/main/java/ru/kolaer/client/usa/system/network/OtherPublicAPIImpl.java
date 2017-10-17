@@ -12,7 +12,7 @@ public class OtherPublicAPIImpl implements OtherPublicAPI {
 
 	public OtherPublicAPIImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate) {
 		this.holidaysTable = new HolidaysTableImpl(objectMapper, globalRestTemplate,
-				"http://" + Resources.URL_TO_KOLAER_WEB + "/rest/non-security/holidays");
+				"http://" + Resources.URL_TO_PUBLIC_SERVER + "/rest/non-security/holidays");
 	}
 
 	@Override

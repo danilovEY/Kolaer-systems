@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * Created by Danilov on 15.04.2016.
  */
-public abstract class AbstractVMTabExplorer extends BorderPane implements PluginsUS, VTabExplorer, ExplorerObservable {
+public abstract class AbstractVMTabExplorer extends BorderPane implements PluginsUS, VTabExplorer<Parent>, ExplorerObservable {
     private final Logger LOG = LoggerFactory.getLogger(AbstractVMTabExplorer.class);
     /**Вкладочная панель.*/
     protected TabPane pluginsTabPane;

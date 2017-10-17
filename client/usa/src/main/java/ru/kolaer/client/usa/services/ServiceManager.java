@@ -15,8 +15,8 @@ import java.util.concurrent.*;
  * @author danilovey
  * @version 0.1
  */
-public class ServiceControlManager {
-	private final Logger LOG = LoggerFactory.getLogger(ServiceControlManager.class);
+public class ServiceManager {
+	private final Logger LOG = LoggerFactory.getLogger(ServiceManager.class);
 	/**Ключ - Служба, Значение - Future потока.*/
 	private final Map<Service, Future<Void>> runnableService = new HashMap<>();
 	/**Пулл потоков.*/

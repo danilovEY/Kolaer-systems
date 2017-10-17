@@ -3,7 +3,7 @@ package ru.kolaer.client.usa.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.client.usa.mvp.viewmodel.impl.VMTabExplorerOSGi;
+import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
 
@@ -18,13 +18,13 @@ public class AutoUpdatePlugins implements Service {
 	
 	private boolean isRun = false;
 	private final PluginManager pluginManager;
-	private final VMTabExplorerOSGi explorer;
-	private final ServiceControlManager serviceControlManager;
+	private final VTabExplorer explorer;
+	private final ServiceManager serviceManager;
 	
-	public AutoUpdatePlugins(final PluginManager pluginManager, final VMTabExplorerOSGi explorer, final ServiceControlManager serviceControlManager) {
+	public AutoUpdatePlugins(final PluginManager pluginManager, VTabExplorer explorer, ServiceManager serviceManager) {
 		this.pluginManager = pluginManager;
 		this.explorer = explorer;
-		this.serviceControlManager = serviceControlManager;
+		this.serviceManager = serviceManager;
 	}
 	
 	@Override
@@ -73,14 +73,14 @@ public class AutoUpdatePlugins implements Service {
         LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
         final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
         if (pluginServices != null) {
-            pluginServices.parallelStream().forEach(this.serviceControlManager::addService);
+            pluginServices.parallelStream().forEach(this.serviceManager::addService);
         }
 	}
 	
 	private void unInstallPlugin(final PluginBundle pluginBundle) {
 		//Удаление старого плагина
 		if(pluginBundle.getUniformSystemPlugin().getServices() != null)
-			pluginBundle.getUniformSystemPlugin().getServices().parallelStream().forEach(serviceControlManager::removeService);
+			pluginBundle.getUniformSystemPlugin().getServices().parallelStream().forEach(serviceManager::removeService);
 		
 		this.explorer.removePlugin(pluginBundle);
 		this.pluginManager.unInstall(pluginBundle);

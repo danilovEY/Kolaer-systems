@@ -1,15 +1,19 @@
 package ru.kolaer.client.usa.mvp.view.awt;
 
-import ru.kolaer.client.usa.mvp.view.ApplicationUiRunner;
+import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.client.usa.mvp.view.AbstractApplicationUiRunner;
+import ru.kolaer.client.usa.mvp.viewmodel.VMainFrame;
+import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
 
 import java.awt.*;
 
 /**
  * Created by danilovey on 13.10.2017.
  */
-public class AwtUiRunner implements ApplicationUiRunner {
+public class AwtUiRunner extends AbstractApplicationUiRunner {
+
     @Override
-    public void run(String[] args) {
+    public boolean initializeUi() {
         Frame frame = new Frame();
 
         Panel panel = new Panel();
@@ -20,5 +24,26 @@ public class AwtUiRunner implements ApplicationUiRunner {
 
         frame.pack();
         frame.setVisible(true);
+        return true;
+    }
+
+    @Override
+    public UniformSystemEditorKit initializeUniformSystemEditorKit() {
+        return null;
+    }
+
+    @Override
+    public VMainFrame getFrame() {
+        return null;
+    }
+
+    @Override
+    public VTabExplorer getExplorer() {
+        return null;
+    }
+
+    @Override
+    public void shutdown() {
+
     }
 }

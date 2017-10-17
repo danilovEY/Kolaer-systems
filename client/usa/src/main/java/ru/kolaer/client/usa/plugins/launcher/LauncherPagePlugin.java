@@ -14,7 +14,7 @@ import ru.kolaer.client.usa.mvp.viewmodel.impl.VMTabExplorerOSGi;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
 import ru.kolaer.client.usa.plugins.UniformSystemPluginAdapter;
-import ru.kolaer.client.usa.services.ServiceControlManager;
+import ru.kolaer.client.usa.services.ServiceManager;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -28,10 +28,10 @@ public class LauncherPagePlugin extends UniformSystemPluginAdapter {
     private final Logger LOG = LoggerFactory.getLogger(LauncherPagePlugin.class);
     private final PluginManager pluginManager;
     private final VMTabExplorerOSGi explorer;
-    private final ServiceControlManager servicesManager;
+    private final ServiceManager servicesManager;
     private BorderPane mainPane;
 
-    public LauncherPagePlugin(VMTabExplorerOSGi explorer, final PluginManager pluginManager, ServiceControlManager servicesManager) {
+    public LauncherPagePlugin(VMTabExplorerOSGi explorer, final PluginManager pluginManager, ServiceManager servicesManager) {
         this.pluginManager = pluginManager;
         this.explorer = explorer;
         this.servicesManager = servicesManager;
