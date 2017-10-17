@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.controlsfx.tools.Borders;
 import org.slf4j.Logger;
@@ -220,20 +221,26 @@ public class NotificationPaneExceptionHandler implements NotificationUS, BaseVie
                 }
             }
 
-            content.setSpacing(5);
+            content.setSpacing(3);
 
             final Label timeLabel = new Label(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss | dd.MM.yyyy")));
-            timeLabel.setFont(Font.font(null, FontWeight.BOLD, 10));
+            timeLabel.setTextAlignment(TextAlignment.CENTER);
+            timeLabel.setWrapText(true);
+            timeLabel.setFont(Font.font(null, FontWeight.BOLD, 9));
 
             final Label titleLabel = new Label(title);
+            titleLabel.setTextAlignment(TextAlignment.CENTER);
+            titleLabel.setWrapText(true);
             titleLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
 
             final Label textLabel = new Label(text);
-            textLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
+            textLabel.setTextAlignment(TextAlignment.CENTER);
+            textLabel.setWrapText(true);
+            textLabel.setFont(Font.font(null, FontWeight.BOLD, 12));
 
-            content.getChildren().add(timeLabel);
             content.getChildren().add(titleLabel);
             content.getChildren().add(textLabel);
+            content.getChildren().add(timeLabel);
 
             if(actions != null) {
                 for (NotifiAction action : actions) {
