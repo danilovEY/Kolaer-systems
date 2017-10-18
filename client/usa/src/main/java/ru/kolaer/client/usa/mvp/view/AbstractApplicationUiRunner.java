@@ -2,10 +2,12 @@ package ru.kolaer.client.usa.mvp.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.Tray;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
+import ru.kolaer.client.usa.plugins.SearchPlugins;
 import ru.kolaer.client.usa.services.AutoCheckingNotifyMessage;
 import ru.kolaer.client.usa.services.AutoUpdatePlugins;
 import ru.kolaer.client.usa.services.HideShowMainStage;
@@ -22,23 +24,30 @@ import java.util.concurrent.*;
 /**
  * Created by danilovey on 17.10.2017.
  */
-public abstract class AbstractApplicationUiRunner implements ApplicationUiRunner {
+public abstract class AbstractApplicationUiRunner<U extends UniformSystemPlugin<T>, T> implements ApplicationUiRunner<U, T> {
     private static final Logger log = LoggerFactory.getLogger(AbstractApplicationUiRunner.class);
     /**
      * Мапа где ключ и значение соответствует ключам и значениям приложения.
      */
-    protected Map<String, String> params = new HashMap<>();
-    protected PluginManager pluginManager = new PluginManager();
-    protected ServiceManager serviceManager = new ServiceManager();
+    protected Map<String, String> params;
+    protected PluginManager pluginManager;
+    protected ServiceManager serviceManager;
 
     @Override
     public void run(String[] args) {
-        initApplicationParams(args);
+        params = readParams(args);
+
+        boolean randomDirCache = params.getOrDefault(Resources.RAND_DIR_CACHE_PARAM, "false").contains("true");
+
+        serviceManager = new ServiceManager();
+        pluginManager = new PluginManager(new SearchPlugins(), randomDirCache);
+
+        initParams();
 
         ExecutorService mainApplicationThreadPool = Executors.newFixedThreadPool(5);
+        Future<PluginManager> initializedPluginManager = mainApplicationThreadPool.submit(this::initPluginManager);
         Future<List<PluginBundle>> searchResult = mainApplicationThreadPool
                 .submit(pluginManager.getSearchPlugins()::search);
-        Future<PluginManager> initializedPluginManager = mainApplicationThreadPool.submit(this::initPluginManager);
 
         CompletableFuture
                 .supplyAsync(this::initializeUi, mainApplicationThreadPool)
@@ -69,26 +78,7 @@ public abstract class AbstractApplicationUiRunner implements ApplicationUiRunner
 
     }
 
-    private void initApplicationParams(String[] args) {
-        for (String arg : args) {
-            if(arg.contains(Resources.PRIVATE_SERVER_URL_PARAM)) {
-                params.put(Resources.PRIVATE_SERVER_URL_PARAM,
-                        arg.substring(Resources.PRIVATE_SERVER_URL_PARAM.length()));
-            } else if(arg.contains(Resources.PUBLIC_SERVER_URL_PARAM)) {
-                params.put(Resources.PUBLIC_SERVER_URL_PARAM,
-                        arg.substring(Resources.PUBLIC_SERVER_URL_PARAM.length()));
-            } else if(arg.contains(Resources.SERVICE_PARAM)) {
-                params.put(Resources.SERVICE_PARAM,
-                        arg.substring(Resources.SERVICE_PARAM.length()));
-            } else if(arg.contains(Resources.UI_PARAM)) {
-                params.put(Resources.UI_PARAM,
-                        arg.substring(Resources.UI_PARAM.length()));
-            } else if(arg.contains(Resources.TRAY_PARAM)) {
-                params.put(Resources.TRAY_PARAM,
-                        arg.substring(Resources.TRAY_PARAM.length()));
-            }
-        }
-
+    private void initParams() {
         String pathServerRest = params.get(Resources.PRIVATE_SERVER_URL_PARAM);
         if (pathServerRest != null) {
             Resources.URL_TO_PRIVATE_SERVER.delete(0, Resources.URL_TO_PRIVATE_SERVER.length()).append(pathServerRest);
@@ -105,6 +95,34 @@ public abstract class AbstractApplicationUiRunner implements ApplicationUiRunner
             serviceManager.setAutoRun(true);
             log.info("Service ON");
         }
+    }
+
+    private Map<String, String> readParams(String[] args) {
+        Map<String, String> params = new HashMap<>();
+
+        for (String arg : args) {
+            if(arg.contains(Resources.PRIVATE_SERVER_URL_PARAM)) {
+                params.put(Resources.PRIVATE_SERVER_URL_PARAM,
+                        arg.substring(Resources.PRIVATE_SERVER_URL_PARAM.length()));
+            } else if(arg.contains(Resources.PUBLIC_SERVER_URL_PARAM)) {
+                params.put(Resources.PUBLIC_SERVER_URL_PARAM,
+                        arg.substring(Resources.PUBLIC_SERVER_URL_PARAM.length()));
+            } else if(arg.contains(Resources.SERVICE_PARAM)) {
+                params.put(Resources.SERVICE_PARAM,
+                        arg.substring(Resources.SERVICE_PARAM.length()));
+            } else if(arg.contains(Resources.UI_PARAM)) {
+                params.put(Resources.UI_PARAM,
+                        arg.substring(Resources.UI_PARAM.length()));
+            } else if(arg.contains(Resources.TRAY_PARAM)) {
+                params.put(Resources.TRAY_PARAM,
+                        arg.substring(Resources.TRAY_PARAM.length()));
+            } else if(arg.contains(Resources.RAND_DIR_CACHE_PARAM)) {
+                params.put(Resources.RAND_DIR_CACHE_PARAM,
+                        arg.substring(Resources.RAND_DIR_CACHE_PARAM.length()));
+            }
+        }
+
+        return params;
     }
 
     private void installPlugins(Future<PluginManager> pluginManagerFuture, Future<List<PluginBundle>> pluginsFuture) {
@@ -130,7 +148,7 @@ public abstract class AbstractApplicationUiRunner implements ApplicationUiRunner
         }
     }
 
-    private void installPluginInThread(PluginBundle pluginBundle) {
+    private void installPluginInThread(PluginBundle<U> pluginBundle) {
         final ExecutorService threadInstallPlugin = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() -> {
             installPlugin(pluginBundle);
@@ -142,11 +160,11 @@ public abstract class AbstractApplicationUiRunner implements ApplicationUiRunner
         });
     }
 
-    private void installPlugin(PluginBundle pluginBundle) {
+    private void installPlugin(PluginBundle<U> pluginBundle) {
         Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
         log.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
 
-        if (pluginManager.install(pluginBundle)) {
+        if (pluginManager.install(pluginBundle, getTypeUi())) {
             log.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
             String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
             getExplorer().addTabPlugin(tabName, pluginBundle);
@@ -208,7 +226,7 @@ public abstract class AbstractApplicationUiRunner implements ApplicationUiRunner
     private void initSystemServices() {
         Thread.currentThread().setName("Добавление системны служб");
 
-        serviceManager.addService(new AutoUpdatePlugins(pluginManager, getExplorer(), serviceManager), true);
+        serviceManager.addService(new AutoUpdatePlugins<>(pluginManager, getExplorer(), serviceManager, getTypeUi()), true);
         serviceManager.addService(new AutoCheckingNotifyMessage(), true);
         if (params.getOrDefault(Resources.TRAY_PARAM, "true").contains("true")) {
             serviceManager.addService(new HideShowMainStage(getFrame()), true);
@@ -228,4 +246,5 @@ public abstract class AbstractApplicationUiRunner implements ApplicationUiRunner
 
         return UniformSystemEditorKitSingleton.getInstance().getAuthentication().loginIsRemember();
     }
+
 }

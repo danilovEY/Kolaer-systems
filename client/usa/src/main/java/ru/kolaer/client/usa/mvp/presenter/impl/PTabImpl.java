@@ -2,6 +2,8 @@ package ru.kolaer.client.usa.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.view.VTab;
 import ru.kolaer.client.usa.mvp.view.javafx.VTabImpl;
@@ -20,7 +22,7 @@ import java.util.concurrent.Executors;
 public class PTabImpl implements PTab {
 	private final Logger LOG = LoggerFactory.getLogger(PTabImpl.class);
 	/**Плагин.*/
-	private final PluginBundle plugin;
+	private final PluginBundle<UniformSystemPluginJavaFx> plugin;
 	/**View.*/
 	private final VTab view;
 	/**Флаг активации вкладки.*/
@@ -29,7 +31,7 @@ public class PTabImpl implements PTab {
 	 * {@linkplain PTabImpl}
 	 * @param plugin - Плагин.
 	 */
-	public PTabImpl(final PluginBundle plugin) {
+	public PTabImpl(PluginBundle<UniformSystemPluginJavaFx> plugin) {
 		this.plugin = plugin;
 		this.view = new VTabImpl();
 		this.view.setTitle(plugin.getNamePlugin());
@@ -54,18 +56,27 @@ public class PTabImpl implements PTab {
 	@Override
 	public void activeTab() {
 		if(!this.isActive) {
-			final ExecutorService threadRunPlugin = Executors.newSingleThreadExecutor();
+			ExecutorService threadRunPlugin = Executors.newSingleThreadExecutor();
 			CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getSymbolicNamePlugin());
 				try {
-					this.plugin.getUniformSystemPlugin().start();
-					
-					this.view.setContent(plugin.getUniformSystemPlugin().getContent());
+					Tools.runOnThreadFX(() -> {
+						try{
+							plugin.getUniformSystemPlugin().initView(parent -> {
+								view.setContent(parent);
+								return null;
+							});
+						} catch(Exception ex) {
+							LOG.error("Ошибка при интциализации UI плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), ex);
+							UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), ex.getMessage());
+						}
+					});
+
+					plugin.getUniformSystemPlugin().start();
 
 					this.isActive = true;
-				} catch (final Exception e) {
+				} catch (Exception e) {
 					LOG.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), e);
-					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), "Ошибка при запуске плагина!");
 					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), e.getMessage());
 					this.closeTab();
 				}
@@ -93,8 +104,12 @@ public class PTabImpl implements PTab {
 					this.plugin.getUniformSystemPlugin().stop();
 				} catch (final Exception e) {
 					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getSymbolicNamePlugin(), e);
-					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!");
-					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), e.getMessage());
+
+					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
+							.showErrorNotifi(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!");
+
+					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
+							.showErrorNotifi(this.plugin.getNamePlugin(), e.getMessage());
 				}
 
 				this.isActive = false;

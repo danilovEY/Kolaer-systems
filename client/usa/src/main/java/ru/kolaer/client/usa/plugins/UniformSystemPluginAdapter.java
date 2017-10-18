@@ -8,6 +8,7 @@ import ru.kolaer.api.system.UniformSystemEditorKit;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.function.Function;
 
 public class UniformSystemPluginAdapter implements UniformSystemPlugin {
 	private UniformSystemEditorKit editorKit;
@@ -42,12 +43,17 @@ public class UniformSystemPluginAdapter implements UniformSystemPlugin {
 	}
 
 	@Override
-	public void setContent(Parent parent) {
+	public void setContent(Object content) {
 
 	}
 
 	@Override
 	public Parent getContent() {
 		return null;
+	}
+
+	@Override
+	public void initView(Function viewVisit) throws Exception {
+
 	}
 }

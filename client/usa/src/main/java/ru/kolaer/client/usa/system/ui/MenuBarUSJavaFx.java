@@ -13,12 +13,12 @@ import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 /**
  * Created by danilovey on 09.02.2017.
  */
-public class MenuBarUSImpl implements MenuBarUS, AuthenticationObserver {
+public class MenuBarUSJavaFx implements MenuBarUS, AuthenticationObserver {
     private final MenuItem authorizationItem;
     private final Menu fileMenu;
     private final MenuBar menuBar;
 
-    public MenuBarUSImpl(MenuBar menuBar) {
+    public MenuBarUSJavaFx(MenuBar menuBar) {
         this.menuBar = menuBar;
         this.fileMenu = new Menu("Файл");
         this.authorizationItem = new MenuItem("Авторизоваться");

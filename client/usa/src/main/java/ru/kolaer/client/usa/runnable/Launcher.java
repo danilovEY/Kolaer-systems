@@ -31,6 +31,8 @@ public class Launcher {
 			//delete(new File(pathToCache));
 			TypeUi typeUi = getTypeUi(args);
 
+			LOG.info("Initialize UI: {}", typeUi.getNameUiLib());
+
 			if(typeUi == TypeUi.LOW) {
 				new AwtUiRunner().run(args);
 			} else if(typeUi == TypeUi.MEDIUM) {

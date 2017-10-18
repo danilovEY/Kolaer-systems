@@ -1,8 +1,8 @@
-package ru.kolaer.client.usa.mvp.viewmodel.impl;
+package ru.kolaer.client.usa.mvp.view.javafx;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.presenter.impl.PTabImpl;
@@ -20,22 +20,22 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerOSGi.class);
 
     public VMTabExplorerOSGi() {
-        this.initSelectionModel();
+        initSelectionModel();
     }
 
     @Override
-    public void addPlugin(final PluginBundle pluginBundle) {
+    public void addPlugin(PluginBundle pluginBundle) {
         this.addTabPlugin(pluginBundle.getNamePlugin(), pluginBundle);
     }
 
     @Override
-    public void addAllPlugins(final Collection<PluginBundle> plugins) {
+    public void addAllPlugins(Collection<PluginBundle<UniformSystemPluginJavaFx>> plugins) {
         plugins.forEach(this::addPlugin);
     }
 
     @Override
-    public void removePlugin(final PluginBundle pluginBundle) {
-    	this.pluginTabMap.values().stream()
+    public void removePlugin(PluginBundle pluginBundle) {
+    	pluginTabMap.values().stream()
                 .filter(tab -> tab.getModel() == pluginBundle)
                 .findFirst()
                 .ifPresent(PTab::closeTab);
@@ -43,33 +43,32 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public void removeAll() {
-        this.pluginTabMap.values().forEach(PTab::closeTab);
+        pluginTabMap.values().forEach(PTab::closeTab);
     }
 
 
     @Override
-    public void addTabPlugin(final String tabName, final PluginBundle pluginBundle) {
+    public void addTabPlugin(String tabName, PluginBundle<UniformSystemPluginJavaFx> pluginBundle) {
         if(pluginBundle == null || !pluginBundle.isInstall()) {
             throw new IllegalArgumentException(tabName + " - is null or not install!");
         }
 
         Tools.runOnWithOutThreadFX(() -> {
-            final PTab tab = new PTabImpl(pluginBundle);
+            PTab tab = new PTabImpl(pluginBundle);
             tab.getView().setTitle(tabName);
 
-            this.pluginTabMap.put(tabName, tab);
-            this.plugins.put(pluginBundle.getUniformSystemPlugin(), pluginBundle);
-
+            pluginTabMap.put(tabName, tab);
+            plugins.put(pluginBundle.getUniformSystemPlugin(), pluginBundle);
 
             LOG.info("{}: Добавление вкладки...", pluginBundle.getSymbolicNamePlugin());
-            this.pluginsTabPane.getTabs().add(tab.getView().getContent());
+            pluginsTabPane.getTabs().add(tab.getView().getContent());
 
-            this.notifyAddPlugin(tab);
+            notifyAddPlugin(tab);
         });
     }
 
     @Override
-    public void removeTabPlugin(final String name) {
+    public void removeTabPlugin(String name) {
 
     }
 
@@ -78,11 +77,11 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
         this.pluginsTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldTab, newTab)  -> {
 
             if(oldTab != null) {
-                final ExecutorService threadActivPlugin= Executors.newSingleThreadExecutor();
+                ExecutorService threadActivPlugin= Executors.newSingleThreadExecutor();
                 CompletableFuture.runAsync(() -> {
-                    final PTab tab = this.pluginTabMap.get(oldTab.getText());
+                    PTab tab = pluginTabMap.get(oldTab.getText());
                     tab.deActiveTab();
-                    this.notifyDeactivationPlugin(tab);
+                    notifyDeactivationPlugin(tab);
                     threadActivPlugin.shutdown();
                 }, threadActivPlugin).exceptionally(t -> {
                 	LOG.error("Ошибка при остановке плагина: {}", oldTab.getText(), t);
@@ -91,11 +90,11 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
             }
 
             if(newTab != null) {
-                final ExecutorService threadDeActivPlugin= Executors.newSingleThreadExecutor();
+                ExecutorService threadDeActivPlugin= Executors.newSingleThreadExecutor();
                 CompletableFuture.runAsync(() -> {
-                    final PTab tab = this.pluginTabMap.get(newTab.getText());
+                    PTab tab = pluginTabMap.get(newTab.getText());
                     tab.activeTab();
-                    this.notifyActivationPlugin(tab);
+                    notifyActivationPlugin(tab);
                     threadDeActivPlugin.shutdown();
                 }, threadDeActivPlugin).exceptionally(t -> {
                 	LOG.error("Ошибка при запуске плагина: {}", newTab.getText(), t);
@@ -106,12 +105,12 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     }
 
     @Override
-    public String getPluginVersion(final UniformSystemPlugin uniformSystemPlugin) {
+    public String getPluginVersion(UniformSystemPluginJavaFx uniformSystemPlugin) {
         return this.plugins.get(uniformSystemPlugin).getVersion();
     }
 
     @Override
-    public String getNamePlugin(final UniformSystemPlugin uniformSystemPlugin) {
+    public String getNamePlugin(UniformSystemPluginJavaFx uniformSystemPlugin) {
         return this.plugins.get(uniformSystemPlugin).getNamePlugin();
     }
 }

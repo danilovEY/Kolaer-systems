@@ -10,9 +10,8 @@ import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.observers.AuthenticationObserver;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
@@ -25,12 +24,13 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
 
 /**
  * Created by danilovey on 20.02.2017.
  */
-public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
-    private final static Logger log = LoggerFactory.getLogger(AsmcPlugin.class);
+public class AsmcPluginJavaFx implements UniformSystemPluginJavaFx, AuthenticationObserver {
+    private final static Logger log = LoggerFactory.getLogger(AsmcPluginJavaFx.class);
     private UniformSystemEditorKit editorKit;
     private PSplitListContent splitListContent;
     private BorderPane mainPane;
@@ -51,13 +51,15 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
     }
 
     @Override
-    public void start() throws Exception {
-        this.mainPane = new BorderPane();
+    public void initView(Function<Parent, Void> viewVisit) throws Exception {
+        mainPane = new BorderPane();
 
-        final PGroupTree pGroupTree = new PGroupTreeImpl(this.editorKit);
+        viewVisit.apply(mainPane);
+
+        PGroupTree pGroupTree = new PGroupTreeImpl(editorKit);
 
         CompletableFuture.runAsync(() -> {
-            final MGroupDataService mGroupDataService = new MGroupDataServiceImpl(this.editorKit);
+            MGroupDataService mGroupDataService = new MGroupDataServiceImpl(editorKit);
             if(mGroupDataService.loadData()) {
                 pGroupTree.setModel(mGroupDataService);
                 Tools.runOnWithOutThreadFX(pGroupTree::updateView);
@@ -66,28 +68,33 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
             }
         }, Executors.newSingleThreadExecutor()).exceptionally(t -> {
             log.error("Ошибка при чтении данных!", t);
-            this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Ошибка при чтении данных!");
+            editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Ошибка при чтении данных!");
             return null;
         });
 
-        final PContentLabel pContentLabel = new PContentLabelImpl();
+        PContentLabel pContentLabel = new PContentLabelImpl();
 
-        this.splitListContent = new PSplitListContentImpl(this.editorKit);
-        this.splitListContent.setPContentLabel(pContentLabel);
-        this.splitListContent.setPGroupList(pGroupTree);
-        this.splitListContent.updateView();
-        if(this.editorKit.getAuthentication().isAuthentication()) {
-            this.login(this.editorKit.getAuthentication().getAuthorizedUser());
+        splitListContent = new PSplitListContentImpl(editorKit);
+        splitListContent.setPContentLabel(pContentLabel);
+        splitListContent.setPGroupList(pGroupTree);
+        splitListContent.updateView();
+        if(editorKit.getAuthentication().isAuthentication()) {
+            login(editorKit.getAuthentication().getAuthorizedUser());
         } else {
-            this.splitListContent.setAccess(false);
+            splitListContent.setAccess(false);
         }
 
-        this.editorKit.getAuthentication().registerObserver(this);
+        editorKit.getAuthentication().registerObserver(this);
 
-        this.mainPane.setCenter(this.splitListContent.getView().getContent());
+        mainPane.setCenter(splitListContent.getView().getContent());
 
-        this.updateBanner();
-        this.initMenuBar();
+        updateBanner();
+        initMenuBar();
+    }
+
+    @Override
+    public void start() throws Exception {
+
     }
 
     private void initMenuBar() {
@@ -169,17 +176,15 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public void login(AccountDto account) {
-        if(this.splitListContent != null) {
-            account.getRoles().stream()
-                    .filter(roleEntity -> roleEntity.getType().equals("OIT"))
-                    .findAny()
-                    .ifPresent(role -> this.splitListContent.setAccess(true));
+        if(splitListContent != null && account.isAccessOit()) {
+            splitListContent.setAccess(true);
         }
     }
 
     @Override
-    public void logout(AccountEntity account) {
-      if(this.splitListContent != null)
-          this.splitListContent.setAccess(false);
+    public void logout(AccountDto account) {
+      if(splitListContent != null) {
+          splitListContent.setAccess(false);
+      }
     }
 }

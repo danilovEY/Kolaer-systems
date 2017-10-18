@@ -1,4 +1,4 @@
-package ru.kolaer.client.usa.mvp.viewmodel.impl;
+package ru.kolaer.client.usa.mvp.view.javafx;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.view.TypeUi;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.view.ApplicationUiRunner;
@@ -21,8 +22,8 @@ import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.usa.system.network.NetworkUSRestTemplate;
-import ru.kolaer.client.usa.system.ui.MenuBarUSImpl;
-import ru.kolaer.client.usa.system.ui.NotificationPaneExceptionHandler;
+import ru.kolaer.client.usa.system.ui.MenuBarUSJavaFx;
+import ru.kolaer.client.usa.system.ui.NotificationJavaFxExceptionHandler;
 import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
 
 import java.util.function.Function;
@@ -149,8 +150,8 @@ public class VMMainFrameImpl extends Application implements VMainFrame<Parent>, 
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        MenuBarUSImpl menuBarUS = new MenuBarUSImpl(menuBar);
-        NotificationPaneExceptionHandler notify = new NotificationPaneExceptionHandler();
+        MenuBarUSJavaFx menuBarUS = new MenuBarUSJavaFx(menuBar);
+        NotificationJavaFxExceptionHandler notify = new NotificationJavaFxExceptionHandler();
         NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
         UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         uiSystemUS.setNotification(notify);
@@ -180,6 +181,11 @@ public class VMMainFrameImpl extends Application implements VMainFrame<Parent>, 
     @Override
     public VTabExplorer getExplorer() {
         return explorer;
+    }
+
+    @Override
+    public TypeUi getTypeUi() {
+        return TypeUi.HIGH;
     }
 
     @Override

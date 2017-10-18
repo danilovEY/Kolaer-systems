@@ -8,9 +8,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.view.TypeUi;
+import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.client.usa.mvp.viewmodel.impl.VMTabExplorerOSGi;
+import ru.kolaer.client.usa.mvp.view.javafx.VMTabExplorerOSGi;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
 import ru.kolaer.client.usa.plugins.UniformSystemPluginAdapter;
@@ -60,7 +62,7 @@ public class LauncherPagePlugin extends UniformSystemPluginAdapter {
                 launchButton.setMinWidth(400);
                 launchButton.setCursor(Cursor.HAND);
                 launchButton.setOnAction(e -> {
-                    for(PluginBundle plugin : explorer.getAllPlugins()) {
+                    for(PluginBundle<UniformSystemPluginJavaFx> plugin : explorer.getAllPlugins()) {
                         if(plugin.getNamePlugin().equals(pluginBundle.getNamePlugin()) && plugin.getVersion().equals(pluginBundle.getVersion())) {
                             explorer.showPlugin(plugin.getUniformSystemPlugin());
                             return;
@@ -78,8 +80,8 @@ public class LauncherPagePlugin extends UniformSystemPluginAdapter {
         return this.mainPane;
     }
 
-    public void installPluginInThread(final VMTabExplorerOSGi explorer, final PluginManager pluginManager, final PluginBundle pluginBundle) {
-        final ExecutorService threadInstallPlugin = Executors.newSingleThreadExecutor();
+    public void installPluginInThread(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle<UniformSystemPluginJavaFx> pluginBundle) {
+        ExecutorService threadInstallPlugin = Executors.newSingleThreadExecutor();
         CompletableFuture.supplyAsync(() -> {
             installPlugin(explorer, pluginManager, pluginBundle);
             return pluginBundle;
@@ -92,19 +94,19 @@ public class LauncherPagePlugin extends UniformSystemPluginAdapter {
         });
     }
 
-    public void installPlugin(final VMTabExplorerOSGi explorer, final PluginManager pluginManager, final PluginBundle pluginBundle) {
+    public void installPlugin(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle<UniformSystemPluginJavaFx> pluginBundle) {
         Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
         LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
 
-        if (pluginManager.install(pluginBundle)) {
+        if (pluginManager.install(pluginBundle, TypeUi.HIGH)) {
             LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
-            final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
+            String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
             explorer.addTabPlugin(tabName, pluginBundle);
 
             LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
-            final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
+            Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
             if (pluginServices != null) {
-                pluginServices.parallelStream().forEach(this.servicesManager::addService);
+                pluginServices.parallelStream().forEach(servicesManager::addService);
             }
         }
     }

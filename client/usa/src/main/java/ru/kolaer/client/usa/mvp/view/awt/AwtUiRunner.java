@@ -1,45 +1,81 @@
 package ru.kolaer.client.usa.mvp.view.awt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ru.kolaer.api.mvp.view.TypeUi;
+import ru.kolaer.api.plugins.UniformSystemPluginAwt;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.system.impl.DefaultMenuBarUS;
+import ru.kolaer.api.system.impl.DefaultNotificationUS;
+import ru.kolaer.api.system.impl.DefaultPluginsUS;
 import ru.kolaer.client.usa.mvp.view.AbstractApplicationUiRunner;
 import ru.kolaer.client.usa.mvp.viewmodel.VMainFrame;
 import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
+import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.usa.system.network.AuthenticationOnNetwork;
+import ru.kolaer.client.usa.system.network.NetworkUSRestTemplate;
+import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
 
 import java.awt.*;
 
 /**
  * Created by danilovey on 13.10.2017.
  */
-public class AwtUiRunner extends AbstractApplicationUiRunner {
+public class AwtUiRunner extends AbstractApplicationUiRunner<UniformSystemPluginAwt, Panel> {
+    private VTabExplorerAwt vTabExplorerAwt;
+    private VMainFrameAwt vMainFrameAwt;
 
     @Override
     public boolean initializeUi() {
-        Frame frame = new Frame();
+        vMainFrameAwt = new VMainFrameAwt();
+        vTabExplorerAwt = new VTabExplorerAwt();
 
-        Panel panel = new Panel();
-        panel.setLayout(new BorderLayout());
-        panel.add(new Button("Button"), BorderLayout.CENTER);
+        vMainFrameAwt.setContent(vTabExplorerAwt.getContent());
 
-        frame.add(panel);
-
-        frame.pack();
-        frame.setVisible(true);
+        vMainFrameAwt.show();
         return true;
     }
 
     @Override
     public UniformSystemEditorKit initializeUniformSystemEditorKit() {
-        return null;
+        Thread.currentThread().setName("Инициализация UniformSystemEditorKit - AWT");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        //MenuBarUS menuBarUS = new MenuBarUSAwt(menuBar);
+        //NotificationUS notify = new NotificationAwtExceptionHandler();
+        NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
+        UISystemUSImpl uiSystemUS = new UISystemUSImpl();
+        uiSystemUS.setNotification(new DefaultNotificationUS());
+        uiSystemUS.setMenuBarUS(new DefaultMenuBarUS());
+
+        //Thread.setDefaultUncaughtExceptionHandler(notify);
+
+        AuthenticationOnNetwork authentication = new AuthenticationOnNetwork(objectMapper);
+        //authentication.registerObserver(menuBarUS);
+
+        UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
+        editorKit.setUSNetwork(network);
+        editorKit.setUISystemUS(uiSystemUS);
+        editorKit.setPluginsUS(new DefaultPluginsUS());
+        editorKit.setAuthentication(authentication);
+
+        return editorKit;
     }
 
     @Override
-    public VMainFrame getFrame() {
-        return null;
+    public VMainFrame<Panel> getFrame() {
+        return vMainFrameAwt;
     }
 
     @Override
-    public VTabExplorer getExplorer() {
-        return null;
+    public VTabExplorer<UniformSystemPluginAwt, Panel> getExplorer() {
+        return vTabExplorerAwt;
+    }
+
+
+    @Override
+    public TypeUi getTypeUi() {
+        return TypeUi.LOW;
     }
 
     @Override

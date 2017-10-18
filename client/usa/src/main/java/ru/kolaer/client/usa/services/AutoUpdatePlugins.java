@@ -2,6 +2,8 @@ package ru.kolaer.client.usa.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.view.TypeUi;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.usa.plugins.PluginBundle;
@@ -13,18 +15,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AutoUpdatePlugins implements Service {
+public class AutoUpdatePlugins<U extends UniformSystemPlugin, T> implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(AutoUpdatePlugins.class);
 	
 	private boolean isRun = false;
 	private final PluginManager pluginManager;
-	private final VTabExplorer explorer;
+	private final VTabExplorer<U, T> explorer;
 	private final ServiceManager serviceManager;
-	
-	public AutoUpdatePlugins(final PluginManager pluginManager, VTabExplorer explorer, ServiceManager serviceManager) {
+	private final TypeUi typeUi;
+
+	public AutoUpdatePlugins(PluginManager pluginManager,
+							 VTabExplorer<U, T> explorer,
+							 ServiceManager serviceManager,
+							 TypeUi typeUi) {
 		this.pluginManager = pluginManager;
 		this.explorer = explorer;
 		this.serviceManager = serviceManager;
+		this.typeUi = typeUi;
 	}
 	
 	@Override
@@ -39,14 +46,14 @@ public class AutoUpdatePlugins implements Service {
 				this.isRun = false;
 			}
 			
-			final List<PluginBundle> installPlugins = new ArrayList<>(this.pluginManager.getInstallPlugins());
-			final List<PluginBundle> pluginsInFolders = this.pluginManager.getSearchPlugins().search();
+			List<PluginBundle> installPlugins = new ArrayList<>(this.pluginManager.getInstallPlugins());
+			List<PluginBundle> pluginsInFolders = this.pluginManager.getSearchPlugins().search();
 			
 			for(Iterator<PluginBundle> installPluginsIter = installPlugins.iterator(); installPluginsIter.hasNext(); ) {
-				final PluginBundle pluginInstall = installPluginsIter.next();
+				PluginBundle pluginInstall = installPluginsIter.next();
 				
 				for(Iterator<PluginBundle> pluginsInFolderIter = pluginsInFolders.iterator(); pluginsInFolderIter.hasNext(); ) {
-					final PluginBundle pluginInFolder = pluginsInFolderIter.next();
+					PluginBundle pluginInFolder = pluginsInFolderIter.next();
 					
 					if(pluginInFolder.getSymbolicNamePlugin().equals(pluginInstall.getSymbolicNamePlugin())
                             && pluginInFolder.getVersion().equals(pluginInstall.getVersion())) {
@@ -62,28 +69,30 @@ public class AutoUpdatePlugins implements Service {
 		}
 	}
 	
-	private void installPlugin(final PluginBundle pluginBundle) {
+	private void installPlugin(PluginBundle<U> pluginBundle) {
 		//Установка нового плагина
-		this.pluginManager.install(pluginBundle);
+		pluginManager.install(pluginBundle, typeUi);
 		
 		LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
-        final String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
-        this.explorer.addTabPlugin(tabName, pluginBundle);
+        String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
+        explorer.addTabPlugin(tabName, pluginBundle);
         
         LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
-        final Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
+        Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
         if (pluginServices != null) {
-            pluginServices.parallelStream().forEach(this.serviceManager::addService);
+            pluginServices.parallelStream().forEach(serviceManager::addService);
         }
 	}
 	
-	private void unInstallPlugin(final PluginBundle pluginBundle) {
+	private void unInstallPlugin(PluginBundle<U> pluginBundle) {
 		//Удаление старого плагина
-		if(pluginBundle.getUniformSystemPlugin().getServices() != null)
-			pluginBundle.getUniformSystemPlugin().getServices().parallelStream().forEach(serviceManager::removeService);
+		Collection<Service> services = pluginBundle.getUniformSystemPlugin().getServices();
+		if(services != null) {
+			services.parallelStream().forEach(serviceManager::removeService);
+		}
 		
-		this.explorer.removePlugin(pluginBundle);
-		this.pluginManager.unInstall(pluginBundle);
+		explorer.removePlugin(pluginBundle);
+		pluginManager.unInstall(pluginBundle);
 	}
 
 	@Override

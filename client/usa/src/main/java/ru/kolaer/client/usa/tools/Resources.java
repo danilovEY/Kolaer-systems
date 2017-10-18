@@ -11,6 +11,7 @@ public interface Resources {
 	String SERVICE_PARAM = "--service=";
 	String TRAY_PARAM = "--tray=";
 	String UI_PARAM = "--ui=";
+	String RAND_DIR_CACHE_PARAM = "--rand-dir-cache=";
 
 	String VERSION = "3.1";
 	

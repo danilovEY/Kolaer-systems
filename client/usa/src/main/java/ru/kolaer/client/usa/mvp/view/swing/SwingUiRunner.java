@@ -1,5 +1,6 @@
 package ru.kolaer.client.usa.mvp.view.swing;
 
+import ru.kolaer.api.mvp.view.TypeUi;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.usa.mvp.view.AbstractApplicationUiRunner;
 import ru.kolaer.client.usa.mvp.viewmodel.VMainFrame;
@@ -41,6 +42,11 @@ public class SwingUiRunner extends AbstractApplicationUiRunner {
     @Override
     public VTabExplorer getExplorer() {
         return null;
+    }
+
+    @Override
+    public TypeUi getTypeUi() {
+        return TypeUi.MEDIUM;
     }
 
     @Override

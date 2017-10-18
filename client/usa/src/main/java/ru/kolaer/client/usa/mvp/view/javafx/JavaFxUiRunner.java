@@ -4,12 +4,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.view.TypeUi;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.usa.mvp.view.AbstractApplicationUiRunner;
 import ru.kolaer.client.usa.mvp.view.ApplicationUiRunner;
 import ru.kolaer.client.usa.mvp.viewmodel.VMainFrame;
 import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
-import ru.kolaer.client.usa.mvp.viewmodel.impl.VMMainFrameImpl;
 
 import java.util.concurrent.Executors;
 
@@ -49,6 +49,11 @@ public class JavaFxUiRunner extends AbstractApplicationUiRunner {
     @Override
     public VTabExplorer getExplorer() {
         return javaFxUiRunner.getExplorer();
+    }
+
+    @Override
+    public TypeUi getTypeUi() {
+        return javaFxUiRunner.getTypeUi();
     }
 
     @Override

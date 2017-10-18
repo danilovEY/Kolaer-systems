@@ -10,7 +10,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
@@ -28,7 +28,7 @@ import java.util.Optional;
 /**
  * Created by danilovey on 14.03.2017.
  */
-public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
+public class WerPlugin implements UniformSystemPluginJavaFx, AuthenticationObserver {
     private UniformSystemEditorKit editorKit;
     private BorderPane mainPane;
     private PEventTableImpl pEventTable;

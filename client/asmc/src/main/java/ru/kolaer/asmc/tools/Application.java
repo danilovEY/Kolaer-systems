@@ -3,12 +3,14 @@ package ru.kolaer.asmc.tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.api.system.PluginsUS;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -100,10 +102,12 @@ public class Application implements Runnable {
 		}
 	}
 
-	private void openUrlInPluginBrowser(final String url) {
-		for(final UniformSystemPlugin plugin : this.editorKit.getPluginsUS().getPlugins()) {
-			if(this.editorKit.getPluginsUS().getNamePlugin(plugin).equals("Браузер")) {
-				this.editorKit.getPluginsUS().showPlugin(plugin);
+	private void openUrlInPluginBrowser(String url) {
+		PluginsUS<UniformSystemPlugin> pluginsUS = editorKit.getPluginsUS();
+		Collection<UniformSystemPlugin> plugins = pluginsUS.getPlugins();
+		for(UniformSystemPlugin plugin : plugins) {
+			if(pluginsUS.getNamePlugin(plugin).equals("Браузер")) {
+				pluginsUS.showPlugin(plugin);
 				break;
 			}
 		}

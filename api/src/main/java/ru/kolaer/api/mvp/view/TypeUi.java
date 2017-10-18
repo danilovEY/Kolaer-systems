@@ -6,7 +6,7 @@ package ru.kolaer.api.mvp.view;
 public enum TypeUi {
     HIGH("JavaFx"), MEDIUM("Swing"), LOW("Awt");
 
-    private String nameUiLib;
+    private final String nameUiLib;
 
     TypeUi(String nameUiLib) {
         this.nameUiLib = nameUiLib;
