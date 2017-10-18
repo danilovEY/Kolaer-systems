@@ -13,7 +13,7 @@ public enum ErrorCode {
     PRE_SQL_EXCEPTION("Ошибка перед SQL-запросом"),
     PARSE_EXCEPTION("Ошибка при парсинге"),
     INCORRECT_REQUEST_VALUE("Неизвестные значения в запросе"),
-    CONNECT("Ну удалось установить соединение");
+    CONNECT("Не удалось установить соединение");
 
     ErrorCode(String message) {
         this.message = message;

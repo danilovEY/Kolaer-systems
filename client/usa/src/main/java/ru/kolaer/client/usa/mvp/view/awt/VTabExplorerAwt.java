@@ -6,6 +6,7 @@ import ru.kolaer.api.plugins.UniformSystemPluginAwt;
 import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
@@ -40,17 +41,17 @@ public class VTabExplorerAwt implements VTabExplorer<UniformSystemPluginAwt, Pan
 
         UniformSystemPluginAwt uniformSystemPluginAwt = uniformSystemPlugin.getUniformSystemPlugin();
         try {
-            uniformSystemPluginAwt.start();
             uniformSystemPluginAwt.initView(panel -> {
                 mainPanel.add(panel);
                 mainPanel.revalidate();
                 mainPanel.repaint();
                 return null;
             });
+            uniformSystemPluginAwt.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        new JPanel().add(new Panel());
     }
 
     @Override
