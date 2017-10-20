@@ -2,7 +2,7 @@ package ru.kolaer.kolpass.mvp.presenter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistoryImpl;
 
@@ -24,14 +24,14 @@ public class PPasswordHistoryImpl implements PPasswordHistory {
     private static final Random random = new Random();
 
     private VPasswordHistory vPasswordHistory;
-    private RepositoryPasswordHistory passwordHistoryDto;
+    private PasswordHistoryDto passwordHistoryDto;
 
 
     public PPasswordHistoryImpl() {
         this.vPasswordHistory = new VPasswordHistoryImpl();
     }
 
-    public PPasswordHistoryImpl(RepositoryPasswordHistory passwordHistoryDto) {
+    public PPasswordHistoryImpl(PasswordHistoryDto passwordHistoryDto) {
         this();
         this.setModel(passwordHistoryDto);
     }
@@ -62,12 +62,12 @@ public class PPasswordHistoryImpl implements PPasswordHistory {
     }
 
     @Override
-    public RepositoryPasswordHistory getModel() {
+    public PasswordHistoryDto getModel() {
         return this.passwordHistoryDto;
     }
 
     @Override
-    public void setModel(RepositoryPasswordHistory model) {
+    public void setModel(PasswordHistoryDto model) {
         this.passwordHistoryDto = model;
         this.updateView();
     }

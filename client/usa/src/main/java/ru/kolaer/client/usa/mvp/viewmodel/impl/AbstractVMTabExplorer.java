@@ -1,11 +1,11 @@
-package ru.kolaer.client.usa.mvp.view.javafx;
+package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.PluginsUS;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.viewmodel.ExplorerObservable;
@@ -20,13 +20,13 @@ import java.util.*;
  * Created by Danilov on 15.04.2016.
  */
 public abstract class AbstractVMTabExplorer extends BorderPane
-        implements PluginsUS<UniformSystemPluginJavaFx>, VTabExplorer<UniformSystemPluginJavaFx, Parent>, ExplorerObservable {
+        implements PluginsUS, VTabExplorer, ExplorerObservable {
     private final Logger LOG = LoggerFactory.getLogger(AbstractVMTabExplorer.class);
     /**Вкладочная панель.*/
     protected TabPane pluginsTabPane;
     /**Ключ - Имя вкладки, значение - Presenter вкладки.*/
     protected Map<String, PTab> pluginTabMap = new HashMap<>();
-    protected Map<UniformSystemPluginJavaFx, PluginBundle<UniformSystemPluginJavaFx>> plugins = new HashMap<>();
+    protected Map<UniformSystemPlugin, PluginBundle> plugins = new HashMap<>();
     /**Коллекция обсерверов.*/
     protected List<ExplorerObserver> observers = new ArrayList<>();
 
@@ -78,7 +78,7 @@ public abstract class AbstractVMTabExplorer extends BorderPane
     }
 
     @Override
-    public void showPlugin(UniformSystemPluginJavaFx uniformSystemPlugin) {
+    public void showPlugin(UniformSystemPlugin uniformSystemPlugin) {
         this.pluginTabMap.values().stream()
                 .filter(pTab -> pTab.getModel().getUniformSystemPlugin() == uniformSystemPlugin)
                 .findFirst()
@@ -93,12 +93,12 @@ public abstract class AbstractVMTabExplorer extends BorderPane
     }
 
     @Override
-    public Collection<UniformSystemPluginJavaFx> getPlugins() {
+    public Collection<UniformSystemPlugin> getPlugins() {
         return this.plugins.keySet();
     }
 
     @Override
-    public Collection<PluginBundle<UniformSystemPluginJavaFx>> getAllPlugins() {
+    public Collection<PluginBundle> getAllPlugins() {
         return this.plugins.values();
     }
 }

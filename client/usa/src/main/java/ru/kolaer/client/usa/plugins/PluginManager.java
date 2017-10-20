@@ -8,10 +8,7 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.launch.Framework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.view.TypeUi;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.plugins.UniformSystemPluginAwt;
-import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
 import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.tools.Resources;
 
@@ -26,9 +23,8 @@ import java.util.*;
 public class PluginManager {
     private final Logger LOG = LoggerFactory.getLogger(PluginManager.class);
 
-    private boolean uniqueCacheDir;
     private SearchPlugins searchPlugins;
-    private final boolean uniqueCacheDir;
+    private boolean uniqueCacheDir;
     private final List<PluginBundle> installPlugins = new ArrayList<>();
     private BundleContext context;
     private boolean isInit = false;
@@ -129,7 +125,7 @@ public class PluginManager {
         return this.isInit;
     }
 
-    public <U extends UniformSystemPlugin> boolean install(PluginBundle<U> pluginBundle, TypeUi typeUi) {
+    public boolean install(PluginBundle pluginBundle) {
         if(pluginBundle.isInstall()) {
             LOG.warn("{} уже установлен", pluginBundle.getSymbolicNamePlugin());
             return true;
@@ -150,7 +146,7 @@ public class PluginManager {
         	
         	installPlugins.add(pluginBundle);
 
-            boolean installed = scanClassesForUSP(pluginBundle, typeUi) && initialize(pluginBundle);
+            boolean installed = scanClassesForUSP(pluginBundle) && initialize(pluginBundle);
 
             if(installed) {
                 return true;
@@ -165,13 +161,7 @@ public class PluginManager {
         return false;
     }
     
-    private <U extends UniformSystemPlugin> boolean scanClassesForUSP(PluginBundle<U> pluginBundle, TypeUi typeUi) {
-        Class<?> uspClass = UniformSystemPluginJavaFx.class;
-
-        if(typeUi == TypeUi.LOW) {
-            uspClass = UniformSystemPluginAwt.class;
-        }
-
+    private <U extends UniformSystemPlugin> boolean scanClassesForUSP(PluginBundle pluginBundle) {
     	Enumeration<URL> entrs = pluginBundle.getBundle().findEntries("/", "*.class", true);
         while (entrs.hasMoreElements()) {
     		URL url = entrs.nextElement();
@@ -186,10 +176,10 @@ public class PluginManager {
             	Class<?> cls = pluginBundle.getBundle().loadClass(classPath);
 
                 for(Class<?> inter : cls.getInterfaces()) {
-                    if(inter == uspClass) {
+                    if(inter == UniformSystemPlugin.class) {
                         try {
 	                        LOG.info("Class is USP: {}", cls.getName());
-	                        U plugin = (U) cls.newInstance();
+	                        UniformSystemPlugin plugin = (UniformSystemPlugin) cls.newInstance();
 	                        pluginBundle.setUniformSystemPlugin(plugin);
 	                        return true;
                         } catch (InstantiationException | IllegalAccessException e) {

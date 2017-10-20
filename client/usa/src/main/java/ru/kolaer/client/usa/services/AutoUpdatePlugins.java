@@ -2,8 +2,6 @@ package ru.kolaer.client.usa.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.view.TypeUi;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.usa.plugins.PluginBundle;
@@ -15,23 +13,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AutoUpdatePlugins<U extends UniformSystemPlugin, T> implements Service {
+public class AutoUpdatePlugins implements Service {
 	private final Logger LOG = LoggerFactory.getLogger(AutoUpdatePlugins.class);
 	
 	private boolean isRun = false;
 	private final PluginManager pluginManager;
-	private final VTabExplorer<U, T> explorer;
+	private final VTabExplorer explorer;
 	private final ServiceManager serviceManager;
-	private final TypeUi typeUi;
 
 	public AutoUpdatePlugins(PluginManager pluginManager,
-							 VTabExplorer<U, T> explorer,
-							 ServiceManager serviceManager,
-							 TypeUi typeUi) {
+							 VTabExplorer explorer,
+							 ServiceManager serviceManager) {
 		this.pluginManager = pluginManager;
 		this.explorer = explorer;
 		this.serviceManager = serviceManager;
-		this.typeUi = typeUi;
 	}
 	
 	@Override
@@ -69,9 +64,9 @@ public class AutoUpdatePlugins<U extends UniformSystemPlugin, T> implements Serv
 		}
 	}
 	
-	private void installPlugin(PluginBundle<U> pluginBundle) {
+	private void installPlugin(PluginBundle pluginBundle) {
 		//Установка нового плагина
-		pluginManager.install(pluginBundle, typeUi);
+		pluginManager.install(pluginBundle);
 		
 		LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
         String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
@@ -84,7 +79,7 @@ public class AutoUpdatePlugins<U extends UniformSystemPlugin, T> implements Serv
         }
 	}
 	
-	private void unInstallPlugin(PluginBundle<U> pluginBundle) {
+	private void unInstallPlugin(PluginBundle pluginBundle) {
 		//Удаление старого плагина
 		Collection<Service> services = pluginBundle.getUniformSystemPlugin().getServices();
 		if(services != null) {

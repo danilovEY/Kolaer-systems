@@ -8,11 +8,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.view.TypeUi;
-import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.client.usa.mvp.view.javafx.VMTabExplorerOSGi;
+import ru.kolaer.client.usa.mvp.viewmodel.impl.VMTabExplorerOSGi;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
 import ru.kolaer.client.usa.plugins.UniformSystemPluginAdapter;
@@ -62,7 +60,7 @@ public class LauncherPagePlugin extends UniformSystemPluginAdapter {
                 launchButton.setMinWidth(400);
                 launchButton.setCursor(Cursor.HAND);
                 launchButton.setOnAction(e -> {
-                    for(PluginBundle<UniformSystemPluginJavaFx> plugin : explorer.getAllPlugins()) {
+                    for(PluginBundle plugin : explorer.getAllPlugins()) {
                         if(plugin.getNamePlugin().equals(pluginBundle.getNamePlugin()) && plugin.getVersion().equals(pluginBundle.getVersion())) {
                             explorer.showPlugin(plugin.getUniformSystemPlugin());
                             return;
@@ -80,7 +78,7 @@ public class LauncherPagePlugin extends UniformSystemPluginAdapter {
         return this.mainPane;
     }
 
-    public void installPluginInThread(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle<UniformSystemPluginJavaFx> pluginBundle) {
+    public void installPluginInThread(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle pluginBundle) {
         ExecutorService threadInstallPlugin = Executors.newSingleThreadExecutor();
         CompletableFuture.supplyAsync(() -> {
             installPlugin(explorer, pluginManager, pluginBundle);
@@ -94,11 +92,11 @@ public class LauncherPagePlugin extends UniformSystemPluginAdapter {
         });
     }
 
-    public void installPlugin(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle<UniformSystemPluginJavaFx> pluginBundle) {
+    public void installPlugin(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle pluginBundle) {
         Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
         LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
 
-        if (pluginManager.install(pluginBundle, TypeUi.HIGH)) {
+        if (pluginManager.install(pluginBundle)) {
             LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
             String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
             explorer.addTabPlugin(tabName, pluginBundle);

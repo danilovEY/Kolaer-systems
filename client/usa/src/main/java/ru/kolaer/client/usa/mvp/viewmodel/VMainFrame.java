@@ -1,5 +1,6 @@
 package ru.kolaer.client.usa.mvp.viewmodel;
 
+import javafx.scene.Parent;
 import ru.kolaer.api.mvp.view.BaseView;
 
 import java.util.function.Function;
@@ -7,7 +8,7 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 17.10.2017.
  */
-public interface VMainFrame<T> extends BaseView<T> {
+public interface VMainFrame extends BaseView<Parent> {
     void show();
     void exit();
     void hide();

@@ -1,8 +1,8 @@
 package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.client.usa.mvp.viewmodel.VMainFrame;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -19,7 +19,7 @@ public class Tray {
     private boolean firstTime = true;
     private TrayIcon trayIcon;
 
-    public void initTrayIcon(VMainFrame stage) {
+    public void initTrayIcon(Stage stage) {
         if(stage == null) {
             return;
         }
@@ -31,7 +31,7 @@ public class Tray {
             return null;
         };
 
-        stage.setOnMinimize(minFun);
+        stage.iconifiedProperty().addListener((observable, oldValue, newValue) -> minFun.apply(true));
 
         if (SystemTray.isSupported()) {
             SystemTray tray = SystemTray.getSystemTray();
@@ -46,7 +46,7 @@ public class Tray {
             };
 
             showItem.addActionListener(showStage);
-            closeItem.addActionListener(e -> stage.exit());
+            closeItem.addActionListener(e -> stage.close());
 
             popup.add(showItem);
             popup.add(closeItem);

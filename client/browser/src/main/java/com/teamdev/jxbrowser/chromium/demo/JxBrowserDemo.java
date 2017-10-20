@@ -15,6 +15,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 
 public class JxBrowserDemo implements UniformSystemPlugin {
@@ -42,15 +43,7 @@ public class JxBrowserDemo implements UniformSystemPlugin {
 
 	@Override
 	public void start() throws Exception {
-		if(!isRun) {
-			isRun = true;
 
-			this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Внимание!", "Инсталяция браузера, подождите...", Duration.seconds(3), Pos.CENTER);
-
-			Tools.runOnThreadFXAndWain(() -> {
-				this.initUI();
-			},20, TimeUnit.SECONDS);
-		}
 	}
 
 	public void loadURL(final String url) {
@@ -119,5 +112,17 @@ public class JxBrowserDemo implements UniformSystemPlugin {
 	public URL getIcon() {
 		return null;
 	}
-	
+
+	@Override
+	public void initView(Function<Parent, Void> viewVisit) throws Exception {
+		if(!isRun) {
+			isRun = true;
+
+			this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Внимание!", "Инсталяция браузера, подождите...", Duration.seconds(3), Pos.CENTER);
+
+			Tools.runOnThreadFXAndWain(() -> {
+				this.initUI();
+			},20, TimeUnit.SECONDS);
+		}
+	}
 }

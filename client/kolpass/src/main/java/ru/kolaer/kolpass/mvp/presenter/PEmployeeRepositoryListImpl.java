@@ -3,11 +3,10 @@ package ru.kolaer.kolpass.mvp.presenter;
 import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.kolpass.mvp.view.VEmployeeRepositoryList;
 import ru.kolaer.kolpass.mvp.view.VEmployeeRepositoryListImpl;
 
@@ -19,7 +18,7 @@ import java.util.function.Function;
  */
 public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
     private static final Logger log = LoggerFactory.getLogger(PEmployeeRepositoryListImpl.class);
-    private final Map<EmployeeEntity, List<RepositoryPassword>> employeeRepMap = new HashMap<>();
+    private final Map<EmployeeDto, List<PasswordRepositoryDto>> employeeRepMap = new HashMap<>();
     private final UniformSystemEditorKit editorKit;
     private KolpassTable model;
     private VEmployeeRepositoryList view;
@@ -52,12 +51,12 @@ public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
 
     @Override
     public void updateView() {
-        final List<RepositoryPassword> allRepositoryPasswords = this.model.getAllRepositoryPasswords();
+       /* final List<PasswordRepositoryDto> allRepositoryPasswords = this.model.getAllRepositoryPasswords();
         if(allRepositoryPasswords.size() > 0) {
             allRepositoryPasswords.forEach(this::put);
         } else {
             this.employeeRepMap
-                    .put(this.editorKit.getAuthentication().getAuthorizedUser().getEmployeeEntity(),
+                    .put(this.editorKit.getAuthentication().getAuthorizedUser().getEmployee(),
                             new ArrayList<>());
         }
 
@@ -68,34 +67,34 @@ public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
 
             this.employeeRepMap.keySet().clear();
 
-            List<RepositoryPassword> allRep = this.model.getAllRepositoryPasswords();
+            List<PasswordRepositoryDto> allRep = this.model.getAllRepositoryPasswords();
             if(allRep.size() > 0) {
                 allRep.forEach(this::put);
             } else {
                 this.employeeRepMap
-                        .put(this.editorKit.getAuthentication().getAuthorizedUser().getEmployeeEntity(),
+                        .put(this.editorKit.getAuthentication().getAuthorizedUser().getEmployee(),
                                 new ArrayList<>());
             }
 
-            final List<RepositoryPassword> allRepositoryPasswordsChief
+            final List<PasswordRepositoryDto> allRepositoryPasswordsChief
                     = this.model.getAllRepositoryPasswordsChief();
 
             allRepositoryPasswordsChief.stream()
-                    .map(RepositoryPassword::getEmployee)
+                    .map(PasswordRepositoryDto::getEmployee)
                     .forEach(this.employeeRepMap::remove);
 
             allRepositoryPasswordsChief.forEach(this::put);
 
             this.employeeRepMap.keySet().forEach(this.view::addEmployee);
             return null;
-        });
+        });*/ // TODO: !!!
     }
 
-    private void put(RepositoryPassword repositoryPassword) {
+    private void put(PasswordRepositoryDto repositoryPassword) {
         if(this.employeeRepMap.containsKey(repositoryPassword.getEmployee())) {
             this.employeeRepMap.get(repositoryPassword.getEmployee()).add(repositoryPassword);
         } else {
-            ArrayList<RepositoryPassword> repositoryPasswords = new ArrayList<>();
+            ArrayList<PasswordRepositoryDto> repositoryPasswords = new ArrayList<>();
             repositoryPasswords.add(repositoryPassword);
             this.employeeRepMap.put(repositoryPassword.getEmployee(), repositoryPasswords);
         }
@@ -108,7 +107,7 @@ public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
     }
 
     @Override
-    public void setOnSelectEmployee(Function<Pair<EmployeeEntity, List<RepositoryPassword>>, Void> function) {
+    public void setOnSelectEmployee(Function<Pair<EmployeeDto, List<PasswordRepositoryDto>>, Void> function) {
         this.view.setOnSelectEmployee(emp -> {
             function.apply(new Pair<>(emp,
                     Optional.ofNullable(this.employeeRepMap.get(emp))

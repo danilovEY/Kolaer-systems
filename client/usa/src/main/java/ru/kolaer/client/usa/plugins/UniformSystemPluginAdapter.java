@@ -43,7 +43,7 @@ public class UniformSystemPluginAdapter implements UniformSystemPlugin {
 	}
 
 	@Override
-	public void setContent(Object content) {
+	public void setContent(Parent content) {
 
 	}
 

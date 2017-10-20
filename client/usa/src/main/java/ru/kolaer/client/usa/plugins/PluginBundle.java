@@ -11,7 +11,7 @@ import java.net.URI;
 /**
  * Created by Danilov on 10.04.2016.
  */
-public abstract class PluginBundle<T extends UniformSystemPlugin> {
+public abstract class PluginBundle {
     private final Logger LOG = LoggerFactory.getLogger(PluginBundle.class);
 
     private String version;
@@ -22,12 +22,12 @@ public abstract class PluginBundle<T extends UniformSystemPlugin> {
     private Bundle bundle;
     private BundleContext bundleContext;
     private boolean isInstall = false;
-    private T uniformSystemPlugin;
+    private UniformSystemPlugin uniformSystemPlugin;
 
     public abstract long getLastModified();
     public abstract long getFirstModified();
     
-    public T getUniformSystemPlugin() {
+    public UniformSystemPlugin getUniformSystemPlugin() {
         if(!this.isInstall) {
             LOG.warn("Плагин: {} не установлен!", this.symbolicNamePlugin);
             return null;
@@ -36,7 +36,7 @@ public abstract class PluginBundle<T extends UniformSystemPlugin> {
         return this.uniformSystemPlugin;
     }
 
-    protected void setUniformSystemPlugin(T plugin) {
+    protected void setUniformSystemPlugin(UniformSystemPlugin plugin) {
         this.uniformSystemPlugin = plugin;
     }
 

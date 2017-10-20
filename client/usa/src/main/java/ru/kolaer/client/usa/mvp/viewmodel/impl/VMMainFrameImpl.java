@@ -20,12 +20,12 @@ import ru.kolaer.client.usa.plugins.PluginManager;
 import ru.kolaer.client.usa.services.AutoCheckingNotifyMessage;
 import ru.kolaer.client.usa.services.AutoUpdatePlugins;
 import ru.kolaer.client.usa.services.HideShowMainStage;
-import ru.kolaer.client.usa.services.ServiceControlManager;
+import ru.kolaer.client.usa.services.ServiceManager;
 import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.usa.system.network.NetworkUSRestTemplate;
 import ru.kolaer.client.usa.system.ui.MenuBarUSImpl;
-import ru.kolaer.client.usa.system.ui.NotificationPaneExceptionHandler;
+import ru.kolaer.client.usa.system.ui.NotificationPanelExceptionHandler;
 import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
 import ru.kolaer.client.usa.tools.Resources;
 
@@ -53,7 +53,7 @@ public class VMMainFrameImpl extends Application {
     /**
      * Менеджер служб.
      */
-    private ServiceControlManager servicesManager;
+    private ServiceManager servicesManager;
     private VMTabExplorerOSGi explorer;
     private PluginManager pluginManager;
     /**
@@ -77,7 +77,7 @@ public class VMMainFrameImpl extends Application {
         this.mainPane.setTop(menuBar);
         this.mainPane.setCenter(splitPane);
 
-        this.servicesManager = new ServiceControlManager();
+        this.servicesManager = new ServiceManager();
         this.pluginManager = new PluginManager();
 
         this.initApplicationParams();
@@ -144,7 +144,7 @@ public class VMMainFrameImpl extends Application {
     private void initSystemServices() {
         Thread.currentThread().setName("Добавление системны служб");
 
-        this.servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, this.servicesManager), true);
+        this.servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, servicesManager), true);
         this.servicesManager.addService(new AutoCheckingNotifyMessage(), true);
         this.servicesManager.addService(new HideShowMainStage(stage), true);
     }
@@ -152,7 +152,7 @@ public class VMMainFrameImpl extends Application {
     private void initTray() {
         Thread.currentThread().setName("Создание инонки для трея");
 
-        new Tray().createTrayIcon(stage, this.pluginManager, this.servicesManager, this.explorer);
+        new Tray().initTrayIcon(stage);
     }
 
     private boolean autoLogin() {
@@ -166,10 +166,10 @@ public class VMMainFrameImpl extends Application {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        final MenuBarUSImpl menuBarUS = new MenuBarUSImpl(menuBar);
-        final NotificationPaneExceptionHandler notify = new NotificationPaneExceptionHandler();
-        final NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
-        final UISystemUSImpl uiSystemUS = new UISystemUSImpl();
+        MenuBarUSImpl menuBarUS = new MenuBarUSImpl(menuBar);
+        NotificationPanelExceptionHandler notify = new NotificationPanelExceptionHandler();
+        NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
+        UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         uiSystemUS.setNotification(notify);
         uiSystemUS.setMenuBarUS(menuBarUS);
 
@@ -220,25 +220,25 @@ public class VMMainFrameImpl extends Application {
         }
     }
     private void initApplicationParams() {
-        String pathServerRest = PARAM.get("server-rest");
+        String pathServerRest = PARAM.get(Resources.PRIVATE_SERVER_URL_PARAM);
         if (pathServerRest != null) {
-            Resources.URL_TO_KOLAER_RESTFUL.delete(0, Resources.URL_TO_KOLAER_RESTFUL.length()).append(pathServerRest);
-            LOG.info("RESTful server: {}", Resources.URL_TO_KOLAER_RESTFUL.toString());
+            Resources.URL_TO_PRIVATE_SERVER.delete(0, Resources.URL_TO_PRIVATE_SERVER.length()).append(pathServerRest);
+            LOG.info("RESTful server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
         }
 
-        String pathServerWeb = PARAM.get("server-web");
+        String pathServerWeb = PARAM.get(Resources.PUBLIC_SERVER_URL_PARAM);
         if (pathServerWeb != null) {
-            Resources.URL_TO_KOLAER_WEB.delete(0, Resources.URL_TO_KOLAER_WEB.length()).append(pathServerWeb);
-            LOG.info("Web server: {}", Resources.URL_TO_KOLAER_WEB.toString());
+            Resources.URL_TO_PRIVATE_SERVER.delete(0, Resources.URL_TO_PRIVATE_SERVER.length()).append(pathServerWeb);
+            LOG.info("Web server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
         }
 
-        String service = PARAM.get("service");
+        String service = PARAM.get(Resources.SERVICE_PARAM);
         if (service == null || !service.equals("false")) {
             this.servicesManager.setAutoRun(true);
             LOG.info("Service ON");
         }
 
-        pluginManager.setUniqueCacheDir(PARAM.getOrDefault("rand-dir-cache", "false").equals("true"));
+        pluginManager.setUniqueCacheDir(PARAM.getOrDefault(Resources.RAND_DIR_CACHE_PARAM, "false").equals("true"));
 
     }
 
@@ -271,6 +271,4 @@ public class VMMainFrameImpl extends Application {
 
         initialize();
     }
-
-
 }

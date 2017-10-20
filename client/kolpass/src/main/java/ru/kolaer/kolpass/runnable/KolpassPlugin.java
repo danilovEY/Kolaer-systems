@@ -6,7 +6,6 @@ import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountEntity;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
@@ -20,6 +19,7 @@ import ru.kolaer.kolpass.mvp.presenter.PSplitContentAndListRepImpl;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Created by danilovey on 09.02.2017.
@@ -49,18 +49,7 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
 
     @Override
     public void start() throws Exception {
-        this.mainPane = new BorderPane();
-        this.loginButton = new Button("Авторизоваться");
-        this.loginButton.setOnAction(e -> this.editorKit.getUISystemUS().getDialog().createAndShowLoginToSystemDialog());
 
-        this.pSplitContentAndListRep = new PSplitContentAndListRepImpl(this.editorKit);
-        this.pSplitContentAndListRep.setContent(new PRepositoryContentImpl(this.editorKit));
-        this.pSplitContentAndListRep.setEmployeeList(new PEmployeeRepositoryListImpl(this.editorKit));
-
-        if(editorKit.getAuthentication().isAuthentication())
-            this.login(null);
-        else
-            this.logout(null);
     }
 
     @Override
@@ -95,10 +84,29 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
     }
 
     @Override
-    public void logout(AccountEntity account) {
+    public void logout(AccountDto account) {
         Optional.ofNullable(this.mainPane).ifPresent(pane -> {
             this.pSplitContentAndListRep.clear();
             pane.setCenter(this.loginButton);
         });
+    }
+
+    @Override
+    public void initView(Function<Parent, Void> viewVisit) throws Exception {
+        this.mainPane = new BorderPane();
+
+        viewVisit.apply(mainPane);
+
+        this.loginButton = new Button("Авторизоваться");
+        this.loginButton.setOnAction(e -> this.editorKit.getUISystemUS().getDialog().createAndShowLoginToSystemDialog());
+
+        this.pSplitContentAndListRep = new PSplitContentAndListRepImpl(this.editorKit);
+        this.pSplitContentAndListRep.setContent(new PRepositoryContentImpl(this.editorKit));
+        this.pSplitContentAndListRep.setEmployeeList(new PEmployeeRepositoryListImpl(this.editorKit));
+
+        if(editorKit.getAuthentication().isAuthentication())
+            this.login(null);
+        else
+            this.logout(null);
     }
 }

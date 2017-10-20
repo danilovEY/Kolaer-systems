@@ -7,15 +7,15 @@ import java.util.Collection;
 /**
  * Created by Danilov on 26.04.2016.
  */
-public interface PluginsUS<T extends UniformSystemPlugin> {
+public interface PluginsUS {
     void showPlugin(String name);
-    void showPlugin(T plugin);
+    void showPlugin(UniformSystemPlugin plugin);
 
-    Collection<T> getPlugins();
+    Collection<UniformSystemPlugin> getPlugins();
 
     void notifyPlugins(String key, Object object);
 
-    String getPluginVersion(T plugin);
-    String getNamePlugin(T plugin);
+    String getPluginVersion(UniformSystemPlugin plugin);
+    String getNamePlugin(UniformSystemPlugin plugin);
 
 }

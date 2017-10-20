@@ -6,19 +6,18 @@ import javafx.scene.control.MenuItem;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
-import ru.kolaer.api.system.ui.MenuBarUS;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 
 /**
  * Created by danilovey on 09.02.2017.
  */
-public class MenuBarUSJavaFx implements MenuBarUS, AuthenticationObserver {
+public class MenuBarUSImpl implements ru.kolaer.api.system.ui.MenuBarUS, AuthenticationObserver {
     private final MenuItem authorizationItem;
     private final Menu fileMenu;
     private final MenuBar menuBar;
 
-    public MenuBarUSJavaFx(MenuBar menuBar) {
+    public MenuBarUSImpl(MenuBar menuBar) {
         this.menuBar = menuBar;
         this.fileMenu = new Menu("Файл");
         this.authorizationItem = new MenuItem("Авторизоваться");

@@ -3,8 +3,7 @@ package ru.kolaer.kolpass.mvp.presenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPassword;
@@ -21,7 +20,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
     private static final Logger log = LoggerFactory.getLogger(PRepositoryPasswordImpl.class);
     private final UniformSystemEditorKit editorKit;
     private VRepositoryPassword vRepositoryPassword;
-    private RepositoryPassword passwordDto;
+    private PasswordRepositoryDto passwordDto;
     private PPasswordHistory lastPassword;
     private PPasswordHistory firstPassword;
     private PPasswordHistory prevPassword;
@@ -31,7 +30,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
         this.editorKit = editorKit;
     }
 
-    public PRepositoryPasswordImpl(UniformSystemEditorKit editorKit, RepositoryPassword passwordDto) {
+    public PRepositoryPasswordImpl(UniformSystemEditorKit editorKit, PasswordRepositoryDto passwordDto) {
         this(editorKit);
         this.passwordDto = passwordDto;
         this.updateView();
@@ -54,8 +53,8 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
                 passwordHistory.setLogin(Optional.ofNullable(view.getLogin()).orElse(""));
                 passwordHistory.setPassword(Optional.ofNullable(view.getPassword()).orElse(""));
 
-                this.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
-                        .getKolpassTable().addHistoryPasswordToRepository(this.passwordDto.getId(), passwordHistory));
+                //this.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase() // TODO!!
+                //        .getKolpassTable().addHistoryPasswordToRepository(this.passwordDto.getId(), passwordHistory));
 
                 this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!", "Сохранение прошло успешно!");
             }
@@ -100,12 +99,12 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
     }
 
     @Override
-    public RepositoryPassword getModel() {
+    public PasswordRepositoryDto getModel() {
         return this.passwordDto;
     }
 
     @Override
-    public void setModel(RepositoryPassword model) {
+    public void setModel(PasswordRepositoryDto model) {
         this.passwordDto = model;
         this.updateView();
     }
@@ -120,7 +119,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
         this.vRepositoryPassword = view;
     }
 
-    private PPasswordHistory setIfExist(PPasswordHistory pPass, RepositoryPasswordHistory dto, boolean edit) {
+    private PPasswordHistory setIfExist(PPasswordHistory pPass, PasswordHistoryDto dto, boolean edit) {
         PPasswordHistory pPasswordHistory = Optional.ofNullable(pPass).orElse(new PPasswordHistoryImpl());
         pPasswordHistory.setEditable(edit);
         pPasswordHistory.setModel(dto);

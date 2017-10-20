@@ -4,7 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 
 import java.util.function.Function;
 
@@ -14,15 +14,15 @@ import java.util.function.Function;
 public class VEmployeeRepositoryListImpl implements VEmployeeRepositoryList {
     private final BorderPane mainPane;
     private final Button loadEmployee;
-    private final ListView<EmployeeEntity> employeeEntityListView;
+    private final ListView<EmployeeDto> employeeEntityListView;
 
     public VEmployeeRepositoryListImpl() {
         this.mainPane = new BorderPane();
 
         this.employeeEntityListView = new ListView<>();
-        this.employeeEntityListView.setCellFactory(param -> new ListCell<EmployeeEntity>() {
+        this.employeeEntityListView.setCellFactory(param -> new ListCell<EmployeeDto>() {
             @Override
-            protected void updateItem(EmployeeEntity item, boolean empty) {
+            protected void updateItem(EmployeeDto item, boolean empty) {
                 super.updateItem(item, empty);
                 if(item != null) {
                     this.setText(item.getInitials() + " (" + item.getDepartment().getAbbreviatedName() + ")");
@@ -51,12 +51,12 @@ public class VEmployeeRepositoryListImpl implements VEmployeeRepositoryList {
     }
 
     @Override
-    public void addEmployee(EmployeeEntity employeeEntity) {
+    public void addEmployee(EmployeeDto employeeEntity) {
         this.employeeEntityListView.getItems().add(employeeEntity);
     }
 
     @Override
-    public void removeEmployee(EmployeeEntity employeeEntity) {
+    public void removeEmployee(EmployeeDto employeeEntity) {
         this.employeeEntityListView.getItems().remove(employeeEntity);
     }
 
@@ -66,7 +66,7 @@ public class VEmployeeRepositoryListImpl implements VEmployeeRepositoryList {
     }
 
     @Override
-    public void setOnSelectEmployee(Function<EmployeeEntity, Void> function) {
+    public void setOnSelectEmployee(Function<EmployeeDto, Void> function) {
         this.employeeEntityListView.getSelectionModel()
                 .selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             function.apply(newValue);

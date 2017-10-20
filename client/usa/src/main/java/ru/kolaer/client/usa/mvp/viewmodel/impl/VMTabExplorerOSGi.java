@@ -1,8 +1,8 @@
-package ru.kolaer.client.usa.mvp.view.javafx;
+package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.presenter.impl.PTabImpl;
@@ -29,7 +29,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     }
 
     @Override
-    public void addAllPlugins(Collection<PluginBundle<UniformSystemPluginJavaFx>> plugins) {
+    public void addAllPlugins(Collection<PluginBundle> plugins) {
         plugins.forEach(this::addPlugin);
     }
 
@@ -48,7 +48,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
 
     @Override
-    public void addTabPlugin(String tabName, PluginBundle<UniformSystemPluginJavaFx> pluginBundle) {
+    public void addTabPlugin(String tabName, PluginBundle pluginBundle) {
         if(pluginBundle == null || !pluginBundle.isInstall()) {
             throw new IllegalArgumentException(tabName + " - is null or not install!");
         }
@@ -105,12 +105,12 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     }
 
     @Override
-    public String getPluginVersion(UniformSystemPluginJavaFx uniformSystemPlugin) {
+    public String getPluginVersion(UniformSystemPlugin uniformSystemPlugin) {
         return this.plugins.get(uniformSystemPlugin).getVersion();
     }
 
     @Override
-    public String getNamePlugin(UniformSystemPluginJavaFx uniformSystemPlugin) {
+    public String getNamePlugin(UniformSystemPlugin uniformSystemPlugin) {
         return this.plugins.get(uniformSystemPlugin).getNamePlugin();
     }
 }

@@ -6,12 +6,11 @@ import java.net.URL;
 public interface Resources {
 	String CACHE_PATH = "D:\\Документы\\KolaerCache";
 
-	String PRIVATE_SERVER_URL_PARAM = "--private-server=";
-	String PUBLIC_SERVER_URL_PARAM = "--public-server=";
-	String SERVICE_PARAM = "--service=";
-	String TRAY_PARAM = "--tray=";
-	String UI_PARAM = "--ui=";
-	String RAND_DIR_CACHE_PARAM = "--rand-dir-cache=";
+	String PRIVATE_SERVER_URL_PARAM = "private-server";
+	String PUBLIC_SERVER_URL_PARAM = "public-server";
+	String SERVICE_PARAM = "service";
+	String TRAY_PARAM = "tray";
+	String RAND_DIR_CACHE_PARAM = "rand-dir-cache";
 
 	String VERSION = "3.1";
 	

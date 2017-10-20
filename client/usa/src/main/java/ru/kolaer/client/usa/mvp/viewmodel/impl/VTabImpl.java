@@ -1,4 +1,4 @@
-package ru.kolaer.client.usa.mvp.view.javafx;
+package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;

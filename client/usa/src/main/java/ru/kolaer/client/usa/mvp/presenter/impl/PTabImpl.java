@@ -2,11 +2,10 @@ package ru.kolaer.client.usa.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.view.VTab;
-import ru.kolaer.client.usa.mvp.view.javafx.VTabImpl;
+import ru.kolaer.client.usa.mvp.viewmodel.impl.VTabImpl;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 
@@ -22,7 +21,7 @@ import java.util.concurrent.Executors;
 public class PTabImpl implements PTab {
 	private final Logger LOG = LoggerFactory.getLogger(PTabImpl.class);
 	/**Плагин.*/
-	private final PluginBundle<UniformSystemPluginJavaFx> plugin;
+	private final PluginBundle plugin;
 	/**View.*/
 	private final VTab view;
 	/**Флаг активации вкладки.*/
@@ -31,7 +30,7 @@ public class PTabImpl implements PTab {
 	 * {@linkplain PTabImpl}
 	 * @param plugin - Плагин.
 	 */
-	public PTabImpl(PluginBundle<UniformSystemPluginJavaFx> plugin) {
+	public PTabImpl(PluginBundle plugin) {
 		this.plugin = plugin;
 		this.view = new VTabImpl();
 		this.view.setTitle(plugin.getNamePlugin());

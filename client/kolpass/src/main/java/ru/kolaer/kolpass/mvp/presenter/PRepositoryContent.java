@@ -1,7 +1,7 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
 import ru.kolaer.api.mvp.model.BaseModel;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.presenter.BasePresenter;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.kolpass.mvp.view.VRepositoryContent;
@@ -17,5 +17,5 @@ public interface PRepositoryContent extends BasePresenter<VRepositoryContent>, B
     void removeRepositoryPassword(PRepositoryPassword pRepositoryPassword);
     void clear();
 
-    void setEmployee(EmployeeEntity key);
+    void setEmployee(EmployeeDto key);
 }

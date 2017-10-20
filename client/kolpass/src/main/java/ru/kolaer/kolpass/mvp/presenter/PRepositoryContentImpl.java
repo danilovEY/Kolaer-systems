@@ -1,7 +1,7 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.kolpass.mvp.view.VRepositoryContent;
@@ -19,7 +19,7 @@ public class PRepositoryContentImpl implements PRepositoryContent {
     private final UniformSystemEditorKit editorKit;
     private VRepositoryContent view;
     private KolpassTable kolpassTable;
-    private EmployeeEntity employeeEntity;
+    private EmployeeDto employeeEntity;
 
     public PRepositoryContentImpl(UniformSystemEditorKit editorKit) {
         this.view = new VRepositoryContentImpl();
@@ -47,18 +47,18 @@ public class PRepositoryContentImpl implements PRepositoryContent {
                 return null;
             }
 
-            RepositoryPassword repositoryPassword = null;
+            PasswordRepositoryDto repositoryPassword = null;
 
             if(this.employeeEntity.getPersonnelNumber().equals(this.editorKit.getAuthentication()
-                            .getAuthorizedUser().getEmployeeEntity().getPersonnelNumber())) {
-                repositoryPassword = this.kolpassTable.addRepositoryPassword(rep);
+                            .getAuthorizedUser().getEmployee().getPersonnelNumber())) {
+                //repositoryPassword = this.kolpassTable.addRepositoryPassword(rep); // TODO!
             } else {
                 rep.setEmployee(this.employeeEntity);
-                repositoryPassword = this.kolpassTable.addRepToOtherEmployee(rep);
+                //repositoryPassword = this.kolpassTable.addRepToOtherEmployee(rep); // TODO!
             }
 
 
-            this.addRepositoryPassword(new PRepositoryPasswordImpl(this.editorKit, repositoryPassword));
+            //this.addRepositoryPassword(new PRepositoryPasswordImpl(this.editorKit, repositoryPassword)); // TODO!!
 
             this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!",
                     "Добавлен репозиторий \"" + repositoryPassword.getName() + "\"!");
@@ -96,7 +96,7 @@ public class PRepositoryContentImpl implements PRepositoryContent {
     }
 
     @Override
-    public void setEmployee(EmployeeEntity key) {
+    public void setEmployee(EmployeeDto key) {
         this.employeeEntity = key;
         this.view.setContextMenu(key != null);
     }

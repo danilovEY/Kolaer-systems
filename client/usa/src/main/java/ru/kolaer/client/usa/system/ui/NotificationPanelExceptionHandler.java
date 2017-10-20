@@ -29,8 +29,8 @@ import java.util.Map;
 /**
  * Created by danilovey on 18.08.2016.
  */
-public class NotificationJavaFxExceptionHandler implements NotificationUS, BaseView<Parent>, Thread.UncaughtExceptionHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(NotificationJavaFxExceptionHandler.class);
+public class NotificationPanelExceptionHandler implements NotificationUS, BaseView<Parent>, Thread.UncaughtExceptionHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(NotificationPanelExceptionHandler.class);
     private final int SIMPLE_MESSAGE = 0;
     private final int INFO_MESSAGE = 1;
     private final int WARN_MESSAGE = 2;
@@ -40,7 +40,7 @@ public class NotificationJavaFxExceptionHandler implements NotificationUS, BaseV
     private VBox vBoxAdminNotify;
     private Map<Node, Node> notifiMap = new HashMap<>();
 
-    public NotificationJavaFxExceptionHandler() {
+    public NotificationPanelExceptionHandler() {
         this.vBoxUserNotify = new VBox();
         this.vBoxUserNotify.setSpacing(5);
         this.vBoxUserNotify.setAlignment(Pos.TOP_LEFT);

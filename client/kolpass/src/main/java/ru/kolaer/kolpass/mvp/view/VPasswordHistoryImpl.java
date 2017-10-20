@@ -9,9 +9,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPasswordHistory;
+import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
 
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -107,7 +107,7 @@ public class VPasswordHistoryImpl implements VPasswordHistory {
     }
 
     @Override
-    public boolean isChangeData(RepositoryPasswordHistory passwordHistory) {
+    public boolean isChangeData(PasswordHistoryDto passwordHistory) {
         return (passwordHistory == null && (!Optional.ofNullable(this.passwordField.getText()).orElse("").isEmpty()
                 || !Optional.ofNullable(this.loginField.getText()).orElse("").isEmpty()))
                 || passwordHistory == null

@@ -10,7 +10,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
-import ru.kolaer.api.plugins.UniformSystemPluginJavaFx;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
@@ -24,11 +24,12 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Created by danilovey on 14.03.2017.
  */
-public class WerPlugin implements UniformSystemPluginJavaFx, AuthenticationObserver {
+public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
     private UniformSystemEditorKit editorKit;
     private BorderPane mainPane;
     private PEventTableImpl pEventTable;
@@ -68,19 +69,6 @@ public class WerPlugin implements UniformSystemPluginJavaFx, AuthenticationObser
 
     @Override
     public void start() throws Exception {
-        this.mainPane = new BorderPane();
-
-        this.pEventTable = new PEventTableImpl(this.editorKit, this.mWindowsEvent);
-        this.detailedEvent = new PDetailedEventImpl();
-
-        this.splitPresenter = new PSplitTableDetailedEventImpl();
-        this.splitPresenter.setDetailedEvent(this.detailedEvent);
-        this.splitPresenter.setEventTable(this.pEventTable);
-        this.splitPresenter.updateView();
-
-        if(this.editorKit.getAuthentication().isAuthentication()) {
-            this.login(this.editorKit.getAuthentication().getAuthorizedUser());
-        }
     }
 
     @Override
@@ -133,5 +121,25 @@ public class WerPlugin implements UniformSystemPluginJavaFx, AuthenticationObser
         Optional.ofNullable(this.mainPane).ifPresent(pane -> {
             pane.setCenter(null);
         });
+    }
+
+    @Override
+    public void initView(Function<Parent, Void> viewVisit) throws Exception {
+        mainPane = new BorderPane();
+
+        viewVisit.apply(mainPane);
+
+        pEventTable = new PEventTableImpl(editorKit, mWindowsEvent);
+        detailedEvent = new PDetailedEventImpl();
+
+        splitPresenter = new PSplitTableDetailedEventImpl();
+        splitPresenter.setDetailedEvent(detailedEvent);
+        splitPresenter.setEventTable(pEventTable);
+        splitPresenter.updateView();
+
+        if(editorKit.getAuthentication().isAuthentication()) {
+            login(editorKit.getAuthentication().getAuthorizedUser());
+        }
+
     }
 }

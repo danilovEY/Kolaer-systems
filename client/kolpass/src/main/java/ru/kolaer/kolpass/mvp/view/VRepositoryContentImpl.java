@@ -9,7 +9,6 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.RepositoryPassword;
 
 import java.util.function.Function;
 
@@ -73,7 +72,7 @@ public class VRepositoryContentImpl implements VRepositoryContent {
     }
 
     @Override
-    public void setOnAddRepository(Function<RepositoryPassword, Void> function) {
+    public void setOnAddRepository(Function<PasswordRepositoryDto, Void> function) {
         this.addRepItem.setOnAction(e -> {
             final TextInputDialog dialog = new TextInputDialog();
             dialog.setHeaderText("");
@@ -85,8 +84,8 @@ public class VRepositoryContentImpl implements VRepositoryContent {
         });
     }
 
-    private RepositoryPassword createRep(String nameRep) {
-        RepositoryPassword repositoryPassword = new PasswordRepositoryDto();
+    private PasswordRepositoryDto createRep(String nameRep) {
+        PasswordRepositoryDto repositoryPassword = new PasswordRepositoryDto();
         repositoryPassword.setName(nameRep);
         return repositoryPassword;
     }
