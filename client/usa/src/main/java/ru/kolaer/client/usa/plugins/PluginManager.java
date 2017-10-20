@@ -25,6 +25,8 @@ import java.util.*;
  */
 public class PluginManager {
     private final Logger LOG = LoggerFactory.getLogger(PluginManager.class);
+
+    private boolean uniqueCacheDir;
     private SearchPlugins searchPlugins;
     private final boolean uniqueCacheDir;
     private final List<PluginBundle> installPlugins = new ArrayList<>();
@@ -269,5 +271,13 @@ public class PluginManager {
 
     public SearchPlugins getSearchPlugins() {
         return searchPlugins;
+    }
+
+    public boolean isUniqueCacheDir() {
+        return uniqueCacheDir;
+    }
+
+    public void setUniqueCacheDir(boolean uniqueCacheDir) {
+        this.uniqueCacheDir = uniqueCacheDir;
     }
 }
