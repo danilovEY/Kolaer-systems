@@ -8,14 +8,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import ru.kolaer.api.mvp.model.kolaerweb.Counter;
+import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 import ru.kolaer.api.system.ui.StaticView;
 
 /**
  * Created by danilovey on 25.08.2016.
  */
 public class StaticViewPPR implements StaticView, PPR {
-    private final Counter counter;
+    private final CounterDto counter;
     private BorderPane mainPane;
     private Label title;
     private Label month;
@@ -27,7 +27,7 @@ public class StaticViewPPR implements StaticView, PPR {
     private Label description;
 
 
-    public StaticViewPPR(final Counter counter) {
+    public StaticViewPPR(final CounterDto counter) {
         this.counter = counter;
         this.mainPane = new BorderPane();
 
@@ -149,7 +149,7 @@ public class StaticViewPPR implements StaticView, PPR {
     }
 
     @Override
-    public Counter getCounter() {
+    public CounterDto getCounter() {
         return this.counter;
     }
 }

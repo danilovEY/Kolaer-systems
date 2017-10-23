@@ -29,19 +29,19 @@ public class ResponseErrorHandlerNotifications extends DefaultResponseErrorHandl
 
         switch (response.getStatusCode().value()) {
             case 400 : notification
-                    .showErrorNotifi("Неверные данные!",
+                    .showErrorNotify("Неверные данные!",
                             this.getMessage(this.getExceptionMessageRequest(response))); break;
 
             case 403: notification
-                    .showErrorNotifi("Не доступа!",
+                    .showErrorNotify("Не доступа!",
                             this.getMessage(this.getExceptionMessageRequest(response))); break;
 
             case 503: notification
-                    .showErrorNotifi("Ошибка на сервере!",
+                    .showErrorNotify("Ошибка на сервере!",
                             this.getMessage(this.getExceptionMessageRequest(response))); break;
 
             default: notification
-                    .showErrorNotifi("Ошибка запроса!",
+                    .showErrorNotify("Ошибка запроса!",
                             this.getMessage(this.getExceptionMessageRequest(response))); break;
         }
 

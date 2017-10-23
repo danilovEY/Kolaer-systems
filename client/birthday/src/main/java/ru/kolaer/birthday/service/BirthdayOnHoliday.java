@@ -2,13 +2,12 @@ package ru.kolaer.birthday.service;
 
 import javafx.application.Platform;
 import javafx.util.Duration;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.system.ui.NotifiAction;
+import ru.kolaer.api.system.ui.NotifyAction;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
@@ -16,6 +15,7 @@ import ru.kolaer.birthday.tools.Tools;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class BirthdayOnHoliday implements Service {
@@ -31,7 +31,7 @@ public class BirthdayOnHoliday implements Service {
 	public void run() {
 		//final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
 
-		final Holiday[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
+		final ServerResponse<List<Holiday>> holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
 		final LocalDate date = LocalDate.now();
 
 		if(date.getDayOfWeek().getValue() == 5 ) {
@@ -43,7 +43,7 @@ public class BirthdayOnHoliday implements Service {
 			}
 		}
 
-		for(final Holiday holiday : holidays) {
+		for(final Holiday holiday : holidays.getResponse()) {
 			final LocalDate holidayLocalDate = LocalDate.parse(holiday.getDate(), dtf);
 			if(date.getDayOfMonth() == holidayLocalDate.getDayOfMonth()) {
 				this.showNotifi("Сегодня ", date, holiday);
@@ -66,11 +66,11 @@ public class BirthdayOnHoliday implements Service {
 		final EmployeeEntity[] employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersByBirthday(Tools.convertToDate(date));
 		final EmployeeOtherOrganization[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByBirthday(Tools.convertToDate(date));
 		
-		final NotifiAction[] actions = new NotifiAction[employeesEntities.length + usersBirthday.length];
+		final NotifyAction[] actions = new NotifyAction[employeesEntities.length + usersBirthday.length];
 		int i = 0;
 
 		for(final EmployeeEntity user : employeesEntities) {
-			actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartment().getAbbreviatedName(), e -> {
+			actions[i] = new NotifyAction(user.getInitials() + " (КолАЭР) " + user.getDepartment().getAbbreviatedName(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				
 				Platform.runLater(() -> {
@@ -80,7 +80,7 @@ public class BirthdayOnHoliday implements Service {
 			i++;
 		}
 		for(final EmployeeOtherOrganization user : usersBirthday) {
-			actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartment(), e -> {
+			actions[i] = new NotifyAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartment(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
 				Platform.runLater(() -> {
@@ -97,7 +97,7 @@ public class BirthdayOnHoliday implements Service {
 		}
 		
 		Platform.runLater(() -> {
-			this.editorKit.getUISystemUS().getNotification().showInformationNotifi(title + holiday.getName() + ".", "День рождения в этот день празднуют:", Duration.hours(24), actions);
+			this.editorKit.getUISystemUS().getNotification().showInformationNotify(title + holiday.getName() + ".", "День рождения в этот день празднуют:", Duration.hours(24), actions);
 		});
 	}
 

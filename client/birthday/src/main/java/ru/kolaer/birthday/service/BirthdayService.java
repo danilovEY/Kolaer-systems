@@ -3,11 +3,13 @@ package ru.kolaer.birthday.service;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.system.ui.NotifiAction;
+import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
+import ru.kolaer.api.system.ui.NotifyAction;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
@@ -15,6 +17,8 @@ import ru.kolaer.birthday.tools.Tools;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class BirthdayService implements Service {
@@ -27,34 +31,51 @@ public class BirthdayService implements Service {
 	
 	@Override
 	public void run() {
-		final EmployeeEntity[]  employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersBirthdayToday();
-		final EmployeeOtherOrganization[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersBirthdayToday();
+		ApplicationDataBase applicationDataBase = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase();
+		ServerResponse<List<EmployeeDto>> employeeBirthdayTodayResponse = applicationDataBase.getGeneralEmployeesTable()
+				.getUsersBirthdayToday();
+		ServerResponse<List<EmployeeOtherOrganizationDto>> otherEmployeeBirthdayTodayResponse = applicationDataBase
+				.getEmployeeOtherOrganizationTable().getUsersBirthdayToday();
 
-		final NotifiAction[] actions = new NotifiAction[employeesEntities.length + usersBirthday.length];
-		int i = 0;
+		if(employeeBirthdayTodayResponse.isServerError()) {
+			editorKit.getUISystemUS().getNotification().showErrorNotify(employeeBirthdayTodayResponse.getExceptionMessage());
+			return;
+		}
 
-		for(final EmployeeEntity user : employeesEntities) {
-			actions[i] = new NotifiAction(user.getInitials() + " (КолАЭР) " + user.getDepartment().getAbbreviatedName(), e -> {
+		if(otherEmployeeBirthdayTodayResponse.isServerError()) {
+			editorKit.getUISystemUS().getNotification().showErrorNotify(otherEmployeeBirthdayTodayResponse.getExceptionMessage());
+			return;
+		}
+
+		if(employeeBirthdayTodayResponse.isServerError() || otherEmployeeBirthdayTodayResponse.isServerError()) {
+			return;
+		}
+
+		List<EmployeeDto> employees = employeeBirthdayTodayResponse.getResponse();
+		List<EmployeeOtherOrganizationDto> otherEmployees = otherEmployeeBirthdayTodayResponse.getResponse();
+
+		List<NotifyAction> actions = new ArrayList<>(employees.size() + otherEmployees.size());
+
+		for(EmployeeDto user : employees) {
+			actions.add(new NotifyAction(user.getInitials() + " (КолАЭР) " + user.getDepartment().getAbbreviatedName(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 
 				Platform.runLater(() -> {
 					new VMDetailedInformationStageImpl(userModel).show();
 				});
-			});
-			i++;
+			}));
 		}
-		for(final EmployeeOtherOrganization user : usersBirthday) {
-			actions[i] = new NotifiAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartment(), e -> {
+		for(EmployeeOtherOrganizationDto user : otherEmployees) {
+			actions.add(new NotifyAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartment(), e -> {
 				final UserModel userModel = new UserModelImpl(user);
 				userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
 				Platform.runLater(() -> {
 					new VMDetailedInformationStageImpl(userModel).show();
 				});
-			});
-			i++;
+			}));
 		}
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-		final StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\".");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		StringBuilder title = new StringBuilder("Сегодня \"").append(LocalDate.now().format(formatter)).append("\".");
 
 		try{
 			TimeUnit.SECONDS.sleep(1);
@@ -63,7 +84,7 @@ public class BirthdayService implements Service {
 		}
 
 		Platform.runLater(() -> {
-			this.editorKit.getUISystemUS().getNotification().showInformationNotifi(title.toString(), "Поздравляем с днем рождения!", null, actions);
+			this.editorKit.getUISystemUS().getNotification().showInformationNotify(title.toString(), "Поздравляем с днем рождения!", null, actions);
 		});
 	}
 

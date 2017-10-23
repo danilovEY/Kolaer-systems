@@ -103,7 +103,7 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
             } catch (IOException e) {
                 LOG.error("Не удалось запомнить логин и пароль!", e);
                 UniformSystemEditorKitSingleton.getInstance().getUISystemUS()
-                        .getNotification().showErrorNotifi("Ошибка!", "Не удалось запомнить логин и пароль!");
+                        .getNotification().showErrorNotify("Ошибка!", "Не удалось запомнить логин и пароль!");
             }
         } else {
             new File(Authentication.TEMP_NAME).delete();

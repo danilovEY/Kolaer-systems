@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
 
 /**
  * Created by danilovey on 20.02.2017.
@@ -51,42 +52,7 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public void start() throws Exception {
-        this.mainPane = new BorderPane();
 
-        final PGroupTree pGroupTree = new PGroupTreeImpl(this.editorKit);
-
-        CompletableFuture.runAsync(() -> {
-            final MGroupDataService mGroupDataService = new MGroupDataServiceImpl(this.editorKit);
-            if(mGroupDataService.loadData()) {
-                pGroupTree.setModel(mGroupDataService);
-                Tools.runOnWithOutThreadFX(pGroupTree::updateView);
-            } else {
-                this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Ошибка при чтении данных!");
-            }
-        }, Executors.newSingleThreadExecutor()).exceptionally(t -> {
-            log.error("Ошибка при чтении данных!", t);
-            this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Ошибка при чтении данных!");
-            return null;
-        });
-
-        final PContentLabel pContentLabel = new PContentLabelImpl();
-
-        this.splitListContent = new PSplitListContentImpl(this.editorKit);
-        this.splitListContent.setPContentLabel(pContentLabel);
-        this.splitListContent.setPGroupList(pGroupTree);
-        this.splitListContent.updateView();
-        if(this.editorKit.getAuthentication().isAuthentication()) {
-            this.login(this.editorKit.getAuthentication().getAuthorizedUser());
-        } else {
-            this.splitListContent.setAccess(false);
-        }
-
-        this.editorKit.getAuthentication().registerObserver(this);
-
-        this.mainPane.setCenter(this.splitListContent.getView().getContent());
-
-        this.updateBanner();
-        this.initMenuBar();
     }
 
     private void initMenuBar() {
@@ -115,7 +81,7 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
                         }
                     }
                     this.editorKit.getUISystemUS().getNotification()
-                            .showErrorNotifi("Ошибка!", "Не верный логин или пароль!");
+                            .showErrorNotify("Ошибка!", "Не верный логин или пароль!");
                 });
             } else {
                 this.splitListContent.setAccess(false);
@@ -177,5 +143,47 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
     public void logout(AccountDto account) {
       if(this.splitListContent != null)
           this.splitListContent.setAccess(false);
+    }
+
+    @Override
+    public void initView(Function<Parent, Void> viewVisit) throws Exception {
+        this.mainPane = new BorderPane();
+
+        final PGroupTree pGroupTree = new PGroupTreeImpl(this.editorKit);
+
+        CompletableFuture.runAsync(() -> {
+            final MGroupDataService mGroupDataService = new MGroupDataServiceImpl(this.editorKit);
+            if(mGroupDataService.loadData()) {
+                pGroupTree.setModel(mGroupDataService);
+                Tools.runOnWithOutThreadFX(pGroupTree::updateView);
+            } else {
+                this.editorKit.getUISystemUS().getNotification().showErrorNotify("Ошибка!", "Ошибка при чтении данных!");
+            }
+        }, Executors.newSingleThreadExecutor()).exceptionally(t -> {
+            log.error("Ошибка при чтении данных!", t);
+            this.editorKit.getUISystemUS().getNotification().showErrorNotify("Ошибка!", "Ошибка при чтении данных!");
+            return null;
+        });
+
+        final PContentLabel pContentLabel = new PContentLabelImpl();
+
+        this.splitListContent = new PSplitListContentImpl(this.editorKit);
+        this.splitListContent.setPContentLabel(pContentLabel);
+        this.splitListContent.setPGroupList(pGroupTree);
+        this.splitListContent.updateView();
+        if(this.editorKit.getAuthentication().isAuthentication()) {
+            this.login(this.editorKit.getAuthentication().getAuthorizedUser());
+        } else {
+            this.splitListContent.setAccess(false);
+        }
+
+        this.editorKit.getAuthentication().registerObserver(this);
+
+        this.mainPane.setCenter(this.splitListContent.getView().getContent());
+
+        this.updateBanner();
+        this.initMenuBar();
+
+        viewVisit.apply(mainPane);
     }
 }

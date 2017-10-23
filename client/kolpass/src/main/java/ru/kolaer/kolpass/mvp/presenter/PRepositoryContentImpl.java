@@ -43,7 +43,7 @@ public class PRepositoryContentImpl implements PRepositoryContent {
         this.view.setOnAddRepository(rep -> {
             if(rep.getName() == null || rep.getName().isEmpty()) {
                 this.editorKit.getUISystemUS().getNotification()
-                        .showErrorNotifi("Ошибка!", "Имя не может быть пустым!");
+                        .showErrorNotify("Ошибка!", "Имя не может быть пустым!");
                 return null;
             }
 
@@ -60,7 +60,7 @@ public class PRepositoryContentImpl implements PRepositoryContent {
 
             //this.addRepositoryPassword(new PRepositoryPasswordImpl(this.editorKit, repositoryPassword)); // TODO!!
 
-            this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!",
+            this.editorKit.getUISystemUS().getNotification().showInformationNotify("Успешная операция!",
                     "Добавлен репозиторий \"" + repositoryPassword.getName() + "\"!");
 
             return null;

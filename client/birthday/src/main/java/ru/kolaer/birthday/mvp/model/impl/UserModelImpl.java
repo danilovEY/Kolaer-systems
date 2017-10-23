@@ -1,8 +1,8 @@
 package ru.kolaer.birthday.mvp.model.impl;
 
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.PostEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.api.mvp.model.other.DbDataAll;
 import ru.kolaer.birthday.mvp.model.UserModel;
 
@@ -77,16 +77,16 @@ public class UserModelImpl implements UserModel {
 		this.setIcon(user.getVCard());
 	}
 
-	public UserModelImpl(final EmployeeEntity user) {
+	public UserModelImpl(EmployeeDto user) {
 		this.setOrganization("КолАтомэнергоремонт");
 		this.setInitials(user.getInitials());
 		this.setBirthday(user.getBirthday());
 		this.setDepartment(user.getDepartment().getAbbreviatedName());
 
-		PostEntity postEntity = user.getPostEntity();
+		PostDto postEntity = user.getPost();
 		String postName = postEntity.getName();
-		if(postEntity.getTypeRang() != null && !postEntity.getTypeRang().trim().isEmpty())
-			postName += " " + postEntity.getRang() + " " + postEntity.getTypeRang();
+		if(postEntity.getType() != null)
+			postName += " " + postEntity.getRang() + " " + postEntity.getType().name();
 
 		this.setPost(postName);
 		this.setPhoneNumber(user.getWorkPhoneNumber());
@@ -94,13 +94,13 @@ public class UserModelImpl implements UserModel {
 		this.setIcon(user.getInitials() + ".jpg");
 	}
 
-	public UserModelImpl(final EmployeeOtherOrganization user) {
+	public UserModelImpl(EmployeeOtherOrganizationDto user) {
 		this.setOrganization(user.getOrganization());
 		this.setInitials(user.getInitials());
 		this.setBirthday(user.getBirthday());
 		this.setDepartment(user.getDepartment());
 		this.setPost(user.getPost());
-		this.setPhoneNumber(user.getPhone());
+		this.setPhoneNumber(user.getWorkPhoneNumber());
 		this.setEmail(user.getEmail());
 		this.setIcon(user.getPhoto());
 	}

@@ -2,7 +2,8 @@ package ru.kolaer.admin.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.kolaerweb.Counter;
+import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
@@ -42,9 +43,9 @@ public class PprService implements Service {
 
     @Override
     public void run() {
-        final Counter[] counters = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getCounterTable().getAllCounters();
+        final ServerResponse<List<CounterDto>> counters = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getCounterTable().getAllCounters();
 
-        if(counters == null || counters.length == 0) {
+        if(counters.isServerError()) {
             this.isRun = false;
             return;
         }
@@ -54,7 +55,7 @@ public class PprService implements Service {
         final List<StaticViewPPR> pprs = new ArrayList<>();
 
         final Date dateNow = new Date();
-        for(final Counter counter : counters) {
+        for(final CounterDto counter : counters.getResponse()) {
             if(counter.getStart() == null || counter.getEnd() == null ||
                     counter.getEnd().before(dateNow))
                 continue;
@@ -76,7 +77,7 @@ public class PprService implements Service {
                 Iterator<StaticViewPPR> iterator = pprs.iterator();
                 while (iterator.hasNext()) {
                     final StaticViewPPR ppr = iterator.next();
-                    final LocalDateTime dateTimeJson = editorKit.getUSNetwork().getKolaerWebServer().getServerTools().getCurrentDataTime();
+                    final LocalDateTime dateTimeJson = editorKit.getUSNetwork().getKolaerWebServer().getServerTools().getCurrentDataTime().getResponse();
                     final Date dateEnd = ppr.getCounter().getEnd();
                     final LocalDateTime ldt = LocalDateTime.ofInstant(dateEnd.toInstant(), ZoneId.of("+3"));
 

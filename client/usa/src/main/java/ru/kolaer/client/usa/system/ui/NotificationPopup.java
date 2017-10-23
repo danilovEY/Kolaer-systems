@@ -6,11 +6,13 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import org.controlsfx.control.action.Action;
-import ru.kolaer.api.system.ui.NotifiAction;
+import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.system.ui.NotificationUS;
+import ru.kolaer.api.system.ui.NotifyAction;
 import ru.kolaer.api.tools.Tools;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,37 +24,37 @@ import java.util.concurrent.TimeUnit;
 public class NotificationPopup implements NotificationUS {
 
 	@Override
-	public void showParentNotifi(Parent pane) {
+	public void showParentNotify(Parent pane) {
 
 	}
 
 	@Override
-	public void removeParentNotifi(Parent content) {
+	public void removeParentNotify(Parent content) {
 
 	}
 
 	@Override
-	public void showSimpleNotifi(final String title, final String text) {
-		this.showSimpleNotifi(title, text, Duration.seconds(5));
+	public void showSimpleNotify(final String title, final String text) {
+		this.showSimpleNotify(title, text, Duration.seconds(5));
 	}
 
 	@Override
-	public void showSimpleNotifi(final String title, final String text, Duration duration) {
-		this.showSimpleNotifi(title, text, duration, new NotifiAction[0]);
-	}
-	
-	@Override
-	public void showSimpleNotifi(final String title, final String text, Duration duration, final NotifiAction... actions) {
-		this.showSimpleNotifi(title, text, duration, Pos.BOTTOM_RIGHT, actions);
-	}
-
-	@Override
-	public void showErrorNotifi(final String title, final String text) {	
-		this.showErrorNotifi(title, text, new NotifiAction[0]);
+	public void showSimpleNotify(final String title, final String text, Duration duration) {
+		this.showSimpleNotify(title, text, duration, Collections.emptyList());
 	}
 	
 	@Override
-	public void showErrorNotifi(final String title, final String text, final NotifiAction... actions) {	
+	public void showSimpleNotify(final String title, final String text, Duration duration, final List<NotifyAction> actions) {
+		this.showSimpleNotify(title, text, duration, Pos.BOTTOM_RIGHT, actions);
+	}
+
+	@Override
+	public void showErrorNotify(final String title, final String text) {
+		this.showErrorNotify(title, text, Collections.emptyList());
+	}
+	
+	@Override
+	public void showErrorNotify(final String title, final String text, final List<NotifyAction> actions) {
 		Tools.runOnThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(Duration.seconds(15));
@@ -67,12 +69,12 @@ public class NotificationPopup implements NotificationUS {
 	}
 
 	@Override
-	public void showWarningNotifi(final String title, final String text) {		
-		this.showWarningNotifi(title, text, new NotifiAction[0]);
+	public void showWarningNotify(final String title, final String text) {
+		this.showWarningNotify(title, text, Collections.emptyList());
 	}
 	
 	@Override
-	public void showWarningNotifi(final String title, final String text, final NotifiAction... actions) {		
+	public void showWarningNotify(final String title, final String text, final List<NotifyAction> actions) {
 		Tools.runOnThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(Duration.seconds(10));
@@ -87,43 +89,45 @@ public class NotificationPopup implements NotificationUS {
 	}
 
 	@Override
-	public void showInformationNotifi(final String title, final String text) {
-		this.showInformationNotifi(title, text, Duration.seconds(5));
+	public void showInformationNotify(final String title, final String text) {
+		this.showInformationNotify(title, text, Duration.seconds(5));
 	}
 
 	@Override
-	public void showInformationNotifi(final String title, final String text, final Duration duration) {
-		this.showInformationNotifi(title, text, duration, new NotifiAction[0]);
+	public void showInformationNotify(final String title, final String text, final Duration duration) {
+		this.showInformationNotify(title, text, duration, Collections.emptyList());
 	}
 	
 	@Override
-	public void showInformationNotifi(final String title, final String text, final Duration duration, final NotifiAction... actions) {
-		this.showInformationNotifi(title, text, duration, Pos.BOTTOM_RIGHT, actions);
+	public void showInformationNotify(final String title, final String text, final Duration duration, final List<NotifyAction> actions) {
+		this.showInformationNotify(title, text, duration, Pos.BOTTOM_RIGHT, actions);
 	}
 
 	@Override
-	public void showInformationNotifiAdmin(String title, String text, NotifiAction... actions) {
+	public void showInformationNotifyAdmin(String title, String text, List<NotifyAction> actions) {
 
 	}
 
 	@Override
-	public void showWarningNotifiAdmin(String title, String text, NotifiAction... actions) {
+	public void showWarningNotifyAdmin(String title, String text, List<NotifyAction> actions) {
 
 	}
 
-	private Notifications addActions(final Notifications Notifi, final NotifiAction... actions) {
+	@Override
+	public void showErrorNotify(ServerExceptionMessage exceptionMessage) {
+
+	}
+
+	private Notifications addActions(Notifications Notifi, List<NotifyAction> actions) {
 		Tools.runOnThreadFXAndWain(() -> {
-			if(actions != null && actions.length != 0) {
-				final Action[] actionsObj = new Action[actions.length];	
+			if(actions != null && actions.size() != 0) {
 				final VBox vBox = new VBox();
 				
-				for(int i = 0; i < actions.length; i++) {
-					final NotifiAction NotifiAction = actions[i];
-					actionsObj[i] = new Action(NotifiAction.getText(), NotifiAction.getConsumer());
-					final Button action = new Button(NotifiAction.getText());
+				for(NotifyAction notifyAction : actions) {
+					final Button action = new Button(notifyAction.getText());
 					action.setMaxWidth(Double.MAX_VALUE);
 					action.setOnAction(e -> {
-						NotifiAction.getConsumer().accept(e);
+						notifyAction.getConsumer().accept(e);
 					});
 					vBox.getChildren().add(action);
 				}
@@ -134,7 +138,7 @@ public class NotificationPopup implements NotificationUS {
 	}
 
 	@Override
-	public void showSimpleNotifi(final String title, final  String text, final Duration duration, final Pos pos, final NotifiAction... actions) {
+	public void showSimpleNotify(final String title, final  String text, final Duration duration, final Pos pos, final List<NotifyAction> actions) {
 		Tools.runOnThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(duration);	
@@ -149,7 +153,7 @@ public class NotificationPopup implements NotificationUS {
 	}
 
 	@Override
-	public void showInformationNotifi(final String title, final String text, final Duration duration, final Pos pos, final NotifiAction... actions) {
+	public void showInformationNotify(final String title, final String text, final Duration duration, final Pos pos, final List<NotifyAction> actions) {
 		Tools.runOnThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(duration);

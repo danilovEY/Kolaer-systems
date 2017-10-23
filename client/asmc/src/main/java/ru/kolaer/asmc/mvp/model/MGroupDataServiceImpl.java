@@ -1,18 +1,14 @@
 package ru.kolaer.asmc.mvp.model;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +63,7 @@ public class MGroupDataServiceImpl implements MGroupDataService {
                 } catch (IOException e) {
                     log.error("Ошибка при создании бэкапа!", e);
                     this.editorKit.getUISystemUS().getNotification()
-                            .showErrorNotifi("Ошибка!", "Ошибка при создании бэкапа!");
+                            .showErrorNotify("Ошибка!", "Ошибка при создании бэкапа!");
                 }
             }
             try(final FileOutputStream fileOutputStream =
@@ -92,11 +88,11 @@ public class MGroupDataServiceImpl implements MGroupDataService {
                     .thenAccept(isSave -> {
                         if (!isSave)
                             this.editorKit.getUISystemUS().getNotification()
-                                    .showErrorNotifi("Ошибка!", "Не удалось сохранить данные!");
+                                    .showErrorNotify("Ошибка!", "Не удалось сохранить данные!");
                     }).exceptionally(t -> {
                         log.error("Ошибка при сохранении!", t);
                         this.editorKit.getUISystemUS().getNotification()
-                            .showErrorNotifi("Ошибка!", "Не удалось сохранить данные!");
+                            .showErrorNotify("Ошибка!", "Не удалось сохранить данные!");
                         return null;
                     });
     }

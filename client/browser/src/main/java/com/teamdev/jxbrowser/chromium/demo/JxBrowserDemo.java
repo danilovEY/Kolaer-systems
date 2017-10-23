@@ -13,6 +13,7 @@ import ru.kolaer.api.tools.Tools;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -118,11 +119,12 @@ public class JxBrowserDemo implements UniformSystemPlugin {
 		if(!isRun) {
 			isRun = true;
 
-			this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Внимание!", "Инсталяция браузера, подождите...", Duration.seconds(3), Pos.CENTER);
+			this.editorKit.getUISystemUS().getNotification().showInformationNotify("Внимание!", "Инсталяция браузера, подождите...",
+					Duration.seconds(3),
+					Pos.CENTER,
+					Collections.emptyList());
 
-			Tools.runOnThreadFXAndWain(() -> {
-				this.initUI();
-			},20, TimeUnit.SECONDS);
+			Tools.runOnThreadFXAndWain(this::initUI,20, TimeUnit.SECONDS);
 		}
 	}
 }

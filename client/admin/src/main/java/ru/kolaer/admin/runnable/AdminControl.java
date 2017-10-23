@@ -1,6 +1,5 @@
 package ru.kolaer.admin.runnable;
 
-import javafx.concurrent.Task;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
@@ -8,23 +7,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import ru.kolaer.admin.service.PprService;
-import ru.kolaer.api.exceptions.ServerException;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
-import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.tools.Tools;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.function.Function;
 
 public class AdminControl implements UniformSystemPlugin {
 	private BorderPane mainPane;
@@ -44,10 +37,48 @@ public class AdminControl implements UniformSystemPlugin {
 	@Override
 	public void initialization(final UniformSystemEditorKit editorKit) throws Exception {
 		this.editorKit = editorKit;
-		this.serviceList = Arrays.asList(new PprService(editorKit));
+		this.serviceList = Collections.singletonList(new PprService(editorKit));
+	}
+
+	private void sendMessage(String message) {
+		final NotifyMessageDto notifyMessage = new NotifyMessageDto();
+		notifyMessage.setMessage(message);
+
+		editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
+				.getNotifyMessageTable().addNotifyMessage(notifyMessage);
+
+	}
+
+	@Override
+	public URL getIcon() {
+		return null;
+	}
+
+	@Override
+	public Collection<Service> getServices() {
+		return this.serviceList;
+	}
+
+	@Override
+	public void start() throws Exception {
+
+	}
+
+	@Override
+	public void stop() throws Exception {
+
+	}
+
+	@Override
+	public void updatePluginObjects(String key, Object object) {
+
+	}
+
+	@Override
+	public void initView(Function<Parent, Void> viewVisit) throws Exception {
 		Tools.runOnThreadFX(() -> {
-			final TextField message = new TextField();
-			final Button sent = new Button("Отправить!");
+			TextField message = new TextField();
+			Button sent = new Button("Отправить!");
 			sent.setOnAction(e -> {
 				if(!editorKit.getAuthentication().isAuthentication()) {
 					final Dialog loginDialog = editorKit.getUISystemUS().getDialog().createLoginDialog();
@@ -56,12 +87,12 @@ public class AdminControl implements UniformSystemPlugin {
 						return;
 					final String[] logPassArray = loginDialog.getResult().toString().split("=");
 
-					Task<Object> worker = new Task<Object>() {
+					/*Task<Object> worker = new Task<Object>() {
 						@Override
 						protected Object call() throws Exception {
 							updateTitle("Подключение к серверу");
 							updateMessage("Проверка доступности сервера...");
-							if(editorKit.getUSNetwork().getKolaerWebServer().getServerStatus() == ServerStatus.AVAILABLE) {
+							if(editorKit.getUSNetwork().getKolaerWebServer().getServerStatus().getResponse() == ServerStatus.AVAILABLE) {
 								updateMessage("Авторизация...");
 								try {
 									String login = "";
@@ -92,7 +123,7 @@ public class AdminControl implements UniformSystemPlugin {
 
 					CompletableFuture.runAsync(worker, authThread).thenAccept(result -> {
 						this.sendMessage(message.getText());
-					});
+					});*/
 				} else {
 					this.sendMessage(message.getText());
 				}
@@ -101,42 +132,7 @@ public class AdminControl implements UniformSystemPlugin {
 
 			});
 			this.mainPane = new BorderPane(new HBox(message, sent));
+			viewVisit.apply(mainPane);
 		});
 	}
-
-	private void sendMessage(String message) {
-		final NotifyMessage notifyMessage = new NotifyMessageDto();
-		notifyMessage.setMessage(message);
-		try {
-			editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getNotifyMessageTable().addNotifyMessage(notifyMessage);
-		}catch (ServerException ex) {
-			editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка", "Не удалось отправить!");
-		}
-	}
-
-	@Override
-	public URL getIcon() {
-		return null;
-	}
-
-	@Override
-	public Collection<Service> getServices() {
-		return this.serviceList;
-	}
-
-	@Override
-	public void start() throws Exception {
-
-	}
-
-	@Override
-	public void stop() throws Exception {
-
-	}
-
-	@Override
-	public void updatePluginObjects(String key, Object object) {
-
-	}
-
 }

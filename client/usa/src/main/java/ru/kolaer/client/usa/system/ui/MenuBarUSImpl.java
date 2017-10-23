@@ -63,7 +63,7 @@ public class MenuBarUSImpl implements ru.kolaer.api.system.ui.MenuBarUS, Authent
         authorizationItem.setText("Авторизоваться");
 
         UniformSystemEditorKitSingleton.getInstance().getUISystemUS()
-                .getNotification().showInformationNotifi("Выход из системы",
+                .getNotification().showInformationNotify("Выход из системы",
                 "Выход из системы прошел успешно");
     }
 }

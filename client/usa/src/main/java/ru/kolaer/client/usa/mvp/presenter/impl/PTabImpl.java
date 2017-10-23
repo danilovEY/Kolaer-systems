@@ -67,7 +67,7 @@ public class PTabImpl implements PTab {
 							});
 						} catch(Exception ex) {
 							LOG.error("Ошибка при интциализации UI плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), ex);
-							UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), ex.getMessage());
+							UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotify(this.plugin.getNamePlugin(), ex.getMessage());
 						}
 					});
 
@@ -76,7 +76,7 @@ public class PTabImpl implements PTab {
 					this.isActive = true;
 				} catch (Exception e) {
 					LOG.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), e);
-					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotifi(this.plugin.getNamePlugin(), e.getMessage());
+					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotify(this.plugin.getNamePlugin(), e.getMessage());
 					this.closeTab();
 				}
 				threadRunPlugin.shutdown();
@@ -105,10 +105,10 @@ public class PTabImpl implements PTab {
 					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getSymbolicNamePlugin(), e);
 
 					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
-							.showErrorNotifi(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!");
+							.showErrorNotify(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!");
 
 					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
-							.showErrorNotifi(this.plugin.getNamePlugin(), e.getMessage());
+							.showErrorNotify(this.plugin.getNamePlugin(), e.getMessage());
 				}
 
 				this.isActive = false;

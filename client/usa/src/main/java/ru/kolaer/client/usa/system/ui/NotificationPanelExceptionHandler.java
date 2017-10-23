@@ -16,14 +16,17 @@ import javafx.util.Duration;
 import org.controlsfx.tools.Borders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.mvp.view.BaseView;
-import ru.kolaer.api.system.ui.NotifiAction;
 import ru.kolaer.api.system.ui.NotificationUS;
+import ru.kolaer.api.system.ui.NotifyAction;
 import ru.kolaer.api.tools.Tools;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -89,7 +92,7 @@ public class NotificationPanelExceptionHandler implements NotificationUS, BaseVi
     }
 
     @Override
-    public void showParentNotifi(Parent pane) {
+    public void showParentNotify(Parent pane) {
         Tools.runOnThreadFX(() -> {
             final BorderPane content = new BorderPane();
             content.setBackground(Background.EMPTY);
@@ -112,85 +115,90 @@ public class NotificationPanelExceptionHandler implements NotificationUS, BaseVi
     }
 
     @Override
-    public void removeParentNotifi(Parent content) {
+    public void removeParentNotify(Parent content) {
         this.vBoxAdminNotify.getChildren().remove(this.notifiMap.get(content));
         this.notifiMap.remove(content);
     }
 
     @Override
-    public void showSimpleNotifi(String title, String text) {
+    public void showSimpleNotify(String title, String text) {
         this.sendMessage(SIMPLE_MESSAGE, title, text);
     }
 
     @Override
-    public void showErrorNotifi(String title, String text) {
+    public void showErrorNotify(String title, String text) {
         this.sendMessage(ERROR_MESSAGE, title, text);
     }
 
     @Override
-    public void showWarningNotifi(String title, String text) {
+    public void showWarningNotify(String title, String text) {
         this.sendMessage(WARN_MESSAGE, title, text);
     }
 
     @Override
-    public void showInformationNotifi(String title, String text) {
+    public void showInformationNotify(String title, String text) {
         this.sendMessage(INFO_MESSAGE, title, text);
     }
 
     @Override
-    public void showInformationNotifi(String title, String text, Duration duration) {
+    public void showInformationNotify(String title, String text, Duration duration) {
         this.sendMessage(INFO_MESSAGE, title, text);
     }
 
     @Override
-    public void showSimpleNotifi(String title, String text, Duration duration) {
+    public void showSimpleNotify(String title, String text, Duration duration) {
         this.sendMessage(SIMPLE_MESSAGE, title, text);
     }
 
     @Override
-    public void showSimpleNotifi(String title, String text, Duration duration, Pos pos, NotifiAction... actions) {
+    public void showSimpleNotify(String title, String text, Duration duration, Pos pos, List<NotifyAction> actions) {
         this.sendMessage(SIMPLE_MESSAGE, title, text, actions);
     }
 
     @Override
-    public void showSimpleNotifi(String title, String text, Duration duration, NotifiAction... actions) {
+    public void showSimpleNotify(String title, String text, Duration duration, List<NotifyAction> actions) {
         this.sendMessage(SIMPLE_MESSAGE, title, text, actions);
     }
 
     @Override
-    public void showErrorNotifi(String title, String text, NotifiAction... actions) {
+    public void showErrorNotify(String title, String text, List<NotifyAction> actions) {
         this.sendMessage(ERROR_MESSAGE, title, text, actions);
     }
 
     @Override
-    public void showWarningNotifi(String title, String text, NotifiAction... actions) {
+    public void showWarningNotify(String title, String text, List<NotifyAction> actions) {
         this.sendMessage(WARN_MESSAGE, title, text, actions);
     }
 
     @Override
-    public void showInformationNotifi(String title, String text, Duration duration, Pos pos, NotifiAction... actions) {
+    public void showInformationNotify(String title, String text, Duration duration, Pos pos, List<NotifyAction> actions) {
         this.sendMessage(INFO_MESSAGE, title, text, actions);    }
 
     @Override
-    public void showInformationNotifi(String title, String text, Duration duration, NotifiAction... actions) {
+    public void showInformationNotify(String title, String text, Duration duration, List<NotifyAction> actions) {
         this.sendMessage(INFO_MESSAGE, title, text, actions);
     }
 
     @Override
-    public void showInformationNotifiAdmin(String title, String text, NotifiAction... actions) {
+    public void showInformationNotifyAdmin(String title, String text, List<NotifyAction> actions) {
         this.sendMessage(this.vBoxAdminNotify, 1, title, text, actions);
     }
 
     @Override
-    public void showWarningNotifiAdmin(String title, String text, NotifiAction... actions) {
+    public void showWarningNotifyAdmin(String title, String text, List<NotifyAction> actions) {
         this.sendMessage(this.vBoxAdminNotify, 2, title, text, actions);
     }
 
-    private void sendMessage(int type, String title, String text) {
-        this.sendMessage(type, title, text, new NotifiAction[0]);
+    @Override
+    public void showErrorNotify(ServerExceptionMessage exceptionMessage) {
+
     }
 
-    private void sendMessage(VBox typePane, int type, String title, String text, NotifiAction... actions) {
+    private void sendMessage(int type, String title, String text) {
+        this.sendMessage(type, title, text, Collections.emptyList());
+    }
+
+    private void sendMessage(VBox typePane, int type, String title, String text, List<NotifyAction> actions) {
         Tools.runOnThreadFX(() -> {
             final VBox content = new VBox();
             content.setAlignment(Pos.CENTER);
@@ -243,7 +251,7 @@ public class NotificationPanelExceptionHandler implements NotificationUS, BaseVi
             content.getChildren().add(timeLabel);
 
             if(actions != null) {
-                for (NotifiAction action : actions) {
+                for (NotifyAction action : actions) {
                     final Button button = new Button(action.getText());
                     button.setOnAction(action.getConsumer()::accept);
                     final Tooltip tooltip = new Tooltip();
@@ -266,7 +274,7 @@ public class NotificationPanelExceptionHandler implements NotificationUS, BaseVi
         });
     }
 
-    private void sendMessage(int type, String title, String text, NotifiAction... actions) {
+    private void sendMessage(int type, String title, String text, List<NotifyAction> actions) {
         this.sendMessage(this.vBoxUserNotify, type, title, text, actions);
     }
 
@@ -284,7 +292,7 @@ public class NotificationPanelExceptionHandler implements NotificationUS, BaseVi
     public void uncaughtException(Thread t, Throwable e) {
         LOG.error("Ошибка в потоке: {}", t.getName(), e);
         Tools.runOnThreadFX(() ->
-                this.showErrorNotifi("Ошибка!", e.toString())
+                this.showErrorNotify("Ошибка!", e.toString())
         );
     }
 }

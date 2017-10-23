@@ -3,6 +3,9 @@ package ru.kolaer.api.system.ui;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.util.Duration;
+import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
+
+import java.util.List;
 
 /**
  * Интерфейс для работы с оповещением.
@@ -13,29 +16,30 @@ import javafx.util.Duration;
 public interface NotificationUS {
 	/**Показать контент нотификации.
 	 * @param pane*/
-	void showParentNotifi(Parent pane);
-	void removeParentNotifi(Parent content);
+	void showParentNotify(Parent pane);
+	void removeParentNotify(Parent content);
 	/**Показать простую нотификацию.*/
-	void showSimpleNotifi(String title, String text);
+	void showSimpleNotify(String title, String text);
 	/**Показать нотификацию с ошибкой.*/
-	void showErrorNotifi(String title, String text);
+	void showErrorNotify(String title, String text);
 	/**Показать нотификацию предупреждением.*/
-	void showWarningNotifi(String title, String text);
+	void showWarningNotify(String title, String text);
 	/**Показать нотификацию с информацией.*/
-	void showInformationNotifi(String title, String text);
+	void showInformationNotify(String title, String text);
 	/**Показать нотификацию с информацией.*/
-	void showInformationNotifi(String title, String text, Duration duration);
+	void showInformationNotify(String title, String text, Duration duration);
 	/**Показать нотификацию с задержкой.*/
-	void showSimpleNotifi(String title, String text, Duration duration);
-	void showSimpleNotifi(String title, String text, Duration duration, Pos pos, NotifiAction... actions);
-	void showSimpleNotifi(String title, String text, Duration duration, NotifiAction... actions);
-	void showErrorNotifi(String title, String text, NotifiAction... actions);
-	void showWarningNotifi(String title, String text, NotifiAction... actions);
-	void showInformationNotifi(String title, String text, Duration duration, Pos pos, NotifiAction... actions);
-	void showInformationNotifi(String title, String text, Duration duration, NotifiAction... actions);
+	void showSimpleNotify(String title, String text, Duration duration);
+	void showSimpleNotify(String title, String text, Duration duration, Pos pos, List<NotifyAction> actions);
+	void showSimpleNotify(String title, String text, Duration duration, List<NotifyAction> actions);
+	void showErrorNotify(String title, String text, List<NotifyAction> actions);
+	void showWarningNotify(String title, String text, List<NotifyAction> actions);
+	void showInformationNotify(String title, String text, Duration duration, Pos pos, List<NotifyAction> actions);
+	void showInformationNotify(String title, String text, Duration duration, List<NotifyAction> actions);
 
-	void showInformationNotifiAdmin(String title, String text, NotifiAction... actions);
-	void showWarningNotifiAdmin(String title, String text, NotifiAction... actions);
+	void showInformationNotifyAdmin(String title, String text, List<NotifyAction> actions);
+	void showWarningNotifyAdmin(String title, String text, List<NotifyAction> actions);
 
 
+    void showErrorNotify(ServerExceptionMessage exceptionMessage);
 }

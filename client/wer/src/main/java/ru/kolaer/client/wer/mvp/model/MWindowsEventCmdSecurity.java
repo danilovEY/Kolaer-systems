@@ -9,7 +9,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -87,13 +90,13 @@ public class MWindowsEventCmdSecurity implements MWindowsEventCmd {
                     return this.parseWindowsEvent(stringBuilder.toString());
                 } catch (Exception e) {
                     log.error("Невозможно загрузить данные!", e);
-                    this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Невозможно загрузить данные!");
+                    this.editorKit.getUISystemUS().getNotification().showErrorNotify("Ошибка!", "Невозможно загрузить данные!");
                     this.setModel(CmdArguments.EMPTY);
                 }
 
             } catch (IOException e) {
                 log.error("Невозможно выполнить комманду!", e);
-                this.editorKit.getUISystemUS().getNotification().showErrorNotifi("Ошибка!", "Невозможно выполнить комманду!");
+                this.editorKit.getUISystemUS().getNotification().showErrorNotify("Ошибка!", "Невозможно выполнить комманду!");
                 this.setModel(CmdArguments.EMPTY);
             }
         }

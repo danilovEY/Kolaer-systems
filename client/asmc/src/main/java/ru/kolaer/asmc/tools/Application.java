@@ -42,14 +42,14 @@ public class Application implements Runnable {
 		if (this.pathApp != null && !this.pathApp.equals("")) {
 			CompletableFuture.runAsync(this, threadForRunApp).exceptionally(t -> {
 				this.editorKit.getUISystemUS().getNotification()
-						.showErrorNotifi("Ошибка!", "Неудалось запустить: " + this.pathApp);
+						.showErrorNotify("Ошибка!", "Неудалось запустить: " + this.pathApp);
 				LOG.error("Неудалось запустить: {}", this.pathApp, t);
 				return null;
 			});
 			this.threadForRunApp.shutdown();
 		} else {
 			this.editorKit.getUISystemUS().getNotification()
-					.showErrorNotifi("Ошибка!", "Не указан файл или ссылка!");
+					.showErrorNotify("Ошибка!", "Не указан файл или ссылка!");
 		}
 	}
 
@@ -103,7 +103,7 @@ public class Application implements Runnable {
 	}
 
 	private void openUrlInPluginBrowser(String url) {
-		PluginsUS<UniformSystemPlugin> pluginsUS = editorKit.getPluginsUS();
+		PluginsUS pluginsUS = editorKit.getPluginsUS();
 		Collection<UniformSystemPlugin> plugins = pluginsUS.getPlugins();
 		for(UniformSystemPlugin plugin : plugins) {
 			if(pluginsUS.getNamePlugin(plugin).equals("Браузер")) {
@@ -134,7 +134,7 @@ public class Application implements Runnable {
 							r.exec(simpleWebBrowser.getAbsolutePath() + " \"" + this.pathApp + "\"");
 						} else {
 							this.editorKit.getUISystemUS().getNotification()
-									.showErrorNotifi("Ошибка!", "Браузер не найден!");
+									.showErrorNotify("Ошибка!", "Браузер не найден!");
 						}
 					}
 				} else {		
@@ -152,13 +152,13 @@ public class Application implements Runnable {
 						}
 					} else {
 						this.editorKit.getUISystemUS().getNotification()
-								.showErrorNotifi("Ошибка!", "Файл \"" + this.pathApp + "\" не найден.");
+								.showErrorNotify("Ошибка!", "Файл \"" + this.pathApp + "\" не найден.");
 					}
 				}
 			}
 		} catch (final IOException e) {
 			this.editorKit.getUISystemUS().getNotification()
-					.showErrorNotifi("Ошибка!", "Не удалось запустить \"" + this.pathApp);
+					.showErrorNotify("Ошибка!", "Не удалось запустить \"" + this.pathApp);
 		}
 	}
 }

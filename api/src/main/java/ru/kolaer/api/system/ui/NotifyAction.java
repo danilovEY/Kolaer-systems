@@ -4,11 +4,11 @@ import javafx.event.ActionEvent;
 
 import java.util.function.Consumer;
 
-public class NotifiAction {
+public class NotifyAction {
 	private final String text;
 	private final Consumer<ActionEvent> consumer;
 	
-	public NotifiAction(final String text, final Consumer<ActionEvent> consumer) {
+	public NotifyAction(final String text, final Consumer<ActionEvent> consumer) {
 		this.text = text;
 		this.consumer = consumer;
 	}

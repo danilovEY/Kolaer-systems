@@ -56,7 +56,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
                 //this.setModel(this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase() // TODO!!
                 //        .getKolpassTable().addHistoryPasswordToRepository(this.passwordDto.getId(), passwordHistory));
 
-                this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!", "Сохранение прошло успешно!");
+                this.editorKit.getUISystemUS().getNotification().showInformationNotify("Успешная операция!", "Сохранение прошло успешно!");
             }
 
             return null;
@@ -71,7 +71,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
                         .getKolpassTable().updateRepositoryPassword(this.passwordDto);
 
                 this.vRepositoryPassword.setName(name);
-                this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!",
+                this.editorKit.getUISystemUS().getNotification().showInformationNotify("Успешная операция!",
                         "Изменение имени с \"" + oldName + "\" на \"" + name + "\"!");
             }
             return null;
@@ -142,7 +142,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
             this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
                     .getKolpassTable().deleteRepositoryPassword(this.passwordDto);
 
-            this.editorKit.getUISystemUS().getNotification().showInformationNotifi("Успешная операция!",
+            this.editorKit.getUISystemUS().getNotification().showInformationNotify("Успешная операция!",
                     "Удален репозиторий: \"" + this.passwordDto.getName() + "\"");
 
 

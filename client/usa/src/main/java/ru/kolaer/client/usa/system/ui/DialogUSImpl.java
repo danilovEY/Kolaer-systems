@@ -96,13 +96,13 @@ public class DialogUSImpl implements DialogUS {
 						final UserAndPassJson userAndPass = new UserAndPassJson(login, pass);
 
 						if (authentication.login(userAndPass, checkBoxRemember.isSelected())) {
-							uiSystemUS.getNotification().showInformationNotifi("Успешная авторизация!",
+							uiSystemUS.getNotification().showInformationNotify("Успешная авторизация!",
 									"Вы авторизовались как: \"" + authentication
 											.getAuthorizedUser().getUsername() + "\"");
 
 							return true;
 						} else {
-							uiSystemUS.getNotification().showErrorNotifi("Ошибка!",
+							uiSystemUS.getNotification().showErrorNotify("Ошибка!",
 									"Авторизироватся не удалось!");
 						}
 					} catch (Exception ex) {
@@ -114,7 +114,7 @@ public class DialogUSImpl implements DialogUS {
 					}
 				} else {
 					log.warn("Сервер {} недоступен!", Resources.URL_TO_PUBLIC_SERVER);
-					uiSystemUS.getNotification().showErrorNotifi("Ошибка!",
+					uiSystemUS.getNotification().showErrorNotify("Ошибка!",
 							"Сервер недоступен!");
 				}
 				updateProgress(100, 100);
