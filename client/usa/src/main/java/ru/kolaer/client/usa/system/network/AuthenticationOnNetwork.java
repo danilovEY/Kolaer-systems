@@ -10,7 +10,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
-import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.tools.Resources;
 
 import java.io.File;

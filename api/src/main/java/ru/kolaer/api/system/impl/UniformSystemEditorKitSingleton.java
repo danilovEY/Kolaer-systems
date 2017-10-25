@@ -1,4 +1,4 @@
-package ru.kolaer.client.usa.system;
+package ru.kolaer.api.system.impl;
 
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.PluginsUS;

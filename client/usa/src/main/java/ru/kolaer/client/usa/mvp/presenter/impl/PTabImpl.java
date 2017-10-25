@@ -2,12 +2,12 @@ package ru.kolaer.client.usa.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.view.VTab;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.VTabImpl;
 import ru.kolaer.client.usa.plugins.PluginBundle;
-import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -33,8 +33,10 @@ public class PTabImpl implements PTab {
 	public PTabImpl(PluginBundle plugin) {
 		this.plugin = plugin;
 		this.view = new VTabImpl();
-		this.view.setTitle(plugin.getNamePlugin());
-		this.view.setContent(plugin.getUniformSystemPlugin().getContent());
+		view.initView(initViewTab -> {
+			view.setTitle(plugin.getNamePlugin());
+			view.setContent(plugin.getUniformSystemPlugin().getContent());
+		});
 	}
 
 	@Override
@@ -59,12 +61,9 @@ public class PTabImpl implements PTab {
 			CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getSymbolicNamePlugin());
 				try {
-					Tools.runOnThreadFX(() -> {
+					Tools.runOnWithOutThreadFX(() -> {
 						try{
-							plugin.getUniformSystemPlugin().initView(parent -> {
-								view.setContent(parent);
-								return null;
-							});
+							plugin.getUniformSystemPlugin().initView(view::setContent);
 						} catch(Exception ex) {
 							LOG.error("Ошибка при интциализации UI плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), ex);
 							UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotify(this.plugin.getNamePlugin(), ex.getMessage());

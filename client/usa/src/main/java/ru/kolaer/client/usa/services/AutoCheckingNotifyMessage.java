@@ -6,7 +6,7 @@ import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;

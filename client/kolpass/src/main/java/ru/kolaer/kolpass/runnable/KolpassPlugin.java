@@ -19,7 +19,7 @@ import ru.kolaer.kolpass.mvp.presenter.PSplitContentAndListRepImpl;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 09.02.2017.
@@ -92,10 +92,9 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
     }
 
     @Override
-    public void initView(Function<Parent, Void> viewVisit) throws Exception {
+    public void initView(Consumer<Parent> viewVisit) {
         this.mainPane = new BorderPane();
 
-        viewVisit.apply(mainPane);
 
         this.loginButton = new Button("Авторизоваться");
         this.loginButton.setOnAction(e -> this.editorKit.getUISystemUS().getDialog().createAndShowLoginToSystemDialog());
@@ -104,9 +103,13 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
         this.pSplitContentAndListRep.setContent(new PRepositoryContentImpl(this.editorKit));
         this.pSplitContentAndListRep.setEmployeeList(new PEmployeeRepositoryListImpl(this.editorKit));
 
-        if(editorKit.getAuthentication().isAuthentication())
+        if(editorKit.getAuthentication().isAuthentication()) {
             this.login(null);
-        else
+        }
+        else {
             this.logout(null);
+        }
+
+        viewVisit.accept(mainPane);
     }
 }

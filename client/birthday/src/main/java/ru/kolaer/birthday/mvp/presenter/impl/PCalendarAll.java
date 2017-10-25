@@ -1,7 +1,8 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.ui.DefaultProgressBar;
 import ru.kolaer.api.system.ui.ProgressBarObservable;
@@ -27,28 +28,30 @@ public class PCalendarAll extends PCalendarBase {
 				final ProgressBarObservable obs = new DefaultProgressBar();
 				this.editorKid.getUISystemUS().getStatusBar().addProgressBar(obs);
 				
-				final EmployeeOtherOrganization[] usersBirthdayAll = this.editorKid.getUSNetwork()
+				ServerResponse<List<EmployeeOtherOrganizationDto>> usersBirthdayAll = this.editorKid.getUSNetwork()
 						.getKolaerWebServer().getApplicationDataBase()
 						.getEmployeeOtherOrganizationTable()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				
-				final EmployeeEntity[] usersDataAll = this.editorKid.getUSNetwork().getKolaerWebServer()
+				ServerResponse<List<EmployeeDto>> usersDataAll = this.editorKid.getUSNetwork().getKolaerWebServer()
 						.getApplicationDataBase().getGeneralEmployeesTable()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				
 				obs.setValue(-1);
-				if(usersBirthdayAll.length != 0) {
-					final double step = 100/(usersBirthdayAll.length + usersDataAll.length) * 0.01;
+				int sizeOtherEmployee = usersBirthdayAll.getResponse().size();
+				int sizeEmployee = usersDataAll.getResponse().size();
+				if(sizeEmployee != 0) {
+					final double step = 100/(sizeOtherEmployee + sizeEmployee) * 0.01;
 					double value = 0;	
 					
-					for (EmployeeEntity user : usersDataAll) {
+					for (EmployeeDto user : usersDataAll.getResponse()) {
 						obs.setValue(value);
 						value += step;
 						final UserModel userModel = new UserModelImpl(user);
 						users.add(userModel);
 					}
 					
-					for (EmployeeOtherOrganization user : usersBirthdayAll) {
+					for (EmployeeOtherOrganizationDto user : usersBirthdayAll.getResponse()) {
 						obs.setValue(value);
 						value += step;
 						final UserModel userModel = new UserModelImpl(user);

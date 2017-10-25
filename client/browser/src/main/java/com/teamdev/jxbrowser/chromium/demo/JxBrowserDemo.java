@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 
 public class JxBrowserDemo implements UniformSystemPlugin {
@@ -115,7 +115,7 @@ public class JxBrowserDemo implements UniformSystemPlugin {
 	}
 
 	@Override
-	public void initView(Function<Parent, Void> viewVisit) throws Exception {
+	public void initView(Consumer<Parent> viewVisit) {
 		if(!isRun) {
 			isRun = true;
 

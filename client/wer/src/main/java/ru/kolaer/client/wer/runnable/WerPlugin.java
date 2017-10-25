@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 14.03.2017.
@@ -124,10 +124,8 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
     }
 
     @Override
-    public void initView(Function<Parent, Void> viewVisit) throws Exception {
+    public void initView(Consumer<Parent> viewVisit) {
         mainPane = new BorderPane();
-
-        viewVisit.apply(mainPane);
 
         pEventTable = new PEventTableImpl(editorKit, mWindowsEvent);
         detailedEvent = new PDetailedEventImpl();
@@ -141,5 +139,6 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
             login(editorKit.getAuthentication().getAuthorizedUser());
         }
 
+        viewVisit.accept(mainPane);
     }
 }

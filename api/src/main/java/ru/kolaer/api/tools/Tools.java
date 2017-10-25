@@ -48,11 +48,12 @@ public class Tools {
 
     }
 
-    public static void runOnThreadFX(final Runnable runnable) {
+    @Deprecated
+    public static void runOnThreadFX(Runnable runnable) {
         Objects.requireNonNull(runnable, "runnable");
 
         if(Platform.isFxApplicationThread()) {
-        	final ExecutorService threadOnFX = Executors.newSingleThreadExecutor();
+        	ExecutorService threadOnFX = Executors.newSingleThreadExecutor();
         	CompletableFuture.runAsync(() -> {
         		Platform.runLater(runnable);
         		threadOnFX.shutdown();
@@ -62,7 +63,7 @@ public class Tools {
         }
     }
 
-    public static void runOnWithOutThreadFX(final Runnable runnable) {
+    public static void runOnWithOutThreadFX(Runnable runnable) {
         Objects.requireNonNull(runnable, "runnable");
 
         if(Platform.isFxApplicationThread()) {

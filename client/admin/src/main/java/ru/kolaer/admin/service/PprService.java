@@ -73,7 +73,7 @@ public class PprService implements Service {
         }
 
         while (this.isRun) {
-            Tools.runOnThreadFX(() -> {
+            Tools.runOnWithOutThreadFX(() -> {
                 Iterator<StaticViewPPR> iterator = pprs.iterator();
                 while (iterator.hasNext()) {
                     final StaticViewPPR ppr = iterator.next();

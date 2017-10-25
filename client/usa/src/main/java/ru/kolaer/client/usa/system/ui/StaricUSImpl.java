@@ -1,8 +1,8 @@
 package ru.kolaer.client.usa.system.ui;
 
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.ui.StaticUS;
 import ru.kolaer.api.system.ui.StaticView;
-import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 
 /**
  * Created by danilovey on 25.08.2016.

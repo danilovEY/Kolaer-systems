@@ -9,7 +9,7 @@ import org.osgi.framework.launch.Framework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.tools.Resources;
 
 import java.io.File;
@@ -161,7 +161,7 @@ public class PluginManager {
         return false;
     }
     
-    private <U extends UniformSystemPlugin> boolean scanClassesForUSP(PluginBundle pluginBundle) {
+    private boolean scanClassesForUSP(PluginBundle pluginBundle) {
     	Enumeration<URL> entrs = pluginBundle.getBundle().findEntries("/", "*.class", true);
         while (entrs.hasMoreElements()) {
     		URL url = entrs.nextElement();

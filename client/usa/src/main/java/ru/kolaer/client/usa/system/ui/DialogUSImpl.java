@@ -14,11 +14,11 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.system.Authentication;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.ui.DialogUS;
 import ru.kolaer.api.system.ui.UISystemUS;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.tools.Resources;
 
 import java.util.concurrent.Executors;

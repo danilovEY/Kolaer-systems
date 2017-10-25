@@ -25,7 +25,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public void addPlugin(PluginBundle pluginBundle) {
-        this.addTabPlugin(pluginBundle.getNamePlugin(), pluginBundle);
+        addTabPlugin(pluginBundle.getNamePlugin(), pluginBundle);
     }
 
     @Override
@@ -106,11 +106,11 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
 
     @Override
     public String getPluginVersion(UniformSystemPlugin uniformSystemPlugin) {
-        return this.plugins.get(uniformSystemPlugin).getVersion();
+        return plugins.get(uniformSystemPlugin).getVersion();
     }
 
     @Override
     public String getNamePlugin(UniformSystemPlugin uniformSystemPlugin) {
-        return this.plugins.get(uniformSystemPlugin).getNamePlugin();
+        return plugins.get(uniformSystemPlugin).getNamePlugin();
     }
 }

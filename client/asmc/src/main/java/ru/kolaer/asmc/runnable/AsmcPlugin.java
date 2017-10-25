@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 20.02.2017.
@@ -90,7 +90,7 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
     }
 
     private void updateBanner() {
-        Tools.runOnThreadFX(() -> {
+        Tools.runOnWithOutThreadFX(() -> {
             final BorderPane imagePane = new BorderPane();
             imagePane.setStyle("-fx-background-color: #FFFFFF"); //,linear-gradient(#f8f8f8, #e7e7e7);
             imagePane.setMaxHeight(300);
@@ -146,7 +146,7 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
     }
 
     @Override
-    public void initView(Function<Parent, Void> viewVisit) throws Exception {
+    public void initView(Consumer<Parent> viewVisit) {
         this.mainPane = new BorderPane();
 
         final PGroupTree pGroupTree = new PGroupTreeImpl(this.editorKit);
@@ -184,6 +184,6 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
         this.updateBanner();
         this.initMenuBar();
 
-        viewVisit.apply(mainPane);
+        viewVisit.accept(mainPane);
     }
 }

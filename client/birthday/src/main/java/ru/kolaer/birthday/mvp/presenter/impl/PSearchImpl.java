@@ -1,7 +1,8 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
@@ -22,16 +23,16 @@ public class PSearchImpl implements PSearchUsers {
 		this.editorKid = editorKid;
 		
 		this.view.setSearchAction(e -> {
-			final EmployeeEntity[] dbDataAllArray = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersByInitials(this.view.getSearchText());
-			final EmployeeOtherOrganization[] dbBirthdayAllArray = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByInitials(this.view.getSearchText());
+			final ServerResponse<List<EmployeeDto>> dbDataAllArray = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersByInitials(this.view.getSearchText());
+			final ServerResponse<List<EmployeeOtherOrganizationDto>> dbBirthdayAllArray = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByInitials(this.view.getSearchText());
 
 			final List<UserModel> users = new ArrayList<>();
 
-			for(final EmployeeEntity user : dbDataAllArray) {
+			for(final EmployeeDto user : dbDataAllArray.getResponse()) {
 				users.add(new UserModelImpl(user));
 			}
 
-			for(final EmployeeOtherOrganization user : dbBirthdayAllArray) {
+			for(final EmployeeOtherOrganizationDto user : dbBirthdayAllArray.getResponse()) {
 				final UserModelImpl userModel = new UserModelImpl(user);
 				userModel.setOrganization(user.getOrganization());
 				users.add(userModel);

@@ -87,10 +87,10 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 				CompletableFuture.runAsync(() -> {
 					int countUsersDataAll = 0;
 					if(organization != null) {
-						countUsersDataAll = ((EmployeeOtherOrganizationTable)usersDB[0]).getCountUsersBirthday(Tools.convertToDate(item), organization);
+						countUsersDataAll = ((EmployeeOtherOrganizationTable)usersDB[0]).getCountUsersBirthday(Tools.convertToDate(item), organization).getResponse();
 					} else {
 						for(UserDataBase<?> base : usersDB) {
-							countUsersDataAll += base.getCountUsersBirthday(Tools.convertToDate(item));
+							countUsersDataAll += base.getCountUsersBirthday(Tools.convertToDate(item)).getResponse();
 						}
 					}
 					

@@ -6,8 +6,8 @@ import javafx.scene.control.MenuItem;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 
 /**
  * Created by danilovey on 09.02.2017.

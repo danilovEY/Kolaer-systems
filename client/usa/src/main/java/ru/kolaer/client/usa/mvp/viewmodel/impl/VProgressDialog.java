@@ -9,13 +9,13 @@ public class VProgressDialog implements VDialog {
 	private final Service<?> service;
 	private ProgressDialog dialog;
 	
-	public VProgressDialog(final Service<?> service) {
+	public VProgressDialog(Service<?> service) {
 		this.service = service;
 		this.dialog = new ProgressDialog(service);
 	}
 
 	@Override
-	public void setText(final String text) {
+	public void setText(String text) {
 		Tools.runOnWithOutThreadFX(() -> {
 			this.setText(text);
 		});
@@ -40,7 +40,7 @@ public class VProgressDialog implements VDialog {
 	}
 
 	@Override
-	public void setTitle(final String title) {
+	public void setTitle(String title) {
 		Tools.runOnWithOutThreadFX(() -> {
 			this.dialog.setTitle(title);
 		});

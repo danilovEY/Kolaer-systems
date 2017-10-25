@@ -2,6 +2,7 @@ package ru.kolaer.client.usa.mvp.view;
 
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
+import ru.kolaer.api.mvp.view.InitializationView;
 
 /**
  * View вкладки с контентом плагина.
@@ -9,7 +10,7 @@ import javafx.scene.control.Tab;
  * @author Danilov
  * @version 0.1
  */
-public interface VTab {
+public interface VTab extends InitializationView<Tab> {
 	/**Получить JavaFX-вкладку.*/
 	Tab getContent();
 	/**Задать контент вкладки.*/

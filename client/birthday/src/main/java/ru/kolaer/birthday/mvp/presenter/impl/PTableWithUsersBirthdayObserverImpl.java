@@ -2,8 +2,9 @@ package ru.kolaer.birthday.mvp.presenter.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganization;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
@@ -73,14 +74,14 @@ public class PTableWithUsersBirthdayObserverImpl implements PTableWithUsersBirth
 	@Override
 	public void showTodayBirthday() {
 		CompletableFuture.runAsync(() -> {
-			final EmployeeEntity[] usersKolaer = editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersBirthdayToday();
-			for(final EmployeeEntity user : usersKolaer) {
+			final ServerResponse<List<EmployeeDto>> usersKolaer = editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersBirthdayToday();
+			for(final EmployeeDto user : usersKolaer.getResponse()) {
 				final UserModel userModel = new UserModelImpl(user);
 				table.addData(userModel);
 			}
 
-			final EmployeeOtherOrganization[] usersOther = editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersBirthdayToday();
-			for(final EmployeeOtherOrganization user : usersOther) {
+			final ServerResponse<List<EmployeeOtherOrganizationDto>> usersOther = editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersBirthdayToday();
+			for(final EmployeeOtherOrganizationDto user : usersOther.getResponse()) {
 				final UserModel userModel = new UserModelImpl(user);
 				userModel.setOrganization(user.getOrganization());
 				table.addData(userModel);

@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.system.network.ServerStatus;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.birthday.mvp.presenter.PCalendar;
 import ru.kolaer.birthday.mvp.presenter.PTableWithUsersBirthdayObserver;
 import ru.kolaer.birthday.mvp.presenter.impl.PCalendarAffiliates;
@@ -24,13 +22,13 @@ import ru.kolaer.birthday.service.BirthdayOnHoliday;
 import ru.kolaer.birthday.service.BirthdayService;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 /**
  * Реализация модуля.
@@ -54,7 +52,7 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 		this.root = new BorderPane();
 		this.servicesList = new ArrayList<>();
 		this.servicesList.add(new BirthdayService(editorKid));
-		this.servicesList.add(new BirthdayOnHoliday(editorKid));
+		this.servicesList.add(new BirthdayOnHoliday());
 	}
 
 	@Override
@@ -64,21 +62,7 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 
 	@Override
 	public void start() throws Exception {
-		if(this.mainPane == null){
-			try {
-				final FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/birthdayView/VMainFrame.fxml"));
-				final VMMainFrameImpl frame = new VMMainFrameImpl();
-				loader.setController(frame);
-				this.mainPane = loader.load();
-				Platform.runLater(() -> {
-					root.setCenter(this.mainPane);
-					root.setPrefSize(800, 600);
-				});
-				this.initTable(frame);
-			} catch(IOException e){
-				throw e;
-			}
-		}
+
 	}
 
 	@Override
@@ -236,5 +220,25 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 	@Override
 	public Parent getContent() {
 		return root;
+	}
+
+	@Override
+	public void initView(Consumer<Parent> viewVisit) {
+		if(this.mainPane == null){
+			try {
+				final FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/birthdayView/VMainFrame.fxml"));
+				final VMMainFrameImpl frame = new VMMainFrameImpl();
+				loader.setController(frame);
+				this.mainPane = loader.load();
+				Platform.runLater(() -> {
+					root.setCenter(this.mainPane);
+					root.setPrefSize(800, 600);
+					viewVisit.accept(root);
+				});
+				this.initTable(frame);
+			} catch(IOException e){
+				throw new RuntimeException(e);
+			}
+		}
 	}
 }

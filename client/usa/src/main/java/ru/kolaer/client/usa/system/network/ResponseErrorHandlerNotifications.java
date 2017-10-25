@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.ui.NotificationUS;
-import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
 
 import java.io.IOException;
 

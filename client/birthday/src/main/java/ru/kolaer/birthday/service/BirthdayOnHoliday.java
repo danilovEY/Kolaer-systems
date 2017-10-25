@@ -1,12 +1,15 @@
 package ru.kolaer.birthday.service;
 
-import javafx.application.Platform;
 import javafx.util.Duration;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.api.system.network.NetworkUS;
+import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.api.system.ui.NotifyAction;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
@@ -15,23 +18,19 @@ import ru.kolaer.birthday.tools.Tools;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class BirthdayOnHoliday implements Service {
 	private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-	private final UniformSystemEditorKit editorKit;
 	private boolean tomorrow = false;
 	private boolean arterTomorrow = false;
-	public BirthdayOnHoliday(final UniformSystemEditorKit editorKit) {
-		this.editorKit = editorKit;
-	}
 	
 	@Override
 	public void run() {
-		//final PublicHolidays[] holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getPublicHolidaysDateBase().getPublicHolidaysInThisMonth();
+		NetworkUS usNetwork = UniformSystemEditorKitSingleton.getInstance().getUSNetwork();
 
-		final ServerResponse<List<Holiday>> holidays = this.editorKit.getUSNetwork().getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
+		final ServerResponse<List<Holiday>> holidays = usNetwork.getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
 		final LocalDate date = LocalDate.now();
 
 		if(date.getDayOfWeek().getValue() == 5 ) {
@@ -62,42 +61,42 @@ public class BirthdayOnHoliday implements Service {
 	}
 
 	private void showNotifi(final String title, final LocalDate date, final Holiday holiday) {
-		//final DbDataAll[] users = this.editorKit.getUSNetwork().getRestfulServer().getKolaerDataBase().getUserDataAllDataBase().getUsersByBirthday(Tools.convertToDate(date));
-		final EmployeeEntity[] employeesEntities = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersByBirthday(Tools.convertToDate(date));
-		final EmployeeOtherOrganization[] usersBirthday = editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersByBirthday(Tools.convertToDate(date));
-		
-		final NotifyAction[] actions = new NotifyAction[employeesEntities.length + usersBirthday.length];
-		int i = 0;
+		ApplicationDataBase applicationDataBase = UniformSystemEditorKitSingleton.getInstance().getUSNetwork()
+				.getKolaerWebServer()
+				.getApplicationDataBase();
 
-		for(final EmployeeEntity user : employeesEntities) {
-			actions[i] = new NotifyAction(user.getInitials() + " (КолАЭР) " + user.getDepartment().getAbbreviatedName(), e -> {
-				final UserModel userModel = new UserModelImpl(user);
-				
-				Platform.runLater(() -> {
+		ServerResponse<List<EmployeeDto>> employeesResponse = applicationDataBase.getGeneralEmployeesTable()
+				.getUsersByBirthday(Tools.convertToDate(date));
+		ServerResponse<List<EmployeeOtherOrganizationDto>> otherEmployeesResponse = applicationDataBase.getEmployeeOtherOrganizationTable()
+				.getUsersByBirthday(Tools.convertToDate(date));
+
+		List<NotifyAction> actions = new ArrayList<>();
+
+		if(!employeesResponse.isServerError()) {
+			for(EmployeeDto user : employeesResponse.getResponse()) {
+				actions.add(new NotifyAction(user.getInitials() + " (КолАЭР) " + user.getDepartment().getAbbreviatedName(),
+						e -> new VMDetailedInformationStageImpl(new UserModelImpl(user)).show()
+				));
+			}
+		}
+
+		if(!otherEmployeesResponse.isServerError()) {
+			for (EmployeeOtherOrganizationDto user : otherEmployeesResponse.getResponse()) {
+				actions.add(new NotifyAction(user.getInitials() + " (" + Tools.getNameOrganization(user.getOrganization()) + ") " + user.getDepartment(), e -> {
+					final UserModel userModel = new UserModelImpl(user);
+					userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
 					new VMDetailedInformationStageImpl(userModel).show();
-				});	
-			});
-			i++;
+				}));
+			}
 		}
-		for(final EmployeeOtherOrganization user : usersBirthday) {
-			actions[i] = new NotifyAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartment(), e -> {
-				final UserModel userModel = new UserModelImpl(user);
-				userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
-				Platform.runLater(() -> {
-					new VMDetailedInformationStageImpl(userModel).show();
-				});					
-			});
-			i++;
-		}
-		
-		try{
-			TimeUnit.SECONDS.sleep(1);
-		}catch(InterruptedException e){
-			e.printStackTrace();
-		}
-		
-		Platform.runLater(() -> {
-			this.editorKit.getUISystemUS().getNotification().showInformationNotify(title + holiday.getName() + ".", "День рождения в этот день празднуют:", Duration.hours(24), actions);
+
+		ru.kolaer.api.tools.Tools.runOnWithOutThreadFX(() -> {
+			UniformSystemEditorKitSingleton.getInstance()
+					.getUISystemUS()
+					.getNotification()
+					.showInformationNotify(title + holiday.getName() + ".", "День рождения в этот день празднуют:",
+							Duration.hours(24),
+							actions);
 		});
 	}
 

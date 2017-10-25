@@ -4,7 +4,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.client.usa.system.UniformSystemEditorKitSingleton;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 /**
  * Created by danilovey on 13.02.2017.

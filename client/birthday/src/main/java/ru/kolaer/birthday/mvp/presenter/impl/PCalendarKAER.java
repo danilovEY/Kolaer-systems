@@ -1,6 +1,7 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeEntity;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.ui.DefaultProgressBar;
 import ru.kolaer.api.system.ui.ProgressBarObservable;
@@ -33,14 +34,14 @@ public class PCalendarKAER extends PCalendarBase implements PCalendar {
 			if (this.editorKid != null) {
 				final ProgressBarObservable obs = new DefaultProgressBar();
 				this.editorKid.getUISystemUS().getStatusBar().addProgressBar(obs);
-				final EmployeeEntity[] usersDataAll = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
+				final ServerResponse<List<EmployeeDto>> usersDataAll = this.editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase()
 						.getGeneralEmployeesTable()
 						.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				obs.setValue(-1);
-				if(usersDataAll.length != 0) {
-					final double step = 100/usersDataAll.length * 0.01;
+				if(usersDataAll.getResponse().size() != 0) {
+					final double step = 100/usersDataAll.getResponse().size() * 0.01;
 					double value = 0;	
-					for (EmployeeEntity user : usersDataAll) {
+					for (EmployeeDto user : usersDataAll.getResponse()) {
 						obs.setValue(value);
 						value += step;
 						final UserModel userModel = new UserModelImpl(user);
