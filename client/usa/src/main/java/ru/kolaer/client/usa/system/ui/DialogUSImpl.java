@@ -49,6 +49,14 @@ public class DialogUSImpl implements DialogUS {
 	}
 
 	@Override
+	public Dialog<?> createWarningDialog(String title, String text) {
+		Alert dlg = new Alert(AlertType.WARNING);
+		dlg.setTitle(title);
+		dlg.setContentText(text);
+		return dlg;
+	}
+
+	@Override
 	public Dialog<?> createLoadingDialog(final Service<?> service) {
          final ProgressDialog dlg = new ProgressDialog(service);
 

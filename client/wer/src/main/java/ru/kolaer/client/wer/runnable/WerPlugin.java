@@ -38,11 +38,6 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
     private PSplitTableDetailedEventImpl splitPresenter;
 
     @Override
-    public void setContent(Parent content) {
-        this.mainPane.setCenter(content);
-    }
-
-    @Override
     public Parent getContent() {
         return this.mainPane;
     }
@@ -124,7 +119,7 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
     }
 
     @Override
-    public void initView(Consumer<Parent> viewVisit) {
+    public void initView(Consumer<UniformSystemPlugin> viewVisit) {
         mainPane = new BorderPane();
 
         pEventTable = new PEventTableImpl(editorKit, mWindowsEvent);
@@ -139,6 +134,6 @@ public class WerPlugin implements UniformSystemPlugin, AuthenticationObserver {
             login(editorKit.getAuthentication().getAuthorizedUser());
         }
 
-        viewVisit.accept(mainPane);
+        viewVisit.accept(this);
     }
 }

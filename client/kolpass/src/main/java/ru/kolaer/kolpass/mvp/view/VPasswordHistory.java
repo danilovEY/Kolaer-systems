@@ -9,7 +9,7 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 09.02.2017.
  */
-public interface VPasswordHistory extends BaseView<BorderPane> {
+public interface VPasswordHistory extends BaseView<VPasswordHistory, BorderPane> {
     String getDate();
     void setDate(String date);
 

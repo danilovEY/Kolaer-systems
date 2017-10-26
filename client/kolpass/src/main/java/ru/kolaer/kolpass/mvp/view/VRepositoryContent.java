@@ -9,7 +9,7 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 09.02.2017.
  */
-public interface VRepositoryContent extends BaseView<BorderPane> {
+public interface VRepositoryContent extends BaseView<VRepositoryContent, BorderPane> {
     void addRepositoryPassword(VRepositoryPassword vRepositoryPassword);
     void removeRepositoryPassword(VRepositoryPassword vRepositoryPassword);
     void clear();

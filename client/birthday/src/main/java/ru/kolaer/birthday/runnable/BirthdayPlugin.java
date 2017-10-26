@@ -22,7 +22,6 @@ import ru.kolaer.birthday.service.BirthdayOnHoliday;
 import ru.kolaer.birthday.service.BirthdayService;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -53,21 +52,6 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 		this.servicesList = new ArrayList<>();
 		this.servicesList.add(new BirthdayService(editorKid));
 		this.servicesList.add(new BirthdayOnHoliday());
-	}
-
-	@Override
-	public URL getIcon() {
-		return null;
-	}
-
-	@Override
-	public void start() throws Exception {
-
-	}
-
-	@Override
-	public void stop() throws Exception {
-
 	}
 
 	private void initTable(VMMainFrame frameContent) {
@@ -209,21 +193,12 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 	}
 
 	@Override
-	public void updatePluginObjects(String key, Object object) {
-	}
-
-	@Override
-	public void setContent(Parent parent) {
-
-	}
-
-	@Override
 	public Parent getContent() {
 		return root;
 	}
 
 	@Override
-	public void initView(Consumer<Parent> viewVisit) {
+	public void initView(Consumer<UniformSystemPlugin> viewVisit) {
 		if(this.mainPane == null){
 			try {
 				final FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/birthdayView/VMainFrame.fxml"));
@@ -233,7 +208,7 @@ public class BirthdayPlugin implements UniformSystemPlugin {
 				Platform.runLater(() -> {
 					root.setCenter(this.mainPane);
 					root.setPrefSize(800, 600);
-					viewVisit.accept(root);
+					viewVisit.accept(this);
 				});
 				this.initTable(frame);
 			} catch(IOException e){

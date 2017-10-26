@@ -14,13 +14,14 @@ repositories {
 }
 
 dependencies {
-    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
+    compile("org.springframework:spring-web:4.3.2.RELEASE") {
+        exclude module: 'spring-aop'
+        exclude module: 'spring-context'
+    }
 
-    compile "org.controlsfx:controlsfx:9.0.0"
-    compileOnly "org.projectlombok:lombok:1.16.18.1"
+    compile "org.controlsfx:controlsfx:8.40.11"
+    compileOnly "org.projectlombok:lombok:1.16.18"
     testCompile "junit:junit:4.11"
-
-} repositories {
 
 }
 

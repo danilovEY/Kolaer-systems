@@ -8,7 +8,7 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 09.02.2017.
  */
-public interface VRepositoryPassword extends BaseView<BorderPane> {
+public interface VRepositoryPassword extends BaseView<VRepositoryPassword, BorderPane> {
     void setName(String name);
     String getName();
 

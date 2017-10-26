@@ -4,12 +4,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.wer.mvp.model.Data;
@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -31,20 +32,12 @@ import java.util.stream.Stream;
 @Slf4j
 public class VEventTableImpl implements VEventTable {
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-    private final ObservableList<Event> observableList;
-    private final TableView<Event> eventTableView;
-    private final BorderPane mainPane;
-    private final TextField textFilter;
+    private ObservableList<Event> observableList;
+    private TableView<Event> eventTableView;
+    private BorderPane mainPane;
+    private TextField textFilter;
     private FilteredList<Event> filteredList;
     private SortedList<Event> events;
-
-    public VEventTableImpl() {
-        this.mainPane = new BorderPane();
-        this.eventTableView = new TableView<>();
-        this.textFilter = new TextField();
-        this.observableList = FXCollections.observableArrayList();
-        this.init();
-    }
 
     private void init() {
         this.eventTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -222,5 +215,17 @@ public class VEventTableImpl implements VEventTable {
     @Override
     public void clear() {
         this.eventTableView.getItems().clear();
+    }
+
+    @Override
+    public void initView(Consumer<VEventTable> viewVisit) {
+        mainPane = new BorderPane();
+        eventTableView = new TableView<>();
+        textFilter = new TextField();
+        observableList = FXCollections.observableArrayList();
+
+        init();
+
+        viewVisit.accept(this);
     }
 }

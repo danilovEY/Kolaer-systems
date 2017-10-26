@@ -9,7 +9,7 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 15.02.2017.
  */
-public interface VEmployeeRepositoryList extends BaseView<BorderPane> {
+public interface VEmployeeRepositoryList extends BaseView<VEmployeeRepositoryList, BorderPane> {
     void addEmployee(EmployeeDto employeeEntity);
     void removeEmployee(EmployeeDto employeeEntity);
 

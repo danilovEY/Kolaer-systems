@@ -3,41 +3,23 @@ package ru.kolaer.asmc.mvp.view;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import ru.kolaer.asmc.mvp.model.MGroup;
 
-import java.util.function.Function;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 20.02.2017.
  */
 public class VGroupTreeItemImpl implements VGroupTreeItem {
-    private final ImageView openIcon =
-            new ImageView(new Image(this.getClass().getResourceAsStream("/open-folder.png")));
-
-    private final ImageView closeIcon =
-            new ImageView(new Image(this.getClass().getResourceAsStream("/close-folder.png")));
-
+    private ImageView openIcon;
+    private ImageView closeIcon;
     private TreeItem<MGroup> treeItem;
 
+    private MGroup group;
+
     public VGroupTreeItemImpl(MGroup group) {
-        this.treeItem = new TreeItem<>(group, this.openIcon);
-        this.init();
-    }
-
-    public VGroupTreeItemImpl() {
-        this.treeItem = new TreeItem<>();
-        this.init();
-    }
-
-    private void init() {
-        this.treeItem.setGraphic(this.openIcon);
-        this.treeItem.setExpanded(true);
-        this.treeItem.expandedProperty().addListener(e ->
-            this.treeItem.setGraphic(this.treeItem.isExpanded()
-                    ? this.openIcon
-                    : this.closeIcon)
-        );
+        this.group = group;
     }
 
     @Override
@@ -64,5 +46,27 @@ public class VGroupTreeItemImpl implements VGroupTreeItem {
     @Override
     public void updateView(MGroup group) {
         this.treeItem.setValue(group);
+    }
+
+    @Override
+    public void initView(Consumer<VGroupTreeItem> viewVisit) {
+        treeItem = new TreeItem<>(group, openIcon);
+        treeItem.setGraphic(getOpenImage());
+        treeItem.setExpanded(true);
+        treeItem.expandedProperty().addListener(e ->
+                treeItem.setGraphic(treeItem.isExpanded()
+                        ? getOpenImage()
+                        : getCloseImage())
+        );
+    }
+
+    private ImageView getOpenImage() {
+        return Optional.ofNullable(openIcon)
+                .orElse(openIcon = new ImageView(new Image(this.getClass().getResourceAsStream("/open-folder.png"))));
+    }
+
+    private ImageView getCloseImage() {
+        return Optional.ofNullable(closeIcon)
+                .orElse(closeIcon = new ImageView(new Image(this.getClass().getResourceAsStream("/close-folder.png"))));
     }
 }

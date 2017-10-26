@@ -24,11 +24,6 @@ public class AdminControl implements UniformSystemPlugin {
 	private List<Service> serviceList;
 
 	@Override
-	public void setContent(Parent content) {
-		
-	}
-
-	@Override
 	public Parent getContent() {
 		return mainPane;
 	}
@@ -74,7 +69,7 @@ public class AdminControl implements UniformSystemPlugin {
 	}
 
 	@Override
-	public void initView(Consumer<Parent> viewVisit) {
+	public void initView(Consumer<UniformSystemPlugin> viewVisit) {
 		TextField message = new TextField();
 		Button sent = new Button("Отправить!");
 		sent.setOnAction(e -> {
@@ -126,10 +121,8 @@ public class AdminControl implements UniformSystemPlugin {
 				this.sendMessage(message.getText());
 			}
 
-
-
 		});
 		this.mainPane = new BorderPane(new HBox(message, sent));
-		viewVisit.accept(mainPane);
+		viewVisit.accept(this);
 	}
 }

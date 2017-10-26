@@ -20,6 +20,11 @@ public class DefaultDialogUS implements DialogUS {
     }
 
     @Override
+    public Dialog<?> createWarningDialog(String title, String text) {
+        return null;
+    }
+
+    @Override
     public Dialog<?> createLoadingDialog(Task<?> task) {
         return null;
     }

@@ -7,6 +7,6 @@ import ru.kolaer.client.wer.mvp.model.Event;
 /**
  * Created by danilovey on 16.03.2017.
  */
-public interface VDetailedEvent extends BaseView<BorderPane> {
+public interface VDetailedEvent extends BaseView<VDetailedEvent, BorderPane> {
     void setEvent(Event event);
 }

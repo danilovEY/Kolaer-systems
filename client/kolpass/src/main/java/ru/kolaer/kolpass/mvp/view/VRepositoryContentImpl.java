@@ -10,36 +10,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
  * Created by danilovey on 09.02.2017.
  */
 public class VRepositoryContentImpl implements VRepositoryContent {
-    private final BorderPane mainPane;
-    private final FlowPane contentPane;
-    private final MenuItem addRepItem;
-    private final ScrollPane scrollPane;
-    private final ContextMenu contextMenu;
-
-    public VRepositoryContentImpl() {
-        this.addRepItem = new MenuItem("Добавить репозиторий");
-
-        this.contextMenu = new ContextMenu(this.addRepItem);
-
-        this.contentPane = new FlowPane(10, 10);
-        this.contentPane.setAlignment(Pos.TOP_CENTER);
-        this.contentPane.setPadding(new Insets(10));
-        this.contentPane.setStyle("-fx-background-image: url('" + this.getClass().getResource("/background.jpg").toString() + "')");
-
-        this.scrollPane = new ScrollPane(this.contentPane);
-        this.scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        this.scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        this.scrollPane.setFitToHeight(true);
-        this.scrollPane.setFitToWidth(true);
-
-        this.mainPane = new BorderPane(this.scrollPane);
-    }
+    private BorderPane mainPane;
+    private FlowPane contentPane;
+    private MenuItem addRepItem;
+    private ScrollPane scrollPane;
+    private ContextMenu contextMenu;
 
     @Override
     public void setContent(BorderPane content) {
@@ -88,5 +70,27 @@ public class VRepositoryContentImpl implements VRepositoryContent {
         PasswordRepositoryDto repositoryPassword = new PasswordRepositoryDto();
         repositoryPassword.setName(nameRep);
         return repositoryPassword;
+    }
+
+    @Override
+    public void initView(Consumer<VRepositoryContent> viewVisit) {
+        this.addRepItem = new MenuItem("Добавить репозиторий");
+
+        this.contextMenu = new ContextMenu(this.addRepItem);
+
+        this.contentPane = new FlowPane(10, 10);
+        this.contentPane.setAlignment(Pos.TOP_CENTER);
+        this.contentPane.setPadding(new Insets(10));
+        this.contentPane.setStyle("-fx-background-image: url('" + this.getClass().getResource("/background.jpg").toString() + "')");
+
+        this.scrollPane = new ScrollPane(this.contentPane);
+        this.scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        this.scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        this.scrollPane.setFitToHeight(true);
+        this.scrollPane.setFitToWidth(true);
+
+        this.mainPane = new BorderPane(this.scrollPane);
+
+        viewVisit.accept(this);
     }
 }

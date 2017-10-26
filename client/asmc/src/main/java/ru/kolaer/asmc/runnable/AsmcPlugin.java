@@ -11,12 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.asmc.mvp.model.MGroupDataService;
-import ru.kolaer.asmc.mvp.model.MGroupDataServiceImpl;
-import ru.kolaer.asmc.mvp.presenter.*;
-import ru.kolaer.asmc.mvp.view.ImageViewPane;
+import ru.kolaer.asmc.mvp.model.DataService;
+import ru.kolaer.asmc.mvp.model.DataServiceImpl;
+import ru.kolaer.asmc.mvp.view.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -26,13 +26,34 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
-    private PSplitListContent splitListContent;
+    private SplitListContentVc splitListContent;
     private BorderPane mainPane;
+    private DataService dataService;
+    private GroupTreeVc groupTreeVc;
+    private ContentLabelVc contentLabelVc;
+
+    @Override
+    public void initialization(UniformSystemEditorKit editorKit) throws Exception {
+        editorKit.getAuthentication().registerObserver(this);
+
+        dataService = new DataServiceImpl();
+
+        groupTreeVc = new GroupTreeVcImpl(dataService);
+        contentLabelVc = new ContentLabelVcImpl(dataService);
+
+        dataService.registerObserver(groupTreeVc);
+        dataService.registerObserver(contentLabelVc);
+
+        splitListContent = new SplitListContentVcImpl(groupTreeVc, contentLabelVc);
+
+        CompletableFuture.runAsync(() -> dataService.loadData());
+    }
 
     private void initMenuBar() {
-        final MenuItem authMenuItem = new MenuItem("Вход");
+        MenuItem authMenuItem = new MenuItem("Вход");
+        MenuItem updateMenuItem = new MenuItem("Обновить данные");
 
-        final Menu asmcMenu = new Menu("АСУП");
+        Menu asmcMenu = new Menu("АСУП");
         asmcMenu.getItems().add(authMenuItem);
 
         UniformSystemEditorKitSingleton.getInstance()
@@ -41,11 +62,11 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
                 .addMenu(asmcMenu);
 
         asmcMenu.addEventHandler(Menu.ON_SHOWING, e ->
-            authMenuItem.setText( this.splitListContent.isAccess() ? "Выход" : "Вход")
+            authMenuItem.setText(splitListContent.isAccess() ? "Выход" : "Вход")
         );
 
         authMenuItem.setOnAction(e -> {
-            if(!this.splitListContent.isAccess()) {
+            if(!splitListContent.isAccess()) {
                 Dialog<?> loginDialog =  UniformSystemEditorKitSingleton.getInstance()
                         .getUISystemUS()
                         .getDialog()
@@ -55,7 +76,7 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
                     if(logPass.length == 2) {
                         if(logPass[0].equals("root")
                                 && logPass[1].equals("\u0032\u0073\u0065\u0072\u0064\u0063\u0065\u0033")) {
-                            this.splitListContent.setAccess(true);
+                            splitListContent.setAccess(true);
 
                             return;
                         }
@@ -64,8 +85,21 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
                             .showErrorNotify("Ошибка!", "Не верный логин или пароль!");
                 });
             } else {
-                this.splitListContent.setAccess(false);
+                splitListContent.setAccess(false);
             }
+        });
+
+        updateMenuItem.setOnAction(e -> {
+            CompletableFuture
+                    .runAsync(() -> dataService.loadData())
+                    .exceptionally(t -> {
+                        log.error("");
+                        UniformSystemEditorKitSingleton.getInstance()
+                                .getUISystemUS()
+                                .getNotification()
+                                .showErrorNotify("Ошибка", "Не удалось прочитать данные");
+                        return null;
+                    });
         });
     }
 
@@ -76,13 +110,13 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
             imagePane.setMaxHeight(300);
             imagePane.setMaxWidth(Double.MAX_VALUE);
 
-            ImageView left = new ImageView(new Image(this.getClass().getResource("/LR.png").toString(), true));
+            ImageView left = new ImageView(new Image(getClass().getResource("/LR.png").toString(), true));
             left.setPreserveRatio(false);
 
-            ImageView right = new ImageView(new Image(this.getClass().getResource("/LR.png").toString(), true));
+            ImageView right = new ImageView(new Image(getClass().getResource("/LR.png").toString(), true));
             right.setPreserveRatio(false);
 
-            ImageViewPane center = new ImageViewPane(new ImageView(new Image(this.getClass().getResource("/Centr.png").toString(), true)));
+            ImageViewPane center = new ImageViewPane(new ImageView(new Image(getClass().getResource("/Centr.png").toString(), true)));
 
             imagePane.setRight(right);
             imagePane.setLeft(left);
@@ -114,46 +148,21 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
     public void initView(Consumer<UniformSystemPlugin> viewVisit) {
         this.mainPane = new BorderPane();
 
-        PGroupTree pGroupTree = new PGroupTreeImpl();
-
-        CompletableFuture.runAsync(() -> {
-            MGroupDataService mGroupDataService = new MGroupDataServiceImpl();
-            if(mGroupDataService.loadData()) {
-                pGroupTree.setModel(mGroupDataService);
-                Tools.runOnWithOutThreadFX(pGroupTree::updateView);
-            } else {
-                UniformSystemEditorKitSingleton.getInstance()
-                        .getUISystemUS()
-                        .getNotification()
-                        .showErrorNotify("Ошибка!", "Ошибка при чтении данных!");
-            }
-        }).exceptionally(t -> {
-            log.error("Ошибка при чтении данных!", t);
-            UniformSystemEditorKitSingleton.getInstance()
-                    .getUISystemUS()
-                    .getNotification()
-                    .showErrorNotify("Ошибка!", "Ошибка при чтении данных!");
-            return null;
+        splitListContent.initView(initSplit -> {
+            groupTreeVc.initView(initSplit::setView);
+            contentLabelVc.initView(initSplit::setView);
         });
 
-        final PContentLabel pContentLabel = new PContentLabelImpl();
-
-        this.splitListContent = new PSplitListContentImpl();
-        this.splitListContent.setPContentLabel(pContentLabel);
-        this.splitListContent.setPGroupList(pGroupTree);
-        this.splitListContent.updateView();
         if(UniformSystemEditorKitSingleton.getInstance().getAuthentication().isAuthentication()) {
-            this.login( UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser());
+            login(UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser());
         } else {
-            this.splitListContent.setAccess(false);
+            splitListContent.setAccess(false);
         }
 
-        UniformSystemEditorKitSingleton.getInstance().getAuthentication().registerObserver(this);
+        mainPane.setCenter(splitListContent.getContent());
 
-        this.mainPane.setCenter(this.splitListContent.getView().getContent());
-
-        this.updateBanner();
-        this.initMenuBar();
+        updateBanner();
+        initMenuBar();
 
         viewVisit.accept(this);
     }

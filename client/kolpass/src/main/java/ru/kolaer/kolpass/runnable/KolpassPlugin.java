@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.kolpass.mvp.presenter.PEmployeeRepositoryListImpl;
@@ -16,8 +15,6 @@ import ru.kolaer.kolpass.mvp.presenter.PRepositoryContentImpl;
 import ru.kolaer.kolpass.mvp.presenter.PSplitContentAndListRep;
 import ru.kolaer.kolpass.mvp.presenter.PSplitContentAndListRepImpl;
 
-import java.net.URL;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -38,33 +35,8 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
     }
 
     @Override
-    public URL getIcon() {
-        return null;
-    }
-
-    @Override
-    public Collection<Service> getServices() {
-        return null;
-    }
-
-    @Override
-    public void start() throws Exception {
-
-    }
-
-    @Override
     public void stop() throws Exception {
         this.pSplitContentAndListRep.clear();
-    }
-
-    @Override
-    public void updatePluginObjects(String key, Object object) {
-
-    }
-
-    @Override
-    public void setContent(Parent content) {
-
     }
 
     @Override
@@ -92,7 +64,7 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
     }
 
     @Override
-    public void initView(Consumer<Parent> viewVisit) {
+    public void initView(Consumer<UniformSystemPlugin> viewVisit) {
         this.mainPane = new BorderPane();
 
 
@@ -110,6 +82,6 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
             this.logout(null);
         }
 
-        viewVisit.accept(mainPane);
+        viewVisit.accept(this);
     }
 }

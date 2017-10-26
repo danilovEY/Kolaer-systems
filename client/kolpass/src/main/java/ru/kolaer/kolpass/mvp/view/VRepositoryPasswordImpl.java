@@ -14,6 +14,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -35,56 +36,6 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
     private Button saveDataButton;
     private MenuItem editName;
     private MenuItem deleteItem;
-
-
-    public VRepositoryPasswordImpl() {
-        this.editName = new MenuItem("Редактировать имя");
-        this.deleteItem = new MenuItem("Удалить");
-
-        final ContextMenu contextMenu = new ContextMenu();
-        contextMenu.getItems().addAll(this.editName, deleteItem);
-
-        this.saveDataButton = new Button("Сохранить");
-
-        this.labelName = new Label();
-        this.labelName.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        this.labelName.setAlignment(Pos.CENTER);
-        this.labelName.setContextMenu(contextMenu);
-
-        this.imageView = new ImageView();
-        this.imageView.setFitHeight(200);
-        this.imageView.setFitWidth(200);
-        this.imageView.setOnContextMenuRequested(e -> {
-            contextMenu.show(this.imageView, e.getScreenX(), e.getScreenY());
-            e.consume();
-        });
-        this.imageView.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> contextMenu.hide());
-
-        this.mainPane = new BorderPane();
-        this.mainPane.setStyle("-fx-background-color: lightskyblue; -fx-background-radius: 20");
-        this.mainPane.setPadding(new Insets(5));
-        this.mainPane.setBorder(new Border(new BorderStroke(Color.BLACK,
-                BorderStrokeStyle.SOLID, new CornerRadii(20.0), new BorderWidths(3.0))));
-        this.mainPane.setOnContextMenuRequested(e -> {
-            contextMenu.show(this.mainPane, e.getScreenX(), e.getScreenY());
-            e.consume();
-        });
-        this.mainPane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> contextMenu.hide());
-        this.mainPane.setTop(this.labelName);
-        this.mainPane.setCenter(this.imageView);
-        BorderPane.setMargin(this.imageView, new Insets(10));
-
-        this.titledPaneLast = new TitledPane("Последний пароль", null);
-
-        this.titledPaneFirst = new TitledPane("Первый пароль", null);
-        this.titledPaneFirst.setExpanded(false);
-
-        this.titledPanePrev = new TitledPane("Предыдущий пароль", null);
-        this.titledPanePrev.setExpanded(false);
-
-        BorderPane.setAlignment(this.labelName, Pos.CENTER);
-        this.init();
-    }
 
     private void init() {
         final Button openPass = new Button("Открыть");
@@ -241,5 +192,57 @@ public class VRepositoryPasswordImpl implements VRepositoryPassword {
     @Override
     public BorderPane getContent() {
         return this.mainPane;
+    }
+
+    @Override
+    public void initView(Consumer<VRepositoryPassword> viewVisit) {
+        this.editName = new MenuItem("Редактировать имя");
+        this.deleteItem = new MenuItem("Удалить");
+
+        final ContextMenu contextMenu = new ContextMenu();
+        contextMenu.getItems().addAll(this.editName, deleteItem);
+
+        this.saveDataButton = new Button("Сохранить");
+
+        this.labelName = new Label();
+        this.labelName.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        this.labelName.setAlignment(Pos.CENTER);
+        this.labelName.setContextMenu(contextMenu);
+
+        this.imageView = new ImageView();
+        this.imageView.setFitHeight(200);
+        this.imageView.setFitWidth(200);
+        this.imageView.setOnContextMenuRequested(e -> {
+            contextMenu.show(this.imageView, e.getScreenX(), e.getScreenY());
+            e.consume();
+        });
+        this.imageView.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> contextMenu.hide());
+
+        this.mainPane = new BorderPane();
+        this.mainPane.setStyle("-fx-background-color: lightskyblue; -fx-background-radius: 20");
+        this.mainPane.setPadding(new Insets(5));
+        this.mainPane.setBorder(new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID, new CornerRadii(20.0), new BorderWidths(3.0))));
+        this.mainPane.setOnContextMenuRequested(e -> {
+            contextMenu.show(this.mainPane, e.getScreenX(), e.getScreenY());
+            e.consume();
+        });
+        this.mainPane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> contextMenu.hide());
+        this.mainPane.setTop(this.labelName);
+        this.mainPane.setCenter(this.imageView);
+        BorderPane.setMargin(this.imageView, new Insets(10));
+
+        this.titledPaneLast = new TitledPane("Последний пароль", null);
+
+        this.titledPaneFirst = new TitledPane("Первый пароль", null);
+        this.titledPaneFirst.setExpanded(false);
+
+        this.titledPanePrev = new TitledPane("Предыдущий пароль", null);
+        this.titledPanePrev.setExpanded(false);
+
+        BorderPane.setAlignment(this.labelName, Pos.CENTER);
+        this.init();
+
+        viewVisit.accept(this);
     }
 }

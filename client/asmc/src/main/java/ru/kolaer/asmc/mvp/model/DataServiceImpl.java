@@ -10,35 +10,46 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by danilovey on 20.02.2017.
  */
-public class MGroupDataServiceImpl implements MGroupDataService {
-    private final static Logger log = LoggerFactory.getLogger(MGroupDataServiceImpl.class);
+public class DataServiceImpl implements DataService {
+    private final static Logger log = LoggerFactory.getLogger(DataServiceImpl.class);
 
     private final String FILE_PATH = "data";
     private final String FILE_NAME = "groups.xml";
     private final String FILE_NAME_BACKUP = "groups_backup.xml";
 
+    private final List<DataServiceObserver> observers = new ArrayList<>();
     private final XmlMapper xmlMapper = new XmlMapper();
-    final File fileWithData = new File(FILE_PATH + "/" + FILE_NAME);
-    final File fileBackup = new File(FILE_PATH + "/" + FILE_NAME_BACKUP);
-    final File fileDir = new File(FILE_PATH);
+
+    private final File fileWithData = new File(FILE_PATH + "/" + FILE_NAME);
+    private final File fileBackup = new File(FILE_PATH + "/" + FILE_NAME_BACKUP);
+    private final File fileDir = new File(FILE_PATH);
     private List<MGroup> groups;
 
     @Override
     public void addGroup(MGroup group) {
-        this.groups.add(group);
+        groups.add(group);
     }
 
     @Override
     public void removeGroup(MGroup group) {
+        group.getGroups().forEach(this::clearGroup);
+        group.getLabelList().clear();
+
         this.groups.remove(group);
+    }
+
+    private void clearGroup(MGroup group) {
+        Optional.ofNullable(group.getGroups())
+                .orElse(Collections.emptyList())
+                .forEach(this::clearGroup);
+
+        group.getLabelList().clear();
     }
 
     @Override
@@ -53,10 +64,8 @@ public class MGroupDataServiceImpl implements MGroupDataService {
                             .showErrorNotify("Ошибка!", "Ошибка при создании бэкапа!");
                 }
             }
-            try(final FileOutputStream fileOutputStream =
-                        new FileOutputStream(fileWithData)) {
-                final byte[] bytes = this.xmlMapper
-                        .writeValueAsBytes(this.groups.stream().toArray(MGroup[]::new));
+            try(FileOutputStream fileOutputStream = new FileOutputStream(fileWithData)) {
+                byte[] bytes = xmlMapper.writeValueAsBytes(groups.stream().toArray(MGroup[]::new));
                 fileOutputStream.write(bytes);
                 fileOutputStream.flush();
                 return true;
@@ -94,22 +103,33 @@ public class MGroupDataServiceImpl implements MGroupDataService {
         }
 
         try {
-            MGroup[] mGroups = this.xmlMapper.readValue(fileWithData, MGroup[].class);
+            MGroup[] mGroups = xmlMapper.readValue(fileWithData, MGroup[].class);
             groups = Arrays.asList(mGroups);
+            observers.forEach(observer -> observer.updateData(groups));
             return true;
         } catch (IOException e) {
             log.error("Ошибка при чтении файла!", e);
-            return false;
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public List<MGroup> getModel() {
-        return this.groups;
+        return groups;
     }
 
     @Override
     public void setModel(List<MGroup> model) {
-        this.groups = model;
+        groups = model;
+    }
+
+    @Override
+    public void registerObserver(DataServiceObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(DataServiceObserver observer) {
+        observers.add(observer);
     }
 }

@@ -16,53 +16,18 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
  * Created by danilovey on 09.02.2017.
  */
 public class VPasswordHistoryImpl implements VPasswordHistory {
-    private final BorderPane mainPane;
-    private final TextField passwordField;
-    private final TextField loginField;
-    private final Label labelDateWrite;
-    private final Button generatePass;
-
-    public VPasswordHistoryImpl() {
-        this.passwordField = new TextField();
-        this.passwordField.setText("");
-        this.passwordField.setPrefWidth(300);
-
-        this.loginField = new TextField();
-        this.loginField.setText("");
-        this.loginField.setPrefWidth(300);
-
-        this.labelDateWrite = new Label("Дата записи");
-
-        this.generatePass = new Button("Генерировать");
-
-        final Button copyPass = new Button("Копировать");
-        copyPass.setOnAction(e -> this.writeToClipboard(this.passwordField.getText()));
-
-        final Button copyLogin = new Button("Копировать");
-        copyLogin.setOnAction(e -> this.writeToClipboard(this.loginField.getText()));
-
-        FlowPane flowPane = new FlowPane(5, 5, new Label("Логин: "), this.loginField, copyLogin);
-        flowPane.setAlignment(Pos.CENTER);
-        FlowPane flowPane1 = new FlowPane(5, 5, new Label("Пароль: "), this.passwordField, new HBox(copyPass, generatePass));
-        flowPane1.setAlignment(Pos.CENTER);
-
-        VBox vBox = new VBox(15, flowPane, flowPane1);
-        //vBox.setAlignment(Pos.CENTER);
-        //vBox.setStyle("-fx-background-color: red");
-
-        this.mainPane = new BorderPane(vBox);
-        this.mainPane.setTop(this.labelDateWrite);
-        this.mainPane.setPadding(new Insets(10));
-
-        BorderPane.setAlignment(this.labelDateWrite, Pos.CENTER);
-    }
-
+    private BorderPane mainPane;
+    private TextField passwordField;
+    private TextField loginField;
+    private Label labelDateWrite;
+    private Button generatePass;
 
     @Override
     public String getDate() {
@@ -134,5 +99,43 @@ public class VPasswordHistoryImpl implements VPasswordHistory {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         Transferable transferable = new StringSelection(s);
         clipboard.setContents(transferable, null);
+    }
+
+    @Override
+    public void initView(Consumer<VPasswordHistory> viewVisit) {
+        this.passwordField = new TextField();
+        this.passwordField.setText("");
+        this.passwordField.setPrefWidth(300);
+
+        this.loginField = new TextField();
+        this.loginField.setText("");
+        this.loginField.setPrefWidth(300);
+
+        this.labelDateWrite = new Label("Дата записи");
+
+        this.generatePass = new Button("Генерировать");
+
+        final Button copyPass = new Button("Копировать");
+        copyPass.setOnAction(e -> this.writeToClipboard(this.passwordField.getText()));
+
+        final Button copyLogin = new Button("Копировать");
+        copyLogin.setOnAction(e -> this.writeToClipboard(this.loginField.getText()));
+
+        FlowPane flowPane = new FlowPane(5, 5, new Label("Логин: "), this.loginField, copyLogin);
+        flowPane.setAlignment(Pos.CENTER);
+        FlowPane flowPane1 = new FlowPane(5, 5, new Label("Пароль: "), this.passwordField, new HBox(copyPass, generatePass));
+        flowPane1.setAlignment(Pos.CENTER);
+
+        VBox vBox = new VBox(15, flowPane, flowPane1);
+        //vBox.setAlignment(Pos.CENTER);
+        //vBox.setStyle("-fx-background-color: red");
+
+        this.mainPane = new BorderPane(vBox);
+        this.mainPane.setTop(this.labelDateWrite);
+        this.mainPane.setPadding(new Insets(10));
+
+        BorderPane.setAlignment(this.labelDateWrite, Pos.CENTER);
+
+        viewVisit.accept(this);
     }
 }

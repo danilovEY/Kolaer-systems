@@ -10,6 +10,8 @@ public interface DialogUS {
 	Dialog<?> createSimpleDialog(String title, String text);
 	/**Показать диалоговое окно информирующая об ошибке.*/
 	Dialog<?> createErrorDialog(String title, String text);
+	/**Показать диалоговое окно информирующая об ошибке.*/
+	Dialog<?> createWarningDialog(String title, String text);
 
 	Dialog<?> createLoadingDialog(Task<?> task);
 

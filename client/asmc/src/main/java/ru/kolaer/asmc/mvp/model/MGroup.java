@@ -1,31 +1,22 @@
 package ru.kolaer.asmc.mvp.model;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Data
 @NoArgsConstructor
 public class MGroup implements Serializable {
-
-	@Getter @Setter
 	private String nameGroup = "name group";
-
-	@Getter @Setter
 	private int priority = 0;
-
-	@Getter
 	private List<MLabel> labelList;
-
-	@Getter
 	private List<MGroup> groups;
 
-	public MGroup(final String text, final int priority) {
+	public MGroup(String text, int priority) {
 		this.nameGroup = text;
 		this.priority = priority;
 		this.labelList = new ArrayList<>();
@@ -33,15 +24,10 @@ public class MGroup implements Serializable {
 	}
 
 	public MGroup(MGroup mGroup) {
-	    this(mGroup.getNameGroup()  + " (Копия)", mGroup.getPriority());
-
-        Optional.ofNullable(mGroup.getLabelList())
-                .ifPresent(labels -> this.labelList.addAll(labels.stream().map(MLabel::new)
-                        .collect(Collectors.toList())));
-
-        Optional.ofNullable(mGroup.getGroups())
-                .ifPresent(groups -> this.groups.addAll(groups.stream().map(MGroup::new)
-                        .collect(Collectors.toList())));
+	    nameGroup = mGroup.getNameGroup()  + " (Копия)";
+	    priority = mGroup.getPriority();
+		labelList = mGroup.getLabelList().stream().map(MLabel::new).collect(Collectors.toList());
+		groups = mGroup.getGroups().stream().map(MGroup::new).collect(Collectors.toList());
 	}
 
     @Override
@@ -57,8 +43,6 @@ public class MGroup implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int result = nameGroup.hashCode();
-		result = 31 * result + priority;
-		return result;
+		return nameGroup.hashCode();
 	}
 }

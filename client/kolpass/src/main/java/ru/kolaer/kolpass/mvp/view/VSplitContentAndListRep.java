@@ -6,7 +6,7 @@ import ru.kolaer.api.mvp.view.BaseView;
 /**
  * Created by danilovey on 16.02.2017.
  */
-public interface VSplitContentAndListRep extends BaseView<BorderPane> {
+public interface VSplitContentAndListRep extends BaseView<VSplitContentAndListRep, BorderPane> {
     void setEmployeeList(VEmployeeRepositoryList view);
     void setContent(VRepositoryContent view);
 }

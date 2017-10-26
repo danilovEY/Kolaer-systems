@@ -1,29 +1,21 @@
 package ru.kolaer.client.wer.mvp.view;
 
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import ru.kolaer.client.wer.mvp.model.Data;
 import ru.kolaer.client.wer.mvp.model.Event;
-import ru.kolaer.client.wer.mvp.model.EventData;
 
-import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 16.03.2017.
  */
 public class VDetailedEventImpl implements VDetailedEvent {
-    private final TableView<Data> tableView;
+    private TableView<Data> tableView;
     private BorderPane mainPane;
-
-    public VDetailedEventImpl() {
-        this.mainPane = new BorderPane();
-        this.tableView = new TableView<>();
-        this.init();
-    }
 
     private void init() {
         this.tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -58,5 +50,14 @@ public class VDetailedEventImpl implements VDetailedEvent {
         this.tableView.getItems().clear();
         if(event != null)
             this.tableView.getItems().setAll(event.getEventData().getDatas());
+    }
+
+    @Override
+    public void initView(Consumer<VDetailedEvent> viewVisit) {
+        this.mainPane = new BorderPane();
+        this.tableView = new TableView<>();
+        this.init();
+
+        viewVisit.accept(this);
     }
 }

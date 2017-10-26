@@ -11,6 +11,8 @@ import javafx.scene.text.FontWeight;
 import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 import ru.kolaer.api.system.ui.StaticView;
 
+import java.util.function.Consumer;
+
 /**
  * Created by danilovey on 25.08.2016.
  */
@@ -29,6 +31,44 @@ public class StaticViewPPR implements StaticView, PPR {
 
     public StaticViewPPR(final CounterDto counter) {
         this.counter = counter;
+    }
+
+    @Override
+    public Parent getContent() {
+        return this.mainPane;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title.setText(title);
+    }
+
+    @Override
+    public void setDescription(String des) {
+        this.description.setText(des);
+    }
+
+    @Override
+    public void setFoot(String foot) {
+        this.foot.setText(foot);
+    }
+
+    @Override
+    public void setTime(int month, int day, int hours, int min, int sec) {
+        this.month.setText(String.format("%02d", month));
+        this.days.setText(String.format("%02d",day));
+        this.hours.setText(String.format("%02d",hours));
+        this.minute.setText(String.format("%02d",min));
+        this.secund.setText(String.format("%02d",sec));
+    }
+
+    @Override
+    public CounterDto getCounter() {
+        return this.counter;
+    }
+
+    @Override
+    public void initView(Consumer<StaticView> viewVisit) {
         this.mainPane = new BorderPane();
 
         final String style = "    -fx-background-color:\n" +
@@ -111,45 +151,6 @@ public class StaticViewPPR implements StaticView, PPR {
         BorderPane.setAlignment(this.foot, Pos.CENTER);
         BorderPane.setAlignment(flowPane, Pos.CENTER);
 
-
-    }
-
-    @Override
-    public void setContent(Parent content) {
-        this.mainPane.setCenter(content);
-    }
-
-    @Override
-    public Parent getContent() {
-        return this.mainPane;
-    }
-
-    @Override
-    public void setTitle(String title) {
-        this.title.setText(title);
-    }
-
-    @Override
-    public void setDescription(String des) {
-        this.description.setText(des);
-    }
-
-    @Override
-    public void setFoot(String foot) {
-        this.foot.setText(foot);
-    }
-
-    @Override
-    public void setTime(int month, int day, int hours, int min, int sec) {
-        this.month.setText(String.format("%02d", month));
-        this.days.setText(String.format("%02d",day));
-        this.hours.setText(String.format("%02d",hours));
-        this.minute.setText(String.format("%02d",min));
-        this.secund.setText(String.format("%02d",sec));
-    }
-
-    @Override
-    public CounterDto getCounter() {
-        return this.counter;
+        viewVisit.accept(this);
     }
 }
