@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -61,25 +60,24 @@ public class VMMainFrameImpl extends Application {
      * Главное окно приложения.
      */
     private static Stage stage;
-    private MenuBar menuBar;
     private SplitPane splitPane;
 
     private void initialize() {
     	Thread.currentThread().setName("Главный поток");
 
-        //Инициализация вкладочного explorer'а.
-        explorer = new VMTabExplorerOSGi();
-        menuBar = new MenuBar();
-
-        splitPane = new SplitPane();
-        splitPane.getItems().add(explorer.getContent());
-        splitPane.setDividerPositions(1);
-
-        mainPane.setTop(menuBar);
-        mainPane.setCenter(splitPane);
-
         servicesManager = new ServiceManager();
         pluginManager = new PluginManager();
+
+        splitPane = new SplitPane();
+        splitPane.setDividerPositions(1);
+
+        mainPane.setCenter(splitPane);
+
+        //Инициализация вкладочного explorer'а.
+        explorer = new VMTabExplorerOSGi();
+        explorer.initView(initExplorer -> {
+            splitPane.getItems().add(explorer.getContent());
+        });
 
         initApplicationParams();
 
@@ -128,6 +126,35 @@ public class VMMainFrameImpl extends Application {
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             LOG.error("Ошибка при инициализации и чтении плагинов!", e);
             System.exit(-9);
+        }
+    }
+
+    private void installPluginInThread(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle pluginBundle) {
+        ExecutorService threadInstallPlugin = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() -> {
+            installPlugin(explorer, pluginManager, pluginBundle);
+
+            threadInstallPlugin.shutdown();
+        }, threadInstallPlugin).exceptionally(ex -> {
+            LOG.error("Ошибка при установки прагина: {}", pluginBundle.getNamePlugin(), ex);
+            return null;
+        });
+    }
+
+    private void installPlugin(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle pluginBundle) {
+        Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
+        LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
+
+        if (pluginManager.install(pluginBundle)) {
+            LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
+            String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
+            explorer.addTabPlugin(tabName, pluginBundle);
+
+            LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
+            Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
+            if (pluginServices != null) {
+                pluginServices.forEach(servicesManager::addService);
+            }
         }
     }
 
@@ -204,22 +231,27 @@ public class VMMainFrameImpl extends Application {
         Thread.currentThread().setName("Инициализация UniformSystemEditorKit");
 
         ObjectMapper objectMapper = new ObjectMapper();
-
-        MenuBarUSImpl menuBarUS = new MenuBarUSImpl(menuBar);
+        AuthenticationOnNetwork authentication = new AuthenticationOnNetwork(objectMapper);
+        MenuBarUSImpl menuBarUS = new MenuBarUSImpl();
         NotificationPanelExceptionHandler notify = new NotificationPanelExceptionHandler();
         NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
         UISystemUSImpl uiSystemUS = new UISystemUSImpl();
-        uiSystemUS.setNotification(notify);
-        uiSystemUS.setMenuBarUS(menuBarUS);
 
-        Tools.runOnWithOutThreadFX(() ->
-            splitPane.getItems().add(notify.getContent())
-        );
+        Tools.runOnWithOutThreadFX(() ->  {
+            notify.initView(initNotify -> {
+                uiSystemUS.setNotification(initNotify);
+                splitPane.getItems().add(initNotify.getContent());
+                uiSystemUS.setStaticUS(initNotify);
+                Thread.setDefaultUncaughtExceptionHandler(initNotify);
+            });
 
-        Thread.setDefaultUncaughtExceptionHandler(notify);
+            menuBarUS.initView(initMenuBar -> {
+                mainPane.setTop(initMenuBar.getContent());
+                uiSystemUS.setMenuBarUS(menuBarUS);
+                authentication.registerObserver(menuBarUS);
+            });
 
-        AuthenticationOnNetwork authentication = new AuthenticationOnNetwork(objectMapper);
-        authentication.registerObserver(menuBarUS);
+        });
 
         UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
         editorKit.setUSNetwork(network);
@@ -229,46 +261,17 @@ public class VMMainFrameImpl extends Application {
 
         return editorKit;
     }
-
-    private void installPluginInThread(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle pluginBundle) {
-        ExecutorService threadInstallPlugin = Executors.newSingleThreadExecutor();
-        CompletableFuture.runAsync(() -> {
-            installPlugin(explorer, pluginManager, pluginBundle);
-
-            threadInstallPlugin.shutdown();
-        }, threadInstallPlugin).exceptionally(ex -> {
-            LOG.error("Ошибка при установки прагина: {}", pluginBundle.getNamePlugin(), ex);
-            return null;
-        });
-    }
-
-    private void installPlugin(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle pluginBundle) {
-        Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
-        LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
-
-        if (pluginManager.install(pluginBundle)) {
-            LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
-            String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
-            explorer.addTabPlugin(tabName, pluginBundle);
-
-            LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
-            Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
-            if (pluginServices != null) {
-                pluginServices.forEach(servicesManager::addService);
-            }
-        }
-    }
     private void initApplicationParams() {
         String pathServerRest = PARAM.get(Resources.PRIVATE_SERVER_URL_PARAM);
         if (pathServerRest != null) {
             Resources.URL_TO_PRIVATE_SERVER.delete(0, Resources.URL_TO_PRIVATE_SERVER.length()).append(pathServerRest);
-            LOG.info("RESTful server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
+            LOG.info("Private server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
         }
 
         String pathServerWeb = PARAM.get(Resources.PUBLIC_SERVER_URL_PARAM);
         if (pathServerWeb != null) {
             Resources.URL_TO_PRIVATE_SERVER.delete(0, Resources.URL_TO_PRIVATE_SERVER.length()).append(pathServerWeb);
-            LOG.info("Web server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
+            LOG.info("Public server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
         }
 
         String service = PARAM.get(Resources.SERVICE_PARAM);
@@ -278,7 +281,6 @@ public class VMMainFrameImpl extends Application {
         }
 
         pluginManager.setUniqueCacheDir(PARAM.getOrDefault(Resources.RAND_DIR_CACHE_PARAM, "false").equals("true"));
-
     }
 
     @Override

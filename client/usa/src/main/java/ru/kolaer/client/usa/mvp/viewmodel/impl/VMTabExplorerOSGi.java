@@ -1,27 +1,24 @@
 package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.presenter.impl.PTabImpl;
+import ru.kolaer.client.usa.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 /**
  * Created by Danilov on 15.04.2016.
  */
+@Slf4j
 public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
-    private final Logger LOG = LoggerFactory.getLogger(VMTabExplorerOSGi.class);
-
-    public VMTabExplorerOSGi() {
-        initSelectionModel();
-    }
 
     @Override
     public void addPlugin(PluginBundle pluginBundle) {
@@ -60,7 +57,7 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
             pluginTabMap.put(tabName, tab);
             plugins.put(pluginBundle.getUniformSystemPlugin(), pluginBundle);
 
-            LOG.info("{}: Добавление вкладки...", pluginBundle.getSymbolicNamePlugin());
+            log.info("{}: Добавление вкладки...", pluginBundle.getSymbolicNamePlugin());
             pluginsTabPane.getTabs().add(tab.getView().getContent());
 
             notifyAddPlugin(tab);
@@ -84,8 +81,8 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
                     notifyDeactivationPlugin(tab);
                     threadActivPlugin.shutdown();
                 }, threadActivPlugin).exceptionally(t -> {
-                	LOG.error("Ошибка при остановке плагина: {}", oldTab.getText(), t);
-                	return null;
+                    log.error("Ошибка при остановке плагина: {}", oldTab.getText(), t);
+                    return null;
                 });
             }
 
@@ -97,8 +94,8 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
                     notifyActivationPlugin(tab);
                     threadDeActivPlugin.shutdown();
                 }, threadDeActivPlugin).exceptionally(t -> {
-                	LOG.error("Ошибка при запуске плагина: {}", newTab.getText(), t);
-                	return null;
+                    log.error("Ошибка при запуске плагина: {}", newTab.getText(), t);
+                    return null;
                 });
             }
         });
@@ -112,5 +109,13 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
     @Override
     public String getNamePlugin(UniformSystemPlugin uniformSystemPlugin) {
         return plugins.get(uniformSystemPlugin).getNamePlugin();
+    }
+
+    @Override
+    public void initView(Consumer<VMExplorer> viewVisit) {
+        super.initView(initViewTab -> {
+            initSelectionModel();
+            viewVisit.accept(this);
+        });
     }
 }

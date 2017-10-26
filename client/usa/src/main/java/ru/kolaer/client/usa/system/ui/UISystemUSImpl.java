@@ -18,7 +18,6 @@ public class UISystemUSImpl implements UISystemUS {
 
 	public UISystemUSImpl(final StatusBarUS statusBar) {
 		this.statusBar = statusBar;
-		this.staticUS = new StaricUSImpl();
 		this.popupNotification = new NotificationPopup();
 	}
 	
@@ -68,5 +67,9 @@ public class UISystemUSImpl implements UISystemUS {
 
 	public void setStatusBar(final StatusBarUS statusBarUS) {
 		this.statusBar = statusBarUS;
+	}
+
+	public void setStaticUS(StaticUS staticUS) {
+		this.staticUS = staticUS;
 	}
 }

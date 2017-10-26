@@ -11,7 +11,7 @@ import java.util.Collection;
  * @author Danilov
  * @version 0.2
  */
-public interface VMExplorer extends BaseView<Parent> {
+public interface VMExplorer extends BaseView<VMExplorer, Parent> {
 	/**Добавить плагин.*/
 	void addPlugin(PluginBundle plugin);
 	/**Добавить плагин.*/

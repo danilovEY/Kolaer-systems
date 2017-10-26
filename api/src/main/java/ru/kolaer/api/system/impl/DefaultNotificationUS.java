@@ -1,7 +1,6 @@
 package ru.kolaer.api.system.impl;
 
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
@@ -15,16 +14,6 @@ import java.util.List;
  */
 @Slf4j
 public class DefaultNotificationUS implements NotificationUS {
-
-    @Override
-    public void showParentNotify(Parent pane) {
-        log.info("Добавление панели в нотификацию");
-    }
-
-    @Override
-    public void removeParentNotify(Parent content) {
-        log.info("Удалении панели из нотификации");
-    }
 
     @Override
     public void showSimpleNotify(String title, String text) {
@@ -84,16 +73,6 @@ public class DefaultNotificationUS implements NotificationUS {
     @Override
     public void showInformationNotify(String title, String text, Duration duration, List<NotifyAction> actions) {
         log.info("Добавление информативной нотификации с текстом, задержкой и действием: {}", text);
-    }
-
-    @Override
-    public void showInformationNotifyAdmin(String title, String text, List<NotifyAction> actions) {
-        log.info("Добавление информативной нотификации с текстом, и действием для админа: {}", text);
-    }
-
-    @Override
-    public void showWarningNotifyAdmin(String title, String text, List<NotifyAction> actions) {
-        log.info("Добавление предупреждение нотификации с текстом, и действием для админа: {}", text);
     }
 
     @Override

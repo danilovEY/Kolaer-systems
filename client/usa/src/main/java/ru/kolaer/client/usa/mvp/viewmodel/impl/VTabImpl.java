@@ -70,7 +70,7 @@ public class VTabImpl implements VTab {
 	}
 
 	@Override
-	public void initView(Consumer<Tab> viewVisit) {
+	public void initView(Consumer<VTab> viewVisit) {
 		tab = new Tab();
 		tab.setText("Плагин");
 		tab.setStyle(".tab .tab:selected{-fx-background-color: #3c3c3c;} .tab.tab-label { -fx-text-fill: -fx-text-base-color; -fx-font-size: 18px;}");
@@ -93,6 +93,6 @@ public class VTabImpl implements VTab {
 
 		tab.setContextMenu(new ContextMenu(openInWindow));
 
-		viewVisit.accept(tab);
+		viewVisit.accept(this);
 	}
 }

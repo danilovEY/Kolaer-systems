@@ -8,7 +8,7 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 17.10.2017.
  */
-public interface VMainFrame extends BaseView<Parent> {
+public interface VMainFrame extends BaseView<VMainFrame, Parent> {
     void show();
     void exit();
     void hide();

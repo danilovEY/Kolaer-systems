@@ -3,25 +3,24 @@ package ru.kolaer.client.usa.mvp.viewmodel.impl;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.PluginsUS;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.viewmodel.ExplorerObservable;
 import ru.kolaer.client.usa.mvp.viewmodel.ExplorerObserver;
+import ru.kolaer.client.usa.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.services.RemoteActivationDeactivationPlugin;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Created by Danilov on 15.04.2016.
  */
 public abstract class AbstractVMTabExplorer extends BorderPane
         implements PluginsUS, VTabExplorer, ExplorerObservable {
-    private final Logger LOG = LoggerFactory.getLogger(AbstractVMTabExplorer.class);
     /**Вкладочная панель.*/
     protected TabPane pluginsTabPane;
     /**Ключ - Имя вкладки, значение - Presenter вкладки.*/
@@ -30,19 +29,9 @@ public abstract class AbstractVMTabExplorer extends BorderPane
     /**Коллекция обсерверов.*/
     protected List<ExplorerObserver> observers = new ArrayList<>();
 
-    public AbstractVMTabExplorer() {
-        pluginsTabPane = new TabPane();
-        this.setCenter(pluginsTabPane);
-    }
-
-    @Override
-    public void setContent(final Parent content) {
-        this.setCenter(content);
-    }
-
     @Override
     public Parent getContent() {
-        return this;
+        return pluginsTabPane;
     }
 
     @Override
@@ -100,5 +89,11 @@ public abstract class AbstractVMTabExplorer extends BorderPane
     @Override
     public Collection<PluginBundle> getAllPlugins() {
         return this.plugins.values();
+    }
+
+    @Override
+    public void initView(Consumer<VMExplorer> viewVisit) {
+        pluginsTabPane = new TabPane();
+        viewVisit.accept(this);
     }
 }

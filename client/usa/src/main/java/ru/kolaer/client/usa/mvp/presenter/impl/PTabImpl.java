@@ -1,7 +1,6 @@
 package ru.kolaer.client.usa.mvp.presenter.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
@@ -18,8 +17,8 @@ import java.util.concurrent.Executors;
  * @author Danilov
  * @version 0.1
  */
+@Slf4j
 public class PTabImpl implements PTab {
-	private final Logger LOG = LoggerFactory.getLogger(PTabImpl.class);
 	/**Плагин.*/
 	private final PluginBundle plugin;
 	/**View.*/
@@ -60,27 +59,29 @@ public class PTabImpl implements PTab {
 			ExecutorService threadRunPlugin = Executors.newSingleThreadExecutor();
 			CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getSymbolicNamePlugin());
-				try {
 					Tools.runOnWithOutThreadFX(() -> {
 						try{
-							plugin.getUniformSystemPlugin().initView(view::setContent);
+							plugin.getUniformSystemPlugin().initView(initUsp -> {
+								view.setContent(initUsp.getContent());
+								try {
+									plugin.getUniformSystemPlugin().start();
+								} catch (Exception e) {
+									log.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), e);
+									UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotify(this.plugin.getNamePlugin(), e.getMessage());
+									this.closeTab();
+								}
+							});
 						} catch(Exception ex) {
-							LOG.error("Ошибка при интциализации UI плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), ex);
-							UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotify(this.plugin.getNamePlugin(), ex.getMessage());
+							log.error("Ошибка при интциализации UI плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), ex);
+							UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().
+									showErrorNotify(this.plugin.getNamePlugin(), ex.getMessage());
 						}
 					});
 
-					plugin.getUniformSystemPlugin().start();
-
 					this.isActive = true;
-				} catch (Exception e) {
-					LOG.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), e);
-					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotify(this.plugin.getNamePlugin(), e.getMessage());
-					this.closeTab();
-				}
 				threadRunPlugin.shutdown();
 			}, threadRunPlugin).exceptionally(t -> {
-				LOG.error("Ошибка в работе плагина: {}", this.plugin.getSymbolicNamePlugin(), t);
+				log.error("Ошибка в работе плагина: {}", this.plugin.getSymbolicNamePlugin(), t);
 				threadRunPlugin.shutdownNow();
 				return null;
 			});
@@ -94,27 +95,24 @@ public class PTabImpl implements PTab {
 
 	@Override
 	public void closeTab() {
-		if(this.isActive) {
-			final ExecutorService threadStopPlugin = Executors.newSingleThreadExecutor();
+		if(isActive) {
+			ExecutorService threadStopPlugin = Executors.newSingleThreadExecutor();
 			CompletableFuture.runAsync(() -> {
-				Thread.currentThread().setName("Остановка плагина: " + this.plugin.getSymbolicNamePlugin());
+				Thread.currentThread().setName("Остановка плагина: " + plugin.getSymbolicNamePlugin());
 				try {
-					this.plugin.getUniformSystemPlugin().stop();
-				} catch (final Exception e) {
-					LOG.error("Ошибка при остановке плагина \"{}\"!",this.plugin.getSymbolicNamePlugin(), e);
+					plugin.getUniformSystemPlugin().stop();
+				} catch (Exception e) {
+					log.error("Ошибка при остановке плагина \"{}\"!", plugin.getSymbolicNamePlugin(), e);
 
 					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
-							.showErrorNotify(this.plugin.getNamePlugin(), "Ошибка при остановке плагина!");
-
-					UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
-							.showErrorNotify(this.plugin.getNamePlugin(), e.getMessage());
+							.showErrorNotify(plugin.getNamePlugin(), e.getLocalizedMessage());
 				}
 
-				this.isActive = false;
+				isActive = false;
 
 				threadStopPlugin.shutdown();
 			}, threadStopPlugin).exceptionally(t -> {
-				LOG.error("Ошибка при остановке плагина: {}", this.plugin.getSymbolicNamePlugin(), t);
+				log.error("Ошибка при остановке плагина: {}", plugin.getSymbolicNamePlugin(), t);
 				threadStopPlugin.shutdownNow();
 				return null;
 			});

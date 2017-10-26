@@ -1,7 +1,6 @@
 package ru.kolaer.client.usa.system.ui;
 
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -22,16 +21,6 @@ import java.util.concurrent.TimeUnit;
  * @version 0.1
  */
 public class NotificationPopup implements NotificationUS {
-
-	@Override
-	public void showParentNotify(Parent pane) {
-
-	}
-
-	@Override
-	public void removeParentNotify(Parent content) {
-
-	}
 
 	@Override
 	public void showSimpleNotify(final String title, final String text) {
@@ -55,7 +44,7 @@ public class NotificationPopup implements NotificationUS {
 	
 	@Override
 	public void showErrorNotify(final String title, final String text, final List<NotifyAction> actions) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(Duration.seconds(15));
 			Notifi.position(Pos.BOTTOM_RIGHT);
@@ -75,7 +64,7 @@ public class NotificationPopup implements NotificationUS {
 	
 	@Override
 	public void showWarningNotify(final String title, final String text, final List<NotifyAction> actions) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(Duration.seconds(10));
 			Notifi.position(Pos.BOTTOM_RIGHT);
@@ -104,16 +93,6 @@ public class NotificationPopup implements NotificationUS {
 	}
 
 	@Override
-	public void showInformationNotifyAdmin(String title, String text, List<NotifyAction> actions) {
-
-	}
-
-	@Override
-	public void showWarningNotifyAdmin(String title, String text, List<NotifyAction> actions) {
-
-	}
-
-	@Override
 	public void showErrorNotify(ServerExceptionMessage exceptionMessage) {
 
 	}
@@ -139,7 +118,7 @@ public class NotificationPopup implements NotificationUS {
 
 	@Override
 	public void showSimpleNotify(final String title, final  String text, final Duration duration, final Pos pos, final List<NotifyAction> actions) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(duration);	
 			Notifi.position(pos);
@@ -154,7 +133,7 @@ public class NotificationPopup implements NotificationUS {
 
 	@Override
 	public void showInformationNotify(final String title, final String text, final Duration duration, final Pos pos, final List<NotifyAction> actions) {
-		Tools.runOnThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			final Notifications Notifi = this.addActions(Notifications.create(), actions);
 			Notifi.hideAfter(duration);
 			Notifi.position(pos);

@@ -13,112 +13,38 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.tools.Borders;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.system.ui.NotificationUS;
 import ru.kolaer.api.system.ui.NotifyAction;
+import ru.kolaer.api.system.ui.StaticUS;
+import ru.kolaer.api.system.ui.StaticView;
 import ru.kolaer.api.tools.Tools;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 18.08.2016.
  */
-public class NotificationPanelExceptionHandler implements NotificationUS, BaseView<Parent>, Thread.UncaughtExceptionHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(NotificationPanelExceptionHandler.class);
+@Slf4j
+public class NotificationPanelExceptionHandler implements NotificationUS,
+        BaseView<NotificationPanelExceptionHandler, Parent>, StaticUS,
+        Thread.UncaughtExceptionHandler {
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy | hh:mm:ss");
     private final int SIMPLE_MESSAGE = 0;
     private final int INFO_MESSAGE = 1;
     private final int WARN_MESSAGE = 2;
     private final int ERROR_MESSAGE = 3;
     private BorderPane mainPane;
     private VBox vBoxUserNotify;
-    private VBox vBoxAdminNotify;
-    private Map<Node, Node> notifiMap = new HashMap<>();
-
-    public NotificationPanelExceptionHandler() {
-        this.vBoxUserNotify = new VBox();
-        this.vBoxUserNotify.setSpacing(5);
-        this.vBoxUserNotify.setAlignment(Pos.TOP_LEFT);
-        this.vBoxUserNotify.setPadding(new Insets(5,5,5,5));
-
-        final ScrollPane scrollPaneUserNotify = new ScrollPane(this.vBoxUserNotify);
-        scrollPaneUserNotify.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPaneUserNotify.setMinWidth(300);
-        scrollPaneUserNotify.setPrefWidth(300);
-        scrollPaneUserNotify.setMaxWidth(400);
-        scrollPaneUserNotify.setFitToHeight(true);
-        scrollPaneUserNotify.setFitToWidth(true);
-
-
-        this.vBoxAdminNotify = new VBox();
-        this.vBoxAdminNotify.setSpacing(5);
-        this.vBoxAdminNotify.setAlignment(Pos.TOP_LEFT);
-        this.vBoxAdminNotify.setPadding(new Insets(5,5,5,5));
-
-        final ScrollPane scrollPaneAdminNotify = new ScrollPane(this.vBoxAdminNotify);
-        scrollPaneAdminNotify.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPaneAdminNotify.setMinWidth(300);
-        scrollPaneAdminNotify.setMinHeight(100);
-        scrollPaneAdminNotify.setPrefWidth(300);
-        scrollPaneAdminNotify.setPrefHeight(100);
-        scrollPaneAdminNotify.setMaxWidth(400);
-        //scrollPaneAdminNotify.setMaxHeight(400);
-        scrollPaneAdminNotify.setFitToHeight(true);
-        scrollPaneAdminNotify.setFitToWidth(true);
-
-        final SplitPane splitPane = new SplitPane();
-        splitPane.getItems().addAll(scrollPaneUserNotify, scrollPaneAdminNotify);
-        splitPane.setDividerPositions(0.7);
-        splitPane.setOrientation(Orientation.VERTICAL);
-        this.mainPane = new BorderPane(splitPane);
-        this.mainPane.setMinWidth(300);
-        this.mainPane.setPrefWidth(300);
-        this.mainPane.setMaxWidth(400);
-
-
-        BackgroundImage myBI= new BackgroundImage(new Image(this.getClass().getResource("/notify-background.jpg").toString()),
-                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT);
-        this.vBoxUserNotify.setBackground(new Background(myBI));
-        this.vBoxAdminNotify.setBackground(new Background(myBI));
-    }
-
-    @Override
-    public void showParentNotify(Parent pane) {
-        Tools.runOnThreadFX(() -> {
-            final BorderPane content = new BorderPane();
-            content.setBackground(Background.EMPTY);
-            content.setStyle("-fx-background-color: rgba(255, 156, 0, 0.6); -fx-effect: dropshadow(gaussian , #866839, 4,0,0,1 ); -fx-padding: 3;");
-
-            content.setCenter(pane);
-
-            final Node border = Borders.wrap(content)
-                    .lineBorder()
-                    .thickness(5)
-                    .innerPadding(0)
-                    .radius(5, 5, 5, 5)
-                    .color(Color.color(0.114, 0.161, 0.209))
-                    .build()
-                    .build();
-            notifiMap.put(pane, border);
-            this.vBoxAdminNotify.getChildren().add(border);
-            border.toBack();
-        });
-    }
-
-    @Override
-    public void removeParentNotify(Parent content) {
-        this.vBoxAdminNotify.getChildren().remove(this.notifiMap.get(content));
-        this.notifiMap.remove(content);
-    }
+    private VBox vBoxStatic;
 
     @Override
     public void showSimpleNotify(String title, String text) {
@@ -180,18 +106,16 @@ public class NotificationPanelExceptionHandler implements NotificationUS, BaseVi
     }
 
     @Override
-    public void showInformationNotifyAdmin(String title, String text, List<NotifyAction> actions) {
-        this.sendMessage(this.vBoxAdminNotify, 1, title, text, actions);
-    }
-
-    @Override
-    public void showWarningNotifyAdmin(String title, String text, List<NotifyAction> actions) {
-        this.sendMessage(this.vBoxAdminNotify, 2, title, text, actions);
-    }
-
-    @Override
     public void showErrorNotify(ServerExceptionMessage exceptionMessage) {
+        log.info("Server error: {}", exceptionMessage.toString());
 
+        String title = "(" + exceptionMessage.getStatus() + ") " +
+                exceptionMessage.getUrl() +
+                " - " +
+                exceptionMessage.getCode().getMessage();
+
+        this.sendMessage(this.vBoxUserNotify, ERROR_MESSAGE, title, exceptionMessage.getMessage(),
+                exceptionMessage.getExceptionTimestamp(), Collections.emptyList());
     }
 
     private void sendMessage(int type, String title, String text) {
@@ -199,8 +123,12 @@ public class NotificationPanelExceptionHandler implements NotificationUS, BaseVi
     }
 
     private void sendMessage(VBox typePane, int type, String title, String text, List<NotifyAction> actions) {
-        Tools.runOnThreadFX(() -> {
-            final VBox content = new VBox();
+        sendMessage(typePane, type, title, text, new Date(), actions);
+    }
+
+    private void sendMessage(VBox typePane, int type, String title, String text, Date date, List<NotifyAction> actions) {
+        Tools.runOnWithOutThreadFX(() -> {
+            VBox content = new VBox();
             content.setAlignment(Pos.CENTER);
             content.setBackground(Background.EMPTY);
             switch (type) {
@@ -231,30 +159,38 @@ public class NotificationPanelExceptionHandler implements NotificationUS, BaseVi
 
             content.setSpacing(3);
 
-            final Label timeLabel = new Label(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss | dd.MM.yyyy")));
+            if(title != null) {
+                Label titleLabel = new Label(title);
+                titleLabel.setTextAlignment(TextAlignment.CENTER);
+                titleLabel.setWrapText(true);
+                titleLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
+                content.getChildren().add(titleLabel);
+            }
+
+            if(text != null) {
+                Label textLabel = new Label(text);
+                textLabel.setTextAlignment(TextAlignment.CENTER);
+                textLabel.setWrapText(true);
+                textLabel.setFont(Font.font(null, FontWeight.BOLD, 12));
+
+                content.getChildren().add(textLabel);
+            }
+
+            String dateToString = dateFormat.format(Optional.ofNullable(date)
+                    .orElse(new Date()));
+
+            Label timeLabel = new Label(dateToString);
             timeLabel.setTextAlignment(TextAlignment.CENTER);
             timeLabel.setWrapText(true);
             timeLabel.setFont(Font.font(null, FontWeight.BOLD, 9));
 
-            final Label titleLabel = new Label(title);
-            titleLabel.setTextAlignment(TextAlignment.CENTER);
-            titleLabel.setWrapText(true);
-            titleLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
-
-            final Label textLabel = new Label(text);
-            textLabel.setTextAlignment(TextAlignment.CENTER);
-            textLabel.setWrapText(true);
-            textLabel.setFont(Font.font(null, FontWeight.BOLD, 12));
-
-            content.getChildren().add(titleLabel);
-            content.getChildren().add(textLabel);
             content.getChildren().add(timeLabel);
 
             if(actions != null) {
                 for (NotifyAction action : actions) {
-                    final Button button = new Button(action.getText());
+                    Button button = new Button(action.getText());
                     button.setOnAction(action.getConsumer()::accept);
-                    final Tooltip tooltip = new Tooltip();
+                    Tooltip tooltip = new Tooltip();
                     tooltip.setText(action.getText());
                     button.setTooltip(tooltip);
                     content.getChildren().add(button);
@@ -290,9 +226,86 @@ public class NotificationPanelExceptionHandler implements NotificationUS, BaseVi
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        LOG.error("Ошибка в потоке: {}", t.getName(), e);
-        Tools.runOnThreadFX(() ->
-                this.showErrorNotify("Ошибка!", e.toString())
-        );
+        log.error("Ошибка в потоке: {}", t.getName(), e);
+        Tools.runOnWithOutThreadFX(() -> showErrorNotify("Ошибка!", e.getLocalizedMessage()));
+    }
+
+    @Override
+    public void initView(Consumer<NotificationPanelExceptionHandler> viewVisit) {
+        this.vBoxUserNotify = new VBox();
+        this.vBoxUserNotify.setSpacing(5);
+        this.vBoxUserNotify.setAlignment(Pos.TOP_LEFT);
+        this.vBoxUserNotify.setPadding(new Insets(5,5,5,5));
+
+        final ScrollPane scrollPaneUserNotify = new ScrollPane(this.vBoxUserNotify);
+        scrollPaneUserNotify.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneUserNotify.setMinWidth(300);
+        scrollPaneUserNotify.setPrefWidth(300);
+        scrollPaneUserNotify.setMaxWidth(400);
+        scrollPaneUserNotify.setFitToHeight(true);
+        scrollPaneUserNotify.setFitToWidth(true);
+
+
+        this.vBoxStatic = new VBox();
+        this.vBoxStatic.setSpacing(5);
+        this.vBoxStatic.setAlignment(Pos.TOP_LEFT);
+        this.vBoxStatic.setPadding(new Insets(5,5,5,5));
+
+        final ScrollPane scrollPaneStatic = new ScrollPane(this.vBoxStatic);
+        scrollPaneStatic.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneStatic.setMinWidth(300);
+        scrollPaneStatic.setMinHeight(100);
+        scrollPaneStatic.setPrefWidth(300);
+        scrollPaneStatic.setPrefHeight(100);
+        scrollPaneStatic.setMaxWidth(400);
+        //scrollPaneAdminNotify.setMaxHeight(400);
+        scrollPaneStatic.setFitToHeight(true);
+        scrollPaneStatic.setFitToWidth(true);
+
+        final SplitPane splitPane = new SplitPane();
+        splitPane.getItems().addAll(scrollPaneStatic, scrollPaneUserNotify);
+        splitPane.setDividerPositions(0.6);
+        splitPane.setOrientation(Orientation.VERTICAL);
+        this.mainPane = new BorderPane(splitPane);
+        this.mainPane.setMinWidth(300);
+        this.mainPane.setPrefWidth(300);
+        this.mainPane.setMaxWidth(400);
+
+
+        BackgroundImage myBI= new BackgroundImage(new Image(this.getClass().getResource("/notify-background.jpg").toString()),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+        this.vBoxUserNotify.setBackground(new Background(myBI));
+        this.vBoxStatic.setBackground(new Background(myBI));
+
+        viewVisit.accept(this);
+    }
+
+    @Override
+    public void addStaticView(StaticView staticView) {
+        Tools.runOnWithOutThreadFX(() -> {
+            BorderPane content = new BorderPane();
+            content.setBackground(Background.EMPTY);
+            content.setStyle("-fx-background-color: rgba(255, 156, 0, 0.6); -fx-effect: dropshadow(gaussian , #866839, 4,0,0,1 ); -fx-padding: 3;");
+            content.setCenter(staticView.getContent());
+
+            Node border = Borders.wrap(content)
+                    .lineBorder()
+                    .thickness(5)
+                    .innerPadding(0)
+                    .radius(5, 5, 5, 5)
+                    .color(Color.color(0.114, 0.161, 0.209))
+                    .build()
+                    .build();
+            this.vBoxStatic.getChildren().add(border);
+            border.toBack();
+        });
+    }
+
+    @Override
+    public void removeStaticView(StaticView staticView) {
+        Tools.runOnWithOutThreadFX(() -> {
+            vBoxStatic.getChildren().remove(staticView.getContent());
+        });
     }
 }

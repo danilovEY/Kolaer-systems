@@ -7,41 +7,17 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.api.system.ui.MenuBarUS;
 import ru.kolaer.api.tools.Tools;
+
+import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 09.02.2017.
  */
-public class MenuBarUSImpl implements ru.kolaer.api.system.ui.MenuBarUS, AuthenticationObserver {
-    private final MenuItem authorizationItem;
-    private final Menu fileMenu;
-    private final MenuBar menuBar;
-
-    public MenuBarUSImpl(MenuBar menuBar) {
-        this.menuBar = menuBar;
-        this.fileMenu = new Menu("Файл");
-        this.authorizationItem = new MenuItem("Авторизоваться");
-        this.initView();
-    }
-
-    private void initView() {
-        authorizationItem.setOnAction(e -> {
-            final Authentication authentication = UniformSystemEditorKitSingleton.getInstance().getAuthentication();
-            if(!authentication.isAuthentication()) {
-                UniformSystemEditorKitSingleton.getInstance()
-                        .getUISystemUS().getDialog().createAndShowLoginToSystemDialog();
-            } else {
-                authentication.logout();
-            }
-        });
-
-
-        Tools.runOnWithOutThreadFX(() -> {
-            fileMenu.getItems().add(authorizationItem);
-
-            menuBar.getMenus().add(fileMenu);
-        });
-    }
+public class MenuBarUSImpl implements MenuBarUS, AuthenticationObserver {
+    private MenuItem authorizationItem;
+    private MenuBar menuBar;
 
     @Override
     public void addMenu(Menu menu) {
@@ -65,5 +41,31 @@ public class MenuBarUSImpl implements ru.kolaer.api.system.ui.MenuBarUS, Authent
         UniformSystemEditorKitSingleton.getInstance().getUISystemUS()
                 .getNotification().showInformationNotify("Выход из системы",
                 "Выход из системы прошел успешно");
+    }
+
+    @Override
+    public void initView(Consumer<MenuBarUS> viewVisit) {
+        menuBar = new MenuBar();
+
+        authorizationItem = new MenuItem("Авторизоваться");
+        authorizationItem.setOnAction(e -> {
+            Authentication authentication = UniformSystemEditorKitSingleton.getInstance().getAuthentication();
+            if(!authentication.isAuthentication()) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS().getDialog().createAndShowLoginToSystemDialog();
+            } else {
+                authentication.logout();
+            }
+        });
+
+
+        Menu fileMenu = new Menu("Файл");
+        fileMenu.getItems().add(authorizationItem);
+        menuBar.getMenus().add(fileMenu);
+    }
+
+    @Override
+    public MenuBar getContent() {
+        return menuBar;
     }
 }

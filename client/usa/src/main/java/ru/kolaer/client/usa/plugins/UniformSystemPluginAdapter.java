@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 
 public class UniformSystemPluginAdapter implements UniformSystemPlugin {
 	private UniformSystemEditorKit editorKit;
+
 	@Override
 	public void initialization(UniformSystemEditorKit uniformSystemEditorKit) throws Exception {
 		this.editorKit = uniformSystemEditorKit;
@@ -43,17 +44,13 @@ public class UniformSystemPluginAdapter implements UniformSystemPlugin {
 	}
 
 	@Override
-	public void setContent(Parent content) {
-
-	}
-
-	@Override
 	public Parent getContent() {
 		return null;
 	}
 
+
 	@Override
-	public void initView(Consumer<Parent> viewVisit) {
+	public void initView(Consumer<UniformSystemPlugin> viewVisit) {
 
 	}
 }

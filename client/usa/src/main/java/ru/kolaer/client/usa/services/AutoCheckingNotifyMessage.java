@@ -8,7 +8,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -52,7 +51,7 @@ public class AutoCheckingNotifyMessage implements Service {
                 if(lastNotifyMessage == null || !lastNotifyMessage.getMessage().equals(response.getMessage())) {
                     lastNotifyMessage = response;
                     UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
-                            .showInformationNotifyAdmin("Сообщение!", lastNotifyMessage.getMessage(), Collections.emptyList());
+                            .showInformationNotify("Сообщение!", lastNotifyMessage.getMessage());
                 }
             } else {
                 ServerExceptionMessage exceptionMessage = responseLastNotifyMessage.getExceptionMessage();

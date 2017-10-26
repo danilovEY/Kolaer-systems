@@ -5,9 +5,9 @@ package ru.kolaer.api.mvp.view;
  * @author Danilov
  * @version 0.1
  */
-public interface BaseView<T> {
+public interface BaseView<V extends BaseView, T> extends InitializationView<V>{
 	/**Задать view контент.*/
-	void setContent(T content);
+	default void setContent(T content) {}
 	/**Получить view контент.*/
 	T getContent();
 }
