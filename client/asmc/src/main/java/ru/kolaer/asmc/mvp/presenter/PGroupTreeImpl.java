@@ -3,18 +3,13 @@ package ru.kolaer.asmc.mvp.presenter;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.mvp.model.MGroupDataService;
 import ru.kolaer.asmc.mvp.view.VGroupTree;
 import ru.kolaer.asmc.mvp.view.VGroupTreeImpl;
-import ru.kolaer.asmc.mvp.view.VGroupTreeItem;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 20.02.2017.
@@ -23,13 +18,11 @@ import java.util.stream.Collectors;
 public class PGroupTreeImpl implements PGroupTree {
     private static final Logger log = LoggerFactory.getLogger(PGroupTreeImpl.class);
     private final Map<MGroup, PGroupTreeItem> modelPresGroupMap = new HashMap<>();
-    private final UniformSystemEditorKit editorKit;
     private MGroup bufferGroup;
     private MGroupDataService model;
     private VGroupTree view;
 
-    public PGroupTreeImpl(UniformSystemEditorKit editorKit) {
-        this.editorKit = editorKit;
+    public PGroupTreeImpl() {
         this.view = new VGroupTreeImpl();
     }
 

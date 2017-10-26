@@ -10,8 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
@@ -38,8 +37,8 @@ import java.util.concurrent.*;
  * @author Danilov
  * @version 0.1
  */
+@Slf4j
 public class VMMainFrameImpl extends Application {
-    private static final Logger LOG = LoggerFactory.getLogger(VMMainFrameImpl.class);
     /**
      * Мапа где ключ и значение соответствует ключам и значениям приложения.
      */
@@ -124,7 +123,7 @@ public class VMMainFrameImpl extends Application {
             pluginBundles.forEach(pluginBundle -> installPluginInThread(explorer, initPluginManager, pluginBundle));
             pluginBundles.clear();
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            LOG.error("Ошибка при инициализации и чтении плагинов!", e);
+            log.error("Ошибка при инициализации и чтении плагинов!", e);
             System.exit(-9);
         }
     }
@@ -136,21 +135,21 @@ public class VMMainFrameImpl extends Application {
 
             threadInstallPlugin.shutdown();
         }, threadInstallPlugin).exceptionally(ex -> {
-            LOG.error("Ошибка при установки прагина: {}", pluginBundle.getNamePlugin(), ex);
+            log.error("Ошибка при установки прагина: {}", pluginBundle.getNamePlugin(), ex);
             return null;
         });
     }
 
     private void installPlugin(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle pluginBundle) {
         Thread.currentThread().setName("Установка плагина: " + pluginBundle.getNamePlugin());
-        LOG.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
+        log.info("{}: Установка плагина.", pluginBundle.getPathPlugin());
 
         if (pluginManager.install(pluginBundle)) {
-            LOG.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
+            log.info("{}: Создание вкладки...", pluginBundle.getSymbolicNamePlugin());
             String tabName = pluginBundle.getNamePlugin() + " (" + pluginBundle.getVersion() + ")";
             explorer.addTabPlugin(tabName, pluginBundle);
 
-            LOG.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
+            log.info("{}: Получение служб...", pluginBundle.getSymbolicNamePlugin());
             Collection<Service> pluginServices = pluginBundle.getUniformSystemPlugin().getServices();
             if (pluginServices != null) {
                 pluginServices.forEach(servicesManager::addService);
@@ -164,7 +163,7 @@ public class VMMainFrameImpl extends Application {
             pluginManager.initialization();
             return pluginManager;
         } catch (Exception e) {
-            LOG.error("Ошибка при инициализации менеджера плагинов!", e);
+            log.error("Ошибка при инициализации менеджера плагинов!", e);
             throw new RuntimeException("Ошибка при инициализации менеджера плагинов!");
         }
     }
@@ -188,33 +187,33 @@ public class VMMainFrameImpl extends Application {
             ExecutorService serviceThread = Executors.newSingleThreadExecutor();
             CompletableFuture.runAsync(() -> {
                 Thread.currentThread().setName("Завершение приложения");
-                LOG.info("Завершение служб...");
+                log.info("Завершение служб...");
                 servicesManager.removeAllServices();
             }, serviceThread).exceptionally(t -> {
-                LOG.error("Ошибка при завершении всех активных служб!", t);
+                log.error("Ошибка при завершении всех активных служб!", t);
                 return null;
             }).thenAccept(aVoid -> {
-                LOG.info("Завершение вкладок...");
+                log.info("Завершение вкладок...");
                 explorer.removeAll();
             }).exceptionally(t -> {
-                LOG.error("Ошибка при завершении всех активных плагинов!", t);
+                log.error("Ошибка при завершении всех активных плагинов!", t);
                 return null;
             }).thenAccept(aVoid -> {
                 try {
                     pluginManager.shutdown();
                 } catch (InterruptedException e1) {
-                    LOG.error("Ошибка при закрытии OSGi!", e1);
+                    log.error("Ошибка при закрытии OSGi!", e1);
                 }
             }).thenAccept(aVoid -> {
                 Tools.runOnWithOutThreadFX(() -> {
-                    LOG.info("Завершение JavaFX...");
+                    log.info("Завершение JavaFX...");
                     stage.close();
                     Platform.exit();
                     System.exit(0);
                 });
-                LOG.info("Завершение приложения...");
+                log.info("Завершение приложения...");
             }).exceptionally(t -> {
-                LOG.error("Ошибка при завершении всего приложения!", t);
+                log.error("Ошибка при завершении всего приложения!", t);
                 System.exit(-9);
                 return null;
             });
@@ -265,19 +264,19 @@ public class VMMainFrameImpl extends Application {
         String pathServerRest = PARAM.get(Resources.PRIVATE_SERVER_URL_PARAM);
         if (pathServerRest != null) {
             Resources.URL_TO_PRIVATE_SERVER.delete(0, Resources.URL_TO_PRIVATE_SERVER.length()).append(pathServerRest);
-            LOG.info("Private server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
+            log.info("Private server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
         }
 
         String pathServerWeb = PARAM.get(Resources.PUBLIC_SERVER_URL_PARAM);
         if (pathServerWeb != null) {
             Resources.URL_TO_PRIVATE_SERVER.delete(0, Resources.URL_TO_PRIVATE_SERVER.length()).append(pathServerWeb);
-            LOG.info("Public server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
+            log.info("Public server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
         }
 
         String service = PARAM.get(Resources.SERVICE_PARAM);
         if (service == null || !service.equals("false")) {
             servicesManager.setAutoRun(true);
-            LOG.info("Service ON");
+            log.info("Service ON");
         }
 
         pluginManager.setUniqueCacheDir(PARAM.getOrDefault(Resources.RAND_DIR_CACHE_PARAM, "false").equals("true"));

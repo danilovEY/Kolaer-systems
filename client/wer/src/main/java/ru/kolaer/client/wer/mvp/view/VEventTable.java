@@ -11,7 +11,7 @@ import java.util.function.Function;
 /**
  * Created by danilovey on 16.03.2017.
  */
-public interface VEventTable extends BaseView<BorderPane> {
+public interface VEventTable extends BaseView<VEventTable, BorderPane> {
     void setOnSelectEvent(Function<Event, Void> function);
 
     void addEvents(List<Event> eventList);

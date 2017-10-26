@@ -1,13 +1,11 @@
 package ru.kolaer.asmc.mvp.presenter;
 
-import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.mvp.model.MLabel;
 import ru.kolaer.asmc.mvp.view.VSplitListContent;
 import ru.kolaer.asmc.mvp.view.VSplitListContentImpl;
 import ru.kolaer.asmc.tools.Application;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,16 +14,14 @@ import java.util.Optional;
  * Created by danilovey on 21.02.2017.
  */
 public class PSplitListContentImpl implements PSplitListContent {
-    private final UniformSystemEditorKit editorKit;
     private boolean isAccess = false;
     private MLabel bufferLabel;
     private VSplitListContent view;
     private PGroupTree groupList;
     private PContentLabel contentLabel;
 
-    public PSplitListContentImpl(UniformSystemEditorKit editorKit) {
+    public PSplitListContentImpl() {
         this.view = new VSplitListContentImpl();
-        this.editorKit = editorKit;
     }
 
     @Override
@@ -104,7 +100,7 @@ public class PSplitListContentImpl implements PSplitListContent {
 
         pLabel.setOnAction(label1 -> {
             final MLabel model = label1.getModel();
-            new Application(model.getPathApplication(), model.getPathOpenAppWith(), this.editorKit)
+            new Application(model.getPathApplication(), model.getPathOpenAppWith())
                     .start();
             return null;
         });

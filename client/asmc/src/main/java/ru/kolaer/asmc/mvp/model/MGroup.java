@@ -44,14 +44,6 @@ public class MGroup implements Serializable {
                         .collect(Collectors.toList())));
 	}
 
-    public void setLabelList(List<MLabel> labelList) {
-        this.labelList = Optional.ofNullable(labelList).orElse(new ArrayList<>());
-    }
-
-    public void setGroups(List<MGroup> groups) {
-        this.groups = Optional.ofNullable(groups).orElse(new ArrayList<>());
-    }
-
     @Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

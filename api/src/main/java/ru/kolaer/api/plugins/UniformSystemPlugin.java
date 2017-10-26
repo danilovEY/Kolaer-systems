@@ -7,6 +7,7 @@ import ru.kolaer.api.system.UniformSystemEditorKit;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Интерфейс для плагинов.
@@ -15,21 +16,24 @@ import java.util.Collection;
  * @version 1.0
  */
 public interface UniformSystemPlugin extends BaseView<UniformSystemPlugin, Node> {
-
 	/**Инициализация плагина */
-	void initialization(UniformSystemEditorKit editorKit) throws Exception;
+	default void initialization(UniformSystemEditorKit editorKit) throws Exception {}
 
 	/**Получить путь к ресурсу иконки.*/
-	URL getIcon();
+	default URL getIcon() {
+		return null;
+	}
 
 	/**Получить коллекцию служб плагина.*/
-	Collection<Service> getServices();
+	default Collection<Service> getServices() {
+		return Collections.emptyList();
+	}
 
 	/**Запустить работу плагина.*/
-	void start() throws Exception;
+	default void start() throws Exception {}
 	/**Остановить плагина.*/
-	void stop() throws Exception;
+	default void stop() throws Exception {}
 
-	void updatePluginObjects(String key, Object object);
+	default void updatePluginObjects(String key, Object object) {}
 
 }

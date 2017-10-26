@@ -1,19 +1,27 @@
 group 'ru.kolaer'
-version '3.1'
+version '4.0'
 
 def projectName = "ru.kolaer.client.usa"
 def projectNameWithVersion = projectName + "-" + version
 def projectJarName = projectNameWithVersion + ".jar"
 
-dependencies {
-    compile("org.springframework:spring-web:4.3.2.RELEASE") {
-        exclude module: 'spring-aop'
-        exclude module: 'spring-context'
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        url 'https://repo.spring.io/libs-milestone'
     }
+}
 
-    compile "org.controlsfx:controlsfx:8.40.11"
-    compileOnly "org.projectlombok:lombok:1.16.12"
+dependencies {
+    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
+
+    compile "org.controlsfx:controlsfx:9.0.0"
+    compileOnly "org.projectlombok:lombok:1.16.18.1"
     testCompile "junit:junit:4.11"
+
+} repositories {
+
 }
 
 task createJar(type: Jar) {

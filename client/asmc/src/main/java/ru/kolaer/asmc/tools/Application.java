@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.PluginsUS;
-import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,25 +30,23 @@ public class Application implements Runnable {
 	private String openWith;
 	/**Поток для запуска приложения пользователя.*/
 	private final ExecutorService threadForRunApp = Executors.newSingleThreadExecutor();
-	private final UniformSystemEditorKit editorKit;
 	
-	public Application(final String path, final String openWith, final UniformSystemEditorKit editorKit) {
+	public Application(String path, String openWith) {
 		this.pathApp = path;
 		this.openWith = openWith;
-		this.editorKit = editorKit;
 	}
 
 	public void start() {
 		if (this.pathApp != null && !this.pathApp.equals("")) {
 			CompletableFuture.runAsync(this, threadForRunApp).exceptionally(t -> {
-				this.editorKit.getUISystemUS().getNotification()
+				UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
 						.showErrorNotify("Ошибка!", "Неудалось запустить: " + this.pathApp);
 				LOG.error("Неудалось запустить: {}", this.pathApp, t);
 				return null;
 			});
 			this.threadForRunApp.shutdown();
 		} else {
-			this.editorKit.getUISystemUS().getNotification()
+			UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
 					.showErrorNotify("Ошибка!", "Не указан файл или ссылка!");
 		}
 	}
@@ -103,7 +101,7 @@ public class Application implements Runnable {
 	}
 
 	private void openUrlInPluginBrowser(String url) {
-		PluginsUS pluginsUS = editorKit.getPluginsUS();
+		PluginsUS pluginsUS =  UniformSystemEditorKitSingleton.getInstance().getPluginsUS();
 		Collection<UniformSystemPlugin> plugins = pluginsUS.getPlugins();
 		for(UniformSystemPlugin plugin : plugins) {
 			if(pluginsUS.getNamePlugin(plugin).equals("Браузер")) {
@@ -111,8 +109,8 @@ public class Application implements Runnable {
 				break;
 			}
 		}
-		
-		this.editorKit.getPluginsUS().notifyPlugins("url", url);
+
+		UniformSystemEditorKitSingleton.getInstance().getPluginsUS().notifyPlugins("url", url);
 	}
 	
 	@Override
@@ -133,7 +131,7 @@ public class Application implements Runnable {
 						if (simpleWebBrowser.exists() && simpleWebBrowser.isFile()) {
 							r.exec(simpleWebBrowser.getAbsolutePath() + " \"" + this.pathApp + "\"");
 						} else {
-							this.editorKit.getUISystemUS().getNotification()
+							UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
 									.showErrorNotify("Ошибка!", "Браузер не найден!");
 						}
 					}
@@ -151,13 +149,13 @@ public class Application implements Runnable {
 							}
 						}
 					} else {
-						this.editorKit.getUISystemUS().getNotification()
+						UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
 								.showErrorNotify("Ошибка!", "Файл \"" + this.pathApp + "\" не найден.");
 					}
 				}
 			}
 		} catch (final IOException e) {
-			this.editorKit.getUISystemUS().getNotification()
+			UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
 					.showErrorNotify("Ошибка!", "Не удалось запустить \"" + this.pathApp);
 		}
 	}
