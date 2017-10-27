@@ -21,7 +21,7 @@ import java.util.Optional;
  * @author Danilov
  * @version 0.2
  */
-public class VAddingGroupLabelsDialog {
+public class AddingGroupLabelsDialogVc {
 
 	private static Dialog<MGroup> initialize(final MGroup groupModel) {
         BorderPane mainPane = new BorderPane();

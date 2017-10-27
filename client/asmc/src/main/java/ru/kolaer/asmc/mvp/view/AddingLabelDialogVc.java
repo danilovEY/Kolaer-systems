@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  * @version 0.1
  */
 @Slf4j
-public class VAddingLabelDialog {
+public class AddingLabelDialogVc {
 
 	private static Dialog<MLabel> initialization(final MLabel mLabel) {
         BorderPane mainPane = new BorderPane();

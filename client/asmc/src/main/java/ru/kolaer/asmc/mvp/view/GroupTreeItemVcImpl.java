@@ -11,14 +11,14 @@ import java.util.function.Consumer;
 /**
  * Created by danilovey on 20.02.2017.
  */
-public class VGroupTreeItemImpl implements VGroupTreeItem {
+public class GroupTreeItemVcImpl implements GroupTreeItemVc {
     private ImageView openIcon;
     private ImageView closeIcon;
     private TreeItem<MGroup> treeItem;
 
     private MGroup group;
 
-    public VGroupTreeItemImpl(MGroup group) {
+    public GroupTreeItemVcImpl(MGroup group) {
         this.group = group;
     }
 
@@ -34,12 +34,12 @@ public class VGroupTreeItemImpl implements VGroupTreeItem {
     }
 
     @Override
-    public void addGroupTreeItem(VGroupTreeItem item) {
+    public void addGroupTreeItem(GroupTreeItemVc item) {
         this.treeItem.getChildren().add(item.getContent());
     }
 
     @Override
-    public void removeGroupTreeItem(VGroupTreeItem item) {
+    public void removeGroupTreeItem(GroupTreeItemVc item) {
         this.treeItem.getChildren().remove(item.getContent());
     }
 
@@ -49,7 +49,7 @@ public class VGroupTreeItemImpl implements VGroupTreeItem {
     }
 
     @Override
-    public void initView(Consumer<VGroupTreeItem> viewVisit) {
+    public void initView(Consumer<GroupTreeItemVc> viewVisit) {
         treeItem = new TreeItem<>(group, openIcon);
         treeItem.setGraphic(getOpenImage());
         treeItem.setExpanded(true);

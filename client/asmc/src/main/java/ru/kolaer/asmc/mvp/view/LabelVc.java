@@ -10,10 +10,10 @@ import java.util.function.Consumer;
 /**
  * Created by danilovey on 20.02.2017.
  */
-public interface LabelVm extends BaseView<LabelVm, BorderPane>, Access {
-    void setOnCopy(Consumer<LabelVm> consumer);
-    void setOnDelete(Consumer<LabelVm> consumer);
-    void setOnEdit(Consumer<LabelVm> consumer);
+public interface LabelVc extends BaseView<LabelVc, BorderPane>, Access {
+    void setOnCopy(Consumer<LabelVc> consumer);
+    void setOnDelete(Consumer<LabelVc> consumer);
+    void setOnEdit(Consumer<LabelVc> consumer);
 
     MLabel getMode();
 }

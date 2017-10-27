@@ -27,7 +27,7 @@ import java.util.function.Consumer;
  * @version 0.1
  */
 @Slf4j
-public class LabelVmCss implements LabelVm {
+public class LabelVcCss implements LabelVc {
 
     private MenuItem editLabel;
     private MenuItem deleteLabel;
@@ -48,7 +48,7 @@ public class LabelVmCss implements LabelVm {
 
     private final MLabel data;
 
-	public LabelVmCss(@NonNull MLabel label) {
+	public LabelVcCss(@NonNull MLabel label) {
 	    this.data = label;
 	}
 
@@ -82,7 +82,7 @@ public class LabelVmCss implements LabelVm {
     }
 
     @Override
-    public void initView(Consumer<LabelVm> viewVisit) {
+    public void initView(Consumer<LabelVc> viewVisit) {
         initialize();
 
         BorderPane borderPane = new BorderPane(this.button);
@@ -159,22 +159,22 @@ public class LabelVmCss implements LabelVm {
     }
 
     @Override
-    public void setOnCopy(Consumer<LabelVm> consumer) {
+    public void setOnCopy(Consumer<LabelVc> consumer) {
         copyLabel.setOnAction(e ->
                 consumer.accept(this)
         );
     }
 
     @Override
-    public void setOnDelete(Consumer<LabelVm> consumer) {
+    public void setOnDelete(Consumer<LabelVc> consumer) {
         deleteLabel.setOnAction(e ->
                 consumer.accept(this)
         );
     }
 
     @Override
-    public void setOnEdit(Consumer<LabelVm> consumer) {
-        editLabel.setOnAction(e -> VAddingLabelDialog
+    public void setOnEdit(Consumer<LabelVc> consumer) {
+        editLabel.setOnAction(e -> AddingLabelDialogVc
                 .showAndWait(data).ifPresent(label -> {
                     consumer.accept(this);
                     this.updateView(label);

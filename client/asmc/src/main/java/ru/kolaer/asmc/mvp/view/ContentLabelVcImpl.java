@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * Created by danilovey on 21.02.2017.
  */
 public class ContentLabelVcImpl implements ContentLabelVc {
-    private final List<LabelVm> labels = new ArrayList<>();
+    private final List<LabelVc> labels = new ArrayList<>();
     private final DataService dataService;
     private MGroup selectedGroup;
     private MLabel bufferedLabel;
@@ -48,7 +48,7 @@ public class ContentLabelVcImpl implements ContentLabelVc {
     }
 
     private void onlyAddLabel(MLabel mLabel) {
-        LabelVm vLabelCss = new LabelVmCss(mLabel);
+        LabelVc vLabelCss = new LabelVcCss(mLabel);
         vLabelCss.initView(initLabel -> {
             contentPane.getChildren().add(initLabel.getContent());
             initLabel.setOnCopy(label -> bufferedLabel = label.getMode());
@@ -128,7 +128,7 @@ public class ContentLabelVcImpl implements ContentLabelVc {
         mainPane.setCenter(scrollPane);
 
         addLabel.setOnAction(e ->
-                VAddingLabelDialog.showAndWait().ifPresent(this::addLabel)
+                AddingLabelDialogVc.showAndWait().ifPresent(this::addLabel)
         );
 
         placeLabel.setOnAction(e -> {

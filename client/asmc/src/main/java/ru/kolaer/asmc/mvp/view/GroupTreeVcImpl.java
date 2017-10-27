@@ -20,7 +20,7 @@ public class GroupTreeVcImpl implements GroupTreeVc {
 
     private BorderPane mainPane;
     private TreeView<MGroup> treeView;
-    private VGroupTreeItemImpl rootNode;
+    private GroupTreeItemVcImpl rootNode;
     private MenuItem addGroup;
     private ContextMenu contextMenu;
     private MenuItem deleteGroup;
@@ -85,7 +85,7 @@ public class GroupTreeVcImpl implements GroupTreeVc {
             if(selectedItem.getValue() == rootNode.getContent().getValue()) {
                 model.addGroup(bufferGroupModel);
 
-                VGroupTreeItem pGroupTreeItem = new VGroupTreeItemImpl(bufferGroupModel);
+                GroupTreeItemVc pGroupTreeItem = new GroupTreeItemVcImpl(bufferGroupModel);
                 pGroupTreeItem.initView(initVew -> rootNode.getContent().getChildren()
                         .add(initVew.getContent()));
 
@@ -103,7 +103,7 @@ public class GroupTreeVcImpl implements GroupTreeVc {
                 selectGroup.setGroups(groupList);
 
 
-                VGroupTreeItem pGroupTreeItem = new VGroupTreeItemImpl(bufferGroupModel);
+                GroupTreeItemVc pGroupTreeItem = new GroupTreeItemVcImpl(bufferGroupModel);
                 pGroupTreeItem.initView(initVew -> selectedItem.getChildren()
                         .add(initVew.getContent()));
 
@@ -160,11 +160,11 @@ public class GroupTreeVcImpl implements GroupTreeVc {
 
         if(parentGroup == null) {
             model.addGroup(childrenGroup);
-            VGroupTreeItem pGroupTreeItem = new VGroupTreeItemImpl(childrenGroup);
+            GroupTreeItemVc pGroupTreeItem = new GroupTreeItemVcImpl(childrenGroup);
             pGroupTreeItem.initView(initGroupTree -> rootNode.getContent().getChildren()
                     .add(initGroupTree.getContent()));
         } else {
-            VGroupTreeItem pGroupTreeItem = new VGroupTreeItemImpl(childrenGroup);
+            GroupTreeItemVc pGroupTreeItem = new GroupTreeItemVcImpl(childrenGroup);
 
             List<MGroup> groupList = Optional.ofNullable(parentGroup.getGroups())
                     .orElse(new ArrayList<>());
@@ -181,7 +181,7 @@ public class GroupTreeVcImpl implements GroupTreeVc {
 
     @Override
     public void initView(Consumer<GroupTreeVc> viewVisit) {
-        rootNode = new VGroupTreeItemImpl(new MGroup("КолАЭР",0));
+        rootNode = new GroupTreeItemVcImpl(new MGroup("КолАЭР",0));
         mainPane = new BorderPane();
         treeView = new TreeView<>();
         addGroup = new MenuItem("Добавить группу");
@@ -216,11 +216,11 @@ public class GroupTreeVcImpl implements GroupTreeVc {
 
         mainPane.setCenter(treeView);
 
-        addGroup.setOnAction(e -> VAddingGroupLabelsDialog
+        addGroup.setOnAction(e -> AddingGroupLabelsDialogVc
                 .showAndWait()
                 .ifPresent(this::addGroup));
 
-        editGroup.setOnAction(e -> VAddingGroupLabelsDialog
+        editGroup.setOnAction(e -> AddingGroupLabelsDialogVc
                 .showAndWait(treeView.getSelectionModel().getSelectedItem().getValue())
                 .ifPresent(this::editGroup));
 
@@ -240,7 +240,7 @@ public class GroupTreeVcImpl implements GroupTreeVc {
     public void updateData(List<MGroup> groupList) {
         if(groupList != null) {
             for (MGroup mGroup : groupList) {
-                VGroupTreeItem pGroupTreeItem = new VGroupTreeItemImpl(mGroup);
+                GroupTreeItemVc pGroupTreeItem = new GroupTreeItemVcImpl(mGroup);
                 pGroupTreeItem.initView(initGroupTree -> rootNode.getContent().getChildren()
                         .add(initGroupTree.getContent()));
                 Optional.ofNullable(mGroup.getGroups())
@@ -252,8 +252,8 @@ public class GroupTreeVcImpl implements GroupTreeVc {
         }
     }
 
-    private void onlyAddGroup(VGroupTreeItem parent, MGroup group) {
-        VGroupTreeItem parentView = new VGroupTreeItemImpl(group);
+    private void onlyAddGroup(GroupTreeItemVc parent, MGroup group) {
+        GroupTreeItemVc parentView = new GroupTreeItemVcImpl(group);
         parentView.initView(parent::addGroupTreeItem);
         Optional.ofNullable(group.getGroups())
                 .orElse(Collections.emptyList())
