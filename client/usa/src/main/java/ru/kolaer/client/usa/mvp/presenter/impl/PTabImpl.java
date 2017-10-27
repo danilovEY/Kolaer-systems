@@ -59,6 +59,7 @@ public class PTabImpl implements PTab {
 			ExecutorService threadRunPlugin = Executors.newSingleThreadExecutor();
 			CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Запуск плагина: " + this.plugin.getSymbolicNamePlugin());
+				log.info("Запуск плагина: {}", plugin.getSymbolicNamePlugin());
 					Tools.runOnWithOutThreadFX(() -> {
 						try{
 							plugin.getUniformSystemPlugin().initView(initUsp -> {
@@ -67,14 +68,14 @@ public class PTabImpl implements PTab {
 									plugin.getUniformSystemPlugin().start();
 								} catch (Exception e) {
 									log.error("Ошибка при запуске плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), e);
-									UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotify(this.plugin.getNamePlugin(), e.getMessage());
+									UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().showErrorNotify(this.plugin.getNamePlugin(), e.getLocalizedMessage());
 									this.closeTab();
 								}
 							});
 						} catch(Exception ex) {
 							log.error("Ошибка при интциализации UI плагина \"{}\"!", this.plugin.getSymbolicNamePlugin(), ex);
 							UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification().
-									showErrorNotify(this.plugin.getNamePlugin(), ex.getMessage());
+									showErrorNotify(this.plugin.getNamePlugin(), ex.getLocalizedMessage());
 						}
 					});
 
@@ -99,6 +100,7 @@ public class PTabImpl implements PTab {
 			ExecutorService threadStopPlugin = Executors.newSingleThreadExecutor();
 			CompletableFuture.runAsync(() -> {
 				Thread.currentThread().setName("Остановка плагина: " + plugin.getSymbolicNamePlugin());
+				log.info("Остановка плагина: {}", plugin.getSymbolicNamePlugin());
 				try {
 					plugin.getUniformSystemPlugin().stop();
 				} catch (Exception e) {

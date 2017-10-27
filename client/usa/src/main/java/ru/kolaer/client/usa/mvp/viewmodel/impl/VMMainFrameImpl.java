@@ -74,9 +74,7 @@ public class VMMainFrameImpl extends Application {
 
         //Инициализация вкладочного explorer'а.
         explorer = new VMTabExplorerOSGi();
-        explorer.initView(initExplorer -> {
-            splitPane.getItems().add(explorer.getContent());
-        });
+        explorer.initView(initExplorer -> splitPane.getItems().add(explorer.getContent()));
 
         initApplicationParams();
 
@@ -236,20 +234,19 @@ public class VMMainFrameImpl extends Application {
         NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
         UISystemUSImpl uiSystemUS = new UISystemUSImpl();
 
+        uiSystemUS.setMenuBarUS(menuBarUS);
+        uiSystemUS.setStaticUS(notify);
+        uiSystemUS.setNotification(notify);
+
+        authentication.registerObserver(menuBarUS);
+
         Tools.runOnWithOutThreadFX(() ->  {
             notify.initView(initNotify -> {
-                uiSystemUS.setNotification(initNotify);
                 splitPane.getItems().add(initNotify.getContent());
-                uiSystemUS.setStaticUS(initNotify);
                 Thread.setDefaultUncaughtExceptionHandler(initNotify);
             });
 
-            menuBarUS.initView(initMenuBar -> {
-                mainPane.setTop(initMenuBar.getContent());
-                uiSystemUS.setMenuBarUS(menuBarUS);
-                authentication.registerObserver(menuBarUS);
-            });
-
+            menuBarUS.initView(initMenuBar -> mainPane.setTop(initMenuBar.getContent()));
         });
 
         UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
@@ -290,9 +287,7 @@ public class VMMainFrameImpl extends Application {
         stage.setMinHeight(650);
         stage.setMinWidth(850);
         stage.setTitle("Единая система КолАЭР");
-        stage.setOnCloseRequest(event -> {
-            System.exit(0);
-        });
+        stage.setOnCloseRequest(event -> System.exit(0));
 
         PARAM.putAll(getParameters().getNamed());
 

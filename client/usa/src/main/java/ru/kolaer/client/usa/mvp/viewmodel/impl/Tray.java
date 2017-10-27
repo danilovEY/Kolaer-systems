@@ -3,6 +3,7 @@ package ru.kolaer.client.usa.mvp.viewmodel.impl;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.api.tools.Tools;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -27,11 +28,12 @@ public class Tray {
         Function<Boolean, Void> minFun = hide -> {
             if(trayIcon != null && hide) {
                 stage.hide();
+                showProgramIsMinimizedMsg();
             }
             return null;
         };
 
-        stage.iconifiedProperty().addListener((observable, oldValue, newValue) -> minFun.apply(true));
+        stage.iconifiedProperty().addListener((observable, oldValue, newValue) -> minFun.apply(newValue));
 
         if (SystemTray.isSupported()) {
             SystemTray tray = SystemTray.getSystemTray();
@@ -41,12 +43,12 @@ public class Tray {
             MenuItem showItem = new MenuItem("Открыть");
             MenuItem closeItem = new MenuItem("Закрыть");
 
-            ActionListener showStage = e1 -> {
-                stage.show();
-            };
+            ActionListener showStage = e1 -> Tools.runOnWithOutThreadFX(stage::show);
 
             showItem.addActionListener(showStage);
-            closeItem.addActionListener(e -> stage.close());
+            closeItem.addActionListener(e ->
+                    Tools.runOnWithOutThreadFX(() ->
+                    stage.getOnCloseRequest().handle(null)));
 
             popup.add(showItem);
             popup.add(closeItem);

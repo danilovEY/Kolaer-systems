@@ -20,12 +20,12 @@ public class PluginBundleJar extends PluginBundle {
     private static final Logger LOG = LoggerFactory.getLogger(PluginBundleJar.class);
     private final File jarPlugin;
     private final long firstModified;
-    private PluginBundleJar(final File jarPlugin) {
+    private PluginBundleJar(File jarPlugin) {
         this.jarPlugin = jarPlugin;
         this.firstModified = jarPlugin.lastModified();
     }
 
-    public static PluginBundleJar getInstance(final File plugin) {
+    public static PluginBundleJar getInstance(File plugin) {
         if(plugin == null) {
             LOG.error("File is null!");
             return null;
@@ -36,32 +36,32 @@ public class PluginBundleJar extends PluginBundle {
             return null;
         }
 
-        final  PluginBundleJar pluginBundle = new PluginBundleJar(plugin);
+        PluginBundleJar pluginBundle = new PluginBundleJar(plugin);
 
-        try (final FileInputStream fileInputStream = new FileInputStream(plugin); final JarInputStream is = new JarInputStream(fileInputStream)) {
-            final Manifest mf = is.getManifest();
+        try (FileInputStream fileInputStream = new FileInputStream(plugin); JarInputStream is = new JarInputStream(fileInputStream)) {
+            Manifest mf = is.getManifest();
             if(mf == null) {
                 LOG.error("Не найден манифест в файле: {}", plugin.getAbsoluteFile());
                 return null;
             }
 
-            final Attributes attributes = mf.getMainAttributes();
+            Attributes attributes = mf.getMainAttributes();
 
-            final String symbolicNamePlugin = attributes.getValue(Constants.BUNDLE_SYMBOLICNAME);
+            String symbolicNamePlugin = attributes.getValue(Constants.BUNDLE_SYMBOLICNAME);
             pluginBundle.setSymbolicNamePlugin(Optional.ofNullable(symbolicNamePlugin).orElse(""));
 
-            final String versionPlugin = attributes.getValue(Constants.BUNDLE_VERSION);
+            String versionPlugin = attributes.getValue(Constants.BUNDLE_VERSION);
             pluginBundle.setVersion(Optional.ofNullable(versionPlugin).orElse(""));
 
-            final String namePlugin = attributes.getValue(Constants.BUNDLE_NAME);
+            String namePlugin = attributes.getValue(Constants.BUNDLE_NAME);
             pluginBundle.setNamePlugin(Optional.ofNullable(namePlugin).orElse(""));
 
             pluginBundle.setPathPlugin(plugin.getAbsolutePath());
             pluginBundle.setUriPlugin(plugin.toURI());
-        } catch (final FileNotFoundException fileNotFound) {
+        } catch (FileNotFoundException fileNotFound) {
             LOG.error("Файл {} не найден!", plugin.getAbsoluteFile(), fileNotFound);
             return null;
-        } catch(final IOException ex) {
+        } catch(IOException ex) {
             LOG.error("Ошибка при чтении файла {}", plugin.getAbsoluteFile(), ex);
             return null;
         }

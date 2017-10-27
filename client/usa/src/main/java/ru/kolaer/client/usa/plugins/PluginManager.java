@@ -135,6 +135,9 @@ public class PluginManager {
         	try {
         		LOG.info("{} установка...", pluginBundle.getSymbolicNamePlugin());
 	            Bundle bundle = context.installBundle(pluginBundle.getUriPlugin().toString());
+                pluginBundle.setNamePlugin(bundle.getHeaders().get(Constants.BUNDLE_NAME));
+	            pluginBundle.setSymbolicNamePlugin(bundle.getSymbolicName());
+                pluginBundle.setVersion(bundle.getVersion().toString());
 	            pluginBundle.setBundle(bundle);
 	            pluginBundle.setBundleContext(context);
 	            pluginBundle.setInstall(true);

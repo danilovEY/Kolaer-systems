@@ -40,15 +40,14 @@ public class SplitListContentVcImpl implements SplitListContentVc {
     }
 
     @Override
-    public void setView(GroupTreeVc groupTreeVc) {
+    public void setView(GroupTreeVc groupTreeVc, ContentLabelVc contentLabelVc) {
         this.splitPane.getItems().set(0, groupTreeVc.getContent());
         SplitPane.setResizableWithParent(groupTreeVc.getContent(), Boolean.FALSE);
         this.splitPane.setDividerPosition(0, 0.3f);
-    }
 
-    @Override
-    public void setView(ContentLabelVc contentLabelVc) {
         this.splitPane.getItems().set(1, contentLabelVc.getContent());
+
+        groupList.setOnSelectItem(contentLabel::setSelectedGroup);
     }
 
     @Override
@@ -63,6 +62,6 @@ public class SplitListContentVcImpl implements SplitListContentVc {
 
         mainPane.setCenter(this.splitPane);
 
-        groupList.setOnSelectItem(contentLabel::setSelectedGroup);
+        viewVisit.accept(this);
     }
 }

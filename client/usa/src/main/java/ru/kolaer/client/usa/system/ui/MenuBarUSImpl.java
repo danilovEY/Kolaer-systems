@@ -62,6 +62,8 @@ public class MenuBarUSImpl implements MenuBarUS, AuthenticationObserver {
         Menu fileMenu = new Menu("Файл");
         fileMenu.getItems().add(authorizationItem);
         menuBar.getMenus().add(fileMenu);
+
+        viewVisit.accept(this);
     }
 
     @Override

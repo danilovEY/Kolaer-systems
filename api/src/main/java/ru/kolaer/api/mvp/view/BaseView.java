@@ -10,4 +10,8 @@ public interface BaseView<V extends BaseView, T> extends InitializationView<V>{
 	default void setContent(T content) {}
 	/**Получить view контент.*/
 	T getContent();
+
+	static void empty(BaseView baseView) {
+
+	}
 }

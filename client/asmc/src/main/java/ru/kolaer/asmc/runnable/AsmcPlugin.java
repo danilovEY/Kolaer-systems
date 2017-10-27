@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -45,7 +46,10 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
         dataService.registerObserver(contentLabelVc);
 
         splitListContent = new SplitListContentVcImpl(groupTreeVc, contentLabelVc);
+    }
 
+    @Override
+    public void start() throws Exception {
         CompletableFuture.runAsync(() -> dataService.loadData());
     }
 
@@ -149,8 +153,9 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
         this.mainPane = new BorderPane();
 
         splitListContent.initView(initSplit -> {
-            groupTreeVc.initView(initSplit::setView);
-            contentLabelVc.initView(initSplit::setView);
+            groupTreeVc.initView(BaseView::empty);
+            contentLabelVc.initView(BaseView::empty);
+            initSplit.setView(groupTreeVc, contentLabelVc);
         });
 
         if(UniformSystemEditorKitSingleton.getInstance().getAuthentication().isAuthentication()) {

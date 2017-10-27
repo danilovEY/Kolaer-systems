@@ -3,6 +3,7 @@ package ru.kolaer.client.usa.plugins;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Danilov on 10.04.2016.
@@ -36,26 +37,22 @@ public class SearchPlugins {
     }
     
     public List<PluginBundle> search() {
-        final List<PluginBundle> plugins = new ArrayList<>();
+        List<PluginBundle> plugins = new ArrayList<>();
 
-        this.pathsDirPlugins.parallelStream().forEach(path -> {
-            final File pathDir = new File(path);
+        this.pathsDirPlugins.forEach(path -> {
+            File pathDir = new File(path);
             if(pathDir.isDirectory()) {
-                final File[] filesToDit = pathDir.listFiles(filter -> {
-                    return filter.getName().endsWith(".jar");
-                });
+                File[] filesToDit = Optional
+                        .ofNullable(pathDir.listFiles(filter -> filter.getName().endsWith(".jar")))
+                        .orElse(new File[0]);
 
-                for(final File fileOnDir : filesToDit) {
-                    final PluginBundle bundle = PluginBundleJar.getInstance(fileOnDir);
-                    
-                    if(bundle != null)
-                        plugins.add(bundle);
+                for(File fileOnDir : filesToDit) {
+                    Optional.ofNullable(PluginBundleNotReadJar.getInstance(fileOnDir))
+                            .ifPresent(plugins::add);
                 }
             }
         });
 
         return plugins;
     }
-
-
 }
