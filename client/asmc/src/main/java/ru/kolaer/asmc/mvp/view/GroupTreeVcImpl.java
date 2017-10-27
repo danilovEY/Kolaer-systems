@@ -3,18 +3,18 @@ package ru.kolaer.asmc.mvp.view;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.layout.BorderPane;
+import lombok.extern.slf4j.Slf4j;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.asmc.mvp.model.DataService;
 import ru.kolaer.asmc.mvp.model.MGroup;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 20.02.2017.
  */
+@Slf4j
 public class GroupTreeVcImpl implements GroupTreeVc {
     private DataService model;
 
@@ -50,8 +50,22 @@ public class GroupTreeVcImpl implements GroupTreeVc {
 
     @Override
     public void sort() {
-        this.rootNode.getContent().getChildren()
+        Tools.runOnWithOutThreadFX(() -> {
+            rootNode.getContent()
+                    .getChildren()
+                    .sort(Comparator.comparingInt(g -> g.getValue().getPriority()));
+
+            rootNode.getContent()
+                    .getChildren()
+                    .forEach(this::sort);
+        });
+    }
+
+    private void sort(TreeItem<MGroup> treeItem) {
+        treeItem.getChildren()
                 .sort(Comparator.comparingInt(g -> g.getValue().getPriority()));
+
+        treeItem.getChildren().forEach(this::sort);
     }
 
     @Override
@@ -101,19 +115,43 @@ public class GroupTreeVcImpl implements GroupTreeVc {
             return;
         }
 
+        sort();
+
         model.saveDataOnThread();
     }
 
     private void deleteGroup(TreeItem<MGroup> selectedItem) {
-        selectedItem.getParent().getChildren().remove(selectedItem);
-        model.removeGroup(selectedItem.getValue());
+        if(selectedItem.getValue().equals(rootNode.getContent().getValue())) {
+            return;
+        }
+
+        TreeItem<MGroup> parentItem = selectedItem.getParent();
+        parentItem.getChildren().remove(selectedItem);
+
+        if(parentItem.getValue().equals(rootNode.getContent().getValue())) {
+            model.removeGroup(selectedItem.getValue());
+        } else {
+            parentItem.getValue().getGroups().remove(selectedItem.getValue());
+        }
+
         model.saveDataOnThread();
     }
 
     private void addGroup(MGroup childrenGroup) {
-        MGroup parentGroup = treeView.getSelectionModel().getSelectedItem().getValue();
+        if(childrenGroup == null || childrenGroup.equals(rootNode.getContent().getValue())) {
+            return;
+        }
+
+        TreeItem<MGroup> selectedItem = treeView.getSelectionModel().getSelectedItem();
+
+        MGroup parentGroup = null;
+
+        if(selectedItem != null && !selectedItem.getValue().equals(rootNode.getContent().getValue())) {
+            parentGroup = selectedItem.getValue();
+        }
 
         if(parentGroup == null) {
+            model.addGroup(childrenGroup);
             VGroupTreeItem pGroupTreeItem = new VGroupTreeItemImpl(childrenGroup);
             pGroupTreeItem.initView(initGroupTree -> rootNode.getContent().getChildren()
                     .add(initGroupTree.getContent()));
@@ -123,12 +161,11 @@ public class GroupTreeVcImpl implements GroupTreeVc {
             List<MGroup> groupList = Optional.ofNullable(parentGroup.getGroups())
                     .orElse(new ArrayList<>());
             groupList.add(childrenGroup);
-            parentGroup.getGroups().addAll(groupList);
+            parentGroup.setGroups(groupList);
 
-
-            VGroupTreeItem newPGroupTreeItem = new VGroupTreeItemImpl(childrenGroup);
-            pGroupTreeItem.addGroupTreeItem(newPGroupTreeItem);
+            pGroupTreeItem.initView(initItem -> selectedItem.getChildren().add(initItem.getContent()));
         }
+
         this.sort();
 
         this.model.saveDataOnThread();
@@ -138,7 +175,7 @@ public class GroupTreeVcImpl implements GroupTreeVc {
     public void initView(Consumer<GroupTreeVc> viewVisit) {
         rootNode = new VGroupTreeItemImpl(new MGroup("КолАЭР",0));
         mainPane = new BorderPane();
-        treeView = new TreeView<>(this.rootNode.getContent());
+        treeView = new TreeView<>();
         addGroup = new MenuItem("Добавить группу");
         deleteGroup = new MenuItem("Удалить группу");
         editGroup = new MenuItem("Редактировать группу");
@@ -167,6 +204,8 @@ public class GroupTreeVcImpl implements GroupTreeVc {
             }
         });
 
+        rootNode.initView(initRootNode -> treeView.setRoot(initRootNode.getContent()));
+
         mainPane.setCenter(treeView);
 
         addGroup.setOnAction(e -> VAddingGroupLabelsDialog
@@ -191,6 +230,25 @@ public class GroupTreeVcImpl implements GroupTreeVc {
 
     @Override
     public void updateData(List<MGroup> groupList) {
+        if(groupList != null) {
+            for (MGroup mGroup : groupList) {
+                VGroupTreeItem pGroupTreeItem = new VGroupTreeItemImpl(mGroup);
+                pGroupTreeItem.initView(initGroupTree -> rootNode.getContent().getChildren()
+                        .add(initGroupTree.getContent()));
+                Optional.ofNullable(mGroup.getGroups())
+                        .orElse(Collections.emptyList())
+                        .forEach(gr -> onlyAddGroup(pGroupTreeItem, gr));
 
+            }
+
+        }
+    }
+
+    private void onlyAddGroup(VGroupTreeItem parent, MGroup group) {
+        VGroupTreeItem parentView = new VGroupTreeItemImpl(group);
+        parentView.initView(parent::addGroupTreeItem);
+        Optional.ofNullable(group.getGroups())
+                .orElse(Collections.emptyList())
+                .forEach(gr -> onlyAddGroup(parentView, gr));
     }
 }

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,13 +34,25 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public void addGroup(MGroup group) {
+        if(groups == null) {
+            groups = new ArrayList<>();
+        }
+
         groups.add(group);
     }
 
     @Override
     public void removeGroup(MGroup group) {
-        group.getGroups().forEach(this::clearGroup);
-        group.getLabelList().clear();
+        if(groups == null) {
+            return;
+        }
+        Optional.ofNullable(group.getGroups())
+                .orElse(Collections.emptyList())
+                .forEach(this::clearGroup);
+
+        Optional.ofNullable(group.getLabelList())
+                .orElse(Collections.emptyList())
+                .clear();
 
         this.groups.remove(group);
     }
@@ -49,7 +62,9 @@ public class DataServiceImpl implements DataService {
                 .orElse(Collections.emptyList())
                 .forEach(this::clearGroup);
 
-        group.getLabelList().clear();
+        Optional.ofNullable(group.getLabelList())
+                .orElse(Collections.emptyList())
+                .clear();
     }
 
     @Override
@@ -64,7 +79,9 @@ public class DataServiceImpl implements DataService {
                             .showErrorNotify("Ошибка!", "Ошибка при создании бэкапа!");
                 }
             }
+
             try(FileOutputStream fileOutputStream = new FileOutputStream(fileWithData)) {
+                sort();
                 byte[] bytes = xmlMapper.writeValueAsBytes(groups.stream().toArray(MGroup[]::new));
                 fileOutputStream.write(bytes);
                 fileOutputStream.flush();
@@ -98,19 +115,44 @@ public class DataServiceImpl implements DataService {
     public boolean loadData() {
         if(!fileWithData.exists()) {
             log.warn("Файл: \"{}\" не найден!", FILE_PATH + "/" + FILE_NAME);
-            groups = Collections.emptyList();
+            groups = new ArrayList<>();
             return true;
         }
 
-        try {
-            MGroup[] mGroups = xmlMapper.readValue(fileWithData, MGroup[].class);
-            groups = Arrays.asList(mGroups);
+        try(FileInputStream fileInputStream = new FileInputStream(fileWithData)) {
+            MGroup[] mGroups = xmlMapper.readValue(fileInputStream, MGroup[].class);
+            groups = mGroups != null && mGroups.length > 0
+                    ? new ArrayList<>(Arrays.asList(mGroups))
+                    : new ArrayList<>();
             observers.forEach(observer -> observer.updateData(groups));
             return true;
         } catch (IOException e) {
             log.error("Ошибка при чтении файла!", e);
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void sort() {
+        if(groups == null) {
+            return;
+        }
+
+        groups.forEach(this::sort);
+    }
+
+    private void sort(MGroup mGroup) {
+        List<MGroup> groups = Optional.ofNullable(mGroup.getGroups())
+                .orElse(Collections.emptyList());
+
+        Optional.ofNullable(mGroup.getLabelList())
+                .orElse(Collections.emptyList())
+                .sort(Comparator.comparing(MLabel::getPriority));
+
+        groups.sort(Comparator.comparing(MGroup::getPriority));
+
+        groups.forEach(this::sort);
+
     }
 
     @Override

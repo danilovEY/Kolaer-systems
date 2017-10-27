@@ -43,7 +43,7 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
     private final int WARN_MESSAGE = 2;
     private final int ERROR_MESSAGE = 3;
     private BorderPane mainPane;
-    private VBox vBoxUserNotify;
+    private VBox vBoxNotifyMessage;
     private VBox vBoxStatic;
 
     @Override
@@ -114,7 +114,7 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
                 " - " +
                 exceptionMessage.getCode().getMessage();
 
-        this.sendMessage(this.vBoxUserNotify, ERROR_MESSAGE, title, exceptionMessage.getMessage(),
+        this.sendMessage(this.vBoxNotifyMessage, ERROR_MESSAGE, title, exceptionMessage.getMessage(),
                 exceptionMessage.getExceptionTimestamp(), Collections.emptyList());
     }
 
@@ -163,7 +163,9 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
                 Label titleLabel = new Label(title);
                 titleLabel.setTextAlignment(TextAlignment.CENTER);
                 titleLabel.setWrapText(true);
+                titleLabel.setMinHeight(Region.USE_PREF_SIZE);
                 titleLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
+
                 content.getChildren().add(titleLabel);
             }
 
@@ -171,6 +173,7 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
                 Label textLabel = new Label(text);
                 textLabel.setTextAlignment(TextAlignment.CENTER);
                 textLabel.setWrapText(true);
+                textLabel.setMinHeight(Region.USE_PREF_SIZE);
                 textLabel.setFont(Font.font(null, FontWeight.BOLD, 12));
 
                 content.getChildren().add(textLabel);
@@ -211,7 +214,7 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
     }
 
     private void sendMessage(int type, String title, String text, List<NotifyAction> actions) {
-        this.sendMessage(this.vBoxUserNotify, type, title, text, actions);
+        this.sendMessage(this.vBoxNotifyMessage, type, title, text, actions);
     }
 
     @Override
@@ -232,12 +235,12 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
 
     @Override
     public void initView(Consumer<NotificationPanelExceptionHandler> viewVisit) {
-        this.vBoxUserNotify = new VBox();
-        this.vBoxUserNotify.setSpacing(5);
-        this.vBoxUserNotify.setAlignment(Pos.TOP_LEFT);
-        this.vBoxUserNotify.setPadding(new Insets(5,5,5,5));
+        this.vBoxNotifyMessage = new VBox();
+        this.vBoxNotifyMessage.setSpacing(5);
+        this.vBoxNotifyMessage.setAlignment(Pos.TOP_LEFT);
+        this.vBoxNotifyMessage.setPadding(new Insets(5,5,5,5));
 
-        final ScrollPane scrollPaneUserNotify = new ScrollPane(this.vBoxUserNotify);
+        final ScrollPane scrollPaneUserNotify = new ScrollPane(this.vBoxNotifyMessage);
         scrollPaneUserNotify.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPaneUserNotify.setMinWidth(300);
         scrollPaneUserNotify.setPrefWidth(300);
@@ -275,7 +278,7 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
         BackgroundImage myBI= new BackgroundImage(new Image(this.getClass().getResource("/notify-background.jpg").toString()),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
-        this.vBoxUserNotify.setBackground(new Background(myBI));
+        this.vBoxNotifyMessage.setBackground(new Background(myBI));
         this.vBoxStatic.setBackground(new Background(myBI));
 
         viewVisit.accept(this);

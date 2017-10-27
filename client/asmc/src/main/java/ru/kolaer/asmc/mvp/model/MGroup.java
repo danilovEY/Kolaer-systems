@@ -3,14 +3,16 @@ package ru.kolaer.asmc.mvp.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-public class MGroup implements Serializable {
+public class MGroup {
+
 	private String nameGroup = "name group";
 	private int priority = 0;
 	private List<MLabel> labelList;
@@ -26,8 +28,18 @@ public class MGroup implements Serializable {
 	public MGroup(MGroup mGroup) {
 	    nameGroup = mGroup.getNameGroup()  + " (Копия)";
 	    priority = mGroup.getPriority();
-		labelList = mGroup.getLabelList().stream().map(MLabel::new).collect(Collectors.toList());
-		groups = mGroup.getGroups().stream().map(MGroup::new).collect(Collectors.toList());
+
+		labelList = Optional.ofNullable(mGroup.getLabelList())
+				.orElse(Collections.emptyList())
+				.stream()
+				.map(MLabel::new)
+				.collect(Collectors.toList());
+
+		groups = Optional.ofNullable(mGroup.getGroups())
+				.orElse(Collections.emptyList())
+				.stream()
+				.map(MGroup::new)
+				.collect(Collectors.toList());
 	}
 
     @Override

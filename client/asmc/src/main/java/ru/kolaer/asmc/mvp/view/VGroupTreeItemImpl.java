@@ -58,6 +58,8 @@ public class VGroupTreeItemImpl implements VGroupTreeItem {
                         ? getOpenImage()
                         : getCloseImage())
         );
+
+        viewVisit.accept(this);
     }
 
     private ImageView getOpenImage() {

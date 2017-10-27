@@ -13,4 +13,6 @@ public interface DataService extends BaseModel<List<MGroup>>, DataServiceObserva
     boolean saveData();
     void saveDataOnThread();
     boolean loadData();
+
+    void sort();
 }
