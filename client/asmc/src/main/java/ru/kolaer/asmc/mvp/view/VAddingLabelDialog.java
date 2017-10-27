@@ -6,7 +6,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -189,14 +188,17 @@ public class VAddingLabelDialog {
                     .ifPresent(pathAppText::setText);
 		});
 
-		pathIconText.setOnKeyPressed(key -> {
-			if (key.getCode() != KeyCode.ENTER)
-				return;
-
-			Optional.of(new File(pathIconText.getText()))
-                    .filter(File::exists)
-                    .ifPresent(updateIcon);
-		});
+		pathIconText.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue == null || newValue.isEmpty()){
+                rbNoneIcon.setSelected(true);
+                rbNoneIcon.getOnAction().handle(null);
+            } else {
+                rbNoneIcon.setSelected(false);
+                Optional.of(new File(pathIconText.getText()))
+                        .filter(File::exists)
+                        .ifPresent(updateIcon);
+            }
+        });
 
         buttonSetPathIcon.setOnAction(e -> {
             Optional.ofNullable(actionButtonSetPathIcon(pathIconText.getText()))

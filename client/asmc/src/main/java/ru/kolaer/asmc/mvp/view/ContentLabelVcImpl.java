@@ -8,20 +8,20 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import ru.kolaer.api.mvp.view.BaseView;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.asmc.mvp.model.DataService;
 import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.mvp.model.MLabel;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 21.02.2017.
  */
 public class ContentLabelVcImpl implements ContentLabelVc {
+    private final List<LabelVm> labels = new ArrayList<>();
     private final DataService dataService;
     private MGroup selectedGroup;
     private MLabel bufferedLabel;
@@ -37,26 +37,34 @@ public class ContentLabelVcImpl implements ContentLabelVc {
     @Override
     public void setSelectedGroup(MGroup mGroup) {
         selectedGroup = mGroup;
+        labels.clear();
         contentPane.getChildren().clear();
         if(selectedGroup != null) {
             Optional.ofNullable(selectedGroup.getLabelList())
                     .orElse(Collections.emptyList())
                     .forEach(this::onlyAddLabel);
+            sort();
         }
     }
 
     private void onlyAddLabel(MLabel mLabel) {
-        LabelVmCss vLabelCss = new LabelVmCss(mLabel);
+        LabelVm vLabelCss = new LabelVmCss(mLabel);
         vLabelCss.initView(initLabel -> {
             contentPane.getChildren().add(initLabel.getContent());
             initLabel.setOnCopy(label -> bufferedLabel = label.getMode());
-            initLabel.setOnEdit(label -> dataService.saveData());
+            initLabel.setOnEdit(label -> {
+                sort();
+                dataService.saveData();
+            });
             initLabel.setOnDelete(label -> {
                 selectedGroup.getLabelList().remove(label.getMode());
                 contentPane.getChildren().remove(label.getContent());
                 dataService.saveData();
             });
+            vLabelCss.setAccess(isAccess());
         });
+
+        labels.add(vLabelCss);
     }
 
     @Override
@@ -71,7 +79,8 @@ public class ContentLabelVcImpl implements ContentLabelVc {
 
     @Override
     public void setAccess(boolean access) {
-        this.scrollPane.setContextMenu(access ? this.contextMenu : null);
+        scrollPane.setContextMenu(access ? this.contextMenu : null);
+        labels.forEach(label -> label.setAccess(access));
     }
 
     @Override
@@ -91,6 +100,8 @@ public class ContentLabelVcImpl implements ContentLabelVc {
             dataService.saveData();
 
             onlyAddLabel(mLabel);
+
+            sort();
         }
     }
 
@@ -129,8 +140,16 @@ public class ContentLabelVcImpl implements ContentLabelVc {
         viewVisit.accept(this);
     }
 
+    private void sort() {
+        Tools.runOnWithOutThreadFX(() -> {
+            labels.sort(Comparator.comparing(label -> label.getMode().getPriority()));
+            contentPane.getChildren().clear();
+            labels.stream().map(BaseView::getContent).forEach(contentPane.getChildren()::add);
+        });
+    }
+
     @Override
     public void updateData(List<MGroup> groupList) {
-
+        setSelectedGroup(null);
     }
 }

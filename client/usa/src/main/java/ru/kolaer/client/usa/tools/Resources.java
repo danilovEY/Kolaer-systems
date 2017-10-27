@@ -18,6 +18,7 @@ public interface Resources {
 	StringBuilder URL_TO_PRIVATE_SERVER = new StringBuilder("localhost:8080/ru.kolaer.server.restful");
 	StringBuilder URL_TO_PUBLIC_SERVER = new StringBuilder("localhost:8080/kolaer-web");
 
+
 	URL ICON_START_BUTTON = Resources.class.getResource("/css/aerIcon.png");
 	InputStream ICON_MAIN_FRAME = Resources.class.getResourceAsStream("/css/favicon.ico");
 	

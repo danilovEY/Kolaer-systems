@@ -167,7 +167,7 @@ public class LabelVmCss implements LabelVm {
 
     @Override
     public void setOnDelete(Consumer<LabelVm> consumer) {
-        copyLabel.setOnAction(e ->
+        deleteLabel.setOnAction(e ->
                 consumer.accept(this)
         );
     }

@@ -291,7 +291,7 @@ public class VMMainFrameImpl extends Application {
         PARAM.putAll(getParameters().getNamed());
 
         stage.setScene(new Scene(mainPane));
-        stage.getIcons().add(new Image("/css/aerIcon.png", true));
+        stage.getIcons().add(new Image(getClass().getResource("/css/aerIcon.png").toString(), false));
         stage.setMaximized(true);
 
         stage.setFullScreen(false);
