@@ -18,7 +18,6 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
 import ru.kolaer.client.usa.services.AutoCheckingNotifyMessage;
-import ru.kolaer.client.usa.services.AutoUpdatePlugins;
 import ru.kolaer.client.usa.services.HideShowMainStage;
 import ru.kolaer.client.usa.services.ServiceManager;
 import ru.kolaer.client.usa.system.network.AuthenticationOnNetwork;
@@ -169,7 +168,7 @@ public class VMMainFrameImpl extends Application {
     private void initSystemServices() {
         Thread.currentThread().setName("Добавление системны служб");
 
-        servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, servicesManager), true);
+        //servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, servicesManager), true);
         servicesManager.addService(new AutoCheckingNotifyMessage(), true);
         servicesManager.addService(new HideShowMainStage(stage), true);
     }

@@ -48,6 +48,10 @@ public class VAddingLabelDialog {
         image.setFitHeight(100);
         image.setFitWidth(100);
 
+        ToggleGroup group = new ToggleGroup();
+        rbNoneIcon.setToggleGroup(group);
+        rbDefaultIcon.setToggleGroup(group);
+
         VBox rbPane = new VBox(rbNoneIcon,
                 rbDefaultIcon,
                 buttonSetPathIcon);

@@ -41,8 +41,22 @@ public class ContentLabelVcImpl implements ContentLabelVc {
         if(selectedGroup != null) {
             Optional.ofNullable(selectedGroup.getLabelList())
                     .orElse(Collections.emptyList())
-                    .forEach(this::addLabel);
+                    .forEach(this::onlyAddLabel);
         }
+    }
+
+    private void onlyAddLabel(MLabel mLabel) {
+        LabelVmCss vLabelCss = new LabelVmCss(mLabel);
+        vLabelCss.initView(initLabel -> {
+            contentPane.getChildren().add(initLabel.getContent());
+            initLabel.setOnCopy(label -> bufferedLabel = label.getMode());
+            initLabel.setOnEdit(label -> dataService.saveData());
+            initLabel.setOnDelete(label -> {
+                selectedGroup.getLabelList().remove(label.getMode());
+                contentPane.getChildren().remove(label.getContent());
+                dataService.saveData();
+            });
+        });
     }
 
     @Override
@@ -76,17 +90,7 @@ public class ContentLabelVcImpl implements ContentLabelVc {
 
             dataService.saveData();
 
-            LabelVmCss vLabelCss = new LabelVmCss(mLabel);
-            vLabelCss.initView(initLabel -> {
-                contentPane.getChildren().add(initLabel.getContent());
-                initLabel.setOnCopy(label -> bufferedLabel = label.getMode());
-                initLabel.setOnEdit(label -> dataService.saveData());
-                initLabel.setOnDelete(label -> {
-                    dataService.saveData();
-                    contentPane.getChildren().remove(label.getContent());
-                    selectedGroup.getLabelList().remove(label.getMode());
-                });
-            });
+            onlyAddLabel(mLabel);
         }
     }
 

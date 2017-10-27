@@ -88,6 +88,10 @@ public class GroupTreeVcImpl implements GroupTreeVc {
                 VGroupTreeItem pGroupTreeItem = new VGroupTreeItemImpl(bufferGroupModel);
                 pGroupTreeItem.initView(initVew -> rootNode.getContent().getChildren()
                         .add(initVew.getContent()));
+
+                Optional.ofNullable(bufferGroupModel.getGroups())
+                        .orElse(Collections.emptyList())
+                        .forEach(gr -> onlyAddGroup(pGroupTreeItem, gr));
             } else {
                 MGroup selectGroup = selectedItem.getValue();
 
@@ -102,6 +106,10 @@ public class GroupTreeVcImpl implements GroupTreeVc {
                 VGroupTreeItem pGroupTreeItem = new VGroupTreeItemImpl(bufferGroupModel);
                 pGroupTreeItem.initView(initVew -> selectedItem.getChildren()
                         .add(initVew.getContent()));
+
+                Optional.ofNullable(bufferGroupModel.getGroups())
+                        .orElse(Collections.emptyList())
+                        .forEach(gr -> onlyAddGroup(pGroupTreeItem, gr));
             }
 
             bufferGroup = null;
@@ -121,14 +129,14 @@ public class GroupTreeVcImpl implements GroupTreeVc {
     }
 
     private void deleteGroup(TreeItem<MGroup> selectedItem) {
-        if(selectedItem.getValue().equals(rootNode.getContent().getValue())) {
+        if(selectedItem.getValue() == rootNode.getContent().getValue()) {
             return;
         }
 
         TreeItem<MGroup> parentItem = selectedItem.getParent();
         parentItem.getChildren().remove(selectedItem);
 
-        if(parentItem.getValue().equals(rootNode.getContent().getValue())) {
+        if(parentItem.getValue() == rootNode.getContent().getValue()) {
             model.removeGroup(selectedItem.getValue());
         } else {
             parentItem.getValue().getGroups().remove(selectedItem.getValue());
@@ -138,7 +146,7 @@ public class GroupTreeVcImpl implements GroupTreeVc {
     }
 
     private void addGroup(MGroup childrenGroup) {
-        if(childrenGroup == null || childrenGroup.equals(rootNode.getContent().getValue())) {
+        if(childrenGroup == null || childrenGroup == rootNode.getContent().getValue()) {
             return;
         }
 
@@ -146,7 +154,7 @@ public class GroupTreeVcImpl implements GroupTreeVc {
 
         MGroup parentGroup = null;
 
-        if(selectedItem != null && !selectedItem.getValue().equals(rootNode.getContent().getValue())) {
+        if(selectedItem != null && selectedItem.getValue() != rootNode.getContent().getValue()) {
             parentGroup = selectedItem.getValue();
         }
 

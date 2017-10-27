@@ -125,8 +125,10 @@ public class LabelVmCss implements LabelVm {
         this.image.setImage(null);
 
         this.button.setOnAction(e ->
-                new Application(data.getPathApplication(), data.getPathOpenAppWith())
+                new Application(data.getPathApplication(), data.getPathOpenAppWith()).start()
         );
+
+        updateView(data);
 
         viewVisit.accept(this);
 
