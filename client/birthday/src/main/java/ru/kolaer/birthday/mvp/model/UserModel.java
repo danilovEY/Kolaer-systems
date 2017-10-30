@@ -1,5 +1,7 @@
 package ru.kolaer.birthday.mvp.model;
 
+import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
+
 import java.util.Date;
 
 /**
@@ -51,4 +53,8 @@ import java.util.Date;
 	 void setInitials(String initials);
 	String getEmail();
 	void setEmail(String email);
+
+	EnumGender getGender();
+
+	void setGender(EnumGender gender);
 }

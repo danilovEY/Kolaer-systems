@@ -1,6 +1,10 @@
 package ru.kolaer.birthday.mvp.model.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.api.mvp.model.other.DbDataAll;
@@ -14,6 +18,9 @@ import java.util.Date;
  * @author danilovey
  * @version 0.1
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserModelImpl implements UserModel {
 	/**Фамилия.*/
 	private String firstName;
@@ -36,151 +43,49 @@ public class UserModelImpl implements UserModel {
 	/**Инициалы.*/
 	private String initials;
 	private String email;
+	private EnumGender gender;
 	
-	public UserModelImpl(final String organization, 
-			final String firstName, 
-			final String secondName, 
-			final String thirdName, 
-			final String department,
-			final Date birthday, 
-			final String icon, 
-			final String phoneNumber, 
-			final String post,
-			final String initials){
-		this.organization = organization;
-		this.firstName = firstName;
-		this.secondName = secondName;
-		this.thirdName = thirdName;
-		this.department = department;
-		this.birthday = birthday;
-		this.phoneNumber = phoneNumber;
-		this.icon = icon;
-		this.post = post;
-		this.initials = initials;
-	}
-	
-	public UserModelImpl() {
-		
-	}
-	
-	public UserModelImpl(final DbDataAll user) {
-		this.setOrganization("КолАтомэнергоремонт");
-		this.setInitials(user.getInitials());
-		this.setBirthday(user.getBirthday());
-		this.setDepartment(user.getDepartament());
-		this.setPost(user.getPost());
-		this.setPhoneNumber(user.getPhone());
-		this.setEmail(user.getEmail());
-		this.setFirstName(user.getName());
-		this.setSecondName(user.getSurname());
-		this.setThirdName(user.getPatronymic());
-		this.setIcon(user.getVCard());
+	public UserModelImpl(DbDataAll user) {
+		setOrganization("КолАтомэнергоремонт");
+		setInitials(user.getInitials());
+		setBirthday(user.getBirthday());
+		setDepartment(user.getDepartament());
+		setPost(user.getPost());
+		setPhoneNumber(user.getPhone());
+		setEmail(user.getEmail());
+		setFirstName(user.getName());
+		setSecondName(user.getSurname());
+		setThirdName(user.getPatronymic());
+		setIcon(user.getVCard());
 	}
 
 	public UserModelImpl(EmployeeDto user) {
-		this.setOrganization("КолАтомэнергоремонт");
-		this.setInitials(user.getInitials());
-		this.setBirthday(user.getBirthday());
-		this.setDepartment(user.getDepartment().getAbbreviatedName());
+		setOrganization("КолАтомэнергоремонт");
+		setInitials(user.getInitials());
+		setBirthday(user.getBirthday());
+		setDepartment(user.getDepartment().getAbbreviatedName());
 
 		PostDto postEntity = user.getPost();
 		String postName = postEntity.getName();
-		if(postEntity.getType() != null)
+		if(postEntity.getType() != null) {
 			postName += " " + postEntity.getRang() + " " + postEntity.getType().name();
+		}
 
-		this.setPost(postName);
-		this.setPhoneNumber(user.getWorkPhoneNumber());
-		this.setEmail("");
-		this.setIcon(user.getInitials() + ".jpg");
+		setPost(postName);
+		setPhoneNumber(user.getWorkPhoneNumber());
+		setEmail("");
+		setIcon(user.getInitials() + ".jpg");
+		setGender(user.getGender());
 	}
 
 	public UserModelImpl(EmployeeOtherOrganizationDto user) {
-		this.setOrganization(user.getOrganization());
-		this.setInitials(user.getInitials());
-		this.setBirthday(user.getBirthday());
-		this.setDepartment(user.getDepartment());
-		this.setPost(user.getPost());
-		this.setPhoneNumber(user.getWorkPhoneNumber());
-		this.setEmail(user.getEmail());
-		this.setIcon(user.getPhoto());
-	}
-	
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(final String firstName) {
-		this.firstName = firstName;
-	}
-	public String getSecondName() {
-		return secondName;
-	}
-	public void setSecondName(final String secondName) {
-		this.secondName = secondName;
-	}
-	public String getThirdName() {
-		return thirdName;
-	}
-	public void setThirdName(final String thirdName) {
-		this.thirdName = thirdName;
-	}
-	public String getDepartment() {
-		return department;
-	}
-	public void setDepartment(final String departament) {
-		this.department = departament;
-	}
-	public Date getBirthday() {
-		return birthday;
-	}
-	public void setBirthday(final Date bithday) {
-		this.birthday = bithday;
-	}
-	public String getIcon() {
-		return icon;
-	}
-	public void setIcon(final String icon) {
-		this.icon = icon;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(final String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	@Override
-	public String getOrganization() {
-		return this.organization;
-	}
-
-	@Override
-	public void setOrganization(final String organization) {
-		this.organization = organization;
-	}
-
-	public String getPost() {
-		return post;
-	}
-
-	public void setPost(String post) {
-		this.post = post;
-	}
-
-	public String getInitials() {
-		return initials;
-	}
-
-	public void setInitials(String initials) {
-		this.initials = initials;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
+		setOrganization(user.getOrganization());
+		setInitials(user.getInitials());
+		setBirthday(user.getBirthday());
+		setDepartment(user.getDepartment());
+		setPost(user.getPost());
+		setPhoneNumber(user.getWorkPhoneNumber());
+		setEmail(user.getEmail());
+		setIcon(user.getPhoto());
 	}
 }

@@ -1,20 +1,18 @@
 package ru.kolaer.birthday.mvp.presenter.impl;
 
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.system.network.UserDataBase;
-import ru.kolaer.api.system.network.kolaerweb.EmployeeOtherOrganizationTable;
-import ru.kolaer.birthday.tools.Tools;
+import ru.kolaer.api.tools.Tools;
+import ru.kolaer.birthday.tools.BirthdayTools;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.function.Function;
 
 /**
  * 
@@ -23,43 +21,29 @@ import java.util.concurrent.Executors;
  * @version 0.1
  */
 public class CustomCallback implements Callback<DatePicker, DateCell> {
-	private final Logger LOG = LoggerFactory.getLogger(CustomCallback.class);
+	private Logger LOG = LoggerFactory.getLogger(CustomCallback.class);
 	/**Объект, который хранит начальную дату во view-календаря.*/
 	private LocalDate startDate = LocalDate.now();
 	/**Оттенки для каждой даты.*/
-	private final String[] arrayColor = new String[42];
+	private String[] arrayColor = new String[42];
 	/**Счеткик дат.*/
 	private int index = 0;
 	/**Индекс последней даты.*/
-	private final int finish = 41;
+	private int finish = 41;
 	/**Флаг true, если нужно пересчитать пользователей и закрасить дату.*/
 	private boolean update = true;
-	/**БД с пользователями.*/
-	private final UserDataBase<?>[] usersDB;
-	/**Имя организации.*/
-	private final String organization;
-	private final ExecutorService threads = Executors.newCachedThreadPool();
-	
-	public CustomCallback(final UserDataBase<?> userDB) {
-		this.usersDB = new UserDataBase<?>[]{userDB};
-		this.organization = null;
-	}
-	
-	public CustomCallback(final EmployeeOtherOrganizationTable userDB, final String organization) {
-		this.usersDB = new UserDataBase<?>[]{userDB};
-		this.organization = organization;
-	}
-	
-	public CustomCallback(final UserDataBase<?>... userDB) {
-		this.usersDB = userDB;
-		this.organization = null;
+
+	private final Function<Date, Integer> gettingCount;
+
+	public CustomCallback(Function<Date, Integer> function) {
+		gettingCount = function;
 	}
 
 	@Override
-	public DateCell call(final DatePicker param) {
+	public DateCell call(DatePicker param) {
 		return new DateCell() {
 			@Override
-			public void updateItem(final LocalDate item, final boolean empty) {
+			public void updateItem(LocalDate item, boolean empty) {
 				if(index == finish) {
 					index = 0;
 				} else {
@@ -74,42 +58,33 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 					index++;
 				}
 
-				final int ind = index;
-				final Node node = this;
+				int ind = index;
+				Node node = this;
 				
 				if(!update) {
-					Platform.runLater(() -> {								
-						node.setStyle(arrayColor[ind]);
-					});
+					Tools.runOnWithOutThreadFX(() -> node.setStyle(arrayColor[ind]));
 					return;
 				}
 				
 				CompletableFuture.runAsync(() -> {
-					int countUsersDataAll = 0;
-					if(organization != null) {
-						countUsersDataAll = ((EmployeeOtherOrganizationTable)usersDB[0]).getCountUsersBirthday(Tools.convertToDate(item), organization).getResponse();
-					} else {
-						for(UserDataBase<?> base : usersDB) {
-							countUsersDataAll += base.getCountUsersBirthday(Tools.convertToDate(item)).getResponse();
-						}
-					}
+					int countUsersDataAll = gettingCount.apply(BirthdayTools.convertToDate(item));
 					
 					if (countUsersDataAll != 0) {
-						final int count = 255 - countUsersDataAll * 15;
+						int count = 255 - countUsersDataAll * 15;
 							//В зависимости от кол-ва людей меняется интенсивность закрашивания даты.
-						Platform.runLater(() -> {							
+						Tools.runOnWithOutThreadFX(() -> {
 							String color = "-fx-background-color: rgb(" + count + ", " + count + ", 255);";
 
 							arrayColor[ind] = color;
 							node.setStyle(color);
 						});
 					} else {
-						Platform.runLater(() -> {							
+						Tools.runOnWithOutThreadFX(() -> {
 							node.setStyle("");
 							arrayColor[ind] = "";
 						});
 					}
-				}, threads).exceptionally(t -> {
+				}).exceptionally(t -> {
 					LOG.error("Ошибка!", t);
 					return null;
 				});

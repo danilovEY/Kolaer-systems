@@ -43,7 +43,7 @@ public interface RestTemplateService {
                 serverResponse.setExceptionMessage(readException(objectMapper, response.getBody()));
             }
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось проситать ответ с сервера", e);
+            throw new RuntimeException("Не удалось прочитать ответ с сервера", e);
         }
 
         return serverResponse;
@@ -64,7 +64,7 @@ public interface RestTemplateService {
                 serverResponse.setExceptionMessage(readException(objectMapper, response.getBody()));
             }
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось проситать ответ с сервера", e);
+            throw new RuntimeException("Не удалось прочитать ответ с сервера", e);
         }
 
         return serverResponse;
@@ -82,7 +82,7 @@ public interface RestTemplateService {
                 serverResponse.setExceptionMessage(readException(objectMapper, response.getBody()));
             }
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось проситать ответ с сервера", e);
+            throw new RuntimeException("Не удалось прочитать ответ с сервера", e);
         }
 
         return serverResponse;
@@ -105,6 +105,6 @@ public interface RestTemplateService {
     }
 
     default <T> ServerResponse<T> createServerExceptionMessage(String url) {
-        return new ServerResponse<T>(true, new ServerExceptionMessage(0, url, ErrorCode.CONNECT), null);
+        return new ServerResponse<>(true, new ServerExceptionMessage(0, url, ErrorCode.CONNECT), null);
     }
 }

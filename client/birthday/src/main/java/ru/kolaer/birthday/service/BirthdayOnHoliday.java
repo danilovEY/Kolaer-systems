@@ -13,8 +13,8 @@ import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.api.system.ui.NotifyAction;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
-import ru.kolaer.birthday.mvp.viewmodel.impl.VMDetailedInformationStageImpl;
-import ru.kolaer.birthday.tools.Tools;
+import ru.kolaer.birthday.mvp.view.DetailedInformationVc;
+import ru.kolaer.birthday.tools.BirthdayTools;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +24,7 @@ import java.util.List;
 public class BirthdayOnHoliday implements Service {
 	private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	private boolean tomorrow = false;
-	private boolean arterTomorrow = false;
+	private boolean afterTomorrow = false;
 	
 	@Override
 	public void run() {
@@ -35,57 +35,57 @@ public class BirthdayOnHoliday implements Service {
 
 		if(date.getDayOfWeek().getValue() == 5 ) {
 			if(!this.tomorrow) {
-				this.showNotifi("В субботу ", date.plusDays(1), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
+				this.showNotify("В субботу ", date.plusDays(1), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
 			}
-			if(!this.arterTomorrow) {
-				this.showNotifi("В воскресенье ", date.plusDays(2), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
+			if(!this.afterTomorrow) {
+				this.showNotify("В воскресенье ", date.plusDays(2), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
 			}
 		}
 
 		for(final Holiday holiday : holidays.getResponse()) {
 			final LocalDate holidayLocalDate = LocalDate.parse(holiday.getDate(), dtf);
 			if(date.getDayOfMonth() == holidayLocalDate.getDayOfMonth()) {
-				this.showNotifi("Сегодня ", date, holiday);
+				this.showNotify("Сегодня ", date, holiday);
 			} else if(date.getDayOfMonth() + 1 == holidayLocalDate.getDayOfMonth()) {
 				this.tomorrow = true;
-				this.showNotifi("Завтра ", date.plusDays(1), holiday);
+				this.showNotify("Завтра ", date.plusDays(1), holiday);
 			} else if(date.getDayOfMonth() + 2 == holidayLocalDate.getDayOfMonth()) {
-				this.arterTomorrow = true;
-				this.showNotifi("После завтра ", date.plusDays(2), holiday);
+				this.afterTomorrow = true;
+				this.showNotify("После завтра ", date.plusDays(2), holiday);
 			} if(date.getDayOfMonth() + 3 == holidayLocalDate.getDayOfMonth()) {
-				this.showNotifi("Через 3 дня ", date.plusDays(3), holiday);
+				this.showNotify("Через 3 дня ", date.plusDays(3), holiday);
 			} if(date.getDayOfMonth() + 4 == holidayLocalDate.getDayOfMonth()) {
-				this.showNotifi("Через 4 дня ", date.plusDays(4), holiday);
+				this.showNotify("Через 4 дня ", date.plusDays(4), holiday);
 			}
 		}
 	}
 
-	private void showNotifi(final String title, final LocalDate date, final Holiday holiday) {
+	private void showNotify(String title, LocalDate date, Holiday holiday) {
 		ApplicationDataBase applicationDataBase = UniformSystemEditorKitSingleton.getInstance().getUSNetwork()
 				.getKolaerWebServer()
 				.getApplicationDataBase();
 
 		ServerResponse<List<EmployeeDto>> employeesResponse = applicationDataBase.getGeneralEmployeesTable()
-				.getUsersByBirthday(Tools.convertToDate(date));
+				.getUsersByBirthday(BirthdayTools.convertToDate(date));
 		ServerResponse<List<EmployeeOtherOrganizationDto>> otherEmployeesResponse = applicationDataBase.getEmployeeOtherOrganizationTable()
-				.getUsersByBirthday(Tools.convertToDate(date));
+				.getUsersByBirthday(BirthdayTools.convertToDate(date));
 
 		List<NotifyAction> actions = new ArrayList<>();
 
 		if(!employeesResponse.isServerError()) {
 			for(EmployeeDto user : employeesResponse.getResponse()) {
 				actions.add(new NotifyAction(user.getInitials() + " (КолАЭР) " + user.getDepartment().getAbbreviatedName(),
-						e -> new VMDetailedInformationStageImpl(new UserModelImpl(user)).show()
+						e -> new DetailedInformationVc(new UserModelImpl(user)).show()
 				));
 			}
 		}
 
 		if(!otherEmployeesResponse.isServerError()) {
 			for (EmployeeOtherOrganizationDto user : otherEmployeesResponse.getResponse()) {
-				actions.add(new NotifyAction(user.getInitials() + " (" + Tools.getNameOrganization(user.getOrganization()) + ") " + user.getDepartment(), e -> {
+				actions.add(new NotifyAction(user.getInitials() + " (" + BirthdayTools.getNameOrganization(user.getOrganization()) + ") " + user.getDepartment(), e -> {
 					final UserModel userModel = new UserModelImpl(user);
-					userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
-					new VMDetailedInformationStageImpl(userModel).show();
+					userModel.setOrganization(BirthdayTools.getNameOrganization(user.getOrganization()));
+					new DetailedInformationVc(userModel).show();
 				}));
 			}
 		}
