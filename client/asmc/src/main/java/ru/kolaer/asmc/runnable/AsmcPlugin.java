@@ -4,6 +4,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -12,13 +13,17 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.asmc.mvp.model.DataService;
 import ru.kolaer.asmc.mvp.model.DataServiceImpl;
+import ru.kolaer.asmc.mvp.service.AutoUploadData;
 import ru.kolaer.asmc.mvp.view.*;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -32,6 +37,7 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
     private DataService dataService;
     private GroupTreeVc groupTreeVc;
     private ContentLabelVc contentLabelVc;
+    private AutoUploadData autoUploadData;
 
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
@@ -41,11 +47,18 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
         groupTreeVc = new GroupTreeVcImpl(dataService);
         contentLabelVc = new ContentLabelVcImpl(dataService);
+        autoUploadData = new AutoUploadData(dataService);
 
         dataService.registerObserver(groupTreeVc);
         dataService.registerObserver(contentLabelVc);
+        dataService.registerObserver(autoUploadData);
 
         splitListContent = new SplitListContentVcImpl(groupTreeVc, contentLabelVc);
+    }
+
+    @Override
+    public Collection<Service> getServices() {
+        return Collections.singletonList(autoUploadData);
     }
 
     @Override
@@ -58,7 +71,9 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
         MenuItem updateMenuItem = new MenuItem("Обновить данные");
 
         Menu asmcMenu = new Menu("АСУП");
-        asmcMenu.getItems().add(authMenuItem);
+        asmcMenu.getItems().addAll(authMenuItem,
+                new SeparatorMenuItem(),
+                updateMenuItem);
 
         UniformSystemEditorKitSingleton.getInstance()
                 .getUISystemUS()
@@ -93,18 +108,20 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
             }
         });
 
-        updateMenuItem.setOnAction(e -> {
-            CompletableFuture
-                    .runAsync(() -> dataService.loadData())
-                    .exceptionally(t -> {
-                        log.error("");
-                        UniformSystemEditorKitSingleton.getInstance()
-                                .getUISystemUS()
-                                .getNotification()
-                                .showErrorNotify("Ошибка", "Не удалось прочитать данные");
-                        return null;
-                    });
-        });
+        updateMenuItem.setOnAction(e -> CompletableFuture
+                .runAsync(() -> dataService.loadData())
+                .thenAccept(aVoid -> UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showInformationNotify("Обновление", "Успешное обновление данных"))
+                .exceptionally(t -> {
+                    log.error("Ошибка", t);
+                    UniformSystemEditorKitSingleton.getInstance()
+                            .getUISystemUS()
+                            .getNotification()
+                            .showErrorNotify("Ошибка", "Не удалось прочитать данные");
+                    return null;
+                }));
     }
 
     private void updateBanner() {

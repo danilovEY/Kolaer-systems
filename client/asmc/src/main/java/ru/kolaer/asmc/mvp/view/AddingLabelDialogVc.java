@@ -165,6 +165,7 @@ public class AddingLabelDialogVc {
                 rbDefaultIcon.setSelected(true);
                 rbNoneIcon.setSelected(false);
             } else {
+                pathIconText.setText(mLabel.getPathImage());
                 Optional.of(new File(mLabel.getPathImage()))
                         .filter(File::exists)
                         .ifPresent(updateIcon);

@@ -30,6 +30,7 @@ public class DataServiceImpl implements DataService {
     private final File fileWithData = new File(FILE_PATH + "/" + FILE_NAME);
     private final File fileBackup = new File(FILE_PATH + "/" + FILE_NAME_BACKUP);
     private final File fileDir = new File(FILE_PATH);
+
     private List<MGroup> groups;
 
     @Override
@@ -85,6 +86,9 @@ public class DataServiceImpl implements DataService {
                 byte[] bytes = xmlMapper.writeValueAsBytes(groups.stream().toArray(MGroup[]::new));
                 fileOutputStream.write(bytes);
                 fileOutputStream.flush();
+
+                observers.forEach(DataServiceObserver::saveData);
+
                 return true;
             } catch (IOException e) {
                 log.error("Ошибка при сохранение данных!", e);
@@ -130,6 +134,11 @@ public class DataServiceImpl implements DataService {
             log.error("Ошибка при чтении файла!", e);
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public long getLastSave() {
+        return fileWithData.exists() ? fileWithData.lastModified() : -1;
     }
 
     @Override

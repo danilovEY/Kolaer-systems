@@ -239,17 +239,24 @@ public class GroupTreeVcImpl implements GroupTreeVc {
     @Override
     public void updateData(List<MGroup> groupList) {
         if(groupList != null) {
-            for (MGroup mGroup : groupList) {
-                GroupTreeItemVc pGroupTreeItem = new GroupTreeItemVcImpl(mGroup);
-                pGroupTreeItem.initView(initGroupTree -> rootNode.getContent().getChildren()
-                        .add(initGroupTree.getContent()));
-                Optional.ofNullable(mGroup.getGroups())
-                        .orElse(Collections.emptyList())
-                        .forEach(gr -> onlyAddGroup(pGroupTreeItem, gr));
+            Tools.runOnWithOutThreadFX(() -> {
+                rootNode.getContent().getChildren().clear();
 
-            }
-
+                for (MGroup mGroup : groupList) {
+                    GroupTreeItemVc pGroupTreeItem = new GroupTreeItemVcImpl(mGroup);
+                    pGroupTreeItem.initView(initGroupTree -> rootNode.getContent().getChildren()
+                            .add(initGroupTree.getContent()));
+                    Optional.ofNullable(mGroup.getGroups())
+                            .orElse(Collections.emptyList())
+                            .forEach(gr -> onlyAddGroup(pGroupTreeItem, gr));
+                }
+            });
         }
+    }
+
+    @Override
+    public void saveData() {
+
     }
 
     private void onlyAddGroup(GroupTreeItemVc parent, MGroup group) {

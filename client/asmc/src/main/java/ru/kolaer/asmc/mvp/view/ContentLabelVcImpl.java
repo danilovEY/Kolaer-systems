@@ -150,6 +150,11 @@ public class ContentLabelVcImpl implements ContentLabelVc {
 
     @Override
     public void updateData(List<MGroup> groupList) {
-        setSelectedGroup(null);
+        Tools.runOnWithOutThreadFX(() -> setSelectedGroup(null));
+    }
+
+    @Override
+    public void saveData() {
+
     }
 }

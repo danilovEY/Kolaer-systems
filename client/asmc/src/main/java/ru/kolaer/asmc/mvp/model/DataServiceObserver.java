@@ -7,4 +7,5 @@ import java.util.List;
  */
 public interface DataServiceObserver {
     void updateData(List<MGroup> groupList);
+    void saveData();
 }
