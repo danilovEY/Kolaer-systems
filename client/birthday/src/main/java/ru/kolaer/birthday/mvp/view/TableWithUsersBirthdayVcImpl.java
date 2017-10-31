@@ -12,16 +12,20 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.tools.BirthdayTools;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * View - таблици с днями рождениями.
@@ -49,6 +53,7 @@ public class TableWithUsersBirthdayVcImpl implements TableWithUsersBirthdayVc {
 		userBirthdayTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		userBirthdayTable.getSelectionModel().setCellSelectionEnabled(true);
 		userBirthdayTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		userBirthdayTable.setPlaceholder(new Label("Именинники отсутствуют!"));
 		userBirthdayTable.setEditable(true);
 		
 		
@@ -186,31 +191,10 @@ public class TableWithUsersBirthdayVcImpl implements TableWithUsersBirthdayVc {
 		this.titleLabel.setMaxWidth(Double.MAX_VALUE);
 
 		this.titlePane.setCenter(this.titleLabel);
-		this.titlePane.setRight(searchUsers.getContent());
+		//this.titlePane.setRight(searchUsers.getContent());
 
 		this.mainPane.setTop(this.titlePane);
 		this.mainPane.setCenter(this.userBirthdayTable);
-	}
-
-	@Override
-	public void setData(List<UserModel> userList) {
-		Tools.runOnWithOutThreadFX(() -> {
-			if(userList == null || userList.isEmpty()) {
-				userBirthdayTable.setPlaceholder(new Label("---"));
-			} else {
-				userBirthdayTable.getItems().setAll(userList);
-			}
-		});
-	}
-
-	@Override
-	public void setTitle(String text) {
-		Tools.runOnWithOutThreadFX(() -> this.titleLabel.setText(text));
-	}
-
-	@Override
-	public void clear() {
-
 	}
 
 	@Override
@@ -225,48 +209,88 @@ public class TableWithUsersBirthdayVcImpl implements TableWithUsersBirthdayVc {
 		return mainPane;
 	}
 
-
-
-
-
-
-
-
-
 	@Override
-	public void updateSelectedDate(LocalDate date, List<UserModel> users) {
-		if(users.size() > 0) {
-			this.userBirthdayTable.setData(users);
-			this.table.setTitle("\"" + date.format(formatter) + "\" день рождения у:");
-		} else {
-			this.table.clear();
-			this.table.setTitle("\"" + date.format(formatter) + "\" именинники отсутствуют!");
-			this.table.setNoContentText("\"" + date.format(formatter) + "\" именинники отсутствуют!");
-		}
-	}
+	public void updateSelectedDate(String title, LocalDate date, List<UserModel> users) {
+		Tools.runOnWithOutThreadFX(() -> {
+			userBirthdayTable.getItems().clear();
+			updateUsers(users);
 
-
-	@Override
-	public void showTodayBirthday() {
-		CompletableFuture.runAsync(() -> {
-			final ServerResponse<List<EmployeeDto>> usersKolaer = editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getGeneralEmployeesTable().getUsersBirthdayToday();
-			for(final EmployeeDto user : usersKolaer.getResponse()) {
-				final UserModel userModel = new UserModelImpl(user);
-				table.addData(userModel);
-			}
-
-			final ServerResponse<List<EmployeeOtherOrganizationDto>> usersOther = editorKid.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getEmployeeOtherOrganizationTable().getUsersBirthdayToday();
-			for(final EmployeeOtherOrganizationDto user : usersOther.getResponse()) {
-				final UserModel userModel = new UserModelImpl(user);
-				userModel.setOrganization(user.getOrganization());
-				table.addData(userModel);
+			if(users.size() > 0) {
+				titleLabel.setText("\"" + date.format(BirthdayTools.getDateTimeFormatter()) + "\" день рождения у:");
+			} else {
+				titleLabel.setText("\"" + date.format(BirthdayTools.getDateTimeFormatter()) + "\" именинники отсутствуют!");
 			}
 		});
 	}
 
 	@Override
+	public void showTodayBirthday() {
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		executorService.submit(() -> {
+			Date now = new Date();
+
+			List<UserModel> userModels = new ArrayList<>();
+
+			ServerResponse<List<EmployeeDto>> usersDataAll = UniformSystemEditorKitSingleton.getInstance()
+					.getUSNetwork()
+					.getKolaerWebServer()
+					.getApplicationDataBase()
+					.getGeneralEmployeesTable()
+					.getUsersByBirthday(now);
+
+			if(!usersDataAll.isServerError()) {
+				List<UserModel> users = usersDataAll
+						.getResponse()
+						.stream()
+						.map(UserModelImpl::new)
+						.collect(Collectors.toList());
+
+				userModels.addAll(users);
+			} else {
+				UniformSystemEditorKitSingleton.getInstance()
+						.getUISystemUS()
+						.getNotification()
+						.showErrorNotify(usersDataAll.getExceptionMessage());
+			}
+
+			ServerResponse<List<EmployeeOtherOrganizationDto>> usersOther = UniformSystemEditorKitSingleton.getInstance()
+					.getUSNetwork()
+					.getKolaerWebServer()
+					.getApplicationDataBase()
+					.getEmployeeOtherOrganizationTable()
+					.getUsersBirthdayToday();
+			if(!usersOther.isServerError()) {
+				List<UserModel> users = usersOther
+						.getResponse()
+						.stream()
+						.map(UserModelImpl::new)
+						.collect(Collectors.toList());
+
+				userModels.addAll(users);
+			} else {
+				UniformSystemEditorKitSingleton.getInstance()
+						.getUISystemUS()
+						.getNotification()
+						.showErrorNotify(usersDataAll.getExceptionMessage());
+			}
+
+			Tools.runOnWithOutThreadFX(() -> {
+				titleLabel.setText("Сегодня день рожденя у:");
+				updateUsers(userModels);
+			});
+		});
+		executorService.shutdown();
+	}
+
+	@Override
 	public void updateUsers(List<UserModel> users) {
-		this.table.setData(users);
+		Tools.runOnWithOutThreadFX(() -> {
+			if(users == null || users.isEmpty()) {
+				userBirthdayTable.setPlaceholder(new Label("Именинники отсутствуют!"));
+			} else {
+				userBirthdayTable.getItems().setAll(users);
+			}
+		});
 	}
 }
 

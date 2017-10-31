@@ -31,7 +31,7 @@ public class ServerToolsImpl implements ServerTools, RestTemplateService {
     public ServerResponse<LocalDateTime> getCurrentDataTime() {
         ServerResponse<LocalDateTime> serverResponse = new ServerResponse<>();
 
-        ServerResponse<DateTimeJson> response = getServerResponse(restTemplate.getForEntity(URL_GET_TIME, String.class),
+        ServerResponse<DateTimeJson> response = getServerResponse(restTemplate, URL_GET_TIME, 
                 DateTimeJson.class, objectMapper);
         if(response.isServerError()){
             serverResponse.setServerError(response.isServerError());

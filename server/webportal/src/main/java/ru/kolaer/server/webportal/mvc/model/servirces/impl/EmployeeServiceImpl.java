@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
@@ -29,6 +30,7 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
     }
 
     @Override
+    @Transactional(readOnly = true)
     public EmployeeDto getByPersonnelNumber(Long id) {
         if(id == null || id < 1) {
             return null;
@@ -38,31 +40,37 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeDto> getUserRangeBirthday(Date startData, Date endData) {
         return baseConverter.convertToDto(employeeDao.getUserRangeBirthday(startData, endData));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeDto> getUsersByBirthday(Date date) {
         return baseConverter.convertToDto(employeeDao.getUsersByBirthday(date));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeDto> getUserBirthdayToday() {
         return baseConverter.convertToDto(employeeDao.getUserBirthdayToday());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeDto> getUsersByInitials(String initials) {
         return baseConverter.convertToDto(employeeDao.getUsersByInitials(initials));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeDto> getUsersByDepartmentId(Long id) {
         return baseConverter.convertToDto(employeeDao.findByDepartmentById(id));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<EmployeeDto> getUsersByDepartmentId(int page, int pageSize, Long id) {
         if(page == 0) {
             List<EmployeeDto> employees = this.getUsersByDepartmentId(id);
@@ -78,6 +86,7 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getCountUserBirthday(Date date) {
         return employeeDao.getCountUserBirthday(date);
     }

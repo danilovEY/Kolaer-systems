@@ -11,6 +11,7 @@ import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.network.NetworkUS;
 import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.api.system.ui.NotifyAction;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.DetailedInformationVc;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BirthdayOnHoliday implements Service {
-	private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	private boolean tomorrow = false;
 	private boolean afterTomorrow = false;
 	
@@ -30,32 +31,35 @@ public class BirthdayOnHoliday implements Service {
 	public void run() {
 		NetworkUS usNetwork = UniformSystemEditorKitSingleton.getInstance().getUSNetwork();
 
-		final ServerResponse<List<Holiday>> holidays = usNetwork.getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
-		final LocalDate date = LocalDate.now();
+		ServerResponse<List<Holiday>> holidays = usNetwork.getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
+		LocalDate date = LocalDate.now();
 
 		if(date.getDayOfWeek().getValue() == 5 ) {
-			if(!this.tomorrow) {
-				this.showNotify("В субботу ", date.plusDays(1), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
+			if(!tomorrow) {
+				showNotify("В субботу ", date.plusDays(1), new Holiday("выходной", date.format(dtf), TypeDay.HOLIDAY));
 			}
-			if(!this.afterTomorrow) {
-				this.showNotify("В воскресенье ", date.plusDays(2), new Holiday("выходной", date.format(this.dtf), TypeDay.HOLIDAY));
+			if(!afterTomorrow) {
+				showNotify("В воскресенье ", date.plusDays(2), new Holiday("выходной", date.format(dtf), TypeDay.HOLIDAY));
 			}
 		}
-
-		for(final Holiday holiday : holidays.getResponse()) {
-			final LocalDate holidayLocalDate = LocalDate.parse(holiday.getDate(), dtf);
-			if(date.getDayOfMonth() == holidayLocalDate.getDayOfMonth()) {
-				this.showNotify("Сегодня ", date, holiday);
-			} else if(date.getDayOfMonth() + 1 == holidayLocalDate.getDayOfMonth()) {
-				this.tomorrow = true;
-				this.showNotify("Завтра ", date.plusDays(1), holiday);
-			} else if(date.getDayOfMonth() + 2 == holidayLocalDate.getDayOfMonth()) {
-				this.afterTomorrow = true;
-				this.showNotify("После завтра ", date.plusDays(2), holiday);
-			} if(date.getDayOfMonth() + 3 == holidayLocalDate.getDayOfMonth()) {
-				this.showNotify("Через 3 дня ", date.plusDays(3), holiday);
-			} if(date.getDayOfMonth() + 4 == holidayLocalDate.getDayOfMonth()) {
-				this.showNotify("Через 4 дня ", date.plusDays(4), holiday);
+		if(!holidays.isServerError()) {
+			for (Holiday holiday : holidays.getResponse()) {
+				LocalDate holidayLocalDate = LocalDate.parse(holiday.getDate(), dtf);
+				if (date.getDayOfMonth() == holidayLocalDate.getDayOfMonth()) {
+					showNotify("Сегодня ", date, holiday);
+				} else if (date.getDayOfMonth() + 1 == holidayLocalDate.getDayOfMonth()) {
+					tomorrow = true;
+					showNotify("Завтра ", date.plusDays(1), holiday);
+				} else if (date.getDayOfMonth() + 2 == holidayLocalDate.getDayOfMonth()) {
+					afterTomorrow = true;
+					showNotify("После завтра ", date.plusDays(2), holiday);
+				}
+				if (date.getDayOfMonth() + 3 == holidayLocalDate.getDayOfMonth()) {
+					showNotify("Через 3 дня ", date.plusDays(3), holiday);
+				}
+				if (date.getDayOfMonth() + 4 == holidayLocalDate.getDayOfMonth()) {
+					showNotify("Через 4 дня ", date.plusDays(4), holiday);
+				}
 			}
 		}
 	}
@@ -75,7 +79,7 @@ public class BirthdayOnHoliday implements Service {
 		if(!employeesResponse.isServerError()) {
 			for(EmployeeDto user : employeesResponse.getResponse()) {
 				actions.add(new NotifyAction(user.getInitials() + " (КолАЭР) " + user.getDepartment().getAbbreviatedName(),
-						e -> new DetailedInformationVc(new UserModelImpl(user)).show()
+						e -> DetailedInformationVc.show(new UserModelImpl(user))
 				));
 			}
 		}
@@ -83,14 +87,14 @@ public class BirthdayOnHoliday implements Service {
 		if(!otherEmployeesResponse.isServerError()) {
 			for (EmployeeOtherOrganizationDto user : otherEmployeesResponse.getResponse()) {
 				actions.add(new NotifyAction(user.getInitials() + " (" + BirthdayTools.getNameOrganization(user.getOrganization()) + ") " + user.getDepartment(), e -> {
-					final UserModel userModel = new UserModelImpl(user);
+					UserModel userModel = new UserModelImpl(user);
 					userModel.setOrganization(BirthdayTools.getNameOrganization(user.getOrganization()));
-					new DetailedInformationVc(userModel).show();
+					DetailedInformationVc.show(userModel);
 				}));
 			}
 		}
 
-		ru.kolaer.api.tools.Tools.runOnWithOutThreadFX(() -> {
+		Tools.runOnWithOutThreadFX(() -> {
 			UniformSystemEditorKitSingleton.getInstance()
 					.getUISystemUS()
 					.getNotification()

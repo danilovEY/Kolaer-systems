@@ -48,12 +48,12 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 
 	@Override
 	public ServerResponse<Page<EmployeeOtherOrganizationDto>> getAllUser() {
-		return getPageResponse(restTemplate.getForEntity(URL_GET_ALL, String.class), objectMapper);
+		return getPageResponse(restTemplate, URL_GET_ALL, objectMapper);
 	}
 
 	@Override
 	public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersMax(final int maxCount) {
-		return getServerResponses(restTemplate.getForEntity(this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount), String.class),
+		return getServerResponses(restTemplate, this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount),
 				EmployeeOtherOrganizationDto[].class, objectMapper);
 	}
 
@@ -62,7 +62,7 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 		final SimpleStringProperty property = new SimpleStringProperty();
 		property.setValue(dateFormat.format(date));
 
-		return getServerResponses(restTemplate.getForEntity(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), String.class),
+		return getServerResponses(restTemplate, this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(),
 				EmployeeOtherOrganizationDto[].class,
 				objectMapper);
 	}
@@ -74,14 +74,14 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 		propertyBegin.setValue(dateFormat.format(dateBegin));
 		propertyEnd.setValue(dateFormat.format(dateEnd));
 
-		return getServerResponses(restTemplate.getForEntity(URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), String.class),
+		return getServerResponses(restTemplate, URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(),
 				EmployeeOtherOrganizationDto[].class,
 				objectMapper);
 	}
 
 	@Override
 	public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersBirthdayToday() {
-		return getServerResponses(restTemplate.getForEntity(URL_GET_USERS_BIRTHDAY_TODAY, String.class),
+		return getServerResponses(restTemplate, URL_GET_USERS_BIRTHDAY_TODAY,
 				EmployeeOtherOrganizationDto[].class,
 				objectMapper);
 	}
@@ -91,14 +91,14 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 		final SimpleStringProperty property = new SimpleStringProperty();
 		property.setValue(dateFormat.format(date));
 
-		return getServerResponse(restTemplate.getForEntity(URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "/count", String.class),
+		return getServerResponse(restTemplate, URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "/count",
 				Integer.class,
 				objectMapper);
 	}
 
 	@Override
 	public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByInitials(final String initials) {
-		return getServerResponses(restTemplate.getForEntity(URL_GET_USERS_BY_INITIALS + "/" + initials, String.class),
+		return getServerResponses(restTemplate, URL_GET_USERS_BY_INITIALS + "/" + initials,
 				EmployeeOtherOrganizationDto[].class,
 				objectMapper);
 	}
@@ -112,7 +112,7 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 	public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByBirthday(Date date, String organization) {
 		final SimpleStringProperty property = new SimpleStringProperty();
 		property.setValue(dateFormat.format(date));
-		return getServerResponses(restTemplate.getForEntity(URL_GET_USERS + "/" + organization + "/birthday/" + property.getValue(), String.class),
+		return getServerResponses(restTemplate, URL_GET_USERS + "/" + organization + "/birthday/" + property.getValue(),
 				EmployeeOtherOrganizationDto[].class,
 				objectMapper);
 	}
@@ -122,7 +122,7 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 		final SimpleStringProperty property = new SimpleStringProperty();
 		property.setValue(dateFormat.format(date));
 
-		return getServerResponse(restTemplate.getForEntity(URL_GET_USERS + "/" + organization + "/birthday/" + property.getValue() + "/count", String.class),
+		return getServerResponse(restTemplate, URL_GET_USERS + "/" + organization + "/birthday/" + property.getValue() + "/count",
 				Integer.class,
 				objectMapper);
 	}

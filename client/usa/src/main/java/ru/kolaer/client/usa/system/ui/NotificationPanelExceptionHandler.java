@@ -3,18 +3,17 @@ package ru.kolaer.client.usa.system.ui;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import org.controlsfx.tools.Borders;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.system.ui.NotificationUS;
@@ -109,12 +108,12 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
     public void showErrorNotify(ServerExceptionMessage exceptionMessage) {
         log.info("Server error: {}", exceptionMessage.toString());
 
-        String title = "(" + exceptionMessage.getStatus() + ") " +
+        String title = exceptionMessage.getCode().getMessage();
+        String message = "(" + exceptionMessage.getStatus() + ") " +
                 exceptionMessage.getUrl() +
-                " - " +
-                exceptionMessage.getCode().getMessage();
+                " - " + exceptionMessage.getMessage();
 
-        this.sendMessage(this.vBoxNotifyMessage, ERROR_MESSAGE, title, exceptionMessage.getMessage(),
+        this.sendMessage(this.vBoxNotifyMessage, ERROR_MESSAGE, title, message,
                 exceptionMessage.getExceptionTimestamp(), Collections.emptyList());
     }
 
@@ -182,6 +181,20 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
             String dateToString = dateFormat.format(Optional.ofNullable(date)
                     .orElse(new Date()));
 
+            MenuItem copy = new MenuItem("Копировать");
+            copy.setOnAction(e -> {
+                ClipboardContent clipboardContent = new ClipboardContent();
+                clipboardContent.putString(String.format("%s\n%s\n%s", title, text, dateToString));
+                Clipboard.getSystemClipboard().setContent(clipboardContent);
+            });
+            ContextMenu contextMenu = new ContextMenu(copy);
+
+            content.setOnMousePressed(event -> {
+                if (event.isSecondaryButtonDown()) {
+                    contextMenu.show(content, event.getScreenX(), event.getScreenY());
+                }
+            });
+
             Label timeLabel = new Label(dateToString);
             timeLabel.setTextAlignment(TextAlignment.CENTER);
             timeLabel.setWrapText(true);
@@ -200,16 +213,18 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
                 }
             }
 
-            final Node border = Borders.wrap(content)
+            /*final Node border = Borders.wrap(content)
                     .lineBorder()
                     .thickness(5)
                     .innerPadding(0)
                     .radius(5, 5, 5, 5)
                     .color(Color.color(0.114, 0.161, 0.209))
                     .build()
-                    .build();
-            typePane.getChildren().add(border);
-            border.toBack();
+                    .build();*/
+
+            typePane.getChildren().add(content);
+
+            content.toBack();
         });
     }
 
@@ -254,6 +269,26 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
         this.vBoxStatic.setAlignment(Pos.TOP_LEFT);
         this.vBoxStatic.setPadding(new Insets(5,5,5,5));
 
+        MenuItem clearStatic = new MenuItem("Очистить");
+        clearStatic.setOnAction(e -> vBoxStatic.getChildren().clear());
+        ContextMenu contextMenuStatic = new ContextMenu(clearStatic);
+
+        vBoxStatic.setOnMousePressed(event -> {
+            if (event.isSecondaryButtonDown()) {
+                contextMenuStatic.show(vBoxStatic, event.getScreenX(), event.getScreenY());
+            }
+        });
+
+        MenuItem clearMessage = new MenuItem("Очистить");
+        clearMessage.setOnAction(e -> vBoxNotifyMessage.getChildren().clear());
+        ContextMenu contextMenuMessages = new ContextMenu(clearMessage);
+
+        vBoxNotifyMessage.setOnMousePressed(event -> {
+            if (event.isSecondaryButtonDown()) {
+                contextMenuMessages.show(vBoxNotifyMessage, event.getScreenX(), event.getScreenY());
+            }
+        });
+
         final ScrollPane scrollPaneStatic = new ScrollPane(this.vBoxStatic);
         scrollPaneStatic.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPaneStatic.setMinWidth(300);
@@ -289,19 +324,20 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
         Tools.runOnWithOutThreadFX(() -> {
             BorderPane content = new BorderPane();
             content.setBackground(Background.EMPTY);
-            content.setStyle("-fx-background-color: rgba(255, 156, 0, 0.6); -fx-effect: dropshadow(gaussian , #866839, 4,0,0,1 ); -fx-padding: 3;");
+            content.setStyle("-fx-background-color: rgba(255,251,253,0.6); -fx-effect: dropshadow(gaussian , #858086, 4,0,0,1 ); -fx-padding: 3;");
             content.setCenter(staticView.getContent());
 
-            Node border = Borders.wrap(content)
+            /*Node border = Borders.wrap(content)
                     .lineBorder()
                     .thickness(5)
                     .innerPadding(0)
                     .radius(5, 5, 5, 5)
                     .color(Color.color(0.114, 0.161, 0.209))
                     .build()
-                    .build();
-            this.vBoxStatic.getChildren().add(border);
-            border.toBack();
+                    .build();*/
+            vBoxStatic.getChildren().add(content);
+
+            content.toBack();
         });
     }
 

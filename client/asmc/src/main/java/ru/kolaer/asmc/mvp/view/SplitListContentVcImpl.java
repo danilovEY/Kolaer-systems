@@ -55,7 +55,7 @@ public class SplitListContentVcImpl implements SplitListContentVc {
         mainPane = new BorderPane();
         splitPane = new SplitPane();
 
-        mainPane.getStylesheets().add(this.getClass().getResource("/CSS/Default/Default.css").toString());
+        mainPane.getStylesheets().add(getClass().getResource("/CSS/Default/Default.css").toString());
 
         splitPane.setOrientation(Orientation.HORIZONTAL);
         splitPane.getItems().addAll(null, null);

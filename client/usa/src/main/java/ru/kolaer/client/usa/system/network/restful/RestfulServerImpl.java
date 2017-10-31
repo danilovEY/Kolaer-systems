@@ -23,7 +23,7 @@ public class RestfulServerImpl implements RestfulServer, RestTemplateService {
 
     @Override
     public ServerResponse<ServerStatus> getServerStatus() {
-        ServerResponse<String> serverResponse = getServerResponse(globalRestTemplate.getForEntity(urlToStatus, String.class),
+        ServerResponse<String> serverResponse = getServerResponse(globalRestTemplate, urlToStatus,
                 String.class, objectMapper);
 
         if (serverResponse.isServerError()) {

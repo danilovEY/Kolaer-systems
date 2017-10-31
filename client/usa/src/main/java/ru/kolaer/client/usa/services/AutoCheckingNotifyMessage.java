@@ -2,7 +2,6 @@ package ru.kolaer.client.usa.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.plugins.services.Service;
@@ -54,10 +53,8 @@ public class AutoCheckingNotifyMessage implements Service {
                             .showInformationNotify("Сообщение!", lastNotifyMessage.getMessage());
                 }
             } else {
-                ServerExceptionMessage exceptionMessage = responseLastNotifyMessage.getExceptionMessage();
-                log.error(exceptionMessage.toString());
                 UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
-                        .showErrorNotify("Невозможно получить сообщение с сервера!", exceptionMessage.getMessage());
+                        .showErrorNotify(responseLastNotifyMessage.getExceptionMessage());
             }
 
             try {

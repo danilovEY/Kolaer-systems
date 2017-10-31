@@ -110,7 +110,7 @@ public class VMMainFrameImpl extends Application {
 
             while (iterPlugins.hasNext()) {
                 PluginBundle pluginBundle = iterPlugins.next();
-                if(pluginBundle.getSymbolicNamePlugin().equals("ru.kolaer.asmc")) {
+                if(pluginBundle.getSymbolicNamePlugin().contains("ru.kolaer.asmc")) {
                     installPlugin(explorer, initPluginManager, pluginBundle);
                     iterPlugins.remove();
                     break;
@@ -265,8 +265,8 @@ public class VMMainFrameImpl extends Application {
 
         String pathServerWeb = PARAM.get(Resources.PUBLIC_SERVER_URL_PARAM);
         if (pathServerWeb != null) {
-            Resources.URL_TO_PRIVATE_SERVER.delete(0, Resources.URL_TO_PRIVATE_SERVER.length()).append(pathServerWeb);
-            log.info("Public server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
+            Resources.URL_TO_PUBLIC_SERVER.delete(0, Resources.URL_TO_PUBLIC_SERVER.length()).append(pathServerWeb);
+            log.info("Public server: {}", Resources.URL_TO_PUBLIC_SERVER.toString());
         }
 
         String service = PARAM.get(Resources.SERVICE_PARAM);

@@ -19,6 +19,10 @@ public class NotifyMessageConverterImpl implements NotifyMessageConverter {
 
     @Override
     public NotifyMessageDto convertToDto(NotifyMessageEntity model) {
+        if(model == null) {
+            return null;
+        }
+
         NotifyMessageDto notifyMessageDto = new NotifyMessageDto();
         notifyMessageDto.setId(model.getId());
         notifyMessageDto.setMessage(model.getMessage());

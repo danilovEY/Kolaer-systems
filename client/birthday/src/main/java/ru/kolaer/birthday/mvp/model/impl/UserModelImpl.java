@@ -68,13 +68,13 @@ public class UserModelImpl implements UserModel {
 		PostDto postEntity = user.getPost();
 		String postName = postEntity.getName();
 		if(postEntity.getType() != null) {
-			postName += " " + postEntity.getRang() + " " + postEntity.getType().name();
+			postName += " " + postEntity.getRang() + " " + postEntity.getType().getName();
 		}
 
 		setPost(postName);
 		setPhoneNumber(user.getWorkPhoneNumber());
-		setEmail("");
-		setIcon(user.getInitials() + ".jpg");
+		setEmail(user.getEmail());
+		setIcon(user.getPhoto());
 		setGender(user.getGender());
 	}
 

@@ -5,6 +5,7 @@ import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class BirthdayTools {
@@ -17,6 +18,7 @@ public class BirthdayTools {
 		}
 	};
 
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	private static final DateFormat dateFormatWithOutYear = new SimpleDateFormat("dd MMMMM", myDateFormatSymbols);
 	private static final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", myDateFormatSymbols);
 
@@ -31,7 +33,11 @@ public class BirthdayTools {
 	public static Date convertToDate(LocalDate date) {
 		return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
-	
+
+	public static DateTimeFormatter getDateTimeFormatter() {
+		return dateTimeFormatter;
+	}
+
 	public static String getNameOrganization(String org) {
 		switch(org) {		
 			case "БалаковоАтомэнергоремонт": return "БалАЭР";

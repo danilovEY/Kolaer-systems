@@ -6,10 +6,12 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.RequestDbBirthdayAllList;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeOtherOrganizationService;
 
 import java.text.ParseException;
@@ -108,31 +110,21 @@ public class EmployeeOtherOrganizationController {
 			notes = "Получить сотрудников у кого день рождения в указанный день из указанной организации"
 	)
 	@UrlDeclaration(description = "Получить сотрудников у кого день рождения в указанный день из указанной организации", isAccessAll = true)
-	@RequestMapping(value = "/get/users/{orgainzation}/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/get/users/{organization}/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthdayAndOrg(
 			final @ApiParam(value = "Дата", required = true) @PathVariable String date,
-			final @ApiParam(value = "Название организации", required = true) @PathVariable String orgainzation) {
+			final @ApiParam(value = "Название организации", required = true) @PathVariable String organization) {
 		final SimpleDateFormat sdf = date.contains("-")
 				? new SimpleDateFormat("yyyy-MM-dd")
 				: new SimpleDateFormat("dd.MM.yyyy");
 	    
 		try {
-			final Date datePasre = sdf.parse(date);
-			return Collections.emptyList(); //employeeOtherOrganizationService.getUsersByBirthdayAndOrg(datePasre, orgainzation); TODO !!!!
+			Date datePasre = sdf.parse(date);
+			return employeeOtherOrganizationService.getUsersByBirthdayAndOrg(datePasre, organization);
 		} catch (ParseException e) {
 			log.error("Ошибка! Не коректные данные: ({})", date);
 			return Collections.emptyList();
 		}
-	}
-
-	@ApiOperation(
-			value = "Задать сотрудников из других организаций",
-			notes = "Задать сотрудников из других организаций"
-	)
-	@UrlDeclaration(description = "Задать сотрудников из других организаций", requestMethod = RequestMethod.POST)
-	@RequestMapping(value = "/set/users/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public void setUsers(final @ApiParam(value = "Список сотрудников", required = true) @RequestBody RequestDbBirthdayAllList usersList) {
-		//employeeOtherOrganizationService.insertDataList(usersList.getBirthdayList()); //TODO !!!!
 	}
 
 	@ApiOperation(
@@ -170,7 +162,7 @@ public class EmployeeOtherOrganizationController {
 	    
 		try {
 			final Date datePasre = sdf.parse(date);
-			return 1;//employeeOtherOrganizationService.getCountUserBirthdayAndOrg(datePasre, organization); TODO: !!
+			return employeeOtherOrganizationService.getCountUserBirthdayAndOrg(datePasre, organization);
 		} catch (ParseException e) {
 			log.error("Ошибка! Не коректные данные: ({})", date);
 			return 0;

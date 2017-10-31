@@ -1,8 +1,6 @@
 package ru.kolaer.birthday.runnable;
 
 import javafx.scene.Parent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
@@ -22,8 +20,6 @@ import java.util.function.Consumer;
  * @version 0.1
  */
 public class BirthdayPlugin implements UniformSystemPlugin {
-	private final static Logger log = LoggerFactory.getLogger(BirthdayPlugin.class);
-
 	/**Список служб.*/
 	private List<Service> servicesList;
 	private MainContentVc mainContentVc;

@@ -8,5 +8,5 @@ import java.util.List;
 /**Слушатель календаря.*/
 public interface ObserverCalendar {
 	/**Получает оповещение о нажатии на дату со списком пользователей.*/
-	void updateSelectedDate(LocalDate date, List<UserModel> users);
+	void updateSelectedDate(String title, LocalDate date, List<UserModel> users);
 }

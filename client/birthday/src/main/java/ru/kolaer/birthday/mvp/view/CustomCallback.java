@@ -1,4 +1,4 @@
-package ru.kolaer.birthday.mvp.presenter.impl;
+package ru.kolaer.birthday.mvp.view;
 
 import javafx.scene.Node;
 import javafx.scene.control.DateCell;

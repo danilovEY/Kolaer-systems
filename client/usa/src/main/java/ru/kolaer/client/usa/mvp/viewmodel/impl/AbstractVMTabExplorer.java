@@ -94,6 +94,7 @@ public abstract class AbstractVMTabExplorer extends BorderPane
     @Override
     public void initView(Consumer<VMExplorer> viewVisit) {
         pluginsTabPane = new TabPane();
+        pluginsTabPane.getStylesheets().add(getClass().getResource("/css/explorer.css").toString());
         viewVisit.accept(this);
     }
 }

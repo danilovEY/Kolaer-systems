@@ -57,6 +57,8 @@ public class PluginManager {
                 "ru.kolaer.api.mvp.model, "+
                 "ru.kolaer.api.mvp.model.kolaerweb, "+
                 "ru.kolaer.api.exceptions, "+
+                "ru.kolaer.api.mvp.model.error, "+
+                "ru.kolaer.api.mvp.model.other, "+
                 "ru.kolaer.api.mvp.model.kolaerweb.psr, "+
                 "ru.kolaer.api.mvp.model.kolaerweb.webportal, "+
                 "ru.kolaer.api.mvp.model.kolaerweb.webportal.rss, "+

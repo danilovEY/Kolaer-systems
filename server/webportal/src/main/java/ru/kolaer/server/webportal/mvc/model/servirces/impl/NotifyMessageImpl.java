@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
 import ru.kolaer.server.webportal.mvc.model.converter.NotifyMessageConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.NotifyMessageDao;
@@ -22,6 +23,7 @@ public class NotifyMessageImpl extends AbstractDefaultService<NotifyMessageDto, 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public NotifyMessageDto getLastNotifyMessage() {
         return baseConverter.convertToDto(notifyMessageDao.getLastNotifyMessage());
     }

@@ -21,9 +21,41 @@ import java.util.List;
  */
 public interface RestTemplateService {
 
+    default <T> ServerResponse<Page<T>> getPageResponse(RestTemplate restTemplate, String url, ObjectMapper objectMapper) {
+        try {
+            return getPageResponse(restTemplate.getForEntity(url, String.class), objectMapper);
+        } catch (RestClientException ex) {
+            return createServerExceptionMessage(url);
+        }
+    }
+
     default <T> ServerResponse<T> getServerResponse(RestTemplate restTemplate, String url, Class<T> dtoClass, ObjectMapper objectMapper) {
         try {
             return getServerResponse(restTemplate.getForEntity(url, String.class), dtoClass, objectMapper);
+        } catch (RestClientException ex) {
+            return createServerExceptionMessage(url);
+        }
+    }
+
+    default <T> ServerResponse<List<T>> getServerResponses(RestTemplate restTemplate, String url, Class<T[]> dtoClass, ObjectMapper objectMapper) {
+        try {
+            return getServerResponses(restTemplate.getForEntity(url, String.class), dtoClass, objectMapper);
+        } catch (RestClientException ex) {
+            return createServerExceptionMessage(url);
+        }
+    }
+
+    default <T> ServerResponse<T> postServerResponse(RestTemplate restTemplate, String url, Object request, Class<T> dtoClass, ObjectMapper objectMapper) {
+        try {
+            return getServerResponse(restTemplate.postForEntity(url, request, String.class), dtoClass, objectMapper);
+        } catch (RestClientException ex) {
+            return createServerExceptionMessage(url);
+        }
+    }
+
+    default <T> ServerResponse<List<T>> postServerResponses(RestTemplate restTemplate, String url, Object request, Class<T[]> dtoClass, ObjectMapper objectMapper) {
+        try {
+            return getServerResponses(restTemplate.postForEntity(url, request, String.class), dtoClass, objectMapper);
         } catch (RestClientException ex) {
             return createServerExceptionMessage(url);
         }

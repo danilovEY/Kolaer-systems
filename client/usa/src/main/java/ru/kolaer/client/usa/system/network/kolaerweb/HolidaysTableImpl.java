@@ -34,13 +34,12 @@ public class HolidaysTableImpl implements HolidaysTable, RestTemplateService {
 
     @Override
     public ServerResponse<List<Holiday>> getHolidays(final int month, final int year) {
-        return getServerResponses(restTemplate.getForEntity(URL_GET + "/" + String.valueOf(month) + "/" + String.valueOf(year), String.class),
+        return getServerResponses(restTemplate, URL_GET + "/" + String.valueOf(month) + "/" + String.valueOf(year),
                 Holiday[].class, objectMapper);
     }
 
     @Override
     public ServerResponse<List<Holiday>> getHolidaysAll() {
-        return getServerResponses(restTemplate.getForEntity(URL_GET_ALL, String.class),
-                Holiday[].class, objectMapper);
+        return getServerResponses(restTemplate, URL_GET_ALL, Holiday[].class, objectMapper);
     }
 }

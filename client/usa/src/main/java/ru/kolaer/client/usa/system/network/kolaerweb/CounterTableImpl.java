@@ -25,7 +25,7 @@ public class CounterTableImpl implements CounterTable, RestTemplateService {
 
     @Override
     public ServerResponse<List<CounterDto>> getAllCounters() {
-        return getServerResponses(restTemplate.getForEntity(URL_GET_ALL, String.class), CounterDto[].class, objectMapper);
+        return getServerResponses(restTemplate, URL_GET_ALL, CounterDto[].class, objectMapper);
     }
 
     @Override

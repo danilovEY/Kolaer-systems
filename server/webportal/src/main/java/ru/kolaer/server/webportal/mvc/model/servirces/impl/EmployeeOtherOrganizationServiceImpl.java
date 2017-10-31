@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.server.webportal.mvc.model.converter.EmployeeOtherOrganizationConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeOtherOrganizationDao;
@@ -31,6 +32,7 @@ public class EmployeeOtherOrganizationServiceImpl
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeOtherOrganizationDto> getUserRangeBirthday(Date startData, Date endData) {
         return employeeOtherOrganizationDao.getUserRangeBirthday(startData, endData)
                 .stream()
@@ -39,6 +41,7 @@ public class EmployeeOtherOrganizationServiceImpl
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeOtherOrganizationDto> getUsersByBirthday(Date date) {
         return employeeOtherOrganizationDao.getUsersByBirthday(date)
                 .stream()
@@ -47,6 +50,7 @@ public class EmployeeOtherOrganizationServiceImpl
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeOtherOrganizationDto> getUserBirthdayToday() {
         return employeeOtherOrganizationDao.getUserBirthdayToday()
                 .stream()
@@ -55,6 +59,7 @@ public class EmployeeOtherOrganizationServiceImpl
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeOtherOrganizationDto> getUsersByInitials(String initials) {
         return employeeOtherOrganizationDao.getUsersByInitials(initials)
                 .stream()
@@ -63,8 +68,23 @@ public class EmployeeOtherOrganizationServiceImpl
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getCountUserBirthday(Date date) {
         return employeeOtherOrganizationDao.getCountUserBirthday(date);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmployeeOtherOrganizationDto> getUsersByBirthdayAndOrg(Date date, String organization) {
+        return employeeOtherOrganizationDao.getUsersByBirthdayAndOrg(date, organization)
+                .stream()
+                .map(baseConverter::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int getCountUserBirthdayAndOrg(Date date, String organization) {
+        return employeeOtherOrganizationDao.getCountUserBirthdayAndOrg(date, organization);
+    }
 }

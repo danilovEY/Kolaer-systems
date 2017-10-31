@@ -1,27 +1,21 @@
 package ru.kolaer.birthday.service;
 
-import javafx.application.Platform;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
-import ru.kolaer.api.system.ui.NotifyAction;
-import ru.kolaer.birthday.mvp.model.UserModel;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
-import ru.kolaer.birthday.mvp.view.DetailedInformationVc;
+import ru.kolaer.birthday.mvp.view.BirthdayInfoPane;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class BirthdayService implements Service {
-	private final Logger log = LoggerFactory.getLogger(BirthdayService.class);
-	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	private boolean run = false;
 	private LocalDate lastUpdateEmployee;
 	private LocalDate lastUpdateOtherEmployee;
@@ -38,35 +32,42 @@ public class BirthdayService implements Service {
 					.getKolaerWebServer()
 					.getApplicationDataBase();
 
-			/*
-
-			ServerResponse<List<EmployeeOtherOrganizationDto>> otherEmployeeBirthdayTodayResponse = applicationDataBase
+			if(lastUpdateOtherEmployee == null || lastUpdateOtherEmployee.isBefore(now)) {
+				ServerResponse<List<EmployeeOtherOrganizationDto>> otherEmployeeBirthdayTodayResponse = applicationDataBase
 						.getEmployeeOtherOrganizationTable()
 						.getUsersBirthdayToday();
 
-				if(employeeBirthdayTodayResponse.isServerError() || otherEmployeeBirthdayTodayResponse.isServerError()) {
-					return;
-				}
+				if (otherEmployeeBirthdayTodayResponse.isServerError()) {
+					UniformSystemEditorKitSingleton.getInstance()
+							.getUISystemUS()
+							.getNotification()
+							.showErrorNotify(otherEmployeeBirthdayTodayResponse.getExceptionMessage());
 
-				List<EmployeeOtherOrganizationDto> otherEmployees = otherEmployeeBirthdayTodayResponse.getResponse();
-				for(EmployeeOtherOrganizationDto user : otherEmployees) {
-					actions.add(new NotifyAction(user.getInitials() + " ("+ Tools.getNameOrganization(user.getOrganization()) +") " + user.getDepartment(), e -> {
-						final UserModel userModel = new UserModelImpl(user);
-						userModel.setOrganization(Tools.getNameOrganization(user.getOrganization()));
-						Platform.runLater(() -> {
-							new VMDetailedInformationStageImpl(userModel).show();
-						});
-					}));
-				}
+					lastUpdateOtherEmployee = null;
+				} else {
+					List<EmployeeOtherOrganizationDto> employees = otherEmployeeBirthdayTodayResponse.getResponse();
 
-			 */
+					if (employees.size() > 0) {
+						String title = "Поздравляем с днем рождения сотрудников в филиалах!";
+
+						Tools.runOnWithOutThreadFX(() -> new BirthdayInfoPane(title, employees.stream()
+								.map(UserModelImpl::new)
+								.collect(Collectors.toList()))
+								.initView(UniformSystemEditorKitSingleton
+										.getInstance()
+										.getUISystemUS()
+										.getStatic()::addStaticView));
+					}
+					lastUpdateOtherEmployee = now;
+				}
+			}
 
 			if(lastUpdateEmployee == null || lastUpdateEmployee.isBefore(now)) {
 				ServerResponse<List<EmployeeDto>> employeeBirthdayTodayResponse = applicationDataBase
 						.getGeneralEmployeesTable()
 						.getUsersBirthdayToday();
 
-				if(employeeBirthdayTodayResponse.isServerError()) {
+				if (employeeBirthdayTodayResponse.isServerError()) {
 					UniformSystemEditorKitSingleton.getInstance()
 							.getUISystemUS()
 							.getNotification()
@@ -76,35 +77,27 @@ public class BirthdayService implements Service {
 				} else {
 					List<EmployeeDto> employees = employeeBirthdayTodayResponse.getResponse();
 
-					List<NotifyAction> actions = new ArrayList<>(employees.size() + employees.size());
+					if (employees.size() > 0) {
+						String title = "Поздравляем с днем рождения наших сотрудников!";
 
-					for(EmployeeDto user : employees) {
-						actions.add(new NotifyAction(user.getInitials() + " (КолАЭР) " + user.getDepartment().getAbbreviatedName(), e -> {
-							UserModel userModel = new UserModelImpl(user);
-
-							new DetailedInformationVc(userModel).show();
-						}));
+						Tools.runOnWithOutThreadFX(() -> new BirthdayInfoPane(title, employees.stream()
+								.map(UserModelImpl::new)
+								.collect(Collectors.toList()))
+								.initView(UniformSystemEditorKitSingleton
+										.getInstance()
+										.getUISystemUS()
+										.getStatic()::addStaticView));
 					}
-
 					lastUpdateEmployee = now;
 				}
-
-
-
-
-				try{
-					TimeUnit.MINUTES.sleep(5);
-				}catch(InterruptedException e){
-					log.error("Привышено ожижание", e);
-				}
-
-				Platform.runLater(() -> {
-					this.editorKit.getUISystemUS().getNotification().showInformationNotify(title.toString(), "Поздравляем с днем рождения!", null, actions);
-				});
 			}
 
+			try{
+				TimeUnit.MINUTES.sleep(5);
+			}catch(InterruptedException e){
+				run = false;
+			}
 		}
-
 	}
 
 	@Override

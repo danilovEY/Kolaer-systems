@@ -60,7 +60,7 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
         LOG.info("Авторизация для: {}", userAndPassJson.getUsername());
 
         try {
-            ServerResponse<TokenJson> response = getServerResponse(restTemplate.postForEntity(URL_TO_GET_TOKEN, userAndPassJson, String.class),
+            ServerResponse<TokenJson> response = postServerResponse(restTemplate, URL_TO_GET_TOKEN, userAndPassJson,
                     TokenJson.class, objectMapper);
             if(response.isServerError()) {
                 LOG.error("EROOR!");

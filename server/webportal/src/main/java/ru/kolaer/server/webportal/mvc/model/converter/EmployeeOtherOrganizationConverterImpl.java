@@ -13,6 +13,7 @@ public class EmployeeOtherOrganizationConverterImpl implements EmployeeOtherOrga
     public EmployeeOtherOrganizationEntity convertToModel(EmployeeOtherOrganizationDto dto) {
         EmployeeOtherOrganizationEntity employeeEntity = new EmployeeOtherOrganizationEntity();
         employeeEntity.setId(dto.getId());
+        employeeEntity.setOrganization(dto.getOrganization());
         employeeEntity.setEmail(dto.getEmail());
         employeeEntity.setFirstName(dto.getFirstName());
         employeeEntity.setSecondName(dto.getSecondName());
@@ -32,6 +33,7 @@ public class EmployeeOtherOrganizationConverterImpl implements EmployeeOtherOrga
     public EmployeeOtherOrganizationDto convertToDto(EmployeeOtherOrganizationEntity model) {
         EmployeeOtherOrganizationDto dto = new EmployeeOtherOrganizationDto();
         dto.setId(model.getId());
+        dto.setOrganization(model.getOrganization());
         dto.setEmail(model.getEmail());
         dto.setFirstName(model.getFirstName());
         dto.setSecondName(model.getSecondName());
@@ -50,6 +52,7 @@ public class EmployeeOtherOrganizationConverterImpl implements EmployeeOtherOrga
     public EmployeeOtherOrganizationDto updateData(EmployeeOtherOrganizationDto oldDto, EmployeeOtherOrganizationEntity newModel) {
         oldDto.setId(newModel.getId());
         oldDto.setEmail(newModel.getEmail());
+        oldDto.setOrganization(newModel.getOrganization());
         oldDto.setFirstName(newModel.getFirstName());
         oldDto.setSecondName(newModel.getSecondName());
         oldDto.setThirdName(newModel.getThirdName());

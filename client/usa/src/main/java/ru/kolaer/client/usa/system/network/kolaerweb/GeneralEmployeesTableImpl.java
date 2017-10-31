@@ -40,12 +40,12 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable, RestTem
 
     @Override
     public ServerResponse<Page<EmployeeDto>> getAllUser() {
-        return getPageResponse(restTemplate.getForEntity(this.URL_GET_ALL, String.class), objectMapper);
+        return getPageResponse(restTemplate, this.URL_GET_ALL, objectMapper);
     }
 
     @Override
     public ServerResponse<List<EmployeeDto>> getUsersMax(final int maxCount) {
-        return getServerResponses(restTemplate.getForEntity(this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount), String.class),
+        return getServerResponses(restTemplate, this.URL_GET_USERS_MAX + "/" + String.valueOf(maxCount), 
                 EmployeeDto[].class, objectMapper);
     }
 
@@ -54,7 +54,7 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable, RestTem
         final SimpleStringProperty property = new SimpleStringProperty();
         property.setValue(dateFormat.format(date));
 
-        return getServerResponses(restTemplate.getForEntity(this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), String.class),
+        return getServerResponses(restTemplate, this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), 
                 EmployeeDto[].class,
                 objectMapper);
     }
@@ -66,14 +66,14 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable, RestTem
         propertyBegin.setValue(dateFormat.format(dateBegin));
         propertyEnd.setValue(dateFormat.format(dateEnd));
 
-        return getServerResponses(restTemplate.getForEntity(URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), String.class),
+        return getServerResponses(restTemplate, URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), 
                 EmployeeDto[].class,
                 objectMapper);
     }
 
     @Override
     public ServerResponse<List<EmployeeDto>> getUsersBirthdayToday() {
-        return getServerResponses(restTemplate.getForEntity(URL_GET_USERS_BIRTHDAY_TODAY, String.class),
+        return getServerResponses(restTemplate, URL_GET_USERS_BIRTHDAY_TODAY, 
                 EmployeeDto[].class,
                 objectMapper);
     }
@@ -83,14 +83,14 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable, RestTem
         final SimpleStringProperty property = new SimpleStringProperty();
         property.setValue(dateFormat.format(date));
 
-        return getServerResponse(restTemplate.getForEntity(URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "/count", String.class),
+        return getServerResponse(restTemplate, URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "/count", 
                 Integer.class,
                 objectMapper);
     }
 
     @Override
     public ServerResponse<List<EmployeeDto>> getUsersByInitials(final String initials) {
-        return getServerResponses(restTemplate.getForEntity(URL_GET_USERS_BY_INITIALS + "/" + initials, String.class),
+        return getServerResponses(restTemplate, URL_GET_USERS_BY_INITIALS + "/" + initials, 
                 EmployeeDto[].class,
                 objectMapper);
     }
