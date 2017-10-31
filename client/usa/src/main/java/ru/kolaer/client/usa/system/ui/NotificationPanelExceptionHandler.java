@@ -309,12 +309,16 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
         this.mainPane.setPrefWidth(300);
         this.mainPane.setMaxWidth(400);
 
-
-        BackgroundImage myBI= new BackgroundImage(new Image(this.getClass().getResource("/notify-background.jpg").toString()),
+        BackgroundImage staticBackground= new BackgroundImage(new Image(getClass().getResource("/static-background.jpg").toString()),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
-        this.vBoxNotifyMessage.setBackground(new Background(myBI));
-        this.vBoxStatic.setBackground(new Background(myBI));
+
+        BackgroundImage notifyBackground= new BackgroundImage(new Image(getClass().getResource("/notify-background.jpg").toString()),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+
+        this.vBoxNotifyMessage.setBackground(new Background(notifyBackground));
+        this.vBoxStatic.setBackground(new Background(staticBackground));
 
         viewVisit.accept(this);
     }
@@ -322,10 +326,10 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
     @Override
     public void addStaticView(StaticView staticView) {
         Tools.runOnWithOutThreadFX(() -> {
-            BorderPane content = new BorderPane();
-            content.setBackground(Background.EMPTY);
-            content.setStyle("-fx-background-color: rgba(255,251,253,0.6); -fx-effect: dropshadow(gaussian , #858086, 4,0,0,1 ); -fx-padding: 3;");
-            content.setCenter(staticView.getContent());
+            //BorderPane content = new BorderPane();
+            //content.setBackground(Background.EMPTY);
+            //content.setStyle("-fx-background-color: rgba(255,251,253,0.8); -fx-effect: dropshadow(gaussian , #858086, 4,0,0,1 ); -fx-padding: 3;");
+            //content.setCenter(staticView.getContent());
 
             /*Node border = Borders.wrap(content)
                     .lineBorder()
@@ -335,9 +339,16 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
                     .color(Color.color(0.114, 0.161, 0.209))
                     .build()
                     .build();*/
-            vBoxStatic.getChildren().add(content);
 
-            content.toBack();
+            //if(StringUtils.isEmpty(staticView.getContent().getStyle())) {
+            //    staticView.getContent().setStyle("-fx-background-color: rgba(255,251,253,0.8); -fx-effect: dropshadow(gaussian , #858086, 4,0,0,1 ); -fx-padding: 3;");
+            //}
+
+            if(!vBoxStatic.getChildren().contains(staticView.getContent())) {
+                vBoxStatic.getChildren().add(staticView.getContent());
+            }
+
+            staticView.getContent().toBack();
         });
     }
 

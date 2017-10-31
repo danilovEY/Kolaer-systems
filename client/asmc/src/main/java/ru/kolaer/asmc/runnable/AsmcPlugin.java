@@ -110,10 +110,6 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
         updateMenuItem.setOnAction(e -> CompletableFuture
                 .runAsync(() -> dataService.loadData())
-                .thenAccept(aVoid -> UniformSystemEditorKitSingleton.getInstance()
-                        .getUISystemUS()
-                        .getNotification()
-                        .showInformationNotify("Обновление", "Успешное обновление данных"))
                 .exceptionally(t -> {
                     log.error("Ошибка", t);
                     UniformSystemEditorKitSingleton.getInstance()
@@ -121,7 +117,10 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
                             .getNotification()
                             .showErrorNotify("Ошибка", "Не удалось прочитать данные");
                     return null;
-                }));
+                }).thenAccept(aVoid -> UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showInformationNotify("Обновление", "Успешное обновление данных")));
     }
 
     private void updateBanner() {

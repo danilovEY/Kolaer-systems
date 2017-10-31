@@ -55,47 +55,12 @@ public class TableWithUsersBirthdayVcImpl implements TableWithUsersBirthdayVc {
 		userBirthdayTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		userBirthdayTable.setPlaceholder(new Label("Именинники отсутствуют!"));
 		userBirthdayTable.setEditable(true);
-		
-		
-		MenuItem item = new MenuItem("Копировать");
-
-		userBirthdayTable.setContextMenu(new ContextMenu(item));
-
-
-	    item.setOnAction(event -> {
-            /*StringBuilder clipboardString = new StringBuilder();
-            Iterator<Integer> iter = userBirthdayTable.getSelectionModel().getSelectedIndices().iterator();
-            while(iter.hasNext()) {
-            	int index = iter.next();
-	            for(TablePosition<UserModel, Object> col : userBirthdayTable.getSelectionModel().getSelectedCells()){
-	            	if(col.getRow() == index) {
-	            		ObservableValue<Object> observableValue = col.getTableColumn().getCellObservableValue(index);
-		            	if(observableValue != null) {
-		            		if(observableValue.getValue().getClass() == Date.class) {
-		            			SimpleStringProperty property = new SimpleStringProperty();
-		    	    	    	DateFormat dateFormat = new SimpleDateFormat("dd MMMMM", myDateFormatSymbols);
-		    	    	    	property.setValue(dateFormat.format((Date)observableValue.getValue()));
-		    	    	    	clipboardString.append(property.getValue()).append(" ");
-		            		} else {
-		            			clipboardString.append(observableValue.getValue()).append(" ");
-		            		}
-		            	}
-	            	}
-	            }
-	            clipboardString.deleteCharAt(clipboardString.length()-1).append('\n');
-            }
-            ClipboardContent content = new ClipboardContent();
-            //В буфер
-            content.putString(clipboardString.toString());
-            Clipboard.getSystemClipboard().setContent(content);*/
-	    });
 
 		userBirthdayTable.setOnMouseClicked(event -> {
 			if(event.getClickCount() == 2) {
 				DetailedInformationVc.show(userBirthdayTable.getSelectionModel().getSelectedItem());
 			}
 		});
-
 		
 		TableColumn<UserModel, String> userIconColumn = new TableColumn<>("Фотография");
 	    userIconColumn.setCellValueFactory(new PropertyValueFactory<>("icon"));
@@ -191,7 +156,10 @@ public class TableWithUsersBirthdayVcImpl implements TableWithUsersBirthdayVc {
 		this.titleLabel.setMaxWidth(Double.MAX_VALUE);
 
 		this.titlePane.setCenter(this.titleLabel);
-		//this.titlePane.setRight(searchUsers.getContent());
+
+		VSearchUsers searchUsers = new VSearchUsersImpl();
+		searchUsers.addObserver(this);
+		searchUsers.initView(initSearch -> titlePane.setRight(initSearch.getContent()));
 
 		this.mainPane.setTop(this.titlePane);
 		this.mainPane.setCenter(this.userBirthdayTable);

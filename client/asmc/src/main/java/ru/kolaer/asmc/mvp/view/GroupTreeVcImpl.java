@@ -1,5 +1,6 @@
 package ru.kolaer.asmc.mvp.view;
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.layout.BorderPane;
@@ -50,15 +51,7 @@ public class GroupTreeVcImpl implements GroupTreeVc {
 
     @Override
     public void sort() {
-        Tools.runOnWithOutThreadFX(() -> {
-            rootNode.getContent()
-                    .getChildren()
-                    .sort(Comparator.comparingInt(g -> g.getValue().getPriority()));
-
-            rootNode.getContent()
-                    .getChildren()
-                    .forEach(this::sort);
-        });
+        Tools.runOnWithOutThreadFX(() -> sort(rootNode.getContent()));
     }
 
     private void sort(TreeItem<MGroup> treeItem) {
@@ -240,12 +233,13 @@ public class GroupTreeVcImpl implements GroupTreeVc {
     public void updateData(List<MGroup> groupList) {
         if(groupList != null) {
             Tools.runOnWithOutThreadFX(() -> {
-                rootNode.getContent().getChildren().clear();
+                ObservableList<TreeItem<MGroup>> children = rootNode.getContent().getChildren();
+                children.clear();
 
                 for (MGroup mGroup : groupList) {
                     GroupTreeItemVc pGroupTreeItem = new GroupTreeItemVcImpl(mGroup);
-                    pGroupTreeItem.initView(initGroupTree -> rootNode.getContent().getChildren()
-                            .add(initGroupTree.getContent()));
+                    pGroupTreeItem.initView(initGroupTree -> children.add(initGroupTree.getContent()));
+
                     Optional.ofNullable(mGroup.getGroups())
                             .orElse(Collections.emptyList())
                             .forEach(gr -> onlyAddGroup(pGroupTreeItem, gr));

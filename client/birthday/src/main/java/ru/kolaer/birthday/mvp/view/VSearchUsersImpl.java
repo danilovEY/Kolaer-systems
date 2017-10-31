@@ -16,15 +16,12 @@ import ru.kolaer.birthday.mvp.presenter.ObserverSearch;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class VSearchUsersImpl implements VSearchUsers {
 	private List<ObserverSearch> observers = new ArrayList<>();
 	private BorderPane mainPane;
 
-	public VSearchUsersImpl() {
-		this.init();
-	}
-	
 	private void init() {
 		this.mainPane = new BorderPane();
 
@@ -38,12 +35,18 @@ public class VSearchUsersImpl implements VSearchUsers {
 		BorderPane.setAlignment(startSearchBut, Pos.CENTER);
 
 		startSearchBut.setOnAction(e -> {
+			List<UserModel> users = new ArrayList<>();
+
 			ServerResponse<List<EmployeeDto>> dbDataAllArray = UniformSystemEditorKitSingleton.getInstance()
 					.getUSNetwork()
 					.getKolaerWebServer()
 					.getApplicationDataBase()
 					.getGeneralEmployeesTable()
 					.getUsersByInitials(searchField.getText());
+
+			if(!dbDataAllArray.isServerError()) {
+				users.addAll(dbDataAllArray.getResponse().stream().map(UserModelImpl::new).collect(Collectors.toList()));
+			}
 
 			ServerResponse<List<EmployeeOtherOrganizationDto>> dbBirthdayAllArray = UniformSystemEditorKitSingleton.getInstance()
 					.getUSNetwork()
@@ -52,19 +55,11 @@ public class VSearchUsersImpl implements VSearchUsers {
 					.getEmployeeOtherOrganizationTable()
 					.getUsersByInitials(searchField.getText());
 
-			List<UserModel> users = new ArrayList<>();
-
-			for(EmployeeDto user : dbDataAllArray.getResponse()) {
-				users.add(new UserModelImpl(user));
+			if(!dbBirthdayAllArray.isServerError()) {
+				users.addAll(dbBirthdayAllArray.getResponse().stream().map(UserModelImpl::new).collect(Collectors.toList()));
 			}
 
-			for(EmployeeOtherOrganizationDto user : dbBirthdayAllArray.getResponse()) {
-				UserModelImpl userModel = new UserModelImpl(user);
-				userModel.setOrganization(user.getOrganization());
-				users.add(userModel);
-			}
-
-			this.notifySearchUsers(users);
+			notifySearchUsers(users);
 		});
 	}
 

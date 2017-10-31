@@ -42,10 +42,8 @@ public class EmployeeOtherOrganizationDaoImpl extends AbstractDefaultDao<Employe
 	
 	@Override
 	public List<EmployeeOtherOrganizationEntity> getUsersByBirthday(final Date date) {
-
 		return getSession()
-				.createQuery("FROM " +
-								getEntityClass() +
+				.createQuery("FROM " + getEntityName() +
 								" t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)",
 						getEntityClass())
 	            .setParameter("date", date)

@@ -51,6 +51,7 @@ public class ContentLabelVcImpl implements ContentLabelVc {
         LabelVc vLabelCss = new LabelVcCss(mLabel);
         vLabelCss.initView(initLabel -> {
             contentPane.getChildren().add(initLabel.getContent());
+
             initLabel.setOnCopy(label -> bufferedLabel = label.getMode());
             initLabel.setOnEdit(label -> {
                 sort();
