@@ -54,6 +54,7 @@ public class BirthdayInfoPaneImpl implements BirthdayInfoPane {
         }
 
         VBox content = new VBox();
+        content.setBackground(Background.EMPTY);
         content.setFillWidth(true);
         content.setAlignment(Pos.CENTER);
 
