@@ -30,7 +30,7 @@ project(":client") {
     subprojects {
         apply plugin: 'java'
 
-        if(name.equals("usa")) {
+        if(name == "usa") {
             dependencies {
                 compile(project(':api'))
             }
@@ -76,6 +76,7 @@ task buildMainClient (dependsOn: ':client:usa:buildApp')
 task buildPlugins (dependsOn: [':client:asmc:buildApp',
                                ':client:birthday:buildApp',
                                ':client:kolpass:buildApp',
+                               ':client:kolaer-chat:buildApp',
                                ':client:wer:buildApp',
                                ':client:browser:buildApp'])
 task buildClient (dependsOn: [buildMainClient, buildPlugins])

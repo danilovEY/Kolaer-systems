@@ -1,0 +1,72 @@
+group 'ru.kolaer'
+version '0.1'
+
+def projectName = "ru.kolaer.chat"
+def projectNameWithVersion = projectName + "-" + version
+def projectJarName = projectNameWithVersion + ".jar"
+
+apply plugin: 'osgi'
+
+dependencies {
+    compile group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.3.5'
+    //compile 'com.neovisionaries:nv-websocket-client:2.3'
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    /*compile "com.fasterxml.jackson.core:jackson-databind:2.8.1"
+compile("org.springframework:spring-web:4.3.2.RELEASE") {
+    exclude module: 'spring-aop'
+    exclude module: 'spring-context'
+}
+compile("org.springframework:spring-context:4.3.2.RELEASE") {
+    exclude module: 'spring-aop'
+    exclude module: 'spring-expression'
+}
+compile("org.springframework:spring-websocket:4.3.2.RELEASE") {
+    exclude module: 'spring-context'
+    exclude module: 'spring-web'
+}
+compile ("org.springframework:spring-messaging:4.3.2.RELEASE") {
+    exclude module: 'spring-context'
+}
+compile "javax.websocket:javax.websocket-api:1.1"
+compile group: 'org.glassfish.tyrus.bundles', name: 'tyrus-standalone-client', version: '1.13.1'*/
+    //compile "org.eclipse.jetty.aggregate:jetty-all:9.3.3.v20150827"
+}
+
+jar {
+    archiveName = projectJarName
+    baseName = project.name
+    manifest {
+        name = 'Чат'
+        symbolicName = projectName
+        instruction "Bundle-ClassPath", "."
+        instruction "Import-Package", "*;version=\"0\";resolution:=optional"
+        //instruction "Require-Capability",  "osgi.extender; filter:=\"(osgi.extender=osgi.serviceloader.processor)\", osgi.serviceloader; filter:=\"(osgi.serviceloader=javax.websocket.ContainerProvider)\"; cardinality:=multiple"
+        //instruction "Provide-Capability", "osgi.serviceloader; osgi.serviceloader=javax.websocket.ContainerProvider"
+        //instruction "Import-Package", "ch.qos.logback.classic", "*"//"javax.xml.stream,javax.xml.transform,javax.xml.namespace,javafx.beans,javax.xml.stream.util,org.w3c.dom", "*"
+        //instruction "Export-Package", "osgi.serviceloader.registrar"
+        //instruction "Export-Package", "com.fasterxml.jackson.databind", "com.fasterxml.jackson.dataformat.xml", "com.fasterxml.jackson.annotation",
+        //       "com.fasterxml.jackson.dataformat.xml.annotation"
+    }
+}
+
+task createJar(type: Jar) {
+    archiveName = projectJarName
+    baseName = project.name
+    manifest = jar.manifest
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
+task copyJarToBin(dependsOn: createJar) {
+    doLast {
+        copy {
+            from 'build/libs/' + projectJarName
+            into pathToProjectDirWithPlugins
+        }
+    }
+}
+
+task buildApp(dependsOn : [clean, copyJarToBin])
