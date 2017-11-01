@@ -47,7 +47,7 @@ public class AutoCheckingNotifyMessage implements Service {
 
             if(!responseLastNotifyMessage.isServerError()) {
                 NotifyMessageDto response = responseLastNotifyMessage.getResponse();
-                if(lastNotifyMessage == null || !lastNotifyMessage.getMessage().equals(response.getMessage())) {
+                if(response != null && (lastNotifyMessage == null || !lastNotifyMessage.getMessage().equals(response.getMessage()))) {
                     lastNotifyMessage = response;
                     UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getNotification()
                             .showInformationNotify("Сообщение!", lastNotifyMessage.getMessage());

@@ -17,7 +17,7 @@
 </div>
 
 <div>
-    <form method="POST" enctype="multipart/form-data" action="/rest/upload/employees">
+    <form method="POST" enctype="multipart/form-data" action="${pageContext.request.contextPath}/rest/upload/employees">
         <table>
             <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
             <tr><td></td><td><input type="submit" value="Upload" /></td></tr>

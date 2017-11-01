@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.error.ErrorCode;
@@ -121,19 +122,27 @@ public interface RestTemplateService {
     }
 
     default <T> List<T> readValues(ObjectMapper objectMapper, String content, Class<T[]> dtoClass) throws IOException {
-        return Arrays.asList(objectMapper.readValue(content, dtoClass));
+        return StringUtils.hasText(content)
+                ?  Arrays.asList(objectMapper.readValue(content, dtoClass))
+                : Collections.emptyList();
     }
 
     default <T> T readValue(ObjectMapper objectMapper, String content, Class<T> dtoClass) throws IOException {
-        return objectMapper.readValue(content, dtoClass);
+        return StringUtils.hasText(content)
+                ? objectMapper.readValue(content, dtoClass)
+                : null;
     }
 
     default <T> Page<T> readPageValue(ObjectMapper objectMapper, String content) throws IOException {
-        return objectMapper.readValue(content, new TypeReference<Page<T>>() {});
+        return StringUtils.hasText(content)
+                ? objectMapper.readValue(content, new TypeReference<Page<T>>() {})
+                : Page.createPage();
     }
 
     default ServerExceptionMessage readException(ObjectMapper objectMapper, String content) throws IOException {
-        return objectMapper.readValue(content, ServerExceptionMessage.class);
+        return StringUtils.hasText(content)
+                ? objectMapper.readValue(content, ServerExceptionMessage.class)
+                : new ServerExceptionMessage();
     }
 
     default <T> ServerResponse<T> createServerExceptionMessage(String url) {

@@ -56,7 +56,6 @@ dependencies {
 war {
     archiveName = nameWarFile
     baseName = name
-    webXml = file('src/main/webapp/WEB-INF/web.xml')
 }
 
 task renameResources(dependsOn: processResources) {
