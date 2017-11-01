@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
@@ -28,6 +29,7 @@ public class AccountServiceImpl extends AbstractDefaultService<AccountDto, Accou
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AccountDto getByLogin(String login) {
         if(login == null || login.isEmpty()){
             return null;

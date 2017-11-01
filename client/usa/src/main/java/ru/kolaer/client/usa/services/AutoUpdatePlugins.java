@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
+import ru.kolaer.client.usa.mvp.viewmodel.impl.ServiceManager;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
 

@@ -3,6 +3,7 @@ package ru.kolaer.client.usa.system.ui;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -182,12 +183,14 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
                     .orElse(new Date()));
 
             MenuItem copy = new MenuItem("Копировать");
+            MenuItem delete = new MenuItem("Удалить");
+            delete.setOnAction(e -> typePane.getChildren().remove(content));
             copy.setOnAction(e -> {
                 ClipboardContent clipboardContent = new ClipboardContent();
                 clipboardContent.putString(String.format("%s\n%s\n%s", title, text, dateToString));
                 Clipboard.getSystemClipboard().setContent(clipboardContent);
             });
-            ContextMenu contextMenu = new ContextMenu(copy);
+            ContextMenu contextMenu = new ContextMenu(copy, delete);
 
             content.setOnMousePressed(event -> {
                 if (event.isSecondaryButtonDown()) {
@@ -269,17 +272,17 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
         this.vBoxStatic.setAlignment(Pos.TOP_LEFT);
         this.vBoxStatic.setPadding(new Insets(5,5,5,5));
 
-        MenuItem clearStatic = new MenuItem("Очистить");
+        /*MenuItem clearStatic = new MenuItem("Очистить");
         clearStatic.setOnAction(e -> vBoxStatic.getChildren().clear());
-        ContextMenu contextMenuStatic = new ContextMenu(clearStatic);
+        this.contextMenuStatic = new ContextMenu(clearStatic);
 
         vBoxStatic.setOnMousePressed(event -> {
             if (event.isSecondaryButtonDown()) {
                 contextMenuStatic.show(vBoxStatic, event.getScreenX(), event.getScreenY());
             }
-        });
+        });*/
 
-        MenuItem clearMessage = new MenuItem("Очистить");
+        /*MenuItem clearMessage = new MenuItem("Очистить");
         clearMessage.setOnAction(e -> vBoxNotifyMessage.getChildren().clear());
         ContextMenu contextMenuMessages = new ContextMenu(clearMessage);
 
@@ -287,7 +290,7 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
             if (event.isSecondaryButtonDown()) {
                 contextMenuMessages.show(vBoxNotifyMessage, event.getScreenX(), event.getScreenY());
             }
-        });
+        });*/
 
         final ScrollPane scrollPaneStatic = new ScrollPane(this.vBoxStatic);
         scrollPaneStatic.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -344,18 +347,36 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
             //    staticView.getContent().setStyle("-fx-background-color: rgba(255,251,253,0.8); -fx-effect: dropshadow(gaussian , #858086, 4,0,0,1 ); -fx-padding: 3;");
             //}
 
-            if(!vBoxStatic.getChildren().contains(staticView.getContent())) {
-                vBoxStatic.getChildren().add(staticView.getContent());
+            Node viewContent = staticView.getContent();
+
+            if(!vBoxStatic.getChildren().contains(viewContent)) {
+                vBoxStatic.getChildren().add(viewContent);
+
+                MenuItem upView = new MenuItem("Поднять");
+                MenuItem downView = new MenuItem("Опустить");
+                MenuItem deleteView = new MenuItem("Удалить");
+                upView.setOnAction(e -> viewContent.toBack());
+                downView.setOnAction(e -> viewContent.toFront());
+                deleteView.setOnAction(e ->  vBoxStatic.getChildren().remove(viewContent));
+
+                ContextMenu contextMenuContent = new ContextMenu(upView,
+                        downView,
+                        new SeparatorMenuItem(),
+                        deleteView);
+
+                viewContent.setOnMousePressed(event -> {
+                    if (event.isSecondaryButtonDown()) {
+                        contextMenuContent.show(viewContent, event.getScreenX(), event.getScreenY());
+                    }
+                });
             }
 
-            staticView.getContent().toBack();
+            viewContent.toBack();
         });
     }
 
     @Override
     public void removeStaticView(StaticView staticView) {
-        Tools.runOnWithOutThreadFX(() -> {
-            vBoxStatic.getChildren().remove(staticView.getContent());
-        });
+        Tools.runOnWithOutThreadFX(() -> vBoxStatic.getChildren().remove(staticView.getContent()));
     }
 }

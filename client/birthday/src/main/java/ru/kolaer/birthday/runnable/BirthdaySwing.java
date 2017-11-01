@@ -2,10 +2,8 @@ package ru.kolaer.birthday.runnable;
 
 import ru.kolaer.api.plugins.services.Service;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -13,13 +11,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 
 public class BirthdaySwing implements Service {
@@ -60,7 +51,7 @@ public class BirthdaySwing implements Service {
 		SwingUtilities.invokeLater(() -> {
 			List<String> list = new ArrayList<>();
 			try{
-				URL oracle = new URL("http://js:8081/kolaer-web/rest/employees/get/birthday/today");
+				URL oracle = new URL("http://aerdc02:8080/kolaer-web/rest/employees/get/birthday/today");
 
 		        BufferedReader in = new BufferedReader(
 		        new InputStreamReader(oracle.openStream(), "UTF-8"));
@@ -74,30 +65,30 @@ public class BirthdaySwing implements Service {
 		        
 		        for(String date : text.split(",")){
 		        	if(date.startsWith("\"initials\"")) {
-		        		list.add(date.split(":")[1].replaceAll("\"", "") + new String(" (КолАЭР)"));
-		        		System.out.println(date.split(":")[1].replaceAll("\"", "") + new String(" (КолАЭР)"));
+		        		list.add(date.split(":")[1].replaceAll("\"", "") + " (КолАЭР)");
+		        		System.out.println(date.split(":")[1].replaceAll("\"", "") + " (КолАЭР)");
 		        	}  	
 		        }
 		        
-		        oracle = new URL("http://js:8081/kolaer-web/rest/organizations/employees/get/users/birthday/today");
+		        oracle = new URL("http://aerdc02:8080/kolaer-web/rest/organizations/employees/get/users/birthday/today");
 				
 		        in = new BufferedReader(
 		        new InputStreamReader(oracle.openStream(), "UTF-8"));
 		        text = "";
-		        inputLine = "";
-		        while ((inputLine = in.readLine()) != null)
+				while ((inputLine = in.readLine()) != null)
 		        	text += inputLine;	        
 		        in.close();
 		        System.out.println(text);
-		        user = "";
+		        String org = "";
 		        for(String date : text.split(",")){
 		        	if(date.startsWith("\"organization\"")) {
-						list.add(user + " (" + getNameOrganization(date.split(":")[1].replaceAll("\"", "")) + ")");
+						org = " (" + getNameOrganization(date.split(":")[1].replaceAll("\"", "")) + ")";
 		        	}
 
 		        	if(date.startsWith("\"initials\"")) {
 						user = date.split(":")[1].replaceAll("\"", "");
-		        	}
+						list.add(user + org);
+					}
 		        }
 			} catch(Exception e1){
 				e1.printStackTrace();

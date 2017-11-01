@@ -1,11 +1,9 @@
-package ru.kolaer.admin.service;
+package ru.kolaer.client.usa.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 
 import java.time.LocalDateTime;
@@ -17,14 +15,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by danilovey on 25.08.2016.
  */
-public class PprService implements Service {
-    private final Logger LOG = LoggerFactory.getLogger(PprService.class);
+public class CounterService implements Service {
     private boolean isRun = false;
-    private final UniformSystemEditorKit editorKit;
-
-    public PprService(UniformSystemEditorKit editorKit) {
-        this.editorKit = editorKit;
-    }
 
     @Override
     public boolean isRunning() {
@@ -43,7 +35,12 @@ public class PprService implements Service {
 
     @Override
     public void run() {
-        final ServerResponse<List<CounterDto>> counters = this.editorKit.getUSNetwork().getKolaerWebServer().getApplicationDataBase().getCounterTable().getAllCounters();
+        ServerResponse<List<CounterDto>> counters = UniformSystemEditorKitSingleton.getInstance()
+                .getUSNetwork()
+                .getKolaerWebServer()
+                .getApplicationDataBase()
+                .getCounterTable()
+                .getAllCounters();
 
         if(counters.isServerError()) {
             this.isRun = false;
@@ -52,34 +49,41 @@ public class PprService implements Service {
 
         this.isRun = true;
 
-        final List<StaticViewPPR> pprs = new ArrayList<>();
+        List<CounterViewImpl> countersList = new ArrayList<>();
 
-        final Date dateNow = new Date();
-        for(final CounterDto counter : counters.getResponse()) {
+        Date dateNow = new Date();
+        for(CounterDto counter : counters.getResponse()) {
             if(counter.getStart() == null || counter.getEnd() == null ||
                     counter.getEnd().before(dateNow))
                 continue;
 
-            final StaticViewPPR staticViewPPR = new StaticViewPPR(counter);
+            CounterViewImpl staticViewPPR = new CounterViewImpl(counter);
+            staticViewPPR.initView(UniformSystemEditorKitSingleton.getInstance()
+                    .getUISystemUS()
+                    .getStatic()::addStaticView);
             staticViewPPR.setTitle(counter.getTitle());
             staticViewPPR.setDescription(counter.getDescription());
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(counter.getEnd());
 
-            editorKit.getUISystemUS().getStatic().addStaticView(staticViewPPR);
-
-            pprs.add(staticViewPPR);
+            countersList.add(staticViewPPR);
         }
 
-        while (this.isRun) {
-            Tools.runOnWithOutThreadFX(() -> {
-                Iterator<StaticViewPPR> iterator = pprs.iterator();
+        while (isRun) {
+                Iterator<CounterViewImpl> iterator = countersList.iterator();
                 while (iterator.hasNext()) {
-                    final StaticViewPPR ppr = iterator.next();
-                    final LocalDateTime dateTimeJson = editorKit.getUSNetwork().getKolaerWebServer().getServerTools().getCurrentDataTime().getResponse();
-                    final Date dateEnd = ppr.getCounter().getEnd();
-                    final LocalDateTime ldt = LocalDateTime.ofInstant(dateEnd.toInstant(), ZoneId.of("+3"));
+                    CounterViewImpl ppr = iterator.next();
+
+                    LocalDateTime dateTimeJson = UniformSystemEditorKitSingleton.getInstance()
+                            .getUSNetwork()
+                            .getKolaerWebServer()
+                            .getServerTools()
+                            .getCurrentDataTime()
+                            .getResponse();
+
+                    Date dateEnd = ppr.getCounter().getEnd();
+                    LocalDateTime ldt = LocalDateTime.ofInstant(dateEnd.toInstant(), ZoneId.of("+3"));
 
                     LocalDateTime tempDateTime = LocalDateTime.from(dateTimeJson);
 
@@ -101,16 +105,17 @@ public class PprService implements Service {
                     tempDateTime = tempDateTime.plusMinutes(minutes);
 
                     long seconds = tempDateTime.until(ldt, ChronoUnit.SECONDS);
-                    ppr.setFoot(String.format("Текущие сутки ремонта: %d", daysStart + 1));
-                    ppr.setTime(Math.toIntExact(months), Math.toIntExact(days), Math.toIntExact(hours), Math.toIntExact(minutes), Math.toIntExact(seconds));
 
-                    if(years == 0 && months == 0 && days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
-                        ppr.setTitle(ppr.getCounter().getTitle() + " (Окончено!)");
-                        iterator.remove();
-                    }
+                    Tools.runOnWithOutThreadFX(() -> {
+                        ppr.setFoot(String.format("Текущие сутки ремонта: %d", daysStart + 1));
+                        ppr.setTime(Math.toIntExact(months), Math.toIntExact(days), Math.toIntExact(hours), Math.toIntExact(minutes), Math.toIntExact(seconds));
+
+                        if(years == 0 && months == 0 && days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+                            ppr.setTitle(ppr.getCounter().getTitle() + " (Окончено!)");
+                            iterator.remove();
+                        }
+                    });
                 }
-            });
-
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {

@@ -10,11 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.usa.mvp.viewmodel.impl.ServiceManager;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.VMTabExplorerOSGi;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
 import ru.kolaer.client.usa.plugins.UniformSystemPluginAdapter;
-import ru.kolaer.client.usa.services.ServiceManager;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;

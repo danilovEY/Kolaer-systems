@@ -7,7 +7,6 @@ include ':server:web-forwarding'
 
 include ':client:usa'
 include ':client:birthday'
-include ':client:admin'
 include ':client:browser'
 include ':client:asmc'
 include ':client:kolpass'

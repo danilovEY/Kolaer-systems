@@ -1,4 +1,4 @@
-package ru.kolaer.admin.service;
+package ru.kolaer.client.usa.services;
 
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -10,13 +10,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 import ru.kolaer.api.system.ui.StaticView;
+import ru.kolaer.client.usa.mvp.viewmodel.impl.CounterView;
 
 import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 25.08.2016.
  */
-public class StaticViewPPR implements StaticView, PPR {
+public class CounterViewImpl implements StaticView, CounterView {
     private final CounterDto counter;
     private BorderPane mainPane;
     private Label title;
@@ -29,7 +30,7 @@ public class StaticViewPPR implements StaticView, PPR {
     private Label description;
 
 
-    public StaticViewPPR(final CounterDto counter) {
+    public CounterViewImpl(final CounterDto counter) {
         this.counter = counter;
     }
 
@@ -70,6 +71,7 @@ public class StaticViewPPR implements StaticView, PPR {
     @Override
     public void initView(Consumer<StaticView> viewVisit) {
         this.mainPane = new BorderPane();
+        mainPane.setStyle("-fx-background-color: rgba(255,254,78,0.8); -fx-effect: dropshadow(gaussian , #868330, 4,0,0,1 ); -fx-padding: 3;");
 
         final String style = "    -fx-background-color:\n" +
                 "                        #0f0d0f, #579bd6,\n" +

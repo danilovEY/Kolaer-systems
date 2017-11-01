@@ -1,4 +1,4 @@
-package ru.kolaer.client.usa.services;
+package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
