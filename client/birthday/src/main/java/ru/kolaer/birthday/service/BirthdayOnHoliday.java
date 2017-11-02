@@ -11,12 +11,14 @@ import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.network.NetworkUS;
 import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.api.tools.Tools;
+import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.BirthdayInfoPane;
 import ru.kolaer.birthday.mvp.view.BirthdayInfoPaneImpl;
 import ru.kolaer.birthday.tools.BirthdayTools;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,12 +59,6 @@ public class BirthdayOnHoliday implements Service {
 					afterTomorrow = true;
 					showNotify("После завтра ", now.plusDays(2), holiday);
 				}
-				if (now.getDayOfMonth() + 3 == holidayLocalDate.getDayOfMonth()) {
-					showNotify("Через 3 дня ", now.plusDays(3), holiday);
-				}
-				if (now.getDayOfMonth() + 4 == holidayLocalDate.getDayOfMonth()) {
-					showNotify("Через 4 дня ", now.plusDays(4), holiday);
-				}
 			}
 		}
 	}
@@ -78,21 +74,14 @@ public class BirthdayOnHoliday implements Service {
 				.getGeneralEmployeesTable()
 				.getUsersByBirthday(BirthdayTools.convertToDate(date));
 
+		List<UserModel> users = new ArrayList<>();
+
 		if (!employeeBirthdayTodayResponse.isServerError()) {
 			List<EmployeeDto> employees = employeeBirthdayTodayResponse.getResponse();
 
-			if (employees.size() > 0) {
-				Tools.runOnWithOutThreadFX(() -> {
-					birthdayInfoPane.put(newTitle, employees.stream()
-							.map(UserModelImpl::new)
-							.collect(Collectors.toList()));
-
-					UniformSystemEditorKitSingleton
-							.getInstance()
-							.getUISystemUS()
-							.getStatic().addStaticView(birthdayInfoPane);
-				});
-			}
+			users.addAll(employees.stream()
+					.map(UserModelImpl::new)
+					.collect(Collectors.toList()));
 		}
 
 		ServerResponse<List<EmployeeOtherOrganizationDto>> otherEmployeeBirthdayTodayResponse = applicationDataBase
@@ -102,18 +91,20 @@ public class BirthdayOnHoliday implements Service {
 		if (!otherEmployeeBirthdayTodayResponse.isServerError()) {
 			List<EmployeeOtherOrganizationDto> employees = otherEmployeeBirthdayTodayResponse.getResponse();
 
-			if (employees.size() > 0) {
-				Tools.runOnWithOutThreadFX(() -> {
-					birthdayInfoPane.put(newTitle, employees.stream()
-							.map(UserModelImpl::new)
-							.collect(Collectors.toList()));
+			users.addAll(employees.stream()
+					.map(UserModelImpl::new)
+					.collect(Collectors.toList()));
+		}
 
-					UniformSystemEditorKitSingleton
-							.getInstance()
-							.getUISystemUS()
-							.getStatic().addStaticView(birthdayInfoPane);
-				});
-			}
+		if(users.size() > 0) {
+			Tools.runOnWithOutThreadFX(() -> {
+				birthdayInfoPane.put(newTitle, users);
+
+				UniformSystemEditorKitSingleton
+						.getInstance()
+						.getUISystemUS()
+						.getStatic().addStaticView(birthdayInfoPane);
+			});
 		}
 	}
 

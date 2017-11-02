@@ -55,7 +55,7 @@ public class BirthdayService implements Service {
 					List<EmployeeDto> employees = employeeBirthdayTodayResponse.getResponse();
 
 					if (employees.size() > 0) {
-						String title = "Поздравляем с днем рождения наших сотрудников!";
+						String title = "Сегодня день рождения у наших сотрудников!";
 
 						Tools.runOnWithOutThreadFX(() -> {
 							birthdayInfoPane.put(title, employees.stream()
@@ -88,7 +88,7 @@ public class BirthdayService implements Service {
 					List<EmployeeOtherOrganizationDto> employees = otherEmployeeBirthdayTodayResponse.getResponse();
 
 					if (employees.size() > 0) {
-						String title = "Поздравляем с днем рождения сотрудников в филиалах!";
+						String title = "Сегодня день рождения у сотрудников филиалов!";
 
 						Tools.runOnWithOutThreadFX(() -> {
 							birthdayInfoPane.put(title, employees.stream()
