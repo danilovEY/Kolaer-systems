@@ -45,7 +45,7 @@ public class ChatClientImpl implements ChatClient {
         sockJsClient.setMessageCodec(new Jackson2SockJsMessageCodec());
 
         StompHeaders stompHeaders = new StompHeaders();
-        stompHeaders.add("x-token", "token_generate");
+        stompHeaders.add("x-token", "MTcyNDc5MTM=:1509786188608:2cf843a88ec95ee39fc8367a15089b5b:SQL");
 
         WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());

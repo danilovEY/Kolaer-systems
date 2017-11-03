@@ -57,7 +57,10 @@ public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-                        accessor.setUser((Principal) authentication.getPrincipal());
+
+                        Principal principal = userDetails::getUsername;
+
+                        accessor.setUser(principal);
                     }
                 }
             }
