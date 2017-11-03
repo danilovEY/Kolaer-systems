@@ -89,11 +89,10 @@ public class TokenUtils {
 
         String userName = authToken.split(":")[0];
         try {
-            userName = new String(java.util.Base64.getDecoder().decode(userName), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            return new String(java.util.Base64.getDecoder().decode(userName), "utf-8");
+        } catch (Exception e) {
+            return null;
         }
-        return userName;
     }
 
     /**

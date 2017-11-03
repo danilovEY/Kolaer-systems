@@ -45,11 +45,12 @@ public class ChatClientImpl implements ChatClient {
         sockJsClient.setMessageCodec(new Jackson2SockJsMessageCodec());
 
         StompHeaders stompHeaders = new StompHeaders();
-        stompHeaders.add("x-token", "");
+        stompHeaders.add("x-token", "token_generate");
 
         WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
         //stompClient.setAutoStartup(true);
+        System.out.println("1");
         try {
             session = stompClient.connect(url, new WebSocketHttpHeaders(), stompHeaders, new StompSessionHandler() {
                 @Override
@@ -59,21 +60,24 @@ public class ChatClientImpl implements ChatClient {
 
                 @Override
                 public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+                    System.out.println("2");
                     exception.printStackTrace();
                 }
 
                 @Override
                 public void handleTransportError(StompSession session, Throwable exception) {
+                    System.out.println("3");
                     exception.printStackTrace();
                 }
 
                 @Override
                 public Type getPayloadType(StompHeaders headers) {
-                    return ChatMessageDto.class;
+                    return String.class;
                 }
 
                 @Override
                 public void handleFrame(StompHeaders headers, Object payload) {
+                    System.out.println("4");
                     System.out.println(payload);
                 }
             }).get();
@@ -101,6 +105,6 @@ public class ChatClientImpl implements ChatClient {
 
     @Override
     public void send(String roomName, ChatMessageDto message) {
-        session.send("/app/chats/" + roomName, message);
+        session.send("/app/chat/room/" + roomName, message);
     }
 }

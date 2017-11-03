@@ -24,6 +24,7 @@ public class ChatWebSocketHandler extends WebSocketHandlerDecorator {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         log.info("handleMessage");
         log.info("{}", message.getPayload());
+
         super.handleMessage(session, message);
     }
 
