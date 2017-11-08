@@ -3,7 +3,6 @@ package ru.kolaer.server.webportal.mvc.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +11,6 @@ import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by danilovey on 27.07.2016.
@@ -28,13 +26,6 @@ public class AccountsController {
     @Autowired
     public AccountsController(AccountService accountService) {
         this.accountService = accountService;
-    }
-
-    @UrlDeclaration(description = "Получить все аккаунты.", isAccessAll = true)
-    @RequestMapping(value = "/test", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Map<String, Object> test() {
-        throw new UsernameNotFoundException("!!");
-        //return Collections.singletonMap("test", "true");
     }
 
     /**Получить все аккаунты.*/

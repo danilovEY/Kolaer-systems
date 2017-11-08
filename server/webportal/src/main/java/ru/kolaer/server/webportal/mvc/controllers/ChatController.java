@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.chat.ChatGroupDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.mvc.model.servirces.ChatMessageService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,18 +28,24 @@ import java.util.List;
 public class ChatController {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatService chatService;
+    private final ChatMessageService chatMessageService;
 
     public ChatController(SimpMessagingTemplate simpMessagingTemplate,
-                          ChatService chatService) {
+                          ChatService chatService,
+                          ChatMessageService chatMessageService) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.chatService = chatService;
+        this.chatMessageService = chatMessageService;
     }
 
     @MessageMapping("/chat/room/{chatRoomId}")
     public void handleChat(@Payload ChatMessageDto message, @DestinationVariable("chatRoomId") String chatRoomId, MessageHeaders messageHeaders) {
+        message.setCreateMessage(new Date());
+        message.setRoom(chatRoomId);
+
         log.info("messages: {}, headers: {}", message, messageHeaders);
-        message.setFrom(message.getFrom() + " - Cool man!");
-        this.simpMessagingTemplate.convertAndSend("/topic/chats." + chatRoomId, message);
+
+        simpMessagingTemplate.convertAndSend("/topic/chats." + chatRoomId, chatMessageService.save(message));
     }
 
     @UrlDeclaration(description = "Получить список активных пользователей чата")

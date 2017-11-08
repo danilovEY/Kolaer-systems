@@ -29,7 +29,6 @@ public class AccountConverterImpl implements AccountConverter {
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setId(dto.getId());
         accountEntity.setEmail(dto.getEmail());
-        accountEntity.setPassword(dto.getPassword());
         accountEntity.setUsername(dto.getUsername());
         accountEntity.setChatName(dto.getChatName());
 
@@ -53,7 +52,6 @@ public class AccountConverterImpl implements AccountConverter {
     public AccountDto updateData(AccountDto accountDto, AccountEntity model) {
         accountDto.setId(model.getId());
         accountDto.setEmail(model.getEmail());
-        accountDto.setPassword(model.getPassword());
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
 
@@ -71,7 +69,6 @@ public class AccountConverterImpl implements AccountConverter {
         AccountDto accountDto = new AccountDto();
         accountDto.setId(model.getId());
         accountDto.setEmail(model.getEmail());
-        accountDto.setPassword(model.getPassword());
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
 

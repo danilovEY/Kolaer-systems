@@ -228,11 +228,11 @@ public class VMMainFrameImpl extends Application {
         Thread.currentThread().setName("Инициализация UniformSystemEditorKit");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        AuthenticationOnNetwork authentication = new AuthenticationOnNetwork(objectMapper);
         MenuBarUSImpl menuBarUS = new MenuBarUSImpl();
         NotificationPanelExceptionHandler notify = new NotificationPanelExceptionHandler();
         NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
         UISystemUSImpl uiSystemUS = new UISystemUSImpl();
+        AuthenticationOnNetwork authentication = new AuthenticationOnNetwork(network.getGlobalRestTemplate(), objectMapper);
 
         uiSystemUS.setMenuBarUS(menuBarUS);
         uiSystemUS.setStaticUS(notify);

@@ -41,7 +41,6 @@ public class DefaultAuthentication implements Authentication {
 
         this.ACCOUNT = new AccountDto();
         this.ACCOUNT.setEmail("test@test.ru");
-        this.ACCOUNT.setPassword(PASSWORD);
         this.ACCOUNT.setUsername(LOGIN);
         this.ACCOUNT.setEmployee(employee);
 

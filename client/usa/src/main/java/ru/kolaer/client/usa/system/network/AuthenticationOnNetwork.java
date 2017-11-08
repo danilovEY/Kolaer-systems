@@ -1,9 +1,9 @@
 package ru.kolaer.client.usa.system.network;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
@@ -26,9 +26,9 @@ import java.util.Optional;
 /**
  * Created by danilovey on 02.08.2016.
  */
+@Slf4j
 public class AuthenticationOnNetwork implements Authentication, RestTemplateService {
-    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationOnNetwork.class);
-    private final List<AuthenticationObserver> authenticationObserverList;
+    private final List<AuthenticationObserver> authenticationObserverList = new ArrayList<>();
     private final RestTemplate restTemplate;
     private final String pathToServer;
     private final ObjectMapper objectMapper;
@@ -38,10 +38,9 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
     private final String URL_TO_GET_TOKEN;
     private final String URL_TO_GET_USER;
 
-    public AuthenticationOnNetwork(ObjectMapper objectMapper) {
+    public AuthenticationOnNetwork(RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.restTemplate = new RestTemplate();
-        this.authenticationObserverList = new ArrayList<>();
+        this.restTemplate = restTemplate;
         this.pathToServer = "http://" + Resources.URL_TO_PUBLIC_SERVER + "/rest/authentication";
         this.URL_TO_GET_TOKEN = this.pathToServer + "/login";
         this.URL_TO_GET_USER = "http://" + Resources.URL_TO_PUBLIC_SERVER + "/rest/user/get";
@@ -57,38 +56,45 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
         userAndPassJson.setUsername(userAndPassJson.getUsername().toLowerCase());
         userAndPassJson.setPassword(Optional.ofNullable(userAndPassJson.getPassword()).orElse(""));
 
-        LOG.info("Авторизация для: {}", userAndPassJson.getUsername());
+        log.info("Авторизация для: {}", userAndPassJson.getUsername());
 
-        try {
             ServerResponse<TokenJson> response = postServerResponse(restTemplate, URL_TO_GET_TOKEN, userAndPassJson,
                     TokenJson.class, objectMapper);
             if(response.isServerError()) {
-                LOG.error("EROOR!");
+                ServerExceptionMessage exceptionMessage = response.getExceptionMessage();
+                log.error("Error: {}", exceptionMessage);
+
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(exceptionMessage);
             } else {
                 this.tokenJson = response.getResponse();
-                LOG.info("Токен получен...");
+                log.info("Токен получен: {}", tokenJson);
+
+                ServerResponse<AccountDto> accountServerResponse = getServerResponse(restTemplate, URL_TO_GET_USER +
+                                "?token=" + this.tokenJson.getToken(),
+                        AccountDto.class,
+                        objectMapper);
+
+                if(accountServerResponse.isServerError()) {
+                    ServerExceptionMessage exceptionMessage = accountServerResponse.getExceptionMessage();
+                    log.error("Error: {}", exceptionMessage);
+
+                    UniformSystemEditorKitSingleton.getInstance()
+                            .getUISystemUS()
+                            .getNotification()
+                            .showErrorNotify(exceptionMessage);
+                } else {
+                    accountsEntity = accountServerResponse.getResponse();
+                    log.info("Пользователь получен: {}", accountsEntity);
+                    isAuth = true;
+                    notifyObserversLogin();
+                    return true;
+                }
             }
 
-
-            LOG.info(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken());
-            this.accountsEntity = this.restTemplate.getForObject(this.URL_TO_GET_USER + "?token=" + this.tokenJson.getToken(), AccountDto.class);
-            if(this.accountsEntity != null) {
-                LOG.info("Пользователь получен...");
-                this.isAuth = true;
-
-                this.notifyObserversLogin();
-
-                LOG.info("Авторизация прошла успешно!");
-
-                return true;
-            } else {
-                LOG.info("Авторизация не прошла!");
-            }
-        } catch (Exception ex) {
-            LOG.error("Не удалось авторизоваться!", ex);
-        }
-
-        return false;
+            return false;
     }
 
     @Override
@@ -101,7 +107,7 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
                 Files.write(Paths.get(Authentication.TEMP_NAME),
                         loginAndPassList, Charset.forName("UTF-8"));
             } catch (IOException e) {
-                LOG.error("Не удалось запомнить логин и пароль!", e);
+                log.error("Не удалось запомнить логин и пароль!", e);
                 UniformSystemEditorKitSingleton.getInstance().getUISystemUS()
                         .getNotification().showErrorNotify("Ошибка!", "Не удалось запомнить логин и пароль!");
             }
@@ -131,7 +137,7 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
 
                 return this.login(userAndPassJson);
             } catch (IOException e) {
-                LOG.error("Не удалось прочитать авто логин!", e);
+                log.error("Не удалось прочитать авто логин!", e);
             }
         }
         return false;

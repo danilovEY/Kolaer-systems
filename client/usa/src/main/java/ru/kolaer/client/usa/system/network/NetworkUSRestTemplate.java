@@ -51,4 +51,7 @@ public class NetworkUSRestTemplate implements NetworkUS {
 		return this.otherPublicAPI;
 	}
 
+	public RestTemplate getGlobalRestTemplate() {
+		return globalRestTemplate;
+	}
 }

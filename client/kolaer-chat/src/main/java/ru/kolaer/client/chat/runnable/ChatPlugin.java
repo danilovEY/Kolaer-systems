@@ -64,10 +64,7 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
             }
         });
 
-        ChatMessageDto test = new ChatMessageDto();
-        test.setFrom("TEST");
-        test.setMessage("test");
-        chatClient.send("test", test);
+
     }
 
     @Override
@@ -86,6 +83,11 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
     @Override
     public void login(AccountDto account) {
         chatClient.start();
+
+        ChatMessageDto test = new ChatMessageDto();
+        test.setFromAccount(account);
+        test.setMessage("test");
+        chatClient.send("test", test);
     }
 
     @Override

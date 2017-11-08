@@ -1,12 +1,10 @@
 package ru.kolaer.server.webportal;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.naming.*;
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
 import javax.naming.directory.*;
-import javax.naming.ldap.*;
-import java.util.*;
-import java.security.*;
+import java.security.Security;
+import java.util.Hashtable;
 
 public class ADConnection {
 
@@ -67,7 +65,7 @@ public class ADConnection {
             ldapContext.createSubcontext(distinguishedName, newAttributes);
         }
         catch (Exception e) {
-            System.out.println("create error: " + e);
+            System.out.println("createMessage error: " + e);
             e.printStackTrace();
             System.exit(-1);
         }
@@ -90,7 +88,7 @@ public class ADConnection {
             ldapContext.createSubcontext(distinguishedName, newAttributes);
         }
         catch (Exception e) {
-            System.out.println("create clone error: " + e);
+            System.out.println("createMessage clone error: " + e);
             e.printStackTrace();
             System.exit(-1);
         }
