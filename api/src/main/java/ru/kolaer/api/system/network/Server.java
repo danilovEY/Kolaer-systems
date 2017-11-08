@@ -8,4 +8,5 @@ import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 public interface Server {
     /**Получить статус сервера.*/
     ServerResponse<ServerStatus> getServerStatus();
+    String getUrl();
 }

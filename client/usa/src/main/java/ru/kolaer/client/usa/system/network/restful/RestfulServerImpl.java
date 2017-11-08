@@ -6,6 +6,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.system.network.ServerStatus;
 import ru.kolaer.api.system.network.restful.RestfulServer;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
+import ru.kolaer.client.usa.tools.Resources;
 
 /**
  * Created by danilovey on 29.07.2016.
@@ -31,5 +32,10 @@ public class RestfulServerImpl implements RestfulServer, RestTemplateService {
         } else {
             return ServerResponse.createServerResponse(ServerStatus.AVAILABLE);
         }
+    }
+
+    @Override
+    public String getUrl() {
+        return Resources.URL_TO_PRIVATE_SERVER.toString();
     }
 }

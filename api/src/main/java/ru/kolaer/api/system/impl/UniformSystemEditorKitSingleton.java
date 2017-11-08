@@ -13,11 +13,15 @@ import ru.kolaer.api.system.ui.UISystemUS;
  * @version 0.1
  */
 public class UniformSystemEditorKitSingleton implements UniformSystemEditorKit {
-	private static UniformSystemEditorKitSingleton instance;
+	private static UniformSystemEditorKit instance;
 
-	public static UniformSystemEditorKitSingleton getInstance() {
+	public static void setInstance(UniformSystemEditorKit uniformSystemEditorKit) {
+		instance = uniformSystemEditorKit;
+	}
+
+	public static UniformSystemEditorKit getInstance() {
 		if(instance == null)
-			instance = new UniformSystemEditorKitSingleton();
+			setInstance(new DefaultUniformSystemEditorKit());
 
 		return instance;
 	}
@@ -27,7 +31,7 @@ public class UniformSystemEditorKitSingleton implements UniformSystemEditorKit {
 	private PluginsUS pluginsUS;
 	private Authentication authentication;
 
-	private UniformSystemEditorKitSingleton() {
+	public UniformSystemEditorKitSingleton() {
 
 	}
 

@@ -47,6 +47,11 @@ public class KolaerWebServerImpl implements KolaerWebServer {
     }
 
     @Override
+    public String getUrl() {
+        return Resources.URL_TO_PUBLIC_SERVER.toString();
+    }
+
+    @Override
     public ApplicationDataBase getApplicationDataBase() {
         return this.applicationDataBase;
     }

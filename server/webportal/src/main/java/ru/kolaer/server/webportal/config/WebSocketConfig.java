@@ -30,7 +30,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer im
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat")
+        registry.addEndpoint("/non-security/chat")
                 .withSockJS()
                 .setSessionCookieNeeded(false);
     }

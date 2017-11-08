@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.List;
  * Created by danilovey on 09.08.2016.
  */
 @Service
+@Slf4j
 public class UrlSecurityServiceImpl extends AbstractDefaultService<UrlSecurityDto, UrlSecurityEntity> implements UrlSecurityService {
     private final UrlSecurityDao urlSecurityDao;
     private final UrlSecurityConverter converter;
@@ -31,6 +33,7 @@ public class UrlSecurityServiceImpl extends AbstractDefaultService<UrlSecurityDt
     @Override
     @Transactional(readOnly = true)
     public UrlSecurityDto getPathByUrlAndMethod(String userUrl, String method) {
+        log.debug("Method: {} Url: {} ", userUrl, method);
         String url = userUrl;
         if(userUrl.contains("?")) {
             url = userUrl.substring(0, userUrl.indexOf("?"));

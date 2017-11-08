@@ -7,6 +7,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
  */
 public interface ChatClient {
     void start();
+
     void close();
 
     boolean isConnect();

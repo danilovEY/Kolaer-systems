@@ -31,4 +31,10 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="1-1" author="Danilov">
+        <addColumn tableName="account">
+            <column name="chat_name" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

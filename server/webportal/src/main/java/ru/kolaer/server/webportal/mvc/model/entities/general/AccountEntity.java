@@ -27,6 +27,9 @@ public class AccountEntity implements BaseEntity {
     @JoinColumn(name = "employee_id", insertable=false, updatable=false)
     private EmployeeEntity employeeEntity;
 
+    @Column(name = "chat_name")
+    private String chatName;
+
     @Column(name = "username", nullable = false)
     private String username;
 

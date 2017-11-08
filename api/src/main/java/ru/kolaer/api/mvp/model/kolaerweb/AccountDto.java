@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class AccountDto implements BaseDto{
     private Long id;
+    private String chatName;
     private String username;
     private String password;
     private String email;

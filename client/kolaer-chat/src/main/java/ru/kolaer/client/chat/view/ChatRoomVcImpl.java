@@ -1,7 +1,9 @@
 package ru.kolaer.client.chat.view;
 
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -32,6 +34,15 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     @Override
     public void initView(Consumer<ChatRoomVc> viewVisit) {
         mainPane = new BorderPane();
+
+        VBox userList = new VBox();
+        VBox chatContent = new VBox();
+
+        ScrollPane scrollPane = new ScrollPane();
+
+
+        mainPane.setLeft(userList);
+        mainPane.setCenter(chatContent);
 
         viewVisit.accept(this);
     }

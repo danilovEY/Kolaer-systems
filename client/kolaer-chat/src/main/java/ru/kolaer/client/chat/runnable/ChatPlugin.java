@@ -1,36 +1,42 @@
 package ru.kolaer.client.chat.runnable;
 
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
+import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.ChatClientImpl;
 import ru.kolaer.client.chat.service.ChatHandler;
+import ru.kolaer.client.chat.view.MainChatContentVcImpl;
 
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 02.11.2017.
  */
-public class ChatPlugin implements UniformSystemPlugin {
-    private Button button;
+public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
+    private MainChatContentVcImpl mainChatContentVc;
+    private ChatClient chatClient;
 
-    public static void main(String[] args) {
-
-        ChatClient chatClient = new ChatClientImpl();
-        chatClient.start();
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    @Override
+    public void initialization(UniformSystemEditorKit editorKit) throws Exception {
+        chatClient = new ChatClientImpl(editorKit.getUSNetwork().getKolaerWebServer().getUrl());
+        if(editorKit.getAuthentication().isAuthentication()) {
+            login(editorKit.getAuthentication().getAuthorizedUser());
         }
+
+        editorKit.getAuthentication().registerObserver(this);
+
+        mainChatContentVc = new MainChatContentVcImpl();
+    }
+
+    @Override
+    public void start() throws Exception {
         System.out.println("subs...");
         chatClient.subscribeRoom("test", new ChatHandler() {
             @Override
@@ -62,19 +68,28 @@ public class ChatPlugin implements UniformSystemPlugin {
         test.setFrom("TEST");
         test.setMessage("test");
         chatClient.send("test", test);
-
-        new Scanner(System.in).nextLine();
     }
 
     @Override
     public void initView(Consumer<UniformSystemPlugin> viewVisit) {
-        button = new Button("TEST");
-        button.setOnAction(e -> main(null));
-        viewVisit.accept(this);
+        mainChatContentVc.initView(initMain -> {
+
+            viewVisit.accept(this);
+        });
     }
 
     @Override
     public Node getContent() {
-        return new BorderPane(button);
+        return mainChatContentVc.getContent();
+    }
+
+    @Override
+    public void login(AccountDto account) {
+        chatClient.start();
+    }
+
+    @Override
+    public void logout(AccountDto account) {
+        chatClient.close();
     }
 }

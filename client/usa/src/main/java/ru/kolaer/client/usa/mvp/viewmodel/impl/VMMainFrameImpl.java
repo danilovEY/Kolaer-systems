@@ -249,11 +249,13 @@ public class VMMainFrameImpl extends Application {
             menuBarUS.initView(initMenuBar -> mainPane.setTop(initMenuBar.getContent()));
         });
 
-        UniformSystemEditorKitSingleton editorKit = UniformSystemEditorKitSingleton.getInstance();
+        UniformSystemEditorKitSingleton editorKit = new UniformSystemEditorKitSingleton();
         editorKit.setUSNetwork(network);
         editorKit.setUISystemUS(uiSystemUS);
         editorKit.setPluginsUS(explorer);
         editorKit.setAuthentication(authentication);
+
+        UniformSystemEditorKitSingleton.setInstance(editorKit);
 
         return editorKit;
     }

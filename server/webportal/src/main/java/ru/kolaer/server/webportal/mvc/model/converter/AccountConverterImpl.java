@@ -31,6 +31,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setEmail(dto.getEmail());
         accountEntity.setPassword(dto.getPassword());
         accountEntity.setUsername(dto.getUsername());
+        accountEntity.setChatName(dto.getChatName());
 
         accountEntity.setEmployeeId(Optional.ofNullable(dto.getEmployee())
                 .map(EmployeeDto::getId)
@@ -54,6 +55,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setEmail(model.getEmail());
         accountDto.setPassword(model.getPassword());
         accountDto.setUsername(model.getUsername());
+        accountDto.setChatName(model.getChatName());
 
         if(model.getEmployeeId() != null) {
             accountDto.setEmployee(employeeConverter.convertToDto(model.getEmployeeEntity()));
@@ -71,6 +73,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setEmail(model.getEmail());
         accountDto.setPassword(model.getPassword());
         accountDto.setUsername(model.getUsername());
+        accountDto.setChatName(model.getChatName());
 
         Optional.ofNullable(model.getEmployeeId())
                 .map(EmployeeDto::new)
@@ -89,6 +92,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setEmployeeId(employeeEntity.getId());
         accountEntity.setEmail(employeeEntity.getEmail());
         accountEntity.setUsername(employeeEntity.getPersonnelNumber().toString());
+        accountEntity.setChatName(employeeEntity.getInitials());
 
         Optional.ofNullable(accountEntity.getUsername())
                 .map(passwordEncoder::encode)

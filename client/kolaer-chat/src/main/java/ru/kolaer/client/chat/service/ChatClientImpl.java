@@ -14,22 +14,28 @@ import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import org.springframework.web.socket.sockjs.frame.Jackson2SockJsMessageCodec;
 import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.*;
 
 /**
  * Created by danilovey on 02.11.2017.
  */
 @Slf4j
 public class ChatClientImpl implements ChatClient {
+    private final Map<String, ChatHandler> subs = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, ChatMessageDto> messages = Collections.synchronizedMap(new HashMap<>());
+
+    private static final String TOPIC = "/topic/chats.";
+    private static final String SEND = "/app/chat/room/";
     private final String url;
     private StompSession session;
+    private WebSocketStompClient stompClient;
 
     public ChatClientImpl(String urlRoot) {
-        url = "ws://" + urlRoot + "/rest/chat";
+        url = "ws://" + urlRoot + "/rest/non-security/chat";
+        log.info("WebSocket url: {}", url);
     }
 
     public ChatClientImpl() {
@@ -45,50 +51,62 @@ public class ChatClientImpl implements ChatClient {
         sockJsClient.setMessageCodec(new Jackson2SockJsMessageCodec());
 
         StompHeaders stompHeaders = new StompHeaders();
-        stompHeaders.add("x-token", "MTcyNDc5MTM=:1509786188608:2cf843a88ec95ee39fc8367a15089b5b:SQL");
+        stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
 
-        WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
+        stompClient = new WebSocketStompClient(sockJsClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-        //stompClient.setAutoStartup(true);
-        System.out.println("1");
-        try {
-            session = stompClient.connect(url, new WebSocketHttpHeaders(), stompHeaders, new StompSessionHandler() {
-                @Override
-                public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-                    System.out.println("Connect...");
-                }
 
-                @Override
-                public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-                    System.out.println("2");
-                    exception.printStackTrace();
-                }
+        stompClient.connect(url, new WebSocketHttpHeaders(), stompHeaders, new StompSessionHandler() {
+            @Override
+            public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
+                ChatClientImpl.this.session = session;
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showInformationNotify(null, "Успешное подключение к чату");
 
-                @Override
-                public void handleTransportError(StompSession session, Throwable exception) {
-                    System.out.println("3");
-                    exception.printStackTrace();
-                }
+                subs.forEach(ChatClientImpl.this::subscribeRoom);
+                messages.forEach(ChatClientImpl.this::send);
 
-                @Override
-                public Type getPayloadType(StompHeaders headers) {
-                    return String.class;
-                }
+                subs.clear();
+                messages.clear();
+            }
 
-                @Override
-                public void handleFrame(StompHeaders headers, Object payload) {
-                    System.out.println("4");
-                    System.out.println(payload);
-                }
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+                log.error("Error!", exception);
+            }
+
+            @Override
+            public void handleTransportError(StompSession session, Throwable exception) {
+                log.error("Error!", exception);
+
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(null, "Отключение от чата");
+            }
+
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return String.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(null, "Чат не доступен");
+            }
+        });
     }
 
     @Override
     public void close() {
-
+        Optional.ofNullable(session)
+                .ifPresent(StompSession::disconnect);
+        stompClient.stop();
     }
 
     @Override
@@ -99,12 +117,24 @@ public class ChatClientImpl implements ChatClient {
     @Override
     public void subscribeRoom(String roomName, ChatHandler chatHandler) {
         if(isConnect()) {
-            session.subscribe("/topic/chats." + roomName, chatHandler);
+            StompHeaders stompHeaders = new StompHeaders();
+            stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
+            stompHeaders.setDestination(TOPIC + roomName);
+            session.subscribe(stompHeaders, chatHandler);
+        } else {
+            subs.put(roomName, chatHandler);
         }
     }
 
     @Override
     public void send(String roomName, ChatMessageDto message) {
-        session.send("/app/chat/room/" + roomName, message);
+        if(isConnect()) {
+            StompHeaders stompHeaders = new StompHeaders();
+            stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
+            stompHeaders.setDestination(SEND + roomName);
+            session.send(stompHeaders, message);
+        } else {
+            messages.put(roomName, message);
+        }
     }
 }

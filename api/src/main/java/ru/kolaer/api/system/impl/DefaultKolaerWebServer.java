@@ -27,4 +27,9 @@ public class DefaultKolaerWebServer implements KolaerWebServer {
     public ServerResponse<ServerStatus> getServerStatus() {
         return ServerResponse.createServerResponse(ServerStatus.AVAILABLE);
     }
+
+    @Override
+    public String getUrl() {
+        return "localhost:8080";
+    }
 }
