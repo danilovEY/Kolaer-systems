@@ -244,6 +244,8 @@ public class GroupTreeVcImpl implements GroupTreeVc {
                             .orElse(Collections.emptyList())
                             .forEach(gr -> onlyAddGroup(pGroupTreeItem, gr));
                 }
+
+                sort();
             });
         }
     }
