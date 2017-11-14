@@ -2,7 +2,9 @@ package ru.kolaer.client.usa.system.network.kolaerweb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.system.network.ChatTable;
 import ru.kolaer.api.system.network.kolaerweb.*;
+import ru.kolaer.client.usa.system.network.ChatTableImpl;
 
 /**
  * Created by Danilov on 31.07.2016.
@@ -13,6 +15,7 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
     private final CounterTable counterTable;
     private final EmployeeOtherOrganizationTable employeeOtherOrganizationTable;
     private final KolpassTable kolpassTable;
+    private final ChatTable chatTable;
 
     public ApplicationDataBaseImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, String path) {
         this.generalEmployeesTable = new GeneralEmployeesTableImpl(objectMapper, globalRestTemplate,
@@ -29,6 +32,7 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
 
         this.kolpassTable = new KolpassTableImpl(objectMapper, globalRestTemplate,
                 path + "/kolpass");
+        this.chatTable = new ChatTableImpl(path + "/chat", globalRestTemplate, objectMapper);
     }
 
     @Override
@@ -54,5 +58,9 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
     @Override
     public EmployeeOtherOrganizationTable getEmployeeOtherOrganizationTable() {
         return this.employeeOtherOrganizationTable;
+    }
+
+    public ChatTable getChatTable() {
+        return chatTable;
     }
 }

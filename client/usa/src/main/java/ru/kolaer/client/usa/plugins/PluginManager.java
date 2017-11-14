@@ -63,6 +63,7 @@ public class PluginManager {
                 "ru.kolaer.api.mvp.model.kolaerweb.webportal, "+
                 "ru.kolaer.api.mvp.model.kolaerweb.webportal.rss, "+
                 "ru.kolaer.api.mvp.model.kolaerweb.kolpass, "+
+                "ru.kolaer.api.mvp.model.kolaerweb.kolchat, "+
                 "ru.kolaer.api.mvp.model.restful, "+
                 "ru.kolaer.api.mvp.presenter, "+
                 "ru.kolaer.api.mvp.view, "+

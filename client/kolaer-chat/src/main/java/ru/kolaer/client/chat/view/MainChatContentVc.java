@@ -7,4 +7,6 @@ import ru.kolaer.api.mvp.view.BaseView;
  * Created by danilovey on 02.11.2017.
  */
 public interface MainChatContentVc extends BaseView<MainChatContentVc, Parent>{
+    void setTabChatRoomVc(TabChatRoomVc tabChatRoomVc);
+    void setUserListVc(UserListVc userListVc);
 }

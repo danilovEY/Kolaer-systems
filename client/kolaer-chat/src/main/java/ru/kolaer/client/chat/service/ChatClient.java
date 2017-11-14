@@ -5,7 +5,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
 /**
  * Created by danilovey on 02.11.2017.
  */
-public interface ChatClient {
+public interface ChatClient extends ChatObservable{
     void start();
 
     void close();

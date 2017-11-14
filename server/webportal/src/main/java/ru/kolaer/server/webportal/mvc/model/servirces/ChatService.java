@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
-import ru.kolaer.api.mvp.model.kolaerweb.chat.ChatGroupDto;
-import ru.kolaer.api.mvp.model.kolaerweb.chat.ChatUserDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 
 /**
  * Created by danilovey on 02.11.2017.

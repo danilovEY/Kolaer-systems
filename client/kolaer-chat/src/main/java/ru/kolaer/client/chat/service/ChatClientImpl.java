@@ -24,6 +24,7 @@ import java.util.*;
  */
 @Slf4j
 public class ChatClientImpl implements ChatClient {
+    private final List<ChatObserver> observers = new ArrayList<>();
     private final Map<String, ChatHandler> subs = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, ChatMessageDto> messages = Collections.synchronizedMap(new HashMap<>());
 
@@ -65,6 +66,8 @@ public class ChatClientImpl implements ChatClient {
                         .getNotification()
                         .showInformationNotify(null, "Успешное подключение к чату");
 
+                observers.forEach(obs -> obs.connect(ChatClientImpl.this));
+
                 subs.forEach(ChatClientImpl.this::subscribeRoom);
                 messages.forEach(ChatClientImpl.this::send);
 
@@ -85,6 +88,8 @@ public class ChatClientImpl implements ChatClient {
                         .getUISystemUS()
                         .getNotification()
                         .showErrorNotify(null, "Отключение от чата");
+
+                observers.forEach(obs -> obs.disconnect(ChatClientImpl.this));
             }
 
             @Override
@@ -136,5 +141,15 @@ public class ChatClientImpl implements ChatClient {
         } else {
             messages.put(roomName, message);
         }
+    }
+
+    @Override
+    public void registerObserver(ChatObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(ChatObserver observer) {
+        observers.remove(observer);
     }
 }

@@ -2,6 +2,7 @@ package ru.kolaer.client.usa.system.network;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -11,6 +12,7 @@ import ru.kolaer.api.mvp.model.error.ErrorCode;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.client.usa.system.network.kolaerweb.TokenToHeader;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -20,11 +22,11 @@ import java.util.List;
 /**
  * Created by danilovey on 16.10.2017.
  */
-public interface RestTemplateService {
+public interface RestTemplateService extends TokenToHeader {
 
     default <T> ServerResponse<Page<T>> getPageResponse(RestTemplate restTemplate, String url, ObjectMapper objectMapper) {
         try {
-            return getPageResponse(restTemplate.getForEntity(url, String.class), objectMapper);
+            return getPageResponse(restTemplate.exchange(url, HttpMethod.GET, getHeader(), String.class), objectMapper);
         } catch (RestClientException ex) {
             return createServerExceptionMessage(url);
         }
@@ -32,7 +34,7 @@ public interface RestTemplateService {
 
     default <T> ServerResponse<T> getServerResponse(RestTemplate restTemplate, String url, Class<T> dtoClass, ObjectMapper objectMapper) {
         try {
-            return getServerResponse(restTemplate.getForEntity(url, String.class), dtoClass, objectMapper);
+            return getServerResponse(restTemplate.exchange(url, HttpMethod.GET, getHeader(), String.class), dtoClass, objectMapper);
         } catch (RestClientException ex) {
             return createServerExceptionMessage(url);
         }
@@ -40,7 +42,7 @@ public interface RestTemplateService {
 
     default <T> ServerResponse<List<T>> getServerResponses(RestTemplate restTemplate, String url, Class<T[]> dtoClass, ObjectMapper objectMapper) {
         try {
-            return getServerResponses(restTemplate.getForEntity(url, String.class), dtoClass, objectMapper);
+            return getServerResponses(restTemplate.exchange(url, HttpMethod.GET, getHeader(), String.class), dtoClass, objectMapper);
         } catch (RestClientException ex) {
             return createServerExceptionMessage(url);
         }
@@ -48,7 +50,7 @@ public interface RestTemplateService {
 
     default <T> ServerResponse<T> postServerResponse(RestTemplate restTemplate, String url, Object request, Class<T> dtoClass, ObjectMapper objectMapper) {
         try {
-            return getServerResponse(restTemplate.postForEntity(url, request, String.class), dtoClass, objectMapper);
+            return getServerResponse(restTemplate.exchange(url, HttpMethod.POST, getHeader(request), String.class), dtoClass, objectMapper);
         } catch (RestClientException ex) {
             return createServerExceptionMessage(url);
         }
@@ -56,7 +58,7 @@ public interface RestTemplateService {
 
     default <T> ServerResponse<List<T>> postServerResponses(RestTemplate restTemplate, String url, Object request, Class<T[]> dtoClass, ObjectMapper objectMapper) {
         try {
-            return getServerResponses(restTemplate.postForEntity(url, request, String.class), dtoClass, objectMapper);
+            return getServerResponses(restTemplate.exchange(url, HttpMethod.POST, getHeader(request), String.class), dtoClass, objectMapper);
         } catch (RestClientException ex) {
             return createServerExceptionMessage(url);
         }

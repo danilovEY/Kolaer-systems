@@ -18,8 +18,8 @@ import java.net.URL;
 public class KolaerWebServerImpl implements KolaerWebServer {
     private final ObjectMapper objectMapper;
     private final RestTemplate globalRestTemplate;
-    private ApplicationDataBase applicationDataBase;
-    private ServerTools serverTools;
+    private final ApplicationDataBase applicationDataBase;
+    private final ServerTools serverTools;
 
     public KolaerWebServerImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, StringBuilder path) {
         this.objectMapper = objectMapper;

@@ -20,10 +20,10 @@ import ru.kolaer.client.usa.tools.Resources;
  */
 public class NetworkUSRestTemplate implements NetworkUS {
 	private final RestTemplate globalRestTemplate;
-	private RestfulServer restfulServer;
-	private KolaerWebServer kolaerWebServer;
+	private final RestfulServer restfulServer;
+	private final KolaerWebServer kolaerWebServer;
 	/**БД через RESTful.*/
-	private OtherPublicAPI otherPublicAPI;
+	private final OtherPublicAPI otherPublicAPI;
 
 	public NetworkUSRestTemplate(ObjectMapper objectMapper) {
 		this.globalRestTemplate = new RestTemplate();

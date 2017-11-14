@@ -178,8 +178,6 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
         });
     }
 
-
-
     @Override
     public void registerObserver(AuthenticationObserver observer) {
         if(observer != null)

@@ -1,5 +1,6 @@
 package ru.kolaer.api.system.impl;
 
+import ru.kolaer.api.system.network.ChatTable;
 import ru.kolaer.api.system.network.kolaerweb.*;
 
 /**
@@ -11,6 +12,7 @@ public class DefaultApplicationDataBase implements ApplicationDataBase {
     private final CounterTable counterTable = new DefaultCounterTable();
     private final KolpassTable kolpassTable = new DefaultKolpassTable();
     private final EmployeeOtherOrganizationTable employeeOtherOrganizationTable = new DefaultEmployeeOtherOrganizationTable();
+    private final ChatTable chatTable = new DefaultChatTable();
 
     @Override
     public GeneralEmployeesTable getGeneralEmployeesTable() {
@@ -30,6 +32,11 @@ public class DefaultApplicationDataBase implements ApplicationDataBase {
     @Override
     public KolpassTable getKolpassTable() {
         return this.kolpassTable;
+    }
+
+    @Override
+    public ChatTable getChatTable() {
+        return chatTable;
     }
 
     @Override

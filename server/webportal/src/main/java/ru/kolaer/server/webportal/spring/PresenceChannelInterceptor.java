@@ -18,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.chat.ChatUserDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
 import ru.kolaer.server.webportal.security.ServerAuthType;
@@ -59,15 +59,6 @@ public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
         setup(accessor);
-
-        if(accessor.getCommand() != null &&
-                accessor.getCommand() != StompCommand.DISCONNECT &&
-                accessor.getCommand() != StompCommand.UNSUBSCRIBE &&
-                (SecurityContextHolder.getContext().getAuthentication() == null ||
-                        !SecurityContextHolder.getContext().getAuthentication().isAuthenticated())) {
-
-            disconnectSession(accessor.getSessionId());
-        }
 
         return MessageBuilder.createMessage(message.getPayload(), accessor.getMessageHeaders());
     }
@@ -140,6 +131,7 @@ public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
                 chatUserDto.setName(Optional.ofNullable(accountDto.getChatName()).orElse(user.getName()));
                 chatUserDto.setRoomName(user.getName());
                 chatUserDto.setSessionId(sha.getSessionId());
+                chatUserDto.setAccountId(accountDto.getId());
 
                 if(activeUserDtoMap.containsKey(user.getName())) {
                     ChatUserDto oldActive = activeUserDtoMap.get(user.getName());
@@ -150,9 +142,15 @@ public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
                 activeUserDtoMap.put(user.getName(), chatUserDto);
 
                 chatService.addActiveUser(chatUserDto);
-            } else if (sha.getCommand() == StompCommand.DISCONNECT) {
-                Optional.ofNullable(activeUserDtoMap.get(user.getName()))
-                        .ifPresent(chatService::removeActiveUser);
+            } else if (sha.getCommand() == StompCommand.DISCONNECT ||
+                    sha.getCommand() == StompCommand.UNSUBSCRIBE) {
+
+                if(activeUserDtoMap.containsKey(user.getName())) {
+                    log.info("Delete: {}", user.getName());
+                    ChatUserDto chatUserDto = activeUserDtoMap.get(user.getName());
+                    chatService.removeActiveUser(chatUserDto);
+                    activeUserDtoMap.remove(user.getName());
+                }
             }
         }
     }

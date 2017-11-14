@@ -1,18 +1,13 @@
 package ru.kolaer.client.chat.runnable;
 
 import javafx.scene.Node;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSession;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.ChatClientImpl;
-import ru.kolaer.client.chat.service.ChatHandler;
-import ru.kolaer.client.chat.view.MainChatContentVcImpl;
+import ru.kolaer.client.chat.view.*;
 
 import java.util.function.Consumer;
 
@@ -22,6 +17,8 @@ import java.util.function.Consumer;
 public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
     private MainChatContentVcImpl mainChatContentVc;
     private ChatClient chatClient;
+    private UserListVc userListVc;
+    private TabChatRoomVc tabChatRoomVc;
 
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
@@ -32,44 +29,29 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
         editorKit.getAuthentication().registerObserver(this);
 
+        userListVc = new UserListVcImpl();
+        tabChatRoomVc = new TabChatRoomVcImpl();
         mainChatContentVc = new MainChatContentVcImpl();
     }
 
     @Override
     public void start() throws Exception {
-        System.out.println("subs...");
-        chatClient.subscribeRoom("test", new ChatHandler() {
-            @Override
-            public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-                System.out.println("AAAAAAAAAAAAAAAAAAAAAAA");
-            }
-
-            @Override
-            public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-                System.out.println("ZZZ");
-                System.out.println(new String(payload));
-                exception.printStackTrace();
-            }
-
-            @Override
-            public void handleTransportError(StompSession session, Throwable exception) {
-                exception.printStackTrace();
-            }
-
-            @Override
-            public void handleFrame(StompHeaders headers, Object payload) {
-                System.out.println("CCCC");
-                ChatMessageDto msg = (ChatMessageDto) payload;
-                System.out.println(msg);
-            }
-        });
-
 
     }
 
     @Override
     public void initView(Consumer<UniformSystemPlugin> viewVisit) {
         mainChatContentVc.initView(initMain -> {
+            tabChatRoomVc.initView(initMain::setTabChatRoomVc);
+            userListVc.initView(initMain::setUserListVc);
+
+            chatClient.registerObserver(userListVc);
+            chatClient.registerObserver(tabChatRoomVc);
+
+            if(chatClient.isConnect()){
+                userListVc.connect(chatClient);
+                tabChatRoomVc.connect(chatClient);
+            }
 
             viewVisit.accept(this);
         });
@@ -83,11 +65,6 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
     @Override
     public void login(AccountDto account) {
         chatClient.start();
-
-        ChatMessageDto test = new ChatMessageDto();
-        test.setFromAccount(account);
-        test.setMessage("test");
-        chatClient.send("test", test);
     }
 
     @Override

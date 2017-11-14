@@ -16,4 +16,10 @@ public interface ChatHandler extends StompSessionHandler {
     }
 
     default void afterConnected(StompSession session, StompHeaders connectedHeaders){}
+
+    default void handleFrame(StompHeaders headers, Object payload) {
+        handleFrame(headers, (ChatMessageDto) payload);
+    }
+
+    void handleFrame(StompHeaders headers, ChatMessageDto message);
 }

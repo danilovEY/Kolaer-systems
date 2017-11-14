@@ -12,6 +12,7 @@ public class DefaultNetworkUS implements NetworkUS {
     private final RestfulServer restfulServer = new DefaultRestfulServer();
     private final KolaerWebServer kolaerWebServer = new DefaultKolaerWebServer();
     private final OtherPublicAPI publicAPI = new DefaultOtherPublicAPI();
+
     @Override
     public RestfulServer getRestfulServer() {
         return this.restfulServer;
@@ -26,4 +27,5 @@ public class DefaultNetworkUS implements NetworkUS {
     public OtherPublicAPI getOtherPublicAPI() {
         return this.publicAPI;
     }
+
 }

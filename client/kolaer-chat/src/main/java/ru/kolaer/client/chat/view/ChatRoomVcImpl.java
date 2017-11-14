@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
+import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
 
 import java.util.function.Consumer;
 
@@ -27,7 +28,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     }
 
     @Override
-    public void handleFrame(StompHeaders headers, Object payload) {
+    public void handleFrame(StompHeaders headers, ChatMessageDto message) {
 
     }
 

@@ -1,9 +1,11 @@
 package ru.kolaer.client.usa.system.network.kolaerweb;
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 /**
@@ -17,9 +19,21 @@ public interface TokenToHeader {
     default HttpHeaders getTokenToHeader() {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("x-token", UniformSystemEditorKitSingleton.getInstance()
-                .getAuthentication().getToken().getToken());
+
+        Authentication authentication = UniformSystemEditorKitSingleton.getInstance()
+                .getAuthentication();
+        if(authentication.isAuthentication()) {
+            headers.set("x-token", authentication.getToken().getToken());
+        }
 
         return headers;
+    }
+
+    default HttpEntity<?> getHeader() {
+        return new HttpEntity<>(getTokenToHeader());
+    }
+
+    default HttpEntity<?> getHeader(Object obj) {
+        return new HttpEntity<>(obj, getTokenToHeader());
     }
 }

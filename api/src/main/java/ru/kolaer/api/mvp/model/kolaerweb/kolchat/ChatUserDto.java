@@ -1,4 +1,4 @@
-package ru.kolaer.api.mvp.model.kolaerweb.chat;
+package ru.kolaer.api.mvp.model.kolaerweb.kolchat;
 
 import lombok.Data;
 import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
@@ -9,6 +9,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
 @Data
 public class ChatUserDto implements BaseDto {
     private Long id;
+    private Long accountId;
     private String roomName;
     private String name;
     private String sessionId;

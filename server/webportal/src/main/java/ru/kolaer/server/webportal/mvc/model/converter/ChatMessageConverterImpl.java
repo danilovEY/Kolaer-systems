@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatMessageEntity;
+import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 
 import java.util.Optional;
 
@@ -14,9 +15,9 @@ import java.util.Optional;
 @Component
 @Slf4j
 public class ChatMessageConverterImpl implements ChatMessageConverter {
-    private final AccountConverter accountConverter;
+    private final AccountService accountConverter;
 
-    public ChatMessageConverterImpl(AccountConverter accountConverter) {
+    public ChatMessageConverterImpl(AccountService accountConverter) {
         this.accountConverter = accountConverter;
     }
 
@@ -48,7 +49,7 @@ public class ChatMessageConverterImpl implements ChatMessageConverter {
         chatMessageDto.setMessage(model.getMessage());
         chatMessageDto.setId(model.getId());
         chatMessageDto.setCreateMessage(model.getCreateMessage());
-        chatMessageDto.setFromAccount(accountConverter.convertToDto(model.getAccount()));
+        chatMessageDto.setFromAccount(accountConverter.getById(model.getAccountId()));
         return chatMessageDto;
     }
 
@@ -58,7 +59,7 @@ public class ChatMessageConverterImpl implements ChatMessageConverter {
         oldDto.setRoom(newModel.getRoom());
         oldDto.setId(newModel.getId());
         oldDto.setCreateMessage(newModel.getCreateMessage());
-        oldDto.setFromAccount(accountConverter.convertToDto(newModel.getAccount()));
+        oldDto.setFromAccount(accountConverter.getById(newModel.getAccountId()));
         return oldDto;
     }
 }

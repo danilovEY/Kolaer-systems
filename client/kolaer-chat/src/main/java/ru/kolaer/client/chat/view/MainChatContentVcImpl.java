@@ -11,19 +11,14 @@ import java.util.function.Consumer;
  */
 public class MainChatContentVcImpl implements MainChatContentVc {
     private BorderPane mainPane;
+    private SplitPane splitPane;
 
     @Override
     public void initView(Consumer<MainChatContentVc> viewVisit) {
         mainPane = new BorderPane();
 
-        SplitPane splitPane = new SplitPane();
+        splitPane = new SplitPane();
         splitPane.getItems().addAll(null, null);
-
-        UserListVc userListVc = new UserListVcImpl();
-        TabChatRoomVc tabChatRoomVc = new TabChatRoomVcImpl();
-
-        userListVc.initView(initUserList -> splitPane.getItems().set(1, initUserList.getContent()));
-        tabChatRoomVc.initView(initTab -> splitPane.getItems().set(0, initTab.getContent()));
 
         mainPane.setCenter(splitPane);
 
@@ -33,5 +28,15 @@ public class MainChatContentVcImpl implements MainChatContentVc {
     @Override
     public Parent getContent() {
         return mainPane;
+    }
+
+    @Override
+    public void setTabChatRoomVc(TabChatRoomVc tabChatRoomVc) {
+        splitPane.getItems().set(0, tabChatRoomVc.getContent());
+    }
+
+    @Override
+    public void setUserListVc(UserListVc userListVc) {
+        splitPane.getItems().set(1, userListVc.getContent());
     }
 }
