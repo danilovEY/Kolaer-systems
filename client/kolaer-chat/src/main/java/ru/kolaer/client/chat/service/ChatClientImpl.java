@@ -13,7 +13,7 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import org.springframework.web.socket.sockjs.frame.Jackson2SockJsMessageCodec;
-import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 import java.lang.reflect.Type;
@@ -25,10 +25,11 @@ import java.util.*;
 @Slf4j
 public class ChatClientImpl implements ChatClient {
     private final List<ChatObserver> observers = new ArrayList<>();
-    private final Map<String, ChatHandler> subs = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, ChatMessageHandler> subs = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, ChatMessageDto> messages = Collections.synchronizedMap(new HashMap<>());
 
-    private static final String TOPIC = "/topic/chats.";
+    private static final String TOPIC_CHATS = "/topic/chats.";
+    private static final String TOPIC_INFO = "/topic/info";
     private static final String SEND = "/app/chat/room/";
     private final String url;
     private StompSession session;
@@ -120,14 +121,24 @@ public class ChatClientImpl implements ChatClient {
     }
 
     @Override
-    public void subscribeRoom(String roomName, ChatHandler chatHandler) {
+    public void subscribeRoom(String roomName, ChatMessageHandler chatMessageHandler) {
         if(isConnect()) {
             StompHeaders stompHeaders = new StompHeaders();
             stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
-            stompHeaders.setDestination(TOPIC + roomName);
-            session.subscribe(stompHeaders, chatHandler);
+            stompHeaders.setDestination(TOPIC_CHATS + roomName);
+            session.subscribe(stompHeaders, chatMessageHandler);
         } else {
-            subs.put(roomName, chatHandler);
+            subs.put(roomName, chatMessageHandler);
+        }
+    }
+
+    @Override
+    public void subscribeInfo(ChatInfoHandler chatMessageHandler) {
+        if(isConnect()) {
+            StompHeaders stompHeaders = new StompHeaders();
+            stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
+            stompHeaders.setDestination(TOPIC_INFO);
+            session.subscribe(stompHeaders, chatMessageHandler);
         }
     }
 

@@ -1,24 +1,25 @@
 package ru.kolaer.client.chat.runnable;
 
 import javafx.scene.Node;
+import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.ChatClientImpl;
-import ru.kolaer.client.chat.view.*;
+import ru.kolaer.client.chat.view.ChatVc;
+import ru.kolaer.client.chat.view.ChatVcImpl;
 
 import java.util.function.Consumer;
 
 /**
  * Created by danilovey on 02.11.2017.
  */
+@Slf4j
 public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
-    private MainChatContentVcImpl mainChatContentVc;
     private ChatClient chatClient;
-    private UserListVc userListVc;
-    private TabChatRoomVc tabChatRoomVc;
+    private ChatVc chatVc;
 
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
@@ -29,28 +30,25 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
         editorKit.getAuthentication().registerObserver(this);
 
-        userListVc = new UserListVcImpl();
-        tabChatRoomVc = new TabChatRoomVcImpl();
-        mainChatContentVc = new MainChatContentVcImpl();
+        chatVc = new ChatVcImpl();
     }
 
     @Override
     public void start() throws Exception {
+    }
+
+    @Override
+    public void stop() throws Exception {
 
     }
 
     @Override
     public void initView(Consumer<UniformSystemPlugin> viewVisit) {
-        mainChatContentVc.initView(initMain -> {
-            tabChatRoomVc.initView(initMain::setTabChatRoomVc);
-            userListVc.initView(initMain::setUserListVc);
-
-            chatClient.registerObserver(userListVc);
-            chatClient.registerObserver(tabChatRoomVc);
+        chatVc.initView(initTab -> {
+            chatClient.registerObserver(chatVc);
 
             if(chatClient.isConnect()){
-                userListVc.connect(chatClient);
-                tabChatRoomVc.connect(chatClient);
+                chatVc.connect(chatClient);
             }
 
             viewVisit.accept(this);
@@ -59,7 +57,7 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public Node getContent() {
-        return mainChatContentVc.getContent();
+        return chatVc.getContent();
     }
 
     @Override

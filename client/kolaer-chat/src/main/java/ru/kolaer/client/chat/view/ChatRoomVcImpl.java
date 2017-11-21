@@ -1,13 +1,8 @@
 package ru.kolaer.client.chat.view;
 
-import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSession;
-import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
+import javafx.scene.control.Tab;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.client.chat.service.ChatClient;
 
 import java.util.function.Consumer;
 
@@ -15,41 +10,33 @@ import java.util.function.Consumer;
  * Created by danilovey on 02.11.2017.
  */
 public class ChatRoomVcImpl implements ChatRoomVc {
-    private BorderPane mainPane;
+    private final ChatGroupDto chatGroupDto;
+    private Tab mainTab;
 
-    @Override
-    public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-
-    }
-
-    @Override
-    public void handleTransportError(StompSession session, Throwable exception) {
-
-    }
-
-    @Override
-    public void handleFrame(StompHeaders headers, ChatMessageDto message) {
-
+    public ChatRoomVcImpl(ChatGroupDto chatGroupDto) {
+        this.chatGroupDto = chatGroupDto;
     }
 
     @Override
     public void initView(Consumer<ChatRoomVc> viewVisit) {
-        mainPane = new BorderPane();
-
-        VBox userList = new VBox();
-        VBox chatContent = new VBox();
-
-        ScrollPane scrollPane = new ScrollPane();
-
-
-        mainPane.setLeft(userList);
-        mainPane.setCenter(chatContent);
+        mainTab = new Tab();
+        mainTab.setText(chatGroupDto.getName());
 
         viewVisit.accept(this);
     }
 
     @Override
-    public Node getContent() {
-        return mainPane;
+    public Tab getContent() {
+        return mainTab;
+    }
+
+    @Override
+    public void connect(ChatClient chatClient) {
+
+    }
+
+    @Override
+    public void disconnect(ChatClient chatClient) {
+
     }
 }

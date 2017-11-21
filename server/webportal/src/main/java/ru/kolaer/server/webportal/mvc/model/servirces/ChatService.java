@@ -9,5 +9,10 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 public interface ChatService extends DefaultService<ChatGroupDto> {
     ChatUserDto addActiveUser(ChatUserDto dto);
     void removeActiveUser(ChatUserDto dto);
-    ChatGroupDto getMainGroup();
+
+    boolean containsUser(String sessionId);
+
+    ChatUserDto getUser(String sessionId);
+
+    ChatUserDto getUserByAccountId(Long id);
 }

@@ -28,6 +28,7 @@ import java.util.Optional;
  */
 @Slf4j
 public class AuthenticationOnNetwork implements Authentication, RestTemplateService {
+    private final String TEMP_NAME = Resources.CACHE_PATH + "\\remember_login.txt";
     private final List<AuthenticationObserver> authenticationObserverList = new ArrayList<>();
     private final RestTemplate restTemplate;
     private final String pathToServer;
@@ -104,7 +105,7 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
                 final List<String> loginAndPassList =
                         Arrays.asList(userAndPassJson.getUsername(), userAndPassJson.getPassword());
 
-                Files.write(Paths.get(Authentication.TEMP_NAME),
+                Files.write(Paths.get(TEMP_NAME),
                         loginAndPassList, Charset.forName("UTF-8"));
             } catch (IOException e) {
                 log.error("Не удалось запомнить логин и пароль!", e);
@@ -112,7 +113,7 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
                         .getNotification().showErrorNotify("Ошибка!", "Не удалось запомнить логин и пароль!");
             }
         } else {
-            new File(Authentication.TEMP_NAME).delete();
+            new File(TEMP_NAME).delete();
         }
 
         return this.login(userAndPassJson);
@@ -120,10 +121,10 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
 
     @Override
     public boolean loginIsRemember() {
-        if(new File(Authentication.TEMP_NAME).exists()) {
+        if(new File(TEMP_NAME).exists()) {
             try {
                 final List<String> strings = Files
-                        .readAllLines(Paths.get(Authentication.TEMP_NAME), Charset.forName("UTF-8"));
+                        .readAllLines(Paths.get(TEMP_NAME), Charset.forName("UTF-8"));
 
                 final UserAndPassJson userAndPassJson = new UserAndPassJson();
 

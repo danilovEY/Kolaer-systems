@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.server.webportal.mvc.model.converter.ChatMessageConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.ChatMessageDao;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatMessageEntity;

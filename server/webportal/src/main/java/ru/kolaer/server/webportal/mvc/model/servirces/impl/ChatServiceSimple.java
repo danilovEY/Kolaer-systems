@@ -7,15 +7,15 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by danilovey on 02.11.2017.
  */
 @Service
 public class ChatServiceSimple implements ChatService {
+    private final Map<String, ChatUserDto> activeUserDtoMap = Collections.synchronizedMap(new HashMap<>());
+
     private final ChatGroupDto mainGroup = new ChatGroupDto();
     private final List<ChatUserDto> users = new ArrayList<>();
 
@@ -28,17 +28,32 @@ public class ChatServiceSimple implements ChatService {
     @Override
     public ChatUserDto addActiveUser(ChatUserDto dto) {
         users.add(dto);
+        activeUserDtoMap.put(dto.getSessionId(), dto);
         return dto;
     }
 
     @Override
     public void removeActiveUser(ChatUserDto dto) {
         users.remove(dto);
+        activeUserDtoMap.remove(dto.getSessionId());
     }
 
     @Override
-    public ChatGroupDto getMainGroup() {
-        return mainGroup;
+    public boolean containsUser(String sessionId) {
+        return activeUserDtoMap.containsKey(sessionId);
+    }
+
+    @Override
+    public ChatUserDto getUser(String sessionId) {
+        return activeUserDtoMap.get(sessionId);
+    }
+
+    @Override
+    public ChatUserDto getUserByAccountId(Long id) {
+        return users.stream()
+                .filter(user -> id.equals(user.getAccountId()))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

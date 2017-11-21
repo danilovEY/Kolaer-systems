@@ -7,5 +7,7 @@ import ru.kolaer.client.chat.service.ChatObserver;
 /**
  * Created by danilovey on 02.11.2017.
  */
-public interface TabChatRoomVc extends BaseView<TabChatRoomVc, Parent>, ChatObserver {
+public interface ChatVc extends BaseView<ChatVc, Parent>, ChatObserver {
+
+    void addChatRoom(ChatRoomVc chatRoomVc);
 }

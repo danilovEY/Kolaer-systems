@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.converter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatMessageEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 
