@@ -9,4 +9,8 @@ import ru.kolaer.client.chat.service.ChatObserver;
  */
 public interface ChatRoomVc extends BaseView<ChatRoomVc, Tab>, ChatObserver {
 
+
+    ChatMessageVc getChatMessageVc();
+
+    UserListVc getUserListVc();
 }

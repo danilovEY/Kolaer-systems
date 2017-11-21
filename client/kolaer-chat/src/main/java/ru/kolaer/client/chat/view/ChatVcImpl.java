@@ -4,11 +4,16 @@ import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
+import ru.kolaer.client.chat.service.ChatInfoHandler;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +25,7 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public class ChatVcImpl implements ChatVc {
-    private final Map<String, ChatGroupDto> groupDtoMap = new HashMap<>();
+    private final Map<String, ChatRoomVc> groupDtoMap = new HashMap<>();
     private BorderPane mainPane;
     private TabPane tabPane;
 
@@ -28,7 +33,7 @@ public class ChatVcImpl implements ChatVc {
     public void initView(Consumer<ChatVc> viewVisit) {
         mainPane = new BorderPane();
 
-        this.tabPane = new TabPane();
+        tabPane = new TabPane();
 
         mainPane.setCenter(tabPane);
 
@@ -64,14 +69,58 @@ public class ChatVcImpl implements ChatVc {
             //        .getAuthorizedUser();
 
             for(ChatGroupDto chatGroupDto : response) {
-                groupDtoMap.put(chatGroupDto.getName(), chatGroupDto);
-
                 Tools.runOnWithOutThreadFX(() -> {
                     ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
                     chatRoomVc.initView(initRoom -> tabPane.getTabs().add(initRoom.getContent()));
+                    if(chatClient.isConnect()) {
+                        chatRoomVc.connect(chatClient);
+                    }
+                    chatClient.registerObserver(chatRoomVc);
+                    groupDtoMap.put(chatGroupDto.getName(), chatRoomVc);
                 });
             }
         }
+
+        chatClient.subscribeInfo(new ChatInfoHandler() {
+            @Override
+            public void handleFrame(StompHeaders headers, ChatInfoDto info) {
+                log.info(info.toString());
+                ServerResponse<List<ChatGroupDto>> activeGroup = UniformSystemEditorKitSingleton.getInstance()
+                        .getUSNetwork()
+                        .getKolaerWebServer()
+                        .getApplicationDataBase()
+                        .getChatTable()
+                        .getActiveGroup();
+
+                log.info(activeGroup.toString());
+
+                if(activeGroup.isServerError()) {
+                    UniformSystemEditorKitSingleton.getInstance()
+                            .getUISystemUS()
+                            .getNotification()
+                            .showErrorNotify(activeGroup.getExceptionMessage());
+                } else {
+                    for (ChatGroupDto chatGroupDto : activeGroup.getResponse()) {
+                        if(groupDtoMap.containsKey(chatGroupDto.getName())) {
+                            ChatRoomVc chatRoomVc = groupDtoMap.get(chatGroupDto.getName());
+                            Tools.runOnWithOutThreadFX(() -> {
+                                chatRoomVc.getUserListVc().setUsers(chatGroupDto.getUsers());
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+
+            }
+
+            @Override
+            public void handleTransportError(StompSession session, Throwable exception) {
+
+            }
+        });
     }
 
     @Override
