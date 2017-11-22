@@ -26,4 +26,14 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="16-1" author="Danilov">
+        <addColumn tableName="chat_info">
+            <column name="data" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="16-2" author="Danilov">
+        <addNotNullConstraint tableName="chat_info" columnName="account_id" columnDataType="BIGINT"/>
+    </changeSet>
+
 </databaseChangeLog>

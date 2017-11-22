@@ -9,9 +9,12 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatMessageService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
@@ -42,6 +45,7 @@ public class ChatController {
     public void handleChat(@Payload ChatMessageDto message, @DestinationVariable("chatRoomId") String chatRoomId, MessageHeaders messageHeaders) {
         message.setCreateMessage(new Date());
         message.setRoom(chatRoomId);
+        message.setType(ChatMessageType.USER);
 
         log.info("messages: {}, headers: {}", message, messageHeaders);
 
@@ -52,5 +56,11 @@ public class ChatController {
     @RequestMapping(value = "/active/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ChatGroupDto> getActiveUsers() {
         return chatService.getAll();
+    }
+
+    @UrlDeclaration(description = "Получить активного пользователя по ID аккаунту")
+    @RequestMapping(value = "/active", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ChatUserDto getActiveUserByAccountId(@RequestParam("account_id") Long accountId) {
+        return chatService.getUserByAccountId(accountId);
     }
 }

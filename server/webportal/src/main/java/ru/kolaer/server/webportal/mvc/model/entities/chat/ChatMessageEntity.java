@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.entities.chat;
 
 import lombok.Data;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 
@@ -31,6 +32,10 @@ public class ChatMessageEntity implements BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_message", nullable = false)
     private Date createMessage;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private ChatMessageType type = ChatMessageType.USER;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", insertable=false, updatable=false, nullable = false)

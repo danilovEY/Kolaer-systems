@@ -34,4 +34,7 @@ public class ChatInfoEntity implements BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", insertable=false, updatable=false)
     private AccountEntity account;
+
+    @Column(name = "data")
+    private String data;
 }

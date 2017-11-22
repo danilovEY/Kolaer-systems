@@ -29,4 +29,14 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="14-1" author="Danilov">
+        <addColumn tableName="chat_message">
+            <column name="type" type="VARCHAR(255)" defaultValue="USER">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addNotNullConstraint tableName="chat_message" columnName="account_id" columnDataType="BIGINT"/>
+        <addNotNullConstraint tableName="chat_message" columnName="room" columnDataType="VARCHAR(255)"/>
+    </changeSet>
+
 </databaseChangeLog>

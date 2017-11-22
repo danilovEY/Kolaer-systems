@@ -13,4 +13,5 @@ public class ChatMessageDto implements BaseDto {
 	private Date createMessage;
 	private String message;
 	private String room;
+	private ChatMessageType type;
 }

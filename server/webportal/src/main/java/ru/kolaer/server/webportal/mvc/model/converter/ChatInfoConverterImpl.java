@@ -16,6 +16,7 @@ public class ChatInfoConverterImpl implements ChatInfoConverter {
         chatInfoEntity.setAccountId(dto.getAccountId());
         chatInfoEntity.setCommand(dto.getCommand());
         chatInfoEntity.setCreateInfo(dto.getCreateInfo());
+        chatInfoEntity.setData(dto.getData());
         return chatInfoEntity;
     }
 
@@ -30,6 +31,7 @@ public class ChatInfoConverterImpl implements ChatInfoConverter {
         oldDto.setAccountId(newModel.getAccountId());
         oldDto.setCreateInfo(newModel.getCreateInfo());
         oldDto.setCommand(newModel.getCommand());
+        oldDto.setData(newModel.getData());
         return oldDto;
     }
 }

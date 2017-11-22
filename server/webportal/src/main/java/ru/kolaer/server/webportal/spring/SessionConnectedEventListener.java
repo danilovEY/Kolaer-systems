@@ -55,6 +55,7 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
         chatUserDto.setRoomName(user.getName());
         chatUserDto.setSessionId(sha.getSessionId());
         chatUserDto.setAccountId(accountDto.getId());
+        chatUserDto.setAccount(accountDto);
 
         ChatUserDto oldActive = chatService.getUserByAccountId(accountDto.getId());
         if (oldActive != null) {
@@ -68,6 +69,7 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
         chatInfoDto.setCommand(ChatInfoCommand.CONNECT);
         chatInfoDto.setCreateInfo(new Date());
         chatInfoDto.setAccountId(chatUserDto.getAccountId());
+        chatInfoDto.setAccount(chatUserDto.getAccount());
 
         simpMessagingTemplate.convertAndSend("/topic/info", chatInfoService.save(chatInfoDto));
 

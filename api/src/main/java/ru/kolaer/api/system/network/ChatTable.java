@@ -2,6 +2,7 @@ package ru.kolaer.api.system.network;
 
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public interface ChatTable {
     ServerResponse<List<ChatGroupDto>> getActiveGroup();
+
+    ServerResponse<ChatUserDto> getActiveByIdAccount(Long id);
 }
