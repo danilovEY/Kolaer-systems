@@ -1,19 +1,15 @@
 package ru.kolaer.client.chat.view;
 
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
@@ -42,40 +38,54 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
         mainPane = new BorderPane();
 
         chatMessageDtoListView = new ListView<>();
-        chatMessageDtoListView.setCellFactory(param -> new TextFieldListCell<ChatMessageDto>() {
+        chatMessageDtoListView.setCellFactory(param -> new ListCell<ChatMessageDto>() {
             @Override
             public void updateItem(ChatMessageDto item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if(item == null || empty) {
-                    setText("");
+                    setGraphic(null);
                 } else {
-                    setText(item.getFromAccount().getChatName() + ": " + item.getMessage());
+                    ChatMessageVc chatMessageVc = new ChatMessageVcImpl(item);
+                    chatMessageVc.initView(initList -> setGraphic(initList.getContent()));
                 }
             }
         });
 
         ScrollPane scrollPane = new ScrollPane(chatMessageDtoListView);
         scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
 
         mainPane.setCenter(scrollPane);
 
-        this.textArea = new TextArea();
+        textArea = new TextArea();
+        textArea.setPromptText("Введите сообщение...");
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        textArea.setMaxWidth(Double.MAX_VALUE);
 
-        Button button = new Button("SEND");
+        Button button = new Button("Отправить");
+        button.setPrefHeight(43);
+        button.setPrefWidth(150);
+        button.setMaxHeight(Double.MAX_VALUE);
         button.setOnAction(e -> {
-            if(chatClient != null) {
+            if(chatClient != null && !textArea.getText().trim().isEmpty()) {
                 chatClient.send(chatGroupDto.getName(), createMessage(textArea.getText()));
             }
         });
 
-        mainPane.setBottom(new HBox(textArea, button));
+        BorderPane inputPane = new BorderPane();
+        inputPane.setCenter(textArea);
+        inputPane.setRight(button);
+        inputPane.setMaxHeight(50);
+
+        mainPane.setBottom(inputPane);
 
         viewVisit.accept(this);
     }
 
     private ChatMessageDto createMessage(String message) {
         ChatMessageDto chatMessageDto = new ChatMessageDto();
+        chatMessageDto.setType(ChatMessageType.USER);
         chatMessageDto.setMessage(message);
         chatMessageDto.setCreateMessage(new Date());
         chatMessageDto.setRoom(chatGroupDto.getName());
