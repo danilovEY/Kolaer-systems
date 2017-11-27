@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 /**
  * Created by danilovey on 02.11.2017.
  */
-public interface ChatInfoHandler extends StompSessionHandler {
+public interface ChatInfoHandler extends StompSessionHandler, Subscription {
     default Type getPayloadType(StompHeaders headers) {
         return ChatInfoDto.class;
     }

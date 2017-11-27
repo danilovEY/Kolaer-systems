@@ -25,8 +25,9 @@ import java.util.*;
 @Slf4j
 public class ChatClientImpl implements ChatClient {
     private final List<ChatObserver> observers = new ArrayList<>();
-    private final Map<String, ChatMessageHandler> subs = Collections.synchronizedMap(new HashMap<>());
-    private final Map<String, ChatMessageDto> messages = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, ChatMessageHandler> queueSubs = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, ChatMessageDto> queueMessages = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, StompSession.Subscription> subscriptionMap = Collections.synchronizedMap(new HashMap<>());
 
     private static final String TOPIC_CHATS = "/topic/chats.";
     private static final String TOPIC_INFO = "/topic/info";
@@ -69,11 +70,11 @@ public class ChatClientImpl implements ChatClient {
 
                 observers.forEach(obs -> obs.connect(ChatClientImpl.this));
 
-                subs.forEach(ChatClientImpl.this::subscribeRoom);
-                messages.forEach(ChatClientImpl.this::send);
+                queueSubs.forEach(ChatClientImpl.this::subscribeRoom);
+                queueMessages.forEach(ChatClientImpl.this::send);
 
-                subs.clear();
-                messages.clear();
+                queueSubs.clear();
+                queueMessages.clear();
             }
 
             @Override
@@ -126,9 +127,11 @@ public class ChatClientImpl implements ChatClient {
             StompHeaders stompHeaders = new StompHeaders();
             stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
             stompHeaders.setDestination(TOPIC_CHATS + roomName);
-            session.subscribe(stompHeaders, chatMessageHandler);
+            StompSession.Subscription subscribe = session.subscribe(stompHeaders, chatMessageHandler);
+            chatMessageHandler.setSubscriptionId(subscribe.getSubscriptionId());
+            subscriptionMap.put(subscribe.getSubscriptionId(), subscribe);
         } else {
-            subs.put(roomName, chatMessageHandler);
+            queueSubs.put(roomName, chatMessageHandler);
         }
     }
 
@@ -138,7 +141,9 @@ public class ChatClientImpl implements ChatClient {
             StompHeaders stompHeaders = new StompHeaders();
             stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
             stompHeaders.setDestination(TOPIC_INFO);
-            session.subscribe(stompHeaders, chatMessageHandler);
+            StompSession.Subscription subscribe = session.subscribe(stompHeaders, chatMessageHandler);
+            chatMessageHandler.setSubscriptionId(subscribe.getSubscriptionId());
+            subscriptionMap.put(subscribe.getSubscriptionId(), subscribe);
         }
     }
 
@@ -150,7 +155,14 @@ public class ChatClientImpl implements ChatClient {
             stompHeaders.setDestination(SEND + roomName);
             session.send(stompHeaders, message);
         } else {
-            messages.put(roomName, message);
+            queueMessages.put(roomName, message);
+        }
+    }
+
+    @Override
+    public void unSubscribe(Subscription subscription) {
+        if(isConnect() && subscription.getSubscriptionId() != null) {
+            subscriptionMap.get(subscription.getSubscriptionId()).unsubscribe();
         }
     }
 

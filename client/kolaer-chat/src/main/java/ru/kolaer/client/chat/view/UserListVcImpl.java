@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
@@ -21,8 +22,11 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.UserListObserver;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 02.11.2017.
@@ -31,7 +35,10 @@ import java.util.function.Consumer;
 public class UserListVcImpl implements UserListVc {
     private final ChatGroupDto chatGroupDto;
     private BorderPane mainPane;
+    private final List<UserListObserver> userListObservers = new ArrayList<>();
     private ObservableList<ChatUserDto> items = FXCollections.observableArrayList();
+    private String subscriptionId;
+    private ListView<ChatUserDto> usersListView;
 
     public UserListVcImpl(ChatGroupDto chatGroupDto) {
         this.chatGroupDto = chatGroupDto;
@@ -41,9 +48,8 @@ public class UserListVcImpl implements UserListVc {
     public void initView(Consumer<UserListVc> viewVisit) {
         mainPane = new BorderPane();
 
-        ListView<ChatUserDto> users = new ListView<>(items);
-
-        users.setCellFactory(param -> new ListCell<ChatUserDto>(){
+        usersListView = new ListView<>(items);
+        usersListView.setCellFactory(param -> new ListCell<ChatUserDto>(){
             @Override
             protected void updateItem(ChatUserDto item, boolean empty) {
                 super.updateItem(item, empty);
@@ -55,8 +61,18 @@ public class UserListVcImpl implements UserListVc {
                 }
             }
         });
+        usersListView.getSelectionModel().selectedItemProperty().addListener(c -> {
+            Optional.ofNullable(usersListView.getSelectionModel().getSelectedItem())
+                    .ifPresent(selected -> userListObservers.forEach(obs -> obs.selected(selected)));
+        });
+        items.addListener((ListChangeListener<? super ChatUserDto>) c -> {
+            if(c.next()) {
+                c.getAddedSubList().forEach(user -> userListObservers.forEach(obs -> obs.connectUser(user)));
+                c.getRemoved().forEach(user -> userListObservers.forEach(obs -> obs.disconnectUser(user)));
+            }
+        });
 
-        mainPane.setCenter(users);
+        mainPane.setCenter(usersListView);
 
         viewVisit.accept(this);
     }
@@ -73,22 +89,25 @@ public class UserListVcImpl implements UserListVc {
 
     @Override
     public void disconnect(ChatClient chatClient) {
-
+        chatClient.unSubscribe(this);
+        Tools.runOnWithOutThreadFX(() -> items.clear());
     }
 
     @Override
     public void setUsers(List<ChatUserDto> users) {
-        items.setAll(users);
+        AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
+                .getAuthentication()
+                .getAuthorizedUser();
+
+        Tools.runOnWithOutThreadFX(() -> items.setAll(users.stream()
+                .filter(chatUserDto -> !chatUserDto.getAccountId().equals(authorizedUser.getId()))
+                .collect(Collectors.toList()))
+        );
     }
 
     @Override
     public void registerObserver(UserListObserver observer) {
-        items.addListener((ListChangeListener<? super ChatUserDto>) c -> {
-            if(c.next()) {
-                c.getAddedSubList().forEach(observer::connectUser);
-                c.getRemoved().forEach(observer::disconnectUser);
-            }
-        });
+        userListObservers.add(observer);
     }
 
     @Override
@@ -126,5 +145,15 @@ public class UserListVcImpl implements UserListVc {
     @Override
     public void handleTransportError(StompSession session, Throwable exception) {
         exception.printStackTrace();
+    }
+
+    @Override
+    public void setSubscriptionId(String id) {
+        this.subscriptionId = id;
+    }
+
+    @Override
+    public String getSubscriptionId() {
+        return subscriptionId;
     }
 }

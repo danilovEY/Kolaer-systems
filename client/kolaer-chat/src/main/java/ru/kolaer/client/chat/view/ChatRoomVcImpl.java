@@ -2,13 +2,8 @@ package ru.kolaer.client.chat.view;
 
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSession;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoDto;
 import ru.kolaer.client.chat.service.ChatClient;
-import ru.kolaer.client.chat.service.ChatInfoHandler;
 
 import java.util.function.Consumer;
 
@@ -20,6 +15,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     private Tab mainTab;
     private ChatMessageContentVc chatMessageContentVc;
     private UserListVc userListVc;
+    private ChatClient chatClient;
 
     public ChatRoomVcImpl(ChatGroupDto chatGroupDto) {
         this.chatGroupDto = chatGroupDto;
@@ -31,6 +27,11 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     public void initView(Consumer<ChatRoomVc> viewVisit) {
         mainTab = new Tab();
         mainTab.setText(chatGroupDto.getName());
+        mainTab.setOnClosed(e -> {
+            if(chatClient.isConnect()) {
+                disconnect(chatClient);
+            }
+        });
 
         SplitPane splitPane = new SplitPane();
 
@@ -52,22 +53,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
     @Override
     public void connect(ChatClient chatClient) {
-        chatClient.subscribeInfo(new ChatInfoHandler() {
-            @Override
-            public void handleFrame(StompHeaders headers, ChatInfoDto info) {
-                System.out.println(info);
-            }
-
-            @Override
-            public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-
-            }
-
-            @Override
-            public void handleTransportError(StompSession session, Throwable exception) {
-
-            }
-        });
+        this.chatClient = chatClient;
         userListVc.connect(chatClient);
         chatMessageContentVc.connect(chatClient);
     }
@@ -76,6 +62,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     public void disconnect(ChatClient chatClient) {
         userListVc.disconnect(chatClient);
         chatMessageContentVc.disconnect(chatClient);
+        this.chatClient = null;
     }
 
     public ChatMessageContentVc getChatMessageContentVc() {

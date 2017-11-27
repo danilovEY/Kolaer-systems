@@ -2,6 +2,7 @@ package ru.kolaer.client.chat.view;
 
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -28,6 +29,7 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     private ListView<ChatMessageDto> chatMessageDtoListView;
     private ChatClient chatClient;
     private TextArea textArea;
+    private String subscriptionId;
 
     public ChatMessageContentVcImpl(ChatGroupDto chatGroupDto) {
         this.chatGroupDto = chatGroupDto;
@@ -62,16 +64,22 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
         textArea.setPromptText("Введите сообщение...");
         textArea.setMaxHeight(Double.MAX_VALUE);
         textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER) {
+                if(keyEvent.isControlDown()) {
+                    textArea.appendText(System.getProperty("line.separator"));
+                } else {
+                    sendMessage();
+                    keyEvent.consume();
+                }
+            }
+        });
 
         Button button = new Button("Отправить");
         button.setPrefHeight(43);
         button.setPrefWidth(150);
         button.setMaxHeight(Double.MAX_VALUE);
-        button.setOnAction(e -> {
-            if(chatClient != null && !textArea.getText().trim().isEmpty()) {
-                chatClient.send(chatGroupDto.getName(), createMessage(textArea.getText()));
-            }
-        });
+        button.setOnAction(e -> sendMessage());
 
         BorderPane inputPane = new BorderPane();
         inputPane.setCenter(textArea);
@@ -81,6 +89,13 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
         mainPane.setBottom(inputPane);
 
         viewVisit.accept(this);
+    }
+
+    private void sendMessage() {
+        if(chatClient != null && !textArea.getText().trim().isEmpty()) {
+            chatClient.send(chatGroupDto.getName(), createMessage(textArea.getText()));
+            textArea.setText("");
+        }
     }
 
     private ChatMessageDto createMessage(String message) {
@@ -114,6 +129,16 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     }
 
     @Override
+    public void setSubscriptionId(String id) {
+        this.subscriptionId = id;
+    }
+
+    @Override
+    public String getSubscriptionId() {
+        return subscriptionId;
+    }
+
+    @Override
     public Node getContent() {
         return mainPane;
     }
@@ -126,16 +151,35 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
 
     @Override
     public void disconnect(ChatClient chatClient) {
-
+        chatClient.unSubscribe(this);
+        Tools.runOnWithOutThreadFX(() -> chatMessageDtoListView.getItems().clear());
     }
 
     @Override
     public void connectUser(ChatUserDto chatUserDto) {
-
+        Tools.runOnWithOutThreadFX(() -> chatMessageDtoListView.getItems()
+                .add(createServerMessage("Пользователь \"" + chatUserDto.getName() + "\" вошел в чат"))
+        );
     }
 
     @Override
     public void disconnectUser(ChatUserDto chatUserDto) {
+        Tools.runOnWithOutThreadFX(() -> chatMessageDtoListView.getItems()
+                .add(createServerMessage("Пользователь \"" + chatUserDto.getName() + "\" вышел в чат"))
+        );
+    }
 
+    @Override
+    public void selected(ChatUserDto chatUserDto) {
+
+    }
+
+    private ChatMessageDto createServerMessage(String text) {
+        ChatMessageDto serverMessage = new ChatMessageDto();
+        serverMessage.setType(ChatMessageType.SERVER);
+        serverMessage.setCreateMessage(new Date());
+        serverMessage.setMessage(text);
+
+        return serverMessage;
     }
 }

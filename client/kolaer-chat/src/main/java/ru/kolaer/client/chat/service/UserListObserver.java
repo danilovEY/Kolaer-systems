@@ -8,4 +8,5 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 public interface UserListObserver {
     void connectUser(ChatUserDto chatUserDto);
     void disconnectUser(ChatUserDto chatUserDto);
+    void selected(ChatUserDto chatUserDto);
 }

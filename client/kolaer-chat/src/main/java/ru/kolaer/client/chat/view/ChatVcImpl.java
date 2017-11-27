@@ -6,10 +6,13 @@ import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
+import ru.kolaer.client.chat.service.UserListObserver;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +22,11 @@ import java.util.function.Consumer;
  * Created by danilovey on 02.11.2017.
  */
 @Slf4j
-public class ChatVcImpl implements ChatVc {
+public class ChatVcImpl implements ChatVc, UserListObserver {
     private final Map<String, ChatRoomVc> groupDtoMap = new HashMap<>();
     private BorderPane mainPane;
     private TabPane tabPane;
+    private ChatClient chatClient;
 
     @Override
     public void initView(Consumer<ChatVc> viewVisit) {
@@ -42,6 +46,7 @@ public class ChatVcImpl implements ChatVc {
 
     @Override
     public void connect(ChatClient chatClient) {
+        this.chatClient = chatClient;
         ServerResponse<List<ChatGroupDto>> activeGroup = UniformSystemEditorKitSingleton.getInstance()
                 .getUSNetwork()
                 .getKolaerWebServer()
@@ -49,32 +54,30 @@ public class ChatVcImpl implements ChatVc {
                 .getChatTable()
                 .getActiveGroup();
 
-        log.info(activeGroup.toString());
-
         if(activeGroup.isServerError()) {
             UniformSystemEditorKitSingleton.getInstance()
                     .getUISystemUS()
                     .getNotification()
                     .showErrorNotify(activeGroup.getExceptionMessage());
         } else {
-            List<ChatGroupDto> response = activeGroup.getResponse();
-
-            //AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
-            //        .getAuthentication()
-            //        .getAuthorizedUser();
-
-            for(ChatGroupDto chatGroupDto : response) {
-                Tools.runOnWithOutThreadFX(() -> {
-                    ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
-                    chatRoomVc.initView(initRoom -> tabPane.getTabs().add(initRoom.getContent()));
-                    if(chatClient.isConnect()) {
-                        chatRoomVc.connect(chatClient);
-                    }
-                    chatClient.registerObserver(chatRoomVc);
-                    groupDtoMap.put(chatGroupDto.getName(), chatRoomVc);
-                });
-            }
+            activeGroup.getResponse()
+                    .forEach(this::createRoom);
         }
+    }
+
+    private void createRoom(ChatGroupDto chatGroupDto) {
+        Tools.runOnWithOutThreadFX(() -> {
+            ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
+            chatRoomVc.initView(initRoom -> {
+                tabPane.getTabs().add(initRoom.getContent());
+                if(chatClient.isConnect()) {
+                    chatRoomVc.connect(chatClient);
+                }
+            });
+            chatRoomVc.getUserListVc().registerObserver(this);
+            chatClient.registerObserver(chatRoomVc);
+            groupDtoMap.put(chatGroupDto.getName(), chatRoomVc);
+        });
     }
 
     @Override
@@ -87,4 +90,22 @@ public class ChatVcImpl implements ChatVc {
         this.tabPane.getTabs().add(chatRoomVc.getContent());
     }
 
+    @Override
+    public void connectUser(ChatUserDto chatUserDto) {
+
+    }
+
+    @Override
+    public void disconnectUser(ChatUserDto chatUserDto) {
+
+    }
+
+    @Override
+    public void selected(ChatUserDto chatUserDto) {
+        ChatGroupDto chatGroupDto = new ChatGroupDto();
+        chatGroupDto.setUsers(Arrays.asList(chatUserDto));
+        chatGroupDto.setName(chatUserDto.getRoomName());
+
+        this.createRoom(chatGroupDto);
+    }
 }
