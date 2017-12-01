@@ -29,14 +29,17 @@ import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import ru.kolaer.server.webportal.beans.TypeServer;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -102,7 +105,13 @@ public class SpringContext extends WebMvcConfigurerAdapter {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .globalOperationParameters(Collections.singletonList(new ParameterBuilder()
+                .name("x-token")
+                .description("Token")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .build()));
     }
 
     @Bean

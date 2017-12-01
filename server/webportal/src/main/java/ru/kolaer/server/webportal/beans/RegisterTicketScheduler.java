@@ -6,6 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
@@ -108,15 +109,18 @@ public class RegisterTicketScheduler {
                 "Сформированные талоны ЛПП для зачисления. Файл во вложении!");
     }
 
+    @Transactional(readOnly = true)
     public boolean generateSetTicketDocument(Integer count, String header, String typeTicket, String textMail) {
-        List<TicketEntity> allTiskets = this.bankAccountDao.findAll().stream().map(bankAccount -> {
+        return this.sendMail(getAllTickets(count), header, typeTicket, textMail);
+    }
+
+    private List<TicketEntity> getAllTickets(Integer count) {
+        return this.bankAccountDao.findAll().stream().map(bankAccount -> {
             final TicketEntity ticket = new TicketEntity();
             ticket.setEmployee(bankAccount.getEmployeeEntity());
             ticket.setCount(count);
             return ticket;
         }).collect(Collectors.toList());
-
-        return this.sendMail(allTiskets, header, typeTicket, textMail);
     }
 
     private boolean sendMail(List<TicketEntity> tickets, String header, String typeTickets, String text) {

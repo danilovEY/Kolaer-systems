@@ -55,6 +55,13 @@ public class TicketsController {
         this.authenticationService = authenticationService;
     }
 
+    @ApiOperation(value = "Сформировать отчет таймера")
+    @UrlDeclaration(description = "Сформировать отчет таймера", requestMethod = RequestMethod.GET)
+    @RequestMapping(value = "/generate/execute/scheduled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void generateAndMailSendScheduled() {
+        registerTicketScheduler.generateZeroTicketsLastDayOfMonthScheduled();
+    }
+
     @ApiOperation(value = "Сформировать отчет")
     @UrlDeclaration(description = "Сформировать отчет", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/generate/execute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

@@ -35,10 +35,10 @@ public class SessionDisconnectedEventListener implements ApplicationListener<Ses
     @Override
     public void onApplicationEvent(SessionDisconnectEvent sessionConnectedEvent) {
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(sessionConnectedEvent.getMessage());
+        ChatUserDto chatUserDto = chatService.getUser(sha.getSessionId());
 
-        if(chatService.containsUser(sha.getSessionId())) {
-            ChatUserDto chatUserDto = chatService.getUser(sha.getSessionId());
-            chatService.removeActiveUser(chatUserDto);
+        if(chatUserDto != null) {
+            chatService.removeFromAllGroup(chatUserDto);
 
             ChatInfoDto chatInfoDto = new ChatInfoDto();
             chatInfoDto.setCommand(ChatInfoCommand.DISCONNECT);

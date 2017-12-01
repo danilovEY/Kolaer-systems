@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.VMMainFrameImpl;
 import ru.kolaer.client.usa.tools.Resources;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,18 +22,18 @@ public class Launcher {
 	public static final String pathToShowAppFile = pathToCache + "\\runnable_show.usa";
 
 	public static void main(final String[] args) {
-//		if(!appIsRun()) {
-			//delete(new File(pathToCache));
+		if(!appIsRun()) {
+			delete(new File(pathToCache));
 			Platform.setImplicitExit(false);
 			Application.launch(VMMainFrameImpl.class ,args);
-//		} else {
-//			LOG.warn("Приложение уже запущенно!");
-//			JOptionPane.showMessageDialog(null,
-//					"Приложение уже запущено.",
-//					"Внимание",
-//					JOptionPane.WARNING_MESSAGE);
-//			System.exit(0);
-//		}
+		} else {
+			LOG.warn("Приложение уже запущенно!");
+			JOptionPane.showMessageDialog(null,
+					"Приложение уже запущено.",
+					"Внимание",
+					JOptionPane.WARNING_MESSAGE);
+			System.exit(0);
+		}
 	}
 
 	private static boolean delete(File pFile) {

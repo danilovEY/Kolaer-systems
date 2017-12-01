@@ -12,7 +12,7 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.UserListObserver;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +47,7 @@ public class ChatVcImpl implements ChatVc, UserListObserver {
     @Override
     public void connect(ChatClient chatClient) {
         this.chatClient = chatClient;
+
         ServerResponse<List<ChatGroupDto>> activeGroup = UniformSystemEditorKitSingleton.getInstance()
                 .getUSNetwork()
                 .getKolaerWebServer()
@@ -67,16 +68,21 @@ public class ChatVcImpl implements ChatVc, UserListObserver {
 
     private void createRoom(ChatGroupDto chatGroupDto) {
         Tools.runOnWithOutThreadFX(() -> {
-            ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
-            chatRoomVc.initView(initRoom -> {
-                tabPane.getTabs().add(initRoom.getContent());
-                if(chatClient.isConnect()) {
-                    chatRoomVc.connect(chatClient);
-                }
-            });
-            chatRoomVc.getUserListVc().registerObserver(this);
-            chatClient.registerObserver(chatRoomVc);
-            groupDtoMap.put(chatGroupDto.getName(), chatRoomVc);
+            if(groupDtoMap.containsKey(chatGroupDto.getName())) {
+                ChatRoomVc chatRoomVc = groupDtoMap.get(chatGroupDto.getName());
+                tabPane.getSelectionModel().select(chatRoomVc.getContent());
+            } else {
+                ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
+                chatRoomVc.initView(initRoom -> {
+                    tabPane.getTabs().add(initRoom.getContent());
+                    if(chatClient.isConnect()) {
+                        chatRoomVc.connect(chatClient);
+                    }
+                });
+                chatRoomVc.getUserListVc().registerObserver(this);
+                chatClient.registerObserver(chatRoomVc);
+                groupDtoMap.put(chatGroupDto.getName(), chatRoomVc);
+            }
         });
     }
 
@@ -103,7 +109,7 @@ public class ChatVcImpl implements ChatVc, UserListObserver {
     @Override
     public void selected(ChatUserDto chatUserDto) {
         ChatGroupDto chatGroupDto = new ChatGroupDto();
-        chatGroupDto.setUsers(Arrays.asList(chatUserDto));
+        chatGroupDto.setUsers(Collections.singletonList(chatUserDto));
         chatGroupDto.setName(chatUserDto.getRoomName());
 
         this.createRoom(chatGroupDto);
