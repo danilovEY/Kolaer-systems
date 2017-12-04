@@ -37,4 +37,7 @@ public class ChatInfoEntity implements BaseEntity {
 
     @Column(name = "data")
     private String data;
+
+    @Column(name = "to_account_id")
+    private Long toAccountId;
 }

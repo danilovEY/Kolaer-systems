@@ -2,6 +2,8 @@ package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 
 /**
@@ -15,14 +17,20 @@ public interface ChatService extends DefaultService<ChatGroupDto> {
 
     ChatUserDto getUserByAccountId(Long id);
 
-    ChatGroupDto getOrCreatePrivateGroup(String name);
-
-    ChatGroupDto getOrCreatePublicGroup(String name);
-
     void removeFromAllGroup(ChatUserDto chatUserDto);
 
     ChatGroupDto createGroup(String name);
-    ChatGroupDto getGroup(String name);
 
-    ChatGroupDto getOrCreatePrivateGroupByAccountId(IdsDto idsDto);
+    void send(ChatInfoDto chatInfoDto);
+
+    void send(String roomId, ChatInfoDto chatInfoDto);
+
+    void sendDisconnect(String sessionId);
+
+    void send(ChatMessageDto message);
+
+    ChatGroupDto createPrivateGroup(String name, IdsDto idsDto);
+    ChatGroupDto createPublicGroup(String name, IdsDto idsDto);
+
+    ChatGroupDto getByRoomId(String roomId);
 }

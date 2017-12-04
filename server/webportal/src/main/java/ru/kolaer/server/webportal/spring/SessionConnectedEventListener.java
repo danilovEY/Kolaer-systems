@@ -2,10 +2,7 @@ package ru.kolaer.server.webportal.spring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
@@ -13,7 +10,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ChatInfoService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
 
 import java.security.Principal;
@@ -27,17 +23,11 @@ import java.util.Optional;
 @Component
 public class SessionConnectedEventListener implements ApplicationListener<SessionConnectedEvent> {
     private final ChatService chatService;
-    private final ChatInfoService chatInfoService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
     private final AuthenticationService authenticationService;
 
     public SessionConnectedEventListener(ChatService chatService,
-                                         ChatInfoService chatInfoService,
-                                         SimpMessagingTemplate simpMessagingTemplate,
                                          AuthenticationService authenticationService) {
         this.chatService = chatService;
-        this.chatInfoService = chatInfoService;
-        this.simpMessagingTemplate = simpMessagingTemplate;
         this.authenticationService = authenticationService;
     }
 
@@ -59,7 +49,7 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
         ChatUserDto oldActive = chatService.getUserByAccountId(accountDto.getId());
         if (oldActive != null) {
             chatService.removeActiveUserFromMain(oldActive);
-            disconnectSession(oldActive.getSessionId());
+            chatService.sendDisconnect(oldActive.getSessionId());
         }
 
         chatService.addActiveUserToMain(chatUserDto);
@@ -70,14 +60,7 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
         chatInfoDto.setAccountId(chatUserDto.getAccountId());
         chatInfoDto.setAccount(chatUserDto.getAccount());
 
-        simpMessagingTemplate.convertAndSend("/topic/info", chatInfoService.save(chatInfoDto));
+        chatService.send(chatInfoDto);
 
-    }
-
-    private void disconnectSession(String sessionId) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.create(StompCommand.ERROR);
-        headerAccessor.setMessage("Bad");
-        headerAccessor.setSessionId(sessionId);
-        simpMessagingTemplate.send(MessageBuilder.createMessage(new byte[0], headerAccessor.getMessageHeaders()));
     }
 }

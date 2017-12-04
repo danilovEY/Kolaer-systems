@@ -17,12 +17,13 @@ import java.util.Optional;
 public class Launcher {
 	private static final Logger LOG = LoggerFactory.getLogger(Launcher.class);
 
+	private static final String MULTIPLE_KEY = "--multiple";
 	public static final String pathToCache = Resources.CACHE_PATH;
 	public static final String pathToRunFile = pathToCache + "\\runnable.usa";
 	public static final String pathToShowAppFile = pathToCache + "\\runnable_show.usa";
 
 	public static void main(final String[] args) {
-		if(!appIsRun()) {
+		if(containsKey(MULTIPLE_KEY, args) || !appIsRun()) {
 			delete(new File(pathToCache));
 			Platform.setImplicitExit(false);
 			Application.launch(VMMainFrameImpl.class ,args);
@@ -34,6 +35,16 @@ public class Launcher {
 					JOptionPane.WARNING_MESSAGE);
 			System.exit(0);
 		}
+	}
+
+	private static boolean containsKey(String key, String[] args) {
+		for (String arg : args) {
+			if(arg.equals(key)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static boolean delete(File pFile) {

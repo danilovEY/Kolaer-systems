@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ChatGroupDto implements BaseDto {
     private Long id;
+    private String roomId;
     private String name;
     private AccountDto userCreated;
     private ChatGroupType type = ChatGroupType.PRIVATE;

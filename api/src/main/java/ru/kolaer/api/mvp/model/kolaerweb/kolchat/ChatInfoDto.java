@@ -13,6 +13,7 @@ import java.util.Date;
 public class ChatInfoDto implements BaseDto {
     private Long id;
     private Long accountId;
+    private Long toAccountId;
     private ChatInfoCommand command;
     private Date createInfo;
     private AccountDto account;

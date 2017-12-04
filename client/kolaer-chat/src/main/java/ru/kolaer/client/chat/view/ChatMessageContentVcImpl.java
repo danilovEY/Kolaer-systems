@@ -146,7 +146,7 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     @Override
     public void connect(ChatClient chatClient) {
         this.chatClient = chatClient;
-        chatClient.subscribeRoom(chatGroupDto.getName(), this);
+        chatClient.subscribeRoom(chatGroupDto.getRoomId(), this);
     }
 
     @Override

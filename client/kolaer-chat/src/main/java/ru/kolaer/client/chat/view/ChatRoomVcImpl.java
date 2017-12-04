@@ -3,8 +3,10 @@ package ru.kolaer.client.chat.view;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.client.chat.service.ChatClient;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -39,7 +41,6 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
         userListVc.initView(initUserList -> splitPane.getItems().add(initUserList.getContent()));
         userListVc.setUsers(chatGroupDto.getUsers());
-        userListVc.registerObserver(chatMessageContentVc);
 
         mainTab.setContent(splitPane);
 
@@ -65,11 +66,24 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         this.chatClient = null;
     }
 
-    public ChatMessageContentVc getChatMessageContentVc() {
-        return chatMessageContentVc;
+    @Override
+    public void connectUser(ChatUserDto chatUserDto) {
+        chatGroupDto.getUsers().add(chatUserDto);
+        chatMessageContentVc.connectUser(chatUserDto);
+        userListVc.connectUser(chatUserDto);
     }
 
-    public UserListVc getUserListVc() {
-        return userListVc;
+    @Override
+    public void disconnectUser(Long accountId) {
+        Optional<ChatUserDto> chatUserDto = chatGroupDto.getUsers()
+                .stream()
+                .filter(user -> user.getAccountId()
+                .equals(accountId))
+                .findFirst();
+
+        if(chatUserDto.isPresent()) {
+            chatMessageContentVc.disconnectUser(chatUserDto.get());
+            userListVc.disconnectUser(chatUserDto.get());
+        }
     }
 }

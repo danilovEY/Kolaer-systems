@@ -9,7 +9,8 @@ import ru.kolaer.client.chat.service.UserListObserver;
 /**
  * Created by danilovey on 02.11.2017.
  */
-public interface ChatMessageContentVc extends BaseView<ChatMessageContentVc, Node>,
+public interface ChatMessageContentVc extends
+        BaseView<ChatMessageContentVc, Node>,
         ChatObserver,
         ChatMessageHandler,
         UserListObserver {

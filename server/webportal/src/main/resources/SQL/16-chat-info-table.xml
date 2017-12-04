@@ -36,4 +36,13 @@
         <addNotNullConstraint tableName="chat_info" columnName="account_id" columnDataType="BIGINT"/>
     </changeSet>
 
+    <changeSet id="16-3" author="Danilov">
+        <addColumn tableName="chat_info">
+            <column name="to_account_id" type="BIGINT"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="chat_info" baseColumnNames="to_account_id" constraintName="info_to_account_fk"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>

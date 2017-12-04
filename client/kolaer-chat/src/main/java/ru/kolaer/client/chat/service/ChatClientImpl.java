@@ -14,6 +14,7 @@ import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import org.springframework.web.socket.sockjs.frame.Jackson2SockJsMessageCodec;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 import java.lang.reflect.Type;
@@ -30,7 +31,7 @@ public class ChatClientImpl implements ChatClient {
     private final Map<String, StompSession.Subscription> subscriptionMap = Collections.synchronizedMap(new HashMap<>());
 
     private static final String TOPIC_CHATS = "/topic/chats.";
-    private static final String TOPIC_INFO = "/topic/info";
+    private static final String TOPIC_INFO = "/topic/info.";
     private static final String SEND = "/app/chat/room/";
     private final String url;
     private StompSession session;
@@ -138,9 +139,10 @@ public class ChatClientImpl implements ChatClient {
     @Override
     public void subscribeInfo(ChatInfoHandler chatMessageHandler) {
         if(isConnect()) {
+            Authentication authentication = UniformSystemEditorKitSingleton.getInstance().getAuthentication();
             StompHeaders stompHeaders = new StompHeaders();
-            stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
-            stompHeaders.setDestination(TOPIC_INFO);
+            stompHeaders.add("x-token", authentication.getToken().getToken());
+            stompHeaders.setDestination(TOPIC_INFO + authentication.getAuthorizedUser().getId());
             StompSession.Subscription subscribe = session.subscribe(stompHeaders, chatMessageHandler);
             chatMessageHandler.setSubscriptionId(subscribe.getSubscriptionId());
             subscriptionMap.put(subscribe.getSubscriptionId(), subscribe);

@@ -2,6 +2,7 @@ package ru.kolaer.client.usa.system.network;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
@@ -14,6 +15,8 @@ import java.util.List;
  */
 public class ChatTableImpl implements ChatTable, RestTemplateService {
     private final String URL_GET_ALL_ACTIVE;
+    private final String URL_POST_CREATE_PRIVATE_GROUP;
+    private final String URL_GET_GROUP;
     private final String URL_GET_ACTIVE_BY_ACCOUNT_ID;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -23,6 +26,8 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.URL_GET_ALL_ACTIVE = url + "/active/all";
+        this.URL_POST_CREATE_PRIVATE_GROUP = url + "/group/private";
+        this.URL_GET_GROUP = url + "/group/";
         this.URL_GET_ACTIVE_BY_ACCOUNT_ID = url + "/active?account_id=";
     }
 
@@ -35,5 +40,17 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     @Override
     public ServerResponse<ChatUserDto> getActiveByIdAccount(Long id) {
         return getServerResponse(restTemplate, URL_GET_ACTIVE_BY_ACCOUNT_ID + id, ChatUserDto.class, objectMapper);
+    }
+
+    @Override
+    public ServerResponse<ChatGroupDto> createPrivateGroup(IdsDto idsDto, String name) {
+        return postServerResponse(restTemplate, URL_POST_CREATE_PRIVATE_GROUP + "?name=" + name,
+                idsDto,
+                ChatGroupDto.class, objectMapper);
+    }
+
+    @Override
+    public ServerResponse<ChatGroupDto> getGroupByRoomId(String roomId) {
+        return getServerResponse(restTemplate, URL_GET_GROUP + roomId, ChatGroupDto.class, objectMapper);
     }
 }
