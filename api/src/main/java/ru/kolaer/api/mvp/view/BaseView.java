@@ -11,7 +11,9 @@ public interface BaseView<V extends BaseView, T> extends InitializationView<V>{
 	/**Получить view контент.*/
 	T getContent();
 
-	static void empty(BaseView baseView) {
-
+	default boolean isViewInit() {
+		return this.getContent() != null;
 	}
+
+	static void empty(BaseView baseView) {}
 }

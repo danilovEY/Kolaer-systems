@@ -32,7 +32,8 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class ChatServiceImpl implements ChatService {
-    private final String PUBLIC_MAIN_GROUP_NAME = "Main";
+    private final String PUBLIC_MAIN_GROUP_NAME = "КолАЭР";
+    private final String PUBLIC_MAIN_ROOM_ID = "main";
     private final Map<String, ChatGroupDto> groups = new HashMap<>();
     private ChatGroupDto mainGroup;
 
@@ -57,8 +58,8 @@ public class ChatServiceImpl implements ChatService {
     @PostConstruct
     public void init() {
         this.mainGroup = this.createGroup(PUBLIC_MAIN_GROUP_NAME);
-        mainGroup.setType(ChatGroupType.PUBLIC);
-        mainGroup.setRoomId(PUBLIC_MAIN_GROUP_NAME);
+        mainGroup.setType(ChatGroupType.MAIN);
+        mainGroup.setRoomId(PUBLIC_MAIN_ROOM_ID);
 
         groups.put(mainGroup.getRoomId(), mainGroup);
     }
@@ -149,11 +150,10 @@ public class ChatServiceImpl implements ChatService {
                 ? UUID.randomUUID().toString()
                 : createRoomId(authenticationService.getAccountByAuthentication().getId(), idsDto.getIds().get(0));
 
-        if(groups.containsKey(roomId)) {
-            return groups.get(roomId);
-        }
+        ChatGroupDto group = groups.containsKey(roomId)
+                ? groups.get(roomId)
+                : createGroup(name);
 
-        ChatGroupDto group = createGroup(name);
         group.setType(ChatGroupType.PRIVATE);
         group.setRoomId(roomId);
         group.setUserCreated(authenticationService.getAccountByAuthentication());

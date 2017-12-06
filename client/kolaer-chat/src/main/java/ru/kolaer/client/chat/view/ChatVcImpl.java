@@ -7,26 +7,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
+import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
+import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
-import ru.kolaer.client.chat.service.UserListObserver;
+import ru.kolaer.client.chat.service.ChatRoomObserver;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 02.11.2017.
  */
 @Slf4j
-public class ChatVcImpl implements ChatVc, UserListObserver {
+public class ChatVcImpl implements ChatVc, ChatRoomObserver {
     private final Map<String, ChatRoomVc> groupDtoMap = new HashMap<>();
     private String subInfoId;
     private BorderPane mainPane;
@@ -69,26 +69,48 @@ public class ChatVcImpl implements ChatVc, UserListObserver {
                     .showErrorNotify(activeGroup.getExceptionMessage());
         } else {
             activeGroup.getResponse()
+                    .stream()
+                    .filter(group -> group.getType() == ChatGroupType.MAIN)
                     .forEach(this::createRoom);
         }
     }
 
-    private void createRoom(ChatGroupDto chatGroupDto) {
-        Tools.runOnWithOutThreadFX(() -> {
-            if(groupDtoMap.containsKey(chatGroupDto.getRoomId())) {
-                ChatRoomVc chatRoomVc = groupDtoMap.get(chatGroupDto.getRoomId());
-                tabPane.getSelectionModel().select(chatRoomVc.getContent());
-            } else {
-                ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
-                chatRoomVc.initView(initRoom -> {
-                    tabPane.getTabs().add(initRoom.getContent());
-                    if(chatClient.isConnect()) {
-                        chatRoomVc.connect(chatClient);
-                    }
-                });
-                groupDtoMap.put(chatGroupDto.getRoomId(), chatRoomVc);
-            }
-        });
+    @Override
+    public void setSubscriptionId(String id) {
+        subInfoId = id;
+    }
+
+    @Override
+    public String getSubscriptionId() {
+        return subInfoId;
+    }
+
+    private ChatRoomVc createRoom(ChatGroupDto chatGroupDto) {
+        if(groupDtoMap.containsKey(chatGroupDto.getRoomId())) {
+            return groupDtoMap.get(chatGroupDto.getRoomId());
+        }
+
+        ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
+        groupDtoMap.put(chatGroupDto.getRoomId(), chatRoomVc);
+        chatRoomVc.addObserver(this);
+
+        if(chatClient.isConnect()) {
+            chatRoomVc.connect(chatClient);
+        }
+
+        if(chatGroupDto.getType() == ChatGroupType.MAIN) {
+            Tools.runOnWithOutThreadFX(() -> showChatRoom(chatRoomVc));
+        }
+
+        return chatRoomVc;
+    }
+
+    private void initRoom(ChatRoomVc chatRoomVc) {
+        if(chatRoomVc == null) {
+            return;
+        }
+
+        chatRoomVc.initView(BaseView::empty);
     }
 
     @Override
@@ -99,8 +121,14 @@ public class ChatVcImpl implements ChatVc, UserListObserver {
     }
 
     @Override
-    public void addChatRoom(ChatRoomVc chatRoomVc) {
-        this.tabPane.getTabs().add(chatRoomVc.getContent());
+    public void showChatRoom(ChatRoomVc chatRoomVc) {
+        if(!chatRoomVc.isViewInit()) {
+            initRoom(chatRoomVc);
+        }
+
+        if(!tabPane.getTabs().contains(chatRoomVc.getContent())) {
+            tabPane.getTabs().add(chatRoomVc.getContent());
+        }
     }
 
     @Override
@@ -156,21 +184,48 @@ public class ChatVcImpl implements ChatVc, UserListObserver {
 
     @Override
     public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-
+        exception.printStackTrace();
     }
 
     @Override
     public void handleTransportError(StompSession session, Throwable exception) {
+        exception.printStackTrace();
+    }
 
+
+    @Override
+    public void getMessage(ChatGroupDto chatGroupDto, ChatMessageDto chatMessageDto) {
+        ChatRoomVc chatRoomVc = groupDtoMap.get(chatGroupDto.getRoomId());
+        if(chatRoomVc != null) {
+            Tools.runOnWithOutThreadFX(() -> {
+                showChatRoom(chatRoomVc);
+            });
+        }
     }
 
     @Override
-    public void setSubscriptionId(String id) {
-        subInfoId = id;
-    }
+    public void createMessageToUser(ChatGroupDto chatGroupDto, List<ChatUserDto> chatUserDtos) {
+        IdsDto idsAccounts = new IdsDto(chatUserDtos.stream()
+                .map(ChatUserDto::getAccountId)
+                .collect(Collectors.toList()));
 
-    @Override
-    public String getSubscriptionId() {
-        return subInfoId;
+        ServerResponse<ChatGroupDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
+                .getInstance()
+                .getUSNetwork()
+                .getKolaerWebServer()
+                .getApplicationDataBase()
+                .getChatTable()
+                .createPrivateGroup(idsAccounts, null);
+
+        if(groupDtoServerResponse.isServerError()) {
+            UniformSystemEditorKitSingleton.getInstance()
+                    .getUISystemUS()
+                    .getNotification()
+                    .showErrorNotify(groupDtoServerResponse.getExceptionMessage());
+        } else {
+            Tools.runOnWithOutThreadFX(() -> {
+                showChatRoom(createRoom(groupDtoServerResponse.getResponse()));
+            });
+        }
     }
 }

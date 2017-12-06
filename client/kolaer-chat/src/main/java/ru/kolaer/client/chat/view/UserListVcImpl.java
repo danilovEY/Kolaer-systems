@@ -3,8 +3,10 @@ package ru.kolaer.client.chat.view;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
@@ -12,7 +14,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.client.chat.service.ChatClient;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -28,6 +29,7 @@ public class UserListVcImpl implements UserListVc {
 
     private BorderPane mainPane;
     private ListView<ChatUserDto> usersListView;
+    private MenuItem createMessageToUser;
 
     public UserListVcImpl(ChatGroupDto chatGroupDto) {
         this.chatGroupDto = chatGroupDto;
@@ -51,6 +53,11 @@ public class UserListVcImpl implements UserListVc {
             }
         });
 
+        createMessageToUser = new MenuItem("Создать сообщение");
+
+        ContextMenu contextMenu = new ContextMenu(createMessageToUser);
+        usersListView.setContextMenu(contextMenu);
+
         mainPane.setCenter(usersListView);
 
         viewVisit.accept(this);
@@ -59,26 +66,6 @@ public class UserListVcImpl implements UserListVc {
     @Override
     public Parent getContent() {
         return mainPane;
-    }
-
-    @Override
-    public void connect(ChatClient chatClient) {
-
-    }
-
-    @Override
-    public void disconnect(ChatClient chatClient) {
-        items.clear();
-    }
-
-    @Override
-    public void connectUser(ChatUserDto chatUserDto) {
-        items.add(chatUserDto);
-    }
-
-    @Override
-    public void disconnectUser(ChatUserDto chatUserDto) {
-        items.remove(chatUserDto);
     }
 
     @Override
@@ -91,6 +78,23 @@ public class UserListVcImpl implements UserListVc {
                 .filter(chatUserDto -> !chatUserDto.getAccountId().equals(authorizedUser.getId()))
                 .collect(Collectors.toList()))
         );
+    }
+
+    @Override
+    public void addUser(ChatUserDto chatUserDto) {
+        items.add(chatUserDto);
+    }
+
+    @Override
+    public void removeUser(ChatUserDto chatUserDto) {
+        items.remove(chatUserDto);
+    }
+
+    @Override
+    public void setOnCreateMessageToUser(Consumer<List<ChatUserDto>> consumer) {
+        createMessageToUser.setOnAction(e -> {
+            consumer.accept(usersListView.getSelectionModel().getSelectedItems());
+        });
     }
 
 }

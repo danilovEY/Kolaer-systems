@@ -9,6 +9,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.api.system.network.ChatTable;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 10.11.2017.
@@ -44,7 +45,11 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
 
     @Override
     public ServerResponse<ChatGroupDto> createPrivateGroup(IdsDto idsDto, String name) {
-        return postServerResponse(restTemplate, URL_POST_CREATE_PRIVATE_GROUP + "?name=" + name,
+        String atr = Optional.ofNullable(name)
+                .map(n -> "?name=" + n)
+                .orElse("");
+
+        return postServerResponse(restTemplate, URL_POST_CREATE_PRIVATE_GROUP + atr,
                 idsDto,
                 ChatGroupDto.class, objectMapper);
     }

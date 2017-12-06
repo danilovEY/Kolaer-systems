@@ -56,7 +56,8 @@ public class ChatController {
 
     @UrlDeclaration(description = "Создать приватную группу пользователей чата", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/group/private", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ChatGroupDto createGroup(@RequestBody IdsDto idsDto, @RequestParam String name) {
+    public ChatGroupDto createGroup(@RequestBody IdsDto idsDto, @RequestParam(required = false) String name) {
+        log.info(idsDto.toString());
         return chatService.createPrivateGroup(name, idsDto);
     }
 

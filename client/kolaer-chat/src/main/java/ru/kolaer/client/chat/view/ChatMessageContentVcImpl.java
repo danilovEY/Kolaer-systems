@@ -1,20 +1,16 @@
 package ru.kolaer.client.chat.view;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSession;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.tools.Tools;
-import ru.kolaer.client.chat.service.ChatClient;
 
 import java.util.Date;
 import java.util.function.Consumer;
@@ -27,9 +23,10 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     private final ChatGroupDto chatGroupDto;
     private BorderPane mainPane;
     private ListView<ChatMessageDto> chatMessageDtoListView;
-    private ChatClient chatClient;
     private TextArea textArea;
-    private String subscriptionId;
+
+    private Consumer<ChatMessageDto> sendMessageConsumer;
+    private ObservableList<ChatMessageDto> messages = FXCollections.observableArrayList();
 
     public ChatMessageContentVcImpl(ChatGroupDto chatGroupDto) {
         this.chatGroupDto = chatGroupDto;
@@ -39,7 +36,7 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     public void initView(Consumer<ChatMessageContentVc> viewVisit) {
         mainPane = new BorderPane();
 
-        chatMessageDtoListView = new ListView<>();
+        chatMessageDtoListView = new ListView<>(messages);
         chatMessageDtoListView.setCellFactory(param -> new ListCell<ChatMessageDto>() {
             @Override
             public void updateItem(ChatMessageDto item, boolean empty) {
@@ -92,50 +89,28 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     }
 
     private void sendMessage() {
-        if(chatClient != null && !textArea.getText().trim().isEmpty()) {
-            chatClient.send(chatGroupDto.getName(), createMessage(textArea.getText()));
+        if(!textArea.getText().trim().isEmpty()) {
+            if(sendMessageConsumer != null) {
+                sendMessageConsumer.accept(createMessage(textArea.getText()));
+            }
             textArea.setText("");
         }
     }
 
-    private ChatMessageDto createMessage(String message) {
+    @Override
+    public void setOnSendMessage(Consumer<ChatMessageDto> consumer) {
+        this.sendMessageConsumer = consumer;
+    }
+
+    @Override
+    public ChatMessageDto createMessage(String message) {
         ChatMessageDto chatMessageDto = new ChatMessageDto();
         chatMessageDto.setType(ChatMessageType.USER);
         chatMessageDto.setMessage(message);
         chatMessageDto.setCreateMessage(new Date());
-        chatMessageDto.setRoom(chatGroupDto.getName());
+        chatMessageDto.setRoom(chatGroupDto.getRoomId());
         chatMessageDto.setFromAccount(UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser());
         return chatMessageDto;
-    }
-
-    @Override
-    public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-
-    }
-
-    @Override
-    public void handleTransportError(StompSession session, Throwable exception) {
-
-    }
-
-    @Override
-    public void handleFrame(StompHeaders headers, ChatMessageDto message) {
-        if(chatMessageDtoListView != null) {
-            Tools.runOnWithOutThreadFX(() -> {
-                chatMessageDtoListView.getItems().add(message);
-                chatMessageDtoListView.scrollTo(message);
-            });
-        }
-    }
-
-    @Override
-    public void setSubscriptionId(String id) {
-        this.subscriptionId = id;
-    }
-
-    @Override
-    public String getSubscriptionId() {
-        return subscriptionId;
     }
 
     @Override
@@ -144,37 +119,15 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     }
 
     @Override
-    public void connect(ChatClient chatClient) {
-        this.chatClient = chatClient;
-        chatClient.subscribeRoom(chatGroupDto.getRoomId(), this);
+    public void addMessage(ChatMessageDto chatMessageDto) {
+        messages.add(chatMessageDto);
+        if(isViewInit()) {
+            chatMessageDtoListView.scrollTo(chatMessageDto);
+        }
     }
 
     @Override
-    public void disconnect(ChatClient chatClient) {
-        chatClient.unSubscribe(this);
-        Tools.runOnWithOutThreadFX(() -> chatMessageDtoListView.getItems().clear());
-    }
-
-    @Override
-    public void connectUser(ChatUserDto chatUserDto) {
-        Tools.runOnWithOutThreadFX(() -> chatMessageDtoListView.getItems()
-                .add(createServerMessage("Пользователь \"" + chatUserDto.getName() + "\" вошел в чат"))
-        );
-    }
-
-    @Override
-    public void disconnectUser(ChatUserDto chatUserDto) {
-        Tools.runOnWithOutThreadFX(() -> chatMessageDtoListView.getItems()
-                .add(createServerMessage("Пользователь \"" + chatUserDto.getName() + "\" вышел в чат"))
-        );
-    }
-
-    @Override
-    public void selected(ChatUserDto chatUserDto) {
-
-    }
-
-    private ChatMessageDto createServerMessage(String text) {
+    public ChatMessageDto createServerMessage(String text) {
         ChatMessageDto serverMessage = new ChatMessageDto();
         serverMessage.setType(ChatMessageType.SERVER);
         serverMessage.setCreateMessage(new Date());
