@@ -51,7 +51,7 @@ public class ChatController {
     @UrlDeclaration(description = "Получить список активных пользователей чата")
     @RequestMapping(value = "/active/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ChatGroupDto> getActiveUsers() {
-        return chatService.getAll();
+        return chatService.getAllForUser();
     }
 
     @UrlDeclaration(description = "Создать приватную группу пользователей чата", requestMethod = RequestMethod.POST)

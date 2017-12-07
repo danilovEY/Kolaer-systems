@@ -19,6 +19,10 @@ import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by danilovey on 02.11.2017.
@@ -26,6 +30,7 @@ import java.util.*;
 @Slf4j
 public class ChatClientImpl implements ChatClient {
     private final List<ChatObserver> observers = new ArrayList<>();
+    private final List<ChatInfoHandler> queueInfoHandlers = new ArrayList<>();
     private final Map<String, ChatMessageHandler> queueSubs = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, ChatMessageDto> queueMessages = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, StompSession.Subscription> subscriptionMap = Collections.synchronizedMap(new HashMap<>());
@@ -36,6 +41,7 @@ public class ChatClientImpl implements ChatClient {
     private final String url;
     private StompSession session;
     private WebSocketStompClient stompClient;
+    private Future<?> waitConnect;
 
     public ChatClientImpl(String urlRoot) {
         url = "ws://" + urlRoot + "/rest/non-security/chat";
@@ -48,21 +54,30 @@ public class ChatClientImpl implements ChatClient {
 
     @Override
     public void start() {
-        Transport webSocketTransport = new WebSocketTransport(new StandardWebSocketClient());
-        List<Transport> transports = Collections.singletonList(webSocketTransport);
+        if(this.isConnect()) {
+            return;
+        }
 
-        SockJsClient sockJsClient = new SockJsClient(transports);
-        sockJsClient.setMessageCodec(new Jackson2SockJsMessageCodec());
+        log.debug("Попытка установки соединение...");
+
+        if(stompClient == null) {
+            Transport webSocketTransport = new WebSocketTransport(new StandardWebSocketClient());
+            List<Transport> transports = Collections.singletonList(webSocketTransport);
+
+            SockJsClient sockJsClient = new SockJsClient(transports);
+            sockJsClient.setMessageCodec(new Jackson2SockJsMessageCodec());
+
+            stompClient = new WebSocketStompClient(sockJsClient);
+            stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        }
 
         StompHeaders stompHeaders = new StompHeaders();
         stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
 
-        stompClient = new WebSocketStompClient(sockJsClient);
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-
         stompClient.connect(url, new WebSocketHttpHeaders(), stompHeaders, new StompSessionHandler() {
             @Override
             public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
+                log.debug("Успешное подключение к чату");
                 ChatClientImpl.this.session = session;
                 UniformSystemEditorKitSingleton.getInstance()
                         .getUISystemUS()
@@ -70,10 +85,11 @@ public class ChatClientImpl implements ChatClient {
                         .showInformationNotify(null, "Успешное подключение к чату");
 
                 observers.forEach(obs -> obs.connect(ChatClientImpl.this));
-
                 queueSubs.forEach(ChatClientImpl.this::subscribeRoom);
+                queueInfoHandlers.forEach(ChatClientImpl.this::subscribeInfo);
                 queueMessages.forEach(ChatClientImpl.this::send);
 
+                queueInfoHandlers.clear();
                 queueSubs.clear();
                 queueMessages.clear();
             }
@@ -85,14 +101,39 @@ public class ChatClientImpl implements ChatClient {
 
             @Override
             public void handleTransportError(StompSession session, Throwable exception) {
-                log.error("Error!", exception);
+                if(ChatClientImpl.this.session != null) {
+                    log.error("Error!", exception);
 
-                UniformSystemEditorKitSingleton.getInstance()
-                        .getUISystemUS()
-                        .getNotification()
-                        .showErrorNotify(null, "Отключение от чата");
+                    UniformSystemEditorKitSingleton.getInstance()
+                            .getUISystemUS()
+                            .getNotification()
+                            .showErrorNotify(null, "Чат не доступен");
 
-                observers.forEach(obs -> obs.disconnect(ChatClientImpl.this));
+                    observers.forEach(obs -> obs.disconnect(ChatClientImpl.this));
+
+                    ChatClientImpl.this.session = null;
+
+                    if (waitConnect == null || waitConnect.isDone()) {
+                        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+                        waitConnect = executorService.submit(() -> {
+                            ChatClientImpl chatClient = ChatClientImpl.this;
+                            while (!chatClient.isConnect()) {
+                                try {
+                                    TimeUnit.SECONDS.sleep(5);
+                                } catch (InterruptedException e) {
+                                    return;
+                                }
+
+                                chatClient.start();
+
+                                waitConnect = null;
+                            }
+                        });
+
+                        executorService.shutdown();
+                    }
+                }
             }
 
             @Override
@@ -146,6 +187,8 @@ public class ChatClientImpl implements ChatClient {
             StompSession.Subscription subscribe = session.subscribe(stompHeaders, chatMessageHandler);
             chatMessageHandler.setSubscriptionId(subscribe.getSubscriptionId());
             subscriptionMap.put(subscribe.getSubscriptionId(), subscribe);
+        } else {
+            queueInfoHandlers.add(chatMessageHandler);
         }
     }
 

@@ -50,16 +50,17 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         });
 
         SplitPane splitPane = new SplitPane();
-
-        chatMessageContentVc.initView(initMessage -> {
-            splitPane.getItems().add(initMessage.getContent());
-            initMessage.setOnSendMessage(this::sendMessage);
-        });
+        splitPane.setDividerPositions(0.3);
 
         userListVc.initView(initUserList -> {
             splitPane.getItems().add(initUserList.getContent());
             initUserList.setUsers(chatGroupDto.getUsers());
             initUserList.setOnCreateMessageToUser(this::createMessageToUser);
+        });
+
+        chatMessageContentVc.initView(initMessage -> {
+            splitPane.getItems().add(initMessage.getContent());
+            initMessage.setOnSendMessage(this::sendMessage);
         });
 
         mainTab.setContent(splitPane);

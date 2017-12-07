@@ -9,11 +9,16 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
+import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatInfoService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatMessageService;
@@ -42,17 +47,20 @@ public class ChatServiceImpl implements ChatService {
     private final ChatInfoService chatInfoService;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final AuthenticationService authenticationService;
+    private final AccountDao accountDao;
 
     public ChatServiceImpl(@Value("${secret_key:secret_key}") String key,
                            ChatMessageService chatMessageService,
                            ChatInfoService chatInfoService,
                            SimpMessagingTemplate simpMessagingTemplate,
-                           AuthenticationService authenticationService) {
+                           AuthenticationService authenticationService,
+                           AccountDao accountDao) {
         this.key = key;
         this.chatMessageService = chatMessageService;
         this.chatInfoService = chatInfoService;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.authenticationService = authenticationService;
+        this.accountDao = accountDao;
     }
 
     @PostConstruct
@@ -141,14 +149,17 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    @Transactional
     public ChatGroupDto createPrivateGroup(String name, IdsDto idsDto) {
         if(idsDto == null || CollectionUtils.isEmpty(idsDto.getIds())) {
             throw new UnexpectedRequestParams("Должны быть ID пользователей");
         }
 
+        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+
         String roomId = idsDto.getIds().size() > 1
                 ? UUID.randomUUID().toString()
-                : createRoomId(authenticationService.getAccountByAuthentication().getId(), idsDto.getIds().get(0));
+                : createRoomId(accountByAuthentication.getId(), idsDto.getIds().get(0));
 
         ChatGroupDto group = groups.containsKey(roomId)
                 ? groups.get(roomId)
@@ -156,7 +167,16 @@ public class ChatServiceImpl implements ChatService {
 
         group.setType(ChatGroupType.PRIVATE);
         group.setRoomId(roomId);
-        group.setUserCreated(authenticationService.getAccountByAuthentication());
+        group.setUserCreated(accountByAuthentication);
+
+        if(StringUtils.isEmpty(group.getName())) {
+            String groupName = accountDao.findById(idsDto.getIds())
+                    .stream()
+                    .map(this::accountsToChatGroupName)
+                    .collect(Collectors.joining(","));
+
+            group.setName(groupName);
+        }
 
         groups.put(group.getRoomId(), group);
 
@@ -173,6 +193,13 @@ public class ChatServiceImpl implements ChatService {
         }
 
         return group;
+    }
+
+    private String accountsToChatGroupName(AccountEntity accountEntity) {
+        return "[" + Optional.ofNullable(accountEntity.getChatName())
+                        .filter(chatName -> !chatName.trim().isEmpty())
+                        .orElse(accountEntity.getUsername()) +
+                "]";
     }
 
     private String createRoomId(@NonNull Long fromAccountId, @NonNull Long toAccountId) {
@@ -214,6 +241,28 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public List<ChatGroupDto> getAll() {
         return groups.values().stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ChatGroupDto> getAllForUser() {
+        return groups.values()
+                .stream()
+                .filter(this::filterForUser)
+                .collect(Collectors.toList());
+    }
+
+    private boolean filterForUser(ChatGroupDto groupDto) {
+        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+
+        return groupDto.getType() == ChatGroupType.PUBLIC ||
+                groupDto.getType() == ChatGroupType.MAIN ||
+                accountByAuthentication.isAccessOit() ||
+                (groupDto.getUserCreated() != null && groupDto.getUserCreated()
+                        .getId().equals(accountByAuthentication.getId())) ||
+                (groupDto.getUsers() != null &&
+                        groupDto.getUsers()
+                                .stream()
+                                .anyMatch(chatUserDto -> chatUserDto.getAccountId().equals(accountByAuthentication.getId())));
     }
 
     @Override

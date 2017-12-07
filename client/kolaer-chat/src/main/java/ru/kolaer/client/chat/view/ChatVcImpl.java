@@ -36,6 +36,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
     @Override
     public void initView(Consumer<ChatVc> viewVisit) {
         mainPane = new BorderPane();
+        mainPane.getStylesheets().add(getClass().getResource("/chatStylesheet.css").toString());
 
         tabPane = new TabPane();
 
@@ -54,6 +55,10 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         this.chatClient = chatClient;
 
         chatClient.subscribeInfo(this);
+
+        for (ChatRoomVc chatRoomVc : groupDtoMap.values()) {
+            chatRoomVc.connect(chatClient);
+        }
 
         ServerResponse<List<ChatGroupDto>> activeGroup = UniformSystemEditorKitSingleton.getInstance()
                 .getUSNetwork()
@@ -99,7 +104,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         }
 
         if(chatGroupDto.getType() == ChatGroupType.MAIN) {
-            Tools.runOnWithOutThreadFX(() -> showChatRoom(chatRoomVc));
+            Tools.runOnWithOutThreadFX(() -> showChatRoom(chatRoomVc, false));
         }
 
         return chatRoomVc;
@@ -121,7 +126,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
     }
 
     @Override
-    public void showChatRoom(ChatRoomVc chatRoomVc) {
+    public ChatRoomVc showChatRoom(ChatRoomVc chatRoomVc, boolean focus) {
         if(!chatRoomVc.isViewInit()) {
             initRoom(chatRoomVc);
         }
@@ -129,6 +134,12 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         if(!tabPane.getTabs().contains(chatRoomVc.getContent())) {
             tabPane.getTabs().add(chatRoomVc.getContent());
         }
+
+        if(focus) {
+            tabPane.getSelectionModel().select(chatRoomVc.getContent());
+        }
+
+        return chatRoomVc;
     }
 
     @Override
@@ -198,7 +209,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         ChatRoomVc chatRoomVc = groupDtoMap.get(chatGroupDto.getRoomId());
         if(chatRoomVc != null) {
             Tools.runOnWithOutThreadFX(() -> {
-                showChatRoom(chatRoomVc);
+                showChatRoom(chatRoomVc, false);
             });
         }
     }
@@ -224,7 +235,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
                     .showErrorNotify(groupDtoServerResponse.getExceptionMessage());
         } else {
             Tools.runOnWithOutThreadFX(() -> {
-                showChatRoom(createRoom(groupDtoServerResponse.getResponse()));
+                showChatRoom(createRoom(groupDtoServerResponse.getResponse()), true);
             });
         }
     }
