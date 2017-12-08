@@ -62,11 +62,11 @@ public class ExcelReaderPost implements ExcelReader<PostEntity> {
     @Override
     public PostEntity checkValues(XSSFRow row, PostEntity object) {
         if(object == null) {
-            throw new IllegalArgumentException("Прочитанная должность NULL! Строка: " + row.getRowNum());
+            throw new IllegalArgumentException("Прочитанная должность NULL! Строка: " + row.getRowNum() + 1);
         }
 
         if(StringUtils.isEmpty(object.getName()) || StringUtils.isEmpty(object.getAbbreviatedName())) {
-            throw new UnexpectedRequestParams("В должности пустое имя или абревиатура! Строка: " + row.getRowNum());
+            throw new UnexpectedRequestParams("В должности пустое имя или абревиатура! Строка: " + row.getRowNum() + 1);
         }
 
         return object;

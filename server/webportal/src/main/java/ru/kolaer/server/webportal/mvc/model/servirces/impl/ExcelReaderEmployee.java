@@ -21,6 +21,7 @@ import java.util.List;
 @Service
 public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
     private static int YEAR_NOT_DISMISSAL = 9999;
+    private static String FIO_NAME = "ФИО";
     private static String SECOND_NAME = "Фамилия";
     private static String FIRST_NAME = "Имя";
     private static String THIRD_NAME = "Отчество";
@@ -58,6 +59,28 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
         newEmployeeEntity.setInitials(newEmployeeEntity.getSecondName() + " "
                 + newEmployeeEntity.getFirstName() + " "
                 + newEmployeeEntity.getThirdName());
+
+        if(StringUtils.isEmpty(newEmployeeEntity.getInitials())) {
+            value = getStringValue(nameColumns, FIO_NAME, row);
+
+            newEmployeeEntity.setInitials(value);
+
+            if(StringUtils.hasText(value)) {
+                String[] fio = value.split(" ");
+
+                if(fio.length > 0) {
+                    newEmployeeEntity.setSecondName(fio[0]);
+                }
+
+                if(fio.length > 1) {
+                    newEmployeeEntity.setFirstName(fio[1]);
+                }
+
+                if(fio.length > 2) {
+                    newEmployeeEntity.setThirdName(fio[3]);
+                }
+            }
+        }
 
         Date date = getDateValue(nameColumns, BIRTHDAY_DATE, row);
         newEmployeeEntity.setBirthday(date);
@@ -114,13 +137,13 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
     @Override
     public EmployeeEntity checkValues(XSSFRow row, EmployeeEntity object) {
         if(object == null) {
-            throw new IllegalArgumentException("Прочитанное подразделение NULL! Строка: " + row.getRowNum());
+            throw new IllegalArgumentException("Прочитанное подразделение NULL! Строка: " + row.getRowNum() + 1);
         }
 
         if(StringUtils.isEmpty(object.getInitials()) || StringUtils.isEmpty(object.getFirstName())
                 || StringUtils.isEmpty(object.getSecondName()) || StringUtils.isEmpty(object.getThirdName())
                 || object.getPersonnelNumber() == null || object.getGender() == null) {
-            throw new UnexpectedRequestParams("У сотрудника пустое Ф.И.О или табельный или пол! Строка: " + row.getRowNum());
+            throw new UnexpectedRequestParams("У сотрудника пустое Ф.И.О или табельный или пол! Строка: " + row.getRowNum() + 1);
         }
 
         return object;

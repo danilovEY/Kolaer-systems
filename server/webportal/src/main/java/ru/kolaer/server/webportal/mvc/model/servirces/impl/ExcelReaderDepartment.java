@@ -38,10 +38,17 @@ public class ExcelReaderDepartment implements ExcelReader<DepartmentEntity> {
         Matcher matcher = pattern.matcher(depName);
 
         departmentEntity.setName(depName);
-        if (matcher.find())
-            departmentEntity.setAbbreviatedName(matcher.group().trim());
-        else
+
+        while(matcher.find()) {
+            if(StringUtils.hasText(matcher.group())) {
+                departmentEntity.setAbbreviatedName(matcher.group().trim());
+                break;
+            }
+        }
+
+        if (StringUtils.isEmpty(departmentEntity.getAbbreviatedName())) {
             departmentEntity.setAbbreviatedName(depName);
+        }
 
         return departmentEntity;
     }
@@ -49,11 +56,11 @@ public class ExcelReaderDepartment implements ExcelReader<DepartmentEntity> {
     @Override
     public DepartmentEntity checkValues(XSSFRow row, DepartmentEntity object) {
         if(object == null) {
-            throw new IllegalArgumentException("Прочитанное подразделение NULL! Строка: " + row.getRowNum());
+            throw new IllegalArgumentException("Прочитанное подразделение NULL! Строка: " + row.getRowNum() + 1);
         }
 
         if(StringUtils.isEmpty(object.getName()) || StringUtils.isEmpty(object.getAbbreviatedName())) {
-            throw new UnexpectedRequestParams("В подразделении пустое имя или абревиатура! Строка: " + row.getRowNum());
+            throw new UnexpectedRequestParams("В подразделении пустое имя или абревиатура! Строка: " + row.getRowNum() + 1);
         }
 
         return object;
