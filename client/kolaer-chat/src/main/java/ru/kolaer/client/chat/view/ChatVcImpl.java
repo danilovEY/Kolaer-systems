@@ -32,11 +32,12 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
     private BorderPane mainPane;
     private TabPane tabPane;
     private ChatClient chatClient;
+    private NotificationMessagePane notificationMessagePane;
 
     @Override
     public void initView(Consumer<ChatVc> viewVisit) {
         mainPane = new BorderPane();
-        mainPane.getStylesheets().add(getClass().getResource("/chatStylesheet.css").toString());
+        mainPane.getStylesheets().add(getClass().getResource("/chat.css").toString());
 
         tabPane = new TabPane();
 
@@ -55,6 +56,8 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         this.chatClient = chatClient;
 
         chatClient.subscribeInfo(this);
+
+        this.notificationMessagePane = new NotificationMessagePane(this);
 
         for (ChatRoomVc chatRoomVc : groupDtoMap.values()) {
             chatRoomVc.connect(chatClient);
@@ -98,6 +101,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
         groupDtoMap.put(chatGroupDto.getRoomId(), chatRoomVc);
         chatRoomVc.addObserver(this);
+        chatRoomVc.addObserver(notificationMessagePane);
 
         if(chatClient.isConnect()) {
             chatRoomVc.connect(chatClient);
@@ -131,7 +135,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
             initRoom(chatRoomVc);
         }
 
-        if(!tabPane.getTabs().contains(chatRoomVc.getContent())) {
+        if(!roomIsShow(chatRoomVc)) {
             tabPane.getTabs().add(chatRoomVc.getContent());
         }
 
@@ -140,6 +144,11 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         }
 
         return chatRoomVc;
+    }
+
+    @Override
+    public boolean roomIsShow(ChatRoomVc chatRoomVc) {
+        return tabPane.getTabs().contains(chatRoomVc.getContent());
     }
 
     @Override

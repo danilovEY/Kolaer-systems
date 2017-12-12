@@ -1,5 +1,6 @@
 package ru.kolaer.api.system.impl;
 
+import javafx.stage.Stage;
 import ru.kolaer.api.system.ui.*;
 
 /**
@@ -40,5 +41,10 @@ public class DefaultUISystemUS implements UISystemUS {
     @Override
     public MenuBarUS getMenuBar() {
         return this.menuBarUS;
+    }
+
+    @Override
+    public Stage getMainStage() {
+        return null;
     }
 }

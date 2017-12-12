@@ -1,0 +1,7 @@
+.chat-message-list-view {
+    -fx-background-image: url(./chat-message-background.jpg);
+}
+
+.chat-message-list-view .list-cell {
+    -fx-background-color: null;
+}

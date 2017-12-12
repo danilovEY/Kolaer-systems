@@ -237,6 +237,7 @@ public class VMMainFrameImpl extends Application {
         uiSystemUS.setMenuBarUS(menuBarUS);
         uiSystemUS.setStaticUS(notify);
         uiSystemUS.setNotification(notify);
+        uiSystemUS.setMainStage(stage);
 
         authentication.registerObserver(menuBarUS);
 

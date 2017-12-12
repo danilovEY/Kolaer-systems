@@ -10,4 +10,5 @@ import ru.kolaer.client.chat.service.ChatObserver;
  */
 public interface ChatVc extends BaseView<ChatVc, Parent>, ChatObserver, ChatInfoHandler {
     ChatRoomVc showChatRoom(ChatRoomVc chatRoomVc, boolean focus);
+    boolean roomIsShow(ChatRoomVc chatRoomVc);
 }

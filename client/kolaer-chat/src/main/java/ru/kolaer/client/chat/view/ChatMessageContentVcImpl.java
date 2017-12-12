@@ -37,6 +37,8 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
         mainPane = new BorderPane();
 
         chatMessageDtoListView = new ListView<>(messages);
+        chatMessageDtoListView.getStyleClass().add("chat-message-list-view");
+
         chatMessageDtoListView.setCellFactory(param -> new ListCell<ChatMessageDto>() {
             @Override
             public void updateItem(ChatMessageDto item, boolean empty) {

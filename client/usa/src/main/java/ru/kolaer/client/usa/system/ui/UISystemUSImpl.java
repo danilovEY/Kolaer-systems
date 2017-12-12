@@ -1,5 +1,6 @@
 package ru.kolaer.client.usa.system.ui;
 
+import javafx.stage.Stage;
 import ru.kolaer.api.system.ui.*;
 
 /**
@@ -15,6 +16,7 @@ public class UISystemUSImpl implements UISystemUS {
 	private StatusBarUS statusBar;
 	private StaticUS staticUS;
 	private MenuBarUS menuBarUS;
+	private Stage mainStage;
 
 	public UISystemUSImpl(final StatusBarUS statusBar) {
 		this.statusBar = statusBar;
@@ -55,6 +57,11 @@ public class UISystemUSImpl implements UISystemUS {
 		return this.menuBarUS;
 	}
 
+	@Override
+	public Stage getMainStage() {
+		return mainStage;
+	}
+
 	public void setNotification(final NotificationUS notificationUS) {
 		this.notification = notificationUS;
 	}
@@ -71,5 +78,9 @@ public class UISystemUSImpl implements UISystemUS {
 
 	public void setStaticUS(StaticUS staticUS) {
 		this.staticUS = staticUS;
+	}
+
+	public void setMainStage(Stage mainStage) {
+		this.mainStage = mainStage;
 	}
 }

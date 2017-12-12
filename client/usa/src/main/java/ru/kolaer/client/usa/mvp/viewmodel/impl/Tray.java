@@ -33,7 +33,7 @@ public class Tray {
             return null;
         };
 
-        stage.iconifiedProperty().addListener((observable, oldValue, newValue) -> minFun.apply(newValue));
+        stage.showingProperty().addListener((observable, oldValue, newValue) -> minFun.apply(newValue));
 
         if (SystemTray.isSupported()) {
             SystemTray tray = SystemTray.getSystemTray();
@@ -43,12 +43,15 @@ public class Tray {
             MenuItem showItem = new MenuItem("Открыть");
             MenuItem closeItem = new MenuItem("Закрыть");
 
-            ActionListener showStage = e1 -> Tools.runOnWithOutThreadFX(stage::show);
+            ActionListener showStage = e1 -> Tools.runOnWithOutThreadFX(() -> {
+                stage.show();
+                stage.setMaximized(false); //JRE BUG
+                stage.setMaximized(true);
+            });
 
             showItem.addActionListener(showStage);
             closeItem.addActionListener(e ->
-                    Tools.runOnWithOutThreadFX(() ->
-                    stage.getOnCloseRequest().handle(null)));
+                    Tools.runOnWithOutThreadFX(stage::hide));
 
             popup.add(showItem);
             popup.add(closeItem);

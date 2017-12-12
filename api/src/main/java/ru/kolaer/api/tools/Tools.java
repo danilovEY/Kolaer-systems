@@ -12,7 +12,27 @@ import java.util.Objects;
 import java.util.concurrent.*;
 
 public class Tools {
+    private static final SimpleDateFormat dateFormatUs = new SimpleDateFormat("yyyy-MM-dd");
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY");
+    private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("DD-MM-yyyy HH:mm:ss");
     private static final Logger LOG = LoggerFactory.getLogger(Tools.class);
+
+    public static String dateToString(Date date) {
+        if(date == null) {
+            return null;
+        }
+
+        return dateFormat.format(date);
+    }
+
+    public static String dateTimeToString(Date date) {
+        if(date == null) {
+            return null;
+        }
+
+        return dateTimeFormat.format(date);
+    }
 
     public static Date convertToDate(final LocalDate date) {
         if(date == null)
@@ -23,7 +43,7 @@ public class Tools {
     public static LocalDate convertToLocalDate(final Date date) {
         if(date == null)
             throw new IllegalArgumentException("LocalDate is null!");
-        return LocalDate.parse( new SimpleDateFormat("yyyy-MM-dd").format(date));
+        return LocalDate.parse(dateFormatUs.format(date));
     }
 
     public static void runOnThreadFXAndWain(final Runnable runnable, final long time, final TimeUnit timeUnit) {

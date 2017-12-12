@@ -5,9 +5,11 @@ import javafx.scene.control.Tab;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.ChatRoomObserver;
@@ -47,6 +49,11 @@ public class ChatRoomVcImpl implements ChatRoomVc {
             //if(chatClient != null) {
             //    disconnect(chatClient);
             //}
+        });
+        mainTab.setOnSelectionChanged(e -> {
+            if(mainTab.isSelected()) {
+                mainTab.setText(chatGroupDto.getName());
+            }
         });
 
         SplitPane splitPane = new SplitPane();
@@ -119,11 +126,22 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
     @Override
     public void handleFrame(StompHeaders headers, ChatMessageDto message) {
-        Tools.runOnWithOutThreadFX(() -> chatMessageContentVc.addMessage(message));
+        Tools.runOnWithOutThreadFX(() -> {
+            chatMessageContentVc.addMessage(message);
+            if(isViewInit() && !mainTab.isSelected()) {
+                mainTab.setText(chatGroupDto.getName() + " [+1]");
+            }
+        });
 
-        for (ChatRoomObserver observer : observers) {
-            observer.getMessage(chatGroupDto, message);
-        }
+        AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
+                .getAuthentication()
+                .getAuthorizedUser();
+
+        //if(authorizedUser != null && !authorizedUser.getId().equals(message.getFromAccount().getId())) {
+            for (ChatRoomObserver observer : observers) {
+                observer.getMessage(chatGroupDto, message);
+            }
+        //}
     }
 
     @Override
