@@ -3,10 +3,7 @@ package ru.kolaer.client.chat.view;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
@@ -40,6 +37,8 @@ public class UserListVcImpl implements UserListVc {
         mainPane = new BorderPane();
 
         usersListView = new ListView<>(items);
+        usersListView.setPlaceholder(new Label("В этом чате только вы"));
+        usersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         usersListView.setCellFactory(param -> new ListCell<ChatUserDto>(){
             @Override
             protected void updateItem(ChatUserDto item, boolean empty) {

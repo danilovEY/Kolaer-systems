@@ -5,3 +5,24 @@
 .chat-message-list-view .list-cell {
     -fx-background-color: null;
 }
+
+.chat-message {
+    -fx-border-width: 2px;
+    -fx-padding: 10;
+    -fx-spacing: 8;
+}
+
+.chat-message-user {
+    -fx-border-color: rgba(155, 155, 155, 0.5);
+    -fx-background-color: rgba(155, 155, 155, 0.5);
+}
+
+.chat-message-other-user {
+    -fx-border-color: rgba(0, 104, 255, 0.5);
+    -fx-background-color: rgba(0, 104, 255, 0.5);
+}
+
+.chat-message-server {
+    -fx-border-color: rgba(0, 255, 16, 0.5);
+    -fx-background-color: rgba(0, 255, 16, 0.5);
+}

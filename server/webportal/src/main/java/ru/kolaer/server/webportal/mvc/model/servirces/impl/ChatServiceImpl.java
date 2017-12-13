@@ -157,9 +157,7 @@ public class ChatServiceImpl implements ChatService {
 
         AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
 
-        String roomId = idsDto.getIds().size() > 1
-                ? UUID.randomUUID().toString()
-                : createRoomId(accountByAuthentication.getId(), idsDto.getIds().get(0));
+        String roomId = createRoomId(accountByAuthentication.getId(), idsDto.getIds().get(0));
 
         ChatGroupDto group = groups.containsKey(roomId)
                 ? groups.get(roomId)
@@ -189,6 +187,7 @@ public class ChatServiceImpl implements ChatService {
 
         for (Long accountId : idsDto.getIds()) {
             chatInfoDto.setToAccountId(accountId);
+            chatInfoDto.setId(null);
             send(chatInfoDto.getToAccountId().toString(), chatInfoDto);
         }
 

@@ -33,7 +33,7 @@ public class Page<T> implements Serializable {
     public Page(List<T> data, int number, int total, int pageSize) {
         this.data = data;
         this.number = number;
-        if(number == 0){
+        if(pageSize == 0){
             this.pageSize = data.size();
             this.total = this.pageSize;
         } else {

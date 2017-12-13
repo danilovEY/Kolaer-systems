@@ -137,11 +137,11 @@ public class ChatRoomVcImpl implements ChatRoomVc {
                 .getAuthentication()
                 .getAuthorizedUser();
 
-        //if(authorizedUser != null && !authorizedUser.getId().equals(message.getFromAccount().getId())) {
+        if(authorizedUser != null && !authorizedUser.getId().equals(message.getFromAccount().getId())) {
             for (ChatRoomObserver observer : observers) {
                 observer.getMessage(chatGroupDto, message);
             }
-        //}
+        }
     }
 
     @Override

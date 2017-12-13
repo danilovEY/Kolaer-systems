@@ -14,4 +14,16 @@ public class ChatInfoDaoImpl extends AbstractDefaultDao<ChatInfoEntity> implemen
     protected ChatInfoDaoImpl(SessionFactory sessionFactory) {
         super(sessionFactory, ChatInfoEntity.class);
     }
+
+    @Override
+    public boolean existInvite(String room, Long accountId) {
+        return !sessionFactory.getCurrentSession()
+                .createQuery("SELECT id FROM " + getEntityName() + " WHERE data = :room " +
+                        "AND (account_id = :account_id OR to_account_id = :account_id)", Long.class)
+                .setParameter("room", room)
+                .setParameter("account_id", accountId)
+                .setMaxResults(1)
+                .list()
+                .isEmpty();
+    }
 }

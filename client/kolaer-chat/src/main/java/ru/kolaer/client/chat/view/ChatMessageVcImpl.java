@@ -1,15 +1,18 @@
 package ru.kolaer.client.chat.view;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.TextAlignment;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.api.tools.Tools;
 
 import java.util.function.Consumer;
 
@@ -28,6 +31,7 @@ public class ChatMessageVcImpl implements ChatMessageVc {
     public void initView(Consumer<ChatMessageVc> viewVisit) {
         mainPane = new BorderPane();
         mainPane.setPadding(new Insets(10));
+        mainPane.getStyleClass().add("chat-message");
 
         AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
                 .getAuthentication()
@@ -63,14 +67,37 @@ public class ChatMessageVcImpl implements ChatMessageVc {
         });
 
         if(chatMessageDto.getType() == ChatMessageType.SERVER) {
-            copyable.setText(chatMessageDto.getMessage());
+            String message = chatMessageDto.getMessage() +
+                    System.lineSeparator() +
+                    Tools.dateTimeToString(chatMessageDto.getCreateMessage());
+
+            copyable.setText(message);
+            copyable.setAlignment(Pos.CENTER);
+            copyable.setTextAlignment(TextAlignment.CENTER);
             mainPane.setCenter(copyable);
+            mainPane.getStyleClass().add("chat-message-server");
         } else if(chatMessageDto.getFromAccount() == null || chatMessageDto.getFromAccount().getId().equals(authorizedUser.getId())){
-            copyable.setText(chatMessageDto.getMessage());
+            String message = chatMessageDto.getMessage() +
+                    System.lineSeparator() +
+                    Tools.dateTimeToString(chatMessageDto.getCreateMessage());
+
+            copyable.setText(message);
+            copyable.setAlignment(Pos.CENTER_RIGHT);
+            copyable.setTextAlignment(TextAlignment.RIGHT);
             mainPane.setRight(copyable);
+            mainPane.getStyleClass().add("chat-message-user");
         } else {
-            copyable.setText(chatMessageDto.getFromAccount().getChatName() + ": " + chatMessageDto.getMessage());
+            String message = chatMessageDto.getFromAccount().getChatName() +
+                    System.lineSeparator() +
+                    chatMessageDto.getMessage() +
+                    System.lineSeparator() +
+                    Tools.dateTimeToString(chatMessageDto.getCreateMessage());
+
+            copyable.setText(message);
+            copyable.setAlignment(Pos.CENTER_LEFT);
+            copyable.setTextAlignment(TextAlignment.LEFT);
             mainPane.setLeft(copyable);
+            mainPane.getStyleClass().add("chat-message-other-user");
         }
 
         viewVisit.accept(this);

@@ -14,8 +14,8 @@ import java.util.concurrent.*;
 public class Tools {
     private static final SimpleDateFormat dateFormatUs = new SimpleDateFormat("yyyy-MM-dd");
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY");
-    private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("DD-MM-yyyy HH:mm:ss");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY");
+    private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     private static final Logger LOG = LoggerFactory.getLogger(Tools.class);
 
     public static String dateToString(Date date) {

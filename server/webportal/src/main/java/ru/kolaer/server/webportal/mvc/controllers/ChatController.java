@@ -9,12 +9,14 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
+import ru.kolaer.server.webportal.mvc.model.servirces.ChatMessageService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
 
 import java.util.Date;
@@ -29,12 +31,15 @@ import java.util.List;
 public class ChatController {
     private final ChatService chatService;
     private final AuthenticationService authenticationService;
+    private final ChatMessageService chatMessageService;
 
     @Autowired
     public ChatController(ChatService chatService,
-                          AuthenticationService authenticationService) {
+                          AuthenticationService authenticationService,
+                          ChatMessageService chatMessageService) {
         this.chatService = chatService;
         this.authenticationService = authenticationService;
+        this.chatMessageService = chatMessageService;
     }
 
     @MessageMapping("/chat/room/{chatRoomId}")
@@ -66,6 +71,15 @@ public class ChatController {
     public ChatGroupDto getGroup(@PathVariable("roomId") String roomId) {
         return chatService.getByRoomId(roomId);
     }
+
+    @UrlDeclaration(description = "Получить сообщения группы", requestMethod = RequestMethod.GET)
+    @RequestMapping(value = "/group/{roomId}/messages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<ChatMessageDto> getMessagesGroup(@PathVariable("roomId") String roomId,
+                                  @RequestParam(value = "page", defaultValue = "0") Integer number,
+                                  @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+        return chatMessageService.getAllByRoom(roomId, number, pageSize);
+    }
+
 
     @UrlDeclaration(description = "Получить активного пользователя по ID аккаунту")
     @RequestMapping(value = "/active", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
