@@ -6,9 +6,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
 
@@ -24,6 +22,7 @@ import java.util.Optional;
 public class SessionConnectedEventListener implements ApplicationListener<SessionConnectedEvent> {
     private final ChatService chatService;
     private final AuthenticationService authenticationService;
+
 
     public SessionConnectedEventListener(ChatService chatService,
                                          AuthenticationService authenticationService) {
@@ -62,5 +61,17 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
 
         chatService.send(chatInfoDto);
 
+        ChatMessageDto chatMessageDto = new ChatMessageDto();
+        chatMessageDto.setCreateMessage(new Date());
+        chatMessageDto.setType(ChatMessageType.SERVER);
+        chatMessageDto.setMessage("Пользователь \"" + chatUserDto.getName() + "\" вошел в чат");
+
+        for (ChatGroupDto chatGroupDto : chatService.getAll()) {
+            if(chatGroupDto.getUsers().contains(chatUserDto)) {
+                chatMessageDto.setId(null);
+                chatMessageDto.setRoom(chatGroupDto.getRoomId());
+                chatService.send(chatMessageDto);
+            }
+        }
     }
 }

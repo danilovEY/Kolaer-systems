@@ -50,7 +50,9 @@ public class ChatMessageConverterImpl implements ChatMessageConverter {
         chatMessageDto.setMessage(model.getMessage());
         chatMessageDto.setId(model.getId());
         chatMessageDto.setCreateMessage(model.getCreateMessage());
-        chatMessageDto.setFromAccount(accountConverter.getById(model.getAccountId()));
+        Optional.ofNullable(model.getAccountId())
+                .map(accountConverter::getById)
+                .ifPresent(chatMessageDto::setFromAccount);
         chatMessageDto.setType(model.getType());
         return chatMessageDto;
     }
@@ -62,7 +64,9 @@ public class ChatMessageConverterImpl implements ChatMessageConverter {
         oldDto.setId(newModel.getId());
         oldDto.setCreateMessage(newModel.getCreateMessage());
         oldDto.setType(newModel.getType());
-        oldDto.setFromAccount(accountConverter.getById(newModel.getAccountId()));
+        Optional.ofNullable(newModel.getAccountId())
+                .map(accountConverter::getById)
+                .ifPresent(oldDto::setFromAccount);
         return oldDto;
     }
 }

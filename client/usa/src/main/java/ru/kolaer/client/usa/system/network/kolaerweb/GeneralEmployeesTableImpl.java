@@ -40,7 +40,7 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable, RestTem
 
     @Override
     public ServerResponse<Page<EmployeeDto>> getAllUser() {
-        return getPageResponse(restTemplate, this.URL_GET_ALL, objectMapper);
+        return getPageResponse(restTemplate, this.URL_GET_ALL, EmployeeDto.class, objectMapper);
     }
 
     @Override

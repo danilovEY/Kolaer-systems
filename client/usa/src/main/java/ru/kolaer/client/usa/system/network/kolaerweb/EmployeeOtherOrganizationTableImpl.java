@@ -48,7 +48,7 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 
 	@Override
 	public ServerResponse<Page<EmployeeOtherOrganizationDto>> getAllUser() {
-		return getPageResponse(restTemplate, URL_GET_ALL, objectMapper);
+		return getPageResponse(restTemplate, URL_GET_ALL, EmployeeOtherOrganizationDto.class, objectMapper);
 	}
 
 	@Override

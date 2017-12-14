@@ -1,8 +1,10 @@
 package ru.kolaer.api.system.network;
 
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 
 import java.util.List;
@@ -17,4 +19,5 @@ public interface ChatTable {
 
     ServerResponse<ChatGroupDto> createPrivateGroup(IdsDto idsDto, String name);
     ServerResponse<ChatGroupDto> getGroupByRoomId(String roomId);
+    ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(String roomId);
 }

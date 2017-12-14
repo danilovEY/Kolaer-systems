@@ -8,14 +8,15 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
-import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.ChatRoomObserver;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +120,26 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
             return;
         }
 
-        chatRoomVc.initView(BaseView::empty);
+        chatRoomVc.initView((ChatRoomVc chatRoom) -> {
+            ServerResponse<Page<ChatMessageDto>> messageByRoomId = UniformSystemEditorKitSingleton.getInstance()
+                    .getUSNetwork()
+                    .getKolaerWebServer()
+                    .getApplicationDataBase()
+                    .getChatTable()
+                    .getMessageByRoomId(chatRoom.getChatGroupDto().getRoomId());
+
+            if(messageByRoomId.isServerError()) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(messageByRoomId.getExceptionMessage());
+            } else {
+                Page<ChatMessageDto> response = messageByRoomId.getResponse();
+                List<ChatMessageDto> data = response.getData();
+                data.sort(Comparator.comparingLong(ChatMessageDto::getId));
+                chatRoom.addMessages(data);
+            }
+        });
     }
 
     @Override

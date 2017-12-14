@@ -1,8 +1,10 @@
 package ru.kolaer.api.system.impl;
 
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.api.system.network.ChatTable;
 
@@ -30,5 +32,10 @@ public class DefaultChatTable implements ChatTable {
     @Override
     public ServerResponse<ChatGroupDto> getGroupByRoomId(String roomId) {
         return ServerResponse.createServerResponse();
+    }
+
+    @Override
+    public ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(String roomId) {
+        return null;
     }
 }

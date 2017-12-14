@@ -17,11 +17,13 @@ import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.webportal.mvc.model.converter.ChatMessageConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
+import ru.kolaer.server.webportal.mvc.model.dao.ChatMessageDao;
+import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatMessageEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatInfoService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ChatMessageService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
 
 import javax.annotation.PostConstruct;
@@ -43,24 +45,26 @@ public class ChatServiceImpl implements ChatService {
     private ChatGroupDto mainGroup;
 
     private final String key;
-    private final ChatMessageService chatMessageService;
     private final ChatInfoService chatInfoService;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final AuthenticationService authenticationService;
     private final AccountDao accountDao;
+    private final ChatMessageDao chatMessageDao;
+    private final ChatMessageConverter chatMessageConverter;
 
     public ChatServiceImpl(@Value("${secret_key:secret_key}") String key,
-                           ChatMessageService chatMessageService,
                            ChatInfoService chatInfoService,
                            SimpMessagingTemplate simpMessagingTemplate,
                            AuthenticationService authenticationService,
-                           AccountDao accountDao) {
+                           AccountDao accountDao, ChatMessageDao chatMessageDao,
+                           ChatMessageConverter chatMessageConverter) {
         this.key = key;
-        this.chatMessageService = chatMessageService;
         this.chatInfoService = chatInfoService;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.authenticationService = authenticationService;
         this.accountDao = accountDao;
+        this.chatMessageDao = chatMessageDao;
+        this.chatMessageConverter = chatMessageConverter;
     }
 
     @PostConstruct
@@ -142,10 +146,14 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    @Transactional
     public void send(ChatMessageDto message) {
         log.debug("messages: {}", message);
 
-        simpMessagingTemplate.convertAndSend("/topic/chats." + message.getRoom(), chatMessageService.save(message));
+        ChatMessageEntity save = chatMessageDao.save(chatMessageConverter.convertToModel(message));
+        message.setId(save.getId());
+
+        simpMessagingTemplate.convertAndSend("/topic/chats." + message.getRoom(), message);
     }
 
     @Override
@@ -302,5 +310,10 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Page<ChatGroupDto> getAll(Integer number, Integer pageSize) {
         return null;
+    }
+
+    @Override
+    public ChatGroupDto getMainGroup() {
+        return mainGroup;
     }
 }

@@ -37,4 +37,6 @@ public interface ChatService extends DefaultService<ChatGroupDto> {
     ChatGroupDto getByRoomId(String roomId);
 
     List<ChatGroupDto> getAllForUser();
+
+    ChatGroupDto getMainGroup();
 }

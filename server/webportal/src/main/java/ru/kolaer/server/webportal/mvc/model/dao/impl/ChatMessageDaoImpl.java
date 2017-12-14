@@ -19,7 +19,7 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
 
     @Override
     public List<ChatMessageEntity> findAllByRoom(String room, Integer number, Integer pageSize) {
-        return getSession().createQuery("FROM " + getEntityName() + " WHERE room = :room", getEntityClass())
+        return getSession().createQuery("FROM " + getEntityName() + " WHERE room = :room ORDER BY id DESC", getEntityClass())
                 .setParameter("room", room)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
@@ -28,7 +28,7 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
 
     @Override
     public List<ChatMessageEntity> findAllByRoom(String room) {
-        return getSession().createQuery("FROM " + getEntityName() + " WHERE room = :room", getEntityClass())
+        return getSession().createQuery("FROM " + getEntityName() + " WHERE room = :room ORDER BY id DESC", getEntityClass())
                 .setParameter("room", room)
                 .list();
     }

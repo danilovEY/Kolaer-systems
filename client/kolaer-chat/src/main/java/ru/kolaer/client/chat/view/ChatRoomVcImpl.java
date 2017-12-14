@@ -100,6 +100,16 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         observers.remove(observer);
     }
 
+    @Override
+    public ChatGroupDto getChatGroupDto() {
+        return chatGroupDto;
+    }
+
+    @Override
+    public void addMessages(List<ChatMessageDto> messages) {
+        messages.forEach(chatMessageContentVc::addMessage);
+    }
+
     private void createMessageToUser(List<ChatUserDto> chatUserDto) {
         for (ChatRoomObserver observer : observers) {
             observer.createMessageToUser(chatGroupDto, chatUserDto);
@@ -137,7 +147,8 @@ public class ChatRoomVcImpl implements ChatRoomVc {
                 .getAuthentication()
                 .getAuthorizedUser();
 
-        if(authorizedUser != null && !authorizedUser.getId().equals(message.getFromAccount().getId())) {
+        if(authorizedUser != null && authorizedUser.getId() != null &&
+                !authorizedUser.getId().equals(message.getFromAccount().getId())) {
             for (ChatRoomObserver observer : observers) {
                 observer.getMessage(chatGroupDto, message);
             }
@@ -164,9 +175,10 @@ public class ChatRoomVcImpl implements ChatRoomVc {
             Tools.runOnWithOutThreadFX(() -> {
                 userListVc.addUser(chatUserDto);
 
-                ChatMessageDto serverMessage = chatMessageContentVc
+                /*/ChatMessageDto serverMessage = chatMessageContentVc
                         .createServerMessage("Пользователь \"" + chatUserDto.getName() + "\" вошел в чат");
                 chatMessageContentVc.addMessage(serverMessage);
+                */
 
                 for (ChatRoomObserver observer : observers) {
                     observer.connectUser(chatGroupDto, chatUserDto);

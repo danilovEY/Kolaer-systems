@@ -3,8 +3,10 @@ package ru.kolaer.client.usa.system.network;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.api.system.network.ChatTable;
 
@@ -57,5 +59,10 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     @Override
     public ServerResponse<ChatGroupDto> getGroupByRoomId(String roomId) {
         return getServerResponse(restTemplate, URL_GET_GROUP + roomId, ChatGroupDto.class, objectMapper);
+    }
+
+    @Override
+    public ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(String roomId) {
+        return getPageResponse(restTemplate, URL_GET_GROUP + roomId + "/messages", ChatMessageDto.class, objectMapper);
     }
 }

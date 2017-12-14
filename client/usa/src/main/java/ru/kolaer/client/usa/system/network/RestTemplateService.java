@@ -1,6 +1,6 @@
 package ru.kolaer.client.usa.system.network;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -24,9 +24,9 @@ import java.util.List;
  */
 public interface RestTemplateService extends TokenToHeader {
 
-    default <T> ServerResponse<Page<T>> getPageResponse(RestTemplate restTemplate, String url, ObjectMapper objectMapper) {
+    default <T> ServerResponse<Page<T>> getPageResponse(RestTemplate restTemplate, String url, Class<T> cls, ObjectMapper objectMapper) {
         try {
-            return getPageResponse(restTemplate.exchange(url, HttpMethod.GET, getHeader(), String.class), objectMapper);
+            return getPageResponse(restTemplate.exchange(url, HttpMethod.GET, getHeader(), String.class), cls, objectMapper);
         } catch (RestClientException ex) {
             return createServerExceptionMessage(url);
         }
@@ -105,13 +105,13 @@ public interface RestTemplateService extends TokenToHeader {
         return serverResponse;
     }
 
-    default <T> ServerResponse<Page<T>> getPageResponse(ResponseEntity<String> response, ObjectMapper objectMapper) {
+    default <T> ServerResponse<Page<T>> getPageResponse(ResponseEntity<String> response, Class<T> cls, ObjectMapper objectMapper) {
         ServerResponse<Page<T>> serverResponse = new ServerResponse<>();
         try {
             HttpStatus statusCode = response.getStatusCode();
 
             if (statusCode == HttpStatus.OK) {
-                serverResponse.setResponse(readPageValue(objectMapper, response.getBody()));
+                serverResponse.setResponse(readPageValue(objectMapper, response.getBody(), cls));
             } else {
                 serverResponse.setServerError(true);
                 serverResponse.setExceptionMessage(readException(objectMapper, response.getBody()));
@@ -135,10 +135,13 @@ public interface RestTemplateService extends TokenToHeader {
                 : null;
     }
 
-    default <T> Page<T> readPageValue(ObjectMapper objectMapper, String content) throws IOException {
-        return StringUtils.hasText(content)
-                ? objectMapper.readValue(content, new TypeReference<Page<T>>() {})
-                : Page.createPage();
+    default <T> Page<T> readPageValue(ObjectMapper objectMapper, String content, Class<T> cls) throws IOException {
+        if (StringUtils.hasText(content)) {
+            JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Page.class, cls);
+            return objectMapper.readValue(content, javaType);
+        } else {
+            return Page.createPage();
+        }
     }
 
     default ServerExceptionMessage readException(ObjectMapper objectMapper, String content) throws IOException {

@@ -26,7 +26,7 @@ public class ChatMessageEntity implements BaseEntity {
     @Column(name = "room", nullable = false)
     private String room;
 
-    @Column(name = "account_id", nullable = false)
+    @Column(name = "account_id")
     private Long accountId;
 
     @Temporal(TemporalType.TIMESTAMP)
