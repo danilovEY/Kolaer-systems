@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
@@ -39,6 +41,7 @@ public class ChatMessageVcImpl implements ChatMessageVc {
 
         Label copyable = new Label();
         copyable.setWrapText(true);
+        copyable.setFont(Font.font(null, FontWeight.BOLD, 20));
         copyable.setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
                 if(mouseEvent.getClickCount() == 2){

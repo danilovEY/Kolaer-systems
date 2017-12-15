@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
@@ -48,6 +50,9 @@ public class UserListVcImpl implements UserListVc {
                     setText("");
                 } else {
                     setText(item.getName());
+                    if(getFont().getSize() < 15) {
+                        setFont(Font.font(null, FontWeight.BOLD, 15));
+                    }
                 }
             }
         });

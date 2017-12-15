@@ -35,8 +35,8 @@ public class SessionDisconnectedEventListener implements ApplicationListener<Ses
 
             for (ChatGroupDto chatGroupDto : chatService.getAll()) {
                 if(chatGroupDto.getUsers().contains(chatUserDto)) {
-                    chatMessageDto.setId(null);
                     chatMessageDto.setRoom(chatGroupDto.getRoomId());
+                    chatMessageDto.setId(null);
                     chatService.send(chatMessageDto);
                 }
             }
