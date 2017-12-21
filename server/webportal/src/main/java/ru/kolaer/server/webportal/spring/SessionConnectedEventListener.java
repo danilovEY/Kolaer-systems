@@ -4,15 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
 
 import java.security.Principal;
 import java.util.Date;
-import java.util.Optional;
 
 /**
  * Created by danilovey on 20.11.2017.
@@ -40,7 +41,18 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
                 .getAccountWithEmployeeByLogin(user.getName());
 
         ChatUserDto chatUserDto = new ChatUserDto();
-        chatUserDto.setName(Optional.ofNullable(accountDto.getChatName()).orElse(user.getName()));
+
+        String username = accountDto.getChatName();
+        if(StringUtils.isEmpty(username)) {
+            EmployeeDto employee = accountDto.getEmployee();
+            if(employee != null) {
+                username = employee.getInitials();
+            } else {
+                username = accountDto.getUsername();
+            }
+        }
+
+        chatUserDto.setName(username);
         chatUserDto.setSessionId(sha.getSessionId());
         chatUserDto.setAccountId(accountDto.getId());
         chatUserDto.setAccount(accountDto);

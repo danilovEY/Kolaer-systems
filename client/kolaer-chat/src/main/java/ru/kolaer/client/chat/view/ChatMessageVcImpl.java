@@ -10,7 +10,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
@@ -90,7 +92,17 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             mainPane.setRight(copyable);
             mainPane.getStyleClass().add("chat-message-user");
         } else {
-            String message = chatMessageDto.getFromAccount().getChatName() +
+            String username = chatMessageDto.getFromAccount().getChatName();
+            if(StringUtils.isEmpty(username)) {
+                EmployeeDto employee = chatMessageDto.getFromAccount().getEmployee();
+                if(employee != null) {
+                    username = employee.getInitials();
+                } else {
+                    username = chatMessageDto.getFromAccount().getUsername();
+                }
+            }
+
+            String message = username +
                     System.lineSeparator() +
                     chatMessageDto.getMessage() +
                     System.lineSeparator() +

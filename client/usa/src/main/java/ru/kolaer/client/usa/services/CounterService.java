@@ -25,7 +25,7 @@ public class CounterService implements Service {
 
     @Override
     public String getName() {
-        return "ППР счетчик";
+        return "Счетчик";
     }
 
     @Override
@@ -107,7 +107,9 @@ public class CounterService implements Service {
                     long seconds = tempDateTime.until(ldt, ChronoUnit.SECONDS);
 
                     Tools.runOnWithOutThreadFX(() -> {
-                        ppr.setFoot(String.format("Текущие сутки ремонта: %d", daysStart + 1));
+                        if(ppr.getCounter().getTitle().contains("ППР")) {
+                            ppr.setFoot(String.format("Текущие сутки ремонта: %d", daysStart + 1));
+                        }
                         ppr.setTime(Math.toIntExact(months), Math.toIntExact(days), Math.toIntExact(hours), Math.toIntExact(minutes), Math.toIntExact(seconds));
 
                         if(years == 0 && months == 0 && days == 0 && hours == 0 && minutes == 0 && seconds == 0) {

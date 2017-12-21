@@ -46,4 +46,8 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="14-3" author="Danilov">
+        <dropNotNullConstraint tableName="chat_message" columnDataType="BIGINT" columnName="account_id"/>
+    </changeSet>
 </databaseChangeLog>

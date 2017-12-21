@@ -102,6 +102,12 @@ public class UserListVcImpl implements UserListVc {
                 consumer.accept(selectedItems);
             }
         });
+
+        usersListView.setOnMouseClicked(e -> {
+            if(e.getClickCount() == 2) {
+                createMessageToUser.getOnAction().handle(null);
+            }
+        });
     }
 
 }

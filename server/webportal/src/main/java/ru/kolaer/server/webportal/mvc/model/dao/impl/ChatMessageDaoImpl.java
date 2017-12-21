@@ -21,9 +21,14 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
     @Override
     @Transactional(readOnly = true)
     public List<ChatMessageEntity> findAllByRoom(String room, boolean withHide, Integer number, Integer pageSize) {
-        return getSession().createQuery("FROM " + getEntityName() + " WHERE room = :room AND hide = :hide ORDER BY id DESC", getEntityClass())
+        String sql = "FROM " + getEntityName() + " WHERE room = :room";
+        if(!withHide) {
+            sql += " AND hide = false";
+        }
+
+        sql += " ORDER BY id DESC";
+        return getSession().createQuery(sql, getEntityClass())
                 .setParameter("room", room)
-                .setParameter("hide", withHide)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .list();
@@ -32,20 +37,28 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
     @Override
     @Transactional(readOnly = true)
     public List<ChatMessageEntity> findAllByRoom(String room, boolean withHide) {
-        return getSession().createQuery("FROM " + getEntityName() + " WHERE room = :room AND hide = :hide ORDER BY id DESC",
-                getEntityClass())
+        String sql = "FROM " + getEntityName() + " WHERE room = :room";
+        if(!withHide) {
+            sql += " AND hide = false";
+        }
+
+        sql += " ORDER BY id DESC";
+        return getSession().createQuery(sql, getEntityClass())
                 .setParameter("room", room)
-                .setParameter("hide", withHide)
                 .list();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Long findCountByRoom(String room, boolean withHide) {
-        return getSession().createQuery("SELECT COUNT(id) FROM " + getEntityName() + " WHERE room = :room AND hide = :hide",
-                Long.class)
+        String sql = "SELECT COUNT(id) FROM " + getEntityName() + " WHERE room = :room";
+        if(!withHide) {
+            sql += " AND hide = false";
+        }
+
+        sql += " ORDER BY id DESC";
+        return getSession().createQuery(sql, Long.class)
                 .setParameter("room", room)
-                .setParameter("hide", withHide)
                 .uniqueResult();
     }
 
