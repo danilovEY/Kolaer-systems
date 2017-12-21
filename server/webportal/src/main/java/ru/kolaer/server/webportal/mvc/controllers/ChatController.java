@@ -15,7 +15,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatMessageService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
 
@@ -30,15 +29,12 @@ import java.util.List;
 @Slf4j
 public class ChatController {
     private final ChatService chatService;
-    private final AuthenticationService authenticationService;
     private final ChatMessageService chatMessageService;
 
     @Autowired
     public ChatController(ChatService chatService,
-                          AuthenticationService authenticationService,
                           ChatMessageService chatMessageService) {
         this.chatService = chatService;
-        this.authenticationService = authenticationService;
         this.chatMessageService = chatMessageService;
     }
 
@@ -62,8 +58,13 @@ public class ChatController {
     @UrlDeclaration(description = "Создать приватную группу пользователей чата", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/group/private", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ChatGroupDto createGroup(@RequestBody IdsDto idsDto, @RequestParam(required = false) String name) {
-        log.info(idsDto.toString());
         return chatService.createPrivateGroup(name, idsDto);
+    }
+
+    @UrlDeclaration(description = "Скрыть сообщения", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/message/hide", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void hideMessages(@RequestBody IdsDto idsDto) {
+        chatService.hideMessage(idsDto, true);
     }
 
     @UrlDeclaration(description = "Получить группу по id комнаты", requestMethod = RequestMethod.GET)

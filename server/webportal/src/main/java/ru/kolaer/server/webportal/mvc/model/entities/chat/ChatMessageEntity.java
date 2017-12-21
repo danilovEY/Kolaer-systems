@@ -40,4 +40,7 @@ public class ChatMessageEntity implements BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", insertable=false, updatable=false, nullable = false)
     private AccountEntity account;
+
+    @Column(name = "hide")
+    private boolean hide;
 }

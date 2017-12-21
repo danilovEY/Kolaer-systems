@@ -7,13 +7,19 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 02.11.2017.
@@ -73,6 +79,41 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
                 }
             }
         });
+
+        MenuItem hideMessages = new MenuItem("Удалить сообщение");
+        hideMessages.setOnAction(e -> {
+            ObservableList<ChatMessageDto> selectedMessages = chatMessageDtoListView.getSelectionModel().getSelectedItems();
+            if(selectedMessages.isEmpty()) {
+                return;
+            }
+
+            AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
+                    .getAuthentication()
+                    .getAuthorizedUser();
+
+            List<Long> removeMessage = selectedMessages.stream()
+                    .filter(message -> authorizedUser.isAccessOit() || authorizedUser.getId().equals(Optional
+                            .ofNullable(message.getFromAccount())
+                            .map(AccountDto::getId)
+                            .orElse(-1L)))
+                    .map(ChatMessageDto::getId)
+                    .collect(Collectors.toList());
+
+            ServerResponse serverResponse = UniformSystemEditorKitSingleton.getInstance()
+                    .getUSNetwork()
+                    .getKolaerWebServer()
+                    .getApplicationDataBase()
+                    .getChatTable()
+                    .hideMessage(new IdsDto(removeMessage));
+            if(serverResponse.isServerError()) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(serverResponse.getExceptionMessage());
+            }
+        });
+
+        chatMessageDtoListView.setContextMenu(new ContextMenu(hideMessages));
 
         Button button = new Button("Отправить");
         button.setPrefHeight(43);
@@ -136,5 +177,15 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
         serverMessage.setMessage(text);
 
         return serverMessage;
+    }
+
+    @Override
+    public List<ChatMessageDto> getMessages() {
+        return messages;
+    }
+
+    @Override
+    public void removeMessages(List<ChatMessageDto> messages) {
+        this.messages.removeAll(messages);
     }
 }

@@ -39,4 +39,11 @@
         <addNotNullConstraint tableName="chat_message" columnName="room" columnDataType="VARCHAR(255)"/>
     </changeSet>
 
+    <changeSet id="14-2" author="Danilov">
+        <addColumn tableName="chat_message">
+            <column name="hide" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

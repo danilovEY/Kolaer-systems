@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.view.BaseView;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -17,4 +18,7 @@ public interface ChatMessageContentVc extends BaseView<ChatMessageContentVc, Nod
     void addMessage(ChatMessageDto chatMessageDto);
 
     ChatMessageDto createServerMessage(String text);
+
+    List<ChatMessageDto> getMessages();
+    void removeMessages(List<ChatMessageDto> messages);
 }

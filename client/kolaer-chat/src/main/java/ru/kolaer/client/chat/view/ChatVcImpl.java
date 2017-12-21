@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by danilovey on 02.11.2017.
@@ -219,6 +221,20 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
                    createRoom(groupDtoServerResponse.getResponse());
                 });
             }
+        } else if(info.getCommand() == ChatInfoCommand.HIDE_MESSAGES) {
+            log.info(info.toString());
+            if(StringUtils.isEmpty(info.getData())) {
+                return;
+            }
+
+            List<Long> messageIds = Stream.of(info.getData().split(","))
+                    .map(Long::valueOf)
+                    .collect(Collectors.toList());
+
+            for (ChatRoomVc chatRoomVc : groupDtoMap.values()) {
+                chatRoomVc.removeMessages(messageIds);
+            }
+
         }
     }
 

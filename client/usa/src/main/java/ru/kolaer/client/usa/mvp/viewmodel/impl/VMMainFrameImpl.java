@@ -183,7 +183,7 @@ public class VMMainFrameImpl extends Application {
     private void initShutdownApplication() {
         stage.setOnCloseRequest(event -> {
             ExecutorService serviceThread = Executors.newSingleThreadExecutor();
-            CompletableFuture.runAsync(() -> {
+            CompletableFuture<Void> shutdownThread = CompletableFuture.runAsync(() -> {
                 Thread.currentThread().setName("Завершение приложения");
                 log.info("Завершение служб...");
                 servicesManager.removeAllServices();
@@ -215,6 +215,16 @@ public class VMMainFrameImpl extends Application {
                 System.exit(-9);
                 return null;
             });
+
+            serviceThread.shutdown();
+
+            try {
+                shutdownThread.get(10, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            System.exit(0);
         });
     }
 

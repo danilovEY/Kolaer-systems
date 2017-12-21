@@ -20,4 +20,6 @@ public interface ChatTable {
     ServerResponse<ChatGroupDto> createPrivateGroup(IdsDto idsDto, String name);
     ServerResponse<ChatGroupDto> getGroupByRoomId(String roomId);
     ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(String roomId);
+
+    ServerResponse hideMessage(IdsDto idsDto);
 }

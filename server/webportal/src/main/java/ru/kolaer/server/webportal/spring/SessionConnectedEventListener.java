@@ -44,6 +44,7 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
         chatUserDto.setSessionId(sha.getSessionId());
         chatUserDto.setAccountId(accountDto.getId());
         chatUserDto.setAccount(accountDto);
+        chatUserDto.setRoomName(accountDto.getId().toString());
 
         ChatUserDto oldActive = chatService.getUserByAccountId(accountDto.getId());
         if (oldActive != null) {

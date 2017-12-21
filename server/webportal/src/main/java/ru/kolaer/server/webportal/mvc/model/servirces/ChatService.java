@@ -39,4 +39,6 @@ public interface ChatService extends DefaultService<ChatGroupDto> {
     List<ChatGroupDto> getAllForUser();
 
     ChatGroupDto getMainGroup();
+
+    void hideMessage(IdsDto idsDto, boolean hide);
 }

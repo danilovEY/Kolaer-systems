@@ -24,4 +24,5 @@ public interface ChatRoomVc extends BaseView<ChatRoomVc, Tab>, ChatObserver, Cha
     ChatGroupDto getChatGroupDto();
 
     void addMessages(List<ChatMessageDto> messages);
+    void removeMessages(List<Long> messages);
 }

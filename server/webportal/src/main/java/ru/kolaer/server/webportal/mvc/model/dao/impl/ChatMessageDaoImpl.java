@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.ChatMessageDao;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatMessageEntity;
@@ -18,25 +19,42 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
     }
 
     @Override
-    public List<ChatMessageEntity> findAllByRoom(String room, Integer number, Integer pageSize) {
-        return getSession().createQuery("FROM " + getEntityName() + " WHERE room = :room ORDER BY id DESC", getEntityClass())
+    @Transactional(readOnly = true)
+    public List<ChatMessageEntity> findAllByRoom(String room, boolean withHide, Integer number, Integer pageSize) {
+        return getSession().createQuery("FROM " + getEntityName() + " WHERE room = :room AND hide = :hide ORDER BY id DESC", getEntityClass())
                 .setParameter("room", room)
+                .setParameter("hide", withHide)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .list();
     }
 
     @Override
-    public List<ChatMessageEntity> findAllByRoom(String room) {
-        return getSession().createQuery("FROM " + getEntityName() + " WHERE room = :room ORDER BY id DESC", getEntityClass())
+    @Transactional(readOnly = true)
+    public List<ChatMessageEntity> findAllByRoom(String room, boolean withHide) {
+        return getSession().createQuery("FROM " + getEntityName() + " WHERE room = :room AND hide = :hide ORDER BY id DESC",
+                getEntityClass())
                 .setParameter("room", room)
+                .setParameter("hide", withHide)
                 .list();
     }
 
     @Override
-    public Long findCountByRoom(String room) {
-        return getSession().createQuery("SELECT COUNT(id) FROM " + getEntityName() + " WHERE room = :room", Long.class)
+    @Transactional(readOnly = true)
+    public Long findCountByRoom(String room, boolean withHide) {
+        return getSession().createQuery("SELECT COUNT(id) FROM " + getEntityName() + " WHERE room = :room AND hide = :hide",
+                Long.class)
                 .setParameter("room", room)
+                .setParameter("hide", withHide)
                 .uniqueResult();
+    }
+
+    @Override
+    @Transactional
+    public void setHideOnIds(List<Long> ids, boolean hide) {
+        getSession().createQuery("UPDATE FROM " + getEntityName() + " SET hide = :hide WHERE id IN (:ids)")
+                .setParameterList("ids", ids)
+                .setParameter("hide", hide)
+                .executeUpdate();
     }
 }

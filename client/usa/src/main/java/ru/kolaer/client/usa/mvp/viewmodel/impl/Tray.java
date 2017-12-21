@@ -51,7 +51,7 @@ public class Tray {
 
             showItem.addActionListener(showStage);
             closeItem.addActionListener(e ->
-                    Tools.runOnWithOutThreadFX(stage::hide));
+                    Tools.runOnWithOutThreadFX(() -> stage.getOnCloseRequest().handle(null)));
 
             popup.add(showItem);
             popup.add(closeItem);

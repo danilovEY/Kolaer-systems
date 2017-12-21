@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 02.11.2017.
@@ -110,6 +111,20 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         messages.forEach(chatMessageContentVc::addMessage);
     }
 
+    @Override
+    public void removeMessages(List<Long> messages) {
+        if(messages == null || messages.isEmpty()) {
+            return;
+        }
+
+        List<ChatMessageDto> removedMessages = chatMessageContentVc.getMessages()
+                .stream()
+                .filter(message -> messages.contains(message.getId()))
+                .collect(Collectors.toList());
+
+        Tools.runOnWithOutThreadFX(() -> chatMessageContentVc.removeMessages(removedMessages));
+    }
+
     private void createMessageToUser(List<ChatUserDto> chatUserDto) {
         for (ChatRoomObserver observer : observers) {
             observer.createMessageToUser(chatGroupDto, chatUserDto);
@@ -148,7 +163,10 @@ public class ChatRoomVcImpl implements ChatRoomVc {
                 .getAuthorizedUser();
 
         if(authorizedUser != null && authorizedUser.getId() != null &&
-                !authorizedUser.getId().equals(message.getFromAccount().getId())) {
+                !authorizedUser.getId()
+                        .equals(Optional.ofNullable(message.getFromAccount())
+                                .map(AccountDto::getId)
+                                .orElse(-1L))) {
             for (ChatRoomObserver observer : observers) {
                 observer.getMessage(chatGroupDto, message);
             }

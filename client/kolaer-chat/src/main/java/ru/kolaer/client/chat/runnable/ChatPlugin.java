@@ -39,7 +39,7 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public void stop() throws Exception {
-
+        chatClient.close();
     }
 
     @Override

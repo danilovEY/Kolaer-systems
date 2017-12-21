@@ -97,7 +97,10 @@ public class UserListVcImpl implements UserListVc {
     @Override
     public void setOnCreateMessageToUser(Consumer<List<ChatUserDto>> consumer) {
         createMessageToUser.setOnAction(e -> {
-            consumer.accept(usersListView.getSelectionModel().getSelectedItems());
+            ObservableList<ChatUserDto> selectedItems = usersListView.getSelectionModel().getSelectedItems();
+            if(!selectedItems.isEmpty()) {
+                consumer.accept(selectedItems);
+            }
         });
     }
 

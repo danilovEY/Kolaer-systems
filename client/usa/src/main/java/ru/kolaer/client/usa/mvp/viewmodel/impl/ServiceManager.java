@@ -88,8 +88,8 @@ public class ServiceManager {
 
 	/**Удалить все службы.*/
 	public void removeAllServices() {
-		this.runnableService.entrySet().parallelStream().forEach(entity -> {
-			final Service service = entity.getKey();
+		this.runnableService.entrySet().forEach(entity -> {
+			Service service = entity.getKey();
 			service.stop();
 
 			if(!entity.getValue().isDone())

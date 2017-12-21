@@ -48,7 +48,7 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
     public List<ChatMessageDto> getAllByRoom(String room) {
         AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
         if(accountByAuthentication.isAccessOit() || chatInfoDao.existInvite(room, accountByAuthentication.getId())) {
-            return baseConverter.convertToDto(chatMessageDao.findAllByRoom(room));
+            return baseConverter.convertToDto(chatMessageDao.findAllByRoom(room, accountByAuthentication.isAccessOit()));
         }
 
         throw new CustomHttpCodeException("У вас нет доступа к чату!",
@@ -72,8 +72,9 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
                 count = (long) results.size();
                 pageSize = count.intValue();
             } else {
-                count = chatMessageDao.findCountByRoom(room);
-                results = baseConverter.convertToDto(chatMessageDao.findAllByRoom(room, number, pageSize));
+                count = chatMessageDao.findCountByRoom(room, accountByAuthentication.isAccessOit());
+                results = baseConverter.convertToDto(chatMessageDao
+                        .findAllByRoom(room, accountByAuthentication.isAccessOit(), number, pageSize));
             }
 
             return new Page<>(results, number, count, pageSize);

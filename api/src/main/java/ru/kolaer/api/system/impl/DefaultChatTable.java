@@ -36,6 +36,11 @@ public class DefaultChatTable implements ChatTable {
 
     @Override
     public ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(String roomId) {
-        return null;
+        return ServerResponse.createServerResponse();
+    }
+
+    @Override
+    public ServerResponse hideMessage(IdsDto idsDto) {
+        return ServerResponse.createServerResponse();
     }
 }

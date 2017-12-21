@@ -133,7 +133,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void send(ChatInfoDto chatInfoDto) {
         for (ChatUserDto chatUserDto : mainGroup.getUsers()) {
-            send(chatUserDto.getAccountId().toString(), chatInfoDto);
+            send(chatUserDto.getRoomName(), chatInfoDto);
         }
     }
 
@@ -315,5 +315,42 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public ChatGroupDto getMainGroup() {
         return mainGroup;
+    }
+
+    @Override
+    @Transactional
+    public void hideMessage(IdsDto idsDto, boolean hide) {
+        if(idsDto != null && idsDto.getIds() != null && !idsDto.getIds().isEmpty()) {
+            AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+            List<ChatMessageEntity> hideMessages = chatMessageDao.findById(idsDto.getIds())
+                    .stream()
+                    .filter(message -> accountByAuthentication.isAccessOit() || message.getAccountId().equals(accountByAuthentication.getId()))
+                    .collect(Collectors.toList());
+
+            if(hideMessages.isEmpty()) {
+                return;
+            }
+
+            chatMessageDao.setHideOnIds(hideMessages.stream()
+                    .map(ChatMessageEntity::getId)
+                    .collect(Collectors.toList()), hide);
+
+            ChatInfoDto chatInfoDto = new ChatInfoDto();
+            chatInfoDto.setData(idsDto.getIds().stream().map(String::valueOf).collect(Collectors.joining(",")));
+            chatInfoDto.setCreateInfo(new Date());
+            chatInfoDto.setCommand(ChatInfoCommand.HIDE_MESSAGES);
+            chatInfoDto.setAccount(accountByAuthentication);
+            chatInfoDto.setAccountId(accountByAuthentication.getId());
+
+            for (ChatMessageEntity chatMessageEntity : hideMessages) {
+                ChatGroupDto chatGroupDto = groups.get(chatMessageEntity.getRoom());
+                if(chatGroupDto != null && !chatGroupDto.getUsers().isEmpty()) {
+                    for (ChatUserDto chatUserDto : chatGroupDto.getUsers()) {
+                        chatInfoDto.setId(null);
+                        send(chatUserDto.getRoomName(), chatInfoDto);
+                    }
+                }
+            }
+        }
     }
 }

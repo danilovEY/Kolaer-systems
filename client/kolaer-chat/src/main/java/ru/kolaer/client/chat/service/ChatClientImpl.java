@@ -153,9 +153,15 @@ public class ChatClientImpl implements ChatClient {
 
     @Override
     public void close() {
+        if(waitConnect != null && !waitConnect.isDone()) {
+            waitConnect.cancel(true);
+        }
+
         Optional.ofNullable(session)
                 .ifPresent(StompSession::disconnect);
-        stompClient.stop();
+
+        Optional.ofNullable(stompClient)
+                .ifPresent(WebSocketStompClient::stop);
     }
 
     @Override

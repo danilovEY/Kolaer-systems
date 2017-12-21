@@ -20,6 +20,7 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     private final String URL_GET_ALL_ACTIVE;
     private final String URL_POST_CREATE_PRIVATE_GROUP;
     private final String URL_GET_GROUP;
+    private final String URL_HIDE_MESSAGES;
     private final String URL_GET_ACTIVE_BY_ACCOUNT_ID;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -28,6 +29,7 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     public ChatTableImpl(String url, RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
+        this.URL_HIDE_MESSAGES = url + "/message/hide";
         this.URL_GET_ALL_ACTIVE = url + "/active/all";
         this.URL_POST_CREATE_PRIVATE_GROUP = url + "/group/private";
         this.URL_GET_GROUP = url + "/group/";
@@ -64,5 +66,12 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     @Override
     public ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(String roomId) {
         return getPageResponse(restTemplate, URL_GET_GROUP + roomId + "/messages", ChatMessageDto.class, objectMapper);
+    }
+
+    @Override
+    public ServerResponse hideMessage(IdsDto idsDto) {
+        return postServerResponse(restTemplate, URL_HIDE_MESSAGES,
+                idsDto,
+                String.class, objectMapper);
     }
 }

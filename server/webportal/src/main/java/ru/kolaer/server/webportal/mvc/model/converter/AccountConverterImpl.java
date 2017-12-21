@@ -31,6 +31,8 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setEmail(dto.getEmail());
         accountEntity.setUsername(dto.getUsername());
         accountEntity.setChatName(dto.getChatName());
+        accountEntity.setAccessUser(dto.isAccessUser());
+        accountEntity.setAccessOit(dto.isAccessOit());
 
         accountEntity.setEmployeeId(Optional.ofNullable(dto.getEmployee())
                 .map(EmployeeDto::getId)
@@ -54,6 +56,8 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setEmail(model.getEmail());
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
+        accountDto.setAccessUser(model.isAccessUser());
+        accountDto.setAccessOit(model.isAccessOit());
 
         if(model.getEmployeeId() != null) {
             accountDto.setEmployee(employeeConverter.convertToDto(model.getEmployeeEntity()));
@@ -71,6 +75,8 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setEmail(model.getEmail());
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
+        accountDto.setAccessUser(model.isAccessUser());
+        accountDto.setAccessOit(model.isAccessOit());
 
         Optional.ofNullable(model.getEmployeeId())
                 .map(EmployeeDto::new)
