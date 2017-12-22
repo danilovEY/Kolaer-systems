@@ -114,7 +114,7 @@ public class DialogUSImpl implements DialogUS {
 									"Авторизироватся не удалось!");
 						}
 					} catch (Exception ex) {
-						updateMessage("Не удалось авторизоваться!!");
+						updateMessage("Не удалось авторизоваться!");
 						this.setException(ex);
 						Tools.runOnWithOutThreadFX(() ->
 								createErrorDialog("Ошибка!", "Неудалось авторизоватся!").show()

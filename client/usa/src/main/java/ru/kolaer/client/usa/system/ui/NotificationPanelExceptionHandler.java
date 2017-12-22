@@ -109,13 +109,15 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
     public void showErrorNotify(ServerExceptionMessage exceptionMessage) {
         log.info("Server error: {}", exceptionMessage.toString());
 
-        String title = exceptionMessage.getCode().getMessage();
-        String message = "(" + exceptionMessage.getStatus() + ") " +
-                exceptionMessage.getUrl() +
-                " - " + exceptionMessage.getMessage();
+        if(exceptionMessage.getStatus() != 0) {
+            String title = exceptionMessage.getCode().getMessage();
+            String message = "(" + exceptionMessage.getStatus() + ") " +
+                    exceptionMessage.getUrl() +
+                    " - " + exceptionMessage.getMessage();
 
-        this.sendMessage(this.vBoxNotifyMessage, ERROR_MESSAGE, title, message,
-                exceptionMessage.getExceptionTimestamp(), Collections.emptyList());
+            this.sendMessage(this.vBoxNotifyMessage, ERROR_MESSAGE, title, message,
+                    exceptionMessage.getExceptionTimestamp(), Collections.emptyList());
+        }
     }
 
     private void sendMessage(int type, String title, String text) {

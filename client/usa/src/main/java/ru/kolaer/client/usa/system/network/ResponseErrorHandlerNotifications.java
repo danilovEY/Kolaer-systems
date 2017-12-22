@@ -33,7 +33,7 @@ public class ResponseErrorHandlerNotifications extends DefaultResponseErrorHandl
                             this.getMessage(this.getExceptionMessageRequest(response))); break;
 
             case 403: notification
-                    .showErrorNotify("Не доступа!",
+                    .showErrorNotify("Нет доступа!",
                             this.getMessage(this.getExceptionMessageRequest(response))); break;
 
             case 503: notification

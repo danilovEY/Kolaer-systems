@@ -3,7 +3,6 @@ package ru.kolaer.client.usa.system.network;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
@@ -59,43 +58,37 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
 
         log.info("Авторизация для: {}", userAndPassJson.getUsername());
 
-            ServerResponse<TokenJson> response = postServerResponse(restTemplate, URL_TO_GET_TOKEN, userAndPassJson,
-                    TokenJson.class, objectMapper);
-            if(response.isServerError()) {
-                ServerExceptionMessage exceptionMessage = response.getExceptionMessage();
-                log.error("Error: {}", exceptionMessage);
+        ServerResponse<TokenJson> response = postServerResponse(restTemplate, URL_TO_GET_TOKEN, userAndPassJson,
+                TokenJson.class, objectMapper);
+        if(response.isServerError()) {
+            UniformSystemEditorKitSingleton.getInstance()
+                    .getUISystemUS()
+                    .getNotification()
+                    .showErrorNotify(response.getExceptionMessage());
+        } else {
+            this.tokenJson = response.getResponse();
+            log.info("Токен получен: {}", tokenJson);
 
+            ServerResponse<AccountDto> accountServerResponse = getServerResponse(restTemplate, URL_TO_GET_USER +
+                            "?token=" + this.tokenJson.getToken(),
+                    AccountDto.class,
+                    objectMapper);
+
+            if(accountServerResponse.isServerError()) {
                 UniformSystemEditorKitSingleton.getInstance()
                         .getUISystemUS()
                         .getNotification()
-                        .showErrorNotify(exceptionMessage);
+                        .showErrorNotify(accountServerResponse.getExceptionMessage());
             } else {
-                this.tokenJson = response.getResponse();
-                log.info("Токен получен: {}", tokenJson);
-
-                ServerResponse<AccountDto> accountServerResponse = getServerResponse(restTemplate, URL_TO_GET_USER +
-                                "?token=" + this.tokenJson.getToken(),
-                        AccountDto.class,
-                        objectMapper);
-
-                if(accountServerResponse.isServerError()) {
-                    ServerExceptionMessage exceptionMessage = accountServerResponse.getExceptionMessage();
-                    log.error("Error: {}", exceptionMessage);
-
-                    UniformSystemEditorKitSingleton.getInstance()
-                            .getUISystemUS()
-                            .getNotification()
-                            .showErrorNotify(exceptionMessage);
-                } else {
-                    accountsEntity = accountServerResponse.getResponse();
-                    log.info("Пользователь получен: {}", accountsEntity);
-                    isAuth = true;
-                    notifyObserversLogin();
-                    return true;
-                }
+                accountsEntity = accountServerResponse.getResponse();
+                log.info("Пользователь получен: {}", accountsEntity);
+                isAuth = true;
+                notifyObserversLogin();
+                return true;
             }
+        }
 
-            return false;
+        return false;
     }
 
     @Override

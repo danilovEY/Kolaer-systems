@@ -74,7 +74,7 @@ public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
 
         final String urlPath = this.logException(hRequest, exception);
 
-        return new ServerExceptionMessage(FORBIDDEN_CODE, urlPath, exception.getMessage(),
+        return new ServerExceptionMessage(FORBIDDEN_CODE, urlPath, "Неправильный логин или пароль",
                 ErrorCode.FORBIDDEN);
     }
 
