@@ -24,7 +24,7 @@ public class Launcher {
 
 	public static void main(final String[] args) {
 		if(containsKey(MULTIPLE_KEY, args) || !appIsRun()) {
-			delete(new File(pathToCache));
+			delete(new File(pathToRunFile));
 			Platform.setImplicitExit(false);
 			Application.launch(VMMainFrameImpl.class ,args);
 		} else {
