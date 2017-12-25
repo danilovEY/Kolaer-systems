@@ -104,7 +104,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
         groupDtoMap.put(chatGroupDto.getRoomId(), chatRoomVc);
         chatRoomVc.addObserver(this);
-        chatRoomVc.addObserver(notificationMessagePane);
+        //chatRoomVc.addObserver(notificationMessagePane);
 
         if(chatClient.isConnect()) {
             chatRoomVc.connect(chatClient);

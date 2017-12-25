@@ -30,6 +30,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
     private final ChatMessageContentVc chatMessageContentVc;
     private final UserListVc userListVc;
+    private final String title;
 
     private String subscriptionId;
 
@@ -41,16 +42,25 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         this.chatGroupDto = chatGroupDto;
         this.chatMessageContentVc = new ChatMessageContentVcImpl(chatGroupDto);
         this.userListVc = new UserListVcImpl(chatGroupDto);
+
+        this.title = generateTitle(chatGroupDto);
     }
 
     @Override
     public void initView(Consumer<ChatRoomVc> viewVisit) {
+
         mainTab = new Tab();
-        mainTab.setText(generateTitle(chatGroupDto));
+        mainTab.setText(title);
         mainTab.setOnClosed(e -> {
             //if(chatClient != null) {
             //    disconnect(chatClient);
             //}
+        });
+
+        mainTab.setOnSelectionChanged(e -> {
+            if(mainTab.isSelected()) {
+                mainTab.setText(title);
+            }
         });
 
         SplitPane splitPane = new SplitPane();

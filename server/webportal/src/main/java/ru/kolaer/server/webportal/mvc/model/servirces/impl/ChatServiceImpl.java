@@ -174,11 +174,16 @@ public class ChatServiceImpl implements ChatService {
 
         AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
 
-        String roomId = createRoomId(accountByAuthentication.getId(), idsDto.getIds().get(0));
+        List<Long> allUserIds = new ArrayList<>(idsDto.getIds());
+        allUserIds.add(accountByAuthentication.getId());
 
-        ChatGroupDto group = groups.containsKey(roomId)
-                ? groups.get(roomId)
-                : createGroup(name);
+        String roomId = createRoomId(allUserIds);
+
+        if(groups.containsKey(roomId)) {
+            return groups.get(roomId);
+        }
+
+        ChatGroupDto group = createGroup(name);
 
         group.setType(ChatGroupType.PRIVATE);
         group.setRoomId(roomId);
@@ -186,15 +191,12 @@ public class ChatServiceImpl implements ChatService {
 
         List<ChatUserDto> activeUserToGroup = mainGroup.getUsers()
                 .stream()
-                .filter(user -> idsDto.getIds().contains(user.getAccountId()) ||
-                        user.getAccountId().equals(accountByAuthentication.getId()))
+                .filter(user -> allUserIds.contains(user.getAccountId()))
                 .collect(Collectors.toList());
         group.getUsers().addAll(activeUserToGroup);
 
         if(StringUtils.isEmpty(group.getName())) {
-            idsDto.getIds().add(accountByAuthentication.getId());
-
-            String groupName = accountDao.findById(idsDto.getIds())
+            String groupName = accountDao.findById(allUserIds)
                     .stream()
                     .map(this::accountsToChatGroupName)
                     .collect(Collectors.joining(","));
@@ -227,13 +229,12 @@ public class ChatServiceImpl implements ChatService {
                 "]";
     }
 
-    private String createRoomId(@NonNull Long fromAccountId, @NonNull Long toAccountId) {
-        String roomId = key;
-        if(fromAccountId < toAccountId) {
-            roomId += fromAccountId.toString() + toAccountId.toString();
-        } else {
-            roomId += toAccountId.toString() + fromAccountId.toString();
-        }
+    private String createRoomId(@NonNull List<Long> accountIds) {
+        String roomId = key + accountIds
+                .stream()
+                .sorted(Long::compareTo)
+                .map(Object::toString)
+                .collect(Collectors.joining(""));
 
         return stringToHash(roomId);
     }
