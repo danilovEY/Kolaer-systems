@@ -78,7 +78,7 @@ public interface RestTemplateService extends TokenToHeader {
                 serverResponse.setExceptionMessage(readException(objectMapper, response.getBody()));
             }
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось прочитать ответ с сервера", e);
+            throw new RuntimeException("Не удалось прочитать ответ с сервера. Требуется перезапуск.", e);
         }
 
         return serverResponse;
@@ -99,7 +99,7 @@ public interface RestTemplateService extends TokenToHeader {
                 serverResponse.setExceptionMessage(readException(objectMapper, response.getBody()));
             }
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось прочитать ответ с сервера", e);
+            throw new RuntimeException("Не удалось прочитать ответ с сервера. Требуется перезапуск.", e);
         }
 
         return serverResponse;
@@ -117,7 +117,7 @@ public interface RestTemplateService extends TokenToHeader {
                 serverResponse.setExceptionMessage(readException(objectMapper, response.getBody()));
             }
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось прочитать ответ с сервера", e);
+            throw new RuntimeException("Не удалось прочитать ответ с сервера. Требуется перезапуск.", e);
         }
 
         return serverResponse;

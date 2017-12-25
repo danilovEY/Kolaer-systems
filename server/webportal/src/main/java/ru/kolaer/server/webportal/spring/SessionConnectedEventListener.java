@@ -76,7 +76,7 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
 
         ChatMessageDto chatMessageDto = new ChatMessageDto();
         chatMessageDto.setCreateMessage(new Date());
-        chatMessageDto.setType(ChatMessageType.SERVER);
+        chatMessageDto.setType(ChatMessageType.SERVER_INFO);
         chatMessageDto.setMessage("Пользователь \"" + chatUserDto.getName() + "\" вошел в чат");
 
         for (ChatGroupDto chatGroupDto : chatService.getAll()) {

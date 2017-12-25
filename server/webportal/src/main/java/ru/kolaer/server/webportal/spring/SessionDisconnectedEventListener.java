@@ -30,8 +30,8 @@ public class SessionDisconnectedEventListener implements ApplicationListener<Ses
         if(chatUserDto != null) {
             ChatMessageDto chatMessageDto = new ChatMessageDto();
             chatMessageDto.setCreateMessage(new Date());
-            chatMessageDto.setType(ChatMessageType.SERVER);
-            //chatMessageDto.setMessage("Пользователь \"" + chatUserDto.getName() + "\" вышел из чата");
+            chatMessageDto.setType(ChatMessageType.SERVER_INFO);
+            chatMessageDto.setMessage("Пользователь \"" + chatUserDto.getName() + "\" вышел из чата");
 
             for (ChatGroupDto chatGroupDto : chatService.getAll()) {
                 if(chatGroupDto.getUsers().contains(chatUserDto)) {

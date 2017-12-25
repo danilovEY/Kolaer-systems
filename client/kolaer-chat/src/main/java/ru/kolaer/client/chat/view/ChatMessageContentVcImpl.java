@@ -172,7 +172,7 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     @Override
     public ChatMessageDto createServerMessage(String text) {
         ChatMessageDto serverMessage = new ChatMessageDto();
-        serverMessage.setType(ChatMessageType.SERVER);
+        serverMessage.setType(ChatMessageType.SERVER_INFO);
         serverMessage.setCreateMessage(new Date());
         serverMessage.setMessage(text);
 

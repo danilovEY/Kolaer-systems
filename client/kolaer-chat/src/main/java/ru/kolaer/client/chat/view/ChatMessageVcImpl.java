@@ -71,7 +71,7 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             }
         });
 
-        if(chatMessageDto.getType() == ChatMessageType.SERVER) {
+        if(chatMessageDto.getType() == ChatMessageType.SERVER_INFO) {
             String message = chatMessageDto.getMessage() +
                     System.lineSeparator() +
                     Tools.dateTimeToString(chatMessageDto.getCreateMessage());

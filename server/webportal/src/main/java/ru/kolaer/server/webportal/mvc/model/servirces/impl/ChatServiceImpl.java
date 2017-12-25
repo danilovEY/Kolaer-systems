@@ -11,7 +11,6 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
@@ -107,9 +106,10 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void removeFromAllGroup(ChatUserDto chatUserDto) {
-        for (ChatGroupDto chatGroupDto : groups.values()) {
-            chatGroupDto.getUsers().removeIf(user -> user.getSessionId().equals(chatUserDto.getSessionId()));
-        }
+        groups.values().removeIf(group -> {
+            group.getUsers().removeIf(user -> user.getSessionId().equals(chatUserDto.getSessionId()));
+            return group.getType() == ChatGroupType.PRIVATE && group.getUsers().isEmpty();
+        });
     }
 
     @Override
@@ -175,14 +175,21 @@ public class ChatServiceImpl implements ChatService {
         group.setRoomId(roomId);
         group.setUserCreated(accountByAuthentication);
 
-        if(StringUtils.isEmpty(group.getName())) {
+        List<ChatUserDto> activeUserToGroup = mainGroup.getUsers()
+                .stream()
+                .filter(user -> idsDto.getIds().contains(user.getAccountId()) ||
+                        user.getAccountId().equals(accountByAuthentication.getId()))
+                .collect(Collectors.toList());
+        group.getUsers().addAll(activeUserToGroup);
+
+        /*if(StringUtils.isEmpty(group.getName())) {
             String groupName = accountDao.findById(idsDto.getIds())
                     .stream()
                     .map(this::accountsToChatGroupName)
                     .collect(Collectors.joining(","));
 
             group.setName(groupName);
-        }
+        }*/
 
         groups.put(group.getRoomId(), group);
 
