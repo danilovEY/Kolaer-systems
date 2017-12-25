@@ -9,4 +9,5 @@ public interface AuthenticationService {
     AccountDto getAccountWithEmployeeByLogin(String login);
     AccountDto getAccountByAuthentication();
     byte[] getAccountPhoto(String login);
+    AccountDto resetOnLogin(String login);
 }

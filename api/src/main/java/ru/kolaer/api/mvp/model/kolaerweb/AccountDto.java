@@ -15,4 +15,5 @@ public class AccountDto implements BaseDto{
     private EmployeeDto employee;
     private boolean accessOit;
     private boolean accessUser = true;
+    private boolean accessWriteMainChat;
 }

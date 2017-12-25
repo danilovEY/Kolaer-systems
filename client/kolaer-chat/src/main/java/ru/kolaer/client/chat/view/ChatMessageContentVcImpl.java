@@ -11,6 +11,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
@@ -65,21 +66,6 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
 
         mainPane.setCenter(scrollPane);
 
-        textArea = new TextArea();
-        textArea.setPromptText("Введите сообщение...");
-        textArea.setMaxHeight(Double.MAX_VALUE);
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER) {
-                if(keyEvent.isControlDown()) {
-                    textArea.appendText(System.getProperty("line.separator"));
-                } else {
-                    sendMessage();
-                    keyEvent.consume();
-                }
-            }
-        });
-
         MenuItem hideMessages = new MenuItem("Удалить сообщение");
         hideMessages.setOnAction(e -> {
             ObservableList<ChatMessageDto> selectedMessages = chatMessageDtoListView.getSelectionModel().getSelectedItems();
@@ -115,18 +101,40 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
 
         chatMessageDtoListView.setContextMenu(new ContextMenu(hideMessages));
 
-        Button button = new Button("Отправить");
-        button.setPrefHeight(43);
-        button.setPrefWidth(150);
-        button.setMaxHeight(Double.MAX_VALUE);
-        button.setOnAction(e -> sendMessage());
+        if(chatGroupDto.getType() != ChatGroupType.MAIN ||
+                (chatGroupDto.getType() == ChatGroupType.MAIN &&
+                        UniformSystemEditorKitSingleton.getInstance()
+                                .getAuthentication()
+                                .getAuthorizedUser()
+                                .isAccessWriteMainChat())) {
+            textArea = new TextArea();
+            textArea.setPromptText("Введите сообщение...");
+            textArea.setMaxHeight(Double.MAX_VALUE);
+            textArea.setMaxWidth(Double.MAX_VALUE);
+            textArea.setOnKeyPressed(keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    if (keyEvent.isControlDown()) {
+                        textArea.appendText(System.getProperty("line.separator"));
+                    } else {
+                        sendMessage();
+                        keyEvent.consume();
+                    }
+                }
+            });
 
-        BorderPane inputPane = new BorderPane();
-        inputPane.setCenter(textArea);
-        inputPane.setRight(button);
-        inputPane.setMaxHeight(50);
+            Button button = new Button("Отправить");
+            button.setPrefHeight(43);
+            button.setPrefWidth(150);
+            button.setMaxHeight(Double.MAX_VALUE);
+            button.setOnAction(e -> sendMessage());
 
-        mainPane.setBottom(inputPane);
+            BorderPane inputPane = new BorderPane();
+            inputPane.setCenter(textArea);
+            inputPane.setRight(button);
+            inputPane.setMaxHeight(50);
+
+            mainPane.setBottom(inputPane);
+        }
 
         viewVisit.accept(this);
     }

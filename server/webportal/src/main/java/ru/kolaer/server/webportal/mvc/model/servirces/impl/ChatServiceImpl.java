@@ -11,10 +11,13 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.error.ErrorCode;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
+import ru.kolaer.server.webportal.exception.CustomHttpCodeException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.ChatMessageConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
@@ -148,12 +151,18 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional
     public void send(ChatMessageDto message) {
-        log.debug("messages: {}", message);
+        if(message.getType() != ChatMessageType.SERVER_INFO &&
+                getByRoomId(message.getRoom()).getType() == ChatGroupType.MAIN &&
+                !message.getFromAccount().isAccessWriteMainChat()) {
+            throw new CustomHttpCodeException("Нет доступа для записи сообщения в этот чат", ErrorCode.FORBIDDEN);
+        } else {
+            log.debug("messages: {}", message);
 
-        ChatMessageEntity save = chatMessageDao.save(chatMessageConverter.convertToModel(message));
-        message.setId(save.getId());
+            ChatMessageEntity save = chatMessageDao.save(chatMessageConverter.convertToModel(message));
+            message.setId(save.getId());
 
-        simpMessagingTemplate.convertAndSend("/topic/chats." + message.getRoom(), message);
+            simpMessagingTemplate.convertAndSend("/topic/chats." + message.getRoom(), message);
+        }
     }
 
     @Override
@@ -182,14 +191,16 @@ public class ChatServiceImpl implements ChatService {
                 .collect(Collectors.toList());
         group.getUsers().addAll(activeUserToGroup);
 
-        /*if(StringUtils.isEmpty(group.getName())) {
+        if(StringUtils.isEmpty(group.getName())) {
+            idsDto.getIds().add(accountByAuthentication.getId());
+
             String groupName = accountDao.findById(idsDto.getIds())
                     .stream()
                     .map(this::accountsToChatGroupName)
                     .collect(Collectors.joining(","));
 
             group.setName(groupName);
-        }*/
+        }
 
         groups.put(group.getRoomId(), group);
 

@@ -11,6 +11,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
@@ -37,7 +39,7 @@ import java.util.concurrent.*;
  * @version 0.1
  */
 @Slf4j
-public class VMMainFrameImpl extends Application {
+public class VMMainFrameImpl extends Application implements AuthenticationObserver {
     /**
      * Мапа где ключ и значение соответствует ключам и значениям приложения.
      */
@@ -250,6 +252,7 @@ public class VMMainFrameImpl extends Application {
         uiSystemUS.setMainStage(stage);
 
         authentication.registerObserver(menuBarUS);
+        authentication.registerObserver(this);
 
         Tools.runOnWithOutThreadFX(() ->  {
             notify.initView(initNotify -> {
@@ -318,5 +321,15 @@ public class VMMainFrameImpl extends Application {
         stage.show();
 
         initialize();
+    }
+
+    @Override
+    public void login(AccountDto account) {
+
+    }
+
+    @Override
+    public void logout(AccountDto account) {
+        Tools.runOnWithOutThreadFX(() -> stage.getOnCloseRequest().handle(null));
     }
 }

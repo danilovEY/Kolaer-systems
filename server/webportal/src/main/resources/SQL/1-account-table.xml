@@ -37,4 +37,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1-2" author="Danilov">
+        <addColumn tableName="account">
+            <column name="access_write_main_chat" defaultValueBoolean="false" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -45,4 +45,7 @@ public class AccountEntity implements BaseEntity {
     @Column(name = "access_user", nullable = false)
     private boolean accessUser = true;
 
+    @Column(name = "access_write_main_chat", nullable = false)
+    private boolean accessWriteMainChat;
+
 }

@@ -158,9 +158,11 @@ public class ChatClientImpl implements ChatClient {
         }
 
         Optional.ofNullable(session)
+                .filter(StompSession::isConnected)
                 .ifPresent(StompSession::disconnect);
 
         Optional.ofNullable(stompClient)
+                .filter(WebSocketStompClient::isRunning)
                 .ifPresent(WebSocketStompClient::stop);
     }
 

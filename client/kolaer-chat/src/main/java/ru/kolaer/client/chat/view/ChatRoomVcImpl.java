@@ -52,11 +52,6 @@ public class ChatRoomVcImpl implements ChatRoomVc {
             //    disconnect(chatClient);
             //}
         });
-        /*mainTab.setOnSelectionChanged(e -> {
-            if(mainTab.isSelected()) {
-                mainTab.setText(chatGroupDto.getName());
-            }
-        });*/
 
         SplitPane splitPane = new SplitPane();
         splitPane.setDividerPositions(0.3);
@@ -230,11 +225,6 @@ public class ChatRoomVcImpl implements ChatRoomVc {
             Tools.runOnWithOutThreadFX(() -> {
                 userListVc.addUser(chatUserDto);
 
-                /*/ChatMessageDto serverMessage = chatMessageContentVc
-                        .createServerMessage("Пользователь \"" + chatUserDto.getName() + "\" вошел в чат");
-                chatMessageContentVc.addMessage(serverMessage);
-                */
-
                 for (ChatRoomObserver observer : observers) {
                     observer.connectUser(chatGroupDto, chatUserDto);
                 }
@@ -256,14 +246,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
             chatGroupDto.getUsers().remove(chatUserDto);
 
             if(isViewInit()) {
-                Tools.runOnWithOutThreadFX(() -> {
-                    userListVc.removeUser(chatUserDto);
-
-                    /*ChatMessageDto serverMessage = chatMessageContentVc
-                            .createServerMessage("Пользователь \"" + chatUserDto.getName() + "\" вышел из чата");
-                    chatMessageContentVc.addMessage(serverMessage);
-                    */
-                });
+                Tools.runOnWithOutThreadFX(() -> userListVc.removeUser(chatUserDto));
             }
 
             for (ChatRoomObserver observer : observers) {

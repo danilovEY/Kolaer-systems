@@ -122,6 +122,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return null;
     }
 
+    @Override
+    @CacheEvict(value = "accounts", key = "#login", cacheManager = "springCM")
+    public AccountDto resetOnLogin(String login) {
+        return getAccountWithEmployeeByLogin(login);
+    }
+
     @PreDestroy
     @CacheEvict(value = "accounts", cacheManager = "springCM")
     public void destroy() {
