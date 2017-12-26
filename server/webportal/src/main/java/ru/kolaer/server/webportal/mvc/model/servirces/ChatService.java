@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoDto;
@@ -12,8 +13,8 @@ import java.util.List;
  * Created by danilovey on 02.11.2017.
  */
 public interface ChatService extends DefaultService<ChatGroupDto> {
-    ChatUserDto addActiveUserToMain(ChatUserDto dto);
-    void removeActiveUserFromMain(ChatUserDto dto);
+    ChatUserDto addActiveUser(ChatUserDto dto);
+    void removeActiveUser(ChatUserDto dto);
 
     ChatUserDto getUser(String sessionId);
 
@@ -41,4 +42,6 @@ public interface ChatService extends DefaultService<ChatGroupDto> {
     ChatGroupDto getMainGroup();
 
     void hideMessage(IdsDto idsDto, boolean hide);
+
+    ChatUserDto createChatUserDto(AccountDto accountDto);
 }

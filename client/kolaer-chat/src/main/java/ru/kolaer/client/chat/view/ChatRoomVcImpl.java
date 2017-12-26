@@ -2,6 +2,7 @@ package ru.kolaer.client.chat.view;
 
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -9,6 +10,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 /**
  * Created by danilovey on 02.11.2017.
  */
+@Slf4j
 public class ChatRoomVcImpl implements ChatRoomVc {
     private final List<ChatRoomObserver> observers = new ArrayList<>();
     private final ChatGroupDto chatGroupDto;
@@ -219,21 +223,62 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     public void connect(ChatClient chatClient) {
         this.chatClient = chatClient;
         chatClient.subscribeRoom(chatGroupDto.getRoomId(), this);
+
+        if(chatGroupDto.getType() != ChatGroupType.MAIN) {
+            ServerResponse<ChatGroupDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
+                    .getInstance()
+                    .getUSNetwork()
+                    .getKolaerWebServer()
+                    .getApplicationDataBase()
+                    .getChatTable()
+                    .getGroupByRoomId(chatGroupDto.getRoomId());
+
+            if (!groupDtoServerResponse.isServerError() && groupDtoServerResponse.getResponse() == null) {
+                createGroup();
+            } else {
+                log.error("{}", groupDtoServerResponse.getExceptionMessage());
+            }
+        }
+    }
+
+    private void createGroup() {
+        IdsDto idsAccounts = new IdsDto(chatGroupDto.getUsers()
+                .stream()
+                .map(ChatUserDto::getAccountId)
+                .collect(Collectors.toList()));
+
+        ServerResponse<ChatGroupDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
+                .getInstance()
+                .getUSNetwork()
+                .getKolaerWebServer()
+                .getApplicationDataBase()
+                .getChatTable()
+                .createPrivateGroup(idsAccounts, chatGroupDto.getName());
+
+        if(groupDtoServerResponse.isServerError()) {
+            UniformSystemEditorKitSingleton.getInstance()
+                    .getUISystemUS()
+                    .getNotification()
+                    .showErrorNotify(groupDtoServerResponse.getExceptionMessage());
+        }
     }
 
     @Override
     public void disconnect(ChatClient chatClient) {
         chatClient.unSubscribe(this);
-        this.chatClient = null;
     }
 
     @Override
     public void connectUser(ChatUserDto chatUserDto) {
-        chatGroupDto.getUsers().add(chatUserDto);
+        if(chatGroupDto.getType() == ChatGroupType.MAIN) {
+            chatGroupDto.getUsers().add(chatUserDto);
+        }
 
         if(isViewInit()) {
             Tools.runOnWithOutThreadFX(() -> {
-                userListVc.addUser(chatUserDto);
+                if(isViewInit()) {
+                    userListVc.addUser(chatUserDto);
+                }
 
                 for (ChatRoomObserver observer : observers) {
                     observer.connectUser(chatGroupDto, chatUserDto);
@@ -253,7 +298,9 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         if(chatUserDtoOptional.isPresent()) {
             ChatUserDto chatUserDto = chatUserDtoOptional.get();
 
-            chatGroupDto.getUsers().remove(chatUserDto);
+            if(chatGroupDto.getType() == ChatGroupType.MAIN) {
+                chatGroupDto.getUsers().remove(chatUserDto);
+            }
 
             if(isViewInit()) {
                 Tools.runOnWithOutThreadFX(() -> userListVc.removeUser(chatUserDto));

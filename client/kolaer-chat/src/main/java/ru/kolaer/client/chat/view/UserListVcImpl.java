@@ -86,12 +86,19 @@ public class UserListVcImpl implements UserListVc {
 
     @Override
     public void addUser(ChatUserDto chatUserDto) {
-        items.add(chatUserDto);
+        boolean containsUser = chatGroupDto.getUsers()
+                .stream()
+                .map(ChatUserDto::getAccountId)
+                .anyMatch(accId -> accId.equals(chatUserDto.getAccountId()));
+
+        if(containsUser) {
+            items.add(chatUserDto);
+        }
     }
 
     @Override
     public void removeUser(ChatUserDto chatUserDto) {
-        items.remove(chatUserDto);
+        items.removeIf(userDto -> userDto.getAccountId().equals(chatUserDto.getAccountId()));
     }
 
     @Override

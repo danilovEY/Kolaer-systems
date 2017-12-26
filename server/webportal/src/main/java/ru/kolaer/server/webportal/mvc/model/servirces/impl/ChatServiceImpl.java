@@ -14,11 +14,13 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.error.ErrorCode;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.server.webportal.exception.CustomHttpCodeException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
 import ru.kolaer.server.webportal.mvc.model.converter.ChatMessageConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.dao.ChatMessageDao;
@@ -33,6 +35,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +54,7 @@ public class ChatServiceImpl implements ChatService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final AuthenticationService authenticationService;
     private final AccountDao accountDao;
+    private final AccountConverter accountConverter;
     private final ChatMessageDao chatMessageDao;
     private final ChatMessageConverter chatMessageConverter;
 
@@ -58,13 +62,16 @@ public class ChatServiceImpl implements ChatService {
                            ChatInfoService chatInfoService,
                            SimpMessagingTemplate simpMessagingTemplate,
                            AuthenticationService authenticationService,
-                           AccountDao accountDao, ChatMessageDao chatMessageDao,
+                           AccountDao accountDao,
+                           AccountConverter accountConverter,
+                           ChatMessageDao chatMessageDao,
                            ChatMessageConverter chatMessageConverter) {
         this.key = key;
         this.chatInfoService = chatInfoService;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.authenticationService = authenticationService;
         this.accountDao = accountDao;
+        this.accountConverter = accountConverter;
         this.chatMessageDao = chatMessageDao;
         this.chatMessageConverter = chatMessageConverter;
     }
@@ -79,14 +86,26 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatUserDto addActiveUserToMain(ChatUserDto dto) {
+    public ChatUserDto addActiveUser(ChatUserDto dto) {
+        for (ChatGroupDto chatGroupDto : groups.values()) {
+            for (ChatUserDto chatUserDto : chatGroupDto.getUsers()) {
+                if(chatUserDto.getAccountId().equals(dto.getAccountId()) &&
+                        chatUserDto.getSessionId() == null) {
+                    chatUserDto.setSessionId(dto.getSessionId());
+                }
+            }
+        }
+
         mainGroup.getUsers().add(dto);
+
         return dto;
     }
 
     @Override
-    public void removeActiveUserFromMain(ChatUserDto dto) {
-        mainGroup.getUsers().remove(dto);
+    public void removeActiveUser(ChatUserDto dto) {
+        for (ChatGroupDto chatGroupDto : groups.values()) {
+            chatGroupDto.getUsers().remove(dto);
+        }
     }
 
     @Override
@@ -109,10 +128,21 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void removeFromAllGroup(ChatUserDto chatUserDto) {
-        groups.values().removeIf(group -> {
-            group.getUsers().removeIf(user -> user.getSessionId().equals(chatUserDto.getSessionId()));
-            return group.getType() == ChatGroupType.PRIVATE && group.getUsers().isEmpty();
-        });
+        mainGroup.getUsers().removeIf(user -> chatUserDto.getSessionId().equals(user.getSessionId()));
+
+        for (ChatGroupDto chatGroupDto : groups.values()) {
+            for (ChatUserDto userDto : chatGroupDto.getUsers()) {
+                if(Objects.equals(chatUserDto.getSessionId(), userDto.getSessionId())) {
+                    userDto.setSessionId(null);
+                }
+            }
+        }
+
+        groups.values().removeIf(group -> group.getType() == ChatGroupType.PRIVATE &&
+                (group.getUsers().isEmpty() || group.getUsers()
+                        .stream()
+                        .map(ChatUserDto::getSessionId)
+                        .allMatch(StringUtils::isEmpty)));
     }
 
     @Override
@@ -152,7 +182,9 @@ public class ChatServiceImpl implements ChatService {
     @Transactional
     public void send(ChatMessageDto message) {
         if(message.getType() != ChatMessageType.SERVER_INFO &&
-                getByRoomId(message.getRoom()).getType() == ChatGroupType.MAIN &&
+                Optional.ofNullable(getByRoomId(message.getRoom()))
+                        .map(ChatGroupDto::getType)
+                        .orElse(ChatGroupType.PUBLIC) == ChatGroupType.MAIN &&
                 !message.getFromAccount().isAccessWriteMainChat()) {
             throw new CustomHttpCodeException("Нет доступа для записи сообщения в этот чат", ErrorCode.FORBIDDEN);
         } else {
@@ -174,8 +206,10 @@ public class ChatServiceImpl implements ChatService {
 
         AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
 
-        List<Long> allUserIds = new ArrayList<>(idsDto.getIds());
-        allUserIds.add(accountByAuthentication.getId());
+        List<Long> allUserIds = idsDto.getIds().stream().distinct().collect(Collectors.toList());
+        if(!allUserIds.contains(accountByAuthentication.getId())) {
+            allUserIds.add(accountByAuthentication.getId());
+        }
 
         String roomId = createRoomId(allUserIds);
 
@@ -189,11 +223,29 @@ public class ChatServiceImpl implements ChatService {
         group.setRoomId(roomId);
         group.setUserCreated(accountByAuthentication);
 
-        List<ChatUserDto> activeUserToGroup = mainGroup.getUsers()
+        Map<Long, ChatUserDto> activeUserToGroup = mainGroup.getUsers()
                 .stream()
                 .filter(user -> allUserIds.contains(user.getAccountId()))
+                .collect(Collectors.toMap(ChatUserDto::getAccountId, Function.identity()));
+
+        List<Long> offlineIds = allUserIds
+                .stream()
+                .filter(userId -> !activeUserToGroup.containsKey(userId))
                 .collect(Collectors.toList());
-        group.getUsers().addAll(activeUserToGroup);
+
+        group.getUsers().addAll(activeUserToGroup.values());
+
+        if(!offlineIds.isEmpty()) {
+            List<AccountDto> accountDtos = accountConverter
+                    .convertToDto(accountDao.findById(offlineIds));
+
+            List<ChatUserDto> chatUserDtoOffline = accountDtos
+                    .stream()
+                    .map(this::createChatUserDto)
+                    .collect(Collectors.toList());
+
+            group.getUsers().addAll(chatUserDtoOffline);
+        }
 
         if(StringUtils.isEmpty(group.getName())) {
             String groupName = accountDao.findById(allUserIds)
@@ -214,9 +266,11 @@ public class ChatServiceImpl implements ChatService {
         chatInfoDto.setCommand(ChatInfoCommand.CREATE_NEW_ROOM);
 
         for (Long accountId : idsDto.getIds()) {
-            chatInfoDto.setToAccountId(accountId);
-            chatInfoDto.setId(null);
-            send(chatInfoDto.getToAccountId().toString(), chatInfoDto);
+            if(!accountByAuthentication.getId().equals(accountId)) {
+                chatInfoDto.setToAccountId(accountId);
+                chatInfoDto.setId(null);
+                send(chatInfoDto.getToAccountId().toString(), chatInfoDto);
+            }
         }
 
         return group;
@@ -280,8 +334,7 @@ public class ChatServiceImpl implements ChatService {
     private boolean filterForUser(ChatGroupDto groupDto) {
         AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
 
-        return groupDto.getType() == ChatGroupType.PUBLIC ||
-                groupDto.getType() == ChatGroupType.MAIN ||
+        return groupDto.getType() == ChatGroupType.MAIN ||
                 accountByAuthentication.isAccessOit() ||
                 (groupDto.getUserCreated() != null && groupDto.getUserCreated()
                         .getId().equals(accountByAuthentication.getId())) ||
@@ -371,5 +424,26 @@ public class ChatServiceImpl implements ChatService {
                 }
             }
         }
+    }
+
+    @Override
+    public ChatUserDto createChatUserDto(AccountDto accountDto) {
+        ChatUserDto chatUserDto = new ChatUserDto();
+
+        String username = accountDto.getChatName();
+        if(StringUtils.isEmpty(username)) {
+            EmployeeDto employee = accountDto.getEmployee();
+            if(employee != null) {
+                username = employee.getInitials();
+            } else {
+                username = accountDto.getUsername();
+            }
+        }
+
+        chatUserDto.setName(username);
+        chatUserDto.setAccountId(accountDto.getId());
+        chatUserDto.setAccount(accountDto);
+        chatUserDto.setRoomName(accountDto.getId().toString());
+        return chatUserDto;
     }
 }

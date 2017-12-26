@@ -1,6 +1,7 @@
 package ru.kolaer.client.chat.view;
 
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
     private TabPane tabPane;
     private ChatClient chatClient;
     private NotificationMessagePane notificationMessagePane;
+    private Label labelInfo;
 
     @Override
     public void initView(Consumer<ChatVc> viewVisit) {
@@ -44,7 +46,9 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
 
         tabPane = new TabPane();
 
-        mainPane.setCenter(tabPane);
+        labelInfo = new Label("Вы не авторизовались");
+
+        mainPane.setCenter(labelInfo);
 
         viewVisit.accept(this);
     }
@@ -56,15 +60,23 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
 
     @Override
     public void connect(ChatClient chatClient) {
+        Tools.runOnWithOutThreadFX(() -> labelInfo.setText("Загрузка комнат..."));
+
         this.chatClient = chatClient;
 
         chatClient.subscribeInfo(this);
 
         this.notificationMessagePane = new NotificationMessagePane(this);
 
+        if(!groupDtoMap.isEmpty()) {
+            Tools.runOnWithOutThreadFX(() -> mainPane.setCenter(tabPane));
+        }
+
         for (ChatRoomVc chatRoomVc : groupDtoMap.values()) {
             chatRoomVc.connect(chatClient);
         }
+
+        Tools.runOnWithOutThreadFX(() -> labelInfo.setText("Загрузка комнат..."));
 
         ServerResponse<List<ChatGroupDto>> activeGroup = UniformSystemEditorKitSingleton.getInstance()
                 .getUSNetwork()
@@ -79,10 +91,11 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
                     .getNotification()
                     .showErrorNotify(activeGroup.getExceptionMessage());
         } else {
-            activeGroup.getResponse()
-                    .stream()
-                    .filter(group -> group.getType() == ChatGroupType.MAIN)
-                    .forEach(this::createRoom);
+            Tools.runOnWithOutThreadFX(() -> labelInfo.setText("Инициализация комнат..."));
+
+            activeGroup.getResponse().forEach(this::createRoom);
+
+            Tools.runOnWithOutThreadFX(() -> mainPane.setCenter(tabPane));
         }
     }
 
@@ -104,7 +117,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
         groupDtoMap.put(chatGroupDto.getRoomId(), chatRoomVc);
         chatRoomVc.addObserver(this);
-        //chatRoomVc.addObserver(notificationMessagePane);
+        chatRoomVc.addObserver(notificationMessagePane);
 
         if(chatClient.isConnect()) {
             chatRoomVc.connect(chatClient);

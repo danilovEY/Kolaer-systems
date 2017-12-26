@@ -4,10 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
@@ -40,31 +38,16 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
         AccountDto accountDto = authenticationService
                 .getAccountWithEmployeeByLogin(user.getName());
 
-        ChatUserDto chatUserDto = new ChatUserDto();
-
-        String username = accountDto.getChatName();
-        if(StringUtils.isEmpty(username)) {
-            EmployeeDto employee = accountDto.getEmployee();
-            if(employee != null) {
-                username = employee.getInitials();
-            } else {
-                username = accountDto.getUsername();
-            }
-        }
-
-        chatUserDto.setName(username);
+        ChatUserDto chatUserDto = chatService.createChatUserDto(accountDto);
         chatUserDto.setSessionId(sha.getSessionId());
-        chatUserDto.setAccountId(accountDto.getId());
-        chatUserDto.setAccount(accountDto);
-        chatUserDto.setRoomName(accountDto.getId().toString());
 
         ChatUserDto oldActive = chatService.getUserByAccountId(accountDto.getId());
         if (oldActive != null) {
-            chatService.removeActiveUserFromMain(oldActive);
+            chatService.removeActiveUser(oldActive);
             chatService.sendDisconnect(oldActive.getSessionId());
         }
 
-        chatService.addActiveUserToMain(chatUserDto);
+        chatService.addActiveUser(chatUserDto);
 
         ChatInfoDto chatInfoDto = new ChatInfoDto();
         chatInfoDto.setCommand(ChatInfoCommand.CONNECT);
