@@ -48,6 +48,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         this.userListVc = new UserListVcImpl(chatGroupDto);
 
         this.title = generateTitle(chatGroupDto);
+        chatGroupDto.setName(title);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
     private BorderPane mainPane;
     private TabPane tabPane;
     private ChatClient chatClient;
-    private NotificationMessagePane notificationMessagePane;
+    private NotificationMessage notificationMessagePane;
     private Label labelInfo;
 
     @Override
@@ -66,7 +66,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
 
         chatClient.subscribeInfo(this);
 
-        this.notificationMessagePane = new NotificationMessagePane(this);
+        this.notificationMessagePane = new NotificationMessagePopup(this);
 
         if(!groupDtoMap.isEmpty()) {
             Tools.runOnWithOutThreadFX(() -> mainPane.setCenter(tabPane));
