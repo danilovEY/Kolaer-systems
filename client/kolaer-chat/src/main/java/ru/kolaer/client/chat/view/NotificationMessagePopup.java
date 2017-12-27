@@ -28,14 +28,14 @@ public class NotificationMessagePopup implements NotificationMessage {
     public void getMessage(ChatGroupDto chatGroupDto, ChatMessageDto chatMessageDto) {
         ChatRoomVc chatRoom = chatVc.getChatRoom(chatGroupDto);
 
-        if(!chatVc.roomIsFocus(chatRoom)) {
+        Stage mainStage = UniformSystemEditorKitSingleton.getInstance()
+                .getUISystemUS()
+                .getMainStage();
+
+        if(mainStage.isIconified() || !chatVc.roomIsFocus(chatRoom)) {
             Tools.runOnWithOutThreadFX(() -> {
                 NotifyAction notifyAction = new NotifyAction("Перейти в " + chatGroupDto.getName(), actionEvent -> {
                     Tools.runOnWithOutThreadFX(() -> {
-                        Stage mainStage = UniformSystemEditorKitSingleton.getInstance()
-                                .getUISystemUS()
-                                .getMainStage();
-
                         if(!mainStage.isShowing()) {
                             mainStage.show();
                         }
@@ -60,12 +60,8 @@ public class NotificationMessagePopup implements NotificationMessage {
                         .getPopupNotification()
                         .showSimpleNotify("У вас новое сообщение!",
                                 null,
-                                Duration.seconds(5),
+                                Duration.seconds(10),
                                 Collections.singletonList(notifyAction));
-
-                Stage mainStage = UniformSystemEditorKitSingleton.getInstance()
-                        .getUISystemUS()
-                        .getMainStage();
 
                 if(!mainStage.isShowing()) {
                     mainStage.show();

@@ -93,6 +93,7 @@ public class UserListVcImpl implements UserListVc {
 
         if(containsUser) {
             items.add(chatUserDto);
+            items.sort((o1, o2) -> String.CASE_INSENSITIVE_ORDER.compare(o1.getName(), o2.getName()));
         }
     }
 
