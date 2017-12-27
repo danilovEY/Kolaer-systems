@@ -335,7 +335,7 @@ public class ChatServiceImpl implements ChatService {
         AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
 
         return groupDto.getType() == ChatGroupType.MAIN ||
-                accountByAuthentication.isAccessOit() ||
+                //accountByAuthentication.isAccessOit() ||
                 (groupDto.getUserCreated() != null && groupDto.getUserCreated()
                         .getId().equals(accountByAuthentication.getId())) ||
                 (groupDto.getUsers() != null &&

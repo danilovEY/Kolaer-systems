@@ -80,6 +80,7 @@ public class UserListVcImpl implements UserListVc {
 
         Tools.runOnWithOutThreadFX(() -> items.setAll(users.stream()
                 .filter(chatUserDto -> !chatUserDto.getAccountId().equals(authorizedUser.getId()))
+                .sorted((o1, o2) -> String.CASE_INSENSITIVE_ORDER.compare(o1.getName(), o2.getName()))
                 .collect(Collectors.toList()))
         );
     }
