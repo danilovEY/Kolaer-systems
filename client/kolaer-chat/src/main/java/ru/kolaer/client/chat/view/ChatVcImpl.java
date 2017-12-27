@@ -13,6 +13,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
@@ -32,12 +33,17 @@ import java.util.stream.Stream;
 @Slf4j
 public class ChatVcImpl implements ChatVc, ChatRoomObserver {
     private final Map<String, ChatRoomVc> groupDtoMap = new HashMap<>();
+    private final UniformSystemPlugin uniformSystemPlugin;
     private String subInfoId;
     private BorderPane mainPane;
     private TabPane tabPane;
     private ChatClient chatClient;
     private NotificationMessage notificationMessagePane;
     private Label labelInfo;
+
+    public ChatVcImpl(UniformSystemPlugin uniformSystemPlugin) {
+        this.uniformSystemPlugin = uniformSystemPlugin;
+    }
 
     @Override
     public void initView(Consumer<ChatVc> viewVisit) {
@@ -66,7 +72,7 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
 
         chatClient.subscribeInfo(this);
 
-        this.notificationMessagePane = new NotificationMessagePopup(this);
+        this.notificationMessagePane = new NotificationMessagePopup(this, uniformSystemPlugin);
 
         if(!groupDtoMap.isEmpty()) {
             Tools.runOnWithOutThreadFX(() -> mainPane.setCenter(tabPane));
@@ -182,8 +188,18 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
     }
 
     @Override
+    public ChatRoomVc getChatRoom(ChatGroupDto chatGroupDto) {
+        return groupDtoMap.get(chatGroupDto.getRoomId());
+    }
+
+    @Override
     public boolean roomIsShow(ChatRoomVc chatRoomVc) {
         return tabPane.getTabs().contains(chatRoomVc.getContent());
+    }
+
+    @Override
+    public boolean roomIsFocus(ChatRoomVc chatRoomVc) {
+        return tabPane.getSelectionModel().isSelected(tabPane.getTabs().indexOf(chatRoomVc.getContent()));
     }
 
     @Override

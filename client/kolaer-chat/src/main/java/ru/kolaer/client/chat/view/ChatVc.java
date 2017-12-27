@@ -1,6 +1,7 @@
 package ru.kolaer.client.chat.view;
 
 import javafx.scene.Parent;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.client.chat.service.ChatInfoHandler;
 import ru.kolaer.client.chat.service.ChatObserver;
@@ -10,5 +11,8 @@ import ru.kolaer.client.chat.service.ChatObserver;
  */
 public interface ChatVc extends BaseView<ChatVc, Parent>, ChatObserver, ChatInfoHandler {
     ChatRoomVc showChatRoom(ChatRoomVc chatRoomVc, boolean focus);
+    ChatRoomVc getChatRoom(ChatGroupDto chatGroupDto);
     boolean roomIsShow(ChatRoomVc chatRoomVc);
+
+    boolean roomIsFocus(ChatRoomVc chatRoom);
 }
