@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
@@ -99,10 +100,27 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         } else {
             Tools.runOnWithOutThreadFX(() -> labelInfo.setText("Инициализация комнат..."));
 
-            activeGroup.getResponse().forEach(this::createRoom);
+            activeGroup.getResponse()
+                    .stream()
+                    .filter(this::filterChatGroup)
+                    .forEach(this::createRoom);
 
             Tools.runOnWithOutThreadFX(() -> mainPane.setCenter(tabPane));
         }
+    }
+
+    private boolean filterChatGroup(ChatGroupDto chatGroupDto) {
+        AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
+                .getAuthentication()
+                .getAuthorizedUser();
+
+        return chatGroupDto.getType() == ChatGroupType.MAIN ||
+                (chatGroupDto.getUserCreated() != null && chatGroupDto.getUserCreated()
+                        .getId().equals(authorizedUser.getId())) ||
+                (chatGroupDto.getUsers() != null &&
+                        chatGroupDto.getUsers()
+                                .stream()
+                                .anyMatch(chatUserDto -> chatUserDto.getAccountId().equals(authorizedUser.getId())));
     }
 
     @Override
