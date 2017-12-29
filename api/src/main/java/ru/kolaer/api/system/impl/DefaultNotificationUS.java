@@ -79,4 +79,9 @@ public class DefaultNotificationUS implements NotificationUS {
     public void showErrorNotify(ServerExceptionMessage exceptionMessage) {
         log.info("Ошибка: {}", exceptionMessage);
     }
+
+    @Override
+    public void showErrorNotify(Exception ex) {
+        log.info("Ошибка: {}", ex);
+    }
 }

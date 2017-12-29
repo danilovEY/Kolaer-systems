@@ -120,6 +120,11 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
         }
     }
 
+    @Override
+    public void showErrorNotify(Exception ex) {
+        this.uncaughtException(Thread.currentThread(), ex);
+    }
+
     private void sendMessage(int type, String title, String text) {
         this.sendMessage(type, title, text, Collections.emptyList());
     }

@@ -162,13 +162,27 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
 
     private void notifyObserversLogin() {
         this.authenticationObserverList.parallelStream().forEach(obs -> {
-            obs.login(this.accountsEntity);
+            try {
+                obs.login(this.accountsEntity);
+            } catch (Exception ex) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(ex);
+            }
         });
     }
 
     private void notifyObserversLogout() {
         this.authenticationObserverList.parallelStream().forEach(obs -> {
-            obs.logout(this.accountsEntity);
+            try {
+                obs.logout(this.accountsEntity);
+            } catch (Exception ex) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(ex);
+            }
         });
     }
 

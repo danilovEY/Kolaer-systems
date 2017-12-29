@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '0.3.8.2'
+version '0.3.9'
 
 def projectName = "ru.kolaer.chat"
 def projectNameWithVersion = projectName + "-" + version
@@ -13,12 +13,24 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE")
     }
 }
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-websocket'
+    compile('org.springframework.boot:spring-boot-starter-websocket')
+//    {
+//        exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
+//    }
+//    compile 'org.springframework.boot:spring-boot-starter-jetty'
+
+//    compile ('org.springframework.boot:spring-boot-starter-jetty') {
+//        exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
+//    }
+//    compile "org.eclipse.jetty.websocket:websocket-client:9.4.8.v20171121"
+//    compile "org.springframework:spring-websocket:4.3.2.RELEASE"
+//    compile "org.springframework:spring-messaging:4.3.2.RELEASE"
+//    compile "javax.websocket:javax.websocket-api:1.1"
 }
 
 jar {

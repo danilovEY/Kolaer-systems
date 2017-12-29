@@ -7,10 +7,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.VBox;
+import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.dialog.LoginDialog;
 import org.controlsfx.dialog.ProgressDialog;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.api.system.Authentication;
@@ -21,7 +20,7 @@ import ru.kolaer.api.system.ui.UISystemUS;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.tools.Resources;
 
-import java.util.concurrent.Executors;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Реализация диалоговых окон.
@@ -29,8 +28,8 @@ import java.util.concurrent.Executors;
  * @author danilovey
  * @version 0.1
  */
+@Slf4j
 public class DialogUSImpl implements DialogUS {
-	private final Logger log = LoggerFactory.getLogger(DialogUSImpl.class);
 
 	@Override
 	public Dialog<?> createSimpleDialog(final String title, final String text) {
@@ -88,8 +87,10 @@ public class DialogUSImpl implements DialogUS {
 			protected Boolean call() throws Exception {
 				this.updateTitle("Подключение к серверу");
 				this.updateMessage("Проверка доступности сервера...");
-				ServerResponse<ServerStatus> responceServerStatus = UniformSystemEditorKitSingleton.getInstance().getUSNetwork()
-						.getKolaerWebServer().getServerStatus();
+				ServerResponse<ServerStatus> responceServerStatus = UniformSystemEditorKitSingleton.getInstance()
+						.getUSNetwork()
+						.getKolaerWebServer()
+						.getServerStatus();
 				if (!responceServerStatus.isServerError()
 						&& responceServerStatus.getResponse() == ServerStatus.AVAILABLE) { // TODO: !!!
 					this.updateMessage("Авторизация...");
@@ -114,6 +115,7 @@ public class DialogUSImpl implements DialogUS {
 									"Авторизироватся не удалось!");
 						}
 					} catch (Exception ex) {
+						log.error("Не удалось авторизоваться!", ex);
 						updateMessage("Не удалось авторизоваться!");
 						this.setException(ex);
 						Tools.runOnWithOutThreadFX(() ->
@@ -130,8 +132,12 @@ public class DialogUSImpl implements DialogUS {
 			}
 		};
 
-		Tools.runOnThreadFX(() -> this.createLoadingDialog(task).showAndWait());
-		Executors.newSingleThreadExecutor().submit(task);
+
+		Tools.runOnWithOutThreadFX(() -> {
+			this.createLoadingDialog(task).show();
+		});
+
+		CompletableFuture.runAsync(task);
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -61,7 +62,8 @@ public class ChatClientImpl implements ChatClient {
         log.debug("Попытка установки соединение...");
 
         if(stompClient == null) {
-            Transport webSocketTransport = new WebSocketTransport(new StandardWebSocketClient());
+            StandardWebSocketClient standardWebSocketClient = new StandardWebSocketClient();
+            Transport webSocketTransport = new WebSocketTransport(standardWebSocketClient);
             List<Transport> transports = Collections.singletonList(webSocketTransport);
 
             SockJsClient sockJsClient = new SockJsClient(transports);
@@ -74,7 +76,9 @@ public class ChatClientImpl implements ChatClient {
         StompHeaders stompHeaders = new StompHeaders();
         stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
 
-        stompClient.connect(url, new WebSocketHttpHeaders(), stompHeaders, new StompSessionHandler() {
+        log.debug("Подключение...");
+
+        ListenableFuture<StompSession> connect = stompClient.connect(url, new WebSocketHttpHeaders(), stompHeaders, new StompSessionHandler() {
             @Override
             public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
                 log.debug("Успешное подключение к чату");
@@ -101,7 +105,7 @@ public class ChatClientImpl implements ChatClient {
 
             @Override
             public void handleTransportError(StompSession session, Throwable exception) {
-                if(ChatClientImpl.this.session != null) {
+                if (ChatClientImpl.this.session != null) {
                     log.error("Error!", exception);
 
                     UniformSystemEditorKitSingleton.getInstance()
@@ -148,6 +152,13 @@ public class ChatClientImpl implements ChatClient {
                         .getNotification()
                         .showErrorNotify(null, "Чат не доступен");
             }
+        });
+
+        connect.addCallback(result -> {
+            log.debug("НОРМ!");
+            log.debug(result.toString());
+        }, ex -> {
+            log.debug("Ошибка", ex);
         });
     }
 

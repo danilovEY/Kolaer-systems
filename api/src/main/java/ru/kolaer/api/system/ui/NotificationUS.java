@@ -33,4 +33,5 @@ public interface NotificationUS {
 	void showInformationNotify(String title, String text, Duration duration, List<NotifyAction> actions);
 
     void showErrorNotify(ServerExceptionMessage exceptionMessage);
+    void showErrorNotify(Exception ex);
 }

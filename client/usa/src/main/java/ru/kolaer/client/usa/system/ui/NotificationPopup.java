@@ -94,7 +94,12 @@ public class NotificationPopup implements NotificationUS {
 
 	@Override
 	public void showErrorNotify(ServerExceptionMessage exceptionMessage) {
+		showErrorNotify("Ошибка", exceptionMessage.getMessage());
+	}
 
+	@Override
+	public void showErrorNotify(Exception ex) {
+		showErrorNotify("Ошибка", ex.getMessage());
 	}
 
 	private Notifications addActions(Notifications Notifi, List<NotifyAction> actions) {
