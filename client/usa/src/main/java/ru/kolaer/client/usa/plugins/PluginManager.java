@@ -91,7 +91,15 @@ public class PluginManager {
 
         this.framework = new Felix(frameworkProperties);
 
-        this.framework.start();
+        this.framework.init(event -> {
+            Throwable error = event.getThrowable();
+
+            if(error != null) {
+                LOG.error("Ошибка при инициализации!", error);
+            } else {
+                LOG.info("OSGi init: {}", event);
+            }
+        });
 
         this.context = this.framework.getBundleContext();
         this.isInit = true;

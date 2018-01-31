@@ -223,7 +223,7 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
             try {
                 shutdownThread.get(10, TimeUnit.SECONDS);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Ошибка при ожидании завершения!", e);
             }
 
             System.exit(0);
