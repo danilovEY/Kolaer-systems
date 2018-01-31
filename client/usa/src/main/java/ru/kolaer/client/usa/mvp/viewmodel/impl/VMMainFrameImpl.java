@@ -302,7 +302,7 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
     	VMMainFrameImpl.stage = stage;
         stage.setMinHeight(650);
         stage.setMinWidth(850);
-        stage.setTitle("Единая система КолАЭР");
+        stage.setTitle("Единая система КолАЭР " + Resources.VERSION );
         stage.setOnCloseRequest(event -> System.exit(0));
 
         PARAM.putAll(getParameters().getNamed());

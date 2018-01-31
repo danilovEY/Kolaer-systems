@@ -91,6 +91,8 @@ public class PluginManager {
 
         this.framework = new Felix(frameworkProperties);
 
+        LOG.debug("OSGi framework init...");
+
         this.framework.init(event -> {
             Throwable error = event.getThrowable();
 
@@ -100,6 +102,8 @@ public class PluginManager {
                 LOG.info("OSGi init: {}", event);
             }
         });
+
+        LOG.debug("OSGi framework init success");
 
         this.context = this.framework.getBundleContext();
         this.isInit = true;

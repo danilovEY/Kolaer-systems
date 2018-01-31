@@ -23,6 +23,8 @@ public class Launcher {
 	public static final String pathToShowAppFile = pathToCache + "\\runnable_show.usa";
 
 	public static void main(final String[] args) {
+		LOG.info("Version: {}", Resources.VERSION);
+
 		if(containsKey(MULTIPLE_KEY, args) || !appIsRun()) {
 			delete(new File(pathToRunFile));
 			Platform.setImplicitExit(false);
