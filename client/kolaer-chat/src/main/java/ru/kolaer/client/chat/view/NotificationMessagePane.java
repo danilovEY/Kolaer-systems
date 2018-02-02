@@ -10,8 +10,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.ui.StaticView;
@@ -23,14 +23,14 @@ import java.util.function.Consumer;
  * Created by danilovey on 11.12.2017.
  */
 public class NotificationMessagePane implements StaticView, NotificationMessage {
-    private final ChatVc chatVc;
+    private final TabChatVc tabChatVc;
     private BorderPane mainPane;
     private Label dateLabel;
     private Label messageLabel;
     private Label titleLabel;
 
-    public NotificationMessagePane(ChatVc chatVc) {
-        this.chatVc = chatVc;
+    public NotificationMessagePane(TabChatVc tabChatVc) {
+        this.tabChatVc = tabChatVc;
     }
 
     @Override
@@ -69,14 +69,14 @@ public class NotificationMessagePane implements StaticView, NotificationMessage 
     }
 
     @Override
-    public void getMessage(ChatGroupDto chatGroupDto, ChatMessageDto chatMessageDto) {
+    public void getMessage(ChatRoomDto chatRoomDto, ChatMessageDto chatMessageDto) {
         Tools.runOnWithOutThreadFX(() -> {
             if(!isViewInit()) {
                 this.initView(BaseView::empty);
             }
 
             titleLabel.setText("У вас новое сообщение!");
-            messageLabel.setText(chatGroupDto.getName());
+            messageLabel.setText(chatRoomDto.getName());
             dateLabel.setText(Tools.dateTimeToString(chatMessageDto.getCreateMessage()));
 
             UniformSystemEditorKitSingleton.getInstance()

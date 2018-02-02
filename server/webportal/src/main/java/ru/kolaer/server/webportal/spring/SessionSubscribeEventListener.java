@@ -32,7 +32,7 @@ public class SessionSubscribeEventListener implements ApplicationListener<Sessio
 //        sha.getDestination();
 //
 //        log.info("{}", sha);
-
+//
 //        AccountDto accountDto = authenticationService
 //                .getAccountWithEmployeeByLogin(user.getName());
 //
@@ -54,18 +54,5 @@ public class SessionSubscribeEventListener implements ApplicationListener<Sessio
 //        chatInfoDto.setAccount(chatUserDto.getAccount());
 //
 //        chatService.send(chatInfoDto);
-//
-//        ChatMessageDto chatMessageDto = new ChatMessageDto();
-//        chatMessageDto.setCreateMessage(new Date());
-//        chatMessageDto.setType(ChatMessageType.SERVER_INFO);
-//        chatMessageDto.setMessage("Пользователь \"" + chatUserDto.getName() + "\" вошел в чат");
-//
-//        for (ChatGroupDto chatGroupDto : chatService.getAll()) {
-//            if(chatGroupDto.getUsers().contains(chatUserDto)) {
-//                chatMessageDto.setId(null);
-//                chatMessageDto.setRoom(chatGroupDto.getRoomId());
-//                chatService.send(chatMessageDto);
-//            }
-//        }
     }
 }

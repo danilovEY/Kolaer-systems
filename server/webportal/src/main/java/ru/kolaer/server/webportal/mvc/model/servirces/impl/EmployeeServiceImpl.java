@@ -19,14 +19,11 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, EmployeeEntity>
-        implements EmployeeService {
-    private final EmployeeDao employeeDao;
+public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, EmployeeEntity, EmployeeDao, EmployeeConverter> implements EmployeeService {
 
     protected EmployeeServiceImpl(EmployeeDao employeeDao,
                                   EmployeeConverter converter) {
         super(employeeDao, converter);
-        this.employeeDao = employeeDao;
     }
 
     @Override
@@ -36,37 +33,37 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
             return null;
         }
 
-        return baseConverter.convertToDto(employeeDao.findByPersonnelNumber(id));
+        return defaultConverter.convertToDto(defaultEntityDao.findByPersonnelNumber(id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeDto> getUserRangeBirthday(Date startData, Date endData) {
-        return baseConverter.convertToDto(employeeDao.getUserRangeBirthday(startData, endData));
+        return defaultConverter.convertToDto(defaultEntityDao.getUserRangeBirthday(startData, endData));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeDto> getUsersByBirthday(Date date) {
-        return baseConverter.convertToDto(employeeDao.getUsersByBirthday(date));
+        return defaultConverter.convertToDto(defaultEntityDao.getUsersByBirthday(date));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeDto> getUserBirthdayToday() {
-        return baseConverter.convertToDto(employeeDao.getUserBirthdayToday());
+        return defaultConverter.convertToDto(defaultEntityDao.getUserBirthdayToday());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeDto> getUsersByInitials(String initials) {
-        return baseConverter.convertToDto(employeeDao.getUsersByInitials(initials));
+        return defaultConverter.convertToDto(defaultEntityDao.getUsersByInitials(initials));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeDto> getUsersByDepartmentId(Long id) {
-        return baseConverter.convertToDto(employeeDao.findByDepartmentById(id));
+        return defaultConverter.convertToDto(defaultEntityDao.findByDepartmentById(id));
     }
 
     @Override
@@ -77,10 +74,10 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
             return new Page<>(employees, page, 0, employees.size());
         }
 
-        Long count = employeeDao.findCountByDepartmentById(id);
+        Long count = defaultEntityDao.findCountByDepartmentById(id);
 
-        List<EmployeeDto> result = baseConverter
-                .convertToDto(employeeDao.findByDepartmentById(page, pageSize, id));
+        List<EmployeeDto> result = defaultConverter
+                .convertToDto(defaultEntityDao.findByDepartmentById(page, pageSize, id));
 
         return new Page<>(result, page, count, pageSize);
     }
@@ -88,6 +85,6 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
     @Override
     @Transactional(readOnly = true)
     public int getCountUserBirthday(Date date) {
-        return employeeDao.getCountUserBirthday(date);
+        return defaultEntityDao.getCountUserBirthday(date);
     }
 }

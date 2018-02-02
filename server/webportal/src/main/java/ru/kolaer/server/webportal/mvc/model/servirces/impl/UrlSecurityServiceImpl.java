@@ -18,15 +18,12 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class UrlSecurityServiceImpl extends AbstractDefaultService<UrlSecurityDto, UrlSecurityEntity> implements UrlSecurityService {
-    private final UrlSecurityDao urlSecurityDao;
-    private final UrlSecurityConverter converter;
+public class UrlSecurityServiceImpl extends AbstractDefaultService<UrlSecurityDto, UrlSecurityEntity, UrlSecurityDao, UrlSecurityConverter>
+        implements UrlSecurityService {
 
     @Autowired
     public UrlSecurityServiceImpl(UrlSecurityDao urlSecurityDao, UrlSecurityConverter converter) {
         super(urlSecurityDao, converter);
-        this.urlSecurityDao = urlSecurityDao;
-        this.converter = converter;
 
     }
 
@@ -39,18 +36,18 @@ public class UrlSecurityServiceImpl extends AbstractDefaultService<UrlSecurityDt
             url = userUrl.substring(0, userUrl.indexOf("?"));
         }
 
-        return converter.convertToDto(urlSecurityDao.findPathByUrlAndMethod(url, method));
+        return defaultConverter.convertToDto(defaultEntityDao.findPathByUrlAndMethod(url, method));
     }
 
     @Override
     public List<String> getAccesses(UrlSecurityDto urlPath) {
-       return converter.convertToAccesses(urlPath);
+       return defaultConverter.convertToAccesses(urlPath);
     }
 
     @Override
     @Transactional
     public void clear() {
-        this.urlSecurityDao.clear();
+        this.defaultEntityDao.clear();
     }
 
 }

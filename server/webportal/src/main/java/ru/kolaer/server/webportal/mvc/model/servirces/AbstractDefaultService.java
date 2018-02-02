@@ -11,57 +11,59 @@ import java.util.List;
 /**
  * Created by danilovey on 09.10.2017.
  */
-public abstract class AbstractDefaultService<T extends BaseDto, K extends BaseEntity> implements DefaultService<T> {
+public abstract class AbstractDefaultService<T extends BaseDto,
+        K extends BaseEntity,
+        D extends DefaultDao<K>,
+        C extends BaseConverter<T, K>> implements DefaultService<T> {
 
-    protected final DefaultDao<K> defaultEntityDao;
-    protected final BaseConverter<T, K> baseConverter;
+    protected final D defaultEntityDao;
+    protected final C defaultConverter;
 
-    protected AbstractDefaultService(DefaultDao<K> defaultEntityDao,
-                                     BaseConverter<T, K> converter) {
+    protected AbstractDefaultService(D defaultEntityDao, C converter) {
         this.defaultEntityDao = defaultEntityDao;
-        this.baseConverter = converter;
+        this.defaultConverter = converter;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<T> getAll() {
-        return baseConverter.convertToDto(defaultEntityDao.findAll());
+        return defaultConverter.convertToDto(defaultEntityDao.findAll());
     }
 
     @Override
     @Transactional(readOnly = true)
     public T getById(Long id) {
-        return baseConverter.convertToDto(defaultEntityDao.findById(id));
+        return defaultConverter.convertToDto(defaultEntityDao.findById(id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<T> getById(List<Long> ids) {
-        return baseConverter.convertToDto(defaultEntityDao.findById(ids));
+        return defaultConverter.convertToDto(defaultEntityDao.findById(ids));
     }
 
     @Override
     @Transactional
     public T save(T dto) {
-        return baseConverter.updateData(dto, defaultEntityDao.save(baseConverter.convertToModel(dto)));
+        return defaultConverter.updateData(dto, defaultEntityDao.save(defaultConverter.convertToModel(dto)));
     }
 
     @Override
     @Transactional
     public List<T> save(List<T> dtos) {
-        return baseConverter.convertToDto(defaultEntityDao.save(baseConverter.convertToModel(dtos)));
+        return defaultConverter.convertToDto(defaultEntityDao.save(defaultConverter.convertToModel(dtos)));
     }
 
     @Override
     @Transactional
     public void delete(T dto) {
-        defaultEntityDao.delete(baseConverter.convertToModel(dto));
+        defaultEntityDao.delete(defaultConverter.convertToModel(dto));
     }
 
     @Override
     @Transactional
     public void delete(List<T> dtos) {
-        defaultEntityDao.delete(baseConverter.convertToModel(dtos));
+        defaultEntityDao.delete(defaultConverter.convertToModel(dtos));
     }
 
     @Override
@@ -76,7 +78,7 @@ public abstract class AbstractDefaultService<T extends BaseDto, K extends BaseEn
             pageSize = count.intValue();
         } else {
             count = defaultEntityDao.findAllCount();
-            results = baseConverter.convertToDto(defaultEntityDao.findAll(number, pageSize));
+            results = defaultConverter.convertToDto(defaultEntityDao.findAll(number, pageSize));
         }
 
         return new Page<>(results, number, count, pageSize);

@@ -12,12 +12,10 @@ import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
  * Created by danilovey on 12.09.2016.
  */
 @Service
-public class DepartmentServiceImpl extends AbstractDefaultService<DepartmentDto, DepartmentEntity> implements DepartmentService {
-    private DepartmentDao departmentDao;
+public class DepartmentServiceImpl extends AbstractDefaultService<DepartmentDto, DepartmentEntity, DepartmentDao, DepartmentConverter> implements DepartmentService {
 
     protected DepartmentServiceImpl(DepartmentDao departmentDao, DepartmentConverter converter) {
         super(departmentDao, converter);
-        this.departmentDao = departmentDao;
     }
 
     @Override
@@ -26,7 +24,7 @@ public class DepartmentServiceImpl extends AbstractDefaultService<DepartmentDto,
             return null;
         }
 
-        return baseConverter.convertToDto(this.departmentDao.findByName(name));
+        return defaultConverter.convertToDto(this.defaultEntityDao.findByName(name));
     }
 
 }

@@ -1,7 +1,6 @@
 package ru.kolaer.api.mvp.model.kolaerweb.kolchat;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
 
 import java.util.Date;
@@ -13,10 +12,7 @@ import java.util.Date;
 public class ChatInfoDto implements BaseDto {
     private Long id;
     private Long accountId;
-    private Long toAccountId;
     private ChatInfoCommand command;
     private Date createInfo;
-    private AccountDto account;
     private String data;
-
 }

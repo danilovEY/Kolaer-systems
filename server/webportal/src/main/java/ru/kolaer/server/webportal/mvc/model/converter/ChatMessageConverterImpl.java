@@ -29,7 +29,7 @@ public class ChatMessageConverterImpl implements ChatMessageConverter {
 
         ChatMessageEntity chatMessageEntity = new ChatMessageEntity();
         chatMessageEntity.setId(dto.getId());
-        chatMessageEntity.setRoom(dto.getRoom());
+        chatMessageEntity.setRoomId(dto.getRoomId());
         chatMessageEntity.setMessage(dto.getMessage());
         chatMessageEntity.setCreateMessage(dto.getCreateMessage());
         chatMessageEntity.setType(dto.getType());
@@ -45,23 +45,14 @@ public class ChatMessageConverterImpl implements ChatMessageConverter {
             return null;
         }
 
-        ChatMessageDto chatMessageDto = new ChatMessageDto();
-        chatMessageDto.setRoom(model.getRoom());
-        chatMessageDto.setMessage(model.getMessage());
-        chatMessageDto.setId(model.getId());
-        chatMessageDto.setCreateMessage(model.getCreateMessage());
-        Optional.ofNullable(model.getAccountId())
-                .map(accountConverter::getById)
-                .ifPresent(chatMessageDto::setFromAccount);
-        chatMessageDto.setType(model.getType());
-        return chatMessageDto;
+        return updateData(new ChatMessageDto(), model);
     }
 
     @Override
     public ChatMessageDto updateData(ChatMessageDto oldDto, ChatMessageEntity newModel) {
-        oldDto.setMessage(newModel.getMessage());
-        oldDto.setRoom(newModel.getRoom());
         oldDto.setId(newModel.getId());
+        oldDto.setMessage(newModel.getMessage());
+        oldDto.setRoomId(newModel.getRoomId());
         oldDto.setCreateMessage(newModel.getCreateMessage());
         oldDto.setType(newModel.getType());
         Optional.ofNullable(newModel.getAccountId())

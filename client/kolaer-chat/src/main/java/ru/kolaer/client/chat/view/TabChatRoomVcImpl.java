@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
@@ -28,9 +27,9 @@ import java.util.stream.Collectors;
  * Created by danilovey on 02.11.2017.
  */
 @Slf4j
-public class ChatRoomVcImpl implements ChatRoomVc {
+public class TabChatRoomVcImpl implements TabChatRoomVc {
     private final List<ChatRoomObserver> observers = new ArrayList<>();
-    private final ChatGroupDto chatGroupDto;
+    private final ChatRoomDto chatRoomDto;
 
     private final ChatMessageContentVc chatMessageContentVc;
     private final UserListVc userListVc;
@@ -42,17 +41,17 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
     private ChatClient chatClient;
 
-    public ChatRoomVcImpl(ChatGroupDto chatGroupDto) {
-        this.chatGroupDto = chatGroupDto;
-        this.chatMessageContentVc = new ChatMessageContentVcImpl(chatGroupDto);
-        this.userListVc = new UserListVcImpl(chatGroupDto);
+    public TabChatRoomVcImpl(ChatRoomDto chatRoomDto) {
+        this.chatRoomDto = chatRoomDto;
+        this.chatMessageContentVc = new ChatMessageContentVcImpl(chatRoomDto);
+        this.userListVc = new UserListVcImpl(chatRoomDto);
 
-        this.title = generateTitle(chatGroupDto);
-        chatGroupDto.setName(title);
+        this.title = generateTitle(chatRoomDto);
+        chatRoomDto.setName(title);
     }
 
     @Override
-    public void initView(Consumer<ChatRoomVc> viewVisit) {
+    public void initView(Consumer<TabChatRoomVc> viewVisit) {
 
         mainTab = new Tab();
         mainTab.setText(title);
@@ -73,7 +72,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
         userListVc.initView(initUserList -> {
             splitPane.getItems().add(initUserList.getContent());
-            initUserList.setUsers(chatGroupDto.getUsers());
+            initUserList.setUsers(chatRoomDto.getUsers());
             initUserList.setOnCreateMessageToUser(this::createMessageToUser);
         });
 
@@ -87,24 +86,25 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         viewVisit.accept(this);
     }
 
-    private String generateTitle(ChatGroupDto chatGroupDto) {
-        if(chatGroupDto == null) {
+    private String generateTitle(ChatRoomDto chatRoomDto) {
+        if(chatRoomDto == null) {
             return "Неизвестный";
         }
 
-        if (CollectionUtils.isEmpty(chatGroupDto.getUsers()) || chatGroupDto.getType() != ChatGroupType.PRIVATE) {
-            return StringUtils.hasText(chatGroupDto.getName()) ? chatGroupDto.getName() : chatGroupDto.getRoomId();
-        } else {
-            AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
-                    .getAuthentication()
-                    .getAuthorizedUser();
-            return chatGroupDto.getUsers()
-                    .stream()
-                    .filter(user -> !user.getAccountId().equals(authorizedUser.getId()))
-                    .map(ChatUserDto::getAccount)
-                    .map(this::accountsToChatGroupName)
-                    .collect(Collectors.joining(","));
-        }
+//        if (CollectionUtils.isEmpty(chatRoomDto.getUsers()) || chatRoomDto.getType() != ChatGroupType.PRIVATE) {
+//            return StringUtils.hasText(chatRoomDto.getName()) ? chatRoomDto.getName() : chatRoomDto.getRoomId();
+//        } else {
+//            AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
+//                    .getAuthentication()
+//                    .getAuthorizedUser();
+//            return chatRoomDto.getUsers()
+//                    .stream()
+//                    .filter(user -> !user.getAccountId().equals(authorizedUser.getId()))
+//                    .map(ChatUserDto::getAccount)
+//                    .map(this::accountsToChatGroupName)
+//                    .collect(Collectors.joining(","));
+//        }
+        return null;
     }
 
     private String accountsToChatGroupName(AccountDto accountDto) {
@@ -145,9 +145,8 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         observers.remove(observer);
     }
 
-    @Override
-    public ChatGroupDto getChatGroupDto() {
-        return chatGroupDto;
+    public ChatRoomDto getChatRoomDto() {
+        return chatRoomDto;
     }
 
     @Override
@@ -171,15 +170,15 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
     private void createMessageToUser(List<ChatUserDto> chatUserDto) {
         for (ChatRoomObserver observer : observers) {
-            observer.createMessageToUser(chatGroupDto, chatUserDto);
+            observer.createMessageToUser(chatRoomDto, chatUserDto);
         }
     }
 
     private void sendMessage(ChatMessageDto chatMessageDto) {
-        chatClient.send(chatGroupDto.getRoomId(), chatMessageDto);
+        chatClient.send(chatRoomDto, chatMessageDto);
 
         for (ChatRoomObserver observer : observers) {
-            observer.sendMessage(chatGroupDto, chatMessageDto);
+            observer.sendMessage(chatRoomDto, chatMessageDto);
         }
     }
 
@@ -215,7 +214,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
                                 .map(AccountDto::getId)
                                 .orElse(-1L))) {
             for (ChatRoomObserver observer : observers) {
-                observer.getMessage(chatGroupDto, message);
+                observer.getMessage(chatRoomDto, message);
             }
         }
     }
@@ -223,16 +222,16 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     @Override
     public void connect(ChatClient chatClient) {
         this.chatClient = chatClient;
-        chatClient.subscribeRoom(chatGroupDto.getRoomId(), this);
+        chatClient.subscribeRoom(chatRoomDto, this);
 
-        if(chatGroupDto.getType() != ChatGroupType.MAIN) {
-            ServerResponse<ChatGroupDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
+        if(chatRoomDto.getType() != ChatGroupType.MAIN) {
+            ServerResponse<ChatRoomDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
                     .getInstance()
                     .getUSNetwork()
                     .getKolaerWebServer()
                     .getApplicationDataBase()
                     .getChatTable()
-                    .getGroupByRoomId(chatGroupDto.getRoomId());
+                    .getGroupByRoomId(chatRoomDto.getId());
 
             if (!groupDtoServerResponse.isServerError() && groupDtoServerResponse.getResponse() == null) {
                 createGroup();
@@ -243,18 +242,18 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     }
 
     private void createGroup() {
-        IdsDto idsAccounts = new IdsDto(chatGroupDto.getUsers()
+        IdsDto idsAccounts = new IdsDto(chatRoomDto.getUsers()
                 .stream()
                 .map(ChatUserDto::getAccountId)
                 .collect(Collectors.toList()));
 
-        ServerResponse<ChatGroupDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
+        ServerResponse<ChatRoomDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
                 .getInstance()
                 .getUSNetwork()
                 .getKolaerWebServer()
                 .getApplicationDataBase()
                 .getChatTable()
-                .createPrivateGroup(idsAccounts, chatGroupDto.getName());
+                .createPrivateGroup(idsAccounts, chatRoomDto.getName());
 
         if(groupDtoServerResponse.isServerError()) {
             UniformSystemEditorKitSingleton.getInstance()
@@ -271,8 +270,8 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
     @Override
     public void connectUser(ChatUserDto chatUserDto) {
-        if(chatGroupDto.getType() == ChatGroupType.MAIN) {
-            chatGroupDto.getUsers().add(chatUserDto);
+        if(chatRoomDto.getType() == ChatGroupType.MAIN) {
+            chatRoomDto.getUsers().add(chatUserDto);
         }
 
         if(isViewInit()) {
@@ -282,7 +281,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
                 }
 
                 for (ChatRoomObserver observer : observers) {
-                    observer.connectUser(chatGroupDto, chatUserDto);
+                    //observer.connectUser(chatRoomDto, chatUserDto);
                 }
             });
         }
@@ -290,7 +289,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
     @Override
     public void disconnectUser(Long accountId) {
-        Optional<ChatUserDto> chatUserDtoOptional = chatGroupDto.getUsers()
+        Optional<ChatUserDto> chatUserDtoOptional = chatRoomDto.getUsers()
                 .stream()
                 .filter(user -> user.getAccountId()
                 .equals(accountId))
@@ -299,8 +298,8 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         if(chatUserDtoOptional.isPresent()) {
             ChatUserDto chatUserDto = chatUserDtoOptional.get();
 
-            if(chatGroupDto.getType() == ChatGroupType.MAIN) {
-                chatGroupDto.getUsers().remove(chatUserDto);
+            if(chatRoomDto.getType() == ChatGroupType.MAIN) {
+                chatRoomDto.getUsers().remove(chatUserDto);
             }
 
             if(isViewInit()) {
@@ -308,7 +307,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
             }
 
             for (ChatRoomObserver observer : observers) {
-                observer.disconnectUser(chatGroupDto, chatUserDto);
+                //observer.disconnectUser(chatRoomDto, chatUserDto);
             }
         }
     }

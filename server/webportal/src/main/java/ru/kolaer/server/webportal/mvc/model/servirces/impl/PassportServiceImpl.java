@@ -12,7 +12,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.PassportService;
  * Created by danilovey on 12.10.2017.
  */
 @Service
-public class PassportServiceImpl extends AbstractDefaultService<PassportDto, PassportEntity> implements PassportService {
+public class PassportServiceImpl extends AbstractDefaultService<PassportDto, PassportEntity, PassportDao, PassportConverter> implements PassportService {
     protected PassportServiceImpl(PassportDao defaultEntityDao, PassportConverter converter) {
         super(defaultEntityDao, converter);
     }

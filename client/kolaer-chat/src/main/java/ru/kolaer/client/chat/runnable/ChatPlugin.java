@@ -8,8 +8,8 @@ import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.ChatClientImpl;
-import ru.kolaer.client.chat.view.ChatVc;
-import ru.kolaer.client.chat.view.ChatVcImpl;
+import ru.kolaer.client.chat.view.RoomListVc;
+import ru.kolaer.client.chat.view.RoomListVcImpl;
 
 import java.util.function.Consumer;
 
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @Slf4j
 public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
     private ChatClient chatClient;
-    private ChatVc chatVc;
+    private RoomListVc roomListVc;
 
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
@@ -29,8 +29,7 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
         }
 
         editorKit.getAuthentication().registerObserver(this);
-
-        chatVc = new ChatVcImpl(this);
+        roomListVc = new RoomListVcImpl();
     }
 
     @Override
@@ -44,11 +43,11 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public void initView(Consumer<UniformSystemPlugin> viewVisit) {
-        chatVc.initView(initTab -> {
-            chatClient.registerObserver(chatVc);
+        roomListVc.initView(initTab -> {
+            chatClient.registerObserver(roomListVc);
 
             if(chatClient.isConnect()){
-                chatVc.connect(chatClient);
+                roomListVc.connect(chatClient);
             }
 
             viewVisit.accept(this);
@@ -57,7 +56,7 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public Node getContent() {
-        return chatVc.getContent();
+        return roomListVc.getContent();
     }
 
     @Override

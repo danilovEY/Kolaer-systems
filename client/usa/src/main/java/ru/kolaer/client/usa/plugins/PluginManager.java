@@ -81,7 +81,7 @@ public class PluginManager {
                 ",org.controlsfx.control.textfield, org.controlsfx.dialog, org.controlsfx.dialog, org.controlsfx.validation, javafx.scene.web");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
-                "javafx.application,javafx.beans.property,javax.xml.stream,javax.net.ssl,org.xml.sax,javax.xml.transform,javax.xml.parsers,javax.xml.namespace," +
+                "javafx.application,javax.websocket,javafx.beans.property,javax.xml.stream,javax.net.ssl,org.xml.sax,javax.xml.transform,javax.xml.parsers,javax.xml.namespace," +
                 "javax.xml.transform.stream,javax.xml.transform.stax,javax.xml.transform.sax,javax.xml.transform.dom,javafx.beans,javax.xml.stream.util,org.w3c.dom,javafx.beans.value.ObservableValue," +
                 "javafx.beans.value,javafx.collections,javafx.collections.transformation,javafx.event,javafx.beans.binding," +
                 "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.canvas, javafx.scene.image, " +

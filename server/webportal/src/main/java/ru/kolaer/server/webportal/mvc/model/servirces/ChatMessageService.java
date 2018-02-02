@@ -9,7 +9,7 @@ import java.util.List;
  * Created by danilovey on 08.11.2017.
  */
 public interface ChatMessageService extends DefaultService<ChatMessageDto> {
-    List<ChatMessageDto> getAllByRoom(String room);
+    List<ChatMessageDto> getAllByRoom(Long roomId);
 
-    Page<ChatMessageDto> getAllByRoom(String roomId, Integer number, Integer pageSize);
+    Page<ChatMessageDto> getAllByRoom(Long roomId, Integer number, Integer pageSize);
 }

@@ -19,21 +19,18 @@ import java.util.stream.Collectors;
  * Created by danilovey on 30.11.2016.
  */
 @Service
-public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegisterDto, TicketRegisterEntity> implements TicketRegisterService {
-    private final TicketRegisterConverter defaultConverter;
-    private final TicketRegisterDao ticketRegisterDao;
+public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegisterDto, TicketRegisterEntity,
+        TicketRegisterDao, TicketRegisterConverter> implements TicketRegisterService {
     private final TicketDao ticketDao;
 
     public TicketRegisterServiceImpl(TicketRegisterConverter defaultConverter, TicketRegisterDao ticketRegisterDao, TicketDao ticketDao) {
         super(ticketRegisterDao, defaultConverter);
-        this.defaultConverter = defaultConverter;
-        this.ticketRegisterDao = ticketRegisterDao;
         this.ticketDao = ticketDao;
     }
 
     @Override
     public TicketRegisterDto save(TicketRegisterDto entity) {
-        List<TicketRegisterEntity> ticketRegisterByDateAndDep = ticketRegisterDao.
+        List<TicketRegisterEntity> ticketRegisterByDateAndDep = defaultEntityDao.
                 getTicketRegisterByDateAndDep(entity.getCreateRegister(), entity.getDepartment().getName());
 
         List<TicketRegisterEntity> collect = ticketRegisterByDateAndDep.stream().filter(ticketRegister ->
@@ -53,12 +50,12 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
             });
         }
 
-        return defaultConverter.convertToDto(ticketRegisterDao.persist(defaultConverter.convertToModel(entity)));
+        return defaultConverter.convertToDto(defaultEntityDao.persist(defaultConverter.convertToModel(entity)));
     }
 
     @Override
     public List<TicketRegisterDto> getAllByDepName(String name) {
-        return ticketRegisterDao.findAllByDepName(name)
+        return defaultEntityDao.findAllByDepName(name)
                 .stream()
                 .map(defaultConverter::convertToDto)
                 .collect(Collectors.toList());
@@ -70,8 +67,8 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
             List<TicketRegisterDto> all = this.getAll();
             return new Page<>(all, 0, 0, all.size());
         } else {
-            Long count = ticketRegisterDao.findCountAllByDepName(page, pageSize, name);
-            List<TicketRegisterDto> result = ticketRegisterDao.findAllByDepName(page, pageSize, name)
+            Long count = defaultEntityDao.findCountAllByDepName(page, pageSize, name);
+            List<TicketRegisterDto> result = defaultEntityDao.findAllByDepName(page, pageSize, name)
                     .stream()
                     .map(defaultConverter::convertToDto)
                     .collect(Collectors.toList());
@@ -82,7 +79,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
 
     @Override
     public List<TicketRegisterDto> getAllOpenRegister() {
-        return ticketRegisterDao.findAllOpenRegister()
+        return defaultEntityDao.findAllOpenRegister()
                 .stream()
                 .map(defaultConverter::convertToDto)
                 .collect(Collectors.toList());

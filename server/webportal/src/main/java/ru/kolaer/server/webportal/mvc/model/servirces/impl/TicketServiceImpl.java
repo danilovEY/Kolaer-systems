@@ -15,21 +15,17 @@ import java.util.stream.Collectors;
  * Created by danilovey on 02.12.2016.
  */
 @Service
-public class TicketServiceImpl extends AbstractDefaultService<TicketDto, TicketEntity> implements TicketService {
-    private final TicketDao ticketDao;
-    private final TicketConverter ticketConverter;
+public class TicketServiceImpl extends AbstractDefaultService<TicketDto, TicketEntity, TicketDao, TicketConverter> implements TicketService {
 
     public TicketServiceImpl(TicketDao defaultEntityDao, TicketConverter converter) {
         super(defaultEntityDao, converter);
-        this.ticketDao = defaultEntityDao;
-        this.ticketConverter = converter;
     }
 
     @Override
     public List<TicketDto> getTicketsByRegisterId(Long id) {
-        return ticketDao.findAllByRegisterId(id)
+        return defaultEntityDao.findAllByRegisterId(id)
                 .stream()
-                .map(ticketConverter::convertToDto)
+                .map(defaultConverter::convertToDto)
                 .collect(Collectors.toList());
     }
 }

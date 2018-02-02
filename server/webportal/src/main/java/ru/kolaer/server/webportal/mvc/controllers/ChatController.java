@@ -8,15 +8,16 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
+import ru.kolaer.api.mvp.model.kolaerweb.IdDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatMessageService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
+import ru.kolaer.server.webportal.mvc.model.servirces.ChatRoomService;
 
 import java.util.Date;
 import java.util.List;
@@ -28,11 +29,11 @@ import java.util.List;
 @RequestMapping("/chat")
 @Slf4j
 public class ChatController {
-    private final ChatService chatService;
+    private final ChatRoomService chatService;
     private final ChatMessageService chatMessageService;
 
     @Autowired
-    public ChatController(ChatService chatService,
+    public ChatController(ChatRoomService chatService,
                           ChatMessageService chatMessageService) {
         this.chatService = chatService;
         this.chatMessageService = chatMessageService;
@@ -40,10 +41,10 @@ public class ChatController {
 
     @MessageMapping("/chat/room/{chatRoomId}")
     public void handleChat(@Payload ChatMessageDto message,
-                           @DestinationVariable("chatRoomId") String chatRoomId,
+                           @DestinationVariable("chatRoomId") Long chatRoomId,
                            MessageHeaders messageHeaders) {
         message.setCreateMessage(new Date());
-        message.setRoom(chatRoomId);
+        message.setRoomId(chatRoomId);
         message.setType(ChatMessageType.USER);
 
         chatService.send(message);
@@ -51,14 +52,20 @@ public class ChatController {
 
     @UrlDeclaration(description = "Получить список активных пользователей чата")
     @RequestMapping(value = "/active/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<ChatGroupDto> getActiveUsers() {
+    public List<ChatRoomDto> getActiveUsers() {
         return chatService.getAllForUser();
     }
 
-    @UrlDeclaration(description = "Создать приватную группу пользователей чата", requestMethod = RequestMethod.POST)
+    @UrlDeclaration(description = "Создать приватную комнату пользователей чата", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/group/private", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ChatGroupDto createGroup(@RequestBody IdsDto idsDto, @RequestParam(required = false) String name) {
+    public ChatRoomDto createGroup(@RequestBody IdsDto idsDto, @RequestParam(required = false) String name) {
         return chatService.createPrivateGroup(name, idsDto);
+    }
+
+    @UrlDeclaration(description = "Создать комнату на двоих", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/group/single", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ChatRoomDto createSingle(@RequestBody IdDto idDto) {
+        return chatService.createSingleGroup(idDto);
     }
 
     @UrlDeclaration(description = "Скрыть сообщения", requestMethod = RequestMethod.POST)
@@ -67,15 +74,15 @@ public class ChatController {
         chatService.hideMessage(idsDto, true);
     }
 
-    @UrlDeclaration(description = "Получить группу по id комнаты", requestMethod = RequestMethod.GET)
+    @UrlDeclaration(description = "Получить комнату по id комнаты", requestMethod = RequestMethod.GET)
     @RequestMapping(value = "/group/{roomId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ChatGroupDto getGroup(@PathVariable("roomId") String roomId) {
-        return chatService.getByRoomId(roomId);
+    public ChatRoomDto getGroup(@PathVariable("roomId") Long roomId) {
+        return chatService.getById(roomId);
     }
 
     @UrlDeclaration(description = "Получить сообщения группы", requestMethod = RequestMethod.GET)
     @RequestMapping(value = "/group/{roomId}/messages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<ChatMessageDto> getMessagesGroup(@PathVariable("roomId") String roomId,
+    public Page<ChatMessageDto> getMessagesGroup(@PathVariable("roomId") Long roomId,
                                   @RequestParam(value = "page", defaultValue = "0") Integer number,
                                   @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return chatMessageService.getAllByRoom(roomId, number, pageSize);

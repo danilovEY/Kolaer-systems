@@ -15,6 +15,7 @@ import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import org.springframework.web.socket.sockjs.frame.Jackson2SockJsMessageCodec;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.system.Authentication;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
@@ -32,9 +33,9 @@ import java.util.concurrent.TimeUnit;
 public class ChatClientImpl implements ChatClient {
     private final List<ChatObserver> observers = new ArrayList<>();
     private final List<ChatInfoHandler> queueInfoHandlers = new ArrayList<>();
-    private final Map<String, ChatMessageHandler> queueSubs = Collections.synchronizedMap(new HashMap<>());
-    private final Map<String, ChatMessageDto> queueMessages = Collections.synchronizedMap(new HashMap<>());
-    private final Map<String, StompSession.Subscription> subscriptionMap = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, List<ChatMessageHandler>> queueSubs = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, List<ChatMessageDto>> queueMessages = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, List<StompSession.Subscription>> subscriptionMap = Collections.synchronizedMap(new HashMap<>());
 
     private static final String TOPIC_CHATS = "/topic/chats.";
     private static final String TOPIC_INFO = "/topic/info.";
@@ -82,6 +83,7 @@ public class ChatClientImpl implements ChatClient {
             @Override
             public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
                 log.debug("Успешное подключение к чату");
+
                 ChatClientImpl.this.session = session;
                 UniformSystemEditorKitSingleton.getInstance()
                         .getUISystemUS()
@@ -89,9 +91,19 @@ public class ChatClientImpl implements ChatClient {
                         .showInformationNotify(null, "Успешное подключение к чату");
 
                 observers.forEach(obs -> obs.connect(ChatClientImpl.this));
-                queueSubs.forEach(ChatClientImpl.this::subscribeRoom);
                 queueInfoHandlers.forEach(ChatClientImpl.this::subscribeInfo);
-                queueMessages.forEach(ChatClientImpl.this::send);
+
+                for (Map.Entry<String, List<ChatMessageHandler>> roomHandlers : queueSubs.entrySet()) {
+                    for (ChatMessageHandler chatMessageHandler : roomHandlers.getValue()) {
+                        subscribeRoom(roomHandlers.getKey(), chatMessageHandler);
+                    }
+                }
+
+                for (Map.Entry<String, List<ChatMessageDto>> roomMessages : queueMessages.entrySet()) {
+                    for (ChatMessageDto chatMessageDto : roomMessages.getValue()) {
+                        send(roomMessages.getKey(), chatMessageDto);
+                    }
+                }
 
                 queueInfoHandlers.clear();
                 queueSubs.clear();
@@ -154,12 +166,7 @@ public class ChatClientImpl implements ChatClient {
             }
         });
 
-        connect.addCallback(result -> {
-            log.debug("НОРМ!");
-            log.debug(result.toString());
-        }, ex -> {
-            log.debug("Ошибка", ex);
-        });
+        connect.addCallback(result -> log.debug("Подключено!"), ex -> log.debug("Ошибка", ex));
     }
 
     @Override
@@ -190,10 +197,24 @@ public class ChatClientImpl implements ChatClient {
             stompHeaders.setDestination(TOPIC_CHATS + roomName);
             StompSession.Subscription subscribe = session.subscribe(stompHeaders, chatMessageHandler);
             chatMessageHandler.setSubscriptionId(subscribe.getSubscriptionId());
-            subscriptionMap.put(subscribe.getSubscriptionId(), subscribe);
+
+            if(!subscriptionMap.containsKey(subscribe.getSubscriptionId())) {
+                subscriptionMap.put(subscribe.getSubscriptionId(), new ArrayList<>());
+            }
+
+            subscriptionMap.get(subscribe.getSubscriptionId()).add(subscribe);
         } else {
-            queueSubs.put(roomName, chatMessageHandler);
+            if(!queueSubs.containsKey(roomName)) {
+                queueSubs.put(roomName, new ArrayList<>());
+            }
+
+            queueSubs.get(roomName).add(chatMessageHandler);
         }
+    }
+
+    @Override
+    public void subscribeRoom(ChatRoomDto chatRoomDto, ChatMessageHandler chatMessageHandler) {
+        subscribeRoom(chatRoomDto.getId().toString(), chatMessageHandler);
     }
 
     @Override
@@ -205,7 +226,10 @@ public class ChatClientImpl implements ChatClient {
             stompHeaders.setDestination(TOPIC_INFO + authentication.getAuthorizedUser().getId());
             StompSession.Subscription subscribe = session.subscribe(stompHeaders, chatMessageHandler);
             chatMessageHandler.setSubscriptionId(subscribe.getSubscriptionId());
-            subscriptionMap.put(subscribe.getSubscriptionId(), subscribe);
+
+            if(!subscriptionMap.containsKey(subscribe.getSubscriptionId())) {
+                subscriptionMap.put(subscribe.getSubscriptionId(), new ArrayList<>());
+            }
         } else {
             queueInfoHandlers.add(chatMessageHandler);
         }
@@ -219,14 +243,24 @@ public class ChatClientImpl implements ChatClient {
             stompHeaders.setDestination(SEND + roomName);
             session.send(stompHeaders, message);
         } else {
-            queueMessages.put(roomName, message);
+            if(!queueMessages.containsKey(roomName)) {
+                queueMessages.put(roomName, new ArrayList<>());
+            }
+
+            queueMessages.get(roomName).add(message);
         }
+    }
+
+    @Override
+    public void send(ChatRoomDto chatRoomDto, ChatMessageDto message) {
+        send(chatRoomDto.getId().toString(), message);
     }
 
     @Override
     public void unSubscribe(Subscription subscription) {
         if(isConnect() && subscription.getSubscriptionId() != null) {
-            subscriptionMap.get(subscription.getSubscriptionId()).unsubscribe();
+            subscriptionMap.get(subscription.getSubscriptionId())
+                    .forEach(StompSession.Subscription::unsubscribe);
         }
     }
 

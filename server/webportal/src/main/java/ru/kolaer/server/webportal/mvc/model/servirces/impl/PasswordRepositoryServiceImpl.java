@@ -19,16 +19,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class PasswordRepositoryServiceImpl
-        extends AbstractDefaultService<PasswordRepositoryDto, PasswordRepositoryEntity>
+        extends AbstractDefaultService<PasswordRepositoryDto, PasswordRepositoryEntity, PasswordRepositoryDao, PasswordRepositoryConverter>
         implements PasswordRepositoryService {
-    private final PasswordRepositoryDao passwordRepositoryDao;
-    private final PasswordRepositoryConverter defaultConverter;
 
     protected PasswordRepositoryServiceImpl(PasswordRepositoryDao passwordRepositoryDao,
                                             PasswordRepositoryConverter converter) {
         super(passwordRepositoryDao, converter);
-        this.defaultConverter = converter;
-        this.passwordRepositoryDao = passwordRepositoryDao;
     }
 
     @Override
@@ -37,8 +33,8 @@ public class PasswordRepositoryServiceImpl
             List<PasswordRepositoryDto> result = this.getAllByPnumbers(Collections.singletonList(pnumber));
             return new Page<>(result, 0, 0, result.size());
         } else {
-            Long count = passwordRepositoryDao.findCountAllByPnumber(pnumber, number, pageSize);
-            List<PasswordRepositoryDto> result = passwordRepositoryDao.findAllByPnumber(pnumber, number, pageSize)
+            Long count = defaultEntityDao.findCountAllByPnumber(pnumber, number, pageSize);
+            List<PasswordRepositoryDto> result = defaultEntityDao.findAllByPnumber(pnumber, number, pageSize)
                     .stream()
                     .map(defaultConverter::convertToDto)
                     .collect(Collectors.toList());
@@ -52,12 +48,12 @@ public class PasswordRepositoryServiceImpl
             throw new UnexpectedRequestParams("Имя и табельный номер не может быть пустым!");
         }
 
-        return defaultConverter.convertToDto(passwordRepositoryDao.findByNameAndPnumber(name, pnumber));
+        return defaultConverter.convertToDto(defaultEntityDao.findByNameAndPnumber(name, pnumber));
     }
 
     @Override
     public List<PasswordRepositoryDto> getAllByPnumbers(List<Long> idsChief) {
-        return passwordRepositoryDao.findAllByPnumbers(idsChief)
+        return defaultEntityDao.findAllByPnumbers(idsChief)
                 .stream()
                 .map(defaultConverter::convertToDto)
                 .collect(Collectors.toList());

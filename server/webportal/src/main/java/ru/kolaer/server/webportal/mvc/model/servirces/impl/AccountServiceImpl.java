@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
-import ru.kolaer.server.webportal.mvc.model.dao.DefaultDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
@@ -17,15 +16,12 @@ import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
  */
 @Service
 @Slf4j
-public class AccountServiceImpl extends AbstractDefaultService<AccountDto, AccountEntity> implements AccountService {
-    private final AccountDao accountDao;
+public class AccountServiceImpl extends AbstractDefaultService<AccountDto, AccountEntity, AccountDao, AccountConverter> implements AccountService {
 
     @Autowired
-    protected AccountServiceImpl(DefaultDao<AccountEntity> defaultEntityDao,
-                                 AccountConverter accountConverter,
-                                 AccountDao accountDao) {
+    protected AccountServiceImpl(AccountDao defaultEntityDao,
+                                 AccountConverter accountConverter) {
         super(defaultEntityDao, accountConverter);
-        this.accountDao = accountDao;
     }
 
     @Override
@@ -35,7 +31,7 @@ public class AccountServiceImpl extends AbstractDefaultService<AccountDto, Accou
             return null;
         }
 
-        return baseConverter.convertToDto(accountDao.findName(login));
+        return defaultConverter.convertToDto(defaultEntityDao.findName(login));
     }
 
 }

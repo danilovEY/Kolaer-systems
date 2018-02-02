@@ -20,15 +20,15 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
 
     @Override
     @Transactional(readOnly = true)
-    public List<ChatMessageEntity> findAllByRoom(String room, boolean withHide, Integer number, Integer pageSize) {
-        String sql = "FROM " + getEntityName() + " WHERE room = :room";
+    public List<ChatMessageEntity> findAllByRoom(Long roomId, boolean withHide, Integer number, Integer pageSize) {
+        String sql = "FROM " + getEntityName() + " WHERE roomId = :room";
         if(!withHide) {
             sql += " AND hide = false";
         }
 
         sql += " ORDER BY id DESC";
         return getSession().createQuery(sql, getEntityClass())
-                .setParameter("room", room)
+                .setParameter("room", roomId)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .list();
@@ -36,7 +36,7 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
 
     @Override
     @Transactional(readOnly = true)
-    public List<ChatMessageEntity> findAllByRoom(String room, boolean withHide) {
+    public List<ChatMessageEntity> findAllByRoom(Long roomId, boolean withHide) {
         String sql = "FROM " + getEntityName() + " WHERE room = :room";
         if(!withHide) {
             sql += " AND hide = false";
@@ -44,13 +44,13 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
 
         sql += " ORDER BY id DESC";
         return getSession().createQuery(sql, getEntityClass())
-                .setParameter("room", room)
+                .setParameter("room", roomId)
                 .list();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Long findCountByRoom(String room, boolean withHide) {
+    public Long findCountByRoom(Long roomId, boolean withHide) {
         String sql = "SELECT COUNT(id) FROM " + getEntityName() + " WHERE room = :room";
         if(!withHide) {
             sql += " AND hide = false";
@@ -58,7 +58,7 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
 
         sql += " ORDER BY id DESC";
         return getSession().createQuery(sql, Long.class)
-                .setParameter("room", room)
+                .setParameter("room", roomId)
                 .uniqueResult();
     }
 

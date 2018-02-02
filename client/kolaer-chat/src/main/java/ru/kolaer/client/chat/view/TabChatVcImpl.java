@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
-import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
@@ -26,14 +25,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by danilovey on 02.11.2017.
  */
 @Slf4j
-public class ChatVcImpl implements ChatVc, ChatRoomObserver {
-    private final Map<String, ChatRoomVc> groupDtoMap = new HashMap<>();
+public class TabChatVcImpl implements TabChatVc, ChatRoomObserver {
+    private final Map<Long, TabChatRoomVc> groupDtoMap = new HashMap<>();
     private final UniformSystemPlugin uniformSystemPlugin;
     private String subInfoId;
     private BorderPane mainPane;
@@ -42,12 +40,12 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
     private NotificationMessage notificationMessagePane;
     private Label labelInfo;
 
-    public ChatVcImpl(UniformSystemPlugin uniformSystemPlugin) {
+    public TabChatVcImpl(UniformSystemPlugin uniformSystemPlugin) {
         this.uniformSystemPlugin = uniformSystemPlugin;
     }
 
     @Override
-    public void initView(Consumer<ChatVc> viewVisit) {
+    public void initView(Consumer<TabChatVc> viewVisit) {
         mainPane = new BorderPane();
         mainPane.getStylesheets().add(getClass().getResource("/chat.css").toString());
 
@@ -79,13 +77,13 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
             Tools.runOnWithOutThreadFX(() -> mainPane.setCenter(tabPane));
         }
 
-        for (ChatRoomVc chatRoomVc : groupDtoMap.values()) {
-            chatRoomVc.connect(chatClient);
+        for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
+            tabChatRoomVc.connect(chatClient);
         }
 
         Tools.runOnWithOutThreadFX(() -> labelInfo.setText("Загрузка комнат..."));
 
-        ServerResponse<List<ChatGroupDto>> activeGroup = UniformSystemEditorKitSingleton.getInstance()
+        ServerResponse<List<ChatRoomDto>> activeGroup = UniformSystemEditorKitSingleton.getInstance()
                 .getUSNetwork()
                 .getKolaerWebServer()
                 .getApplicationDataBase()
@@ -109,16 +107,16 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         }
     }
 
-    private boolean filterChatGroup(ChatGroupDto chatGroupDto) {
+    private boolean filterChatGroup(ChatRoomDto chatRoomDto) {
         AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
                 .getAuthentication()
                 .getAuthorizedUser();
 
-        return chatGroupDto.getType() == ChatGroupType.MAIN ||
-                (chatGroupDto.getUserCreated() != null && chatGroupDto.getUserCreated()
+        return chatRoomDto.getType() == ChatGroupType.MAIN ||
+                (chatRoomDto.getUserCreated() != null && chatRoomDto.getUserCreated()
                         .getId().equals(authorizedUser.getId())) ||
-                (chatGroupDto.getUsers() != null &&
-                        chatGroupDto.getUsers()
+                (chatRoomDto.getUsers() != null &&
+                        chatRoomDto.getUsers()
                                 .stream()
                                 .anyMatch(chatUserDto -> chatUserDto.getAccountId().equals(authorizedUser.getId())));
     }
@@ -133,39 +131,39 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
         return subInfoId;
     }
 
-    private ChatRoomVc createRoom(ChatGroupDto chatGroupDto) {
-        if(groupDtoMap.containsKey(chatGroupDto.getRoomId())) {
-            return groupDtoMap.get(chatGroupDto.getRoomId());
+    private TabChatRoomVc createRoom(ChatRoomDto chatRoomDto) {
+        if(groupDtoMap.containsKey(chatRoomDto.getId())) {
+            return groupDtoMap.get(chatRoomDto.getId());
         }
 
-        ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatGroupDto);
-        groupDtoMap.put(chatGroupDto.getRoomId(), chatRoomVc);
-        chatRoomVc.addObserver(this);
-        chatRoomVc.addObserver(notificationMessagePane);
+        TabChatRoomVc tabChatRoomVc = new TabChatRoomVcImpl(chatRoomDto);
+        groupDtoMap.put(chatRoomDto.getId(), tabChatRoomVc);
+        tabChatRoomVc.addObserver(this);
+        tabChatRoomVc.addObserver(notificationMessagePane);
 
         if(chatClient.isConnect()) {
-            chatRoomVc.connect(chatClient);
+            tabChatRoomVc.connect(chatClient);
         }
 
-        if(chatGroupDto.getType() == ChatGroupType.MAIN) {
-            Tools.runOnWithOutThreadFX(() -> showChatRoom(chatRoomVc, false));
+        if(chatRoomDto.getType() == ChatGroupType.MAIN) {
+            Tools.runOnWithOutThreadFX(() -> showChatRoom(tabChatRoomVc, false));
         }
 
-        return chatRoomVc;
+        return tabChatRoomVc;
     }
 
-    private void initRoom(ChatRoomVc chatRoomVc) {
-        if(chatRoomVc == null) {
+    private void initRoom(TabChatRoomVc tabChatRoomVc) {
+        if(tabChatRoomVc == null) {
             return;
         }
 
-        chatRoomVc.initView((ChatRoomVc chatRoom) -> {
+        tabChatRoomVc.initView((TabChatRoomVc chatRoom) -> {
             ServerResponse<Page<ChatMessageDto>> messageByRoomId = UniformSystemEditorKitSingleton.getInstance()
                     .getUSNetwork()
                     .getKolaerWebServer()
                     .getApplicationDataBase()
                     .getChatTable()
-                    .getMessageByRoomId(chatRoom.getChatGroupDto().getRoomId());
+                    .getMessageByRoomId(chatRoom.getChatRoomDto().getId());
 
             if(messageByRoomId.isServerError()) {
                 UniformSystemEditorKitSingleton.getInstance()
@@ -183,41 +181,41 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
 
     @Override
     public void disconnect(ChatClient chatClient) {
-        for (ChatRoomVc chatRoomVc : groupDtoMap.values()) {
-            chatRoomVc.disconnect(chatClient);
+        for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
+            tabChatRoomVc.disconnect(chatClient);
         }
     }
 
     @Override
-    public ChatRoomVc showChatRoom(ChatRoomVc chatRoomVc, boolean focus) {
-        if(!chatRoomVc.isViewInit()) {
-            initRoom(chatRoomVc);
+    public TabChatRoomVc showChatRoom(TabChatRoomVc tabChatRoomVc, boolean focus) {
+        if(!tabChatRoomVc.isViewInit()) {
+            initRoom(tabChatRoomVc);
         }
 
-        if(!roomIsShow(chatRoomVc)) {
-            tabPane.getTabs().add(chatRoomVc.getContent());
+        if(!roomIsShow(tabChatRoomVc)) {
+            tabPane.getTabs().add(tabChatRoomVc.getContent());
         }
 
         if(focus) {
-            tabPane.getSelectionModel().select(chatRoomVc.getContent());
+            tabPane.getSelectionModel().select(tabChatRoomVc.getContent());
         }
 
-        return chatRoomVc;
+        return tabChatRoomVc;
     }
 
     @Override
-    public ChatRoomVc getChatRoom(ChatGroupDto chatGroupDto) {
-        return groupDtoMap.get(chatGroupDto.getRoomId());
+    public TabChatRoomVc getChatRoom(ChatRoomDto chatRoomDto) {
+        return groupDtoMap.get(chatRoomDto.getId());
     }
 
     @Override
-    public boolean roomIsShow(ChatRoomVc chatRoomVc) {
-        return tabPane.getTabs().contains(chatRoomVc.getContent());
+    public boolean roomIsShow(TabChatRoomVc tabChatRoomVc) {
+        return tabPane.getTabs().contains(tabChatRoomVc.getContent());
     }
 
     @Override
-    public boolean roomIsFocus(ChatRoomVc chatRoomVc) {
-        return tabPane.getSelectionModel().isSelected(tabPane.getTabs().indexOf(chatRoomVc.getContent()));
+    public boolean roomIsFocus(TabChatRoomVc tabChatRoomVc) {
+        return tabPane.getSelectionModel().isSelected(tabPane.getTabs().indexOf(tabChatRoomVc.getContent()));
     }
 
     @Override
@@ -238,25 +236,25 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
                         .showErrorNotify(activeByIdAccountResponse.getExceptionMessage());
             } else {
                 Tools.runOnWithOutThreadFX(() -> {
-                    for (ChatRoomVc chatRoomVc : groupDtoMap.values()) {
-                        chatRoomVc.connectUser(activeByIdAccountResponse.getResponse());
+                    for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
+                        tabChatRoomVc.connectUser(activeByIdAccountResponse.getResponse());
                     }
                 });
             }
         } else if(info.getCommand() == ChatInfoCommand.DISCONNECT) {
             Tools.runOnWithOutThreadFX(() -> {
-                for (ChatRoomVc chatRoomVc : groupDtoMap.values()) {
-                    chatRoomVc.disconnectUser(info.getAccountId());
+                for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
+                    tabChatRoomVc.disconnectUser(info.getAccountId());
                 }
             });
         } else if(info.getCommand() == ChatInfoCommand.CREATE_NEW_ROOM) {
-            ServerResponse<ChatGroupDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
+            ServerResponse<ChatRoomDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
                     .getInstance()
                     .getUSNetwork()
                     .getKolaerWebServer()
                     .getApplicationDataBase()
                     .getChatTable()
-                    .getGroupByRoomId(info.getData());
+                    .getGroupByRoomId(((ChatInfoCreateNewRoomDto)info).getData().getId());
 
             if(groupDtoServerResponse.isServerError()) {
                 UniformSystemEditorKitSingleton.getInstance()
@@ -270,19 +268,34 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
             }
         } else if(info.getCommand() == ChatInfoCommand.HIDE_MESSAGES) {
             log.info(info.toString());
-            if(StringUtils.isEmpty(info.getData())) {
-                return;
-            }
-
-            List<Long> messageIds = Stream.of(info.getData().split(","))
-                    .map(Long::valueOf)
-                    .collect(Collectors.toList());
-
-            for (ChatRoomVc chatRoomVc : groupDtoMap.values()) {
-                chatRoomVc.removeMessages(messageIds);
-            }
+//            if(StringUtils.isEmpty(info.getData())) {
+//                return;
+//            }
+//
+//            List<Long> messageIds = Stream.of(info.getData().split(","))
+//                    .map(Long::valueOf)
+//                    .collect(Collectors.toList());
+//
+//            for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
+//                tabChatRoomVc.removeMessages(messageIds);
+//            }
 
         }
+    }
+
+    @Override
+    public void handlerInfo(ChatInfoDto chatInfoDto) {
+
+    }
+
+    @Override
+    public void handlerNewRoom(ChatInfoCreateNewRoomDto chatInfoCreateNewRoomDto) {
+
+    }
+
+    @Override
+    public void handlerUserAction(ChatInfoUserActionDto chatInfoUserActionDto) {
+
     }
 
     @Override
@@ -297,22 +310,22 @@ public class ChatVcImpl implements ChatVc, ChatRoomObserver {
 
 
     @Override
-    public void getMessage(ChatGroupDto chatGroupDto, ChatMessageDto chatMessageDto) {
-        ChatRoomVc chatRoomVc = groupDtoMap.get(chatGroupDto.getRoomId());
-        if(chatRoomVc != null) {
+    public void getMessage(ChatRoomDto chatRoomDto, ChatMessageDto chatMessageDto) {
+        TabChatRoomVc tabChatRoomVc = groupDtoMap.get(chatRoomDto.getId());
+        if(tabChatRoomVc != null) {
             Tools.runOnWithOutThreadFX(() -> {
-                showChatRoom(chatRoomVc, false);
+                showChatRoom(tabChatRoomVc, false);
             });
         }
     }
 
     @Override
-    public void createMessageToUser(ChatGroupDto chatGroupDto, List<ChatUserDto> chatUserDtos) {
+    public void createMessageToUser(ChatRoomDto chatRoomDto, List<ChatUserDto> chatUserDtos) {
         IdsDto idsAccounts = new IdsDto(chatUserDtos.stream()
                 .map(ChatUserDto::getAccountId)
                 .collect(Collectors.toList()));
 
-        ServerResponse<ChatGroupDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
+        ServerResponse<ChatRoomDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
                 .getInstance()
                 .getUSNetwork()
                 .getKolaerWebServer()

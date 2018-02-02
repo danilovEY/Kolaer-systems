@@ -1,10 +1,11 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.IdDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by danilovey on 02.11.2017.
  */
-public interface ChatService extends DefaultService<ChatGroupDto> {
+public interface ChatService extends DefaultService<ChatRoomDto> {
     ChatUserDto addActiveUser(ChatUserDto dto);
     void removeActiveUser(ChatUserDto dto);
 
@@ -20,9 +21,7 @@ public interface ChatService extends DefaultService<ChatGroupDto> {
 
     ChatUserDto getUserByAccountId(Long id);
 
-    void removeFromAllGroup(ChatUserDto chatUserDto);
-
-    ChatGroupDto createGroup(String name);
+    ChatRoomDto createGroup(String name);
 
     void send(ChatInfoDto chatInfoDto);
 
@@ -32,14 +31,13 @@ public interface ChatService extends DefaultService<ChatGroupDto> {
 
     void send(ChatMessageDto message);
 
-    ChatGroupDto createPrivateGroup(String name, IdsDto idsDto);
-    ChatGroupDto createPublicGroup(String name, IdsDto idsDto);
+    ChatRoomDto createSingleGroup(IdDto accountId);
+    ChatRoomDto createPrivateGroup(String name, IdsDto idsDto);
+    ChatRoomDto createPublicGroup(String name, IdsDto idsDto);
 
-    ChatGroupDto getByRoomId(String roomId);
+    List<ChatRoomDto> getAllForUser();
 
-    List<ChatGroupDto> getAllForUser();
-
-    ChatGroupDto getMainGroup();
+    ChatRoomDto getMainGroup();
 
     void hideMessage(IdsDto idsDto, boolean hide);
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="17" author="Danilov">
+        <createTable tableName="chat_room">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="type" type="VARCHAR(20)" defaultValue="PRIVATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="room_key" type="VARCHAR(255)"/>
+            <column name="user_created_id" type="BIGINT"/>
+        </createTable>
+        <addPrimaryKey tableName="chat_room" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="chat_room" baseColumnNames="user_created_id" constraintName="chat_room_from_account_fk"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

@@ -20,71 +20,68 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class EmployeeOtherOrganizationServiceImpl
-        extends AbstractDefaultService<EmployeeOtherOrganizationDto, EmployeeOtherOrganizationEntity>
+        extends AbstractDefaultService<EmployeeOtherOrganizationDto, EmployeeOtherOrganizationEntity, EmployeeOtherOrganizationDao, EmployeeOtherOrganizationConverter>
         implements EmployeeOtherOrganizationService {
-
-    private final EmployeeOtherOrganizationDao employeeOtherOrganizationDao;
 
     protected EmployeeOtherOrganizationServiceImpl(EmployeeOtherOrganizationDao employeeOtherOrganizationDao,
                                                    EmployeeOtherOrganizationConverter converter) {
         super(employeeOtherOrganizationDao, converter);
-        this.employeeOtherOrganizationDao = employeeOtherOrganizationDao;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeOtherOrganizationDto> getUserRangeBirthday(Date startData, Date endData) {
-        return employeeOtherOrganizationDao.getUserRangeBirthday(startData, endData)
+        return defaultEntityDao.getUserRangeBirthday(startData, endData)
                 .stream()
-                .map(baseConverter::convertToDto)
+                .map(defaultConverter::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeOtherOrganizationDto> getUsersByBirthday(Date date) {
-        return employeeOtherOrganizationDao.getUsersByBirthday(date)
+        return defaultEntityDao.getUsersByBirthday(date)
                 .stream()
-                .map(baseConverter::convertToDto)
+                .map(defaultConverter::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeOtherOrganizationDto> getUserBirthdayToday() {
-        return employeeOtherOrganizationDao.getUserBirthdayToday()
+        return defaultEntityDao.getUserBirthdayToday()
                 .stream()
-                .map(baseConverter::convertToDto)
+                .map(defaultConverter::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeOtherOrganizationDto> getUsersByInitials(String initials) {
-        return employeeOtherOrganizationDao.getUsersByInitials(initials)
+        return defaultEntityDao.getUsersByInitials(initials)
                 .stream()
-                .map(baseConverter::convertToDto)
+                .map(defaultConverter::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public int getCountUserBirthday(Date date) {
-        return employeeOtherOrganizationDao.getCountUserBirthday(date);
+        return defaultEntityDao.getCountUserBirthday(date);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeOtherOrganizationDto> getUsersByBirthdayAndOrg(Date date, String organization) {
-        return employeeOtherOrganizationDao.getUsersByBirthdayAndOrg(date, organization)
+        return defaultEntityDao.getUsersByBirthdayAndOrg(date, organization)
                 .stream()
-                .map(baseConverter::convertToDto)
+                .map(defaultConverter::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public int getCountUserBirthdayAndOrg(Date date, String organization) {
-        return employeeOtherOrganizationDao.getCountUserBirthdayAndOrg(date, organization);
+        return defaultEntityDao.getCountUserBirthdayAndOrg(date, organization);
     }
 }

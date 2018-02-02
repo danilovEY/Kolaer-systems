@@ -2,11 +2,12 @@ package ru.kolaer.client.usa.system.network;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.api.mvp.model.kolaerweb.IdDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.api.system.network.ChatTable;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class ChatTableImpl implements ChatTable, RestTemplateService {
     private final String URL_GET_ALL_ACTIVE;
     private final String URL_POST_CREATE_PRIVATE_GROUP;
+    private final String URL_POST_CREATE_SINGLE_GROUP;
     private final String URL_GET_GROUP;
     private final String URL_HIDE_MESSAGES;
     private final String URL_GET_ACTIVE_BY_ACCOUNT_ID;
@@ -32,14 +34,15 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
         this.URL_HIDE_MESSAGES = url + "/message/hide";
         this.URL_GET_ALL_ACTIVE = url + "/active/all";
         this.URL_POST_CREATE_PRIVATE_GROUP = url + "/group/private";
+        this.URL_POST_CREATE_SINGLE_GROUP = url + "/group/single";
         this.URL_GET_GROUP = url + "/group/";
         this.URL_GET_ACTIVE_BY_ACCOUNT_ID = url + "/active?account_id=";
     }
 
 
     @Override
-    public ServerResponse<List<ChatGroupDto>> getActiveGroup() {
-        return getServerResponses(restTemplate, URL_GET_ALL_ACTIVE, ChatGroupDto[].class, objectMapper);
+    public ServerResponse<List<ChatRoomDto>> getActiveGroup() {
+        return getServerResponses(restTemplate, URL_GET_ALL_ACTIVE, ChatRoomDto[].class, objectMapper);
     }
 
     @Override
@@ -48,23 +51,30 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     }
 
     @Override
-    public ServerResponse<ChatGroupDto> createPrivateGroup(IdsDto idsDto, String name) {
+    public ServerResponse<ChatRoomDto> createPrivateGroup(IdsDto idsDto, String name) {
         String atr = Optional.ofNullable(name)
                 .map(n -> "?name=" + n)
                 .orElse("");
 
         return postServerResponse(restTemplate, URL_POST_CREATE_PRIVATE_GROUP + atr,
                 idsDto,
-                ChatGroupDto.class, objectMapper);
+                ChatRoomDto.class, objectMapper);
     }
 
     @Override
-    public ServerResponse<ChatGroupDto> getGroupByRoomId(String roomId) {
-        return getServerResponse(restTemplate, URL_GET_GROUP + roomId, ChatGroupDto.class, objectMapper);
+    public ServerResponse<ChatRoomDto> createSingleGroup(IdDto idDto) {
+        return postServerResponse(restTemplate, URL_POST_CREATE_SINGLE_GROUP,
+                idDto,
+                ChatRoomDto.class, objectMapper);
     }
 
     @Override
-    public ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(String roomId) {
+    public ServerResponse<ChatRoomDto> getGroupByRoomId(long roomId) {
+        return getServerResponse(restTemplate, URL_GET_GROUP + roomId, ChatRoomDto.class, objectMapper);
+    }
+
+    @Override
+    public ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(long roomId) {
         return getPageResponse(restTemplate, URL_GET_GROUP + roomId + "/messages", ChatMessageDto.class, objectMapper);
     }
 

@@ -13,18 +13,15 @@ import ru.kolaer.server.webportal.mvc.model.servirces.NotifyMessageService;
  * Created by danilovey on 18.08.2016.
  */
 @Service
-public class NotifyMessageImpl extends AbstractDefaultService<NotifyMessageDto, NotifyMessageEntity> implements NotifyMessageService {
-
-    private final NotifyMessageDao notifyMessageDao;
+public class NotifyMessageImpl extends AbstractDefaultService<NotifyMessageDto, NotifyMessageEntity, NotifyMessageDao, NotifyMessageConverter> implements NotifyMessageService {
 
     protected NotifyMessageImpl(NotifyMessageDao notifyMessageDao, NotifyMessageConverter converter) {
         super(notifyMessageDao, converter);
-        this.notifyMessageDao = notifyMessageDao;
     }
 
     @Override
     @Transactional(readOnly = true)
     public NotifyMessageDto getLastNotifyMessage() {
-        return baseConverter.convertToDto(notifyMessageDao.getLastNotifyMessage());
+        return defaultConverter.convertToDto(defaultEntityDao.getLastNotifyMessage());
     }
 }

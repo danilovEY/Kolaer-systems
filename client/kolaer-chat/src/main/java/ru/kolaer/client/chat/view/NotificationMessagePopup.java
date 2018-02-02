@@ -2,8 +2,8 @@ package ru.kolaer.client.chat.view;
 
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.ui.NotifyAction;
@@ -15,26 +15,26 @@ import java.util.Collections;
  * Created by danilovey on 11.12.2017.
  */
 public class NotificationMessagePopup implements NotificationMessage {
-    private final ChatVc chatVc;
+    private final TabChatVc tabChatVc;
     private final UniformSystemPlugin uniformSystemPlugin;
 
-    public NotificationMessagePopup(ChatVc chatVc,
+    public NotificationMessagePopup(TabChatVc tabChatVc,
                                     UniformSystemPlugin uniformSystemPlugin) {
-        this.chatVc = chatVc;
+        this.tabChatVc = tabChatVc;
         this.uniformSystemPlugin = uniformSystemPlugin;
     }
 
     @Override
-    public void getMessage(ChatGroupDto chatGroupDto, ChatMessageDto chatMessageDto) {
-        ChatRoomVc chatRoom = chatVc.getChatRoom(chatGroupDto);
+    public void getMessage(ChatRoomDto chatRoomDto, ChatMessageDto chatMessageDto) {
+        TabChatRoomVc chatRoom = tabChatVc.getChatRoom(chatRoomDto);
 
         Stage mainStage = UniformSystemEditorKitSingleton.getInstance()
                 .getUISystemUS()
                 .getMainStage();
 
-        if(mainStage.isIconified() || !chatVc.roomIsFocus(chatRoom)) {
+        if(mainStage.isIconified() || !tabChatVc.roomIsFocus(chatRoom)) {
             Tools.runOnWithOutThreadFX(() -> {
-                NotifyAction notifyAction = new NotifyAction("Перейти в " + chatGroupDto.getName(), actionEvent -> {
+                NotifyAction notifyAction = new NotifyAction("Перейти в " + chatRoomDto.getName(), actionEvent -> {
                     Tools.runOnWithOutThreadFX(() -> {
                         if(!mainStage.isShowing()) {
                             mainStage.show();
@@ -51,7 +51,7 @@ public class NotificationMessagePopup implements NotificationMessage {
                                 .getPluginsUS()
                                 .showPlugin(uniformSystemPlugin);
 
-                        chatVc.showChatRoom(chatRoom, true);
+                        tabChatVc.showChatRoom(chatRoom, true);
                     });
                 });
 

@@ -8,21 +8,21 @@ import java.util.List;
  * Created by danilovey on 08.11.2017.
  */
 public interface ChatMessageDao extends DefaultDao<ChatMessageEntity> {
-    List<ChatMessageEntity> findAllByRoom(String room, boolean withHide, Integer number, Integer pageSize);
-    default List<ChatMessageEntity> findAllByRoom(String room, Integer number, Integer pageSize) {
-        return findAllByRoom(room, false, number, pageSize);
+    List<ChatMessageEntity> findAllByRoom(Long roomId, boolean withHide, Integer number, Integer pageSize);
+    default List<ChatMessageEntity> findAllByRoom(Long roomId, Integer number, Integer pageSize) {
+        return findAllByRoom(roomId, false, number, pageSize);
     }
 
-    List<ChatMessageEntity> findAllByRoom(String room, boolean withHide);
-    default List<ChatMessageEntity> findAllByRoom(String room) {
-        return this.findAllByRoom(room, false);
+    List<ChatMessageEntity> findAllByRoom(Long roomId, boolean withHide);
+    default List<ChatMessageEntity> findAllByRoom(Long roomId) {
+        return this.findAllByRoom(roomId, false);
     }
 
-    default Long findCountByRoom(String room) {
-        return findCountByRoom(room, false);
+    default Long findCountByRoom(Long roomId) {
+        return findCountByRoom(roomId, false);
     }
 
-    Long findCountByRoom(String room, boolean withHide);
+    Long findCountByRoom(Long roomId, boolean withHide);
 
     void setHideOnIds(List<Long> ids, boolean hide);
 }

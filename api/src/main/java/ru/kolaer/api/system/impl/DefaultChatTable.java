@@ -1,10 +1,11 @@
 package ru.kolaer.api.system.impl;
 
+import ru.kolaer.api.mvp.model.kolaerweb.IdDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.api.system.network.ChatTable;
 
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class DefaultChatTable implements ChatTable {
     @Override
-    public ServerResponse<List<ChatGroupDto>> getActiveGroup() {
+    public ServerResponse<List<ChatRoomDto>> getActiveGroup() {
         return ServerResponse.createServerResponse();
     }
 
@@ -25,17 +26,22 @@ public class DefaultChatTable implements ChatTable {
     }
 
     @Override
-    public ServerResponse<ChatGroupDto> createPrivateGroup(IdsDto idsDto, String name) {
+    public ServerResponse<ChatRoomDto> createPrivateGroup(IdsDto idsDto, String name) {
         return ServerResponse.createServerResponse();
     }
 
     @Override
-    public ServerResponse<ChatGroupDto> getGroupByRoomId(String roomId) {
+    public ServerResponse<ChatRoomDto> createSingleGroup(IdDto idDto) {
         return ServerResponse.createServerResponse();
     }
 
     @Override
-    public ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(String roomId) {
+    public ServerResponse<ChatRoomDto> getGroupByRoomId(long roomId) {
+        return ServerResponse.createServerResponse();
+    }
+
+    @Override
+    public ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(long roomId) {
         return ServerResponse.createServerResponse();
     }
 

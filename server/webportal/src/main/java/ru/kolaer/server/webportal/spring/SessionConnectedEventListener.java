@@ -6,9 +6,10 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
+import ru.kolaer.server.webportal.mvc.model.servirces.ChatRoomService;
 
 import java.security.Principal;
 import java.util.Date;
@@ -19,11 +20,11 @@ import java.util.Date;
 @Slf4j
 @Component
 public class SessionConnectedEventListener implements ApplicationListener<SessionConnectedEvent> {
-    private final ChatService chatService;
+    private final ChatRoomService chatService;
     private final AuthenticationService authenticationService;
 
 
-    public SessionConnectedEventListener(ChatService chatService,
+    public SessionConnectedEventListener(ChatRoomService chatService,
                                          AuthenticationService authenticationService) {
         this.chatService = chatService;
         this.authenticationService = authenticationService;
@@ -49,25 +50,12 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
 
         chatService.addActiveUser(chatUserDto);
 
-        ChatInfoDto chatInfoDto = new ChatInfoDto();
+        ChatInfoUserActionDto chatInfoDto = new ChatInfoUserActionDto();
         chatInfoDto.setCommand(ChatInfoCommand.CONNECT);
         chatInfoDto.setCreateInfo(new Date());
         chatInfoDto.setAccountId(chatUserDto.getAccountId());
-        chatInfoDto.setAccount(chatUserDto.getAccount());
+        chatInfoDto.setData(chatUserDto);
 
         chatService.send(chatInfoDto);
-
-        ChatMessageDto chatMessageDto = new ChatMessageDto();
-        chatMessageDto.setCreateMessage(new Date());
-        chatMessageDto.setType(ChatMessageType.SERVER_INFO);
-        chatMessageDto.setMessage("Пользователь \"" + chatUserDto.getName() + "\" вошел в чат");
-
-        for (ChatGroupDto chatGroupDto : chatService.getAll()) {
-            if(chatGroupDto.getUsers().contains(chatUserDto)) {
-                chatMessageDto.setId(null);
-                chatMessageDto.setRoom(chatGroupDto.getRoomId());
-                chatService.send(chatMessageDto);
-            }
-        }
     }
 }

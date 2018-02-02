@@ -17,30 +17,25 @@ import java.util.stream.Collectors;
  */
 @Service
 public class PasswordHistoryServiceImpl
-        extends AbstractDefaultService<PasswordHistoryDto, PasswordHistoryEntity>
+        extends AbstractDefaultService<PasswordHistoryDto, PasswordHistoryEntity, PasswordHistoryDao, PasswordHistoryConverter>
         implements PasswordHistoryService {
-
-    private final PasswordHistoryDao passwordHistoryDao;
-    private final PasswordHistoryConverter defaultConverter;
 
     protected PasswordHistoryServiceImpl(PasswordHistoryDao defaultEntityDao,
                                          PasswordHistoryConverter converter) {
         super(defaultEntityDao, converter);
-        this.passwordHistoryDao = defaultEntityDao;
-        this.defaultConverter = converter;
     }
 
     @Override
     public Page<PasswordHistoryDto> getHistoryByIdRepository(Long id, Integer number, Integer pageSize) {
         if(pageSize == null || pageSize == 0) {
-            List<PasswordHistoryDto> result = passwordHistoryDao.findAllHistoryByIdRepository(id)
+            List<PasswordHistoryDto> result = defaultEntityDao.findAllHistoryByIdRepository(id)
                     .stream()
                     .map(defaultConverter::convertToDto)
                     .collect(Collectors.toList());
             return new Page<>(result, 0, 0, result.size());
         } else {
-            Long count = passwordHistoryDao.findCountHistoryByIdRepository(id, number, pageSize);
-            List<PasswordHistoryDto> result = passwordHistoryDao.findHistoryByIdRepository(id, number, pageSize)
+            Long count = defaultEntityDao.findCountHistoryByIdRepository(id, number, pageSize);
+            List<PasswordHistoryDto> result = defaultEntityDao.findHistoryByIdRepository(id, number, pageSize)
                     .stream()
                     .map(defaultConverter::convertToDto)
                     .collect(Collectors.toList());
@@ -51,6 +46,6 @@ public class PasswordHistoryServiceImpl
 
     @Override
     public void deleteByIdRep(Long id) {
-        passwordHistoryDao.deleteByIdRep(id);
+        defaultEntityDao.deleteByIdRep(id);
     }
 }

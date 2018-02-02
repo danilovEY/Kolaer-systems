@@ -10,10 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 
 import java.util.Date;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class ChatMessageContentVcImpl implements ChatMessageContentVc {
-    private final ChatGroupDto chatGroupDto;
+    private final ChatRoomDto chatRoomDto;
     private BorderPane mainPane;
     private ListView<ChatMessageDto> chatMessageDtoListView;
     private TextArea textArea;
@@ -35,8 +35,8 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     private Consumer<ChatMessageDto> sendMessageConsumer;
     private ObservableList<ChatMessageDto> messages = FXCollections.observableArrayList();
 
-    public ChatMessageContentVcImpl(ChatGroupDto chatGroupDto) {
-        this.chatGroupDto = chatGroupDto;
+    public ChatMessageContentVcImpl(ChatRoomDto chatRoomDto) {
+        this.chatRoomDto = chatRoomDto;
     }
 
     @Override
@@ -101,8 +101,8 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
 
         chatMessageDtoListView.setContextMenu(new ContextMenu(hideMessages));
 
-        if(chatGroupDto.getType() != ChatGroupType.MAIN ||
-                (chatGroupDto.getType() == ChatGroupType.MAIN &&
+        if(chatRoomDto.getType() != ChatGroupType.MAIN ||
+                (chatRoomDto.getType() == ChatGroupType.MAIN &&
                         UniformSystemEditorKitSingleton.getInstance()
                                 .getAuthentication()
                                 .getAuthorizedUser()
@@ -159,7 +159,7 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
         chatMessageDto.setType(ChatMessageType.USER);
         chatMessageDto.setMessage(message);
         chatMessageDto.setCreateMessage(new Date());
-        chatMessageDto.setRoom(chatGroupDto.getRoomId());
+        chatMessageDto.setRoomId(chatRoomDto.getId());
         chatMessageDto.setFromAccount(UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser());
         return chatMessageDto;
     }

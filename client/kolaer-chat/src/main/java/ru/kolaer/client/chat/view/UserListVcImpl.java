@@ -9,7 +9,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
@@ -23,15 +23,15 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class UserListVcImpl implements UserListVc {
-    private final ChatGroupDto chatGroupDto;
+    private final ChatRoomDto chatRoomDto;
     private final ObservableList<ChatUserDto> items = FXCollections.observableArrayList();
 
     private BorderPane mainPane;
     private ListView<ChatUserDto> usersListView;
     private MenuItem createMessageToUser;
 
-    public UserListVcImpl(ChatGroupDto chatGroupDto) {
-        this.chatGroupDto = chatGroupDto;
+    public UserListVcImpl(ChatRoomDto chatRoomDto) {
+        this.chatRoomDto = chatRoomDto;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class UserListVcImpl implements UserListVc {
 
     @Override
     public void addUser(ChatUserDto chatUserDto) {
-        boolean containsUser = chatGroupDto.getUsers()
+        boolean containsUser = chatRoomDto.getUsers()
                 .stream()
                 .map(ChatUserDto::getAccountId)
                 .anyMatch(accId -> accId.equals(chatUserDto.getAccountId()));

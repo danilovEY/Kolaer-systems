@@ -12,7 +12,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.CounterService;
  * Created by danilovey on 25.08.2016.
  */
 @Service
-public class CounterServiceImpl extends AbstractDefaultService<CounterDto, CounterEntity> implements CounterService {
+public class CounterServiceImpl extends AbstractDefaultService<CounterDto, CounterEntity, CounterDao, CounterConverter> implements CounterService {
 
     protected CounterServiceImpl(CounterDao counterDao, CounterConverter converter) {
         super(counterDao, converter);
