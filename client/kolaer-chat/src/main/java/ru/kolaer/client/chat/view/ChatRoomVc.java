@@ -11,4 +11,7 @@ import ru.kolaer.client.chat.service.ChatObserver;
  */
 public interface ChatRoomVc extends BaseView<ChatRoomVc, Parent>, ChatObserver, ChatMessageHandler {
     ChatRoomDto getChatRoomDto();
+
+    void setSelected(boolean selected);
+    boolean isSelected();
 }

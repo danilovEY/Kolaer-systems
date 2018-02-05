@@ -56,7 +56,12 @@ public class ChatContentVcImpl implements ChatContentVc {
 
         chatRoomListVc.initView(chatRoomList -> splitPane.getItems().add(chatRoomList.getContent()));
         chatRoomListVc.setOnSelectRoom(selected -> {
+            if(selectedRoom != null) {
+                selectedRoom.setSelected(false);
+            }
+
             selectedRoom = selected;
+            selectedRoom.setSelected(true);
         });
 
         mainPane.setCenter(splitPane);

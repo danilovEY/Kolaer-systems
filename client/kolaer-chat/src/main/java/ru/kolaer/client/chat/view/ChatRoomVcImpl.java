@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ChatRoomVcImpl implements ChatRoomVc {
     private final ChatRoomDto chatRoomDto;
+    private boolean selected;
     private String subId;
     private BorderPane mainPane;
     private Label title;
@@ -35,6 +36,16 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     @Override
     public ChatRoomDto getChatRoomDto() {
         return this.chatRoomDto;
+    }
+
+    @Override
+    public void selected(boolean selected) {
+        this.selected = selected;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return this.selected;
     }
 
     @Override
