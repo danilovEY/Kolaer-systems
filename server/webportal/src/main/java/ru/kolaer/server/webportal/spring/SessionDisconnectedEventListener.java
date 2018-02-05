@@ -6,6 +6,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatRoomService;
 
@@ -34,8 +35,7 @@ public class SessionDisconnectedEventListener implements ApplicationListener<Ses
             ChatInfoUserActionDto chatInfoDto = new ChatInfoUserActionDto();
             chatInfoDto.setCommand(ChatInfoCommand.DISCONNECT);
             chatInfoDto.setCreateInfo(new Date());
-            chatInfoDto.setAccountId(chatUserDto.getAccountId());
-            chatInfoDto.setData(chatUserDto);
+            chatInfoDto.setChatUserDto(chatUserDto);
 
             chatService.send(chatInfoDto);
         }

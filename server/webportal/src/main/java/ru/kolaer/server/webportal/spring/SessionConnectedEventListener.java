@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserStatus;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatRoomService;
 
@@ -41,6 +43,7 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
 
         ChatUserDto chatUserDto = chatService.createChatUserDto(accountDto);
         chatUserDto.setSessionId(sha.getSessionId());
+        chatUserDto.setStatus(ChatUserStatus.ONLINE);
 
         ChatUserDto oldActive = chatService.getUserByAccountId(accountDto.getId());
         if (oldActive != null) {
@@ -53,8 +56,7 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
         ChatInfoUserActionDto chatInfoDto = new ChatInfoUserActionDto();
         chatInfoDto.setCommand(ChatInfoCommand.CONNECT);
         chatInfoDto.setCreateInfo(new Date());
-        chatInfoDto.setAccountId(chatUserDto.getAccountId());
-        chatInfoDto.setData(chatUserDto);
+        chatInfoDto.setChatUserDto(chatUserDto);
 
         chatService.send(chatInfoDto);
     }

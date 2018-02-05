@@ -14,6 +14,7 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import org.springframework.web.socket.sockjs.frame.Jackson2SockJsMessageCodec;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatConstants;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.system.Authentication;
@@ -32,14 +33,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ChatClientImpl implements ChatClient {
     private final List<ChatObserver> observers = new ArrayList<>();
-    private final List<ChatInfoHandler> queueInfoHandlers = new ArrayList<>();
+    private final Map<String, List<ChatInfoHandler>> queueInfoHandlers = new HashMap<>();
     private final Map<String, List<ChatMessageHandler>> queueSubs = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, List<ChatMessageDto>> queueMessages = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, List<StompSession.Subscription>> subscriptionMap = Collections.synchronizedMap(new HashMap<>());
 
-    private static final String TOPIC_CHATS = "/topic/chats.";
-    private static final String TOPIC_INFO = "/topic/info.";
-    private static final String SEND = "/app/chat/room/";
     private final String url;
     private StompSession session;
     private WebSocketStompClient stompClient;
@@ -91,7 +89,14 @@ public class ChatClientImpl implements ChatClient {
                         .showInformationNotify(null, "Успешное подключение к чату");
 
                 observers.forEach(obs -> obs.connect(ChatClientImpl.this));
-                queueInfoHandlers.forEach(ChatClientImpl.this::subscribeInfo);
+
+                for (Map.Entry<String, List<ChatInfoHandler>> handlersEntry : queueInfoHandlers.entrySet()) {
+                    String topic = handlersEntry.getKey();
+
+                    for (ChatInfoHandler chatInfoHandler : handlersEntry.getValue()) {
+                        subscribeInfo(topic, chatInfoHandler);
+                    }
+                }
 
                 for (Map.Entry<String, List<ChatMessageHandler>> roomHandlers : queueSubs.entrySet()) {
                     for (ChatMessageHandler chatMessageHandler : roomHandlers.getValue()) {
@@ -194,7 +199,7 @@ public class ChatClientImpl implements ChatClient {
         if(isConnect()) {
             StompHeaders stompHeaders = new StompHeaders();
             stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
-            stompHeaders.setDestination(TOPIC_CHATS + roomName);
+            stompHeaders.setDestination(ChatConstants.TOPIC_CHAT_MESSAGE + roomName);
             StompSession.Subscription subscribe = session.subscribe(stompHeaders, chatMessageHandler);
             chatMessageHandler.setSubscriptionId(subscribe.getSubscriptionId());
 
@@ -218,20 +223,33 @@ public class ChatClientImpl implements ChatClient {
     }
 
     @Override
-    public void subscribeInfo(ChatInfoHandler chatMessageHandler) {
+    public void subscribeInfo(ChatInfoUserActionHandler chatInfoUserActionHandler) {
+        subscribeInfo(ChatConstants.TOPIC_INFO_USER_ACTION, chatInfoUserActionHandler);
+    }
+
+    @Override
+    public void subscribeInfo(ChatInfoRoomActionHandler chatInfoRoomActionHandler) {
+        subscribeInfo(ChatConstants.TOPIC_INFO_ROOM_ACTION, chatInfoRoomActionHandler);
+    }
+
+    private void subscribeInfo(String destination, ChatInfoHandler chatInfoHandler) {
         if(isConnect()) {
             Authentication authentication = UniformSystemEditorKitSingleton.getInstance().getAuthentication();
+
             StompHeaders stompHeaders = new StompHeaders();
             stompHeaders.add("x-token", authentication.getToken().getToken());
-            stompHeaders.setDestination(TOPIC_INFO + authentication.getAuthorizedUser().getId());
-            StompSession.Subscription subscribe = session.subscribe(stompHeaders, chatMessageHandler);
-            chatMessageHandler.setSubscriptionId(subscribe.getSubscriptionId());
+            stompHeaders.setDestination(destination + authentication.getAuthorizedUser().getId());
+            StompSession.Subscription subscribe = session.subscribe(stompHeaders, chatInfoHandler);
+            chatInfoHandler.setSubscriptionId(subscribe.getSubscriptionId());
 
             if(!subscriptionMap.containsKey(subscribe.getSubscriptionId())) {
                 subscriptionMap.put(subscribe.getSubscriptionId(), new ArrayList<>());
             }
         } else {
-            queueInfoHandlers.add(chatMessageHandler);
+            List<ChatInfoHandler> handlers = queueInfoHandlers.getOrDefault(destination, new ArrayList<>());
+            handlers.add(chatInfoHandler);
+
+            queueInfoHandlers.put(destination, handlers);
         }
     }
 
@@ -240,7 +258,7 @@ public class ChatClientImpl implements ChatClient {
         if(isConnect()) {
             StompHeaders stompHeaders = new StompHeaders();
             stompHeaders.add("x-token", UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken());
-            stompHeaders.setDestination(SEND + roomName);
+            stompHeaders.setDestination(ChatConstants.SEND + roomName);
             session.send(stompHeaders, message);
         } else {
             if(!queueMessages.containsKey(roomName)) {
@@ -267,6 +285,10 @@ public class ChatClientImpl implements ChatClient {
     @Override
     public void registerObserver(ChatObserver observer) {
         observers.add(observer);
+
+        if(isConnect()){
+            observer.connect(this);
+        }
     }
 
     @Override

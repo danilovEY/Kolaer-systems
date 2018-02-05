@@ -231,7 +231,7 @@ public class TabChatRoomVcImpl implements TabChatRoomVc {
                     .getKolaerWebServer()
                     .getApplicationDataBase()
                     .getChatTable()
-                    .getGroupByRoomId(chatRoomDto.getId());
+                    .getRoomById(chatRoomDto.getId());
 
             if (!groupDtoServerResponse.isServerError() && groupDtoServerResponse.getResponse() == null) {
                 createGroup();
@@ -253,7 +253,7 @@ public class TabChatRoomVcImpl implements TabChatRoomVc {
                 .getKolaerWebServer()
                 .getApplicationDataBase()
                 .getChatTable()
-                .createPrivateGroup(idsAccounts, chatRoomDto.getName());
+                .createPrivateRoom(idsAccounts, chatRoomDto.getName());
 
         if(groupDtoServerResponse.isServerError()) {
             UniformSystemEditorKitSingleton.getInstance()

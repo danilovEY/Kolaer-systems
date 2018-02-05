@@ -25,18 +25,15 @@ import ru.kolaer.server.webportal.mvc.model.dao.ChatMessageDao;
 import ru.kolaer.server.webportal.mvc.model.dao.ChatRoomDao;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatMessageEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatRoomEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatRoomService;
 
-import javax.annotation.PostConstruct;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by danilovey on 02.11.2017.
@@ -45,10 +42,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, ChatRoomEntity, ChatRoomDao, ChatRoomConverter>
         implements ChatRoomService {
-    private final String PUBLIC_MAIN_ROOM_NAME = "КолАЭР";
-    private final String PUBLIC_MAIN_ROOM_KEY = "main";
-    private ChatRoomDto mainGroup;
-
+    private final Map<Long, ChatUserDto> activeUser = new HashMap<>();
     private final String key;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final AuthenticationService authenticationService;
@@ -76,29 +70,19 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         this.chatMessageConverter = chatMessageConverter;
     }
 
-    @PostConstruct
-    public void init() {
-        mainGroup = createGroup(PUBLIC_MAIN_ROOM_NAME);
-        mainGroup.setId(0L);
-        mainGroup.setRoomKey(PUBLIC_MAIN_ROOM_KEY);
-        mainGroup.setType(ChatGroupType.MAIN);
-    }
-
     @Override
     public ChatUserDto addActiveUser(ChatUserDto dto) {
-        mainGroup.getUsers().add(dto);
-
-        return dto;
+        return activeUser.put(dto.getAccountId(), dto);
     }
 
     @Override
     public void removeActiveUser(ChatUserDto dto) {
-        mainGroup.getUsers().remove(dto);
+        activeUser.remove(dto.getAccountId());
     }
 
     @Override
     public ChatUserDto getUser(String sessionId) {
-        return mainGroup.getUsers()
+        return activeUser.values()
                 .stream()
                 .filter(user -> user.getSessionId().equals(sessionId))
                 .findFirst()
@@ -107,11 +91,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
     @Override
     public ChatUserDto getUserByAccountId(Long id) {
-        return mainGroup.getUsers()
-                .stream()
-                .filter(user -> id.equals(user.getAccountId()))
-                .findFirst()
-                .orElse(null);
+        return activeUser.get(id);
     }
 
     @Override
@@ -124,16 +104,39 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     }
 
     @Override
-    public void send(String roomId, ChatInfoDto chatInfoDto) {
-        log.debug("To room: {} Info: {}", roomId, chatInfoDto);
-
-        simpMessagingTemplate.convertAndSend("/topic/info." + roomId, chatInfoDto);
+    public void send(ChatInfoUserActionDto chatInfoUserActionDto) {
+        for (ChatUserDto chatUserDto : activeUser.values()) {
+            String roomId = chatUserDto.getAccountId().toString();
+            simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_USER_ACTION + roomId, chatInfoUserActionDto);
+        }
     }
 
     @Override
-    public void send(ChatInfoDto chatInfoDto) {
-        for (ChatUserDto chatUserDto : mainGroup.getUsers()) {
-            send(chatUserDto.getAccountId().toString(), chatInfoDto);
+    @Transactional(readOnly = true)
+    public List<ChatRoomDto> getAllRoomForAuthUser() {
+        List<ChatRoomEntity> allByUserInRoom = defaultEntityDao.findAllByUserInRoom(authenticationService.getAccountByAuthentication().getId());
+
+        if(allByUserInRoom.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<ChatRoomDto> rooms = new ArrayList<>();
+
+        for (ChatRoomEntity chatRoomEntity : allByUserInRoom) {
+            ChatRoomDto chatRoomDto = defaultConverter.convertToDto(chatRoomEntity);
+            chatRoomDto.setUsers(getUsersByIds(chatRoomEntity.getAccountIds()));
+
+            rooms.add(chatRoomDto);
+        }
+
+        return rooms;
+    }
+
+    @Override
+    public void send(ChatInfoRoomActionDto chatInfoRoomActionDto) {
+        for (ChatUserDto chatUserDto : chatInfoRoomActionDto.getChatRoomDto().getUsers()) {
+            String roomId = chatUserDto.getAccountId().toString();
+            simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_ROOM_ACTION + roomId, chatInfoRoomActionDto);
         }
     }
 
@@ -160,11 +163,12 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             ChatMessageEntity save = chatMessageDao.save(chatMessageConverter.convertToModel(message));
             message.setId(save.getId());
 
-            simpMessagingTemplate.convertAndSend("/topic/chats." + message.getRoomId(), message);
+            simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_CHAT_MESSAGE + message.getRoomId(), message);
         }
     }
 
     @Override
+    @Transactional
     public ChatRoomDto createSingleGroup(IdDto idDto) {
         if(idDto == null || idDto.getId() == null) {
             throw new UnexpectedRequestParams("Должен быть ID пользователя");
@@ -181,30 +185,25 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             return group;
         }
 
-        List<ChatUserDto> chatUserDtos = accountConverter.convertToDto(accountDao.findById(allUserIds))
-                .stream()
-                .map(this::createChatUserDto)
-                .collect(Collectors.toList());
-
         group = createGroup(null);
         group.setType(ChatGroupType.SINGLE);
         group.setRoomKey(roomKey);
         group.setUserCreated(createChatUserDto(accountByAuthentication));
-        group.getUsers().addAll(chatUserDtos);
+        group.getUsers().addAll(getUsersByIds(allUserIds));
         group = this.save(group);
 
-        ChatInfoCreateNewRoomDto chatInfoDto = new ChatInfoCreateNewRoomDto();
-        chatInfoDto.setData(group);
-        chatInfoDto.setAccountId(accountByAuthentication.getId());
-        chatInfoDto.setCreateInfo(new Date());
+        ChatInfoRoomActionDto chatInfoCreateNewRoomDto = new ChatInfoRoomActionDto();
+        chatInfoCreateNewRoomDto.setChatRoomDto(group);
+        chatInfoCreateNewRoomDto.setCommand(ChatInfoCommand.CREATE_NEW_ROOM);
+        chatInfoCreateNewRoomDto.setFromAccount(accountByAuthentication.getId());
+        chatInfoCreateNewRoomDto.setCreateInfo(new Date());
 
-        for (Long accId : allUserIds) {
-            send(accId.toString(), chatInfoDto);
-        }
+        send(chatInfoCreateNewRoomDto);
 
         return group;
     }
 
+    @Transactional(readOnly = true)
     private ChatRoomDto getByRoomKey(String roomKey) {
         return defaultConverter.convertToDto(defaultEntityDao.findByRoomKey(roomKey));
     }
@@ -223,34 +222,48 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             allUserIds.add(accountByAuthentication.getId());
         }
 
-        List<ChatUserDto> chatUserDtos = accountConverter.convertToDto(accountDao.findById(allUserIds))
-                .stream()
-                .map(this::createChatUserDto)
-                .collect(Collectors.toList());
-
         ChatRoomDto group = createGroup(name);
         group.setType(ChatGroupType.PRIVATE);
         group.setUserCreated(createChatUserDto(accountByAuthentication));
-        group.getUsers().addAll(chatUserDtos);
+        group.getUsers().addAll(getUsersByIds(allUserIds));
         group = this.save(group);
 
-        ChatInfoCreateNewRoomDto chatInfoDto = new ChatInfoCreateNewRoomDto();
-        chatInfoDto.setData(group);
-        chatInfoDto.setAccountId(accountByAuthentication.getId());
-        chatInfoDto.setCreateInfo(new Date());
+        ChatInfoRoomActionDto chatInfoCreateNewRoomDto = new ChatInfoRoomActionDto();
+        chatInfoCreateNewRoomDto.setCommand(ChatInfoCommand.CREATE_NEW_ROOM);
+        chatInfoCreateNewRoomDto.setChatRoomDto(group);
+        chatInfoCreateNewRoomDto.setFromAccount(accountByAuthentication.getId());
+        chatInfoCreateNewRoomDto.setCreateInfo(new Date());
 
-        for (Long accountId : allUserIds) {
-            send(accountId.toString(), chatInfoDto);
-        }
+        send(chatInfoCreateNewRoomDto);
 
         return group;
     }
 
-    private String accountsToChatGroupName(AccountEntity accountEntity) {
-        return "[" + Optional.ofNullable(accountEntity.getChatName())
-                        .filter(chatName -> !chatName.trim().isEmpty())
-                        .orElse(accountEntity.getUsername()) +
-                "]";
+    private List<ChatUserDto> getUsersByIds(List<Long> accountIds) {
+        if(CollectionUtils.isEmpty(accountIds)) {
+            return Collections.emptyList();
+        }
+
+        List<ChatUserDto> users = new ArrayList<>();
+
+        Iterator<Long> iterator = accountIds.iterator();
+        while (iterator.hasNext()) {
+            ChatUserDto chatUserDto = activeUser.get(iterator.next());
+            if(chatUserDto != null) {
+                users.add(chatUserDto);
+                iterator.remove();
+            }
+        }
+
+        if (!accountIds.isEmpty()) {
+            List<ChatUserDto> chatUserDtos = accountConverter.convertToDto(accountDao.findById(accountIds))
+                    .stream()
+                    .map(this::createChatUserDto)
+                    .collect(Collectors.toList());
+            users.addAll(chatUserDtos);
+        }
+
+        return users;
     }
 
     private String generateRoomKey(@NonNull List<Long> accountIds) {
@@ -284,51 +297,33 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ChatRoomDto> getAll() {
-        return Collections.singletonList(mainGroup);
+        return defaultConverter.convertToDto(defaultEntityDao.findAll());
     }
 
     @Override
-    public List<ChatRoomDto> getAllForUser() {
-        return Stream.of(mainGroup)
-                .filter(this::filterForUser)
-                .collect(Collectors.toList());
-    }
-
-    private boolean filterForUser(ChatRoomDto groupDto) {
-        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
-
-        return groupDto.getType() == ChatGroupType.MAIN ||
-                //accountByAuthentication.isAccessOit() ||
-                (groupDto.getUserCreated() != null && groupDto.getUserCreated()
-                        .getId().equals(accountByAuthentication.getId())) ||
-                (groupDto.getUsers() != null &&
-                        groupDto.getUsers()
-                                .stream()
-                                .anyMatch(chatUserDto -> chatUserDto.getAccountId().equals(accountByAuthentication.getId())));
-    }
-
-    @Override
+    @Transactional
     public List<ChatRoomDto> save(List<ChatRoomDto> dtos) {
         dtos.forEach(this::save);
         return dtos;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ChatRoomDto getById(Long id) {
-        return null;
+        return defaultConverter.convertToDto(defaultEntityDao.findById(id));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ChatRoomDto> getById(List<Long> ids) {
-        return Collections.emptyList();
+        return defaultConverter.convertToDto(defaultEntityDao.findById(ids));
     }
 
     @Override
     public void delete(ChatRoomDto dto) {
-        if(dto.getId() != null) {
 
-        }
     }
 
     @Override
@@ -339,11 +334,6 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     @Override
     public Page<ChatRoomDto> getAll(Integer number, Integer pageSize) {
         return null;
-    }
-
-    @Override
-    public ChatRoomDto getMainGroup() {
-        return mainGroup;
     }
 
     @Override
@@ -397,6 +387,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             }
         }
 
+        chatUserDto.setStatus(ChatUserStatus.OFLINE);
         chatUserDto.setName(username);
         chatUserDto.setAccountId(accountDto.getId());
         return chatUserDto;

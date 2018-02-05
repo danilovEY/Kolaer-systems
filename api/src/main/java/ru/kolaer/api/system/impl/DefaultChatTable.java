@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class DefaultChatTable implements ChatTable {
     @Override
-    public ServerResponse<List<ChatRoomDto>> getActiveGroup() {
+    public ServerResponse<List<ChatRoomDto>> getRooms() {
         return ServerResponse.createServerResponse();
     }
 
@@ -26,17 +26,17 @@ public class DefaultChatTable implements ChatTable {
     }
 
     @Override
-    public ServerResponse<ChatRoomDto> createPrivateGroup(IdsDto idsDto, String name) {
+    public ServerResponse<ChatRoomDto> createPrivateRoom(IdsDto idsDto, String name) {
         return ServerResponse.createServerResponse();
     }
 
     @Override
-    public ServerResponse<ChatRoomDto> createSingleGroup(IdDto idDto) {
+    public ServerResponse<ChatRoomDto> createSingleRoom(IdDto idDto) {
         return ServerResponse.createServerResponse();
     }
 
     @Override
-    public ServerResponse<ChatRoomDto> getGroupByRoomId(long roomId) {
+    public ServerResponse<ChatRoomDto> getRoomById(long roomId) {
         return ServerResponse.createServerResponse();
     }
 

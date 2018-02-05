@@ -11,8 +11,6 @@ import java.util.Date;
 @Data
 public class ChatInfoDto implements BaseDto {
     private Long id;
-    private Long accountId;
     private ChatInfoCommand command;
     private Date createInfo;
-    private String data;
 }

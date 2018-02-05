@@ -32,16 +32,16 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.URL_HIDE_MESSAGES = url + "/message/hide";
-        this.URL_GET_ALL_ACTIVE = url + "/active/all";
-        this.URL_POST_CREATE_PRIVATE_GROUP = url + "/group/private";
-        this.URL_POST_CREATE_SINGLE_GROUP = url + "/group/single";
-        this.URL_GET_GROUP = url + "/group/";
+        this.URL_GET_ALL_ACTIVE = url + "/room/all";
+        this.URL_POST_CREATE_PRIVATE_GROUP = url + "/room/private";
+        this.URL_POST_CREATE_SINGLE_GROUP = url + "/room/single";
+        this.URL_GET_GROUP = url + "/room/";
         this.URL_GET_ACTIVE_BY_ACCOUNT_ID = url + "/active?account_id=";
     }
 
 
     @Override
-    public ServerResponse<List<ChatRoomDto>> getActiveGroup() {
+    public ServerResponse<List<ChatRoomDto>> getRooms() {
         return getServerResponses(restTemplate, URL_GET_ALL_ACTIVE, ChatRoomDto[].class, objectMapper);
     }
 
@@ -51,7 +51,7 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     }
 
     @Override
-    public ServerResponse<ChatRoomDto> createPrivateGroup(IdsDto idsDto, String name) {
+    public ServerResponse<ChatRoomDto> createPrivateRoom(IdsDto idsDto, String name) {
         String atr = Optional.ofNullable(name)
                 .map(n -> "?name=" + n)
                 .orElse("");
@@ -62,14 +62,14 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     }
 
     @Override
-    public ServerResponse<ChatRoomDto> createSingleGroup(IdDto idDto) {
+    public ServerResponse<ChatRoomDto> createSingleRoom(IdDto idDto) {
         return postServerResponse(restTemplate, URL_POST_CREATE_SINGLE_GROUP,
                 idDto,
                 ChatRoomDto.class, objectMapper);
     }
 
     @Override
-    public ServerResponse<ChatRoomDto> getGroupByRoomId(long roomId) {
+    public ServerResponse<ChatRoomDto> getRoomById(long roomId) {
         return getServerResponse(restTemplate, URL_GET_GROUP + roomId, ChatRoomDto.class, objectMapper);
     }
 

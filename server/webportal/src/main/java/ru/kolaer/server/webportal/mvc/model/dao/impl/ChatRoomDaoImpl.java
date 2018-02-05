@@ -6,6 +6,8 @@ import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.ChatRoomDao;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatRoomEntity;
 
+import java.util.List;
+
 /**
  * Created by danilovey on 08.11.2017.
  */
@@ -39,5 +41,12 @@ public class ChatRoomDaoImpl extends AbstractDefaultDao<ChatRoomEntity> implemen
                 .stream()
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public List<ChatRoomEntity> findAllByUserInRoom(Long id) {
+        return getSession().createQuery("FROM " + getEntityName() + " AS chatRoom WHERE :accountId IN elements(chatRoom.accountIds)", getEntityClass())
+                .setParameter("accountId", id)
+                .list();
     }
 }

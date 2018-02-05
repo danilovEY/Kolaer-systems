@@ -51,20 +51,20 @@ public class ChatController {
     }
 
     @UrlDeclaration(description = "Получить список активных пользователей чата")
-    @RequestMapping(value = "/active/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<ChatRoomDto> getActiveUsers() {
-        return chatService.getAllForUser();
+    @RequestMapping(value = "/room/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<ChatRoomDto> getRoomFromAuthUser() {
+        return chatService.getAllRoomForAuthUser();
     }
 
     @UrlDeclaration(description = "Создать приватную комнату пользователей чата", requestMethod = RequestMethod.POST)
-    @RequestMapping(value = "/group/private", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ChatRoomDto createGroup(@RequestBody IdsDto idsDto, @RequestParam(required = false) String name) {
+    @RequestMapping(value = "/room/private", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ChatRoomDto createPrivateRoom(@RequestBody IdsDto idsDto, @RequestParam(required = false) String name) {
         return chatService.createPrivateGroup(name, idsDto);
     }
 
     @UrlDeclaration(description = "Создать комнату на двоих", requestMethod = RequestMethod.POST)
-    @RequestMapping(value = "/group/single", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ChatRoomDto createSingle(@RequestBody IdDto idDto) {
+    @RequestMapping(value = "/room/single", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ChatRoomDto createSingleRoom(@RequestBody IdDto idDto) {
         return chatService.createSingleGroup(idDto);
     }
 
@@ -75,16 +75,16 @@ public class ChatController {
     }
 
     @UrlDeclaration(description = "Получить комнату по id комнаты", requestMethod = RequestMethod.GET)
-    @RequestMapping(value = "/group/{roomId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ChatRoomDto getGroup(@PathVariable("roomId") Long roomId) {
+    @RequestMapping(value = "/room/{roomId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ChatRoomDto getRoom(@PathVariable("roomId") Long roomId) {
         return chatService.getById(roomId);
     }
 
     @UrlDeclaration(description = "Получить сообщения группы", requestMethod = RequestMethod.GET)
-    @RequestMapping(value = "/group/{roomId}/messages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<ChatMessageDto> getMessagesGroup(@PathVariable("roomId") Long roomId,
-                                  @RequestParam(value = "page", defaultValue = "0") Integer number,
-                                  @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+    @RequestMapping(value = "/room/{roomId}/messages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<ChatMessageDto> getMessagesRoom(@PathVariable("roomId") Long roomId,
+                                                @RequestParam(value = "page", defaultValue = "0") Integer number,
+                                                @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return chatMessageService.getAllByRoom(roomId, number, pageSize);
     }
 

@@ -12,4 +12,5 @@ public class ChatUserDto implements BaseDto {
     private Long accountId;
     private String name;
     private String sessionId;
+    private ChatUserStatus status;
 }

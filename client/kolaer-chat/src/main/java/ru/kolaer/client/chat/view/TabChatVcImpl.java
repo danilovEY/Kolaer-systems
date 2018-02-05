@@ -19,6 +19,7 @@ import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.ChatRoomObserver;
 
+import java.lang.reflect.Type;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +70,7 @@ public class TabChatVcImpl implements TabChatVc, ChatRoomObserver {
 
         this.chatClient = chatClient;
 
-        chatClient.subscribeInfo(this);
+//        chatClient.subscribeInfo(this);
 
         this.notificationMessagePane = new NotificationMessagePopup(this, uniformSystemPlugin);
 
@@ -88,7 +89,7 @@ public class TabChatVcImpl implements TabChatVc, ChatRoomObserver {
                 .getKolaerWebServer()
                 .getApplicationDataBase()
                 .getChatTable()
-                .getActiveGroup();
+                .getRooms();
 
         if(activeGroup.isServerError()) {
             UniformSystemEditorKitSingleton.getInstance()
@@ -218,83 +219,73 @@ public class TabChatVcImpl implements TabChatVc, ChatRoomObserver {
         return tabPane.getSelectionModel().isSelected(tabPane.getTabs().indexOf(tabChatRoomVc.getContent()));
     }
 
-    @Override
-    public void handleFrame(StompHeaders headers, ChatInfoDto info) {
-        if(info.getCommand() == ChatInfoCommand.CONNECT) {
-            ServerResponse<ChatUserDto> activeByIdAccountResponse = UniformSystemEditorKitSingleton
-                    .getInstance()
-                    .getUSNetwork()
-                    .getKolaerWebServer()
-                    .getApplicationDataBase()
-                    .getChatTable()
-                    .getActiveByIdAccount(info.getAccountId());
-
-            if(activeByIdAccountResponse.isServerError()) {
-                UniformSystemEditorKitSingleton.getInstance()
-                        .getUISystemUS()
-                        .getNotification()
-                        .showErrorNotify(activeByIdAccountResponse.getExceptionMessage());
-            } else {
-                Tools.runOnWithOutThreadFX(() -> {
-                    for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
-                        tabChatRoomVc.connectUser(activeByIdAccountResponse.getResponse());
-                    }
-                });
-            }
-        } else if(info.getCommand() == ChatInfoCommand.DISCONNECT) {
-            Tools.runOnWithOutThreadFX(() -> {
-                for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
-                    tabChatRoomVc.disconnectUser(info.getAccountId());
-                }
-            });
-        } else if(info.getCommand() == ChatInfoCommand.CREATE_NEW_ROOM) {
-            ServerResponse<ChatRoomDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
-                    .getInstance()
-                    .getUSNetwork()
-                    .getKolaerWebServer()
-                    .getApplicationDataBase()
-                    .getChatTable()
-                    .getGroupByRoomId(((ChatInfoCreateNewRoomDto)info).getData().getId());
-
-            if(groupDtoServerResponse.isServerError()) {
-                UniformSystemEditorKitSingleton.getInstance()
-                        .getUISystemUS()
-                        .getNotification()
-                        .showErrorNotify(groupDtoServerResponse.getExceptionMessage());
-            } else {
-                Tools.runOnWithOutThreadFX(() -> {
-                   createRoom(groupDtoServerResponse.getResponse());
-                });
-            }
-        } else if(info.getCommand() == ChatInfoCommand.HIDE_MESSAGES) {
-            log.info(info.toString());
-//            if(StringUtils.isEmpty(info.getData())) {
-//                return;
-//            }
+//    @Override
+//    public void handleFrame(StompHeaders headers, ChatInfoDto info) {
+//        if(info.getCommand() == ChatInfoCommand.CONNECT) {
+//            ServerResponse<ChatUserDto> activeByIdAccountResponse = UniformSystemEditorKitSingleton
+//                    .getInstance()
+//                    .getUSNetwork()
+//                    .getKolaerWebServer()
+//                    .getApplicationDataBase()
+//                    .getChatTable()
+//                    .getActiveByIdAccount(info.getAccountId());
 //
-//            List<Long> messageIds = Stream.of(info.getData().split(","))
-//                    .map(Long::valueOf)
-//                    .collect(Collectors.toList());
-//
-//            for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
-//                tabChatRoomVc.removeMessages(messageIds);
+//            if(activeByIdAccountResponse.isServerError()) {
+//                UniformSystemEditorKitSingleton.getInstance()
+//                        .getUISystemUS()
+//                        .getNotification()
+//                        .showErrorNotify(activeByIdAccountResponse.getExceptionMessage());
+//            } else {
+//                Tools.runOnWithOutThreadFX(() -> {
+//                    for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
+//                        tabChatRoomVc.connectUser(activeByIdAccountResponse.getResponse());
+//                    }
+//                });
 //            }
-
-        }
-    }
+//        } else if(info.getCommand() == ChatInfoCommand.DISCONNECT) {
+//            Tools.runOnWithOutThreadFX(() -> {
+//                for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
+//                    tabChatRoomVc.disconnectUser(info.getAccountId());
+//                }
+//            });
+//        } else if(info.getCommand() == ChatInfoCommand.CREATE_NEW_ROOM) {
+//            ServerResponse<ChatRoomDto> groupDtoServerResponse = UniformSystemEditorKitSingleton
+//                    .getInstance()
+//                    .getUSNetwork()
+//                    .getKolaerWebServer()
+//                    .getApplicationDataBase()
+//                    .getChatTable()
+//                    .getRoomById(((ChatInfoRoomActionDto)info).getData().getId());
+//
+//            if(groupDtoServerResponse.isServerError()) {
+//                UniformSystemEditorKitSingleton.getInstance()
+//                        .getUISystemUS()
+//                        .getNotification()
+//                        .showErrorNotify(groupDtoServerResponse.getExceptionMessage());
+//            } else {
+//                Tools.runOnWithOutThreadFX(() -> {
+//                   createRoom(groupDtoServerResponse.getResponse());
+//                });
+//            }
+//        } else if(info.getCommand() == ChatInfoCommand.HIDE_MESSAGES) {
+//            log.info(info.toString());
+////            if(StringUtils.isEmpty(info.getData())) {
+////                return;
+////            }
+////
+////            List<Long> messageIds = Stream.of(info.getData().split(","))
+////                    .map(Long::valueOf)
+////                    .collect(Collectors.toList());
+////
+////            for (TabChatRoomVc tabChatRoomVc : groupDtoMap.values()) {
+////                tabChatRoomVc.removeMessages(messageIds);
+////            }
+//
+//        }
+//    }
 
     @Override
     public void handlerInfo(ChatInfoDto chatInfoDto) {
-
-    }
-
-    @Override
-    public void handlerNewRoom(ChatInfoCreateNewRoomDto chatInfoCreateNewRoomDto) {
-
-    }
-
-    @Override
-    public void handlerUserAction(ChatInfoUserActionDto chatInfoUserActionDto) {
 
     }
 
@@ -331,7 +322,7 @@ public class TabChatVcImpl implements TabChatVc, ChatRoomObserver {
                 .getKolaerWebServer()
                 .getApplicationDataBase()
                 .getChatTable()
-                .createPrivateGroup(idsAccounts, null);
+                .createPrivateRoom(idsAccounts, null);
 
         if(groupDtoServerResponse.isServerError()) {
             UniformSystemEditorKitSingleton.getInstance()
@@ -343,5 +334,15 @@ public class TabChatVcImpl implements TabChatVc, ChatRoomObserver {
                 showChatRoom(createRoom(groupDtoServerResponse.getResponse()), true);
             });
         }
+    }
+
+    @Override
+    public Type getPayloadType(StompHeaders headers) {
+        return null;
+    }
+
+    @Override
+    public void handleFrame(StompHeaders headers, Object payload) {
+
     }
 }

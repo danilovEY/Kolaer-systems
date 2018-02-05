@@ -16,7 +16,8 @@ public interface ChatClient extends ChatObservable{
     void subscribeRoom(String roomName, ChatMessageHandler chatMessageHandler);
     void subscribeRoom(ChatRoomDto chatRoomDto, ChatMessageHandler chatMessageHandler);
 
-    void subscribeInfo(ChatInfoHandler chatMessageHandler);
+    void subscribeInfo(ChatInfoUserActionHandler chatInfoUserActionHandler);
+    void subscribeInfo(ChatInfoRoomActionHandler chatInfoRoomActionHandler);
 
     void send(String roomName, ChatMessageDto message);
     void send(ChatRoomDto chatRoomDto, ChatMessageDto message);
