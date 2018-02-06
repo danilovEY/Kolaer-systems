@@ -12,6 +12,6 @@ public interface ChatRoomPreviewVc extends BaseView<ChatRoomPreviewVc, Parent>, 
     void setSelected(boolean selected);
     boolean isSelected();
 
-    void setTitle(String title);
-    void setStatus(ChatUserStatus status);
+    void setTitle(String titleLabel);
+    void setStatus(ChatUserStatus statusLabel);
 }

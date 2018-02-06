@@ -32,6 +32,8 @@ public class ChatContentVcImpl implements ChatContentVc {
 
     private final ObservableList<ChatRoomVc> chatRooms = FXCollections.observableArrayList();
 
+    private ChatRoomVc lastSelected;
+
     private BorderPane mainPane;
     private ChatRoomListVc chatRoomListVc;
     private ChatClient chatClient;
@@ -63,6 +65,13 @@ public class ChatContentVcImpl implements ChatContentVc {
 
         chatRoomListVc.initView(chatRoomList -> splitPane.getItems().add(0, chatRoomList.getContent()));
         chatRoomListVc.setOnSelectRoom(chatRoomVc -> {
+            if(lastSelected != null) {
+                lastSelected.getChatRoomPreviewVc().setSelected(false);
+            }
+
+            lastSelected = chatRoomVc;
+            lastSelected.getChatRoomPreviewVc().setSelected(true);
+
             ChatRoomMessagesVc chatRoomMessagesVc = chatRoomVc.getChatRoomMessagesVc();
             if(!chatRoomMessagesVc.isViewInit()) {
                 chatRoomMessagesVc.initView(BaseView::empty);

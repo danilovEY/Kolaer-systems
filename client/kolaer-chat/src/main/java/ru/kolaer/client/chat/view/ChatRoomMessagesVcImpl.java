@@ -60,11 +60,14 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
                     .getNotification()
                     .showErrorNotify(messageByRoomId.getExceptionMessage());
         } else {
-            messages.addAll(messageByRoomId.getResponse().getData());
-            messages.sort(Comparator.comparing(ChatMessageDto::getId));
+            List<ChatMessageDto> loadMessages = messageByRoomId.getResponse().getData();
+            loadMessages.sort(Comparator.comparing(ChatMessageDto::getId));
+
+            messages.addAll(loadMessages);
         }
 
         chatMessageDtoListView = new ListView<>(messages);
+        chatMessageDtoListView.scrollTo(messages.size() - 1);
         chatMessageDtoListView.getStyleClass().add("chat-message-list-view");
 
         chatMessageDtoListView.setCellFactory(param -> new ListCell<ChatMessageDto>() {
