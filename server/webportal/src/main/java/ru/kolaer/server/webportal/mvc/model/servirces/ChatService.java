@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -30,7 +31,9 @@ public interface ChatService extends DefaultService<ChatRoomDto> {
     void send(ChatMessageDto message);
 
     ChatRoomDto createSingleGroup(IdDto accountId);
+    List<ChatRoomDto> createSingleGroup(IdsDto idsDto);
     ChatRoomDto createPrivateGroup(String name, IdsDto idsDto);
+
     ChatRoomDto createPublicGroup(String name, IdsDto idsDto);
 
     List<ChatRoomDto> getAllRoomForAuthUser();
@@ -38,4 +41,6 @@ public interface ChatService extends DefaultService<ChatRoomDto> {
     void hideMessage(IdsDto idsDto, boolean hide);
 
     ChatUserDto createChatUserDto(AccountDto accountDto);
+
+    Collection<ChatUserDto> getOnlineUsers();
 }

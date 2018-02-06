@@ -19,6 +19,7 @@ import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatMessageService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatRoomService;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -50,10 +51,16 @@ public class ChatController {
         chatService.send(message);
     }
 
-    @UrlDeclaration(description = "Получить список активных пользователей чата")
+    @UrlDeclaration(description = "Получить список своих комнат")
     @RequestMapping(value = "/room/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ChatRoomDto> getRoomFromAuthUser() {
         return chatService.getAllRoomForAuthUser();
+    }
+
+    @UrlDeclaration(description = "Получить список активных пользователей чата")
+    @RequestMapping(value = "/user/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Collection<ChatUserDto> getOnlineUsers() {
+        return chatService.getOnlineUsers();
     }
 
     @UrlDeclaration(description = "Создать приватную комнату пользователей чата", requestMethod = RequestMethod.POST)
@@ -64,8 +71,14 @@ public class ChatController {
 
     @UrlDeclaration(description = "Создать комнату на двоих", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/room/single", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ChatRoomDto createSingleRoom(@RequestBody IdDto idDto) {
+    public ChatRoomDto getOrCreateSingleRoom(@RequestBody IdDto idDto) {
         return chatService.createSingleGroup(idDto);
+    }
+
+    @UrlDeclaration(description = "Создать комнату на двоих", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/room/singles", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<ChatRoomDto> getOrCreateSingleRooms(@RequestBody IdsDto idsDto) {
+        return chatService.createSingleGroup(idsDto);
     }
 
     @UrlDeclaration(description = "Скрыть сообщения", requestMethod = RequestMethod.POST)

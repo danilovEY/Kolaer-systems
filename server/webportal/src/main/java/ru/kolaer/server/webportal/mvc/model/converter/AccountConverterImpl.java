@@ -33,7 +33,6 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setChatName(dto.getChatName());
         accountEntity.setAccessUser(dto.isAccessUser());
         accountEntity.setAccessOit(dto.isAccessOit());
-        accountEntity.setAccessWriteMainChat(dto.isAccessWriteMainChat());
 
         accountEntity.setEmployeeId(Optional.ofNullable(dto.getEmployee())
                 .map(EmployeeDto::getId)
@@ -59,7 +58,6 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setChatName(model.getChatName());
         accountDto.setAccessUser(model.isAccessUser());
         accountDto.setAccessOit(model.isAccessOit());
-        accountDto.setAccessWriteMainChat(model.isAccessWriteMainChat());
 
         if(model.getEmployeeId() != null) {
             accountDto.setEmployee(employeeConverter.convertToDto(model.getEmployeeEntity()));
@@ -79,7 +77,6 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setChatName(model.getChatName());
         accountDto.setAccessUser(model.isAccessUser());
         accountDto.setAccessOit(model.isAccessOit());
-        accountDto.setAccessWriteMainChat(model.isAccessWriteMainChat());
 
         Optional.ofNullable(model.getEmployeeId())
                 .map(EmployeeDto::new)

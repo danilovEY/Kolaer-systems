@@ -1,8 +1,9 @@
 package ru.kolaer.client.chat.view;
 
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.view.BaseView;
+import ru.kolaer.client.chat.service.ChatRoomObserver;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -10,15 +11,16 @@ import java.util.function.Consumer;
 /**
  * Created by danilovey on 02.11.2017.
  */
-public interface ChatMessageContentVc extends BaseView<ChatMessageContentVc, Node> {
-    void setOnSendMessage(Consumer<ChatMessageDto> consumer);
-
+public interface ChatRoomMessagesVc extends BaseView<ChatRoomMessagesVc, Parent>, ChatRoomObserver {
     ChatMessageDto createMessage(String message);
-
-    void addMessage(ChatMessageDto chatMessageDto);
-
     ChatMessageDto createServerMessage(String text);
 
-    List<ChatMessageDto> getMessages();
+    void addMessage(ChatMessageDto chatMessageDto);
     void removeMessages(List<ChatMessageDto> messages);
+
+    List<ChatMessageDto> getMessages();
+
+    void setSendMessage(Consumer<ChatMessageDto> consumer);
+
+    void setTitle(String title);
 }

@@ -43,4 +43,8 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1-3" author="Danilov">
+        <dropColumn tableName="account" columnName="access_write_main_chat"/>
+    </changeSet>
+
 </databaseChangeLog>

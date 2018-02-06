@@ -154,8 +154,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         if(message.getType() != ChatMessageType.SERVER_INFO &&
                 Optional.ofNullable(defaultEntityDao.findById(message.getRoomId()))
                         .map(ChatRoomEntity::getType)
-                        .orElse(ChatGroupType.PUBLIC) == ChatGroupType.MAIN &&
-                !message.getFromAccount().isAccessWriteMainChat()) {
+                        .orElse(ChatGroupType.PUBLIC) == ChatGroupType.MAIN) {
             throw new CustomHttpCodeException("Нет доступа для записи сообщения в этот чат", ErrorCode.FORBIDDEN);
         } else {
             log.debug("messages: {}", message);
@@ -203,6 +202,47 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         return group;
     }
 
+    @Override
+    @Transactional
+    public List<ChatRoomDto> createSingleGroup(IdsDto idsDto) {
+        if(idsDto == null || CollectionUtils.isEmpty(idsDto.getIds())) {
+            throw new UnexpectedRequestParams("Должены быть ID пользователей");
+        }
+
+        List<ChatRoomDto> roomDtos = new ArrayList<>(idsDto.getIds().size());
+
+        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+        ChatUserDto authChatUserDto = createChatUserDto(accountByAuthentication);
+
+        for (Long accountId : idsDto.getIds()) {
+            List<Long> allUserIds = Arrays.asList(accountId, accountByAuthentication.getId());
+
+            String roomKey = generateRoomKey(allUserIds);
+
+            ChatRoomDto group = getByRoomKey(roomKey);
+            if(group == null) {
+                group = createGroup(null);
+                group.setType(ChatGroupType.SINGLE);
+                group.setRoomKey(roomKey);
+                group.setUserCreated(authChatUserDto);
+                group.getUsers().addAll(getUsersByIds(allUserIds));
+                group = this.save(group);
+
+                ChatInfoRoomActionDto chatInfoCreateNewRoomDto = new ChatInfoRoomActionDto();
+                chatInfoCreateNewRoomDto.setChatRoomDto(group);
+                chatInfoCreateNewRoomDto.setCommand(ChatInfoCommand.CREATE_NEW_ROOM);
+                chatInfoCreateNewRoomDto.setFromAccount(accountByAuthentication.getId());
+                chatInfoCreateNewRoomDto.setCreateInfo(new Date());
+
+                send(chatInfoCreateNewRoomDto);
+            }
+
+            roomDtos.add(group);
+        }
+
+        return roomDtos;
+    }
+
     @Transactional(readOnly = true)
     private ChatRoomDto getByRoomKey(String roomKey) {
         return defaultConverter.convertToDto(defaultEntityDao.findByRoomKey(roomKey));
@@ -244,19 +284,20 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             return Collections.emptyList();
         }
 
+        List<Long> selectedIds = new ArrayList<>();
         List<ChatUserDto> users = new ArrayList<>();
 
-        Iterator<Long> iterator = accountIds.iterator();
-        while (iterator.hasNext()) {
-            ChatUserDto chatUserDto = activeUser.get(iterator.next());
+        for (Long accountId : accountIds) {
+            ChatUserDto chatUserDto = activeUser.get(accountId);
             if(chatUserDto != null) {
                 users.add(chatUserDto);
-                iterator.remove();
+            } else {
+                selectedIds.add(accountId);
             }
         }
 
-        if (!accountIds.isEmpty()) {
-            List<ChatUserDto> chatUserDtos = accountConverter.convertToDto(accountDao.findById(accountIds))
+        if(!CollectionUtils.isEmpty(selectedIds)) {
+            List<ChatUserDto> chatUserDtos = accountConverter.convertToDto(accountDao.findById(selectedIds))
                     .stream()
                     .map(this::createChatUserDto)
                     .collect(Collectors.toList());
@@ -387,9 +428,14 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             }
         }
 
-        chatUserDto.setStatus(ChatUserStatus.OFLINE);
+        chatUserDto.setStatus(ChatUserStatus.OFFLINE);
         chatUserDto.setName(username);
         chatUserDto.setAccountId(accountDto.getId());
         return chatUserDto;
+    }
+
+    @Override
+    public Collection<ChatUserDto> getOnlineUsers() {
+        return activeUser.values();
     }
 }

@@ -39,7 +39,7 @@
 	
      <logger name="ru.danilov.client.javafx" level="DEBUG"/>
 
-	<root level="TRACE">
+	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</root>

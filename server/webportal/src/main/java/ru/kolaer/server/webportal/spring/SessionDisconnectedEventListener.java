@@ -8,6 +8,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserStatus;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatRoomService;
 
 import java.util.Date;
@@ -31,6 +32,8 @@ public class SessionDisconnectedEventListener implements ApplicationListener<Ses
 
         if(chatUserDto != null) {
             chatService.removeActiveUser(chatUserDto);
+
+            chatUserDto.setStatus(ChatUserStatus.OFFLINE);
 
             ChatInfoUserActionDto chatInfoDto = new ChatInfoUserActionDto();
             chatInfoDto.setCommand(ChatInfoCommand.DISCONNECT);

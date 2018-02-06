@@ -21,6 +21,11 @@ public class DefaultChatTable implements ChatTable {
     }
 
     @Override
+    public ServerResponse<List<ChatUserDto>> getOnlineUser() {
+        return ServerResponse.createServerResponse();
+    }
+
+    @Override
     public ServerResponse<ChatUserDto> getActiveByIdAccount(Long id) {
         return ServerResponse.createServerResponse();
     }
@@ -32,6 +37,11 @@ public class DefaultChatTable implements ChatTable {
 
     @Override
     public ServerResponse<ChatRoomDto> createSingleRoom(IdDto idDto) {
+        return ServerResponse.createServerResponse();
+    }
+
+    @Override
+    public ServerResponse<List<ChatRoomDto>> createSingleRooms(IdsDto idDto) {
         return ServerResponse.createServerResponse();
     }
 

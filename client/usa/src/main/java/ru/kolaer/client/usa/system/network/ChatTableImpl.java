@@ -21,7 +21,9 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     private final String URL_GET_ALL_ACTIVE;
     private final String URL_POST_CREATE_PRIVATE_GROUP;
     private final String URL_POST_CREATE_SINGLE_GROUP;
+    private final String URL_POST_CREATE_SINGLES_GROUP;
     private final String URL_GET_GROUP;
+    private final String URL_GET_ONLINE_USER;
     private final String URL_HIDE_MESSAGES;
     private final String URL_GET_ACTIVE_BY_ACCOUNT_ID;
     private final RestTemplate restTemplate;
@@ -33,8 +35,10 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
         this.objectMapper = objectMapper;
         this.URL_HIDE_MESSAGES = url + "/message/hide";
         this.URL_GET_ALL_ACTIVE = url + "/room/all";
+        this.URL_GET_ONLINE_USER = url + "/user/all";
         this.URL_POST_CREATE_PRIVATE_GROUP = url + "/room/private";
         this.URL_POST_CREATE_SINGLE_GROUP = url + "/room/single";
+        this.URL_POST_CREATE_SINGLES_GROUP = url + "/room/singles";
         this.URL_GET_GROUP = url + "/room/";
         this.URL_GET_ACTIVE_BY_ACCOUNT_ID = url + "/active?account_id=";
     }
@@ -43,6 +47,11 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     @Override
     public ServerResponse<List<ChatRoomDto>> getRooms() {
         return getServerResponses(restTemplate, URL_GET_ALL_ACTIVE, ChatRoomDto[].class, objectMapper);
+    }
+
+    @Override
+    public ServerResponse<List<ChatUserDto>> getOnlineUser() {
+        return getServerResponses(restTemplate, URL_GET_ONLINE_USER, ChatUserDto[].class, objectMapper);
     }
 
     @Override
@@ -66,6 +75,13 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
         return postServerResponse(restTemplate, URL_POST_CREATE_SINGLE_GROUP,
                 idDto,
                 ChatRoomDto.class, objectMapper);
+    }
+
+    @Override
+    public ServerResponse<List<ChatRoomDto>> createSingleRooms(IdsDto idDto) {
+        return postServerResponses(restTemplate, URL_POST_CREATE_SINGLES_GROUP,
+                idDto,
+                ChatRoomDto[].class, objectMapper);
     }
 
     @Override

@@ -1,21 +1,26 @@
 package ru.kolaer.client.chat.view;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoRoomActionDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
+import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 05.02.2018.
@@ -25,25 +30,26 @@ public class ChatContentVcImpl implements ChatContentVc {
     private final ChatInfoUserActionHandler chatInfoUserActionHandler;
     private final ChatInfoRoomActionHandler chatInfoRoomActionHandler;
 
+    private final ObservableList<ChatRoomVc> chatRooms = FXCollections.observableArrayList();
+
     private BorderPane mainPane;
     private ChatRoomListVc chatRoomListVc;
-    private ChatRoomVc selectedRoom;
     private ChatClient chatClient;
 
     public ChatContentVcImpl() {
-        this.chatRoomListVc = new ChatRoomListVcImpl();
+        this.chatRoomListVc = new ChatRoomListVcImpl(chatRooms);
 
         this.chatInfoUserActionHandler = new ChatInfoUserActionHandlerAbsctract() {
             @Override
             public void handlerInfo(ChatInfoUserActionDto chatInfoDto) {
-                chatRoomListVc.handlerInfo(chatInfoDto);
+                ChatContentVcImpl.this.handlerInfo(chatInfoDto);
             }
         };
 
         this.chatInfoRoomActionHandler = new ChatInfoRoomActionHandlerAbsctract() {
             @Override
             public void handlerInfo(ChatInfoRoomActionDto chatInfoDto) {
-                chatRoomListVc.handlerInfo(chatInfoDto);
+                ChatContentVcImpl.this.handlerInfo(chatInfoDto);
             }
         };
     }
@@ -51,18 +57,21 @@ public class ChatContentVcImpl implements ChatContentVc {
     @Override
     public void initView(Consumer<ChatContentVc> viewVisit) {
         mainPane = new BorderPane();
+        mainPane.getStylesheets().add(getClass().getResource("/chat.css").toString());
 
         SplitPane splitPane = new SplitPane();
 
-        chatRoomListVc.initView(chatRoomList -> splitPane.getItems().add(chatRoomList.getContent()));
-        chatRoomListVc.setOnSelectRoom(selected -> {
-            if(selectedRoom != null) {
-                selectedRoom.setSelected(false);
+        chatRoomListVc.initView(chatRoomList -> splitPane.getItems().add(0, chatRoomList.getContent()));
+        chatRoomListVc.setOnSelectRoom(chatRoomVc -> {
+            ChatRoomMessagesVc chatRoomMessagesVc = chatRoomVc.getChatRoomMessagesVc();
+            if(!chatRoomMessagesVc.isViewInit()) {
+                chatRoomMessagesVc.initView(BaseView::empty);
             }
 
-            selectedRoom = selected;
-            selectedRoom.setSelected(true);
+            splitPane.getItems().set(1, chatRoomMessagesVc.getContent());
         });
+
+        splitPane.getItems().add(1, new Pane());
 
         mainPane.setCenter(splitPane);
 
@@ -103,8 +112,78 @@ public class ChatContentVcImpl implements ChatContentVc {
                         .removeIf(user -> user.getAccountId().equals(authorizedUser.getId()));
             }
 
-            chatRoomListVc.addChatRoomDto(rooms.getResponse());
+            chatRooms.addAll(this.createChatRooms(rooms.getResponse()));
+
+            ServerResponse<List<ChatUserDto>> onlineUser = UniformSystemEditorKitSingleton.getInstance()
+                    .getUSNetwork()
+                    .getKolaerWebServer()
+                    .getApplicationDataBase()
+                    .getChatTable()
+                    .getOnlineUser();
+
+            if(onlineUser.isServerError()) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(onlineUser.getExceptionMessage());
+            } else {
+                List<Long> accountsId = onlineUser.getResponse()
+                        .stream()
+                        .filter(user -> !user.getAccountId().equals(authorizedUser.getId()))
+                        .map(ChatUserDto::getAccountId)
+                        .collect(Collectors.toList());
+
+                if(!accountsId.isEmpty()) {
+                    ServerResponse<List<ChatRoomDto>> singleRooms = UniformSystemEditorKitSingleton.getInstance()
+                            .getUSNetwork()
+                            .getKolaerWebServer()
+                            .getApplicationDataBase()
+                            .getChatTable()
+                            .createSingleRooms(new IdsDto(accountsId));
+
+                    if (singleRooms.isServerError()) {
+                        UniformSystemEditorKitSingleton.getInstance()
+                                .getUISystemUS()
+                                .getNotification()
+                                .showErrorNotify(singleRooms.getExceptionMessage());
+                    }
+                }
+            }
         }
+    }
+
+    private List<ChatRoomVc> createChatRooms(List<ChatRoomDto> chatRoomDtos) {
+        return chatRoomDtos.stream().map(this::createChatRoomVc).collect(Collectors.toList());
+    }
+
+    private ChatRoomVc createChatRoomVc(ChatRoomDto chatRoomDto) {
+        ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatRoomDto);
+        if(chatClient.isConnect()) {
+            chatRoomVc.connect(chatClient);
+        }
+        return chatRoomVc;
+    }
+
+    private void handlerInfo(ChatInfoRoomActionDto chatInfoDto) {
+        Tools.runOnWithOutThreadFX(() -> {
+            AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
+                    .getAuthentication()
+                    .getAuthorizedUser();
+
+            chatInfoDto.getChatRoomDto()
+                    .getUsers()
+                    .removeIf(user -> user.getAccountId().equals(authorizedUser.getId()));
+
+            if(chatInfoDto.getCommand() == ChatInfoCommand.CREATE_NEW_ROOM) {
+                chatRooms.add(createChatRoomVc(chatInfoDto.getChatRoomDto()));
+            }
+        });
+
+        chatRooms.forEach(chatRoomVc -> chatRoomVc.handlerInfo(chatInfoDto));
+    }
+
+    private void handlerInfo(ChatInfoUserActionDto infoUserActionDto) {
+        chatRooms.forEach(chatRoomVc -> chatRoomVc.handlerInfo(infoUserActionDto));
     }
 
     @Override

@@ -2,7 +2,7 @@ package ru.kolaer.client.chat.view;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -10,11 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.api.tools.Tools;
 
 import java.util.Date;
 import java.util.List;
@@ -26,21 +26,23 @@ import java.util.stream.Collectors;
  * Created by danilovey on 02.11.2017.
  */
 @Slf4j
-public class ChatMessageContentVcImpl implements ChatMessageContentVc {
+public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     private final ChatRoomDto chatRoomDto;
+
+    private final ObservableList<ChatMessageDto> messages = FXCollections.observableArrayList();
+
     private BorderPane mainPane;
     private ListView<ChatMessageDto> chatMessageDtoListView;
     private TextArea textArea;
 
-    private Consumer<ChatMessageDto> sendMessageConsumer;
-    private ObservableList<ChatMessageDto> messages = FXCollections.observableArrayList();
+    private Consumer<ChatMessageDto> chatMessageConsumer;
 
-    public ChatMessageContentVcImpl(ChatRoomDto chatRoomDto) {
+    public ChatRoomMessagesVcImpl(ChatRoomDto chatRoomDto) {
         this.chatRoomDto = chatRoomDto;
     }
 
     @Override
-    public void initView(Consumer<ChatMessageContentVc> viewVisit) {
+    public void initView(Consumer<ChatRoomMessagesVc> viewVisit) {
         mainPane = new BorderPane();
 
         chatMessageDtoListView = new ListView<>(messages);
@@ -101,56 +103,45 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
 
         chatMessageDtoListView.setContextMenu(new ContextMenu(hideMessages));
 
-        if(chatRoomDto.getType() != ChatGroupType.MAIN ||
-                (chatRoomDto.getType() == ChatGroupType.MAIN &&
-                        UniformSystemEditorKitSingleton.getInstance()
-                                .getAuthentication()
-                                .getAuthorizedUser()
-                                .isAccessWriteMainChat())) {
-            textArea = new TextArea();
-            textArea.setPromptText("Введите сообщение...");
-            textArea.setMaxHeight(Double.MAX_VALUE);
-            textArea.setMaxWidth(Double.MAX_VALUE);
-            textArea.setOnKeyPressed(keyEvent -> {
-                if (keyEvent.getCode() == KeyCode.ENTER) {
-                    if (keyEvent.isControlDown()) {
-                        textArea.appendText(System.getProperty("line.separator"));
-                    } else {
-                        sendMessage();
-                        keyEvent.consume();
-                    }
+        textArea = new TextArea();
+        textArea.setPromptText("Введите сообщение...");
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                if (keyEvent.isControlDown()) {
+                    textArea.appendText(System.getProperty("line.separator"));
+                } else {
+                    sendMessage();
+                    keyEvent.consume();
                 }
-            });
+            }
+        });
 
-            Button button = new Button("Отправить");
-            button.setPrefHeight(43);
-            button.setPrefWidth(150);
-            button.setMaxHeight(Double.MAX_VALUE);
-            button.setOnAction(e -> sendMessage());
+        Button button = new Button("Отправить");
+        button.setPrefHeight(43);
+        button.setPrefWidth(150);
+        button.setMaxHeight(Double.MAX_VALUE);
+        button.setOnAction(e -> sendMessage());
 
-            BorderPane inputPane = new BorderPane();
-            inputPane.setCenter(textArea);
-            inputPane.setRight(button);
-            inputPane.setMaxHeight(50);
+        BorderPane inputPane = new BorderPane();
+        inputPane.setCenter(textArea);
+        inputPane.setRight(button);
+        inputPane.setMaxHeight(50);
 
-            mainPane.setBottom(inputPane);
-        }
+        mainPane.setBottom(inputPane);
 
         viewVisit.accept(this);
     }
 
     private void sendMessage() {
         if(!textArea.getText().trim().isEmpty()) {
-            if(sendMessageConsumer != null) {
-                sendMessageConsumer.accept(createMessage(textArea.getText()));
+            if(chatMessageConsumer != null) {
+                chatMessageConsumer.accept(createMessage(textArea.getText()));
             }
+
             textArea.setText("");
         }
-    }
-
-    @Override
-    public void setOnSendMessage(Consumer<ChatMessageDto> consumer) {
-        this.sendMessageConsumer = consumer;
     }
 
     @Override
@@ -165,7 +156,7 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     }
 
     @Override
-    public Node getContent() {
+    public Parent getContent() {
         return mainPane;
     }
 
@@ -175,6 +166,11 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
         if(isViewInit()) {
             chatMessageDtoListView.scrollTo(chatMessageDto);
         }
+    }
+
+    @Override
+    public void receivedMessage(ChatRoomDto chatRoomDto, ChatMessageDto chatMessageDto) {
+        Tools.runOnWithOutThreadFX(() -> addMessage(chatMessageDto));
     }
 
     @Override
@@ -190,6 +186,17 @@ public class ChatMessageContentVcImpl implements ChatMessageContentVc {
     @Override
     public List<ChatMessageDto> getMessages() {
         return messages;
+    }
+
+    @Override
+    public void setSendMessage(Consumer<ChatMessageDto> consumer) {
+        this.chatMessageConsumer = consumer;
+    }
+
+
+    @Override
+    public void setTitle(String title) {
+
     }
 
     @Override

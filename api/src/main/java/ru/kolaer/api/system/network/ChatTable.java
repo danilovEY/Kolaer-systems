@@ -15,11 +15,15 @@ import java.util.List;
  */
 public interface ChatTable {
     ServerResponse<List<ChatRoomDto>> getRooms();
+    ServerResponse<List<ChatUserDto>> getOnlineUser();
 
     ServerResponse<ChatUserDto> getActiveByIdAccount(Long id);
 
     ServerResponse<ChatRoomDto> createPrivateRoom(IdsDto idsDto, String name);
     ServerResponse<ChatRoomDto> createSingleRoom(IdDto idDto);
+
+    ServerResponse<List<ChatRoomDto>> createSingleRooms(IdsDto idDto);
+
     ServerResponse<ChatRoomDto> getRoomById(long roomId);
     ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(long roomId);
 

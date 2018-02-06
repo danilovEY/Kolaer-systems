@@ -1,109 +1,61 @@
 package ru.kolaer.client.chat.view;
 
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.util.StringUtils;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
+import ru.kolaer.client.chat.service.ChatRoomObserver;
 
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by danilovey on 05.02.2018.
+ * Created by danilovey on 06.02.2018.
  */
 @Slf4j
 public class ChatRoomVcImpl implements ChatRoomVc {
+    private final List<ChatRoomObserver> chatRoomObserverList = new ArrayList<>();
     private final ChatRoomDto chatRoomDto;
-    private boolean selected;
-    private String subId;
-    private BorderPane mainPane;
-    private Label title;
-    private Label status;
+
+    private ChatClient chatClient;
+    private String subscriptionId;
+
+    private final ChatRoomPreviewVc chatRoomPreviewVc;
+    private final ChatRoomMessagesVc chatRoomMessagesVc;
 
     public ChatRoomVcImpl(ChatRoomDto chatRoomDto) {
         this.chatRoomDto = chatRoomDto;
+        this.chatRoomMessagesVc = new ChatRoomMessagesVcImpl(chatRoomDto);
+        this.chatRoomPreviewVc = new ChatRoomPreviewVcImpl(chatRoomDto);
+
+        this.registerChatRoomObserver(chatRoomMessagesVc);
+        this.registerChatRoomObserver(chatRoomPreviewVc);
+
+        this.init();
     }
 
     @Override
-    public ChatRoomDto getChatRoomDto() {
-        return this.chatRoomDto;
-    }
+    public void handlerInfo(ChatInfoUserActionDto infoUserActionDto) {
+        if(infoUserActionDto.getCommand() == ChatInfoCommand.CONNECT ||
+                infoUserActionDto.getCommand() == ChatInfoCommand.DISCONNECT) {
+            ChatUserDto chatUserDto = infoUserActionDto.getChatUserDto();
 
-    @Override
-    public void selected(boolean selected) {
-        this.selected = selected;
-    }
+            chatRoomDto.getUsers()
+                    .stream()
+                    .filter(user -> user.getAccountId().equals(chatUserDto.getAccountId()))
+                    .findFirst()
+                    .ifPresent(user -> {
+                        user.setStatus(chatUserDto.getStatus());
+                        user.setName(chatUserDto.getName());
 
-    @Override
-    public boolean isSelected() {
-        return this.selected;
-    }
-
-    @Override
-    public void initView(Consumer<ChatRoomVc> viewVisit) {
-        this.mainPane = new BorderPane();
-        this.title = new Label();
-        this.status = new Label();
-
-        if(chatRoomDto.getType() == ChatGroupType.SINGLE) {
-            ChatUserDto chatUserDto = chatRoomDto.getUsers().get(0);
-
-            if(chatUserDto != null) {
-                String title = chatUserDto.getName();
-
-                this.title.setText(title);
-                this.status.setText(chatUserDto.getStatus().name());
-            } else {
-                this.title.setText("Unknown");
-                this.status.setText("");
-            }
-        } else {
-            String title = chatRoomDto.getName();
-
-            if(StringUtils.isEmpty(title)) {
-                title = chatRoomDto.getUsers()
-                        .stream()
-                        .map(ChatUserDto::getName)
-                        .collect(Collectors.joining(","));
-            }
-
-            this.title.setText(title);
-            this.status.setText("");
+                        Tools.runOnWithOutThreadFX(() -> updateRoomName(this.chatRoomDto));
+                    });
         }
-
-        this.mainPane.setCenter(title);
-        this.mainPane.setRight(status);
-
-        viewVisit.accept(this);
-    }
-
-    @Override
-    public Parent getContent() {
-        return this.mainPane;
-    }
-
-    @Override
-    public void connect(ChatClient chatClient) {
-        chatClient.subscribeRoom(this.chatRoomDto, this);
-    }
-
-    @Override
-    public void disconnect(ChatClient chatClient) {
-
-    }
-
-    @Override
-    public void handleFrame(StompHeaders headers, ChatMessageDto message) {
-        log.info("New message: {}", message);
     }
 
     @Override
@@ -117,12 +69,92 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     }
 
     @Override
+    public void connect(ChatClient chatClient) {
+        this.chatClient = chatClient;
+
+        chatClient.subscribeRoom(this.chatRoomDto, this);
+    }
+
+    @Override
+    public void disconnect(ChatClient chatClient) {
+
+    }
+
+    @Override
     public void setSubscriptionId(String id) {
-        this.subId = id;
+        this.subscriptionId = id;
     }
 
     @Override
     public String getSubscriptionId() {
-        return this.subId;
+        return this.subscriptionId;
+    }
+
+    private void init() {
+        updateRoomName(this.chatRoomDto);
+
+        this.chatRoomMessagesVc.setSendMessage(chatMessageDto -> {
+            if(chatClient != null) {
+                chatClient.send(this.chatRoomDto, chatMessageDto);
+            }
+        });
+    }
+
+    private void updateRoomName(ChatRoomDto chatRoomDto) {
+        String title = null;
+        ChatUserStatus status = null;
+
+        if(chatRoomDto.getType() == ChatGroupType.SINGLE) {
+            ChatUserDto chatUserDto = chatRoomDto.getUsers().get(0);
+
+            if(chatUserDto != null) {
+                title = chatUserDto.getName();
+                status = chatUserDto.getStatus();
+            }
+        } else {
+            title = chatRoomDto.getName();
+
+            if(StringUtils.isEmpty(title)) {
+                title = chatRoomDto.getUsers()
+                        .stream()
+                        .map(ChatUserDto::getName)
+                        .collect(Collectors.joining(","));
+            }
+        }
+
+        this.chatRoomPreviewVc.setTitle(title);
+        this.chatRoomPreviewVc.setStatus(status);
+        this.chatRoomMessagesVc.setTitle(title);
+    }
+
+    @Override
+    public void handleFrame(StompHeaders headers, ChatMessageDto message) {
+        log.debug("New MESSAGE: {}", message);
+        this.chatRoomObserverList.forEach(osb -> osb.receivedMessage(this.chatRoomDto, message));
+    }
+
+    @Override
+    public ChatRoomPreviewVc getChatRoomPreviewVc() {
+        return this.chatRoomPreviewVc;
+    }
+
+    @Override
+    public ChatRoomMessagesVc getChatRoomMessagesVc() {
+        return this.chatRoomMessagesVc;
+    }
+
+    @Override
+    public ChatRoomDto getChatRoomDto() {
+        return this.chatRoomDto;
+    }
+
+    @Override
+    public void registerChatRoomObserver(ChatRoomObserver chatRoomObserver) {
+        chatRoomObserverList.add(chatRoomObserver);
+    }
+
+    @Override
+    public void deleteChatRoomObserver(ChatRoomObserver chatRoomObserver) {
+        chatRoomObserverList.remove(chatRoomObserver);
     }
 }
