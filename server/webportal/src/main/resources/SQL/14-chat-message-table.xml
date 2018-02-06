@@ -58,4 +58,10 @@
             <column name="room_id" type="BIGINT"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="14-5" author="Danilov">
+        <addForeignKeyConstraint baseTableName="chat_message" baseColumnNames="room_id" constraintName="message_for_room_fk"
+                                 referencedTableName="chat_room"
+                                 referencedColumnNames="id"/>
+    </changeSet>
 </databaseChangeLog>
