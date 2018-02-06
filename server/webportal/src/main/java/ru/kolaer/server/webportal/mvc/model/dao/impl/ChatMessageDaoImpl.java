@@ -37,7 +37,7 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
     @Override
     @Transactional(readOnly = true)
     public List<ChatMessageEntity> findAllByRoom(Long roomId, boolean withHide) {
-        String sql = "FROM " + getEntityName() + " WHERE room = :room";
+        String sql = "FROM " + getEntityName() + " WHERE roomId = :room";
         if(!withHide) {
             sql += " AND hide = false";
         }
@@ -51,7 +51,7 @@ public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> im
     @Override
     @Transactional(readOnly = true)
     public Long findCountByRoom(Long roomId, boolean withHide) {
-        String sql = "SELECT COUNT(id) FROM " + getEntityName() + " WHERE room = :room";
+        String sql = "SELECT COUNT(id) FROM " + getEntityName() + " WHERE roomId = :room";
         if(!withHide) {
             sql += " AND hide = false";
         }

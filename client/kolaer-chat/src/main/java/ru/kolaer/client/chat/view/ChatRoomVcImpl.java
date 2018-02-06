@@ -129,7 +129,6 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
     @Override
     public void handleFrame(StompHeaders headers, ChatMessageDto message) {
-        log.debug("New MESSAGE: {}", message);
         this.chatRoomObserverList.forEach(osb -> osb.receivedMessage(this.chatRoomDto, message));
     }
 

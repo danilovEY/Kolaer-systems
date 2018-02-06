@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
@@ -16,6 +17,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,23 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     @Override
     public void initView(Consumer<ChatRoomMessagesVc> viewVisit) {
         mainPane = new BorderPane();
+
+        ServerResponse<Page<ChatMessageDto>> messageByRoomId = UniformSystemEditorKitSingleton.getInstance()
+                .getUSNetwork()
+                .getKolaerWebServer()
+                .getApplicationDataBase()
+                .getChatTable()
+                .getMessageByRoomId(chatRoomDto.getId());
+
+        if(messageByRoomId.isServerError()) {
+            UniformSystemEditorKitSingleton.getInstance()
+                    .getUISystemUS()
+                    .getNotification()
+                    .showErrorNotify(messageByRoomId.getExceptionMessage());
+        } else {
+            messages.addAll(messageByRoomId.getResponse().getData());
+            messages.sort(Comparator.comparing(ChatMessageDto::getId));
+        }
 
         chatMessageDtoListView = new ListView<>(messages);
         chatMessageDtoListView.getStyleClass().add("chat-message-list-view");

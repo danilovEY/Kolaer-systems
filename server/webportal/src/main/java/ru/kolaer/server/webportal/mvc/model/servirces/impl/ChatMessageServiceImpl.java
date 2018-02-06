@@ -8,15 +8,15 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.server.webportal.exception.CustomHttpCodeException;
 import ru.kolaer.server.webportal.mvc.model.converter.ChatMessageConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.ChatMessageDao;
+import ru.kolaer.server.webportal.mvc.model.dao.ChatRoomDao;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatMessageEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatRoomEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatMessageService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ChatRoomService;
 
 import java.util.List;
 
@@ -27,16 +27,16 @@ import java.util.List;
 public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDto, ChatMessageEntity, ChatMessageDao, ChatMessageConverter>
         implements ChatMessageService {
     private final AuthenticationService authenticationService;
-    private final ChatRoomService chatService;
+    private final ChatRoomDao chatRoomDao;
 
     protected ChatMessageServiceImpl(ChatMessageDao defaultEntityDao,
                                      ChatMessageConverter converter,
                                      AuthenticationService authenticationService,
-                                     ChatRoomService chatService) {
+                                     ChatRoomDao chatRoomDao) {
         super(defaultEntityDao, converter);
 
         this.authenticationService = authenticationService;
-        this.chatService = chatService;
+        this.chatRoomDao = chatRoomDao;
     }
 
     @Override
@@ -56,10 +56,13 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
     @Transactional(readOnly = true)
     public Page<ChatMessageDto> getAllByRoom(Long room, Integer number, Integer pageSize) {
         AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
-        ChatRoomDto chatRoomDto = chatService.getById(room);
+        ChatRoomEntity chatRoomEntity = chatRoomDao.findById(room);
+
         if(accountByAuthentication.isAccessOit() ||
-                chatRoomDto.getType() == ChatGroupType.MAIN ||
-                chatRoomDto.getType() == ChatGroupType.PUBLIC) {
+                chatRoomEntity.getType() == ChatGroupType.MAIN ||
+                chatRoomEntity.getType() == ChatGroupType.PUBLIC ||
+                chatRoomEntity.getUserCreatedId().equals(accountByAuthentication.getId()) ||
+                chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId())) {
             Long count;
             List<ChatMessageDto> results;
 
