@@ -7,6 +7,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by danilovey on 08.11.2017.
@@ -43,4 +44,9 @@ public class ChatMessageEntity implements BaseEntity {
 
     @Column(name = "hide")
     private boolean hide;
+
+    @ElementCollection
+    @CollectionTable(name="chat_message_read", joinColumns=@JoinColumn(name="message_id"))
+    @Column(name="account_id")
+    private List<Long> readIds;
 }

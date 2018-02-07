@@ -2,12 +2,16 @@ package ru.kolaer.server.webportal.mvc.model.converter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatMessageEntity;
-import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
+import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 08.11.2017.
@@ -15,10 +19,10 @@ import java.util.Optional;
 @Component
 @Slf4j
 public class ChatMessageConverterImpl implements ChatMessageConverter {
-    private final AccountService accountConverter;
+    private final ChatService chatService;
 
-    public ChatMessageConverterImpl(AccountService accountConverter) {
-        this.accountConverter = accountConverter;
+    public ChatMessageConverterImpl(ChatService chatService) {
+        this.chatService = chatService;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class ChatMessageConverterImpl implements ChatMessageConverter {
         chatMessageEntity.setCreateMessage(dto.getCreateMessage());
         chatMessageEntity.setType(dto.getType());
         Optional.ofNullable(dto.getFromAccount())
-                .map(AccountDto::getId)
+                .map(ChatUserDto::getAccountId)
                 .ifPresent(chatMessageEntity::setAccountId);
         return chatMessageEntity;
     }
@@ -45,19 +49,46 @@ public class ChatMessageConverterImpl implements ChatMessageConverter {
             return null;
         }
 
-        return updateData(new ChatMessageDto(), model);
+        return updateData(convertToDtoWithOutSubEntity(model), model);
     }
 
     @Override
     public ChatMessageDto updateData(ChatMessageDto oldDto, ChatMessageEntity newModel) {
-        oldDto.setId(newModel.getId());
-        oldDto.setMessage(newModel.getMessage());
-        oldDto.setRoomId(newModel.getRoomId());
-        oldDto.setCreateMessage(newModel.getCreateMessage());
-        oldDto.setType(newModel.getType());
         Optional.ofNullable(newModel.getAccountId())
-                .map(accountConverter::getById)
+                .map(chatService::getOrCreateUserByAccountId)
                 .ifPresent(oldDto::setFromAccount);
         return oldDto;
+    }
+
+    @Override
+    public List<ChatMessageDto> convertToDto(List<ChatMessageEntity> model) {
+        List<Long> accountIds = model.stream()
+                .map(ChatMessageEntity::getAccountId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        Map<Long, ChatUserDto> usersMap = chatService.getOrCreateUserByAccountId(accountIds)
+                .stream()
+                .collect(Collectors.toMap(ChatUserDto::getAccountId, Function.identity()));
+
+        return model.stream()
+                .map(message -> {
+                    ChatMessageDto dto = this.convertToDtoWithOutSubEntity(message);
+                    dto.setFromAccount(usersMap.get(message.getAccountId()));
+                    return dto;
+                }).collect(Collectors.toList());
+    }
+
+    @Override
+    public ChatMessageDto convertToDtoWithOutSubEntity(ChatMessageEntity model) {
+        ChatMessageDto dto = new ChatMessageDto();
+        dto.setId(model.getId());
+        dto.setMessage(model.getMessage());
+        dto.setRoomId(model.getRoomId());
+        dto.setCreateMessage(model.getCreateMessage());
+        dto.setType(model.getType());
+        dto.setHide(model.isHide());
+
+        return dto;
     }
 }

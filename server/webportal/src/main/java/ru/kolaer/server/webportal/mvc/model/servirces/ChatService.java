@@ -38,9 +38,13 @@ public interface ChatService extends DefaultService<ChatRoomDto> {
 
     List<ChatRoomDto> getAllRoomForAuthUser();
 
+    void markReadMessages(IdsDto idsDto, boolean read);
     void hideMessage(IdsDto idsDto, boolean hide);
 
     ChatUserDto createChatUserDto(AccountDto accountDto);
 
     Collection<ChatUserDto> getOnlineUsers();
+
+    ChatUserDto getOrCreateUserByAccountId(Long accountId);
+    List<ChatUserDto> getOrCreateUserByAccountId(List<Long> accountIds);
 }

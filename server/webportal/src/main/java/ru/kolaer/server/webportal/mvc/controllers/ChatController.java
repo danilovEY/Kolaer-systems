@@ -87,6 +87,12 @@ public class ChatController {
         chatService.hideMessage(idsDto, true);
     }
 
+    @UrlDeclaration(description = "Пометить сообщение как прочитанное сообщения", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/message/read", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void markAsReadMessages(@RequestBody IdsDto idsDto) {
+        chatService.markReadMessages(idsDto, true);
+    }
+
     @UrlDeclaration(description = "Получить комнату по id комнаты", requestMethod = RequestMethod.GET)
     @RequestMapping(value = "/room/{roomId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ChatRoomDto getRoom(@PathVariable("roomId") Long roomId) {

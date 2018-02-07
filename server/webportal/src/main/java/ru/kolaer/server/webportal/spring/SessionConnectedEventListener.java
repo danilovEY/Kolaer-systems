@@ -41,17 +41,16 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
         AccountDto accountDto = authenticationService
                 .getAccountWithEmployeeByLogin(user.getName());
 
-        ChatUserDto chatUserDto = chatService.createChatUserDto(accountDto);
-        chatUserDto.setSessionId(sha.getSessionId());
-        chatUserDto.setStatus(ChatUserStatus.ONLINE);
-
-        ChatUserDto oldActive = chatService.getUserByAccountId(accountDto.getId());
-        if (oldActive != null) {
-            chatService.removeActiveUser(oldActive);
-            chatService.sendDisconnect(oldActive.getSessionId());
+        ChatUserDto chatUserDto = chatService.getUserByAccountId(accountDto.getId());
+        if (chatUserDto != null && chatUserDto.getSessionId() == null) {
+            chatService.removeActiveUser(chatUserDto);
+            chatService.sendDisconnect(chatUserDto.getSessionId());
+        } else {
+            chatUserDto = chatService.addActiveUser(chatService.createChatUserDto(accountDto));
         }
 
-        chatService.addActiveUser(chatUserDto);
+        chatUserDto.setSessionId(sha.getSessionId());
+        chatUserDto.setStatus(ChatUserStatus.ONLINE);
 
         ChatInfoUserActionDto chatInfoDto = new ChatInfoUserActionDto();
         chatInfoDto.setCommand(ChatInfoCommand.CONNECT);

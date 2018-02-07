@@ -19,6 +19,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatMessageService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 08.11.2017.
@@ -43,8 +44,16 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
     @Transactional(readOnly = true)
     public List<ChatMessageDto> getAllByRoom(Long roomId) {
         AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
-        if(accountByAuthentication.isAccessOit()) {
-            return defaultConverter.convertToDto(defaultEntityDao.findAllByRoom(roomId, accountByAuthentication.isAccessOit()));
+
+        ChatRoomEntity chatRoomEntity = chatRoomDao.findById(roomId);
+
+        if(accountByAuthentication.isAccessOit() ||
+                chatRoomEntity.getType() == ChatGroupType.MAIN ||
+                chatRoomEntity.getType() == ChatGroupType.PUBLIC ||
+                chatRoomEntity.getUserCreatedId().equals(accountByAuthentication.getId()) ||
+                chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId())) {
+            return checkReads(defaultConverter.convertToDto(defaultEntityDao.findAllByRoom(roomId, accountByAuthentication.isAccessOit())),
+                    accountByAuthentication.getId());
         }
 
         throw new CustomHttpCodeException("У вас нет доступа к чату!",
@@ -58,11 +67,11 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
         AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
         ChatRoomEntity chatRoomEntity = chatRoomDao.findById(room);
 
-        if(accountByAuthentication.isAccessOit() ||
+        if(chatRoomEntity != null && (accountByAuthentication.isAccessOit() ||
                 chatRoomEntity.getType() == ChatGroupType.MAIN ||
                 chatRoomEntity.getType() == ChatGroupType.PUBLIC ||
                 chatRoomEntity.getUserCreatedId().equals(accountByAuthentication.getId()) ||
-                chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId())) {
+                chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId()))) {
             Long count;
             List<ChatMessageDto> results;
 
@@ -76,11 +85,29 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
                         .findAllByRoom(room, accountByAuthentication.isAccessOit(), number, pageSize));
             }
 
+            results = checkReads(results, accountByAuthentication.getId());
+
             return new Page<>(results, number, count, pageSize);
         }
 
         throw new CustomHttpCodeException("У вас нет доступа к чату!",
                 ErrorCode.FORBIDDEN,
                 HttpStatus.FORBIDDEN);
+    }
+
+    private List<ChatMessageDto> checkReads(List<ChatMessageDto> messages, long accountId) {
+        List<Long> messageIds = messages.stream()
+                .map(ChatMessageDto::getId)
+                .collect(Collectors.toList());
+
+        if(!messageIds.isEmpty()) {
+            List<Long> messageReads = defaultEntityDao.findReadByMessageAndAccount(messageIds, accountId);
+
+            messages.stream()
+                    .filter(message -> messageReads.contains(message.getId()))
+                    .forEach(message -> message.setRead(true));
+        }
+
+        return messages;
     }
 }

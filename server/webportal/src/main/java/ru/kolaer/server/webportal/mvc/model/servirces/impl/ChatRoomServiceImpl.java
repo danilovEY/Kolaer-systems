@@ -18,7 +18,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.server.webportal.exception.CustomHttpCodeException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
-import ru.kolaer.server.webportal.mvc.model.converter.ChatMessageConverter;
 import ru.kolaer.server.webportal.mvc.model.converter.ChatRoomConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.dao.ChatMessageDao;
@@ -49,7 +48,6 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     private final AccountDao accountDao;
     private final AccountConverter accountConverter;
     private final ChatMessageDao chatMessageDao;
-    private final ChatMessageConverter chatMessageConverter;
 
     public ChatRoomServiceImpl(@Value("${secret_key:secret_key}") String key,
                                SimpMessagingTemplate simpMessagingTemplate,
@@ -57,7 +55,6 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
                                AccountDao accountDao,
                                AccountConverter accountConverter,
                                ChatMessageDao chatMessageDao,
-                               ChatMessageConverter chatMessageConverter,
                                ChatRoomDao defaultEntityDao,
                                ChatRoomConverter converter) {
         super(defaultEntityDao, converter);
@@ -67,7 +64,6 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         this.accountDao = accountDao;
         this.accountConverter = accountConverter;
         this.chatMessageDao = chatMessageDao;
-        this.chatMessageConverter = chatMessageConverter;
     }
 
     @Override
@@ -77,14 +73,14 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
     @Override
     public void removeActiveUser(ChatUserDto dto) {
-        activeUser.remove(dto.getAccountId());
+        dto.setStatus(ChatUserStatus.OFFLINE);
     }
 
     @Override
     public ChatUserDto getUser(String sessionId) {
         return activeUser.values()
                 .stream()
-                .filter(user -> user.getSessionId().equals(sessionId))
+                .filter(user -> sessionId.equals(user.getSessionId()))
                 .findFirst()
                 .orElse(null);
     }
@@ -133,6 +129,15 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     }
 
     @Override
+    @Transactional
+    public void markReadMessages(IdsDto idsDto, boolean read) {
+        if(idsDto != null && !CollectionUtils.isEmpty(idsDto.getIds())) {
+            AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+            chatMessageDao.markRead(idsDto.getIds(), accountByAuthentication.getId(), read);
+        }
+    }
+
+    @Override
     public void send(ChatInfoRoomActionDto chatInfoRoomActionDto) {
         for (ChatUserDto chatUserDto : chatInfoRoomActionDto.getChatRoomDto().getUsers()) {
             String roomId = chatUserDto.getAccountId().toString();
@@ -159,11 +164,29 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         } else {
             log.debug("messages: {}", message);
 
-            ChatMessageEntity save = chatMessageDao.save(chatMessageConverter.convertToModel(message));
+            message.setFromAccount(this.getOrCreateUserByAccountId(message.getFromAccount().getAccountId()));
+            ChatMessageEntity save = chatMessageDao.save(convertToModel(message));
             message.setId(save.getId());
+
 
             simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_CHAT_MESSAGE + message.getRoomId(), message);
         }
+    }
+
+    private ChatMessageEntity convertToModel(ChatMessageDto dto) {
+        ChatMessageEntity chatMessageEntity = new ChatMessageEntity();
+        chatMessageEntity.setId(dto.getId());
+        chatMessageEntity.setRoomId(dto.getRoomId());
+        chatMessageEntity.setMessage(dto.getMessage());
+        chatMessageEntity.setCreateMessage(dto.getCreateMessage());
+        chatMessageEntity.setType(dto.getType());
+        Optional.ofNullable(dto.getFromAccount())
+                .map(ChatUserDto::getAccountId)
+                .ifPresent(chatMessageEntity::setAccountId);
+
+        chatMessageEntity.setReadIds(Collections.singletonList(chatMessageEntity.getAccountId()));
+
+        return chatMessageEntity;
     }
 
     @Override
@@ -391,7 +414,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 //                return;
 //            }
 //
-//            chatMessageDao.setHideOnIds(hideMessages.stream()
+//            chatMessageDao.markHideOnIds(hideMessages.stream()
 //                    .map(ChatMessageEntity::getId)
 //                    .collect(Collectors.toList()), hide);
 //
@@ -437,5 +460,15 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     @Override
     public Collection<ChatUserDto> getOnlineUsers() {
         return activeUser.values();
+    }
+
+    @Override
+    public ChatUserDto getOrCreateUserByAccountId(Long accountId) {
+        return getUsersByIds(Collections.singletonList(accountId)).get(0);
+    }
+
+    @Override
+    public List<ChatUserDto> getOrCreateUserByAccountId(List<Long> accountIds) {
+        return getUsersByIds(accountIds);
     }
 }

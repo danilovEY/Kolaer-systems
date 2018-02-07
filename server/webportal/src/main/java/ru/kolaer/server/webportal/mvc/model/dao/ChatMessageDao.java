@@ -24,5 +24,8 @@ public interface ChatMessageDao extends DefaultDao<ChatMessageEntity> {
 
     Long findCountByRoom(Long roomId, boolean withHide);
 
-    void setHideOnIds(List<Long> ids, boolean hide);
+    void markHideOnIds(List<Long> ids, boolean hide);
+    void markRead(List<Long> messageIds, Long accountId, boolean read);
+
+    List<Long> findReadByMessageAndAccount(List<Long> messageIds, Long id);
 }

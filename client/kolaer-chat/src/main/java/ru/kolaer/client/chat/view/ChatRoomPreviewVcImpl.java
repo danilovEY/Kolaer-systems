@@ -21,7 +21,6 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
-    private final ChatRoomDto chatRoomDto;
 
     private final SimpleStringProperty titleProperty = new SimpleStringProperty();
     private final SimpleStringProperty statusProperty = new SimpleStringProperty();
@@ -32,10 +31,7 @@ public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
     private int unreadCountMessage = 0;
 
     private BorderPane mainPane;
-    private Label titleLabel;
-    private Label statusLabel;
-    private Label lastMessageLabel;
-    private Label messageCountLabel;
+    private ChatRoomDto chatRoomDto;
 
     public ChatRoomPreviewVcImpl(ChatRoomDto chatRoomDto) {
         this.chatRoomDto = chatRoomDto;
@@ -78,19 +74,19 @@ public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
     public void initView(Consumer<ChatRoomPreviewVc> viewVisit) {
         mainPane = new BorderPane();
 
-        titleLabel = new Label();
+        Label titleLabel = new Label();
         titleLabel.setFont(Font.font(null, FontWeight.NORMAL, 15));
         titleLabel.textProperty().bind(titleProperty);
 
-        lastMessageLabel = new Label();
+        Label lastMessageLabel = new Label();
         lastMessageLabel.setFont(Font.font(null, FontWeight.NORMAL, 10));
         lastMessageLabel.textProperty().bind(lastMessageProperty);
 
-        statusLabel = new Label();
+        Label statusLabel = new Label();
         statusLabel.setFont(Font.font(null, FontWeight.NORMAL, 15));
         statusLabel.textProperty().bind(statusProperty);
 
-        messageCountLabel = new Label();
+        Label messageCountLabel = new Label();
         messageCountLabel.setFont(Font.font(null, FontWeight.NORMAL, 10));
         messageCountLabel.textProperty().bind(messageCountProperty);
 
@@ -111,7 +107,7 @@ public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
     public void receivedMessage(ChatRoomDto chatRoomDto, ChatMessageDto chatMessageDto) {
         if(!selected) {
             Tools.runOnWithOutThreadFX(() -> {
-                lastMessageProperty.set("Новое сообщение " + Tools.dateTimeToString(chatMessageDto.getCreateMessage()));
+                lastMessageProperty.set("Сообщение от " + Tools.dateTimeToString(chatMessageDto.getCreateMessage()));
                 messageCountProperty.setValue("[+" + ++unreadCountMessage + "]");
             });
         }

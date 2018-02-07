@@ -37,6 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final EmployeeService employeeService;
     private final AccountLDAP accountLDAP;
     private final EmployeeLDAP employeeLDAP;
+    private AuthenticationService self;
 
     @Autowired
     public AuthenticationServiceImpl(@Value("${server.auth.type}") String serverAuthType,
@@ -109,7 +110,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AccountDto getAccountByAuthentication() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && !auth.getName().equals("anonymousUser")){
-            return this.getAccountWithEmployeeByLogin(auth.getName());
+            return self.getAccountWithEmployeeByLogin(auth.getName());
         }
 
         return this.defaultAccount;
@@ -131,5 +132,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @PreDestroy
     @CacheEvict(value = "accounts", cacheManager = "springCM")
     public void destroy() {
+    }
+
+    @Autowired
+    public void setSelf(AuthenticationService self) {
+        this.self = self;
     }
 }

@@ -10,9 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
-import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
@@ -84,7 +82,7 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             mainPane.setAlignment(Pos.CENTER);
             mainPane.getChildren().add(copyable);
             mainPane.getStyleClass().add("chat-message-server");
-        } else if(chatMessageDto.getFromAccount() == null || chatMessageDto.getFromAccount().getId().equals(authorizedUser.getId())){
+        } else if(chatMessageDto.getFromAccount() == null || chatMessageDto.getFromAccount().getAccountId().equals(authorizedUser.getId())){
             String message = chatMessageDto.getMessage() +
                     System.lineSeparator() +
                     Tools.dateTimeToString(chatMessageDto.getCreateMessage());
@@ -96,15 +94,7 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             mainPane.getChildren().add(copyable);
             mainPane.getStyleClass().add("chat-message-user");
         } else {
-            String username = chatMessageDto.getFromAccount().getChatName();
-            if(StringUtils.isEmpty(username)) {
-                EmployeeDto employee = chatMessageDto.getFromAccount().getEmployee();
-                if(employee != null) {
-                    username = employee.getInitials();
-                } else {
-                    username = chatMessageDto.getFromAccount().getUsername();
-                }
-            }
+            String username = chatMessageDto.getFromAccount().getName();
 
             String message = username +
                     System.lineSeparator() +

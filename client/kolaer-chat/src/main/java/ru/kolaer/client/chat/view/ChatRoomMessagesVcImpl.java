@@ -9,18 +9,16 @@ import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -79,7 +77,7 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
             List<Long> removeMessage = selectedMessages.stream()
                     .filter(message -> authorizedUser.isAccessOit() || authorizedUser.getId().equals(Optional
                             .ofNullable(message.getFromAccount())
-                            .map(AccountDto::getId)
+                            .map(ChatUserDto::getAccountId)
                             .orElse(-1L)))
                     .map(ChatMessageDto::getId)
                     .collect(Collectors.toList());
@@ -148,8 +146,16 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
         chatMessageDto.setMessage(message);
         chatMessageDto.setCreateMessage(new Date());
         chatMessageDto.setRoomId(chatRoomDto.getId());
-        chatMessageDto.setFromAccount(UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser());
+        chatMessageDto.setRead(true);
+        chatMessageDto.setFromAccount(convertToChatUser(UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser()));
         return chatMessageDto;
+    }
+
+    private ChatUserDto convertToChatUser(AccountDto accountDto) {
+        ChatUserDto chatUserDto = new ChatUserDto();
+        chatUserDto.setStatus(ChatUserStatus.ONLINE);
+        chatUserDto.setAccountId(accountDto.getId());
+        return chatUserDto;
     }
 
     @Override
@@ -203,30 +209,7 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
 
     @Override
     public void connect(ChatClient chatClient) {
-        ServerResponse<Page<ChatMessageDto>> messageByRoomId = UniformSystemEditorKitSingleton.getInstance()
-                .getUSNetwork()
-                .getKolaerWebServer()
-                .getApplicationDataBase()
-                .getChatTable()
-                .getMessageByRoomId(chatRoomDto.getId());
 
-        if(messageByRoomId.isServerError()) {
-            UniformSystemEditorKitSingleton.getInstance()
-                    .getUISystemUS()
-                    .getNotification()
-                    .showErrorNotify(messageByRoomId.getExceptionMessage());
-        } else {
-            Map<Long, ChatMessageDto> messageMap = messages
-                    .stream()
-                    .collect(Collectors.toMap(ChatMessageDto::getId, Function.identity()));
-
-            messageByRoomId.getResponse()
-                    .getData()
-                    .stream()
-                    .filter(message -> !messageMap.containsKey(message.getId()))
-                    .sorted(Comparator.comparing(ChatMessageDto::getId))
-                    .forEach(messages::add);
-        }
     }
 
     @Override

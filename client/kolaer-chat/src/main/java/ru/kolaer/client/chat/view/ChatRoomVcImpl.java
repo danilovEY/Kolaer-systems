@@ -5,13 +5,17 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.ChatRoomObserver;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -76,9 +80,45 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
         chatRoomPreviewVc.connect(chatClient);
 
-        if(isSelected() && chatClient.isConnect() && chatRoomMessagesVc.isViewInit()) {
-            chatRoomMessagesVc.connect(chatClient);
+        ServerResponse<Page<ChatMessageDto>> messageByRoomId = UniformSystemEditorKitSingleton.getInstance()
+                .getUSNetwork()
+                .getKolaerWebServer()
+                .getApplicationDataBase()
+                .getChatTable()
+                .getMessageByRoomId(chatRoomDto.getId());
+
+        if(messageByRoomId.isServerError()) {
+            UniformSystemEditorKitSingleton.getInstance()
+                    .getUISystemUS()
+                    .getNotification()
+                    .showErrorNotify(messageByRoomId.getExceptionMessage());
+        } else {
+            Map<Long, ChatMessageDto> messageMap = chatRoomMessagesVc.getMessages()
+                    .stream()
+                    .collect(Collectors.toMap(ChatMessageDto::getId, Function.identity()));
+
+            messageByRoomId.getResponse()
+                    .getData()
+                    .stream()
+                    .filter(message -> !messageMap.containsKey(message.getId()))
+                    .sorted(Comparator.comparing(ChatMessageDto::getId))
+                    .collect(Collectors.toList())
+                    .forEach(this::loadedMessage);
         }
+    }
+
+    private void loadedMessage(ChatMessageDto chatMessageDto) {
+        Long authId = UniformSystemEditorKitSingleton
+                .getInstance()
+                .getAuthentication()
+                .getAuthorizedUser()
+                .getId();
+
+        if(!chatMessageDto.isRead() && !authId.equals(chatMessageDto.getFromAccount().getAccountId())) {
+            chatRoomPreviewVc.receivedMessage(chatRoomDto, chatMessageDto);
+        }
+
+        chatRoomMessagesVc.addMessage(chatMessageDto);
     }
 
     @Override
@@ -136,6 +176,12 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     @Override
     public void handleFrame(StompHeaders headers, ChatMessageDto message) {
         this.chatRoomObserverList.forEach(osb -> osb.receivedMessage(this.chatRoomDto, message));
+
+        if(isSelected()) {
+            message.setRead(true);
+
+            markAsReadMessage(message);
+        }
     }
 
     @Override
@@ -167,13 +213,47 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     public void setSelected(boolean selected) {
         chatRoomPreviewVc.setSelected(selected);
 
-        if(selected && chatClient.isConnect() && !chatRoomMessagesVc.isViewInit()) {
-            chatRoomMessagesVc.connect(chatClient);
+        if(selected) {
+            markAsReadMessage(chatRoomMessagesVc.getMessages());
         }
     }
 
     @Override
     public boolean isSelected() {
         return chatRoomPreviewVc.isSelected();
+    }
+
+    private void markAsReadMessage(ChatMessageDto messages) {
+       markAsReadMessage(Collections.singletonList(messages));
+    }
+
+    private void markAsReadMessage(List<ChatMessageDto> messages) {
+        Long authId = UniformSystemEditorKitSingleton
+                .getInstance()
+                .getAuthentication()
+                .getAuthorizedUser()
+                .getId();
+
+        List<Long> messageIdsNotRead = messages
+                .stream()
+                .filter(message -> !authId.equals(message.getFromAccount().getAccountId()))
+                .filter(message -> !message.isRead()).map(ChatMessageDto::getId)
+                .collect(Collectors.toList());
+
+        if(!messageIdsNotRead.isEmpty()) {
+            ServerResponse serverResponse = UniformSystemEditorKitSingleton.getInstance()
+                    .getUSNetwork()
+                    .getKolaerWebServer()
+                    .getApplicationDataBase()
+                    .getChatTable()
+                    .markAsReadMessage(new IdsDto(messageIdsNotRead));
+
+            if (serverResponse.isServerError()) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(serverResponse.getExceptionMessage());
+            }
+        }
     }
 }

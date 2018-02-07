@@ -59,4 +59,9 @@ public class DefaultChatTable implements ChatTable {
     public ServerResponse hideMessage(IdsDto idsDto) {
         return ServerResponse.createServerResponse();
     }
+
+    @Override
+    public ServerResponse markAsReadMessage(IdsDto idsDto) {
+        return ServerResponse.createServerResponse();
+    }
 }
