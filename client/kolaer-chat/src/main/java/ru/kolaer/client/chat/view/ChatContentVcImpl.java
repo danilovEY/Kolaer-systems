@@ -18,8 +18,10 @@ import ru.kolaer.client.chat.service.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -66,11 +68,11 @@ public class ChatContentVcImpl implements ChatContentVc {
         chatRoomListVc.initView(chatRoomList -> splitPane.getItems().add(0, chatRoomList.getContent()));
         chatRoomListVc.setOnSelectRoom(chatRoomVc -> {
             if(lastSelected != null) {
-                lastSelected.getChatRoomPreviewVc().setSelected(false);
+                lastSelected.setSelected(false);
             }
 
             lastSelected = chatRoomVc;
-            lastSelected.getChatRoomPreviewVc().setSelected(true);
+            lastSelected.setSelected(true);
 
             ChatRoomMessagesVc chatRoomMessagesVc = chatRoomVc.getChatRoomMessagesVc();
             if(!chatRoomMessagesVc.isViewInit()) {
@@ -121,7 +123,17 @@ public class ChatContentVcImpl implements ChatContentVc {
                         .removeIf(user -> user.getAccountId().equals(authorizedUser.getId()));
             }
 
-            chatRooms.addAll(this.createChatRooms(rooms.getResponse()));
+            Map<Long, ChatRoomDto> chatRoomMap = chatRooms
+                    .stream()
+                    .map(ChatRoomVc::getChatRoomDto)
+                    .collect(Collectors.toMap(ChatRoomDto::getId, Function.identity()));
+
+            Tools.runOnWithOutThreadFX(() -> rooms.getResponse()
+                    .stream()
+                    .filter(chatRoom -> !chatRoomMap.containsKey(chatRoom.getId()))
+                    .map(this::createChatRoomVc)
+                    .forEach(chatRooms::add)
+            );
 
             ServerResponse<List<ChatUserDto>> onlineUser = UniformSystemEditorKitSingleton.getInstance()
                     .getUSNetwork()
@@ -159,6 +171,8 @@ public class ChatContentVcImpl implements ChatContentVc {
                 }
             }
         }
+
+        chatRooms.forEach(chatRoom -> chatRoom.connect(chatClient));
     }
 
     private List<ChatRoomVc> createChatRooms(List<ChatRoomDto> chatRoomDtos) {
@@ -166,11 +180,7 @@ public class ChatContentVcImpl implements ChatContentVc {
     }
 
     private ChatRoomVc createChatRoomVc(ChatRoomDto chatRoomDto) {
-        ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatRoomDto);
-        if(chatClient.isConnect()) {
-            chatRoomVc.connect(chatClient);
-        }
-        return chatRoomVc;
+        return new ChatRoomVcImpl(chatRoomDto);
     }
 
     private void handlerInfo(ChatInfoRoomActionDto chatInfoDto) {

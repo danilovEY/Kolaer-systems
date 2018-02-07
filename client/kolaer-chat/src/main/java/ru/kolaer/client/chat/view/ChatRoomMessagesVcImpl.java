@@ -16,12 +16,11 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.chat.service.ChatClient;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -47,29 +46,9 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     public void initView(Consumer<ChatRoomMessagesVc> viewVisit) {
         mainPane = new BorderPane();
 
-        ServerResponse<Page<ChatMessageDto>> messageByRoomId = UniformSystemEditorKitSingleton.getInstance()
-                .getUSNetwork()
-                .getKolaerWebServer()
-                .getApplicationDataBase()
-                .getChatTable()
-                .getMessageByRoomId(chatRoomDto.getId());
-
-        if(messageByRoomId.isServerError()) {
-            UniformSystemEditorKitSingleton.getInstance()
-                    .getUISystemUS()
-                    .getNotification()
-                    .showErrorNotify(messageByRoomId.getExceptionMessage());
-        } else {
-            List<ChatMessageDto> loadMessages = messageByRoomId.getResponse().getData();
-            loadMessages.sort(Comparator.comparing(ChatMessageDto::getId));
-
-            messages.addAll(loadMessages);
-        }
-
         chatMessageDtoListView = new ListView<>(messages);
         chatMessageDtoListView.scrollTo(messages.size() - 1);
         chatMessageDtoListView.getStyleClass().add("chat-message-list-view");
-
         chatMessageDtoListView.setCellFactory(param -> new ListCell<ChatMessageDto>() {
             @Override
             public void updateItem(ChatMessageDto item, boolean empty) {
@@ -84,11 +63,7 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
             }
         });
 
-        ScrollPane scrollPane = new ScrollPane(chatMessageDtoListView);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setFitToHeight(true);
-
-        mainPane.setCenter(scrollPane);
+        mainPane.setCenter(chatMessageDtoListView);
 
         MenuItem hideMessages = new MenuItem("Удалить сообщение");
         hideMessages.setOnAction(e -> {
@@ -224,5 +199,38 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     @Override
     public void removeMessages(List<ChatMessageDto> messages) {
         this.messages.removeAll(messages);
+    }
+
+    @Override
+    public void connect(ChatClient chatClient) {
+        ServerResponse<Page<ChatMessageDto>> messageByRoomId = UniformSystemEditorKitSingleton.getInstance()
+                .getUSNetwork()
+                .getKolaerWebServer()
+                .getApplicationDataBase()
+                .getChatTable()
+                .getMessageByRoomId(chatRoomDto.getId());
+
+        if(messageByRoomId.isServerError()) {
+            UniformSystemEditorKitSingleton.getInstance()
+                    .getUISystemUS()
+                    .getNotification()
+                    .showErrorNotify(messageByRoomId.getExceptionMessage());
+        } else {
+            Map<Long, ChatMessageDto> messageMap = messages
+                    .stream()
+                    .collect(Collectors.toMap(ChatMessageDto::getId, Function.identity()));
+
+            messageByRoomId.getResponse()
+                    .getData()
+                    .stream()
+                    .filter(message -> !messageMap.containsKey(message.getId()))
+                    .sorted(Comparator.comparing(ChatMessageDto::getId))
+                    .forEach(messages::add);
+        }
+    }
+
+    @Override
+    public void disconnect(ChatClient chatClient) {
+
     }
 }

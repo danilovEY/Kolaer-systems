@@ -98,7 +98,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     public ChatRoomDto createGroup(String name) {
         ChatRoomDto chatRoomDto = new ChatRoomDto();
         chatRoomDto.setName(name);
-        chatRoomDto.setUsers(Collections.synchronizedList(new ArrayList<>()));
+        chatRoomDto.setUsers(new ArrayList<>());
 
         return chatRoomDto;
     }

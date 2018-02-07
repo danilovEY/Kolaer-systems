@@ -73,6 +73,12 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         this.chatClient = chatClient;
 
         chatClient.subscribeRoom(this.chatRoomDto, this);
+
+        chatRoomPreviewVc.connect(chatClient);
+
+        if(isSelected() && chatClient.isConnect() && chatRoomMessagesVc.isViewInit()) {
+            chatRoomMessagesVc.connect(chatClient);
+        }
     }
 
     @Override
@@ -155,5 +161,19 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     @Override
     public void deleteChatRoomObserver(ChatRoomObserver chatRoomObserver) {
         chatRoomObserverList.remove(chatRoomObserver);
+    }
+
+    @Override
+    public void setSelected(boolean selected) {
+        chatRoomPreviewVc.setSelected(selected);
+
+        if(selected && chatClient.isConnect() && !chatRoomMessagesVc.isViewInit()) {
+            chatRoomMessagesVc.connect(chatClient);
+        }
+    }
+
+    @Override
+    public boolean isSelected() {
+        return chatRoomPreviewVc.isSelected();
     }
 }

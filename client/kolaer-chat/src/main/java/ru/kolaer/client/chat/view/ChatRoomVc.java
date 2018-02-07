@@ -17,4 +17,7 @@ public interface ChatRoomVc extends ChatObserver, ChatMessageHandler, ChatHandle
 
     void registerChatRoomObserver(ChatRoomObserver chatRoomObserver);
     void deleteChatRoomObserver(ChatRoomObserver chatRoomObserver);
+
+    void setSelected(boolean selected);
+    boolean isSelected();
 }

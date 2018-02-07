@@ -6,7 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -25,7 +25,7 @@ import java.util.function.Consumer;
  */
 public class ChatMessageVcImpl implements ChatMessageVc {
     private final ChatMessageDto chatMessageDto;
-    private BorderPane mainPane;
+    private StackPane mainPane;
 
     public ChatMessageVcImpl(ChatMessageDto chatMessageDto) {
         this.chatMessageDto = chatMessageDto;
@@ -33,8 +33,10 @@ public class ChatMessageVcImpl implements ChatMessageVc {
 
     @Override
     public void initView(Consumer<ChatMessageVc> viewVisit) {
-        mainPane = new BorderPane();
+        mainPane = new StackPane();
         mainPane.setPadding(new Insets(10));
+        mainPane.setMinWidth(0);
+        mainPane.setPrefWidth(1);
         mainPane.getStyleClass().add("chat-message");
 
         AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
@@ -43,27 +45,27 @@ public class ChatMessageVcImpl implements ChatMessageVc {
 
         Label copyable = new Label();
         copyable.setWrapText(true);
-        copyable.setFont(Font.font(null, FontWeight.BOLD, 20));
+        copyable.setFont(Font.font(null, FontWeight.NORMAL, 15));
         copyable.setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
                 if(mouseEvent.getClickCount() == 2){
                     TextArea textarea = new TextArea(copyable.getText());
                     textarea.setPrefHeight(copyable.getHeight() + 10);
                     copyable.setVisible(false);
-                    mainPane.setTop(textarea);
+                    mainPane.getChildren().add(textarea);
 
                     textarea.requestFocus();
                     textarea.selectAll();
 
                     textarea.focusedProperty().addListener((observable, oldValue, newValue) -> {
                         if(!newValue) {
-                            mainPane.setTop(null);
+                            mainPane.getChildren().add(null);
                             copyable.setVisible(true);
                         }
                     });
                     textarea.setOnKeyPressed(event ->{
                         if(event.getCode().toString().equals("ENTER|ESCAPE")) {
-                            mainPane.setTop(null);
+                            mainPane.getChildren().add(null);
                             copyable.setVisible(true);
                         }
                     });
@@ -79,7 +81,8 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             copyable.setText(message);
             copyable.setAlignment(Pos.CENTER);
             copyable.setTextAlignment(TextAlignment.CENTER);
-            mainPane.setCenter(copyable);
+            mainPane.setAlignment(Pos.CENTER);
+            mainPane.getChildren().add(copyable);
             mainPane.getStyleClass().add("chat-message-server");
         } else if(chatMessageDto.getFromAccount() == null || chatMessageDto.getFromAccount().getId().equals(authorizedUser.getId())){
             String message = chatMessageDto.getMessage() +
@@ -89,7 +92,8 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             copyable.setText(message);
             copyable.setAlignment(Pos.CENTER_RIGHT);
             copyable.setTextAlignment(TextAlignment.RIGHT);
-            mainPane.setRight(copyable);
+            mainPane.setAlignment(Pos.CENTER_RIGHT);
+            mainPane.getChildren().add(copyable);
             mainPane.getStyleClass().add("chat-message-user");
         } else {
             String username = chatMessageDto.getFromAccount().getChatName();
@@ -111,7 +115,8 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             copyable.setText(message);
             copyable.setAlignment(Pos.CENTER_LEFT);
             copyable.setTextAlignment(TextAlignment.LEFT);
-            mainPane.setLeft(copyable);
+            mainPane.setAlignment(Pos.CENTER_LEFT);
+            mainPane.getChildren().add(copyable);
             mainPane.getStyleClass().add("chat-message-other-user");
         }
 

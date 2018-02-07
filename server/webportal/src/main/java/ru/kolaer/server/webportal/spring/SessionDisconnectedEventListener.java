@@ -34,6 +34,7 @@ public class SessionDisconnectedEventListener implements ApplicationListener<Ses
             chatService.removeActiveUser(chatUserDto);
 
             chatUserDto.setStatus(ChatUserStatus.OFFLINE);
+            chatUserDto.setSessionId(null);
 
             ChatInfoUserActionDto chatInfoDto = new ChatInfoUserActionDto();
             chatInfoDto.setCommand(ChatInfoCommand.DISCONNECT);

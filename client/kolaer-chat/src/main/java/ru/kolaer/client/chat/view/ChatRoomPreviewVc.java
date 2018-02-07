@@ -3,12 +3,13 @@ package ru.kolaer.client.chat.view;
 import javafx.scene.Parent;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserStatus;
 import ru.kolaer.api.mvp.view.BaseView;
+import ru.kolaer.client.chat.service.ChatObserver;
 import ru.kolaer.client.chat.service.ChatRoomObserver;
 
 /**
  * Created by danilovey on 05.02.2018.
  */
-public interface ChatRoomPreviewVc extends BaseView<ChatRoomPreviewVc, Parent>, ChatRoomObserver {
+public interface ChatRoomPreviewVc extends BaseView<ChatRoomPreviewVc, Parent>, ChatRoomObserver, ChatObserver {
     void setSelected(boolean selected);
     boolean isSelected();
 

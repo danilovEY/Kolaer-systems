@@ -11,6 +11,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserStatus;
 import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.chat.service.ChatClient;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -114,5 +115,15 @@ public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
                 messageCountProperty.setValue("[+" + ++unreadCountMessage + "]");
             });
         }
+    }
+
+    @Override
+    public void connect(ChatClient chatClient) {
+
+    }
+
+    @Override
+    public void disconnect(ChatClient chatClient) {
+
     }
 }
