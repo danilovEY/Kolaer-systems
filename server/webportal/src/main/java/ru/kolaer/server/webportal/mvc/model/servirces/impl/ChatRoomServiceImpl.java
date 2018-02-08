@@ -24,6 +24,8 @@ import ru.kolaer.server.webportal.mvc.model.dao.ChatMessageDao;
 import ru.kolaer.server.webportal.mvc.model.dao.ChatRoomDao;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatMessageEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatRoomEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.ChatRoomService;
@@ -32,6 +34,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -68,7 +71,9 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
     @Override
     public ChatUserDto addActiveUser(ChatUserDto dto) {
-        return activeUser.put(dto.getAccountId(), dto);
+        activeUser.put(dto.getAccountId(), dto);
+
+        return dto;
     }
 
     @Override
@@ -110,7 +115,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     @Override
     @Transactional(readOnly = true)
     public List<ChatRoomDto> getAllRoomForAuthUser() {
-        List<ChatRoomEntity> allByUserInRoom = defaultEntityDao.findAllByUserInRoom(authenticationService.getAccountByAuthentication().getId());
+        List<ChatRoomEntity> allByUserInRoom = defaultEntityDao.findAllByUser(authenticationService.getAccountByAuthentication().getId());
 
         if(allByUserInRoom.isEmpty()) {
             return Collections.emptyList();
@@ -118,9 +123,29 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
         List<ChatRoomDto> rooms = new ArrayList<>();
 
+        List<Long> roomIds = allByUserInRoom.stream()
+                .map(ChatRoomEntity::getId)
+                .collect(Collectors.toList());
+
+        Map<Long, List<Long>> allUsersByRooms = defaultEntityDao.findAllUsersByRooms(roomIds);
+
+        List<Long> allUserIds = allUsersByRooms.values()
+                .stream()
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toList());
+
+        Map<Long, ChatUserDto> userDtoMap = getUsersByIds(allUserIds).stream()
+                .collect(Collectors.toMap(ChatUserDto::getAccountId, Function.identity()));
+
         for (ChatRoomEntity chatRoomEntity : allByUserInRoom) {
             ChatRoomDto chatRoomDto = defaultConverter.convertToDto(chatRoomEntity);
-            chatRoomDto.setUsers(getUsersByIds(chatRoomEntity.getAccountIds()));
+
+            List<ChatUserDto> userInRoom = allUsersByRooms.get(chatRoomDto.getId()).stream()
+                    .map(userDtoMap::get)
+                    .collect(Collectors.toList());
+
+            chatRoomDto.setUsers(userInRoom);
 
             rooms.add(chatRoomDto);
         }
@@ -320,11 +345,14 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         }
 
         if(!CollectionUtils.isEmpty(selectedIds)) {
-            List<ChatUserDto> chatUserDtos = accountConverter.convertToDto(accountDao.findById(selectedIds))
+            Map<Long, ChatUserDto> notAddUsers = accountDao.findById(selectedIds)
                     .stream()
                     .map(this::createChatUserDto)
-                    .collect(Collectors.toList());
-            users.addAll(chatUserDtos);
+                    .collect(Collectors.toMap(ChatUserDto::getAccountId, Function.identity()));
+
+            activeUser.putAll(notAddUsers);
+
+            users.addAll(notAddUsers.values());
         }
 
         return users;
@@ -435,6 +463,25 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 //                }
 //            }
 //        }
+    }
+
+    private ChatUserDto createChatUserDto(AccountEntity accountEntity) {
+        ChatUserDto chatUserDto = new ChatUserDto();
+
+        String username = accountEntity.getChatName();
+        if(StringUtils.isEmpty(username)) {
+            EmployeeEntity employee = accountEntity.getEmployeeEntity();
+            if(employee != null) {
+                username = employee.getInitials();
+            } else {
+                username = accountEntity.getUsername();
+            }
+        }
+
+        chatUserDto.setStatus(ChatUserStatus.OFFLINE);
+        chatUserDto.setName(username);
+        chatUserDto.setAccountId(accountEntity.getId());
+        return chatUserDto;
     }
 
     @Override

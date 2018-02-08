@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.mvc.model.entities.chat.ChatRoomEntity;
-import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,11 +15,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class ChatRoomConverterImpl implements ChatRoomConverter {
-    private final AccountService accountConverter;
-
-    public ChatRoomConverterImpl(AccountService accountConverter) {
-        this.accountConverter = accountConverter;
-    }
 
     @Override
     public ChatRoomEntity convertToModel(ChatRoomDto dto) {
