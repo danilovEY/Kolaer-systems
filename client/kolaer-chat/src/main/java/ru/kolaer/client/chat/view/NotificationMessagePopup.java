@@ -3,6 +3,7 @@ package ru.kolaer.client.chat.view;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
@@ -52,8 +53,12 @@ public class NotificationMessagePopup implements NotificationMessage {
             return;
         }
 
+        String message = "Сообщение " +
+                (chatRoomVc.getChatRoomDto().getType() == ChatGroupType.SINGLE ? "от " : "из ")
+                + chatRoomVc.getChatRoomDto().getName();
+
         Tools.runOnWithOutThreadFX(() -> {
-                NotifyAction openChatAction = new NotifyAction("Открыть чат " + chatRoomVc.getChatRoomDto().getName(), actionEvent -> {
+                NotifyAction openChatAction = new NotifyAction(message, actionEvent -> {
                     Tools.runOnWithOutThreadFX(() -> {
                         mainStage.show();
                         mainStage.setIconified(false);
@@ -81,26 +86,25 @@ public class NotificationMessagePopup implements NotificationMessage {
                                     Collections.singletonList(openChatAction));
                 } else {
                     if(!notifyView.isViewInit()) {
-                        notifyView.setTitle("Сообщение");
                         notifyView.setDuration(Duration.hours(1));
                         notifyView.setType(NotificationType.INFO);
                         notifyView.setOnClose(e -> unreadCountMessage = 1);
 
-                        notifyAction = new Button();
+                        notifyAction = new Button("Открыть чат");
                         notifyAction.setMaxWidth(Double.MAX_VALUE);
 
                         notifyView.setContent(notifyAction);
                         notifyView.initView(BaseView::empty);
                     }
 
-                    notifyAction.setText(openChatAction.getText());
                     notifyAction.setOnAction(openChatAction.getConsumer()::accept);
+                    notifyView.setText(openChatAction.getText());
 
                     if(!notifyView.isShow()) {
-                        notifyView.setText("У вас новое сообщение!");
+                        notifyView.setTitle("У вас новое сообщение!");
                         notifyView.show();
                     } else {
-                        notifyView.setText("У вас (" + ++unreadCountMessage + ") новых сообщений!");
+                        notifyView.setTitle("У вас (" + ++unreadCountMessage + ") новых сообщений!");
                     }
                 }
         });

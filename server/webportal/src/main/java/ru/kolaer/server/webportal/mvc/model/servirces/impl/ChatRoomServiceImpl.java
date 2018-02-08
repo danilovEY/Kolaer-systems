@@ -17,7 +17,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.*;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.server.webportal.exception.CustomHttpCodeException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
-import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
 import ru.kolaer.server.webportal.mvc.model.converter.ChatRoomConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.dao.ChatMessageDao;
@@ -49,14 +48,12 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final AuthenticationService authenticationService;
     private final AccountDao accountDao;
-    private final AccountConverter accountConverter;
     private final ChatMessageDao chatMessageDao;
 
     public ChatRoomServiceImpl(@Value("${secret_key:secret_key}") String key,
                                SimpMessagingTemplate simpMessagingTemplate,
                                AuthenticationService authenticationService,
                                AccountDao accountDao,
-                               AccountConverter accountConverter,
                                ChatMessageDao chatMessageDao,
                                ChatRoomDao defaultEntityDao,
                                ChatRoomConverter converter) {
@@ -65,7 +62,6 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.authenticationService = authenticationService;
         this.accountDao = accountDao;
-        this.accountConverter = accountConverter;
         this.chatMessageDao = chatMessageDao;
     }
 
