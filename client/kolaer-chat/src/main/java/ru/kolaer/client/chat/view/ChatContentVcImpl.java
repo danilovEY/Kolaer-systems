@@ -12,6 +12,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.api.mvp.view.BaseView;
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.*;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class ChatContentVcImpl implements ChatContentVc {
     private final ChatInfoUserActionHandler chatInfoUserActionHandler;
     private final ChatInfoRoomActionHandler chatInfoRoomActionHandler;
+    private final NotificationMessage notificationMessage;
 
     private final ObservableList<ChatRoomVc> chatRooms = FXCollections.observableArrayList();
 
@@ -40,8 +42,9 @@ public class ChatContentVcImpl implements ChatContentVc {
     private ChatRoomListVc chatRoomListVc;
     private ChatClient chatClient;
 
-    public ChatContentVcImpl() {
+    public ChatContentVcImpl(UniformSystemPlugin uniformSystemPlugin) {
         this.chatRoomListVc = new ChatRoomListVcImpl(chatRooms);
+        this.notificationMessage = new NotificationMessagePopup(this, uniformSystemPlugin);
 
         this.chatInfoUserActionHandler = new ChatInfoUserActionHandlerAbsctract() {
             @Override
@@ -180,7 +183,9 @@ public class ChatContentVcImpl implements ChatContentVc {
     }
 
     private ChatRoomVc createChatRoomVc(ChatRoomDto chatRoomDto) {
-        return new ChatRoomVcImpl(chatRoomDto);
+        ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatRoomDto);
+        chatRoomVc.registerChatRoomObserver(notificationMessage);
+        return chatRoomVc;
     }
 
     private void handlerInfo(ChatInfoRoomActionDto chatInfoDto) {
@@ -208,5 +213,10 @@ public class ChatContentVcImpl implements ChatContentVc {
     @Override
     public void disconnect(ChatClient chatClient) {
         chatRoomListVc.disconnect(chatClient);
+    }
+
+    @Override
+    public void showChatRoom(ChatRoomVc chatRoomVc) {
+        chatRoomListVc.setSelectRoom(chatRoomVc);
     }
 }

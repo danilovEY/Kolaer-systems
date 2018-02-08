@@ -20,7 +20,7 @@ public class UISystemUSImpl implements UISystemUS {
 
 	public UISystemUSImpl(final StatusBarUS statusBar) {
 		this.statusBar = statusBar;
-		this.popupNotification = new NotificationPopup();
+		this.popupNotification = new NotificationPopupToasts();
 	}
 	
 	public UISystemUSImpl() {

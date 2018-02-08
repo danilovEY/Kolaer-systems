@@ -24,4 +24,6 @@ public interface ChatRoomMessagesVc extends BaseView<ChatRoomMessagesVc, Parent>
     void setSendMessage(Consumer<ChatMessageDto> consumer);
 
     void setTitle(String title);
+
+    void setSelected(boolean selected);
 }

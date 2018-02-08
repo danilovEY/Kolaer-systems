@@ -13,6 +13,7 @@ import java.util.List;
  * @version 0.1
  */
 public interface NotificationUS {
+
 	/**Показать простую нотификацию.*/
 	void showSimpleNotify(String title, String text);
 	/**Показать нотификацию с ошибкой.*/
@@ -31,6 +32,8 @@ public interface NotificationUS {
 	void showWarningNotify(String title, String text, List<NotifyAction> actions);
 	void showInformationNotify(String title, String text, Duration duration, Pos pos, List<NotifyAction> actions);
 	void showInformationNotify(String title, String text, Duration duration, List<NotifyAction> actions);
+
+	default NotificationView createNotify(){return null;}
 
     void showErrorNotify(ServerExceptionMessage exceptionMessage);
     void showErrorNotify(Exception ex);

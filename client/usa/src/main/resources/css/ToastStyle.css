@@ -1,0 +1,44 @@
+.tooltip {
+    -fx-font-size: 13px;
+}
+
+.tooltip .ErrorToolTip {
+    -fx-text-fill: #ff3333;
+    -fx-background-color: rgba(255,255,255,.9);
+}
+.tooltip .GuideToolTip{
+    -fx-text-fill: #ffffff;
+    -fx-background-color: rgba(28, 28, 28, 0.82);
+    -fx-padding: 10 15 10 15;
+    -fx-background-radius: 3;
+    -fx-border-radius:3;
+    -fx-border-width: 2;
+    -fx-border-color: rgba(150,150,150, 0.82);
+}
+
+#msg-tip{
+    -fx-background-color: rgba(255,255,255,.0);
+}
+
+#msgtipbox{
+    -fx-padding: 5;
+    -fx-background-radius: 3;
+    -fx-border-radius:3;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(255,255,255,.0);
+}
+
+#msgtipbox:hover{
+    -fx-border-color: #cccccc;
+}
+
+#msg-tip #Close{
+    -fx-padding: 3 5 3 5;
+    -fx-background-radius: 3;
+    -fx-background-color:rgb(30,30,30);
+    -fx-text-fill: #fff;
+}
+#msg-tip #Close:hover{
+    -fx-background-color:rgb(50,50,50);
+    -fx-text-fill: #fff;
+}

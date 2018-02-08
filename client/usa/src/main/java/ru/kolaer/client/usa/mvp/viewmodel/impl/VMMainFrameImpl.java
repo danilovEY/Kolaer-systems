@@ -310,7 +310,7 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
         stage.setScene(new Scene(mainPane));
         stage.getIcons().add(new Image(getClass().getResource("/css/aerIcon.png").toString(), false));
         stage.setMaximized(true);
-
+        stage.getScene().getStylesheets().add(getClass().getResource("/css/ToastStyle.css").toString());
         stage.setFullScreen(false);
         stage.addEventHandler(KeyEvent.KEY_PRESSED, (e) -> {
             if (e.getCode() == KeyCode.F11)

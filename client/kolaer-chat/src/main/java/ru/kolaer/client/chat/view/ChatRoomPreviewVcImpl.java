@@ -104,7 +104,7 @@ public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
     }
 
     @Override
-    public void receivedMessage(ChatRoomDto chatRoomDto, ChatMessageDto chatMessageDto) {
+    public void receivedMessage(ChatRoomVc chatRoomVc, ChatMessageDto chatMessageDto) {
         if(!selected) {
             Tools.runOnWithOutThreadFX(() -> {
                 lastMessageProperty.set("Сообщение от " + Tools.dateTimeToString(chatMessageDto.getCreateMessage()));

@@ -29,7 +29,7 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
         }
 
         editorKit.getAuthentication().registerObserver(this);
-        chatContentVc = new ChatContentVcImpl();
+        chatContentVc = new ChatContentVcImpl(this);
     }
 
     @Override

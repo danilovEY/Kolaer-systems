@@ -12,7 +12,6 @@ import ru.kolaer.api.tools.Tools;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Реализация интерфейса для работы с оповещением.
@@ -20,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @author danilovey
  * @version 0.1
  */
-public class NotificationPopup implements NotificationUS {
+public class NotificationPopupControlFx implements NotificationUS {
 
 	@Override
 	public void showSimpleNotify(final String title, final String text) {
@@ -45,15 +44,15 @@ public class NotificationPopup implements NotificationUS {
 	@Override
 	public void showErrorNotify(final String title, final String text, final List<NotifyAction> actions) {
 		Tools.runOnWithOutThreadFX(() -> {
-			final Notifications Notifi = this.addActions(Notifications.create(), actions);
-			Notifi.hideAfter(Duration.seconds(15));
-			Notifi.position(Pos.BOTTOM_RIGHT);
+			final Notifications notify = this.addActions(Notifications.create(), actions);
+			notify.hideAfter(Duration.seconds(15));
+			notify.position(Pos.BOTTOM_RIGHT);
 			if(title != null)
-				Notifi.title(title);
+				notify.title(title);
 			if(text != null) {
-				Notifi.text(text);
-			} 
-			Notifi.showError();
+				notify.text(text);
+			}
+			notify.showError();
 		});
 	}
 
@@ -65,15 +64,15 @@ public class NotificationPopup implements NotificationUS {
 	@Override
 	public void showWarningNotify(final String title, final String text, final List<NotifyAction> actions) {
 		Tools.runOnWithOutThreadFX(() -> {
-			final Notifications Notifi = this.addActions(Notifications.create(), actions);
-			Notifi.hideAfter(Duration.seconds(10));
-			Notifi.position(Pos.BOTTOM_RIGHT);
+			final Notifications notify = this.addActions(Notifications.create(), actions);
+			notify.hideAfter(Duration.seconds(10));
+			notify.position(Pos.BOTTOM_RIGHT);
 			if(title != null)
-				Notifi.title(title);
+				notify.title(title);
 			if(text != null) {
-				Notifi.text(text);
+				notify.text(text);
 			} 
-			Notifi.showWarning();
+			notify.showWarning();
 		});
 	}
 
@@ -102,52 +101,49 @@ public class NotificationPopup implements NotificationUS {
 		showErrorNotify("Ошибка", ex.getMessage());
 	}
 
-	private Notifications addActions(Notifications Notifi, List<NotifyAction> actions) {
-		Tools.runOnThreadFXAndWain(() -> {
+	private Notifications addActions(Notifications notify, List<NotifyAction> actions) {
 			if(actions != null && actions.size() != 0) {
 				final VBox vBox = new VBox();
 				
 				for(NotifyAction notifyAction : actions) {
 					final Button action = new Button(notifyAction.getText());
 					action.setMaxWidth(Double.MAX_VALUE);
-					action.setOnAction(e -> {
-						notifyAction.getConsumer().accept(e);
-					});
+					action.setOnAction(notifyAction.getConsumer()::accept);
 					vBox.getChildren().add(action);
 				}
-				Notifi.graphic(vBox);
+				notify.graphic(vBox);
 			}	
-		}, 20, TimeUnit.SECONDS);
-		return Notifi;
+		return notify;
 	}
 
 	@Override
 	public void showSimpleNotify(final String title, final  String text, final Duration duration, final Pos pos, final List<NotifyAction> actions) {
 		Tools.runOnWithOutThreadFX(() -> {
-			final Notifications Notifi = this.addActions(Notifications.create(), actions);
-			Notifi.hideAfter(duration);	
-			Notifi.position(pos);
+			final Notifications notify = this.addActions(Notifications.create(), actions);
+			notify.hideAfter(duration);
+			notify.position(pos);
+			notify.hideCloseButton();
 			if(title != null)
-				Notifi.title(title);
+				notify.title(title);
 			if(text != null) {
-				Notifi.text(text);
-			} 	
-			Notifi.show();
+				notify.text(text);
+			}
+			notify.show();
 		});
 	}
 
 	@Override
 	public void showInformationNotify(final String title, final String text, final Duration duration, final Pos pos, final List<NotifyAction> actions) {
 		Tools.runOnWithOutThreadFX(() -> {
-			final Notifications Notifi = this.addActions(Notifications.create(), actions);
-			Notifi.hideAfter(duration);
-			Notifi.position(pos);
+			final Notifications notify = this.addActions(Notifications.create(), actions);
+			notify.hideAfter(duration);
+			notify.position(pos);
 			if(title != null)
-				Notifi.title(title);
+				notify.title(title);
 			if(text != null) {
-				Notifi.text(text);
+				notify.text(text);
 			}
-			Notifi.showInformation();
+			notify.showInformation();
 		});
 	}
 }

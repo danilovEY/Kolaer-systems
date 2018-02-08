@@ -35,6 +35,7 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     private TextArea textArea;
 
     private Consumer<ChatMessageDto> chatMessageConsumer;
+    private boolean selected;
 
     public ChatRoomMessagesVcImpl(ChatRoomDto chatRoomDto) {
         this.chatRoomDto = chatRoomDto;
@@ -45,7 +46,6 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
         mainPane = new BorderPane();
 
         chatMessageDtoListView = new ListView<>(messages);
-        chatMessageDtoListView.scrollTo(messages.size() - 1);
         chatMessageDtoListView.getStyleClass().add("chat-message-list-view");
         chatMessageDtoListView.setCellFactory(param -> new ListCell<ChatMessageDto>() {
             @Override
@@ -60,6 +60,10 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
                 }
             }
         });
+
+        if(!messages.isEmpty()) {
+            chatMessageDtoListView.scrollTo(messages.size() - 1);
+        }
 
         mainPane.setCenter(chatMessageDtoListView);
 
@@ -166,13 +170,13 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     @Override
     public void addMessage(ChatMessageDto chatMessageDto) {
         messages.add(chatMessageDto);
-        if(isViewInit()) {
+        if(isViewInit() && selected) {
             chatMessageDtoListView.scrollTo(chatMessageDto);
         }
     }
 
     @Override
-    public void receivedMessage(ChatRoomDto chatRoomDto, ChatMessageDto chatMessageDto) {
+    public void receivedMessage(ChatRoomVc chatRoomVc, ChatMessageDto chatMessageDto) {
         Tools.runOnWithOutThreadFX(() -> addMessage(chatMessageDto));
     }
 
@@ -200,6 +204,15 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     @Override
     public void setTitle(String title) {
 
+    }
+
+    @Override
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+
+        if(isViewInit() && !messages.isEmpty()) {
+            chatMessageDtoListView.scrollTo(messages.size() - 1);
+        }
     }
 
     @Override

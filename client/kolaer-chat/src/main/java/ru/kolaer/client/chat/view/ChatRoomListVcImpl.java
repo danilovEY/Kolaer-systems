@@ -88,4 +88,9 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
     }
+
+    @Override
+    public void setSelectRoom(ChatRoomVc chatRoomVc) {
+        roomListView.getSelectionModel().select(chatRoomVc);
+    }
 }

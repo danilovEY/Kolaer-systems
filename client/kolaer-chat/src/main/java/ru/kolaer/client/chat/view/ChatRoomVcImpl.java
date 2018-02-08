@@ -115,7 +115,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
                 .getId();
 
         if(!chatMessageDto.isRead() && !authId.equals(chatMessageDto.getFromAccount().getAccountId())) {
-            chatRoomPreviewVc.receivedMessage(chatRoomDto, chatMessageDto);
+            chatRoomPreviewVc.receivedMessage(this, chatMessageDto);
         }
 
         chatRoomMessagesVc.addMessage(chatMessageDto);
@@ -168,6 +168,8 @@ public class ChatRoomVcImpl implements ChatRoomVc {
             }
         }
 
+        chatRoomDto.setName(title);
+
         this.chatRoomPreviewVc.setTitle(title);
         this.chatRoomPreviewVc.setStatus(status);
         this.chatRoomMessagesVc.setTitle(title);
@@ -175,7 +177,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
     @Override
     public void handleFrame(StompHeaders headers, ChatMessageDto message) {
-        this.chatRoomObserverList.forEach(osb -> osb.receivedMessage(this.chatRoomDto, message));
+        this.chatRoomObserverList.forEach(osb -> osb.receivedMessage(this, message));
 
         if(isSelected()) {
             message.setRead(true);
@@ -212,6 +214,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     @Override
     public void setSelected(boolean selected) {
         chatRoomPreviewVc.setSelected(selected);
+        chatRoomMessagesVc.setSelected(selected);
 
         if(selected) {
             markAsReadMessage(chatRoomMessagesVc.getMessages());

@@ -15,4 +15,5 @@ public interface ChatRoomListVc extends BaseView<ChatRoomListVc, Parent>, ChatOb
     void addChatRoomVc(ChatRoomVc chatRoomVc);
 
     void setOnSelectRoom(Consumer<ChatRoomVc> consumer);
+    void setSelectRoom(ChatRoomVc chatRoomVc);
 }

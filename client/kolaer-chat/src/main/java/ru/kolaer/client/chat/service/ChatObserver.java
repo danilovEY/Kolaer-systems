@@ -6,4 +6,5 @@ package ru.kolaer.client.chat.service;
 public interface ChatObserver {
     void connect(ChatClient chatClient);
     void disconnect(ChatClient chatClient);
+
 }
