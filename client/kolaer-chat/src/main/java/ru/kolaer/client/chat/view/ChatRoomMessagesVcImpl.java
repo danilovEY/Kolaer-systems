@@ -200,7 +200,6 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
         this.chatMessageConsumer = consumer;
     }
 
-
     @Override
     public void setTitle(String title) {
 

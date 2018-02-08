@@ -8,11 +8,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoRoomActionDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
@@ -143,41 +141,41 @@ public class ChatContentVcImpl implements ChatContentVc {
                     chatRooms.forEach(chatRoom -> chatRoom.connect(chatClient));
             });
 
-//            ServerResponse<List<ChatUserDto>> onlineUser = UniformSystemEditorKitSingleton.getInstance()
-//                    .getUSNetwork()
-//                    .getKolaerWebServer()
-//                    .getApplicationDataBase()
-//                    .getChatTable()
-//                    .getOnlineUser();
-//
-//            if(onlineUser.isServerError()) {
-//                UniformSystemEditorKitSingleton.getInstance()
-//                        .getUISystemUS()
-//                        .getNotification()
-//                        .showErrorNotify(onlineUser.getExceptionMessage());
-//            } else {
-//                List<Long> accountsId = onlineUser.getResponse()
-//                        .stream()
-//                        .filter(user -> !user.getAccountId().equals(authorizedUser.getId()))
-//                        .map(ChatUserDto::getAccountId)
-//                        .collect(Collectors.toList());
-//
-//                if(!accountsId.isEmpty()) {
-//                    ServerResponse<List<ChatRoomDto>> singleRooms = UniformSystemEditorKitSingleton.getInstance()
-//                            .getUSNetwork()
-//                            .getKolaerWebServer()
-//                            .getApplicationDataBase()
-//                            .getChatTable()
-//                            .createSingleRooms(new IdsDto(accountsId));
-//
-//                    if (singleRooms.isServerError()) {
-//                        UniformSystemEditorKitSingleton.getInstance()
-//                                .getUISystemUS()
-//                                .getNotification()
-//                                .showErrorNotify(singleRooms.getExceptionMessage());
-//                    }
-//                }
-//            }
+            ServerResponse<List<ChatUserDto>> onlineUser = UniformSystemEditorKitSingleton.getInstance()
+                    .getUSNetwork()
+                    .getKolaerWebServer()
+                    .getApplicationDataBase()
+                    .getChatTable()
+                    .getOnlineUser();
+
+            if(onlineUser.isServerError()) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(onlineUser.getExceptionMessage());
+            } else {
+                List<Long> accountsId = onlineUser.getResponse()
+                        .stream()
+                        .filter(user -> !user.getAccountId().equals(authorizedUser.getId()))
+                        .map(ChatUserDto::getAccountId)
+                        .collect(Collectors.toList());
+
+                if(!accountsId.isEmpty()) {
+                    ServerResponse<List<ChatRoomDto>> singleRooms = UniformSystemEditorKitSingleton.getInstance()
+                            .getUSNetwork()
+                            .getKolaerWebServer()
+                            .getApplicationDataBase()
+                            .getChatTable()
+                            .createSingleRooms(new IdsDto(accountsId));
+
+                    if (singleRooms.isServerError()) {
+                        UniformSystemEditorKitSingleton.getInstance()
+                                .getUISystemUS()
+                                .getNotification()
+                                .showErrorNotify(singleRooms.getExceptionMessage());
+                    }
+                }
+            }
         }
 
     }
@@ -203,7 +201,9 @@ public class ChatContentVcImpl implements ChatContentVc {
                     .removeIf(user -> user.getAccountId().equals(authorizedUser.getId()));
 
             if(chatInfoDto.getCommand() == ChatInfoCommand.CREATE_NEW_ROOM) {
-                chatRooms.add(createChatRoomVc(chatInfoDto.getChatRoomDto()));
+                ChatRoomVc chatRoomVc = createChatRoomVc(chatInfoDto.getChatRoomDto());
+                chatRooms.add(chatRoomVc);
+                chatRoomVc.connect(chatClient);
             }
         });
 
