@@ -306,19 +306,25 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             allUserIds.add(accountByAuthentication.getId());
         }
 
-        ChatRoomDto group = createGroup(name);
-        group.setType(ChatGroupType.PRIVATE);
-        group.setUserCreated(createChatUserDto(accountByAuthentication));
-        group.getUsers().addAll(getUsersByIds(allUserIds));
-        group = this.save(group);
+        String roomKey = generateRoomKey(allUserIds);
 
-        ChatInfoRoomActionDto chatInfoCreateNewRoomDto = new ChatInfoRoomActionDto();
-        chatInfoCreateNewRoomDto.setCommand(ChatInfoCommand.CREATE_NEW_ROOM);
-        chatInfoCreateNewRoomDto.setChatRoomDto(group);
-        chatInfoCreateNewRoomDto.setFromAccount(accountByAuthentication.getId());
-        chatInfoCreateNewRoomDto.setCreateInfo(new Date());
+        ChatRoomDto group = getByRoomKey(roomKey);
+        if(group == null) {
+            group = createGroup(name);
+            group.setRoomKey(roomKey);
+            group.setType(ChatGroupType.PRIVATE);
+            group.setUserCreated(createChatUserDto(accountByAuthentication));
+            group.getUsers().addAll(getUsersByIds(allUserIds));
+            group = this.save(group);
 
-        send(chatInfoCreateNewRoomDto);
+            ChatInfoRoomActionDto chatInfoCreateNewRoomDto = new ChatInfoRoomActionDto();
+            chatInfoCreateNewRoomDto.setCommand(ChatInfoCommand.CREATE_NEW_ROOM);
+            chatInfoCreateNewRoomDto.setChatRoomDto(group);
+            chatInfoCreateNewRoomDto.setFromAccount(accountByAuthentication.getId());
+            chatInfoCreateNewRoomDto.setCreateInfo(new Date());
+
+            send(chatInfoCreateNewRoomDto);
+        }
 
         return group;
     }

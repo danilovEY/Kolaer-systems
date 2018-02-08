@@ -20,4 +20,5 @@ public class ChatRoomDto implements BaseDto {
     private ChatUserDto userCreated;
     private ChatGroupType type = ChatGroupType.SINGLE;
     private List<ChatUserDto> users;
+    private List<ChatMessageDto> lastMessage;
 }

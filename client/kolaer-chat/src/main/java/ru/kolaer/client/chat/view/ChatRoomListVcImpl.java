@@ -2,17 +2,18 @@ package ru.kolaer.client.chat.view;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
+import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.api.mvp.view.BaseView;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.chat.service.ChatClient;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 02.02.2018.
@@ -34,7 +35,7 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
 
         roomListView = new ListView<>(chatRooms);
         roomListView.setPlaceholder(new Label("Wait"));
-        roomListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        roomListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         roomListView.setCellFactory(param -> new ListCell<ChatRoomVc>(){
             @Override
             protected void updateItem(ChatRoomVc item, boolean empty) {
@@ -52,6 +53,25 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
                 }
             }
         });
+
+        MenuItem createRoom = new MenuItem("Создать комнату");
+        createRoom.setOnAction(e -> {
+            List<Long> userIds = roomListView.getSelectionModel().getSelectedItems()
+                    .stream()
+                    .filter(chat -> chat.getChatRoomDto().getType() == ChatGroupType.SINGLE)
+                    .map(ChatRoomVc::getChatRoomDto)
+                    .map(room -> room.getUsers().get(0).getAccountId())
+                    .collect(Collectors.toList());
+
+            UniformSystemEditorKitSingleton.getInstance()
+                    .getUSNetwork()
+                    .getKolaerWebServer()
+                    .getApplicationDataBase()
+                    .getChatTable()
+                    .createPrivateRoom(new IdsDto(userIds), null);
+        });
+
+        roomListView.setContextMenu(new ContextMenu(createRoom));
 
         mainPane.setCenter(roomListView);
 
