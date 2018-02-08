@@ -33,7 +33,7 @@
     <logger name="org.hibernate" level="TRACE"/>
     <logger name="org.hibernate.type.EnumType" level="TRACE"/>
 
-    <root level="TRACE">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>
