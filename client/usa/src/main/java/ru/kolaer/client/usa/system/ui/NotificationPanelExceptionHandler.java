@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 public class NotificationPanelExceptionHandler implements NotificationUS,
         BaseView<NotificationPanelExceptionHandler, Parent>, StaticUS,
         Thread.UncaughtExceptionHandler {
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy | hh:mm:ss");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy | HH:mm:ss");
     private final int SIMPLE_MESSAGE = 0;
     private final int INFO_MESSAGE = 1;
     private final int WARN_MESSAGE = 2;
