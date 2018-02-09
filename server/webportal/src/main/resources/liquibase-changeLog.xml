@@ -18,9 +18,9 @@
     <include file="classpath:SQL/12-ticket-register-table.xml"/>
     <include file="classpath:SQL/11-ticket-table.xml"/>
     <include file="classpath:SQL/13-url-security-table.xml"/>
-    <include file="classpath:SQL/14-chat-message-table.xml"/>
-    <include file="classpath:SQL/15-chat-message-read-table.xml"/>
     <include file="classpath:SQL/17-chat-room-table.xml"/>
     <include file="classpath:SQL/18-chat-room-account-table.xml"/>
+    <include file="classpath:SQL/14-chat-message-table.xml"/>
+    <include file="classpath:SQL/15-chat-message-read-table.xml"/>
 
 </databaseChangeLog>
