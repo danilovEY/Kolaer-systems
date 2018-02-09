@@ -30,12 +30,13 @@ public class ChatPlugin implements UniformSystemPlugin, AuthenticationObserver {
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
         chatClient = new ChatClientImpl(editorKit.getUSNetwork().getKolaerWebServer().getUrl());
+        chatContentVc = new ChatContentVcImpl(this);
+
+        editorKit.getAuthentication().registerObserver(this);
+
         if(editorKit.getAuthentication().isAuthentication()) {
             login(editorKit.getAuthentication().getAuthorizedUser());
         }
-
-        editorKit.getAuthentication().registerObserver(this);
-        chatContentVc = new ChatContentVcImpl(this);
     }
 
     @Override
