@@ -231,6 +231,11 @@ public class ChatClientImpl implements ChatClient {
         subscribeInfo(ChatConstants.TOPIC_INFO_ROOM_ACTION, chatInfoRoomActionHandler);
     }
 
+    @Override
+    public void subscribeInfo(ChatInfoMessageActionHandler chatInfoMessageActionHandler) {
+        subscribeInfo(ChatConstants.TOPIC_INFO_MESSAGE_ACTION, chatInfoMessageActionHandler);
+    }
+
     private void subscribeInfo(String destination, ChatInfoHandler chatInfoHandler) {
         if(isConnect()) {
             Authentication authentication = UniformSystemEditorKitSingleton.getInstance().getAuthentication();

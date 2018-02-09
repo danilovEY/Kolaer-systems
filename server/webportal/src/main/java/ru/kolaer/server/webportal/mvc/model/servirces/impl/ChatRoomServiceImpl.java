@@ -167,6 +167,25 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     }
 
     @Override
+    public void send(ChatInfoMessageActionDto chatInfoRoomActionDto) {
+        List<Long> roomIds = chatInfoRoomActionDto.getChatMessageDtoList()
+                .stream()
+                .map(ChatMessageDto::getRoomId)
+                .collect(Collectors.toList());
+
+        List<Long> userIds = defaultEntityDao.findAllUsersByRooms(roomIds).values()
+                .stream()
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toList());
+
+        for (Long userId : userIds) {
+            String roomId = userId.toString();
+            simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_MESSAGE_ACTION + roomId, chatInfoRoomActionDto);
+        }
+    }
+
+    @Override
     public void sendDisconnect(String sessionId) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.create(StompCommand.ERROR);
         headerAccessor.setMessage("Bad");
@@ -208,6 +227,20 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         chatMessageEntity.setReadIds(Collections.singletonList(chatMessageEntity.getAccountId()));
 
         return chatMessageEntity;
+    }
+
+    private ChatMessageDto convertToDto(ChatMessageEntity chatMessageEntity) {
+        ChatMessageDto chatMessageDto = new ChatMessageDto();
+        chatMessageDto.setId(chatMessageEntity.getId());
+        chatMessageDto.setRoomId(chatMessageEntity.getRoomId());
+        chatMessageDto.setMessage(chatMessageEntity.getMessage());
+        chatMessageDto.setCreateMessage(chatMessageEntity.getCreateMessage());
+        chatMessageDto.setType(chatMessageEntity.getType());
+        Optional.ofNullable(chatMessageEntity.getAccountId())
+                .map(this::getOrCreateUserByAccountId)
+                .ifPresent(chatMessageDto::setFromAccount);
+
+        return chatMessageDto;
     }
 
     @Override
@@ -433,38 +466,29 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     @Override
     @Transactional
     public void hideMessage(IdsDto idsDto, boolean hide) {
-//        if(idsDto != null && idsDto.getIds() != null && !idsDto.getIds().isEmpty()) {
-//            AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
-//            List<ChatMessageEntity> hideMessages = chatMessageDao.findById(idsDto.getIds())
-//                    .stream()
-//                    .filter(message -> accountByAuthentication.isAccessOit() || message.getAccountId().equals(accountByAuthentication.getId()))
-//                    .collect(Collectors.toList());
-//
-//            if(hideMessages.isEmpty()) {
-//                return;
-//            }
-//
-//            chatMessageDao.markHideOnIds(hideMessages.stream()
-//                    .map(ChatMessageEntity::getId)
-//                    .collect(Collectors.toList()), hide);
-//
-//            ChatInfoDto chatInfoDto = new ChatInfoDto();
-//            chatInfoDto.setData(idsDto.getIds().stream().map(String::valueOf).collect(Collectors.joining(",")));
-//            chatInfoDto.setCreateInfo(new Date());
-//            chatInfoDto.setCommand(ChatInfoCommand.HIDE_MESSAGES);
-//            chatInfoDto.setAccount(accountByAuthentication);
-//            chatInfoDto.setAccountId(accountByAuthentication.getId());
-//
-//            for (ChatMessageEntity chatMessageEntity : hideMessages) {
-//                ChatRoomDto chatRoomDto = groups.get(chatMessageEntity.getRoom());
-//                if(chatRoomDto != null && !chatRoomDto.getUsers().isEmpty()) {
-//                    for (ChatUserDto chatUserDto : chatRoomDto.getUsers()) {
-//                        chatInfoDto.setId(null);
-//                        send(chatUserDto.getRoomName(), chatInfoDto);
-//                    }
-//                }
-//            }
-//        }
+        if(idsDto != null && !CollectionUtils.isEmpty(idsDto.getIds())) {
+            AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+            List<ChatMessageEntity> hideMessages = chatMessageDao.findById(idsDto.getIds())
+                    .stream()
+                    .filter(message -> accountByAuthentication.isAccessOit() || message.getAccountId().equals(accountByAuthentication.getId()))
+                    .collect(Collectors.toList());
+
+            if(hideMessages.isEmpty()) {
+                return;
+            }
+
+            chatMessageDao.markHideOnIds(hideMessages.stream()
+                    .map(ChatMessageEntity::getId)
+                    .collect(Collectors.toList()), hide);
+
+            ChatInfoMessageActionDto chatInfoDto = new ChatInfoMessageActionDto();
+            chatInfoDto.setChatMessageDtoList(hideMessages.stream().map(this::convertToDto).collect(Collectors.toList()));
+            chatInfoDto.setCreateInfo(new Date());
+            chatInfoDto.setCommand(ChatInfoCommand.HIDE_MESSAGES);
+            chatInfoDto.setFromAccount(accountByAuthentication.getId());
+
+            send(chatInfoDto);
+        }
     }
 
     private ChatUserDto createChatUserDto(AccountEntity accountEntity) {

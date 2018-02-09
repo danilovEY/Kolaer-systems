@@ -17,7 +17,6 @@ import ru.kolaer.client.chat.service.ChatClient;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -74,15 +73,7 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
                 return;
             }
 
-            AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
-                    .getAuthentication()
-                    .getAuthorizedUser();
-
             List<Long> removeMessage = selectedMessages.stream()
-                    .filter(message -> authorizedUser.isAccessOit() || authorizedUser.getId().equals(Optional
-                            .ofNullable(message.getFromAccount())
-                            .map(ChatUserDto::getAccountId)
-                            .orElse(-1L)))
                     .map(ChatMessageDto::getId)
                     .collect(Collectors.toList());
 
@@ -212,6 +203,11 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
         if(isViewInit() && !messages.isEmpty()) {
             chatMessageDtoListView.scrollTo(messages.size() - 1);
         }
+    }
+
+    @Override
+    public void hideMessage(ChatMessageDto chatMessageDto) {
+        messages.removeIf(message -> message.getId().equals(chatMessageDto.getId()));
     }
 
     @Override

@@ -71,11 +71,15 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             }
         });
 
-        if(chatMessageDto.getType() == ChatMessageType.SERVER_INFO) {
-            String message = chatMessageDto.getMessage() +
-                    System.lineSeparator() +
-                    Tools.dateTimeToString(chatMessageDto.getCreateMessage());
+        String message = chatMessageDto.getMessage() +
+                System.lineSeparator() +
+                Tools.dateTimeToString(chatMessageDto.getCreateMessage());
 
+        if(chatMessageDto.isHide()) {
+            message += System.lineSeparator() + "(Сообщение скрыто)";
+        }
+
+        if(chatMessageDto.getType() == ChatMessageType.SERVER_INFO) {
             copyable.setText(message);
             copyable.setAlignment(Pos.CENTER);
             copyable.setTextAlignment(TextAlignment.CENTER);
@@ -83,10 +87,6 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             mainPane.getChildren().add(copyable);
             mainPane.getStyleClass().add("chat-message-server");
         } else if(chatMessageDto.getFromAccount() == null || chatMessageDto.getFromAccount().getAccountId().equals(authorizedUser.getId())){
-            String message = chatMessageDto.getMessage() +
-                    System.lineSeparator() +
-                    Tools.dateTimeToString(chatMessageDto.getCreateMessage());
-
             copyable.setText(message);
             copyable.setAlignment(Pos.CENTER_RIGHT);
             copyable.setTextAlignment(TextAlignment.RIGHT);
@@ -96,11 +96,9 @@ public class ChatMessageVcImpl implements ChatMessageVc {
         } else {
             String username = chatMessageDto.getFromAccount().getName();
 
-            String message = username +
+            message = username +
                     System.lineSeparator() +
-                    chatMessageDto.getMessage() +
-                    System.lineSeparator() +
-                    Tools.dateTimeToString(chatMessageDto.getCreateMessage());
+                    message;
 
             copyable.setText(message);
             copyable.setAlignment(Pos.CENTER_LEFT);

@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 public class ChatContentVcImpl implements ChatContentVc {
     private final ChatInfoUserActionHandler chatInfoUserActionHandler;
     private final ChatInfoRoomActionHandler chatInfoRoomActionHandler;
+    private final ChatInfoMessageActionHandler chatInfoMessageActionHandler;
     private final NotificationMessage notificationMessage;
 
     private final ObservableList<ChatRoomVc> chatRooms = FXCollections.observableArrayList();
@@ -56,6 +57,13 @@ public class ChatContentVcImpl implements ChatContentVc {
         this.chatInfoRoomActionHandler = new ChatInfoRoomActionHandlerAbsctract() {
             @Override
             public void handlerInfo(ChatInfoRoomActionDto chatInfoDto) {
+                ChatContentVcImpl.this.handlerInfo(chatInfoDto);
+            }
+        };
+
+        this.chatInfoMessageActionHandler = new ChatInfoMessageActionHandlerAbsctract() {
+            @Override
+            public void handlerInfo(ChatInfoMessageActionDto chatInfoDto) {
                 ChatContentVcImpl.this.handlerInfo(chatInfoDto);
             }
         };
@@ -110,6 +118,7 @@ public class ChatContentVcImpl implements ChatContentVc {
 
         chatClient.subscribeInfo(chatInfoRoomActionHandler);
         chatClient.subscribeInfo(chatInfoUserActionHandler);
+        chatClient.subscribeInfo(chatInfoMessageActionHandler);
 
         ServerResponse<List<ChatRoomDto>> rooms = UniformSystemEditorKitSingleton.getInstance()
                 .getUSNetwork()
@@ -217,6 +226,10 @@ public class ChatContentVcImpl implements ChatContentVc {
 
     private void handlerInfo(ChatInfoUserActionDto infoUserActionDto) {
         chatRooms.forEach(chatRoomVc -> chatRoomVc.handlerInfo(infoUserActionDto));
+    }
+
+    private void handlerInfo(ChatInfoMessageActionDto chatInfoMessageActionDto) {
+        chatRooms.forEach(chatRoomVc -> chatRoomVc.handlerInfo(chatInfoMessageActionDto));
     }
 
     @Override

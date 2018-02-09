@@ -1,5 +1,6 @@
 package ru.kolaer.client.chat.service;
 
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoMessageActionDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoRoomActionDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
@@ -10,5 +11,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 public interface ChatHandler {
     default void handlerInfo(ChatInfoRoomActionDto chatInfoDto){}
     default void handlerInfo(ChatInfoUserActionDto infoUserActionDto) {}
+    default void handlerInfo(ChatInfoMessageActionDto infoMessageActionDto) {}
     default void handlerMessage(ChatMessageDto chatMessageDto) {}
 }

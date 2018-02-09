@@ -26,4 +26,6 @@ public interface ChatRoomMessagesVc extends BaseView<ChatRoomMessagesVc, Parent>
     void setTitle(String title);
 
     void setSelected(boolean selected);
+
+    void hideMessage(ChatMessageDto chatMessageDto);
 }

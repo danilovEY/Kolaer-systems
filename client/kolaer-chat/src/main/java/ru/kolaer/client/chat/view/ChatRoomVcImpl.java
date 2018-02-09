@@ -63,6 +63,19 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     }
 
     @Override
+    public void handlerInfo(ChatInfoMessageActionDto infoMessageActionDto) {
+        Tools.runOnWithOutThreadFX(() -> {
+            for (ChatMessageDto chatMessageDto : infoMessageActionDto.getChatMessageDtoList()) {
+                if(chatMessageDto.getRoomId().equals(chatRoomDto.getId())) {
+                    if(infoMessageActionDto.getCommand() == ChatInfoCommand.HIDE_MESSAGES) {
+                        chatRoomMessagesVc.hideMessage(chatMessageDto);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
     public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
         handleTransportError(session, exception);
     }
