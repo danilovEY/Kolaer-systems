@@ -57,13 +57,13 @@ public class ChatMessageVcImpl implements ChatMessageVc {
 
                     textarea.focusedProperty().addListener((observable, oldValue, newValue) -> {
                         if(!newValue) {
-                            mainPane.getChildren().add(null);
+                            mainPane.getChildren().remove(textarea);
                             copyable.setVisible(true);
                         }
                     });
                     textarea.setOnKeyPressed(event ->{
                         if(event.getCode().toString().equals("ENTER|ESCAPE")) {
-                            mainPane.getChildren().add(null);
+                            mainPane.getChildren().remove(textarea);
                             copyable.setVisible(true);
                         }
                     });
