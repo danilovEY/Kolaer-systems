@@ -330,6 +330,6 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
 
     @Override
     public void logout(AccountDto account) {
-        Tools.runOnWithOutThreadFX(() -> stage.getOnCloseRequest().handle(null));
+//        Tools.runOnWithOutThreadFX(() -> stage.getOnCloseRequest().handle(null));
     }
 }

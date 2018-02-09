@@ -127,6 +127,13 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     }
 
     @Override
+    public void close(ChatClient chatClient) {
+        chatClient.unSubscribe(this);
+        chatRoomMessagesVc.close(chatClient);
+        chatRoomPreviewVc.close(chatClient);
+    }
+
+    @Override
     public void setSubscriptionId(String id) {
         this.subscriptionId = id;
     }

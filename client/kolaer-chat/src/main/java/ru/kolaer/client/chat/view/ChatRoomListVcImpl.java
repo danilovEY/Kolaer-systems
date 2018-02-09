@@ -103,6 +103,11 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
     }
 
     @Override
+    public void close(ChatClient chatClient) {
+
+    }
+
+    @Override
     public void setOnSelectRoom(Consumer<ChatRoomVc> consumer) {
         roomListView.getSelectionModel()
                 .selectedItemProperty()

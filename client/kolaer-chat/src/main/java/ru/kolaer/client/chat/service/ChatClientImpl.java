@@ -176,6 +176,8 @@ public class ChatClientImpl implements ChatClient {
 
     @Override
     public void close() {
+        observers.forEach(obs -> obs.close(this));
+
         if(waitConnect != null && !waitConnect.isDone()) {
             waitConnect.cancel(true);
         }
@@ -183,10 +185,7 @@ public class ChatClientImpl implements ChatClient {
         Optional.ofNullable(session)
                 .filter(StompSession::isConnected)
                 .ifPresent(StompSession::disconnect);
-
-        Optional.ofNullable(stompClient)
-                .filter(WebSocketStompClient::isRunning)
-                .ifPresent(WebSocketStompClient::stop);
+        session = null;
     }
 
     @Override
@@ -279,6 +278,9 @@ public class ChatClientImpl implements ChatClient {
         if(isConnect() && subscription.getSubscriptionId() != null) {
             subscriptionMap.get(subscription.getSubscriptionId())
                     .forEach(StompSession.Subscription::unsubscribe);
+            subscriptionMap.remove(subscription.getSubscriptionId());
+
+            subscription.setSubscriptionId(null);
         }
     }
 

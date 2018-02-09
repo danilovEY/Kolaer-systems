@@ -122,4 +122,9 @@ public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
     public void disconnect(ChatClient chatClient) {
 
     }
+
+    @Override
+    public void close(ChatClient chatClient) {
+
+    }
 }

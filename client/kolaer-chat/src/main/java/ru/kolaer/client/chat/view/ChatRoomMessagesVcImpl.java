@@ -228,4 +228,9 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     public void disconnect(ChatClient chatClient) {
 
     }
+
+    @Override
+    public void close(ChatClient chatClient) {
+        messages.clear();
+    }
 }

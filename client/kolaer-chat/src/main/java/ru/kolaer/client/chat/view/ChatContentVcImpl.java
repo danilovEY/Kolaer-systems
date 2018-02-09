@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
@@ -41,6 +40,7 @@ public class ChatContentVcImpl implements ChatContentVc {
     private BorderPane mainPane;
     private ChatRoomListVc chatRoomListVc;
     private ChatClient chatClient;
+    private SplitPane splitPane;
 
     public ChatContentVcImpl(UniformSystemPlugin uniformSystemPlugin) {
         this.chatRoomListVc = new ChatRoomListVcImpl(chatRooms);
@@ -66,26 +66,31 @@ public class ChatContentVcImpl implements ChatContentVc {
         mainPane = new BorderPane();
         mainPane.getStylesheets().add(getClass().getResource("/chat.css").toString());
 
-        SplitPane splitPane = new SplitPane();
+        splitPane = new SplitPane();
 
         chatRoomListVc.initView(chatRoomList -> splitPane.getItems().add(0, chatRoomList.getContent()));
         chatRoomListVc.setOnSelectRoom(chatRoomVc -> {
             if(lastSelected != null) {
                 lastSelected.setSelected(false);
+
+                if(splitPane.getItems().size() > 1) {
+                    splitPane.getItems().remove(1);
+                }
             }
 
-            lastSelected = chatRoomVc;
-            lastSelected.setSelected(true);
+            if(chatRoomVc != null) {
+                lastSelected = chatRoomVc;
+                lastSelected.setSelected(true);
 
-            ChatRoomMessagesVc chatRoomMessagesVc = chatRoomVc.getChatRoomMessagesVc();
-            if(!chatRoomMessagesVc.isViewInit()) {
-                chatRoomMessagesVc.initView(BaseView::empty);
+                ChatRoomMessagesVc chatRoomMessagesVc = chatRoomVc.getChatRoomMessagesVc();
+                if (!chatRoomMessagesVc.isViewInit()) {
+                    chatRoomMessagesVc.initView(BaseView::empty);
+                }
+
+                splitPane.getItems().add(1, chatRoomMessagesVc.getContent());
             }
-
-            splitPane.getItems().set(1, chatRoomMessagesVc.getContent());
         });
 
-        splitPane.getItems().add(1, new Pane());
 
         mainPane.setCenter(splitPane);
 
@@ -217,6 +222,19 @@ public class ChatContentVcImpl implements ChatContentVc {
     @Override
     public void disconnect(ChatClient chatClient) {
         chatRoomListVc.disconnect(chatClient);
+    }
+
+    @Override
+    public void close(ChatClient chatClient) {
+        Tools.runOnWithOutThreadFX(() -> {
+            chatRooms.forEach(room -> room.close(chatClient));
+            chatRooms.clear();
+
+            if(splitPane.getItems().size() > 1) {
+                splitPane.getItems().remove(1);
+            }
+        });
+
     }
 
     @Override
