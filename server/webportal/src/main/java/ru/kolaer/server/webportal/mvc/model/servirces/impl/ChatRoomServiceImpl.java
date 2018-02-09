@@ -103,8 +103,13 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     @Override
     public void send(ChatInfoUserActionDto chatInfoUserActionDto) {
         for (ChatUserDto chatUserDto : activeUser.values()) {
-            String roomId = chatUserDto.getAccountId().toString();
-            simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_USER_ACTION + roomId, chatInfoUserActionDto);
+            if(chatUserDto.getStatus() == ChatUserStatus.ONLINE) {
+                String roomId = chatUserDto.getAccountId().toString();
+
+                log.debug("Send user action to: {}", roomId);
+
+                simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_USER_ACTION + roomId, chatInfoUserActionDto);
+            }
         }
     }
 
@@ -161,8 +166,13 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     @Override
     public void send(ChatInfoRoomActionDto chatInfoRoomActionDto) {
         for (ChatUserDto chatUserDto : chatInfoRoomActionDto.getChatRoomDto().getUsers()) {
-            String roomId = chatUserDto.getAccountId().toString();
-            simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_ROOM_ACTION + roomId, chatInfoRoomActionDto);
+            if(chatUserDto.getStatus() == ChatUserStatus.ONLINE) {
+                String roomId = chatUserDto.getAccountId().toString();
+
+                log.debug("Send room action to: {}", roomId);
+
+                simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_ROOM_ACTION + roomId, chatInfoRoomActionDto);
+            }
         }
     }
 
@@ -181,6 +191,9 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
         for (Long userId : userIds) {
             String roomId = userId.toString();
+
+            log.debug("Send message action to: {}", roomId);
+
             simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_MESSAGE_ACTION + roomId, chatInfoRoomActionDto);
         }
     }
@@ -343,6 +356,8 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
         ChatRoomDto group = getByRoomKey(roomKey);
         if(group == null) {
+            log.debug("Create private room: {}", roomKey);
+
             group = createGroup(name);
             group.setRoomKey(roomKey);
             group.setType(ChatGroupType.PRIVATE);
@@ -409,7 +424,11 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             messageDigest.reset();
             messageDigest.update(string.getBytes(Charset.forName("UTF8")));
             byte[] resultByte = messageDigest.digest();
-            return Hex.encodeHexString(resultByte);
+            String hash = Hex.encodeHexString(resultByte);
+
+            log.debug("Generate: {} | {}", string, hash);
+
+            return hash;
         } catch (NoSuchAlgorithmException ignore) {
             return null;
         }
