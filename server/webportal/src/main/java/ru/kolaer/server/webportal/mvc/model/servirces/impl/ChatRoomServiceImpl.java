@@ -106,7 +106,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             if(chatUserDto.getStatus() == ChatUserStatus.ONLINE) {
                 String roomId = chatUserDto.getAccountId().toString();
 
-                log.debug("Send user action to: {}", roomId);
+                log.info("Send user action to: {}", roomId);
 
                 simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_USER_ACTION + roomId, chatInfoUserActionDto);
             }
@@ -169,7 +169,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             if(chatUserDto.getStatus() == ChatUserStatus.ONLINE) {
                 String roomId = chatUserDto.getAccountId().toString();
 
-                log.debug("Send room action to: {}", roomId);
+                log.info("Send room action to: {}", roomId);
 
                 simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_ROOM_ACTION + roomId, chatInfoRoomActionDto);
             }
@@ -192,7 +192,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         for (Long userId : userIds) {
             String roomId = userId.toString();
 
-            log.debug("Send message action to: {}", roomId);
+            log.info("Send message action to: {}", roomId);
 
             simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_MESSAGE_ACTION + roomId, chatInfoRoomActionDto);
         }
@@ -316,18 +316,25 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
                 group.setRoomKey(roomKey);
                 group.setUserCreated(authChatUserDto);
                 group.getUsers().addAll(getUsersByIds(allUserIds));
-                group = this.save(group);
-
-                ChatInfoRoomActionDto chatInfoCreateNewRoomDto = new ChatInfoRoomActionDto();
-                chatInfoCreateNewRoomDto.setChatRoomDto(group);
-                chatInfoCreateNewRoomDto.setCommand(ChatInfoCommand.CREATE_NEW_ROOM);
-                chatInfoCreateNewRoomDto.setFromAccount(accountByAuthentication.getId());
-                chatInfoCreateNewRoomDto.setCreateInfo(new Date());
-
-                send(chatInfoCreateNewRoomDto);
             }
 
             roomDtos.add(group);
+        }
+
+        List<ChatRoomDto> persistRooms = roomDtos.stream()
+                .filter(room -> room.getId() == null)
+                .collect(Collectors.toList());
+
+        List<ChatRoomDto> saveRooms = save(persistRooms);
+
+        for (ChatRoomDto saveRoom : saveRooms) {
+            ChatInfoRoomActionDto chatInfoCreateNewRoomDto = new ChatInfoRoomActionDto();
+            chatInfoCreateNewRoomDto.setChatRoomDto(saveRoom);
+            chatInfoCreateNewRoomDto.setCommand(ChatInfoCommand.CREATE_NEW_ROOM);
+            chatInfoCreateNewRoomDto.setFromAccount(accountByAuthentication.getId());
+            chatInfoCreateNewRoomDto.setCreateInfo(new Date());
+
+            send(chatInfoCreateNewRoomDto);
         }
 
         return roomDtos;
@@ -356,7 +363,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
         ChatRoomDto group = getByRoomKey(roomKey);
         if(group == null) {
-            log.debug("Create private room: {}", roomKey);
+            log.info("Create private room: {}", roomKey);
 
             group = createGroup(name);
             group.setRoomKey(roomKey);
@@ -424,11 +431,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             messageDigest.reset();
             messageDigest.update(string.getBytes(Charset.forName("UTF8")));
             byte[] resultByte = messageDigest.digest();
-            String hash = Hex.encodeHexString(resultByte);
-
-            log.debug("Generate: {} | {}", string, hash);
-
-            return hash;
+            return Hex.encodeHexString(resultByte);
         } catch (NoSuchAlgorithmException ignore) {
             return null;
         }

@@ -23,7 +23,7 @@ public class ChatRoomDaoImpl extends AbstractDefaultDao<ChatRoomEntity> implemen
 
     @Override
     public void addAccountToRoom(Long roomId, Long userId) {
-        getSession().createNamedQuery("INSERT INTO chat_room_account (chat_room_id, account_id) VALUES(:roomId, userId)")
+        getSession().createNativeQuery("INSERT INTO chat_room_account (chat_room_id, account_id) VALUES(:roomId, :userId)")
                 .setParameter("roomId", roomId)
                 .setParameter("userId", userId)
                 .executeUpdate();

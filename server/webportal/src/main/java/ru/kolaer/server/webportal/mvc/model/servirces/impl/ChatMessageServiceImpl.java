@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
  * Created by danilovey on 08.11.2017.
  */
 @Service
+@Slf4j
 public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDto, ChatMessageEntity, ChatMessageDao, ChatMessageConverter>
         implements ChatMessageService {
     private final AuthenticationService authenticationService;
@@ -47,14 +49,16 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
 
         ChatRoomEntity chatRoomEntity = chatRoomDao.findById(roomId);
 
-        if(accountByAuthentication.isAccessOit() ||
+        if(chatRoomEntity != null && (accountByAuthentication.isAccessOit() ||
                 chatRoomEntity.getType() == ChatGroupType.MAIN ||
                 chatRoomEntity.getType() == ChatGroupType.PUBLIC ||
                 chatRoomEntity.getUserCreatedId().equals(accountByAuthentication.getId()) ||
-                chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId())) {
+                chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId()))) {
             return checkReads(defaultConverter.convertToDto(defaultEntityDao.findAllByRoom(roomId, accountByAuthentication.isAccessOit())),
                     accountByAuthentication.getId());
         }
+
+        log.debug("У пользователя: {} нет доступа к чату: {}", accountByAuthentication.getId(), roomId);
 
         throw new CustomHttpCodeException("У вас нет доступа к чату!",
                 ErrorCode.FORBIDDEN,
@@ -89,6 +93,8 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
 
             return new Page<>(results, number, count, pageSize);
         }
+
+        log.debug("У пользователя: {} нет доступа к чату: {}", accountByAuthentication.getId(), room);
 
         throw new CustomHttpCodeException("У вас нет доступа к чату!",
                 ErrorCode.FORBIDDEN,
