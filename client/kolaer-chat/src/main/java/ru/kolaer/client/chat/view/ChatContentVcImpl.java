@@ -153,6 +153,8 @@ public class ChatContentVcImpl implements ChatContentVc {
                         .forEach(chatRooms::add);
 
                     chatRooms.forEach(chatRoom -> chatRoom.connect(chatClient));
+
+                    chatRoomListVc.sorted();
             });
 
             ServerResponse<List<ChatUserDto>> onlineUser = UniformSystemEditorKitSingleton.getInstance()
@@ -201,6 +203,7 @@ public class ChatContentVcImpl implements ChatContentVc {
     private ChatRoomVc createChatRoomVc(ChatRoomDto chatRoomDto) {
         ChatRoomVc chatRoomVc = new ChatRoomVcImpl(chatRoomDto);
         chatRoomVc.registerChatRoomObserver(notificationMessage);
+        chatRoomVc.registerChatRoomObserver(chatRoomListVc);
         return chatRoomVc;
     }
 

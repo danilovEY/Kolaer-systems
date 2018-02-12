@@ -7,11 +7,15 @@ import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
 
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -34,6 +38,8 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
     @Override
     public void initView(Consumer<ChatRoomListVc> viewVisit) {
         mainPane = new BorderPane();
+
+        sorted();
 
         roomListView = new ListView<>(chatRooms);
         roomListView.setPlaceholder(new Label("Wait"));
@@ -120,6 +126,20 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
         viewVisit.accept(this);
     }
 
+    private int compareRoom(ChatRoomVc chatRoomVcFirst, ChatRoomVc chatRoomVcSecond) {
+        return getLastMessageDate(chatRoomVcFirst).toInstant().truncatedTo(ChronoUnit.DAYS)
+                .compareTo(getLastMessageDate(chatRoomVcSecond).toInstant()) * -1;
+    }
+
+    private Date getLastMessageDate(ChatRoomVc chatRoomVc) {
+        List<ChatMessageVc> messages = chatRoomVc.getChatRoomMessagesVc().getMessages();
+        if (messages.isEmpty()) {
+            return new Date(0);
+        } else {
+            return messages.get(messages.size() - 1).getChatMessageDto().getCreateMessage();
+        }
+    }
+
     @Override
     public Parent getContent() {
         return mainPane;
@@ -159,5 +179,15 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
     @Override
     public void setSelectRoom(ChatRoomVc chatRoomVc) {
         roomListView.getSelectionModel().select(chatRoomVc);
+    }
+
+    @Override
+    public void sorted() {
+        Tools.runOnWithOutThreadFX(() -> this.chatRooms.sort(this::compareRoom));
+    }
+
+    @Override
+    public void receivedMessage(ChatRoomVc chatRoomVc, ChatMessageDto chatMessageDto) {
+        sorted();
     }
 }

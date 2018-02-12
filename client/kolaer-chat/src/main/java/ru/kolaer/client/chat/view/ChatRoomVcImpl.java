@@ -99,8 +99,6 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
         chatClient.subscribeRoom(this.chatRoomDto, this);
 
-        chatRoomPreviewVc.connect(chatClient);
-
         ServerResponse<Page<ChatMessageDto>> messageByRoomId = UniformSystemEditorKitSingleton.getInstance()
                 .getUSNetwork()
                 .getKolaerWebServer()
@@ -127,6 +125,9 @@ public class ChatRoomVcImpl implements ChatRoomVc {
                     .collect(Collectors.toList())
                     .forEach(this::loadedMessage);
         }
+
+        chatRoomMessagesVc.connect(chatClient);
+        chatRoomPreviewVc.connect(chatClient);
     }
 
     private void loadedMessage(ChatMessageDto chatMessageDto) {
