@@ -18,4 +18,6 @@ public interface ChatRoomDao extends DefaultDao<ChatRoomEntity> {
     List<ChatRoomEntity> findAllByUser(Long id);
 
     Map<Long, List<Long>> findAllUsersByRooms(List<Long> roomIds);
+
+    void removeUserFromRooms(List<Long> roomIds, Long accountId);
 }

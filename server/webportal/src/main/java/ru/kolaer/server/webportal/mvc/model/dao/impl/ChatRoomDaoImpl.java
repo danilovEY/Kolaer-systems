@@ -64,4 +64,12 @@ public class ChatRoomDaoImpl extends AbstractDefaultDao<ChatRoomEntity> implemen
                 .map(objects -> new Pair<>(((BigInteger) objects[0]).longValue(), ((BigInteger) objects[1]).longValue()))
                 .collect(Collectors.groupingBy(Pair::getKey, Collectors.mapping(Pair::getValue, Collectors.toList())));
     }
+
+    @Override
+    public void removeUserFromRooms(List<Long> roomIds, Long accountId) {
+        getSession().createNativeQuery("DELETE FROM chat_room_account WHERE account_Id = :accountId AND chat_room_id IN(:roomIds)")
+                .setParameter("accountId", accountId)
+                .setParameterList("roomIds", roomIds)
+                .executeUpdate();
+    }
 }

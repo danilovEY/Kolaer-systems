@@ -210,14 +210,31 @@ public class ChatContentVcImpl implements ChatContentVc {
                     .getAuthentication()
                     .getAuthorizedUser();
 
-            chatInfoDto.getChatRoomDto()
-                    .getUsers()
-                    .removeIf(user -> user.getAccountId().equals(authorizedUser.getId()));
+            ChatRoomDto chatRoomDto = chatInfoDto.getChatRoomDto();
+
+            chatRoomDto.getUsers().removeIf(user -> user.getAccountId().equals(authorizedUser.getId()));
 
             if(chatInfoDto.getCommand() == ChatInfoCommand.CREATE_NEW_ROOM) {
-                ChatRoomVc chatRoomVc = createChatRoomVc(chatInfoDto.getChatRoomDto());
+                ChatRoomVc chatRoomVc = createChatRoomVc(chatRoomDto);
                 chatRooms.add(chatRoomVc);
                 chatRoomVc.connect(chatClient);
+            } else if(chatInfoDto.getCommand() == ChatInfoCommand.QUIT_FROM_ROOM) {
+                ChatRoomVc findChatRoomVc = chatRooms.stream()
+                        .filter(chatRoomVc -> chatRoomVc.getChatRoomDto().getId().equals(chatRoomDto.getId()))
+                        .findFirst()
+                        .orElse(null);
+
+                if(findChatRoomVc != null) {
+                    if (authorizedUser.getId().equals(chatInfoDto.getFromAccount())) {
+                        chatRooms.remove(findChatRoomVc);
+                        findChatRoomVc.disconnect(chatClient);
+                        findChatRoomVc.close(chatClient);
+                    } else {
+                        chatRoomDto.getUsers().removeIf(user -> user.getAccountId().equals(chatInfoDto.getFromAccount()));
+
+                        findChatRoomVc.updateRoom(chatRoomDto);
+                    }
+                }
             }
         });
 

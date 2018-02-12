@@ -57,7 +57,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
                         user.setStatus(chatUserDto.getStatus());
                         user.setName(chatUserDto.getName());
 
-                        Tools.runOnWithOutThreadFX(() -> updateRoomName(this.chatRoomDto));
+                        Tools.runOnWithOutThreadFX(() -> updateRoom(this.chatRoomDto));
                     });
         }
     }
@@ -157,7 +157,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
     }
 
     private void init() {
-        updateRoomName(this.chatRoomDto);
+        updateRoom(this.chatRoomDto);
 
         this.chatRoomMessagesVc.setSendMessage(chatMessageDto -> {
             if(chatClient != null) {
@@ -166,7 +166,8 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         });
     }
 
-    private void updateRoomName(ChatRoomDto chatRoomDto) {
+    @Override
+    public void updateRoom(ChatRoomDto chatRoomDto) {
         String title = null;
         ChatUserStatus status = null;
 
@@ -181,10 +182,16 @@ public class ChatRoomVcImpl implements ChatRoomVc {
             title = chatRoomDto.getName();
 
             if(StringUtils.isEmpty(title)) {
-                title = chatRoomDto.getUsers()
-                        .stream()
-                        .map(ChatUserDto::getName)
-                        .collect(Collectors.joining(","));
+                if(chatRoomDto.getUsers().isEmpty()) {
+                    title = "[Пустая комната]";
+                } else {
+                    title = "[" +
+                            chatRoomDto.getUsers()
+                                    .stream()
+                                    .map(ChatUserDto::getName)
+                                    .collect(Collectors.joining(",")) +
+                            "]";
+                }
             }
         }
 

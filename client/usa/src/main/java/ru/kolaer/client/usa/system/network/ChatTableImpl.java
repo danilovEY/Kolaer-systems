@@ -26,6 +26,7 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     private final String URL_GET_ONLINE_USER;
     private final String URL_HIDE_MESSAGES;
     private final String URL_READ_MESSAGES;
+    private final String URL_POST_QUIT_FROM_ROOM;
     private final String URL_GET_ACTIVE_BY_ACCOUNT_ID;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -39,6 +40,7 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
         this.URL_GET_ALL_ACTIVE = url + "/room/all";
         this.URL_GET_ONLINE_USER = url + "/user/all";
         this.URL_POST_CREATE_PRIVATE_GROUP = url + "/room/private";
+        this.URL_POST_QUIT_FROM_ROOM = url + "/room/quit";
         this.URL_POST_CREATE_SINGLE_GROUP = url + "/room/single";
         this.URL_POST_CREATE_SINGLES_GROUP = url + "/room/singles";
         this.URL_GET_GROUP = url + "/room/";
@@ -77,6 +79,13 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
         return postServerResponse(restTemplate, URL_POST_CREATE_SINGLE_GROUP,
                 idDto,
                 ChatRoomDto.class, objectMapper);
+    }
+
+    @Override
+    public ServerResponse quitFromRoom(IdsDto idsDto) {
+        return postServerResponses(restTemplate, URL_POST_QUIT_FROM_ROOM,
+                idsDto,
+                null, objectMapper);
     }
 
     @Override

@@ -7,11 +7,13 @@ import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
+import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.chat.service.ChatClient;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -54,7 +56,8 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
             }
         });
 
-        MenuItem createRoom = new MenuItem("Создать комнату");
+        MenuItem createRoom = new MenuItem("Создать приватную группу комнату");
+        MenuItem quitRoom = new MenuItem("Выйти из комнат");
         createRoom.setOnAction(e -> {
             List<Long> userIds = roomListView.getSelectionModel().getSelectedItems()
                     .stream()
@@ -63,15 +66,54 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
                     .map(room -> room.getUsers().get(0).getAccountId())
                     .collect(Collectors.toList());
 
-            UniformSystemEditorKitSingleton.getInstance()
-                    .getUSNetwork()
-                    .getKolaerWebServer()
-                    .getApplicationDataBase()
-                    .getChatTable()
-                    .createPrivateRoom(new IdsDto(userIds), null);
+            if(userIds.size() > 1) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUSNetwork()
+                        .getKolaerWebServer()
+                        .getApplicationDataBase()
+                        .getChatTable()
+                        .createPrivateRoom(new IdsDto(userIds), null);
+            }
+        });
+        quitRoom.setOnAction(e -> {
+            List<ChatRoomDto> rooms = roomListView.getSelectionModel().getSelectedItems()
+                    .stream()
+                    .filter(chat -> chat.getChatRoomDto().getType() == ChatGroupType.PRIVATE ||
+                            chat.getChatRoomDto().getType() == ChatGroupType.PUBLIC)
+                    .map(ChatRoomVc::getChatRoomDto)
+                    .collect(Collectors.toList());
+
+            if(rooms.isEmpty()) {
+                return;
+            }
+
+            String roomNames = rooms
+                    .stream()
+                    .map(ChatRoomDto::getName)
+                    .collect(Collectors.joining("," + System.lineSeparator()));
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Вопрос");
+            alert.setHeaderText("Выход из групп");
+            alert.setContentText("Вы действительно хотите выйти из групп:" + System.lineSeparator() + roomNames);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                List<Long> roomIds = rooms
+                        .stream()
+                        .map(ChatRoomDto::getId)
+                        .collect(Collectors.toList());
+
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUSNetwork()
+                        .getKolaerWebServer()
+                        .getApplicationDataBase()
+                        .getChatTable()
+                        .quitFromRoom(new IdsDto(roomIds));
+            }
         });
 
-        roomListView.setContextMenu(new ContextMenu(createRoom));
+        roomListView.setContextMenu(new ContextMenu(createRoom, quitRoom));
 
         mainPane.setCenter(roomListView);
 

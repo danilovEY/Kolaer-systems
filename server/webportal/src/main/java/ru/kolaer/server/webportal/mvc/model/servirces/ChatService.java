@@ -19,22 +19,20 @@ public interface ChatService extends DefaultService<ChatRoomDto> {
     void removeActiveUser(ChatUserDto dto);
 
     ChatUserDto getUser(String sessionId);
-
     ChatUserDto getUserByAccountId(Long id);
 
     ChatRoomDto createGroup(String name);
 
     void send(ChatInfoUserActionDto chatInfoUserActionDto);
-
     void sendDisconnect(String sessionId);
-
     void send(ChatMessageDto message);
 
     ChatRoomDto createSingleGroup(IdDto accountId);
     List<ChatRoomDto> createSingleGroup(IdsDto idsDto);
     ChatRoomDto createPrivateGroup(String name, IdsDto idsDto);
-
     ChatRoomDto createPublicGroup(String name, IdsDto idsDto);
+
+    void quitFromRooms(IdsDto idsDto);
 
     List<ChatRoomDto> getAllRoomForAuthUser();
 

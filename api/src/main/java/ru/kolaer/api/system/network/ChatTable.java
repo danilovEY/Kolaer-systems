@@ -21,6 +21,7 @@ public interface ChatTable {
 
     ServerResponse<ChatRoomDto> createPrivateRoom(IdsDto idsDto, String name);
     ServerResponse<ChatRoomDto> createSingleRoom(IdDto idDto);
+    ServerResponse quitFromRoom(IdsDto idsDto);
 
     ServerResponse<List<ChatRoomDto>> createSingleRooms(IdsDto idDto);
 

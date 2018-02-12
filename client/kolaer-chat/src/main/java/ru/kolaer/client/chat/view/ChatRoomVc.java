@@ -10,6 +10,8 @@ import ru.kolaer.client.chat.service.ChatRoomObserver;
  * Created by danilovey on 06.02.2018.
  */
 public interface ChatRoomVc extends ChatObserver, ChatMessageHandler, ChatHandler {
+    void updateRoom(ChatRoomDto chatRoomDto);
+
     ChatRoomPreviewVc getChatRoomPreviewVc();
     ChatRoomMessagesVc getChatRoomMessagesVc();
 

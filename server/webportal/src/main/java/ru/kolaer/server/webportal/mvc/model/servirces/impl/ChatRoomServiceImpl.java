@@ -459,6 +459,46 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
     @Override
     @Transactional
+    public void quitFromRooms(IdsDto idsDto) {
+        if(idsDto == null || CollectionUtils.isEmpty(idsDto.getIds())) {
+            throw new UnexpectedRequestParams("Должны быть ID групп");
+        }
+
+        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+        Long authAccountId = accountByAuthentication.getId();
+
+        Map<Long, List<Long>> allUsersByRooms = defaultEntityDao.findAllUsersByRooms(idsDto.getIds());
+
+        List<Long> roomIdsWithAuthUser = allUsersByRooms.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().contains(authAccountId))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+
+        if(!roomIdsWithAuthUser.isEmpty()) {
+            defaultEntityDao.removeUserFromRooms(roomIdsWithAuthUser, authAccountId);
+
+            for (ChatRoomDto room : getById(roomIdsWithAuthUser)) {
+                List<Long> accountInRoom = allUsersByRooms.get(room.getId());
+
+                room.setUsers(getUsersByIds(accountInRoom));
+
+                ChatInfoRoomActionDto chatInfoCreateNewRoomDto = new ChatInfoRoomActionDto();
+                chatInfoCreateNewRoomDto.setCommand(ChatInfoCommand.QUIT_FROM_ROOM);
+                chatInfoCreateNewRoomDto.setChatRoomDto(room);
+                chatInfoCreateNewRoomDto.setFromAccount(authAccountId);
+                chatInfoCreateNewRoomDto.setCreateInfo(new Date());
+
+                send(chatInfoCreateNewRoomDto);
+            }
+        }
+
+
+    }
+
+    @Override
+    @Transactional
     public void hideMessage(IdsDto idsDto, boolean hide) {
         if(idsDto != null && !CollectionUtils.isEmpty(idsDto.getIds())) {
             AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();

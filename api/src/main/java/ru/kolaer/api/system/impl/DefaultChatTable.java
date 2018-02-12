@@ -41,6 +41,11 @@ public class DefaultChatTable implements ChatTable {
     }
 
     @Override
+    public ServerResponse quitFromRoom(IdsDto idsDto) {
+        return ServerResponse.createServerResponse();
+    }
+
+    @Override
     public ServerResponse<List<ChatRoomDto>> createSingleRooms(IdsDto idDto) {
         return ServerResponse.createServerResponse();
     }
