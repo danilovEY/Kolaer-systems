@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 public class ChatMessageVcImpl implements ChatMessageVc {
     private final ChatMessageDto chatMessageDto;
     private StackPane mainPane;
+    private Label copyable;
 
     public ChatMessageVcImpl(ChatMessageDto chatMessageDto) {
         this.chatMessageDto = chatMessageDto;
@@ -37,11 +38,7 @@ public class ChatMessageVcImpl implements ChatMessageVc {
         mainPane.setPrefWidth(1);
         mainPane.getStyleClass().add("chat-message");
 
-        AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
-                .getAuthentication()
-                .getAuthorizedUser();
-
-        Label copyable = new Label();
+        copyable = new Label();
         copyable.setWrapText(true);
         copyable.setFont(Font.font(null, FontWeight.NORMAL, 15));
         copyable.setOnMouseClicked(mouseEvent -> {
@@ -71,6 +68,29 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             }
         });
 
+        mainPane.getChildren().add(copyable);
+
+        updateMessage(this.chatMessageDto);
+
+        viewVisit.accept(this);
+    }
+
+    @Override
+    public Node getContent() {
+        return mainPane;
+    }
+
+    @Override
+    public ChatMessageDto getChatMessageDto() {
+        return this.chatMessageDto;
+    }
+
+    @Override
+    public void updateMessage(ChatMessageDto chatMessageDto) {
+        AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
+                .getAuthentication()
+                .getAuthorizedUser();
+
         String message = chatMessageDto.getMessage() +
                 System.lineSeparator() +
                 Tools.dateTimeToString(chatMessageDto.getCreateMessage());
@@ -79,19 +99,19 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             message += System.lineSeparator() + "(Сообщение скрыто)";
         }
 
+        mainPane.getStyleClass().clear();
+
         if(chatMessageDto.getType() == ChatMessageType.SERVER_INFO) {
             copyable.setText(message);
             copyable.setAlignment(Pos.CENTER);
             copyable.setTextAlignment(TextAlignment.CENTER);
             mainPane.setAlignment(Pos.CENTER);
-            mainPane.getChildren().add(copyable);
             mainPane.getStyleClass().add("chat-message-server");
         } else if(chatMessageDto.getFromAccount() == null || chatMessageDto.getFromAccount().getAccountId().equals(authorizedUser.getId())){
             copyable.setText(message);
             copyable.setAlignment(Pos.CENTER_RIGHT);
             copyable.setTextAlignment(TextAlignment.RIGHT);
             mainPane.setAlignment(Pos.CENTER_RIGHT);
-            mainPane.getChildren().add(copyable);
             mainPane.getStyleClass().add("chat-message-user");
         } else {
             String username = chatMessageDto.getFromAccount().getName();
@@ -104,15 +124,7 @@ public class ChatMessageVcImpl implements ChatMessageVc {
             copyable.setAlignment(Pos.CENTER_LEFT);
             copyable.setTextAlignment(TextAlignment.LEFT);
             mainPane.setAlignment(Pos.CENTER_LEFT);
-            mainPane.getChildren().add(copyable);
             mainPane.getStyleClass().add("chat-message-other-user");
         }
-
-        viewVisit.accept(this);
-    }
-
-    @Override
-    public Node getContent() {
-        return mainPane;
     }
 }

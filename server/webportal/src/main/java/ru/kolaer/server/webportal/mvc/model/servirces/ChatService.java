@@ -38,6 +38,7 @@ public interface ChatService extends DefaultService<ChatRoomDto> {
 
     void markReadMessages(IdsDto idsDto, boolean read);
     void hideMessage(IdsDto idsDto, boolean hide);
+    void deleteMessage(IdsDto idsDto);
 
     ChatUserDto createChatUserDto(AccountDto accountDto);
 

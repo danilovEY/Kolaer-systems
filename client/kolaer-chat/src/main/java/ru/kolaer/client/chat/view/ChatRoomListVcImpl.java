@@ -56,7 +56,7 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
             }
         });
 
-        MenuItem createRoom = new MenuItem("Создать приватную группу комнату");
+        MenuItem createRoom = new MenuItem("Создать приватную комнату");
         MenuItem quitRoom = new MenuItem("Выйти из комнат");
         createRoom.setOnAction(e -> {
             List<Long> userIds = roomListView.getSelectionModel().getSelectedItems()

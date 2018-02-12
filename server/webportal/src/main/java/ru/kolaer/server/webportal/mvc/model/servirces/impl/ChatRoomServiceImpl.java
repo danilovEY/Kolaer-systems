@@ -258,6 +258,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         chatMessageDto.setRoomId(chatMessageEntity.getRoomId());
         chatMessageDto.setMessage(chatMessageEntity.getMessage());
         chatMessageDto.setCreateMessage(chatMessageEntity.getCreateMessage());
+        chatMessageDto.setHide(chatMessageEntity.isHide());
         chatMessageDto.setType(chatMessageEntity.getType());
         Optional.ofNullable(chatMessageEntity.getAccountId())
                 .map(this::getOrCreateUserByAccountId)
@@ -515,10 +516,39 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
                     .map(ChatMessageEntity::getId)
                     .collect(Collectors.toList()), hide);
 
+            hideMessages.forEach(message -> message.setHide(hide));
+
             ChatInfoMessageActionDto chatInfoDto = new ChatInfoMessageActionDto();
             chatInfoDto.setChatMessageDtoList(hideMessages.stream().map(this::convertToDto).collect(Collectors.toList()));
             chatInfoDto.setCreateInfo(new Date());
             chatInfoDto.setCommand(ChatInfoCommand.HIDE_MESSAGES);
+            chatInfoDto.setFromAccount(accountByAuthentication.getId());
+
+            send(chatInfoDto);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteMessage(IdsDto idsDto) {
+        if(idsDto != null && !CollectionUtils.isEmpty(idsDto.getIds())) {
+            AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+
+            List<ChatMessageEntity> messages = chatMessageDao.findById(idsDto.getIds());
+            List<ChatMessageEntity> removedMessages = messages
+                    .stream()
+                    .filter(message -> accountByAuthentication.isAccessOit() ||
+                            message.getAccountId().equals(accountByAuthentication.getId()))
+                    .collect(Collectors.toList());
+
+            if (!removedMessages.isEmpty()) {
+                chatMessageDao.delete(removedMessages);
+            }
+
+            ChatInfoMessageActionDto chatInfoDto = new ChatInfoMessageActionDto();
+            chatInfoDto.setChatMessageDtoList(removedMessages.stream().map(this::convertToDto).collect(Collectors.toList()));
+            chatInfoDto.setCreateInfo(new Date());
+            chatInfoDto.setCommand(ChatInfoCommand.DELETE_MESSAGES);
             chatInfoDto.setFromAccount(accountByAuthentication.getId());
 
             send(chatInfoDto);

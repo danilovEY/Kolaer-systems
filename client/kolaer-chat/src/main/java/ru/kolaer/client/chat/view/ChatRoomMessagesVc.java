@@ -19,7 +19,7 @@ public interface ChatRoomMessagesVc extends BaseView<ChatRoomMessagesVc, Parent>
     void addMessage(ChatMessageDto chatMessageDto);
     void removeMessages(List<ChatMessageDto> messages);
 
-    List<ChatMessageDto> getMessages();
+    List<ChatMessageVc> getMessages();
 
     void setSendMessage(Consumer<ChatMessageDto> consumer);
 
@@ -28,4 +28,6 @@ public interface ChatRoomMessagesVc extends BaseView<ChatRoomMessagesVc, Parent>
     void setSelected(boolean selected);
 
     void hideMessage(ChatMessageDto chatMessageDto);
+
+    void removeMessage(ChatMessageDto chatMessageDto);
 }

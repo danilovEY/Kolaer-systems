@@ -87,6 +87,12 @@ public class ChatController {
         chatService.hideMessage(idsDto, true);
     }
 
+    @UrlDeclaration(description = "Удалить сообщения", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/message/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void deleteMessages(@RequestBody IdsDto idsDto) {
+        chatService.deleteMessage(idsDto);
+    }
+
     @UrlDeclaration(description = "Выйти из комнат", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/room/quit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void quitFromRooms(@RequestBody IdsDto idsDto) {

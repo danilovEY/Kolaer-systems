@@ -27,6 +27,7 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     private final String URL_HIDE_MESSAGES;
     private final String URL_READ_MESSAGES;
     private final String URL_POST_QUIT_FROM_ROOM;
+    private final String URL_DELETE_MESSAGES;
     private final String URL_GET_ACTIVE_BY_ACCOUNT_ID;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -36,6 +37,7 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.URL_HIDE_MESSAGES = url + "/message/hide";
+        this.URL_DELETE_MESSAGES = url + "/message/delete";
         this.URL_READ_MESSAGES = url + "/message/read";
         this.URL_GET_ALL_ACTIVE = url + "/room/all";
         this.URL_GET_ONLINE_USER = url + "/user/all";
@@ -108,6 +110,13 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     @Override
     public ServerResponse hideMessage(IdsDto idsDto) {
         return postServerResponse(restTemplate, URL_HIDE_MESSAGES,
+                idsDto,
+                String.class, objectMapper);
+    }
+
+    @Override
+    public ServerResponse deleteMessage(IdsDto idsDto) {
+        return postServerResponse(restTemplate, URL_DELETE_MESSAGES,
                 idsDto,
                 String.class, objectMapper);
     }

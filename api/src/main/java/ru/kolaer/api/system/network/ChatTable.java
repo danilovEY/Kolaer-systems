@@ -29,5 +29,6 @@ public interface ChatTable {
     ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(long roomId);
 
     ServerResponse hideMessage(IdsDto idsDto);
+    ServerResponse deleteMessage(IdsDto idsDto);
     ServerResponse markAsReadMessage(IdsDto idsDto);
 }

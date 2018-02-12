@@ -17,7 +17,9 @@ import ru.kolaer.client.chat.service.ChatClient;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -27,10 +29,10 @@ import java.util.stream.Collectors;
 public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     private final ChatRoomDto chatRoomDto;
 
-    private final ObservableList<ChatMessageDto> messages = FXCollections.observableArrayList();
+    private final ObservableList<ChatMessageVc> messages = FXCollections.observableArrayList();
 
     private BorderPane mainPane;
-    private ListView<ChatMessageDto> chatMessageDtoListView;
+    private ListView<ChatMessageVc> chatMessageDtoListView;
     private TextArea textArea;
 
     private Consumer<ChatMessageDto> chatMessageConsumer;
@@ -46,16 +48,19 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
 
         chatMessageDtoListView = new ListView<>(messages);
         chatMessageDtoListView.getStyleClass().add("chat-message-list-view");
-        chatMessageDtoListView.setCellFactory(param -> new ListCell<ChatMessageDto>() {
+        chatMessageDtoListView.setCellFactory(param -> new ListCell<ChatMessageVc>() {
             @Override
-            public void updateItem(ChatMessageDto item, boolean empty) {
+            public void updateItem(ChatMessageVc item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if(item == null || empty) {
                     setGraphic(null);
                 } else {
-                    ChatMessageVc chatMessageVc = new ChatMessageVcImpl(item);
-                    chatMessageVc.initView(initList -> setGraphic(initList.getContent()));
+                    if(!item.isViewInit()) {
+                        item.initView(initList -> setGraphic(initList.getContent()));
+                    } else {
+                        setGraphic(item.getContent());
+                    }
                 }
             }
         });
@@ -66,24 +71,38 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
 
         mainPane.setCenter(chatMessageDtoListView);
 
-        MenuItem hideMessages = new MenuItem("Удалить сообщение");
-        hideMessages.setOnAction(e -> {
-            ObservableList<ChatMessageDto> selectedMessages = chatMessageDtoListView.getSelectionModel().getSelectedItems();
+        MenuItem hideMessages = new MenuItem("Скрыть сообщение");
+        MenuItem deleteMessages = new MenuItem("Удалить сообщение");
+        deleteMessages.setOnAction(e -> {
+            ObservableList<ChatMessageVc> selectedMessages = chatMessageDtoListView.getSelectionModel().getSelectedItems();
             if(selectedMessages.isEmpty()) {
                 return;
             }
 
             List<Long> removeMessage = selectedMessages.stream()
+                    .map(ChatMessageVc::getChatMessageDto)
                     .map(ChatMessageDto::getId)
                     .collect(Collectors.toList());
 
-            ServerResponse serverResponse = UniformSystemEditorKitSingleton.getInstance()
-                    .getUSNetwork()
-                    .getKolaerWebServer()
-                    .getApplicationDataBase()
-                    .getChatTable()
-                    .hideMessage(new IdsDto(removeMessage));
-            if(serverResponse.isServerError()) {
+            ServerResponse serverResponse;
+
+            if(UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser().isAccessOit()) {
+                serverResponse = UniformSystemEditorKitSingleton.getInstance()
+                        .getUSNetwork()
+                        .getKolaerWebServer()
+                        .getApplicationDataBase()
+                        .getChatTable()
+                        .deleteMessage(new IdsDto(removeMessage));
+            } else {
+                serverResponse = UniformSystemEditorKitSingleton.getInstance()
+                        .getUSNetwork()
+                        .getKolaerWebServer()
+                        .getApplicationDataBase()
+                        .getChatTable()
+                        .hideMessage(new IdsDto(removeMessage));
+            }
+
+            if (serverResponse.isServerError()) {
                 UniformSystemEditorKitSingleton.getInstance()
                         .getUISystemUS()
                         .getNotification()
@@ -91,7 +110,47 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
             }
         });
 
-        chatMessageDtoListView.setContextMenu(new ContextMenu(hideMessages));
+        hideMessages.setOnAction(e -> {
+            ObservableList<ChatMessageVc> selectedMessages = chatMessageDtoListView.getSelectionModel().getSelectedItems();
+            if(selectedMessages.isEmpty()) {
+                return;
+            }
+
+            List<Long> removeMessage = selectedMessages.stream()
+                    .map(ChatMessageVc::getChatMessageDto)
+                    .map(ChatMessageDto::getId)
+                    .collect(Collectors.toList());
+
+            ServerResponse serverResponse = UniformSystemEditorKitSingleton.getInstance()
+                        .getUSNetwork()
+                        .getKolaerWebServer()
+                        .getApplicationDataBase()
+                        .getChatTable()
+                        .hideMessage(new IdsDto(removeMessage));
+
+            if (serverResponse.isServerError()) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(serverResponse.getExceptionMessage());
+            }
+        });
+
+        ContextMenu contextMenu = new ContextMenu(deleteMessages);
+        contextMenu.setOnShowing(e -> {
+            AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
+                    .getAuthentication()
+                    .getAuthorizedUser();
+            if(authorizedUser.isAccessOit()) {
+                if(!contextMenu.getItems().contains(hideMessages)) {
+                    contextMenu.getItems().add(hideMessages);
+                }
+            } else {
+                contextMenu.getItems().remove(hideMessages);
+            }
+        });
+
+        chatMessageDtoListView.setContextMenu(contextMenu);
 
         textArea = new TextArea();
         textArea.setPromptText("Введите сообщение...");
@@ -160,9 +219,10 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
 
     @Override
     public void addMessage(ChatMessageDto chatMessageDto) {
-        messages.add(chatMessageDto);
+        ChatMessageVc chatMessageVc = new ChatMessageVcImpl(chatMessageDto);
+        messages.add(chatMessageVc);
         if(isViewInit() && selected) {
-            chatMessageDtoListView.scrollTo(chatMessageDto);
+            chatMessageDtoListView.scrollTo(chatMessageVc);
         }
     }
 
@@ -182,7 +242,7 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     }
 
     @Override
-    public List<ChatMessageDto> getMessages() {
+    public List<ChatMessageVc> getMessages() {
         return messages;
     }
 
@@ -207,12 +267,31 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
 
     @Override
     public void hideMessage(ChatMessageDto chatMessageDto) {
-        messages.removeIf(message -> message.getId().equals(chatMessageDto.getId()));
+        Tools.runOnWithOutThreadFX(() -> {
+            for (ChatMessageVc message : messages) {
+                if (message.getChatMessageDto().getId().equals(chatMessageDto.getId())) {
+                    message.updateMessage(chatMessageDto);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void removeMessage(ChatMessageDto chatMessageDto) {
+        Tools.runOnWithOutThreadFX(() -> this.messages
+                .removeIf(message -> chatMessageDto.getId().equals(message.getChatMessageDto().getId())));
+
     }
 
     @Override
     public void removeMessages(List<ChatMessageDto> messages) {
-        this.messages.removeAll(messages);
+        Tools.runOnWithOutThreadFX(() -> {
+            Map<Long, ChatMessageDto> messagesMap = messages
+                    .stream()
+                    .collect(Collectors.toMap(ChatMessageDto::getId, Function.identity()));
+
+            this.messages.removeIf(message -> messagesMap.containsKey(message.getChatMessageDto().getId()));
+        });
     }
 
     @Override

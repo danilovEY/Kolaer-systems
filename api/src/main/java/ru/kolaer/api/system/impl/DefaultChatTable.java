@@ -66,6 +66,11 @@ public class DefaultChatTable implements ChatTable {
     }
 
     @Override
+    public ServerResponse deleteMessage(IdsDto idsDto) {
+        return null;
+    }
+
+    @Override
     public ServerResponse markAsReadMessage(IdsDto idsDto) {
         return ServerResponse.createServerResponse();
     }

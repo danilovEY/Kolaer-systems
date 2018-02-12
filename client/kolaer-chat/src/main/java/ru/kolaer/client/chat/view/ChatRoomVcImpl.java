@@ -5,6 +5,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
@@ -64,11 +65,18 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
     @Override
     public void handlerInfo(ChatInfoMessageActionDto infoMessageActionDto) {
+        AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser();
         Tools.runOnWithOutThreadFX(() -> {
             for (ChatMessageDto chatMessageDto : infoMessageActionDto.getChatMessageDtoList()) {
                 if(chatMessageDto.getRoomId().equals(chatRoomDto.getId())) {
                     if(infoMessageActionDto.getCommand() == ChatInfoCommand.HIDE_MESSAGES) {
-                        chatRoomMessagesVc.hideMessage(chatMessageDto);
+                        if(authorizedUser.isAccessOit()) {
+                            chatRoomMessagesVc.hideMessage(chatMessageDto);
+                        } else {
+                            chatRoomMessagesVc.removeMessage(chatMessageDto);
+                        }
+                    } else if(infoMessageActionDto.getCommand() == ChatInfoCommand.DELETE_MESSAGES) {
+                        chatRoomMessagesVc.removeMessage(chatMessageDto);
                     }
                 }
             }
@@ -108,6 +116,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         } else {
             Map<Long, ChatMessageDto> messageMap = chatRoomMessagesVc.getMessages()
                     .stream()
+                    .map(ChatMessageVc::getChatMessageDto)
                     .collect(Collectors.toMap(ChatMessageDto::getId, Function.identity()));
 
             messageByRoomId.getResponse()
@@ -244,7 +253,10 @@ public class ChatRoomVcImpl implements ChatRoomVc {
         chatRoomMessagesVc.setSelected(selected);
 
         if(selected) {
-            markAsReadMessage(chatRoomMessagesVc.getMessages());
+            markAsReadMessage(chatRoomMessagesVc.getMessages()
+                    .stream()
+                    .map(ChatMessageVc::getChatMessageDto)
+                    .collect(Collectors.toList()));
         }
     }
 
