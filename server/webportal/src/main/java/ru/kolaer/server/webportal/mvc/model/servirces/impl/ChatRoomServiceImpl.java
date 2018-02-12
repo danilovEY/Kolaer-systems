@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -13,7 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.error.ErrorCode;
-import ru.kolaer.api.mvp.model.kolaerweb.*;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.api.mvp.model.kolaerweb.IdDto;
+import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.*;
 import ru.kolaer.server.webportal.exception.CustomHttpCodeException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
@@ -44,11 +48,13 @@ import java.util.stream.Collectors;
 public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, ChatRoomEntity, ChatRoomDao, ChatRoomConverter>
         implements ChatRoomService {
     private final Map<Long, ChatUserDto> activeUser = new HashMap<>();
+
     private final String key;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final AuthenticationService authenticationService;
     private final AccountDao accountDao;
     private final ChatMessageDao chatMessageDao;
+    private final SessionFactory sessionFactory;
 
     public ChatRoomServiceImpl(@Value("${secret_key:secret_key}") String key,
                                SimpMessagingTemplate simpMessagingTemplate,
@@ -56,13 +62,15 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
                                AccountDao accountDao,
                                ChatMessageDao chatMessageDao,
                                ChatRoomDao defaultEntityDao,
-                               ChatRoomConverter converter) {
+                               ChatRoomConverter converter,
+                               SessionFactory sessionFactory) {
         super(defaultEntityDao, converter);
         this.key = key;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.authenticationService = authenticationService;
         this.accountDao = accountDao;
         this.chatMessageDao = chatMessageDao;
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
@@ -165,11 +173,13 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
     @Override
     public void send(ChatInfoRoomActionDto chatInfoRoomActionDto) {
-        for (ChatUserDto chatUserDto : chatInfoRoomActionDto.getChatRoomDto().getUsers()) {
+        ChatRoomDto chatRoomDto = chatInfoRoomActionDto.getChatRoomDto();
+
+        for (ChatUserDto chatUserDto : chatRoomDto.getUsers()) {
             if(chatUserDto.getStatus() == ChatUserStatus.ONLINE) {
                 String roomId = chatUserDto.getAccountId().toString();
 
-                log.info("Send room action to: {}", roomId);
+                log.info("Send room key: {} action to: {}", chatRoomDto.getRoomKey(), roomId);
 
                 simpMessagingTemplate.convertAndSend(ChatConstants.TOPIC_INFO_ROOM_ACTION + roomId, chatInfoRoomActionDto);
             }
@@ -321,13 +331,15 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             roomDtos.add(group);
         }
 
-        List<ChatRoomDto> persistRooms = roomDtos.stream()
+        Map<String, ChatRoomDto> persistRooms = roomDtos.stream()
                 .filter(room -> room.getId() == null)
-                .collect(Collectors.toList());
+                .collect(Collectors.toMap(ChatRoomDto::getRoomKey, Function.identity()));
 
-        List<ChatRoomDto> saveRooms = save(persistRooms);
+        List<ChatRoomDto> saveRooms = save(persistRooms.values().stream().collect(Collectors.toList()));
 
         for (ChatRoomDto saveRoom : saveRooms) {
+            saveRoom.setUsers(persistRooms.get(saveRoom.getRoomKey()).getUsers());
+
             ChatInfoRoomActionDto chatInfoCreateNewRoomDto = new ChatInfoRoomActionDto();
             chatInfoCreateNewRoomDto.setChatRoomDto(saveRoom);
             chatInfoCreateNewRoomDto.setCommand(ChatInfoCommand.CREATE_NEW_ROOM);
@@ -443,46 +455,6 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         group.setType(ChatGroupType.PUBLIC);
         group.setUserCreated(createChatUserDto(authenticationService.getAccountByAuthentication()));
         return group;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ChatRoomDto> getAll() {
-        return defaultConverter.convertToDto(defaultEntityDao.findAll());
-    }
-
-    @Override
-    @Transactional
-    public List<ChatRoomDto> save(List<ChatRoomDto> dtos) {
-        dtos.forEach(this::save);
-        return dtos;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ChatRoomDto getById(Long id) {
-        return defaultConverter.convertToDto(defaultEntityDao.findById(id));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ChatRoomDto> getById(List<Long> ids) {
-        return defaultConverter.convertToDto(defaultEntityDao.findById(ids));
-    }
-
-    @Override
-    public void delete(ChatRoomDto dto) {
-
-    }
-
-    @Override
-    public void delete(List<ChatRoomDto> dtos) {
-        dtos.forEach(this::delete);
-    }
-
-    @Override
-    public Page<ChatRoomDto> getAll(Integer number, Integer pageSize) {
-        return null;
     }
 
     @Override

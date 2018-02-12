@@ -58,7 +58,7 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
                     accountByAuthentication.getId());
         }
 
-        log.debug("У пользователя: {} нет доступа к чату: {}", accountByAuthentication.getId(), roomId);
+        log.info("У пользователя: {} нет доступа к чату: {}", accountByAuthentication.getId(), roomId);
 
         throw new CustomHttpCodeException("У вас нет доступа к чату!",
                 ErrorCode.FORBIDDEN,
@@ -94,7 +94,7 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
             return new Page<>(results, number, count, pageSize);
         }
 
-        log.debug("У пользователя: {} нет доступа к чату: {}", accountByAuthentication.getId(), room);
+        log.info("У пользователя: {} нет доступа к чату: {}", accountByAuthentication.getId(), room);
 
         throw new CustomHttpCodeException("У вас нет доступа к чату!",
                 ErrorCode.FORBIDDEN,
