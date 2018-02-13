@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -15,21 +14,24 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.api.system.impl.DefaultNotificationUS;
+import ru.kolaer.api.system.impl.DefaultStaticUS;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
-import ru.kolaer.client.usa.services.AutoCheckingNotifyMessage;
-import ru.kolaer.client.usa.services.CounterService;
+import ru.kolaer.client.usa.plugins.info.InfoPaneBundle;
 import ru.kolaer.client.usa.services.HideShowMainStage;
 import ru.kolaer.client.usa.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.usa.system.network.NetworkUSRestTemplate;
 import ru.kolaer.client.usa.system.ui.MenuBarUSImpl;
-import ru.kolaer.client.usa.system.ui.NotificationPanelExceptionHandler;
 import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
 import ru.kolaer.client.usa.tools.Resources;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -60,7 +62,8 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
      * Главное окно приложения.
      */
     private static Stage stage;
-    private SplitPane splitPane;
+    private UISystemUSImpl uiSystemUS;
+//    private SplitPane splitPane;
 
     private void initialize() {
     	Thread.currentThread().setName("Главный поток");
@@ -68,14 +71,14 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
         servicesManager = new ServiceManager();
         pluginManager = new PluginManager();
 
-        splitPane = new SplitPane();
-        splitPane.setDividerPositions(1);
+//        splitPane = new SplitPane();
+//        splitPane.setDividerPositions(1);
 
-        mainPane.setCenter(splitPane);
+//        mainPane.setCenter(splitPane);
 
         //Инициализация вкладочного explorer'а.
         explorer = new VMTabExplorerOSGi();
-        explorer.initView(initExplorer -> splitPane.getItems().add(explorer.getContent()));
+        explorer.initView(initExplorer -> mainPane.setCenter(explorer.getContent()));
 
         initApplicationParams();
 
@@ -108,16 +111,18 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
             PluginManager initPluginManager = pluginManager.get(30, TimeUnit.SECONDS);
             List<PluginBundle> pluginBundles = plugins.get(30, TimeUnit.SECONDS);
 
-            Iterator<PluginBundle> iterPlugins = pluginBundles.iterator();
+//            Iterator<PluginBundle> iterPlugins = pluginBundles.iterator();
+//
+//            while (iterPlugins.hasNext()) {
+//                PluginBundle pluginBundle = iterPlugins.next();
+//                if(pluginBundle.getSymbolicNamePlugin().contains("ru.kolaer.asmc")) {
+//                    installPlugin(explorer, initPluginManager, pluginBundle);
+//                    iterPlugins.remove();
+//                    break;
+//                }
+//            }
 
-            while (iterPlugins.hasNext()) {
-                PluginBundle pluginBundle = iterPlugins.next();
-                if(pluginBundle.getSymbolicNamePlugin().contains("ru.kolaer.asmc")) {
-                    installPlugin(explorer, initPluginManager, pluginBundle);
-                    iterPlugins.remove();
-                    break;
-                }
-            }
+            installPluginInThread(explorer, initPluginManager,  new InfoPaneBundle());
 
             pluginBundles.forEach(pluginBundle -> installPluginInThread(explorer, initPluginManager, pluginBundle));
             pluginBundles.clear();
@@ -170,9 +175,9 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
     private void initSystemServices() {
         Thread.currentThread().setName("Добавление системны служб");
 
-        //servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, servicesManager), true);
-        servicesManager.addService(new CounterService(), true);
-        servicesManager.addService(new AutoCheckingNotifyMessage(), true);
+//        servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, servicesManager), true);
+//        servicesManager.addService(new CounterService(), true);
+//        servicesManager.addService(new AutoCheckingNotifyMessage(), true);
         servicesManager.addService(new HideShowMainStage(stage), true);
     }
 
@@ -241,25 +246,20 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
 
         ObjectMapper objectMapper = new ObjectMapper();
         MenuBarUSImpl menuBarUS = new MenuBarUSImpl();
-        NotificationPanelExceptionHandler notify = new NotificationPanelExceptionHandler();
+
         NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
-        UISystemUSImpl uiSystemUS = new UISystemUSImpl();
+        this.uiSystemUS = new UISystemUSImpl();
         AuthenticationOnNetwork authentication = new AuthenticationOnNetwork(network.getGlobalRestTemplate(), objectMapper);
 
         uiSystemUS.setMenuBarUS(menuBarUS);
-        uiSystemUS.setStaticUS(notify);
-        uiSystemUS.setNotification(notify);
+        uiSystemUS.setStaticUS(new DefaultStaticUS());
+        uiSystemUS.setNotification(new DefaultNotificationUS());
         uiSystemUS.setMainStage(stage);
 
         authentication.registerObserver(menuBarUS);
         authentication.registerObserver(this);
 
         Tools.runOnWithOutThreadFX(() ->  {
-            notify.initView(initNotify -> {
-                splitPane.getItems().add(initNotify.getContent());
-                Thread.setDefaultUncaughtExceptionHandler(initNotify);
-            });
-
             menuBarUS.initView(initMenuBar -> mainPane.setTop(initMenuBar.getContent()));
         });
 

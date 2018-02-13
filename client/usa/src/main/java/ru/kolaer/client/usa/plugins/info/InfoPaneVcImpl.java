@@ -1,6 +1,5 @@
-package ru.kolaer.client.usa.system.ui;
+package ru.kolaer.client.usa.plugins.info;
 
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
@@ -9,31 +8,55 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
-import ru.kolaer.api.mvp.view.BaseView;
-import ru.kolaer.api.system.ui.NotificationUS;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.ui.NotifyAction;
-import ru.kolaer.api.system.ui.StaticUS;
 import ru.kolaer.api.system.ui.StaticView;
 import ru.kolaer.api.tools.Tools;
+import ru.kolaer.client.usa.system.ui.NotificationPaneVc;
+import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Created by danilovey on 18.08.2016.
+ * Created by danilovey on 13.02.2018.
  */
 @Slf4j
-public class NotificationPanelExceptionHandler implements NotificationUS,
-        BaseView<NotificationPanelExceptionHandler, Parent>, StaticUS,
-        Thread.UncaughtExceptionHandler {
+public class InfoPaneVcImpl implements InfoPaneVc {
+    private final NotificationPaneVc notificationPane = new NotificationPaneVc();
     private BorderPane mainPane;
 
-    private NotificationPaneVc notificationPane;
-    private StaticPaneVc staticPaneVc;
 
-    public NotificationPanelExceptionHandler() {
-        this.notificationPane = new NotificationPaneVc();
-        this.staticPaneVc = new StaticPaneVc();
+    @Override
+    public void initView(Consumer<InfoPaneVc> viewVisit) {
+        mainPane = new BorderPane();
+
+        ScrollPane scrollPaneUserNotify = new ScrollPane();
+        scrollPaneUserNotify.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneUserNotify.setMinWidth(300);
+        scrollPaneUserNotify.setPrefWidth(300);
+        scrollPaneUserNotify.setMaxWidth(400);
+        scrollPaneUserNotify.setFitToHeight(true);
+        scrollPaneUserNotify.setFitToWidth(true);
+
+        SplitPane splitPane = new SplitPane();
+        splitPane.getItems().addAll(new BorderPane(), scrollPaneUserNotify);
+        splitPane.setDividerPositions(1);
+
+        mainPane.setCenter(splitPane);
+
+        notificationPane.initView(notifyPane -> scrollPaneUserNotify.setContent(notifyPane.getContent()));
+
+        UISystemUSImpl uiSystemUS = (UISystemUSImpl) UniformSystemEditorKitSingleton.getInstance().getUISystemUS();
+        uiSystemUS.setStaticUS(this);
+        uiSystemUS.setNotification(this);
+
+        viewVisit.accept(this);
+    }
+
+    @Override
+    public Parent getContent() {
+        return this.mainPane;
     }
 
     @Override
@@ -106,17 +129,6 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
         notificationPane.showErrorNotify(ex);
     }
 
-
-    @Override
-    public void setContent(Parent content) {
-
-    }
-
-    @Override
-    public Parent getContent() {
-        return this.mainPane;
-    }
-
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         log.error("Ошибка в потоке: {}", t.getName(), e);
@@ -124,50 +136,12 @@ public class NotificationPanelExceptionHandler implements NotificationUS,
     }
 
     @Override
-    public void initView(Consumer<NotificationPanelExceptionHandler> viewVisit) {
-        ScrollPane scrollPaneUserNotify = new ScrollPane();
-        scrollPaneUserNotify.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPaneUserNotify.setMinWidth(300);
-        scrollPaneUserNotify.setPrefWidth(300);
-        scrollPaneUserNotify.setMaxWidth(400);
-        scrollPaneUserNotify.setFitToHeight(true);
-        scrollPaneUserNotify.setFitToWidth(true);
-
-        ScrollPane scrollPaneStatic = new ScrollPane();
-        scrollPaneStatic.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPaneStatic.setMinWidth(300);
-        scrollPaneStatic.setMinHeight(100);
-        scrollPaneStatic.setPrefWidth(300);
-        scrollPaneStatic.setPrefHeight(100);
-        scrollPaneStatic.setMaxWidth(400);
-        //scrollPaneAdminNotify.setMaxHeight(400);
-        scrollPaneStatic.setFitToHeight(true);
-        scrollPaneStatic.setFitToWidth(true);
-
-        notificationPane.initView(notifyPane -> scrollPaneUserNotify.setContent(notifyPane.getContent()));
-        staticPaneVc.initView(staticPane -> scrollPaneStatic.setContent(staticPane.getContent()));
-
-
-        SplitPane splitPane = new SplitPane();
-        splitPane.getItems().addAll(scrollPaneStatic, scrollPaneUserNotify);
-        splitPane.setDividerPositions(0.6);
-        splitPane.setOrientation(Orientation.VERTICAL);
-
-        this.mainPane = new BorderPane(splitPane);
-        this.mainPane.setMinWidth(300);
-        this.mainPane.setPrefWidth(300);
-        this.mainPane.setMaxWidth(400);
-
-        viewVisit.accept(this);
-    }
-
-    @Override
     public void addStaticView(StaticView staticView) {
-        staticPaneVc.addStaticView(staticView);
+
     }
 
     @Override
     public void removeStaticView(StaticView staticView) {
-        staticPaneVc.removeStaticView(staticView);
+
     }
 }
