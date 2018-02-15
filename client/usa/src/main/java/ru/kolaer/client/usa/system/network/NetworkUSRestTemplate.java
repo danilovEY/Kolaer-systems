@@ -3,6 +3,7 @@ package ru.kolaer.client.usa.system.network;
 import ch.qos.logback.classic.Level;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.system.network.NetworkUS;
 import ru.kolaer.api.system.network.OtherPublicAPI;
@@ -11,6 +12,8 @@ import ru.kolaer.api.system.network.restful.RestfulServer;
 import ru.kolaer.client.usa.system.network.kolaerweb.KolaerWebServerImpl;
 import ru.kolaer.client.usa.system.network.restful.RestfulServerImpl;
 import ru.kolaer.client.usa.tools.Resources;
+
+import java.nio.charset.Charset;
 
 /**
  * Реализация интерфейса для работы с сетью.
@@ -27,6 +30,8 @@ public class NetworkUSRestTemplate implements NetworkUS {
 
 	public NetworkUSRestTemplate(ObjectMapper objectMapper) {
 		this.globalRestTemplate = new RestTemplate();
+		this.globalRestTemplate.getMessageConverters()
+				.add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
 		//Убираем лог REST'a (засоряет)
 		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.springframework.web.client.RestTemplate")).setLevel(Level.INFO);
 		this.globalRestTemplate.setErrorHandler(new ResponseErrorHandlerNotifications(objectMapper));

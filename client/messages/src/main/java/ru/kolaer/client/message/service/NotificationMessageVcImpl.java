@@ -1,4 +1,4 @@
-package ru.kolaer.client.usa.system.ui;
+package ru.kolaer.client.message.service;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -7,13 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import org.controlsfx.tools.Borders;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
 import ru.kolaer.api.system.ui.NotificationType;
 import ru.kolaer.api.system.ui.NotificationView;
@@ -66,14 +64,15 @@ public class NotificationMessageVcImpl implements NotificationView {
 
         content.getChildren().add(timeLabel);
 
+        mainPane = content;
 
-        mainPane = Borders.wrap(content)
-                .lineBorder()
-                .thickness(2)
-                .innerPadding(0)
-                .radius(5, 5, 5, 5)
-                .color(Color.color(0.114, 0.161, 0.209))
-                .buildAll();
+//        mainPane = Borders.wrap(content)
+//                .lineBorder()
+//                .thickness(2)
+//                .innerPadding(0)
+//                .radius(5, 5, 5, 5)
+//                .color(Color.color(0.114, 0.161, 0.209))
+//                .buildAll();
 
         viewVisit.accept(this);
     }

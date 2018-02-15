@@ -1,6 +1,7 @@
 package ru.kolaer.api.system.impl;
 
 import ru.kolaer.api.system.network.HolidaysTable;
+import ru.kolaer.api.system.network.KaesTable;
 import ru.kolaer.api.system.network.OtherPublicAPI;
 
 /**
@@ -12,5 +13,10 @@ public class DefaultOtherPublicAPI implements OtherPublicAPI {
     @Override
     public HolidaysTable getHolidaysTable() {
         return this.holidaysTable;
+    }
+
+    @Override
+    public KaesTable getKaesTable() {
+        return null;
     }
 }

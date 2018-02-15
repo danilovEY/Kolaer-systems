@@ -12,5 +12,5 @@ include ':client:asmc'
 include ':client:kolpass'
 include ':client:wer'
 include ':client:kolaer-chat'
-findProject(':client:kolaer-chat')?.name = 'kolaer-chat'
+include ':client:messages'
 

@@ -1,4 +1,4 @@
-package ru.kolaer.client.usa.services;
+package ru.kolaer.client.message.service;
 
 import javafx.scene.Node;
 import javafx.scene.layout.Region;
@@ -13,7 +13,6 @@ import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.ui.NotificationView;
 import ru.kolaer.api.system.ui.StaticView;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.client.usa.system.ui.NotificationMessageVcImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -108,6 +107,7 @@ public class AutoCheckingNotifyMessage implements Service, StaticView {
     public void initView(Consumer<StaticView> viewVisit) {
         messageListView = new VBox();
         messageListView.setMaxHeight(Region.USE_PREF_SIZE);
+        messageListView.setSpacing(10);
 
         setContent(messageListView);
 

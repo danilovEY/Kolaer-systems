@@ -5,7 +5,6 @@ import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.ServiceManager;
-import ru.kolaer.client.usa.services.AutoCheckingNotifyMessage;
 import ru.kolaer.client.usa.services.CounterService;
 import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
 
@@ -30,7 +29,6 @@ public class InfoPanePlugin implements UniformSystemPlugin {
         uiSystemUS.setStaticUS(infoPaneVc);
         Thread.setDefaultUncaughtExceptionHandler(infoPaneVc);
         servicesManager.addService(new CounterService());
-        servicesManager.addService(new AutoCheckingNotifyMessage());
 
         viewVisit.accept(this);
     }
