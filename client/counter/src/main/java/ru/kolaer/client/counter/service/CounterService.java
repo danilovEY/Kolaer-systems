@@ -1,4 +1,4 @@
-package ru.kolaer.client.usa.services;
+package ru.kolaer.client.counter.service;
 
 import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;

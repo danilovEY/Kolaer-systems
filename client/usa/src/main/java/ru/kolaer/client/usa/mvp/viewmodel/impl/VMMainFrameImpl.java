@@ -168,9 +168,7 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
     private void initSystemPlugins() {
         Thread.currentThread().setName("Добавление системных плагинов");
 
-        InfoPanePlugin infoPanePlugin = new InfoPanePlugin(servicesManager);
-
-        installPlugin(explorer, pluginManager,  new InfoPaneBundle(infoPanePlugin));
+        installPlugin(explorer, pluginManager,  new InfoPaneBundle(new InfoPanePlugin()));
     }
 
     private void initSystemServices() {

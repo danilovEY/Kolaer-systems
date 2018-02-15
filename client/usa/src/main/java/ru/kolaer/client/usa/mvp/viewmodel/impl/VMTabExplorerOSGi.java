@@ -50,18 +50,20 @@ public class VMTabExplorerOSGi extends AbstractVMTabExplorer {
             throw new IllegalArgumentException(tabName + " - is null or not install!");
         }
 
-        Tools.runOnWithOutThreadFX(() -> {
-            PTab tab = new PTabImpl(pluginBundle);
-            tab.getView().setTitle(tabName);
+        if(pluginBundle.getUniformSystemPlugin().isInitPluginView()) {
+            Tools.runOnWithOutThreadFX(() -> {
+                PTab tab = new PTabImpl(pluginBundle);
+                tab.getView().setTitle(tabName);
 
-            pluginTabMap.put(tabName, tab);
-            plugins.put(pluginBundle.getUniformSystemPlugin(), pluginBundle);
+                pluginTabMap.put(tabName, tab);
+                plugins.put(pluginBundle.getUniformSystemPlugin(), pluginBundle);
 
-            log.info("{}: Добавление вкладки...", pluginBundle.getSymbolicNamePlugin());
-            pluginsTabPane.getTabs().add(tab.getView().getContent());
+                log.info("{}: Добавление вкладки...", pluginBundle.getSymbolicNamePlugin());
+                pluginsTabPane.getTabs().add(tab.getView().getContent());
 
-            notifyAddPlugin(tab);
-        });
+                notifyAddPlugin(tab);
+            });
+        }
     }
 
     @Override

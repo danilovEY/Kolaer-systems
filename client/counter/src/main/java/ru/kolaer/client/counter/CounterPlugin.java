@@ -1,9 +1,9 @@
-package ru.kolaer.client.message;
+package ru.kolaer.client.counter;
 
 import javafx.scene.Node;
 import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.client.message.service.AutoCheckingNotifyMessage;
+import ru.kolaer.client.counter.service.CounterService;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -12,9 +12,11 @@ import java.util.function.Consumer;
 /**
  * Created by danilovey on 15.02.2018.
  */
-public class MessagePlugin implements UniformSystemPlugin {
+public class CounterPlugin implements UniformSystemPlugin {
+
     @Override
     public void initView(Consumer<UniformSystemPlugin> viewVisit) {
+
     }
 
     @Override
@@ -24,7 +26,7 @@ public class MessagePlugin implements UniformSystemPlugin {
 
     @Override
     public Collection<Service> getServices() {
-        return Collections.singletonList(new AutoCheckingNotifyMessage());
+        return Collections.singletonList(new CounterService());
     }
 
     @Override

@@ -36,4 +36,8 @@ public interface UniformSystemPlugin extends BaseView<UniformSystemPlugin, Node>
 
 	default void updatePluginObjects(String key, Object object) {}
 
+	default boolean isInitPluginView() {
+		return true;
+	}
+
 }

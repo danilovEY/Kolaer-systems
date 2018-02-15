@@ -1,4 +1,4 @@
-package ru.kolaer.client.usa.services;
+package ru.kolaer.client.counter.service;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -11,7 +11,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
 import ru.kolaer.api.system.ui.StaticView;
-import ru.kolaer.client.usa.mvp.viewmodel.impl.CounterView;
 
 import java.util.function.Consumer;
 
