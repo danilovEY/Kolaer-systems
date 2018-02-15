@@ -30,4 +30,9 @@ public class KaesTableImpl implements KaesTable, RestTemplateService {
     public ServerResponse<WeatherKaesDto> getWeather() {
         return getServerResponse(globalRestTemplate, URL_GET_WEATHER, WeatherKaesDto.class, objectMapper);
     }
+
+    @Override
+    public String getWeatherChartUrl() {
+        return URL_GET_WEATHER_CHART;
+    }
 }

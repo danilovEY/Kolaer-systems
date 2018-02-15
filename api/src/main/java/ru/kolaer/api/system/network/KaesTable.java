@@ -8,4 +8,6 @@ import ru.kolaer.api.mvp.model.other.WeatherKaesDto;
  */
 public interface KaesTable {
     ServerResponse<WeatherKaesDto> getWeather();
+
+    String getWeatherChartUrl();
 }

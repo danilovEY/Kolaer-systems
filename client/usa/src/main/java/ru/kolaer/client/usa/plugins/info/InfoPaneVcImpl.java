@@ -1,5 +1,7 @@
 package ru.kolaer.client.usa.plugins.info;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -24,6 +26,8 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public class InfoPaneVcImpl implements InfoPaneVc {
+    private transient static final Object synch = new Object();
+
     private BorderPane mainPane;
     private FlowPane staticViewPane;
 
@@ -95,7 +99,17 @@ public class InfoPaneVcImpl implements InfoPaneVc {
 
             staticView.setContent(newContent);
 
-            staticViewPane.getChildren().add(staticView.getContent());
+            synchronized (synch) {
+                staticViewPane.getChildren().add(staticView.getContent());
+
+                ObservableList<Node> nodes = FXCollections.observableArrayList(staticViewPane.getChildren());
+
+                nodes.sort((o1, o2) ->
+                        Double.compare(o1.getBoundsInParent().getHeight(), o2.getBoundsInParent().getHeight()) * -1
+                );
+
+                staticViewPane.getChildren().setAll(nodes);
+            }
         });
     }
 

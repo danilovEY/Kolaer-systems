@@ -14,4 +14,6 @@ include ':client:wer'
 include ':client:kolaer-chat'
 include ':client:messages'
 include ':client:counter'
+include 'client:weather'
+findProject(':client:weather')?.name = 'weather'
 

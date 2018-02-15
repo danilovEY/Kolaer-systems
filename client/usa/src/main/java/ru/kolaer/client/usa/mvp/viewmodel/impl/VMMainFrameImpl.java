@@ -85,18 +85,15 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
 
         CompletableFuture
                 .supplyAsync(this::initUniformSystemEditorKit, mainApplicationThreadPool)
-        .thenRunAsync(() -> {
-            mainApplicationThreadPool.submit(this::autoLogin);
-            mainApplicationThreadPool.submit(this::initTray);
-            mainApplicationThreadPool.submit(this::initSystemPlugins);
-            mainApplicationThreadPool.submit(this::initSystemServices);
-            mainApplicationThreadPool.submit(this::initShutdownApplication);
-            mainApplicationThreadPool.submit(() -> installPlugins(initializedPluginManager, searchResult));
-            mainApplicationThreadPool.shutdown();
-        }).exceptionally(throwable -> {
-            throwable.printStackTrace();
-            return null;
-        });
+                .thenRunAsync(this::autoLogin, mainApplicationThreadPool)
+                .thenRunAsync(this::initTray, mainApplicationThreadPool)
+                .thenRun(this::initSystemPlugins)
+                .thenRun(this::initSystemServices)
+                .thenRun(() -> installPlugins(initializedPluginManager, searchResult))
+                .exceptionally(throwable -> {
+                    log.error("Ошибка", throwable);
+                    return null;
+                });
     }
 
     private void installPlugins(Future<PluginManager> pluginManager, Future<List<PluginBundle>> plugins) {

@@ -1,0 +1,43 @@
+group 'ru.kolaer'
+version '0.1'
+
+def projectName = "ru.kolaer.weather"
+def projectNameWithVersion = projectName + "-" + version
+def projectJarName = projectNameWithVersion + ".jar"
+
+apply plugin: 'osgi'
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+jar {
+    archiveName = projectJarName
+    baseName = project.name
+    manifest {
+        name = 'Погода'
+        symbolicName = projectName
+//        instruction "Bundle-ClassPath", "."
+//        instruction "Import-Package", "*;version=\"0\";resolution:=optional"
+    }
+}
+
+task createJar(type: Jar) {
+    archiveName = projectJarName
+    baseName = project.name
+    manifest = jar.manifest
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
+task copyJarToBin(dependsOn: jar) {
+    doLast {
+        copy {
+            from 'build/libs/' + projectJarName
+            into pathToProjectDirWithPlugins
+        }
+    }
+}
+
+task buildApp(dependsOn : [copyJarToBin])
