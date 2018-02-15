@@ -14,6 +14,7 @@ public class NotifyMessageConverterImpl implements NotifyMessageConverter {
         NotifyMessageEntity notifyMessageEntity = new NotifyMessageEntity();
         notifyMessageEntity.setId(dto.getId());
         notifyMessageEntity.setMessage(dto.getMessage());
+        notifyMessageEntity.setCreate(dto.getCreate());
         return notifyMessageEntity;
     }
 
@@ -26,6 +27,7 @@ public class NotifyMessageConverterImpl implements NotifyMessageConverter {
         NotifyMessageDto notifyMessageDto = new NotifyMessageDto();
         notifyMessageDto.setId(model.getId());
         notifyMessageDto.setMessage(model.getMessage());
+        notifyMessageDto.setCreate(model.getCreate());
         return notifyMessageDto;
     }
 
@@ -33,6 +35,7 @@ public class NotifyMessageConverterImpl implements NotifyMessageConverter {
     public NotifyMessageDto updateData(NotifyMessageDto oldDto, NotifyMessageEntity newModel) {
         oldDto.setId(newModel.getId());
         oldDto.setMessage(newModel.getMessage());
+        oldDto.setCreate(newModel.getCreate());
         return oldDto;
     }
 }

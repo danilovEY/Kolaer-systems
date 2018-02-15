@@ -4,8 +4,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.control.Notifications;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
+import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.ui.NotificationUS;
 import ru.kolaer.api.system.ui.NotifyAction;
 import ru.kolaer.api.tools.Tools;
@@ -19,6 +21,7 @@ import java.util.List;
  * @author danilovey
  * @version 0.1
  */
+@Slf4j
 public class NotificationPopupControlFx implements NotificationUS {
 
 	@Override
@@ -43,8 +46,11 @@ public class NotificationPopupControlFx implements NotificationUS {
 	
 	@Override
 	public void showErrorNotify(final String title, final String text, final List<NotifyAction> actions) {
+		log.error("Title:{} Text:{}", title, text);
+
 		Tools.runOnWithOutThreadFX(() -> {
 			final Notifications notify = this.addActions(Notifications.create(), actions);
+			notify.owner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
 			notify.hideAfter(Duration.seconds(15));
 			notify.position(Pos.BOTTOM_RIGHT);
 			if(title != null)
@@ -63,8 +69,10 @@ public class NotificationPopupControlFx implements NotificationUS {
 	
 	@Override
 	public void showWarningNotify(final String title, final String text, final List<NotifyAction> actions) {
+		log.warn("Title:{} Text:{}", title, text);
 		Tools.runOnWithOutThreadFX(() -> {
 			final Notifications notify = this.addActions(Notifications.create(), actions);
+			notify.owner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
 			notify.hideAfter(Duration.seconds(10));
 			notify.position(Pos.BOTTOM_RIGHT);
 			if(title != null)
@@ -93,11 +101,13 @@ public class NotificationPopupControlFx implements NotificationUS {
 
 	@Override
 	public void showErrorNotify(ServerExceptionMessage exceptionMessage) {
+		log.error("{}", exceptionMessage);
 		showErrorNotify("Ошибка", exceptionMessage.getMessage());
 	}
 
 	@Override
 	public void showErrorNotify(Exception ex) {
+		log.error("Ошибка", ex);
 		showErrorNotify("Ошибка", ex.getMessage());
 	}
 
@@ -111,6 +121,7 @@ public class NotificationPopupControlFx implements NotificationUS {
 					action.setOnAction(notifyAction.getConsumer()::accept);
 					vBox.getChildren().add(action);
 				}
+				notify.owner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
 				notify.graphic(vBox);
 			}	
 		return notify;
@@ -120,6 +131,7 @@ public class NotificationPopupControlFx implements NotificationUS {
 	public void showSimpleNotify(final String title, final  String text, final Duration duration, final Pos pos, final List<NotifyAction> actions) {
 		Tools.runOnWithOutThreadFX(() -> {
 			final Notifications notify = this.addActions(Notifications.create(), actions);
+			notify.owner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
 			notify.hideAfter(duration);
 			notify.position(pos);
 			notify.hideCloseButton();
@@ -136,6 +148,7 @@ public class NotificationPopupControlFx implements NotificationUS {
 	public void showInformationNotify(final String title, final String text, final Duration duration, final Pos pos, final List<NotifyAction> actions) {
 		Tools.runOnWithOutThreadFX(() -> {
 			final Notifications notify = this.addActions(Notifications.create(), actions);
+			notify.owner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
 			notify.hideAfter(duration);
 			notify.position(pos);
 			if(title != null)

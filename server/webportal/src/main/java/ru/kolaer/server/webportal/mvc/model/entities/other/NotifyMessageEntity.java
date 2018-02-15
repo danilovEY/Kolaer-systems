@@ -4,6 +4,7 @@ import lombok.Data;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by danilovey on 18.08.2016.
@@ -20,4 +21,8 @@ public class NotifyMessageEntity implements BaseEntity {
 
     @Column(name = "message", nullable = false)
     private String message;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create", nullable = false)
+    private Date create;
 }

@@ -63,7 +63,9 @@ public class GroupTreeVcImpl implements GroupTreeVc {
 
     @Override
     public void setAccess(boolean access) {
-        this.treeView.setContextMenu(access ? this.contextMenu : null);
+        if(isViewInit()) {
+            this.treeView.setContextMenu(access ? this.contextMenu : null);
+        }
     }
 
     @Override

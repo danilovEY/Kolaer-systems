@@ -5,8 +5,6 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
@@ -16,7 +14,6 @@ import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.asmc.mvp.model.DataService;
 import ru.kolaer.asmc.mvp.model.DataServiceImpl;
 import ru.kolaer.asmc.mvp.service.AutoUploadData;
@@ -123,29 +120,6 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
                         .showInformationNotify("Обновление", "Успешное обновление данных")));
     }
 
-    private void updateBanner() {
-        Tools.runOnWithOutThreadFX(() -> {
-            BorderPane imagePane = new BorderPane();
-            imagePane.setStyle("-fx-background-color: #FFFFFF"); //,linear-gradient(#f8f8f8, #e7e7e7);
-            imagePane.setMaxHeight(300);
-            imagePane.setMaxWidth(Double.MAX_VALUE);
-
-            ImageView left = new ImageView(new Image(getClass().getResource("/LR.png").toString(), true));
-            left.setPreserveRatio(false);
-
-            ImageView right = new ImageView(new Image(getClass().getResource("/LR.png").toString(), true));
-            right.setPreserveRatio(false);
-
-            ImageViewPane center = new ImageViewPane(new ImageView(new Image(getClass().getResource("/Centr.png").toString(), true)));
-
-            imagePane.setRight(right);
-            imagePane.setLeft(left);
-            imagePane.setCenter(center);
-
-            this.mainPane.setTop(imagePane);
-        });
-    }
-
     @Override
     public Parent getContent() {
         return this.mainPane;
@@ -182,7 +156,6 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
         mainPane.setCenter(splitListContent.getContent());
 
-        updateBanner();
         initMenuBar();
 
         viewVisit.accept(this);

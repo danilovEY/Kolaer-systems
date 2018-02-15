@@ -3,10 +3,14 @@ package ru.kolaer.client.usa.system.network.kolaerweb;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.network.kolaerweb.NotifyMessageTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by danilovey on 18.08.2016.
@@ -16,11 +20,13 @@ public class NotifyMessageTableImpl implements NotifyMessageTable, RestTemplateS
     private final RestTemplate restTemplate;
     private String URL_GET_LAST;
     private String URL_ADD;
+    private String URL_GET;
 
     public NotifyMessageTableImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, String path) {
         this.objectMapper = objectMapper;
         this.restTemplate = globalRestTemplate;
         this.URL_GET_LAST = path + "/get/last";
+        this.URL_GET = path + "/get?page={page}&pagesize={pagesize}";
         this.URL_ADD = path + "/add";
     }
 
@@ -34,5 +40,19 @@ public class NotifyMessageTableImpl implements NotifyMessageTable, RestTemplateS
         return getServerResponse(restTemplate
                 .postForEntity(URL_ADD + "?token=" + UniformSystemEditorKitSingleton.getInstance().getAuthentication().getToken().getToken(),
                         notifyMessage, String.class), null, objectMapper);
+    }
+
+    @Override
+    public ServerResponse<Page<NotifyMessageDto>> getAllNotifyMessages() {
+        return getAllNotifyMessages(0, 7);
+    }
+
+    @Override
+    public ServerResponse<Page<NotifyMessageDto>> getAllNotifyMessages(int page, int pageSize) {
+        Map<String, Object> urlVariables = new HashMap<>();
+        urlVariables.put("page", page);
+        urlVariables.put("pagesize", pageSize);
+
+        return getPageResponse(restTemplate, URL_GET, NotifyMessageDto.class, objectMapper, urlVariables);
     }
 }

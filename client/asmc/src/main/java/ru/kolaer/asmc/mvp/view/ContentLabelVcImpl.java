@@ -80,8 +80,10 @@ public class ContentLabelVcImpl implements ContentLabelVc {
 
     @Override
     public void setAccess(boolean access) {
-        scrollPane.setContextMenu(access ? this.contextMenu : null);
-        labels.forEach(label -> label.setAccess(access));
+        if(isViewInit()) {
+            scrollPane.setContextMenu(access ? this.contextMenu : null);
+            labels.forEach(label -> label.setAccess(access));
+        }
     }
 
     @Override
@@ -117,7 +119,7 @@ public class ContentLabelVcImpl implements ContentLabelVc {
 
         contentPane.setStyle("-fx-background-image: url(" +
                 this.getClass().getResource("/background-repiat.jpg").toString() + ");");
-        contentPane.setAlignment(Pos.TOP_CENTER);
+        contentPane.setAlignment(Pos.CENTER);
         contentPane.setPadding(new Insets(5,5,5,5));
         contentPane.setVgap(5);
         contentPane.setHgap(5);

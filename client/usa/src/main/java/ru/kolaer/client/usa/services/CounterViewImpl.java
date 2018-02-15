@@ -1,10 +1,11 @@
 package ru.kolaer.client.usa.services;
 
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -19,13 +20,13 @@ import java.util.function.Consumer;
  */
 public class CounterViewImpl implements StaticView, CounterView {
     private final CounterDto counter;
-    private BorderPane mainPane;
+    private Node mainPane;
     private Label title;
     private Label month;
     private Label days;
     private Label hours;
     private Label minute;
-    private Label secund;
+    private Label second;
     private Label foot;
     private Label description;
 
@@ -35,8 +36,18 @@ public class CounterViewImpl implements StaticView, CounterView {
     }
 
     @Override
-    public Parent getContent() {
-        return this.mainPane;
+    public Node getContent() {
+        return mainPane;
+    }
+
+    @Override
+    public void setContent(Node content) {
+        mainPane = content;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Счетчик";
     }
 
     @Override
@@ -60,7 +71,7 @@ public class CounterViewImpl implements StaticView, CounterView {
         this.days.setText(String.format("%02d",day));
         this.hours.setText(String.format("%02d",hours));
         this.minute.setText(String.format("%02d",min));
-        this.secund.setText(String.format("%02d",sec));
+        this.second.setText(String.format("%02d",sec));
     }
 
     @Override
@@ -70,8 +81,9 @@ public class CounterViewImpl implements StaticView, CounterView {
 
     @Override
     public void initView(Consumer<StaticView> viewVisit) {
-        this.mainPane = new BorderPane();
-        mainPane.setStyle("-fx-background-color: rgba(255,254,78,0.8); -fx-effect: dropshadow(gaussian , #868330, 4,0,0,1 ); -fx-padding: 3;");
+        BorderPane content = new BorderPane();
+        content.setMaxHeight(Region.USE_PREF_SIZE);
+        content.setStyle("-fx-background-color: rgba(255,254,78,0.8); -fx-effect: dropshadow(gaussian , #868330, 4,0,0,1 ); -fx-padding: 3;");
 
         final String style = "    -fx-background-color:\n" +
                 "                        #0f0d0f, #579bd6,\n" +
@@ -82,15 +94,15 @@ public class CounterViewImpl implements StaticView, CounterView {
                 "    -fx-font-family: \"Arial\";\n" +
                 "    -fx-text-fill: linear-gradient(white, #d0d0d0);\n" +
                 "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 15px;\n" +
+                "    -fx-font-size: 25px;\n" +
                 "    -fx-padding: 5 10 5 10;";
 
 
         this.title = new Label();
-        this.title.setFont(Font.font(null, FontWeight.BOLD, 15));
+        this.title.setFont(Font.font(null, FontWeight.BOLD, 25));
 
         this.description = new Label();
-        this.description.setFont(Font.font(null, FontWeight.BOLD, 13));
+        this.description.setFont(Font.font(null, FontWeight.BOLD, 23));
 
         this.month = new Label();
         this.month.setStyle(style);
@@ -104,10 +116,10 @@ public class CounterViewImpl implements StaticView, CounterView {
         this.minute = new Label();
         this.minute.setStyle(style);
 
-        this.secund = new Label();
-        this.secund.setStyle(style);
+        this.second = new Label();
+        this.second.setStyle(style);
 
-        final Font labelFont = Font.font(null, FontWeight.BOLD, 10);
+        final Font labelFont = Font.font(null, FontWeight.BOLD, 20);
 
         final Label labelMonth = new Label("Месяцы");
         labelMonth.setFont(labelFont);
@@ -131,7 +143,7 @@ public class CounterViewImpl implements StaticView, CounterView {
 
         final Label labelSec = new Label("Секунды");
         labelSec.setFont(labelFont);
-        final VBox secundPane = new VBox(this.secund, labelSec);
+        final VBox secundPane = new VBox(this.second, labelSec);
         secundPane.setAlignment(Pos.CENTER);
 
 
@@ -144,14 +156,16 @@ public class CounterViewImpl implements StaticView, CounterView {
         titleDisPane.setAlignment(Pos.CENTER);
 
         this.foot = new Label();
-        foot.setFont(Font.font(null, FontWeight.BOLD, 13));
+        foot.setFont(Font.font(null, FontWeight.BOLD, 23));
 
-        this.mainPane.setTop(titleDisPane);
-        this.mainPane.setCenter(flowPane);
-        this.mainPane.setBottom(this.foot);
+        content.setTop(titleDisPane);
+        content.setCenter(flowPane);
+        content.setBottom(this.foot);
         BorderPane.setAlignment(this.title, Pos.CENTER);
         BorderPane.setAlignment(this.foot, Pos.CENTER);
         BorderPane.setAlignment(flowPane, Pos.CENTER);
+
+        setContent(content);
 
         viewVisit.accept(this);
     }

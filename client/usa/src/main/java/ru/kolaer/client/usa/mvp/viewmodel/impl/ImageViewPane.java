@@ -1,4 +1,4 @@
-package ru.kolaer.asmc.mvp.view;
+package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

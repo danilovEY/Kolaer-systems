@@ -25,21 +25,35 @@ import java.util.function.Consumer;
  */
 public class BirthdayInfoPaneImpl implements BirthdayInfoPane {
     private final Map<String, VBox> labelsMap = new HashMap<>();
-    private VBox mainPane;
+    private Node mainPane;
+    private VBox content;
+
+    @Override
+    public String getTitle() {
+        return "Дни рождения";
+    }
 
     @Override
     public void initView(Consumer<StaticView> viewVisit) {
-        mainPane = new VBox();
-        mainPane.setFillWidth(true);
-        mainPane.setAlignment(Pos.CENTER);
-        mainPane.setPadding(new Insets(10));
+        content = new VBox();
+        content.setMaxHeight(Region.USE_PREF_SIZE);
+        content.setFillWidth(true);
+        content.setAlignment(Pos.CENTER);
+        content.setPadding(new Insets(10));
 
         BackgroundImage notifyBackground= new BackgroundImage(new Image(getClass().getResource("/static-background.png").toString()),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
-        mainPane.setBackground(new Background(notifyBackground));
+        content.setBackground(new Background(notifyBackground));
+
+        setContent(content);
 
         viewVisit.accept(this);
+    }
+
+    @Override
+    public void setContent(Node content) {
+        mainPane = content;
     }
 
     @Override
@@ -50,7 +64,7 @@ public class BirthdayInfoPaneImpl implements BirthdayInfoPane {
     @Override
     public void put(String title, List<UserModel> users) {
         if(labelsMap.containsKey(title)) {
-            mainPane.getChildren().remove(labelsMap.get(title));
+            content.getChildren().remove(labelsMap.get(title));
         }
 
         VBox content = new VBox();
@@ -78,7 +92,7 @@ public class BirthdayInfoPaneImpl implements BirthdayInfoPane {
 
         content.getChildren().addAll(buttons);
 
-        mainPane.getChildren().add(content);
+        this.content.getChildren().add(content);
 
         labelsMap.put(title, content);
     }

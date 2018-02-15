@@ -2,14 +2,14 @@ package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.servirces.NotifyMessageService;
 
@@ -38,13 +38,13 @@ public class NotifyMessageController {
     }
 
     @ApiOperation(
-            value = "Добавить оповещение"
+            value = "Получить последнее оповещение"
     )
-    @UrlDeclaration(description = "Добавить оповещение", requestMethod = RequestMethod.POST)
-    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void addNotifyMessage(@ApiParam(value = "Сообщение", required = true) @RequestBody NotifyMessageDto notifyMessage) {
-        notifyMessage.setId(1L);
-        this.notifyMessageService.save(notifyMessage);
+    @UrlDeclaration(description = "Получить оповещения", isAccessAll = true)
+    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<NotifyMessageDto> getNotifyMessages(@RequestParam(value = "page", defaultValue = "0") Integer number,
+                                                    @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+        return notifyMessageService.getAll(number, pageSize);
     }
 
 }

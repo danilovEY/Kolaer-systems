@@ -1,5 +1,6 @@
 package ru.kolaer.client.usa.plugins.info;
 
+import ru.kolaer.api.plugins.UniformSystemPlugin;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 
 /**
@@ -7,12 +8,12 @@ import ru.kolaer.client.usa.plugins.PluginBundle;
  */
 public class InfoPaneBundle extends PluginBundle {
 
-    public InfoPaneBundle() {
+    public InfoPaneBundle(UniformSystemPlugin uniformSystemPlugin) {
         this.setNamePlugin("Информационная панель");
         this.setSymbolicNamePlugin("ru.kolaer.client.info");
         this.setVersion("1.0");
         this.setInstall(true);
-        this.setUniformSystemPlugin(new InfoPanePlugin());
+        this.setUniformSystemPlugin(uniformSystemPlugin);
     }
 
     @Override

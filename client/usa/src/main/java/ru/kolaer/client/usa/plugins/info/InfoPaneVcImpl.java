@@ -1,21 +1,22 @@
 package ru.kolaer.client.usa.plugins.info;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
-import javafx.scene.layout.BorderPane;
-import javafx.util.Duration;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import lombok.extern.slf4j.Slf4j;
-import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
+import org.controlsfx.tools.Borders;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.system.ui.NotifyAction;
 import ru.kolaer.api.system.ui.StaticView;
 import ru.kolaer.api.tools.Tools;
-import ru.kolaer.client.usa.system.ui.NotificationPaneVc;
-import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
+import ru.kolaer.client.usa.mvp.viewmodel.impl.ImageViewPane;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -23,35 +24,56 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public class InfoPaneVcImpl implements InfoPaneVc {
-    private final NotificationPaneVc notificationPane = new NotificationPaneVc();
     private BorderPane mainPane;
-
+    private FlowPane staticViewPane;
 
     @Override
     public void initView(Consumer<InfoPaneVc> viewVisit) {
         mainPane = new BorderPane();
 
-        ScrollPane scrollPaneUserNotify = new ScrollPane();
-        scrollPaneUserNotify.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPaneUserNotify.setMinWidth(300);
-        scrollPaneUserNotify.setPrefWidth(300);
-        scrollPaneUserNotify.setMaxWidth(400);
-        scrollPaneUserNotify.setFitToHeight(true);
-        scrollPaneUserNotify.setFitToWidth(true);
+        staticViewPane = new FlowPane(Orientation.VERTICAL);
+        staticViewPane.setAlignment(Pos.TOP_CENTER);
+        staticViewPane.setHgap(20);
+        staticViewPane.setVgap(20);
+        staticViewPane.setPadding(new Insets(20));
 
-        SplitPane splitPane = new SplitPane();
-        splitPane.getItems().addAll(new BorderPane(), scrollPaneUserNotify);
-        splitPane.setDividerPositions(1);
+        BackgroundImage staticBackground = new BackgroundImage(new Image(getClass().getResource("/static-background.jpg").toString()),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
 
-        mainPane.setCenter(splitPane);
+        staticViewPane.setBackground(new Background(staticBackground));
 
-        notificationPane.initView(notifyPane -> scrollPaneUserNotify.setContent(notifyPane.getContent()));
+        ScrollPane scrollPaneStatic = new ScrollPane(staticViewPane);
+        scrollPaneStatic.setMinWidth(300);
+        scrollPaneStatic.setPrefWidth(300);
+        scrollPaneStatic.setFitToHeight(true);
+        scrollPaneStatic.setFitToWidth(true);
 
-        UISystemUSImpl uiSystemUS = (UISystemUSImpl) UniformSystemEditorKitSingleton.getInstance().getUISystemUS();
-        uiSystemUS.setStaticUS(this);
-        uiSystemUS.setNotification(this);
+        mainPane.setCenter(scrollPaneStatic);
+        mainPane.setTop(initBanner());
 
         viewVisit.accept(this);
+    }
+
+    private Node initBanner() {
+        BorderPane imagePane = new BorderPane();
+        imagePane.setStyle("-fx-background-color: #FFFFFF"); //,linear-gradient(#f8f8f8, #e7e7e7);
+        imagePane.setMaxHeight(300);
+        imagePane.setMaxWidth(Double.MAX_VALUE);
+
+        ImageView left = new ImageView(new Image(getClass().getResource("/LR.png").toString(), true));
+        left.setPreserveRatio(false);
+
+        ImageView right = new ImageView(new Image(getClass().getResource("/LR.png").toString(), true));
+        right.setPreserveRatio(false);
+
+        ImageViewPane center = new ImageViewPane(new ImageView(new Image(getClass().getResource("/Centr.png").toString(), true)));
+
+        imagePane.setRight(right);
+        imagePane.setLeft(left);
+        imagePane.setCenter(center);
+
+        return imagePane;
     }
 
     @Override
@@ -60,88 +82,35 @@ public class InfoPaneVcImpl implements InfoPaneVc {
     }
 
     @Override
-    public void showSimpleNotify(String title, String text) {
-        notificationPane.showSimpleNotify(title, text);
-    }
-
-    @Override
-    public void showErrorNotify(String title, String text) {
-        notificationPane.showErrorNotify(title, text);
-    }
-
-    @Override
-    public void showWarningNotify(String title, String text) {
-        notificationPane.showWarningNotify(title, text);
-    }
-
-    @Override
-    public void showInformationNotify(String title, String text) {
-        notificationPane.showInformationNotify(title, text);
-    }
-
-    @Override
-    public void showInformationNotify(String title, String text, Duration duration) {
-        notificationPane.showInformationNotify(title, text, duration);
-    }
-
-    @Override
-    public void showSimpleNotify(String title, String text, Duration duration) {
-        notificationPane.showSimpleNotify(title, text, duration);
-    }
-
-    @Override
-    public void showSimpleNotify(String title, String text, Duration duration, Pos pos, List<NotifyAction> actions) {
-        notificationPane.showSimpleNotify(title, text, duration, pos, actions);
-    }
-
-    @Override
-    public void showSimpleNotify(String title, String text, Duration duration, List<NotifyAction> actions) {
-        notificationPane.showSimpleNotify(title, text, duration, actions);
-    }
-
-    @Override
-    public void showErrorNotify(String title, String text, List<NotifyAction> actions) {
-        notificationPane.showErrorNotify(title, text, actions);
-    }
-
-    @Override
-    public void showWarningNotify(String title, String text, List<NotifyAction> actions) {
-        notificationPane.showWarningNotify(title, text, actions);
-    }
-
-    @Override
-    public void showInformationNotify(String title, String text, Duration duration, Pos pos, List<NotifyAction> actions) {
-        notificationPane.showInformationNotify(title, text, duration, pos, actions);
-    }
-
-    @Override
-    public void showInformationNotify(String title, String text, Duration duration, List<NotifyAction> actions) {
-        notificationPane.showInformationNotify(title, text, duration, actions);
-    }
-
-    @Override
-    public void showErrorNotify(ServerExceptionMessage exceptionMessage) {
-        notificationPane.showErrorNotify(exceptionMessage);
-    }
-
-    @Override
-    public void showErrorNotify(Exception ex) {
-        notificationPane.showErrorNotify(ex);
-    }
-
-    @Override
-    public void uncaughtException(Thread t, Throwable e) {
-        log.error("Ошибка в потоке: {}", t.getName(), e);
-        Tools.runOnWithOutThreadFX(() -> notificationPane.showErrorNotify("Ошибка!", e.getLocalizedMessage()));
-    }
-
-    @Override
     public void addStaticView(StaticView staticView) {
+        Tools.runOnWithOutThreadFX(() -> {
+            Node newContent = Borders.wrap(staticView.getContent())
+                    .lineBorder()
+                    .title("  " + staticView.getTitle())
+                    .thickness(5)
+                    .innerPadding(20)
+                    .radius(10)
+                    .color(Color.color(0.114, 0.161, 0.209))
+                    .buildAll();
 
+            staticView.setContent(newContent);
+
+            staticViewPane.getChildren().add(staticView.getContent());
+        });
     }
 
     @Override
     public void removeStaticView(StaticView staticView) {
+        Tools.runOnWithOutThreadFX(() -> {
+            staticViewPane.getChildren().remove(staticView.getContent());
+        });
+    }
 
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        UniformSystemEditorKitSingleton.getInstance()
+                .getUISystemUS()
+                .getNotification()
+                .showErrorNotify("Ошибка", e.getLocalizedMessage());
     }
 }

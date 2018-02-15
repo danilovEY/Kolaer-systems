@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by danilovey on 16.10.2017.
@@ -27,6 +28,14 @@ public interface RestTemplateService extends TokenToHeader {
     default <T> ServerResponse<Page<T>> getPageResponse(RestTemplate restTemplate, String url, Class<T> cls, ObjectMapper objectMapper) {
         try {
             return getPageResponse(restTemplate.exchange(url, HttpMethod.GET, getHeader(), String.class), cls, objectMapper);
+        } catch (RestClientException ex) {
+            return createServerExceptionMessage(url);
+        }
+    }
+
+    default <T> ServerResponse<Page<T>> getPageResponse(RestTemplate restTemplate, String url, Class<T> cls, ObjectMapper objectMapper, Map<String, Object> urlVariables) {
+        try {
+            return getPageResponse(restTemplate.exchange(url, HttpMethod.GET, getHeader(), String.class, urlVariables), cls, objectMapper);
         } catch (RestClientException ex) {
             return createServerExceptionMessage(url);
         }

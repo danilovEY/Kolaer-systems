@@ -14,17 +14,18 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.observers.AuthenticationObserver;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.system.impl.DefaultNotificationUS;
 import ru.kolaer.api.system.impl.DefaultStaticUS;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.plugins.PluginManager;
 import ru.kolaer.client.usa.plugins.info.InfoPaneBundle;
+import ru.kolaer.client.usa.plugins.info.InfoPanePlugin;
 import ru.kolaer.client.usa.services.HideShowMainStage;
 import ru.kolaer.client.usa.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.usa.system.network.NetworkUSRestTemplate;
 import ru.kolaer.client.usa.system.ui.MenuBarUSImpl;
+import ru.kolaer.client.usa.system.ui.NotificationPopupControlFx;
 import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
 import ru.kolaer.client.usa.tools.Resources;
 
@@ -62,19 +63,12 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
      * Главное окно приложения.
      */
     private static Stage stage;
-    private UISystemUSImpl uiSystemUS;
-//    private SplitPane splitPane;
 
     private void initialize() {
     	Thread.currentThread().setName("Главный поток");
 
         servicesManager = new ServiceManager();
         pluginManager = new PluginManager();
-
-//        splitPane = new SplitPane();
-//        splitPane.setDividerPositions(1);
-
-//        mainPane.setCenter(splitPane);
 
         //Инициализация вкладочного explorer'а.
         explorer = new VMTabExplorerOSGi();
@@ -94,6 +88,7 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
         .thenRunAsync(() -> {
             mainApplicationThreadPool.submit(this::autoLogin);
             mainApplicationThreadPool.submit(this::initTray);
+            mainApplicationThreadPool.submit(this::initSystemPlugins);
             mainApplicationThreadPool.submit(this::initSystemServices);
             mainApplicationThreadPool.submit(this::initShutdownApplication);
             mainApplicationThreadPool.submit(() -> installPlugins(initializedPluginManager, searchResult));
@@ -121,8 +116,6 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
 //                    break;
 //                }
 //            }
-
-            installPluginInThread(explorer, initPluginManager,  new InfoPaneBundle());
 
             pluginBundles.forEach(pluginBundle -> installPluginInThread(explorer, initPluginManager, pluginBundle));
             pluginBundles.clear();
@@ -172,12 +165,18 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
         }
     }
 
+    private void initSystemPlugins() {
+        Thread.currentThread().setName("Добавление системных плагинов");
+
+        InfoPanePlugin infoPanePlugin = new InfoPanePlugin(servicesManager);
+
+        installPlugin(explorer, pluginManager,  new InfoPaneBundle(infoPanePlugin));
+    }
+
     private void initSystemServices() {
-        Thread.currentThread().setName("Добавление системны служб");
+        Thread.currentThread().setName("Добавление системных служб");
 
 //        servicesManager.addService(new AutoUpdatePlugins(pluginManager, explorer, servicesManager), true);
-//        servicesManager.addService(new CounterService(), true);
-//        servicesManager.addService(new AutoCheckingNotifyMessage(), true);
         servicesManager.addService(new HideShowMainStage(stage), true);
     }
 
@@ -248,12 +247,12 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
         MenuBarUSImpl menuBarUS = new MenuBarUSImpl();
 
         NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
-        this.uiSystemUS = new UISystemUSImpl();
+        UISystemUSImpl uiSystemUS = new UISystemUSImpl();
         AuthenticationOnNetwork authentication = new AuthenticationOnNetwork(network.getGlobalRestTemplate(), objectMapper);
 
         uiSystemUS.setMenuBarUS(menuBarUS);
         uiSystemUS.setStaticUS(new DefaultStaticUS());
-        uiSystemUS.setNotification(new DefaultNotificationUS());
+        uiSystemUS.setNotification(new NotificationPopupControlFx());
         uiSystemUS.setMainStage(stage);
 
         authentication.registerObserver(menuBarUS);

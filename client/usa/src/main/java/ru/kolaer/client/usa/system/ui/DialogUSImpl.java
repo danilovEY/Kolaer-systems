@@ -34,6 +34,7 @@ public class DialogUSImpl implements DialogUS {
 	@Override
 	public Dialog<?> createSimpleDialog(final String title, final String text) {
 		 final Alert dlg = new Alert(AlertType.NONE);
+		 dlg.initOwner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
          dlg.setTitle(title);
          dlg.setContentText(text);
          return dlg;
@@ -42,6 +43,7 @@ public class DialogUSImpl implements DialogUS {
 	@Override
 	public Dialog<?> createErrorDialog(final String title, final String text) {
 		final Alert dlg = new Alert(AlertType.ERROR);
+		dlg.initOwner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
         dlg.setTitle(title);
         dlg.setContentText(text);
         return dlg;
@@ -50,6 +52,7 @@ public class DialogUSImpl implements DialogUS {
 	@Override
 	public Dialog<?> createWarningDialog(String title, String text) {
 		Alert dlg = new Alert(AlertType.WARNING);
+		dlg.initOwner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
 		dlg.setTitle(title);
 		dlg.setContentText(text);
 		return dlg;
@@ -57,15 +60,16 @@ public class DialogUSImpl implements DialogUS {
 
 	@Override
 	public Dialog<?> createLoadingDialog(final Service<?> service) {
-         final ProgressDialog dlg = new ProgressDialog(service);
-
+         ProgressDialog dlg = new ProgressDialog(service);
+         dlg.initOwner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
          service.start();
          return dlg;
 	}
 
 	@Override
 	public Dialog<?> createLoadingDialog(final Task<?> task) {
-         final ProgressDialog dlg = new ProgressDialog(task);
+         ProgressDialog dlg = new ProgressDialog(task);
+         dlg.initOwner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
          return dlg;
 	}
 
@@ -143,6 +147,7 @@ public class DialogUSImpl implements DialogUS {
 	@Override
 	public Dialog<?> createInfoDialog(String title, String text) {
 		final Alert dlg = new Alert(AlertType.INFORMATION);
+		dlg.initOwner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
         dlg.setTitle(title);
         dlg.setContentText(text);
         return dlg;
@@ -150,7 +155,8 @@ public class DialogUSImpl implements DialogUS {
 
 	@Override
 	public Dialog<?> createLoginDialog() {
-		final LoginDialog dlg = new LoginDialog(null, null);
+		LoginDialog dlg = new LoginDialog(null, null);
+		dlg.initOwner(UniformSystemEditorKitSingleton.getInstance().getUISystemUS().getMainStage());
 		return dlg;
 	}
 }

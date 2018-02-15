@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '1.6.3'
+version '1.6.4'
 
 
 def projectName = "ru.kolaer.birthday"
