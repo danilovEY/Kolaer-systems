@@ -53,12 +53,6 @@ public class AutoCheckingNotifyMessage implements Service, StaticView {
     public void run() {
         run = true;
 
-        if(!isViewInit()) {
-            Tools.runOnWithOutThreadFX(() -> initView(UniformSystemEditorKitSingleton.getInstance()
-                    .getUISystemUS()
-                    .getStatic()::addStaticView));
-        }
-
         while (run) {
             ServerResponse<Page<NotifyMessageDto>> allNotifyMessages = UniformSystemEditorKitSingleton.getInstance()
                     .getUSNetwork()
@@ -68,9 +62,23 @@ public class AutoCheckingNotifyMessage implements Service, StaticView {
                     .getAllNotifyMessages();
 
             if(!allNotifyMessages.isServerError()) {
-                Tools.runOnWithOutThreadFX(() -> allNotifyMessages.getResponse()
-                        .getData()
-                        .forEach(this::addNotifyMessage));
+                Tools.runOnWithOutThreadFX(() -> {
+                    if(!isViewInit()) {
+                        Tools.runOnWithOutThreadFX(() -> initView(BaseView::empty));
+
+                        allNotifyMessages.getResponse()
+                                .getData()
+                                .forEach(this::addNotifyMessage);
+
+                        UniformSystemEditorKitSingleton.getInstance()
+                                .getUISystemUS()
+                                .getStatic().addStaticView(this);
+                    } else {
+                        allNotifyMessages.getResponse()
+                                .getData()
+                                .forEach(this::addNotifyMessage);
+                    }
+                });
             } else {
                 UniformSystemEditorKitSingleton.getInstance()
                         .getUISystemUS()

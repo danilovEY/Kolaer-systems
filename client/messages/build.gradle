@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '0.1'
+version '0.1.1'
 
 def projectName = "ru.kolaer.messages"
 def projectNameWithVersion = projectName + "-" + version
