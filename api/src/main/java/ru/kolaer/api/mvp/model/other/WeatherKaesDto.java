@@ -18,6 +18,6 @@ public class WeatherKaesDto {
     private WeatherKaesDataDto data;
 
     @JsonProperty("dbupd")
-    @JsonFormat(pattern = "dd.MM.yyyy HH:mm")
+    @JsonFormat(locale = "ru", shape = JsonFormat.Shape.STRING, timezone = "Europe/Moscow", pattern = "dd.MM.yyyy HH:mm")
     private Date updateTime;
 }

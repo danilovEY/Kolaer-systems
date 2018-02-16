@@ -5,6 +5,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.network.NetworkUS;
@@ -94,13 +95,17 @@ public class BirthdayOnHoliday implements Service {
 		if(users.size() > 0) {
 			Tools.runOnWithOutThreadFX(() -> {
 				if(!birthdayInfoPane.isViewInit()) {
-					birthdayInfoPane.initView(UniformSystemEditorKitSingleton
+					birthdayInfoPane.initView(BaseView::empty);
+
+					birthdayInfoPane.put(newTitle, users);
+
+					UniformSystemEditorKitSingleton
 							.getInstance()
 							.getUISystemUS()
-							.getStatic()::addStaticView);
+							.getStatic().addStaticView(birthdayInfoPane);
+				} else {
+					birthdayInfoPane.put(newTitle, users);
 				}
-
-				birthdayInfoPane.put(newTitle, users);
 			});
 		}
 	}

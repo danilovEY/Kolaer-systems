@@ -23,7 +23,6 @@ import ru.kolaer.api.system.ui.StaticView;
 import ru.kolaer.api.tools.Tools;
 
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -117,12 +116,12 @@ public class WeatherService implements Service, StaticView {
         }
 
         if(weatherKaesDto != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(weatherKaesDto.getUpdateTime());
-            calendar.roll(Calendar.HOUR, -3);
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(weatherKaesDto.getUpdateTime());
+//            calendar.roll(Calendar.HOUR, -3);
 
             lastUpdateDate.setText("Время последнего обновления: " +
-                    Tools.dateTimeToString(calendar.getTime()));
+                    Tools.dateTimeToString(weatherKaesDto.getUpdateTime()));
 
             WeatherKaesDataDto data = weatherKaesDto.getData();
             if (data != null) {

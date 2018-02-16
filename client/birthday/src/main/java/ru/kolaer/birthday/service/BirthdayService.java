@@ -3,10 +3,12 @@ package ru.kolaer.birthday.service;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.api.tools.Tools;
+import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.BirthdayInfoPane;
 import ru.kolaer.birthday.mvp.view.BirthdayInfoPaneImpl;
@@ -52,20 +54,9 @@ public class BirthdayService implements Service {
 					if (employees.size() > 0) {
 						String title = "Сегодня день рождения у наших сотрудников!";
 
-						Tools.runOnWithOutThreadFX(() -> {
-							if(!birthdayInfoPane.isViewInit()) {
-								birthdayInfoPane.initView(UniformSystemEditorKitSingleton
-										.getInstance()
-										.getUISystemUS()
-										.getStatic()::addStaticView);
-							}
-
-							birthdayInfoPane.put(title, employees.stream()
-									.map(UserModelImpl::new)
-									.collect(Collectors.toList()));
-
-
-						});
+						loadEmployees(title, employees.stream()
+								.map(UserModelImpl::new)
+								.collect(Collectors.toList()));
 					}
 					lastUpdateEmployee = now;
 				}
@@ -89,19 +80,9 @@ public class BirthdayService implements Service {
 					if (employees.size() > 0) {
 						String title = "Сегодня день рождения у сотрудников филиалов!";
 
-						Tools.runOnWithOutThreadFX(() -> {
-							if(!birthdayInfoPane.isViewInit()) {
-								birthdayInfoPane.initView(UniformSystemEditorKitSingleton
-										.getInstance()
-										.getUISystemUS()
-										.getStatic()::addStaticView);
-							}
-
-							birthdayInfoPane.put(title, employees.stream()
-									.map(UserModelImpl::new)
-									.collect(Collectors.toList()));
-
-						});
+						loadEmployees(title, employees.stream()
+								.map(UserModelImpl::new)
+								.collect(Collectors.toList()));
 					}
 					lastUpdateOtherEmployee = now;
 				}
@@ -113,6 +94,23 @@ public class BirthdayService implements Service {
 				run = false;
 			}
 		}
+	}
+
+	private void loadEmployees(String title, List<UserModel> userModels) {
+		Tools.runOnWithOutThreadFX(() -> {
+			if(!birthdayInfoPane.isViewInit()) {
+				birthdayInfoPane.initView(BaseView::empty);
+
+				birthdayInfoPane.put(title, userModels);
+
+				UniformSystemEditorKitSingleton
+						.getInstance()
+						.getUISystemUS()
+						.getStatic().addStaticView(birthdayInfoPane);
+			} else {
+				birthdayInfoPane.put(title, userModels);
+			}
+		});
 	}
 
 	@Override

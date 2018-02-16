@@ -29,7 +29,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     @Override
     public List<EmployeeEntity> findEmployeeByInitials(@NonNull String initials) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " emp WHERE emp.initials LIKE :initials ORDER BY emp.initials", EmployeeEntity.class)
+                .createQuery("FROM " + getEntityName() + " emp WHERE emp.initials LIKE :initials AND emp.dismissalDate IS NULL ORDER BY emp.initials", EmployeeEntity.class)
                 .setParameter("initials", "%" + initials + "%")
                 .list();
     }
@@ -37,7 +37,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     @Override
     public List<EmployeeEntity> findByDepartmentById(@NonNull Long id) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " emp WHERE emp.department.id = :id ORDER BY emp.initials", EmployeeEntity.class)
+                .createQuery("FROM " + getEntityName() + " emp WHERE emp.department.id = :id AND emp.dismissalDate IS NULL ORDER BY emp.initials", EmployeeEntity.class)
                 .setParameter("id", id)
                 .list();
     }
@@ -45,7 +45,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     @Override
     public List<EmployeeEntity> findByDepartmentById(int page, int pageSize, @NonNull Long id) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " emp WHERE emp.department.id = :id ORDER BY emp.initials",
+                .createQuery("FROM " + getEntityName() + " emp WHERE emp.department.id = :id AND emp.dismissalDate IS NULL ORDER BY emp.initials",
                         EmployeeEntity.class)
                 .setParameter("id", id)
                 .setFirstResult((page - 1) * pageSize)
@@ -56,7 +56,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     @Override
     public Long findCountByDepartmentById(Long id) {
         return getSession().createQuery("SELECT COUNT(emp.personnelNumber) FROM " + getEntityName() +
-                " emp WHERE emp.department.id = :id", Long.class)
+                " emp WHERE emp.department.id = :id AND emp.dismissalDate IS NULL", Long.class)
                 .setParameter("id", id)
                 .uniqueResult();
     }
@@ -64,7 +64,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     @Override
     public EmployeeEntity findByPersonnelNumber(Long id) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " emp WHERE emp.personnelNumber = :id", EmployeeEntity.class)
+                .createQuery("FROM " + getEntityName() + " emp WHERE emp.personnelNumber = :id AND emp.dismissalDate IS NULL", EmployeeEntity.class)
                 .setParameter("id", id)
                 .uniqueResult();
     }
@@ -73,7 +73,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     public List<EmployeeEntity> getUserRangeBirthday(@NonNull final Date startDate, @NonNull final Date endDate) {
         return getSession()
                 .createQuery("FROM " + getEntityName() +
-                        " t where t.birthday BETWEEN :startDate AND :endDate " +
+                        " t where t.birthday BETWEEN :startDate AND :endDate AND t.dismissalDate IS NULL " +
                         "ORDER BY t.initials", EmployeeEntity.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
@@ -84,7 +84,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     public List<EmployeeEntity> getUsersByBirthday(@NonNull final Date date) {
         return getSession()
                 .createQuery("FROM " + getEntityName() +
-                        " t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) " +
+                        " t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) AND t.dismissalDate IS NULL " +
                         "ORDER BY t.initials", EmployeeEntity.class)
                 .setParameter("date", date)
                 .list();
@@ -94,7 +94,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     public List<EmployeeEntity> getUserBirthdayToday() {
         return getSession()
                 .createQuery("FROM " + getEntityName() +
-                        " t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) " +
+                        " t where day(t.birthday) = day(CURRENT_DATE) and month(t.birthday) = month(CURRENT_DATE) AND t.dismissalDate IS NULL " +
                         "ORDER BY t.initials", EmployeeEntity.class)
                 .list();
     }
@@ -103,7 +103,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     public int getCountUserBirthday(@NonNull final Date date) {
         return getSession()
                 .createQuery("SELECT count(t.personnelNumber) FROM " + getEntityName() +
-                        " t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", Long.class)
+                        " t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) AND t.dismissalDate IS NULL", Long.class)
                 .setParameter("date", date)
                 .uniqueResult()
                 .intValue();
@@ -113,7 +113,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     public List<EmployeeEntity> getUsersByInitials(@NonNull final String initials) {
         return getSession()
                 .createQuery("FROM " + getEntityName() +
-                " t where t.initials like :initials ORDER BY t.initials", EmployeeEntity.class)
+                " t where t.initials like :initials AND t.dismissalDate IS NULL ORDER BY t.initials", EmployeeEntity.class)
                 .setParameter("initials", "%" + initials + "%")
                 .list();
     }
