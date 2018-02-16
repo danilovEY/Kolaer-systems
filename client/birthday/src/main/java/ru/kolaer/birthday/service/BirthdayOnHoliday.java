@@ -5,7 +5,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
-import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.network.NetworkUS;
@@ -30,10 +29,6 @@ public class BirthdayOnHoliday implements Service {
 	@Override
 	public void run() {
 		NetworkUS usNetwork = UniformSystemEditorKitSingleton.getInstance().getUSNetwork();
-
-		if(birthdayInfoPane.getContent() == null) {
-			Tools.runOnWithOutThreadFX(() -> birthdayInfoPane.initView(BaseView::empty));
-		}
 
 		ServerResponse<List<Holiday>> holidays = usNetwork.getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
 		LocalDate now = LocalDate.now();
@@ -98,12 +93,14 @@ public class BirthdayOnHoliday implements Service {
 
 		if(users.size() > 0) {
 			Tools.runOnWithOutThreadFX(() -> {
-				birthdayInfoPane.put(newTitle, users);
+				if(!birthdayInfoPane.isViewInit()) {
+					birthdayInfoPane.initView(UniformSystemEditorKitSingleton
+							.getInstance()
+							.getUISystemUS()
+							.getStatic()::addStaticView);
+				}
 
-				UniformSystemEditorKitSingleton
-						.getInstance()
-						.getUISystemUS()
-						.getStatic().addStaticView(birthdayInfoPane);
+				birthdayInfoPane.put(newTitle, users);
 			});
 		}
 	}

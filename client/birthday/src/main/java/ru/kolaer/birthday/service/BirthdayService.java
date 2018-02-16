@@ -3,7 +3,6 @@ package ru.kolaer.birthday.service;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
-import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
@@ -26,10 +25,6 @@ public class BirthdayService implements Service {
 	@Override
 	public void run() {
 		run = true;
-
-		if(birthdayInfoPane.getContent() == null) {
-			Tools.runOnWithOutThreadFX(() -> birthdayInfoPane.initView(BaseView::empty));
-		}
 
 		while (run) {
 			LocalDate now = LocalDate.now();
@@ -58,14 +53,18 @@ public class BirthdayService implements Service {
 						String title = "Сегодня день рождения у наших сотрудников!";
 
 						Tools.runOnWithOutThreadFX(() -> {
+							if(!birthdayInfoPane.isViewInit()) {
+								birthdayInfoPane.initView(UniformSystemEditorKitSingleton
+										.getInstance()
+										.getUISystemUS()
+										.getStatic()::addStaticView);
+							}
+
 							birthdayInfoPane.put(title, employees.stream()
 									.map(UserModelImpl::new)
 									.collect(Collectors.toList()));
 
-							UniformSystemEditorKitSingleton
-									.getInstance()
-									.getUISystemUS()
-									.getStatic().addStaticView(birthdayInfoPane);
+
 						});
 					}
 					lastUpdateEmployee = now;
@@ -91,14 +90,17 @@ public class BirthdayService implements Service {
 						String title = "Сегодня день рождения у сотрудников филиалов!";
 
 						Tools.runOnWithOutThreadFX(() -> {
+							if(!birthdayInfoPane.isViewInit()) {
+								birthdayInfoPane.initView(UniformSystemEditorKitSingleton
+										.getInstance()
+										.getUISystemUS()
+										.getStatic()::addStaticView);
+							}
+
 							birthdayInfoPane.put(title, employees.stream()
 									.map(UserModelImpl::new)
 									.collect(Collectors.toList()));
 
-							UniformSystemEditorKitSingleton
-											.getInstance()
-											.getUISystemUS()
-											.getStatic().addStaticView(birthdayInfoPane);
 						});
 					}
 					lastUpdateOtherEmployee = now;
@@ -106,7 +108,7 @@ public class BirthdayService implements Service {
 			}
 
 			try{
-				TimeUnit.MINUTES.sleep(5);
+				TimeUnit.HOURS.sleep(1);
 			}catch(InterruptedException e){
 				run = false;
 			}
