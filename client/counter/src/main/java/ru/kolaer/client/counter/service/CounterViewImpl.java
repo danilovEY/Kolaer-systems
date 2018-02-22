@@ -93,15 +93,15 @@ public class CounterViewImpl implements StaticView, CounterView {
                 "    -fx-font-family: \"Arial\";\n" +
                 "    -fx-text-fill: linear-gradient(white, #d0d0d0);\n" +
                 "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 25px;\n" +
+                "    -fx-font-size: 15px;\n" +
                 "    -fx-padding: 5 10 5 10;";
 
 
         this.title = new Label();
-        this.title.setFont(Font.font(null, FontWeight.BOLD, 25));
+        this.title.setFont(Font.font(null, FontWeight.BOLD, 15));
 
         this.description = new Label();
-        this.description.setFont(Font.font(null, FontWeight.BOLD, 23));
+        this.description.setFont(Font.font(null, FontWeight.BOLD, 13));
 
         this.month = new Label();
         this.month.setStyle(style);
@@ -118,7 +118,7 @@ public class CounterViewImpl implements StaticView, CounterView {
         this.second = new Label();
         this.second.setStyle(style);
 
-        final Font labelFont = Font.font(null, FontWeight.BOLD, 20);
+        final Font labelFont = Font.font(null, FontWeight.BOLD, 10);
 
         final Label labelMonth = new Label("Месяцы");
         labelMonth.setFont(labelFont);
@@ -155,7 +155,7 @@ public class CounterViewImpl implements StaticView, CounterView {
         titleDisPane.setAlignment(Pos.CENTER);
 
         this.foot = new Label();
-        foot.setFont(Font.font(null, FontWeight.BOLD, 23));
+        foot.setFont(Font.font(null, FontWeight.BOLD, 13));
 
         content.setTop(titleDisPane);
         content.setCenter(flowPane);
