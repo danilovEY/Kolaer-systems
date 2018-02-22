@@ -54,7 +54,7 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
                 filteredData.setPredicate(s -> true);
             }
             else {
-                filteredData.setPredicate(s -> s.getChatRoomDto().getName().contains(filter));
+                filteredData.setPredicate(s -> s.getChatRoomDto().getName().toLowerCase().contains(filter.toLowerCase()));
             }
         });
 
