@@ -49,7 +49,7 @@ public class NotificationMessageVcImpl implements NotificationView {
             textLabel.setTextAlignment(TextAlignment.CENTER);
             textLabel.setWrapText(true);
             textLabel.setMinHeight(Region.USE_PREF_SIZE);
-            textLabel.setFont(Font.font(null, FontWeight.BOLD, 22));
+            textLabel.setFont(Font.font(null, FontWeight.BOLD, 17));
 
             content.getChildren().add(textLabel);
         }
@@ -60,7 +60,7 @@ public class NotificationMessageVcImpl implements NotificationView {
         Label timeLabel = new Label(dateToString);
         timeLabel.setTextAlignment(TextAlignment.CENTER);
         timeLabel.setWrapText(true);
-        timeLabel.setFont(Font.font(null, FontWeight.BOLD, 19));
+        timeLabel.setFont(Font.font(null, FontWeight.BOLD, 15));
 
         content.getChildren().add(timeLabel);
 
