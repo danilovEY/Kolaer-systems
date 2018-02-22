@@ -97,11 +97,13 @@ public class InfoPaneVcImpl implements InfoPaneVc {
                     .color(Color.color(0.114, 0.161, 0.209))
                     .buildAll();
 
+//            newContent.setStyle("-fx-max-height: " + newContent.getBoundsInParent().getHeight());
+
             staticView.setContent(newContent);
 
-            synchronized (synch) {
-                staticViewPane.getChildren().add(staticView.getContent());
+            staticViewPane.getChildren().add(staticView.getContent());
 
+//            synchronized (synch) {
                 ObservableList<Node> nodes = FXCollections.observableArrayList(staticViewPane.getChildren());
 
                 nodes.sort((o1, o2) ->
@@ -109,7 +111,7 @@ public class InfoPaneVcImpl implements InfoPaneVc {
                 );
 
                 staticViewPane.getChildren().setAll(nodes);
-            }
+//            }
         });
     }
 
