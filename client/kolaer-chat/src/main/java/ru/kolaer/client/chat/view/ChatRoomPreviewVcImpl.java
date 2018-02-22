@@ -2,8 +2,11 @@ package ru.kolaer.client.chat.view;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Parent;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +26,6 @@ import java.util.function.Consumer;
 public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
 
     private final SimpleStringProperty titleProperty = new SimpleStringProperty();
-    private final SimpleStringProperty statusProperty = new SimpleStringProperty();
     private final SimpleStringProperty lastMessageProperty = new SimpleStringProperty();
     private final SimpleStringProperty messageCountProperty = new SimpleStringProperty();
 
@@ -32,6 +34,12 @@ public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
 
     private BorderPane mainPane;
     private ChatRoomDto chatRoomDto;
+    private Label lastMessageLabel;
+    private Label messageCountLabel;
+
+    private ChatUserStatus chatUserStatus;
+    private Canvas statusIcon;
+    private Label titleLabel;
 
     public ChatRoomPreviewVcImpl(ChatRoomDto chatRoomDto) {
         this.chatRoomDto = chatRoomDto;
@@ -45,6 +53,11 @@ public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
                 lastMessageProperty.set("");
                 messageCountProperty.set("");
                 unreadCountMessage = 0;
+
+                if(isViewInit()) {
+                    mainPane.setBottom(null);
+                    mainPane.setRight(null);
+                }
             });
         }
     }
@@ -58,42 +71,56 @@ public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
         this.titleProperty.set(titleLabel);
     }
 
-    public void setStatus(ChatUserStatus statusLabel) {
-        this.statusProperty.set(Optional.ofNullable(statusLabel).map(this::convertStatus).orElse(""));
-    }
+    public void setStatus(ChatUserStatus chatUserStatus) {
+        Tools.runOnWithOutThreadFX(() -> {
+            this.chatUserStatus = chatUserStatus;
+            if (isViewInit()) {
+                GraphicsContext graphicsContext2D = statusIcon.getGraphicsContext2D();
+                if(chatUserStatus == ChatUserStatus.ONLINE) {
+                    graphicsContext2D.setFill(Color.LIGHTGREEN);
+                } else {
+                    graphicsContext2D.setFill(Color.GRAY);
+                }
 
-    private String convertStatus(ChatUserStatus chatUserStatus) {
-        switch (chatUserStatus) {
-            case OFFLINE: return "Не в сети";
-            case ONLINE: return "В сети";
-            default: return chatUserStatus.name();
-        }
+                graphicsContext2D.fillOval(0, 0, 15, 15);
+                graphicsContext2D.fill();
+                graphicsContext2D.save();
+            }
+        });
     }
 
     @Override
     public void initView(Consumer<ChatRoomPreviewVc> viewVisit) {
         mainPane = new BorderPane();
 
-        Label titleLabel = new Label();
+        titleLabel = new Label();
         titleLabel.setFont(Font.font(null, FontWeight.NORMAL, 15));
         titleLabel.textProperty().bind(titleProperty);
 
-        Label lastMessageLabel = new Label();
+        lastMessageLabel = new Label();
         lastMessageLabel.setFont(Font.font(null, FontWeight.NORMAL, 10));
         lastMessageLabel.textProperty().bind(lastMessageProperty);
 
-        Label statusLabel = new Label();
-        statusLabel.setFont(Font.font(null, FontWeight.NORMAL, 15));
-        statusLabel.textProperty().bind(statusProperty);
+        statusIcon = new Canvas(15, 15);
+        GraphicsContext graphicsContext2D = statusIcon.getGraphicsContext2D();
+        graphicsContext2D.setFill(Color.GRAY);
+        graphicsContext2D.fillOval(0, 0, 15, 15);
+        graphicsContext2D.save();
 
-        Label messageCountLabel = new Label();
+        messageCountLabel = new Label();
         messageCountLabel.setFont(Font.font(null, FontWeight.NORMAL, 10));
         messageCountLabel.textProperty().bind(messageCountProperty);
 
         mainPane.setCenter(titleLabel);
-        mainPane.setBottom(lastMessageLabel);
-        mainPane.setRight(messageCountLabel);
-        mainPane.setLeft(statusLabel);
+        mainPane.setLeft(statusIcon);
+
+        if(unreadCountMessage > 0) {
+            mainPane.setBottom(lastMessageLabel);
+            mainPane.setRight(messageCountLabel);
+        }
+
+        Optional.ofNullable(chatUserStatus)
+                .ifPresent(this::setStatus);
 
         viewVisit.accept(this);
     }
@@ -109,6 +136,11 @@ public class ChatRoomPreviewVcImpl implements ChatRoomPreviewVc {
             Tools.runOnWithOutThreadFX(() -> {
                 lastMessageProperty.set("Сообщение от " + Tools.dateTimeToString(chatMessageDto.getCreateMessage()));
                 messageCountProperty.setValue("[+" + ++unreadCountMessage + "]");
+
+                if(isViewInit()) {
+                    mainPane.setBottom(lastMessageLabel);
+                    mainPane.setRight(messageCountLabel);
+                }
             });
         }
     }

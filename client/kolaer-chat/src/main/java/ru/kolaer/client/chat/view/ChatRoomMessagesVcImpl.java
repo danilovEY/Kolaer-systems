@@ -1,11 +1,16 @@
 package ru.kolaer.client.chat.view;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
@@ -31,10 +36,12 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
 
     private final ObservableList<ChatMessageVc> messages = FXCollections.observableArrayList();
 
+    private final SimpleStringProperty titleLabelProperty = new SimpleStringProperty();
+
     private BorderPane mainPane;
     private ListView<ChatMessageVc> chatMessageDtoListView;
-    private TextArea textArea;
 
+    private TextArea textArea;
     private Consumer<ChatMessageDto> chatMessageConsumer;
     private boolean selected;
 
@@ -45,6 +52,17 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     @Override
     public void initView(Consumer<ChatRoomMessagesVc> viewVisit) {
         mainPane = new BorderPane();
+        mainPane.setStyle("-fx-background-color: white;");
+
+        Label titleLabel = new Label();
+        titleLabel.setWrapText(true);
+        titleLabel.setFont(Font.font(null, FontWeight.NORMAL, 20));
+        titleLabel.setAlignment(Pos.CENTER);
+        titleLabel.setTextAlignment(TextAlignment.CENTER);
+        titleLabel.textProperty().bind(titleLabelProperty);
+
+        mainPane.setTop(titleLabel);
+        BorderPane.setAlignment(titleLabel, Pos.CENTER);
 
         chatMessageDtoListView = new ListView<>(messages);
         chatMessageDtoListView.getStyleClass().add("chat-message-list-view");
@@ -253,7 +271,7 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
 
     @Override
     public void setTitle(String title) {
-
+        Tools.runOnWithOutThreadFX(() -> titleLabelProperty.set(title));
     }
 
     @Override

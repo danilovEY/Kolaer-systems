@@ -1,9 +1,13 @@
 package ru.kolaer.client.chat.view;
 
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
@@ -41,8 +45,21 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
 
         sorted();
 
-        roomListView = new ListView<>(chatRooms);
-        roomListView.setPlaceholder(new Label("Wait"));
+        FilteredList<ChatRoomVc> filteredData = new FilteredList<>(chatRooms, s -> true);
+
+        TextField filterInput = new TextField();
+        filterInput.textProperty().addListener(obs->{
+            String filter = filterInput.getText();
+            if(filter == null || filter.isEmpty()) {
+                filteredData.setPredicate(s -> true);
+            }
+            else {
+                filteredData.setPredicate(s -> s.getChatRoomDto().getName().contains(filter));
+            }
+        });
+
+        roomListView = new ListView<>(filteredData);
+        roomListView.setPlaceholder(new Label("Список пуст"));
         roomListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         roomListView.setCellFactory(param -> new ListCell<ChatRoomVc>(){
             @Override
@@ -121,6 +138,16 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
 
         roomListView.setContextMenu(new ContextMenu(createRoom, quitRoom));
 
+        Label search = new Label("Поиск");
+        search.setTextAlignment(TextAlignment.CENTER);
+        search.setAlignment(Pos.CENTER);
+        search.setPadding(new Insets(10));
+
+        BorderPane searchPane = new BorderPane(filterInput);
+        searchPane.setLeft(search);
+        searchPane.setPadding(new Insets(10));
+
+        mainPane.setTop(searchPane);
         mainPane.setCenter(roomListView);
 
         viewVisit.accept(this);
@@ -173,7 +200,8 @@ public class ChatRoomListVcImpl implements ChatRoomListVc {
     public void setOnSelectRoom(Consumer<ChatRoomVc> consumer) {
         roomListView.getSelectionModel()
                 .selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+                .addListener((observable, oldValue, newValue) ->
+                        Optional.ofNullable(newValue).ifPresent(consumer));
     }
 
     @Override
