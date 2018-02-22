@@ -9,10 +9,12 @@ import {AppRoutingModule} from './app.routing';
 import {AppComponent} from './app.component';
 import {HomeModule} from './commons/pages/home/home.module';
 import {AuthModule} from './auth/auth.module';
+import { ModalComponent } from './commons/components/modal/modal.component';
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
+		ModalComponent
 	],
 	imports: [
 		BrowserModule,

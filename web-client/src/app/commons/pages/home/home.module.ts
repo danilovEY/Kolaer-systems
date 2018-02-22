@@ -22,7 +22,6 @@ import {TestComponent} from '../../../applications/test/test.component';
 	],
 	imports: [
 		CommonModule,
-		RouterModule,
 
 		HomeRoutingModule,
 		RouterModule
