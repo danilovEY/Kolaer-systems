@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ROUTES} from '../sidebar/sidebar-routes.config';
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {Location} from '@angular/common';
 
 @Component({
 	selector: 'app-navbar',

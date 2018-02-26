@@ -1,32 +1,24 @@
-import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
-import {RouterModule} from '@angular/router';
 
 import {AppRoutingModule} from './app.routing';
 
 import {AppComponent} from './app.component';
 import {HomeModule} from './commons/pages/home/home.module';
-import {AuthModule} from './auth/auth.module';
-import { ModalComponent } from './commons/components/modal/modal.component';
+import {NotFoundComponent} from './commons/pages/not-found/not-found.component';
+import {LOG_LOGGER_PROVIDERS} from 'angular2-logger/core';
 
 @NgModule({
 	declarations: [
 		AppComponent,
-		ModalComponent
+		NotFoundComponent
 	],
 	imports: [
-		BrowserModule,
-		FormsModule,
-		HttpClientModule,
-		RouterModule,
-
-		AuthModule,
 		HomeModule,
 		AppRoutingModule
 	],
-	providers: [],
+	providers: [
+		LOG_LOGGER_PROVIDERS
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule {

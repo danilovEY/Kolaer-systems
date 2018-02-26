@@ -13,4 +13,7 @@ export class TestComponent implements OnInit {
 	ngOnInit() {
 	}
 
+	test() {
+		console.log("TEST1");
+	}
 }

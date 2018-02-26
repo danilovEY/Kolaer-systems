@@ -16,20 +16,22 @@ export class HomeComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		// $.getScript('../../../assets/js/material-dashboard.js');
 		$.getScript('../../../assets/js/initMenu.js');
 	}
 
-	isMaps(path) {
-		var titlee = this.location.prepareExternalUrl(this.location.path());
-		titlee = titlee.slice(1);
+	// isMaps(path) {
+	// 	var titlee = this.location.prepareExternalUrl(this.location.path());
+	// 	titlee = titlee.slice(1);
+	//
+	// 	if (path == titlee) {
+	// 		return false;
+	// 	}
+	// 	else {
+	// 		return true;
+	// 	}
+	// }
 
-		if (path == titlee) {
-			return false;
-		}
-		else {
-			return true;
-		}
+	test() {
+		console.log("HOME!");
 	}
-
 }

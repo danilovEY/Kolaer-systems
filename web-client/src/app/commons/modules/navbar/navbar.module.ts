@@ -1,14 +1,17 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NavbarComponent} from './navbar.component';
-import {ModalModule} from '../modal/modal.module';
+import {ModalComponent} from '../../components/modal/modal.component';
 
 @NgModule({
 	imports: [
-		CommonModule,
-		ModalModule
+		CommonModule
 	],
 	declarations: [
+		NavbarComponent,
+		ModalComponent
+	],
+	exports: [
 		NavbarComponent
 	]
 })
