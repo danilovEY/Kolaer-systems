@@ -101,8 +101,8 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
         Thread.currentThread().setName("Чтение и установка плагинов");
 
         try {
-            PluginManager initPluginManager = pluginManager.get(30, TimeUnit.SECONDS);
-            List<PluginBundle> pluginBundles = plugins.get(30, TimeUnit.SECONDS);
+            PluginManager initPluginManager = pluginManager.get(3, TimeUnit.MINUTES);
+            List<PluginBundle> pluginBundles = plugins.get(3, TimeUnit.MINUTES);
 
 //            Iterator<PluginBundle> iterPlugins = pluginBundles.iterator();
 //
