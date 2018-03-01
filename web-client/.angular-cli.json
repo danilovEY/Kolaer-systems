@@ -19,19 +19,15 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "../node_modules/bootstrap/dist/css/bootstrap.css",
-        "../node_modules/font-awesome/css/font-awesome.css",
+        "../node_modules/font-awesome/scss/font-awesome.scss",
         "../node_modules/material-design-icons/iconfont/material-icons.css",
-        "assets/css/material-dashboard.css",
-        "styles.css"
+        "../node_modules/angular-bootstrap-md/scss/bootstrap/bootstrap.scss",
+        "../node_modules/angular-bootstrap-md/scss/mdb-free.scss",
+        "styles.scss"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.js",
-        "../node_modules/bootstrap/dist/js/bootstrap.js",
-        "../node_modules/arrive/minified/arrive.min.js",
-        "../node_modules/material-design-lite/material.js",
-        "../node_modules/chartist/dist/chartist.js",
-        "../node_modules/bootstrap-notify/bootstrap-notify.js"
+        "../node_modules/chart.js/dist/Chart.js",
+        "../node_modules/hammerjs/hammer.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
@@ -62,7 +58,8 @@
     }
   },
   "defaults": {
-    "styleExt": "css",
-    "component": {}
+    "styleExt": "scss",
+    "component": {
+    }
   }
 }

@@ -1,15 +1,17 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {NavbarComponent} from './navbar.component';
-import {ModalComponent} from '../../components/modal/modal.component';
+import {AppCommonModule} from '../common/app-common.module';
+import {MdbNavbarModule} from '../mdb/navbars/navbar.module';
+import {MdbBsDropdownModule} from '../mdb/dropdown/dropdown.module';
 
 @NgModule({
 	imports: [
-		CommonModule
+		AppCommonModule,
+		MdbNavbarModule,
+		MdbBsDropdownModule.forRoot()
 	],
 	declarations: [
-		NavbarComponent,
-		ModalComponent
+		NavbarComponent
 	],
 	exports: [
 		NavbarComponent

@@ -19,7 +19,7 @@
     ],
     "import-spacing": true,
     "indent": [
-      true,
+      false,
       "tabs",
       2
     ],
@@ -52,7 +52,7 @@
     "no-empty-interface": true,
     "no-eval": true,
     "no-inferrable-types": [
-      true,
+      false,
       "ignore-params"
     ],
     "no-misused-new": true,
@@ -109,13 +109,13 @@
       "check-type"
     ],
     "directive-selector": [
-      true,
+      false,
       "attribute",
       "app",
       "camelCase"
     ],
     "component-selector": [
-      true,
+      false,
       "element",
       "app",
       "kebab-case"

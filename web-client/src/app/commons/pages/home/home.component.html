@@ -1,16 +1,31 @@
 <div class="wrapper">
-    <div class="sidebar" data-color='blue' data-image="" data-background-color="blue">
-        <app-sidebar></app-sidebar>
-        <div class="sidebar-background" style="background-image: url(../assets/img/sidebar-4.jpg)"></div>
-    </div>
+    <!--<div class="sidebar" data-color='blue' data-image="" data-background-color="blue">-->
+        <!--<app-sidebar></app-sidebar>-->
+        <!--<div class="sidebar-background" style="background-image: url(../assets/img/sidebar-4.jpg)"></div>-->
+    <!--</div>-->
 
-    <div class="main-panel">
-        <app-navbar></app-navbar>
+    <app-navbar></app-navbar>
 
-        <div class="main-content">
-            <router-outlet></router-outlet>
+    <div class="container">
+        <!--<router-outlet></router-outlet>-->
+        <!--Card-->
+        <div class="card">
+
+            <!--Card image-->
+            <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg" alt="Card image cap">
+
+            <!--Card content-->
+            <div class="card-body">
+                <!--Title-->
+                <h4 class="card-title">Card title</h4>
+                <!--Text-->
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Button</a>
+            </div>
+
         </div>
-
-        <app-footer></app-footer>
+        <!--/.Card-->
     </div>
+
+    <app-footer></app-footer>
 </div>
