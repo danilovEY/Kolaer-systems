@@ -19,6 +19,8 @@ import ru.kolaer.api.system.ui.StaticView;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.ImageViewPane;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -30,6 +32,8 @@ public class InfoPaneVcImpl implements InfoPaneVc {
 
     private BorderPane mainPane;
     private FlowPane staticViewPane;
+
+    private List<StaticView> chacheStaticView = new ArrayList<>(5);
 
     @Override
     public void initView(Consumer<InfoPaneVc> viewVisit) {
@@ -55,6 +59,11 @@ public class InfoPaneVcImpl implements InfoPaneVc {
 
         mainPane.setCenter(scrollPaneStatic);
         mainPane.setTop(initBanner());
+
+        if(!chacheStaticView.isEmpty()) {
+            chacheStaticView.forEach(this::addStaticView);
+            chacheStaticView.clear();
+        }
 
         viewVisit.accept(this);
     }
@@ -87,21 +96,24 @@ public class InfoPaneVcImpl implements InfoPaneVc {
 
     @Override
     public void addStaticView(StaticView staticView) {
-        Tools.runOnWithOutThreadFX(() -> {
-            Node newContent = Borders.wrap(staticView.getContent())
-                    .lineBorder()
-                    .title("  " + staticView.getTitle())
-                    .thickness(5)
-                    .innerPadding(20)
-                    .radius(10)
-                    .color(Color.color(0.114, 0.161, 0.209))
-                    .buildAll();
+        if(!isViewInit()) {
+            chacheStaticView.add(staticView);
+        } else {
+            Tools.runOnWithOutThreadFX(() -> {
+                Node newContent = Borders.wrap(staticView.getContent())
+                        .lineBorder()
+                        .title("  " + staticView.getTitle())
+                        .thickness(5)
+                        .innerPadding(20)
+                        .radius(10)
+                        .color(Color.color(0.114, 0.161, 0.209))
+                        .buildAll();
 
 //            newContent.setStyle("-fx-max-height: " + newContent.getBoundsInParent().getHeight());
 
-            staticView.setContent(newContent);
+                staticView.setContent(newContent);
 
-            staticViewPane.getChildren().add(staticView.getContent());
+                staticViewPane.getChildren().add(staticView.getContent());
 
 //            synchronized (synch) {
                 ObservableList<Node> nodes = FXCollections.observableArrayList(staticViewPane.getChildren());
@@ -112,14 +124,19 @@ public class InfoPaneVcImpl implements InfoPaneVc {
 
                 staticViewPane.getChildren().setAll(nodes);
 //            }
-        });
+            });
+        }
     }
 
     @Override
     public void removeStaticView(StaticView staticView) {
-        Tools.runOnWithOutThreadFX(() -> {
-            staticViewPane.getChildren().remove(staticView.getContent());
-        });
+        if(!isViewInit()) {
+            chacheStaticView.remove(staticView);
+        } else {
+            Tools.runOnWithOutThreadFX(() -> {
+                staticViewPane.getChildren().remove(staticView.getContent());
+            });
+        }
     }
 
     @Override

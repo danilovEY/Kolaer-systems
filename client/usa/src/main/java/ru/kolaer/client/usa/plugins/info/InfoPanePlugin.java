@@ -16,11 +16,11 @@ public class InfoPanePlugin implements UniformSystemPlugin {
 
     @Override
     public void initView(Consumer<UniformSystemPlugin> viewVisit) {
-        infoPaneVc.initView(BaseView::empty);
-
         UISystemUSImpl uiSystemUS = (UISystemUSImpl) UniformSystemEditorKitSingleton.getInstance().getUISystemUS();
         uiSystemUS.setStaticUS(infoPaneVc);
         Thread.setDefaultUncaughtExceptionHandler(infoPaneVc);
+
+        infoPaneVc.initView(BaseView::empty);
 
         viewVisit.accept(this);
     }

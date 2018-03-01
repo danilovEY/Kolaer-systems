@@ -88,7 +88,7 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
                 .thenRunAsync(this::autoLogin, mainApplicationThreadPool)
                 .thenRunAsync(this::initTray, mainApplicationThreadPool)
                 .thenRunAsync(this::initShutdownApplication, mainApplicationThreadPool)
-                .thenRun(this::initSystemPlugins)
+                .thenRunAsync(this::initSystemPlugins, mainApplicationThreadPool)
                 .thenRun(this::initSystemServices)
                 .thenRun(() -> installPlugins(initializedPluginManager, searchResult))
                 .exceptionally(throwable -> {
