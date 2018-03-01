@@ -64,4 +64,8 @@
                                  referencedTableName="chat_room"
                                  referencedColumnNames="id"/>
     </changeSet>
+
+    <changeSet id="14-6" author="Danilov">
+        <modifyDataType tableName="chat_message" columnName="message" newDataType="VARCHAR(4096)"/>
+    </changeSet>
 </databaseChangeLog>

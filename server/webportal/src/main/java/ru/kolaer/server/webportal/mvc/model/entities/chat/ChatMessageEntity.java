@@ -21,7 +21,7 @@ public class ChatMessageEntity implements BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "message", nullable = false)
+    @Column(name = "message", nullable = false, length = 4096)
     private String message;
 
     @Column(name = "room_id")

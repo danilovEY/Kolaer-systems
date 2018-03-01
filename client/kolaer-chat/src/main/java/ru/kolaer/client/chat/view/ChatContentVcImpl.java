@@ -34,7 +34,7 @@ public class ChatContentVcImpl implements ChatContentVc {
     private final ChatInfoMessageActionHandler chatInfoMessageActionHandler;
     private final NotificationMessage notificationMessage;
 
-    private final ObservableList<ChatRoomVc> chatRooms = FXCollections.observableArrayList();
+    private final ObservableList<ChatRoomVc> chatRooms = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
 
     private ChatRoomVc lastSelected;
 

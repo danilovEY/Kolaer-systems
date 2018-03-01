@@ -202,9 +202,23 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
     }
 
     private void sendMessage() {
-        if(!textArea.getText().trim().isEmpty()) {
-            if(chatMessageConsumer != null) {
-                chatMessageConsumer.accept(createMessage(textArea.getText()));
+        if(!textArea.getText().trim().isEmpty() && chatMessageConsumer != null) {
+            String message = textArea.getText();
+
+            if(message.length() > 4096) {
+                String[] splitMessage = message.split("(?<=\\G.{4090})");
+                for (int i = 0; i < splitMessage.length; i++) {
+                    String messagePack = splitMessage[i];
+
+                    if(i < splitMessage.length - 1) {
+                        messagePack += "...";
+                    }
+
+                    chatMessageConsumer.accept(createMessage(messagePack));
+
+                }
+            } else {
+                chatMessageConsumer.accept(createMessage(message));
             }
 
             textArea.setText("");
