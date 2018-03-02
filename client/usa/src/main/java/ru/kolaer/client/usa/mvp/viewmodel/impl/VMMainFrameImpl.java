@@ -31,7 +31,6 @@ import ru.kolaer.client.usa.tools.Resources;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
@@ -78,9 +77,6 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
 
         ExecutorService mainApplicationThreadPool = Executors.newFixedThreadPool(5);
 
-        Future<List<PluginBundle>> searchResult = mainApplicationThreadPool
-                .submit(pluginManager.getSearchPlugins()::search);
-
         Future<PluginManager> initializedPluginManager = mainApplicationThreadPool.submit(this::initPluginManager);
 
         CompletableFuture
@@ -88,21 +84,21 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
                 .thenRunAsync(this::autoLogin, mainApplicationThreadPool)
                 .thenRunAsync(this::initTray, mainApplicationThreadPool)
                 .thenRunAsync(this::initShutdownApplication, mainApplicationThreadPool)
-                .thenRunAsync(this::initSystemPlugins, mainApplicationThreadPool)
-                .thenRun(this::initSystemServices)
-                .thenRun(() -> installPlugins(initializedPluginManager, searchResult))
+                .thenRunAsync(this::initSystemServices, mainApplicationThreadPool)
+                .thenRunAsync(() -> installPlugins(initializedPluginManager), mainApplicationThreadPool)
                 .exceptionally(throwable -> {
                     log.error("Ошибка", throwable);
                     return null;
                 });
     }
 
-    private void installPlugins(Future<PluginManager> pluginManager, Future<List<PluginBundle>> plugins) {
+    private void installPlugins(Future<PluginManager> pluginManager) {
         Thread.currentThread().setName("Чтение и установка плагинов");
 
         try {
             PluginManager initPluginManager = pluginManager.get(3, TimeUnit.MINUTES);
-            List<PluginBundle> pluginBundles = plugins.get(3, TimeUnit.MINUTES);
+
+            this.initSystemPlugins();
 
 //            Iterator<PluginBundle> iterPlugins = pluginBundles.iterator();
 //
@@ -115,24 +111,24 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
 //                }
 //            }
 
-            pluginBundles.forEach(pluginBundle -> installPluginInThread(explorer, initPluginManager, pluginBundle));
-            pluginBundles.clear();
+            ExecutorService executorService = Executors.newCachedThreadPool();
+
+            initPluginManager
+                    .getSearchPlugins()
+                    .search(pluginBundle -> installPluginInThread(executorService, explorer, initPluginManager, pluginBundle));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             log.error("Ошибка при инициализации и чтении плагинов!", e);
             System.exit(-9);
         }
     }
 
-    private void installPluginInThread(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle pluginBundle) {
-        ExecutorService threadInstallPlugin = Executors.newSingleThreadExecutor();
-        CompletableFuture.runAsync(() -> {
-            installPlugin(explorer, pluginManager, pluginBundle);
-
-            threadInstallPlugin.shutdown();
-        }, threadInstallPlugin).exceptionally(ex -> {
-            log.error("Ошибка при установки прагина: {}", pluginBundle.getNamePlugin(), ex);
-            return null;
-        });
+    private void installPluginInThread(ExecutorService executorService, VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle pluginBundle) {
+        CompletableFuture
+                .runAsync(() -> installPlugin(explorer, pluginManager, pluginBundle), executorService)
+                .exceptionally(ex -> {
+                    log.error("Ошибка при установки прагина: {}", pluginBundle.getNamePlugin(), ex);
+                    return null;
+                });
     }
 
     private void installPlugin(VMTabExplorerOSGi explorer, PluginManager pluginManager, PluginBundle pluginBundle) {
@@ -149,6 +145,12 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
             if (pluginServices != null) {
                 pluginServices.forEach(servicesManager::addService);
             }
+        } else {
+            UniformSystemEditorKitSingleton.getInstance()
+                    .getUISystemUS()
+                    .getNotification()
+                    .showErrorNotify("Не удалось установить плагин: " + pluginBundle.getNamePlugin(),
+                            "Нужно удалить папку 'KolaerCahe'");
         }
     }
 
@@ -166,7 +168,7 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
     private void initSystemPlugins() {
         Thread.currentThread().setName("Добавление системных плагинов");
 
-        installPlugin(explorer, pluginManager,  new InfoPaneBundle(new InfoPanePlugin()));
+        installPluginInThread(Executors.newSingleThreadExecutor(), explorer, pluginManager,  new InfoPaneBundle(new InfoPanePlugin()));
     }
 
     private void initSystemServices() {

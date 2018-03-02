@@ -3,7 +3,9 @@ package ru.kolaer.client.usa.plugins;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * Created by Danilov on 10.04.2016.
@@ -39,20 +41,19 @@ public class SearchPlugins {
     public List<PluginBundle> search() {
         List<PluginBundle> plugins = new ArrayList<>();
 
-        this.pathsDirPlugins.forEach(path -> {
-            File pathDir = new File(path);
-            if(pathDir.isDirectory()) {
-                File[] filesToDit = Optional
-                        .ofNullable(pathDir.listFiles(filter -> filter.getName().endsWith(".jar")))
-                        .orElse(new File[0]);
-
-                for(File fileOnDir : filesToDit) {
-                    Optional.ofNullable(PluginBundleNotReadJar.getInstance(fileOnDir))
-                            .ifPresent(plugins::add);
-                }
-            }
-        });
+        search(plugins::add);
 
         return plugins;
+    }
+
+    public void search(Consumer<PluginBundle> consumer) {
+        pathsDirPlugins.parallelStream()
+                .map(File::new)
+                .filter(File::isDirectory)
+                .map(pathDir -> pathDir.listFiles(filter -> filter.getName().endsWith(".jar")))
+                .flatMap(Stream::of)
+                .map(PluginBundleNotReadJar::getInstance)
+                .filter(Objects::nonNull)
+                .forEach(consumer);
     }
 }
