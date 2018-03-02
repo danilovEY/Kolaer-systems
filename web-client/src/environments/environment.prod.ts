@@ -6,3 +6,5 @@ export const environment = {
 		level: Level.WARN
 	}
 };
+
+export const publicServerUrl: string = 'http://aerdc02:8080/kolaer-web/rest';

@@ -9,5 +9,6 @@ export const environment = {
 	production: false,
 	logger: {
 		level: Level.LOG
-	}
+	},
+	publicServerUrl: 'http://localhost:8080/rest'
 };

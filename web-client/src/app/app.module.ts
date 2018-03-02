@@ -14,7 +14,7 @@ import {LOG_LOGGER_PROVIDERS} from 'angular2-logger/core';
 	],
 	imports: [
 		HomeModule,
-		AppRoutingModule,
+		AppRoutingModule
 	],
 	providers: [
 		LOG_LOGGER_PROVIDERS

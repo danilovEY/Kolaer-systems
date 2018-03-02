@@ -10,6 +10,8 @@
     "../node_modules/angular2-logger/app/core/level.ts",
     "../node_modules/angular2-logger/app/core/logger.ts",
     "../node_modules/angular2-logger/app/core/providers.ts",
+    "../node_modules/angular2-logger/app/core/providers.ts",
+    "../node_modules/angular-bootstrap-md/index.ts",
     "**/*.ts"
   ],
   "exclude": [

@@ -1,9 +1,12 @@
-
 <!--Navbar-->
-<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo">
+<mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navbar-dark blue scrolling-navbar ie-nav" [containerInside]="false">
 
     <!-- Navbar brand -->
-    <logo><a class="navbar-brand" href="#">Navbar</a></logo>
+    <logo>
+        <a class="navbar-brand" href="#">
+            <img src="assets/img/aerIcon.png" height="30" alt="">
+        </a>
+    </logo>
 
     <!-- Collapsible content -->
     <links>
@@ -36,12 +39,70 @@
         </ul>
         <!-- Links -->
 
-        <!-- Search form -->
-        <form class="form-inline  waves-light" mdbRippleRadius>
-            <input class="form-control mr-sm-2" type="text" placeholder="Search">
-        </form>
+        <ul class="navbar-nav ml-auto nav-flex-icons">
+            <li class="nav-item avatar dropdown" dropdown>
+                <a dropdownToggle mdbRippleRadius class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" aria-haspopup="true" aria-expanded="true">
+                    <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" class="rounded-circle z-depth-0" alt="avatar image" style="height: 35px;">
+                </a>
+                <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
+                    <a class="dropdown-item waves-effect waves-light" (click)="form.show()" mdbRippleRadius>Авторизация</a>
+                </div>
+            </li>
+        </ul>
     </links>
     <!-- Collapsible content -->
+
+    <!--<button type="button" class="btn btn-primary waves-light"  mdbRippleRadius>Login form</button>-->
+    <!--Modal: Login Form-->
+    <div mdbModal #form="mdb-modal" class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog cascading-modal" role="document">
+            <!--Content-->
+            <div class="modal-content">
+
+                <!--Header-->
+                <div class="modal-header light-blue darken-3 white-text">
+                    <h4 class="title"><i class="fa fa-user"></i> Log in</h4>
+                    <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="form.hide()">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <!--Body-->
+                <form (ngSubmit)="submitLogin()" [formGroup]="loginForm">
+                    <div class="modal-body">
+                        <div class="md-form form-sm">
+                            <i class="fa fa-envelope prefix"></i>
+                            <input mdbActive type="text" id="form30" class="form-control" formControlName="username">
+                            <label for="form30">Your email</label>
+                        </div>
+
+                        <div class="md-form form-sm">
+                            <i class="fa fa-lock prefix"></i>
+                            <input mdbActive type="password" id="form31" class="form-control" formControlName="password">
+                            <label for="form31">Your password</label>
+                        </div>
+
+                        <div class="text-center mt-2">
+                            <button type="submit" class="btn btn-info waves-light" mdbRippleRadius [disabled]="loginForm.invalid">
+                                Log in
+                                <i class="fa fa-sign-in ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <!--Footer-->
+                <div class="modal-footer">
+                    <div class="options text-center text-md-right mt-1">
+                        <p>Not a member? <a href="#">Sign Up</a></p>
+                        <p>Forgot <a href="#">Password?</a></p>
+                    </div>
+                    <button type="button" class="btn btn-outline-info ml-auto" data-dismiss="modal" (click)="form.hide()" mdbRippleRadius>Close</button>
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+    <!--Modal: Login Form-->
+
 
 </mdb-navbar>
 <!--/.Navbar-->
