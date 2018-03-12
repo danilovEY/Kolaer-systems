@@ -4,7 +4,7 @@ import {AppCommonModule} from '../../app-common.module';
 import {AuthModule} from '../auth/auth.module';
 import {ReactiveFormsModule} from '@angular/forms';
 
-import { NavbarModule as MdbNavbarModule, BsDropdownModule, ModalModule, ActiveModule } from 'angular-bootstrap-md'
+import { NavbarModule as MdbNavbarModule, BsDropdownModule, ModalModule, ActiveModule, RippleModule } from 'angular-bootstrap-md'
 
 @NgModule({
 	imports: [
@@ -14,6 +14,7 @@ import { NavbarModule as MdbNavbarModule, BsDropdownModule, ModalModule, ActiveM
 		BsDropdownModule.forRoot(),
 		ModalModule.forRoot(),
 		ActiveModule.forRoot(),
+		RippleModule,
 		AuthModule
 	],
 	declarations: [

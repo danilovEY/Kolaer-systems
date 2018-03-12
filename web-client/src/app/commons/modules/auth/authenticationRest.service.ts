@@ -10,7 +10,7 @@ import {RestHttpClient} from '../../services/restHttpClient';
 import {mergeMap, tap} from 'rxjs/operators';
 
 @Injectable()
-export class AuthenticationServiceRest implements OnInit, AuthenticationService {
+export class AuthenticationRestService implements OnInit, AuthenticationService {
 	private authUrl: string = environment.publicServerUrl + '/authentication';
 	private loginUrl: string = this.authUrl + '/login';
 	private getAuthUserUrl: string = environment.publicServerUrl + '/user/get';

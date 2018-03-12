@@ -1,14 +1,15 @@
 import {NgModule} from '@angular/core';
-import {AuthenticationServiceRest} from './authentication.rest.service';
+import {AuthenticationMockService} from './authenticationMock.service';
 import {HttpClientModule} from '@angular/common/http';
 import {RestHttpClient} from '../../services/restHttpClient';
+import {AuthenticationService} from '../../services/authenticationService';
 
 @NgModule({
 	imports: [
 		HttpClientModule
 	],
 	providers: [
-		AuthenticationServiceRest,
+		{ provide: 'AuthenticationService', useClass: AuthenticationMockService },
 		RestHttpClient
 	]
 })

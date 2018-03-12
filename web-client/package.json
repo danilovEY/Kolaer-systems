@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^5.2.7",
     "@angular/router": "^5.2.7",
     "@types/core-js": "^0.9.46",
-    "ajv": "^6.2.0",
+    "ajv": "^6.2.1",
     "angular-bootstrap-md": "^5.2.2",
     "angular2-logger": "^0.7.0",
     "bootstrap": "^3.3.7",
