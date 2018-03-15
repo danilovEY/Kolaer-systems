@@ -44,9 +44,16 @@
                 <div class="modal-body">
                     <div class="md-form form-sm">
                         <i class="fa fa-envelope prefix"></i>
-                        <input mdbActive type="text" id="form30" class="form-control" formControlName="username">
+                        <input mdbActive type="text" id="form30"
+                               [ngClass]="{'loginErrorMessage': loginForm.controls['username'].touched &&
+                        loginForm.controls['username'].invalid}"
+                               class="form-control" formControlName="username">
                         <label for="form30">Логин</label>
                     </div>
+
+                    <ul class="list-group loginErrorMessage" *ngIf="loginForm.controls['username'].touched && loginForm.controls['username'].invalid">
+                        <li class="list-group-item list-group-item-danger" *ngIf="loginForm.controls['username'].errors?.required">Логин не может быть пустым</li>
+                    </ul>
 
                     <div class="md-form form-sm">
                         <i class="fa fa-lock prefix"></i>
@@ -54,22 +61,23 @@
                         <label for="form31">Пароль</label>
                     </div>
 
+
                     <div class="text-center mt-2">
                         <button type="submit" class="btn btn-info waves-light" mdbRippleRadius [disabled]="loginForm.invalid">
-                            Log in
+                            Войти
                             <i class="fa fa-sign-in ml-1"></i>
                         </button>
                     </div>
                 </div>
             </form>
             <!--Footer-->
-            <div class="modal-footer">
-                <div class="options text-center text-md-right mt-1">
-                    <p>Not a member? <a href="#">Sign Up</a></p>
-                    <p>Forgot <a href="#">Password?</a></p>
-                </div>
-                <button type="button" class="btn btn-outline-info ml-auto" data-dismiss="modal" (click)="form.hide()" mdbRippleRadius>Close</button>
-            </div>
+            <!--<div class="modal-footer">-->
+                <!--<div class="options text-center text-md-right mt-1">-->
+                    <!--<p>Not a member? <a href="#">Sign Up</a></p>-->
+                    <!--<p>Forgot <a href="#">Password?</a></p>-->
+                <!--</div>-->
+                <!--<button type="button" class="btn btn-outline-info ml-auto" data-dismiss="modal" (click)="form.hide()" mdbRippleRadius>Close</button>-->
+            <!--</div>-->
         </div>
         <!--/.Content-->
     </div>

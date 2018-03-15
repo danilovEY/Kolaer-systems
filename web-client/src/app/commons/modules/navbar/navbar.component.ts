@@ -7,7 +7,7 @@ import {AuthenticationService} from '../../services/authenticationService';
 @Component({
 	selector: 'app-navbar',
 	templateUrl: './navbar.component.html',
-	styleUrls: ['./navbar.component.css']
+	styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit, AuthenticationObserver {
 	loginForm: FormGroup;
@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit, AuthenticationObserver {
 
 	ngOnInit(): void {
 		this.loginForm = new FormGroup({
-			username: new FormControl('', [Validators.required]),
+			username: new FormControl('', [Validators.required, Validators.minLength(3)]),
 			password: new FormControl(''),
 		});
 
