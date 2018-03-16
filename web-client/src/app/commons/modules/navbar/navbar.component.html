@@ -53,6 +53,7 @@
 
                     <ul class="list-group loginErrorMessage" *ngIf="loginForm.controls['username'].touched && loginForm.controls['username'].invalid">
                         <li class="list-group-item list-group-item-danger" *ngIf="loginForm.controls['username'].errors?.required">Логин не может быть пустым</li>
+                        <li class="list-group-item list-group-item-danger" *ngIf="loginForm.controls['username'].errors?.minlength">Логин должен быть больше 3 символов</li>
                     </ul>
 
                     <div class="md-form form-sm">

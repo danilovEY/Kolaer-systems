@@ -12,6 +12,7 @@ import {AuthenticationService} from '../../services/authenticationService';
 export class NavbarComponent implements OnInit, AuthenticationObserver {
 	loginForm: FormGroup;
 
+
 	@ViewChild('nav') navbar: ElementRef;
 
 	constructor(@Inject('AuthenticationService') private _authenticationService: AuthenticationService,
