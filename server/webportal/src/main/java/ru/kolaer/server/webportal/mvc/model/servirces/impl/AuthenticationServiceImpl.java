@@ -117,13 +117,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public byte[] getAccountPhoto(String login) {
-        if(login != null)
-            return this.accountLDAP.getPhotoByLogin(login);
-        return null;
-    }
-
-    @Override
     @CacheEvict(value = "accounts", key = "#login", cacheManager = "springCM")
     public AccountDto resetOnLogin(String login) {
         return getAccountWithEmployeeByLogin(login);
