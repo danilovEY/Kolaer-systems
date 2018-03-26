@@ -43,4 +43,8 @@ export class AuthenticationMockService implements OnInit, AuthenticationService 
 	removeObserver(observer: AuthenticationObserver): void {
 	}
 
+    getAccountModel(): AccountModel {
+        return undefined;
+    }
+
 }

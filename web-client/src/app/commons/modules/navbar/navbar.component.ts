@@ -3,6 +3,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationObserver} from '../../services/authenticationObserver';
 import {AccountModel} from '../../models/account.model';
 import {AuthenticationService} from '../../services/authenticationService';
+import {ModalDirective} from 'angular-bootstrap-md/modals/modal.directive';
+import {ServerExceptionModel} from '../../models/server.exception.model';
 
 @Component({
 	selector: 'app-navbar',
@@ -11,13 +13,15 @@ import {AuthenticationService} from '../../services/authenticationService';
 })
 export class NavbarComponent implements OnInit, AuthenticationObserver {
 	loginForm: FormGroup;
+	serverError: ServerExceptionModel = undefined;
 
-
+    @ViewChild('loginModal') loginModal: ModalDirective;
+    @ViewChild('successModal') successModal: ModalDirective;
 	@ViewChild('nav') navbar: ElementRef;
 
-	constructor(@Inject('AuthenticationService') private _authenticationService: AuthenticationService,
-				private _renderer: Renderer2) {
 
+	constructor(@Inject('AuthenticationService') public authenticationService: AuthenticationService,
+				private _renderer: Renderer2) {
 	}
 
 	ngOnInit(): void {
@@ -26,18 +30,35 @@ export class NavbarComponent implements OnInit, AuthenticationObserver {
 			password: new FormControl(''),
 		});
 
-		this._authenticationService.registerObserver(this)
+		this.authenticationService.registerObserver(this)
 	}
 
 	submitLogin(): void {
-		this._authenticationService.login(this.loginForm.value.username, this.loginForm.value.password)
+		this.serverError = undefined;
+
+		const username: string = this.loginForm.value.username;
+		const password: string = this.loginForm.value.password;
+
+		this.authenticationService.login(username, password)
 			.subscribe(
-				(account: AccountModel) => console.log('Account', account),
-				error => console.log('Error', error));
+				(account: AccountModel) => {
+					this.loginModal.hide();
+                    this.successModal.show();
+                    setTimeout(() => {
+                    	if (this.successModal.isShown) {
+                            this.successModal.hide();
+                        }
+                    }, 2000);
+				},
+				(error: ServerExceptionModel) => {
+					this.serverError = error;
+                });
+
+        this.loginForm.reset();
 	}
 
-	@HostListener('window:resize', ['$event'])
-	onResize(event: any) {
+	// @HostListener('window:resize', ['$event'])
+	// onResize(event: any) {
 		// let breakpoit = 0;
 
 		// if (this.SideClass.includes('navbar-expand-xl')) {
@@ -70,7 +91,7 @@ export class NavbarComponent implements OnInit, AuthenticationObserver {
 		// 	this.collapse = true;
 		// 	this.renderer.setElementStyle(this.el.nativeElement, 'height', '');
 		// }
-	}
+	// }
 
 	@HostListener('document:scroll', ['$event'])
 	onScroll() {
@@ -88,6 +109,17 @@ export class NavbarComponent implements OnInit, AuthenticationObserver {
 	}
 
 	logout(account: AccountModel): void {
+
 	}
 
+	logoutSubmit(): void {
+		this.authenticationService.logout()
+			.subscribe(
+				(req: any) => {
+
+				},
+				(error: any) => {
+					console.log(error);
+				});
+	}
 }

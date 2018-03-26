@@ -14,12 +14,20 @@
 
         <ul class="navbar-nav ml-auto nav-flex-icons">
             <li class="nav-item avatar dropdown" dropdown>
-                <a dropdownToggle mdbRippleRadius class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" aria-haspopup="true" aria-expanded="true">
-                    <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" class="rounded-circle z-depth-0" alt="avatar image" style="height: 35px;">
+
+                <a *ngIf="!authenticationService.isAuthentication()" dropdownToggle mdbRippleRadius class="nav-link dropdown-toggle waves-effect waves-light">
+                    <img src="assets/img/no_photo.jpg" class="rounded-circle z-depth-0" alt="avatar image" style="height: 35px;">
                     Вы не авторизованы
                 </a>
-                <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
-                    <a class="dropdown-item waves-effect waves-light" (click)="form.show()" mdbRippleRadius>Авторизация</a>
+
+                <a *ngIf="authenticationService.isAuthentication()" dropdownToggle mdbRippleRadius class="nav-link dropdown-toggle waves-effect waves-light">
+                    <img src="assets/img/no_photo.jpg" class="rounded-circle z-depth-0" alt="avatar image" style="height: 35px;">
+                    {{ authenticationService.getAccountModel()?.username }}
+                </a>
+
+                <div class="dropdown-menu dropdown-primary">
+                    <a *ngIf="!authenticationService.isAuthentication()" class="dropdown-item" (click)="loginModal.show()" mdbRippleRadius>Авторизация</a>
+                    <a *ngIf="authenticationService.isAuthentication()" class="dropdown-item" (click)="logoutSubmit()" mdbRippleRadius>Выход</a>
                 </div>
             </li>
         </ul>
@@ -27,28 +35,33 @@
 </nav>
 
 <!--Modal: Login Form-->
-<div mdbModal #form="mdb-modal" class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog cascading-modal" role="document">
+<div mdbModal #loginModal="mdb-modal" class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog cascading-modal">
         <!--Content-->
         <div class="modal-content">
 
             <!--Header-->
             <div class="modal-header light-blue lighten-2 white-text">
-                <h4 class="title"><i class="fa fa-user"></i> Log in</h4>
-                <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="form.hide()">
+                <h4 class="title"><i class="fa fa-user"></i> Авторизация</h4>
+                <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="loginModal.hide()">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
+
+            <ul class="list-group loginErrorMessage" *ngIf="serverError != undefined">
+                <li class="list-group-item list-group-item-danger"> {{ serverError?.message }}</li>
+            </ul>
+
+
             <!--Body-->
             <form (ngSubmit)="submitLogin()" [formGroup]="loginForm">
                 <div class="modal-body">
                     <div class="md-form form-sm">
                         <i class="fa fa-envelope prefix"></i>
-                        <input mdbActive type="text" id="form30"
-                               [ngClass]="{'loginErrorMessage': loginForm.controls['username'].touched &&
-                        loginForm.controls['username'].invalid}"
+                        <input mdbActive type="text" id="loginInput"
+                               [ngClass]="{'loginErrorMessage': loginForm.controls['username'].touched && loginForm.controls['username'].invalid}"
                                class="form-control" formControlName="username">
-                        <label for="form30">Логин</label>
+                        <label for="loginInput">Логин</label>
                     </div>
 
                     <ul class="list-group loginErrorMessage" *ngIf="loginForm.controls['username'].touched && loginForm.controls['username'].invalid">
@@ -58,8 +71,8 @@
 
                     <div class="md-form form-sm">
                         <i class="fa fa-lock prefix"></i>
-                        <input mdbActive type="password" id="form31" class="form-control" formControlName="password">
-                        <label for="form31">Пароль</label>
+                        <input mdbActive id="passwordInput" type="password" class="form-control" formControlName="password">
+                        <label for="passwordInput">Пароль</label>
                     </div>
 
 
@@ -71,16 +84,30 @@
                     </div>
                 </div>
             </form>
-            <!--Footer-->
-            <!--<div class="modal-footer">-->
-                <!--<div class="options text-center text-md-right mt-1">-->
-                    <!--<p>Not a member? <a href="#">Sign Up</a></p>-->
-                    <!--<p>Forgot <a href="#">Password?</a></p>-->
-                <!--</div>-->
-                <!--<button type="button" class="btn btn-outline-info ml-auto" data-dismiss="modal" (click)="form.hide()" mdbRippleRadius>Close</button>-->
-            <!--</div>-->
         </div>
         <!--/.Content-->
     </div>
 </div>
 <!--Modal: Login Form-->
+
+<div mdbModal #successModal="mdb-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-success" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="heading lead">Авторизация прошла успешно</p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="successModal.hide()">
+                    <span aria-hidden="true" class="white-text">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                    <p>Добро пожаловать {{ authenticationService.getAccountModel()?.username }}</p>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a type="button" class="btn btn-primary-modal waves-light" mdbRippleRadius (click)="successModal.hide()">OK<i class="fa fa-diamond ml-1"></i></a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {AuthenticationMockService} from './authenticationMock.service';
+import {AuthenticationRestService} from './authenticationRest.service';
 import {HttpClientModule} from '@angular/common/http';
 import {RestHttpClient} from '../../services/restHttpClient';
 import {AuthenticationService} from '../../services/authenticationService';
@@ -9,7 +9,7 @@ import {AuthenticationService} from '../../services/authenticationService';
 		HttpClientModule
 	],
 	providers: [
-		{ provide: 'AuthenticationService', useClass: AuthenticationMockService },
+		{ provide: 'AuthenticationService', useClass: AuthenticationRestService },
 		RestHttpClient
 	]
 })
