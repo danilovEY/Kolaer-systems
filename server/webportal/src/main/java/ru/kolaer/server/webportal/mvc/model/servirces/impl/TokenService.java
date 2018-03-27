@@ -1,9 +1,10 @@
-package ru.kolaer.server.webportal.security;
+package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.codec.Hex;
+import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -15,9 +16,14 @@ import java.util.Optional;
  *
  * Created by danilovey on 02.08.2016.
  */
-public class TokenUtils {
-    private static final Logger logger = LoggerFactory.getLogger(TokenUtils.class);
-    public static final String MAGIC_KEY = "obfuscate";
+@Service
+@Slf4j
+public class TokenService {
+    String MAGIC_KEY = "obfuscate";
+
+    public TokenService(@Value("${secret_key}") String magicKey) {
+        this.MAGIC_KEY = magicKey;
+    }
 
     /**
      * Создать токен
@@ -25,28 +31,28 @@ public class TokenUtils {
      * @param password пароль
      * @return токен
      */
-    public static String createToken(String username, String password, String postfix) {
+    public String createToken(String username, String password, String postfix) {
         long expires = System.currentTimeMillis() + 1000L * 60 * 60 * 24;
 
         StringBuilder tokenBuilder = new StringBuilder();
         try {
             tokenBuilder.append(java.util.Base64.getEncoder().encodeToString(username.getBytes("utf-8")));
         } catch (UnsupportedEncodingException e) {
-            logger.error("Невозможно кодировать слово: {}", username, e);
+            log.error("Невозможно кодировать слово: {}", username, e);
             tokenBuilder.append(username);
         }
         tokenBuilder.append(":");
         tokenBuilder.append(expires);
         tokenBuilder.append(":");
-        tokenBuilder.append(TokenUtils.computeSignature(username,password, expires));
+        tokenBuilder.append(computeSignature(username,password, expires));
         tokenBuilder.append(":");
         tokenBuilder.append(postfix);
 
         return tokenBuilder.toString();
     }
 
-    public static String createToken(UserDetails userDetails) {
-        return TokenUtils.createToken(userDetails.getUsername(), userDetails.getPassword(), "SQL");
+    public String createToken(UserDetails userDetails) {
+        return createToken(userDetails.getUsername(), userDetails.getPassword(), "SQL");
     }
 
     /**
@@ -56,15 +62,15 @@ public class TokenUtils {
      * @param expires время истечения токена
      * @return хэш-код
      */
-    public static String computeSignature(String username, String password, long expires) {
+    public String computeSignature(String username, String password, long expires) {
         StringBuilder signatureBuilder = new StringBuilder();
         signatureBuilder.append(username);
         signatureBuilder.append(":");
         signatureBuilder.append(expires);
         signatureBuilder.append(":");
-        signatureBuilder.append(Optional.ofNullable(password).orElse(TokenUtils.MAGIC_KEY + String.valueOf(expires)));
+        signatureBuilder.append(Optional.ofNullable(password).orElse(MAGIC_KEY + String.valueOf(expires)));
         signatureBuilder.append(":");
-        signatureBuilder.append(TokenUtils.MAGIC_KEY);
+        signatureBuilder.append(MAGIC_KEY);
 
         MessageDigest digest;
         try {
@@ -82,7 +88,7 @@ public class TokenUtils {
      * @param authToken токен
      * @return логин
      */
-    public static String getUserNameFromToken(String authToken) {
+    public String getUserNameFromToken(String authToken) {
         if (null == authToken) {
             return null;
         }
@@ -100,7 +106,7 @@ public class TokenUtils {
      * @param authToken токен
      * @return логин
      */
-    public static boolean isLDAP(String authToken) {
+    public boolean isLDAP(String authToken) {
         if (null == authToken || authToken.trim().isEmpty()) {
             return true;
         }
@@ -115,7 +121,7 @@ public class TokenUtils {
      * @param userDetails пользователь
      * @return
      */
-    public static boolean validateToken(String authToken, UserDetails userDetails) {
+    public boolean validateToken(String authToken, UserDetails userDetails) {
         String[] parts = authToken.split(":");
         long expires = Long.parseLong(parts[1]);
         String signature = parts[2];
@@ -123,10 +129,10 @@ public class TokenUtils {
         if (expires < System.currentTimeMillis()) {
             return false;
         }
-        return signature.equals(TokenUtils.computeSignature(userDetails.getUsername(), userDetails.getPassword(), expires));
+        return signature.equals(computeSignature(userDetails.getUsername(), userDetails.getPassword(), expires));
     }
 
-    public static boolean validateTokenLDAP(String authToken, UserDetails userDetails) {
+    public boolean validateTokenLDAP(String authToken, UserDetails userDetails) {
         String[] parts = authToken.split(":");
         long expires = Long.parseLong(parts[1]);
         String signature = parts[2];
@@ -135,10 +141,10 @@ public class TokenUtils {
             return false;
         }
 
-        return signature.equals(TokenUtils.computeSignature(userDetails.getUsername(), null, expires));
+        return signature.equals(computeSignature(userDetails.getUsername(), null, expires));
     }
 
-    public static String createTokenLDAP(UserDetails userDetails) {
+    public String createTokenLDAP(UserDetails userDetails) {
         return createToken(userDetails.getUsername(), null, "LDAP");
     }
 }

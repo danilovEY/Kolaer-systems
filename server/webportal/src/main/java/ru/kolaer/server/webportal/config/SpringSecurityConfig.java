@@ -27,6 +27,7 @@ import ru.kolaer.server.webportal.beans.ToolsLDAP;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
+import ru.kolaer.server.webportal.mvc.model.servirces.impl.TokenService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
 import ru.kolaer.server.webportal.spring.ExceptionHandlerFilter;
@@ -59,6 +60,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     /**Секретный ключ для шифрования пароля.*/
     private final String secretKey;
     private final ServerAuthType serverAuthType;
+    private final TokenService tokenService;
     private final AccountDao accountDao;
     private final UrlSecurityService urlSecurityService;
     private final ExceptionHandlerService exceptionHandlerService;
@@ -69,11 +71,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public SpringSecurityConfig(@Value("${secret_key}") String secretKey,
                                 @Value("${server.auth.type}") String serverAuthType,
+                                TokenService tokenService,
                                 AccountDao accountDao,
                                 UrlSecurityService urlSecurityService,
                                 ExceptionHandlerService exceptionHandlerService) {
         this.secretKey = secretKey;
         this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
+        this.tokenService = tokenService;
         this.accountDao = accountDao;
         this.urlSecurityService = urlSecurityService;
         this.exceptionHandlerService = exceptionHandlerService;
@@ -118,8 +122,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**Фильтер для проверки URL'ов.*/
-    @Bean
-    @Autowired
+//    @Bean
+//    @Autowired
     public FilterSecurityInterceptor filter(UrlSecurityService urlSecurityService) throws Exception {
         FilterSecurityInterceptor filter = new FilterSecurityInterceptor();
         filter.setAuthenticationManager(authenticationManagerBean());
@@ -189,7 +193,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private AuthenticationTokenProcessingFilter authenticationTokenProcessingFilter(UserDetailsService userDetailsService) {
-        return new AuthenticationTokenProcessingFilter(serverAuthType, userDetailsService);
+        return new AuthenticationTokenProcessingFilter(serverAuthType, userDetailsService, tokenService);
     }
 
     private UserDetailsService userDetailsServiceLDAP(InitialLdapContext context) {

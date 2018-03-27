@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,8 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.mvc.model.servirces.impl.TokenService;
 import ru.kolaer.server.webportal.security.ServerAuthType;
-import ru.kolaer.server.webportal.security.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,18 +39,21 @@ import java.util.Optional;
 public class AuthenticationController {
     private final ServerAuthType serverAuthType;
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsServiceLDAP;
+    private final UserDetailsService userDetailsService;
+    private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public AuthenticationController(@Value("${server.auth.type}") String serverAuthType,
                                     AuthenticationManager authenticationManager,
-                                    UserDetailsService userDetailsServiceLDAP,
+                                    UserDetailsService userDetailsService,
+                                    TokenService tokenService,
                                     PasswordEncoder passwordEncoder) {
+        this.tokenService = tokenService;
         this.passwordEncoder = passwordEncoder;
         this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.authenticationManager = authenticationManager;
-        this.userDetailsServiceLDAP = userDetailsServiceLDAP;
+        this.userDetailsService = userDetailsService;
     }
 
     @ApiOperation(
@@ -95,7 +99,6 @@ public class AuthenticationController {
         return this.getToken(userAndPassJson.getUsername(), Optional.ofNullable(userAndPassJson.getPassword()).orElse(""));
     }
 
-
     @ApiOperation(
             value = "Авторизация",
             notes = "Генерация токена по имени и паролю пользователя"
@@ -117,7 +120,7 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final UserDetails userDetails = this.userDetailsServiceLDAP.loadUserByUsername(username);
+        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
         if(userDetails == null) {
             throw new UsernameNotFoundException("Пользователь " + username + " не найден!");
         }
@@ -125,10 +128,26 @@ public class AuthenticationController {
         return new TokenJson(getToken(userDetails));
     }
 
+    @ApiOperation(
+            value = "Обновление токена",
+            notes = "Обновление токена."
+    )
+    @UrlDeclaration(description = "Обновление токена", requestMethod = RequestMethod.GET)
+    @RequestMapping(value = "/refresh", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public TokenJson refreshToken(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null) {
+            throw new AccessDeniedException("Нет доступа");
+        }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(authentication.getName());
+        return new TokenJson(getToken(userDetails));
+    }
+
     private String getToken(UserDetails userDetails) {
         switch (serverAuthType) {
-            case LDAP: return  TokenUtils.createTokenLDAP(userDetails);
-            default: return  TokenUtils.createToken(userDetails);
+            case LDAP: return  tokenService.createTokenLDAP(userDetails);
+            default: return  tokenService.createToken(userDetails);
         }
     }
 

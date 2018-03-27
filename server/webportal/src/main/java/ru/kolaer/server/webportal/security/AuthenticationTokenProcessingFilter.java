@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.GenericFilterBean;
+import ru.kolaer.server.webportal.mvc.model.servirces.impl.TokenService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -24,10 +25,14 @@ import java.io.IOException;
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     private final ServerAuthType serverAuthType;
     private final UserDetailsService userDetailsService;
+    private final TokenService tokenService;
 
-    public AuthenticationTokenProcessingFilter(ServerAuthType serverAuthType, UserDetailsService userDetailsService) {
+    public AuthenticationTokenProcessingFilter(ServerAuthType serverAuthType,
+                                               UserDetailsService userDetailsService,
+                                               TokenService tokenService) {
         this.serverAuthType = serverAuthType;
         this.userDetailsService = userDetailsService;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -35,7 +40,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
         HttpServletRequest httpRequest = this.getAsHttpRequest(request);
 
         String authToken = this.extractAuthTokenFromRequest(httpRequest);
-        String userName = TokenUtils.getUserNameFromToken(authToken);
+        String userName = tokenService.getUserNameFromToken(authToken);
         if (userName != null) {
             final UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
             if(userDetails != null){
@@ -53,8 +58,8 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 
     private boolean tokenIsValidate(String authToken, UserDetails userDetails) {
         switch (serverAuthType) {
-            case LDAP: return TokenUtils.validateTokenLDAP(authToken, userDetails);
-            default: return TokenUtils.validateToken(authToken, userDetails);
+            case LDAP: return tokenService.validateTokenLDAP(authToken, userDetails);
+            default: return tokenService.validateToken(authToken, userDetails);
         }
     }
 
