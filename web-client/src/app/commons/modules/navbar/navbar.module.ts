@@ -1,26 +1,26 @@
 import {NgModule} from '@angular/core';
 import {NavbarComponent} from './navbar.component';
-import {AppCommonModule} from '../../app-common.module';
-import {AuthModule} from '../auth/auth.module';
 import {ReactiveFormsModule} from '@angular/forms';
 
-import { NavbarModule as MdbNavbarModule,
-	BsDropdownModule,
-	ModalModule,
-	ActiveModule,
-	RippleModule,
-	InputValidateDirective } from 'angular-bootstrap-md'
+import {AppCoreModule} from '../../AppCoreModule';
+
+import {
+    ActiveModule,
+    BsDropdownModule,
+    ModalModule,
+    NavbarModule as MdbNavbarModule,
+    RippleModule
+} from 'angular-bootstrap-md'
 
 @NgModule({
 	imports: [
-		AppCommonModule,
+		AppCoreModule,
 		ReactiveFormsModule,
 		MdbNavbarModule,
 		BsDropdownModule.forRoot(),
 		ModalModule.forRoot(),
 		ActiveModule.forRoot(),
-		RippleModule,
-		AuthModule
+		RippleModule
 	],
 	declarations: [
 		NavbarComponent

@@ -10,5 +10,7 @@ export interface AuthenticationService {
 	registerObserver(observer: AuthenticationObserver): void;
 	removeObserver(observer: AuthenticationObserver): void;
 
+	refreshToken(): void;
+
     getAccountModel(): AccountModel;
 }

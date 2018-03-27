@@ -1,13 +1,13 @@
 import {NgModule} from '@angular/core';
 import {FooterComponent} from './footer.component';
-import {AppCommonModule} from '../../app-common.module';
+import {AppCoreModule} from '../../AppCoreModule';
 
 @NgModule({
 	declarations: [
 		FooterComponent
 	],
 	imports: [
-		AppCommonModule
+		AppCoreModule
 	],
 	exports: [
 		FooterComponent

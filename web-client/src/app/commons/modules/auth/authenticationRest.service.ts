@@ -1,4 +1,3 @@
-///<reference path="../../../../../node_modules/rxjs/operators/catchError.d.ts"/>
 import {Injectable, OnInit} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {UsernamePasswordModel} from '../../models/username.password.model';
@@ -17,6 +16,7 @@ export class AuthenticationRestService implements OnInit, AuthenticationService 
 	private _authUrl: string = environment.publicServerUrl + '/authentication';
 	private _loginUrl: string = this._authUrl + '/login';
 	private _logoutUrl: string = this._authUrl + '/logout';
+	private _refreshUrl: string = this._authUrl + '/refresh';
 	private _getAuthUserUrl: string = environment.publicServerUrl + '/user/get';
 	private _authObserversList: Array<AuthenticationObserver> = [];
 
@@ -75,6 +75,10 @@ export class AuthenticationRestService implements OnInit, AuthenticationService 
                 this._accountModel = undefined;
 			}));
 	}
+
+    refreshToken(): void {
+
+    }
 
 	registerObserver(observer: AuthenticationObserver): void {
         this._authObserversList.push(observer);
