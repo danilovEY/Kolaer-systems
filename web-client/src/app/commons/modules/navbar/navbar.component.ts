@@ -1,17 +1,17 @@
 import {Component, ElementRef, HostListener, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthenticationObserver} from '../../services/authenticationObserver';
+import {AuthenticationObserverService} from '../../services/authentication-observer.service';
 import {AccountModel} from '../../models/account.model';
-import {AuthenticationService} from '../../services/authenticationService';
+import {AuthenticationService} from '../auth/authentication.service';
 import {ModalDirective} from 'angular-bootstrap-md/modals/modal.directive';
-import {ServerExceptionModel} from '../../models/server.exception.model';
+import {ServerExceptionModel} from '../../models/server-exception.model';
 
 @Component({
 	selector: 'app-navbar',
 	templateUrl: './navbar.component.html',
 	styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit, AuthenticationObserver {
+export class NavbarComponent implements OnInit, AuthenticationObserverService {
 	loginForm: FormGroup;
 	serverError: ServerExceptionModel = undefined;
 
@@ -22,6 +22,7 @@ export class NavbarComponent implements OnInit, AuthenticationObserver {
 
 	constructor(@Inject('AuthenticationService') public authenticationService: AuthenticationService,
 				private _renderer: Renderer2) {
+		this.authenticationService.refreshToken();
 	}
 
 	ngOnInit(): void {
@@ -30,7 +31,7 @@ export class NavbarComponent implements OnInit, AuthenticationObserver {
 			password: new FormControl(''),
 		});
 
-		this.authenticationService.registerObserver(this)
+		this.authenticationService.registerObserver(this);
 	}
 
 	submitLogin(): void {

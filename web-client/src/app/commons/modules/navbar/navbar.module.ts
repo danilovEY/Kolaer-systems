@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {NavbarComponent} from './navbar.component';
 import {ReactiveFormsModule} from '@angular/forms';
 
-import {AppCoreModule} from '../../AppCoreModule';
+import {AppCoreModule} from '../../app-core.module';
 
 import {
     ActiveModule,

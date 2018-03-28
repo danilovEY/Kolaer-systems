@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {FooterComponent} from './footer.component';
-import {AppCoreModule} from '../../AppCoreModule';
+import {AppCoreModule} from '../../app-core.module';
 
 @NgModule({
 	declarations: [
