@@ -5,6 +5,7 @@ import {AccountModel} from '../../models/account.model';
 import {AuthenticationService} from '../auth/authentication.service';
 import {ModalDirective} from 'angular-bootstrap-md/modals/modal.directive';
 import {ServerExceptionModel} from '../../models/server-exception.model';
+import {AccountService} from "../../services/account.service";
 
 @Component({
 	selector: 'app-navbar',
@@ -15,14 +16,22 @@ export class NavbarComponent implements OnInit, AuthenticationObserverService {
 	loginForm: FormGroup;
 	serverError: ServerExceptionModel = undefined;
 
-    @ViewChild('loginModal') loginModal: ModalDirective;
-    @ViewChild('successModal') successModal: ModalDirective;
-	@ViewChild('nav') navbar: ElementRef;
+    accountModel: AccountModel = undefined;
+
+    @ViewChild('loginModal')
+	loginModal: ModalDirective;
+
+    @ViewChild('successModal')
+	successModal: ModalDirective;
+
+	@ViewChild('nav')
+	navbar: ElementRef;
 
 
 	constructor(@Inject('AuthenticationService') public authenticationService: AuthenticationService,
+				public accountService: AccountService,
 				private _renderer: Renderer2) {
-		this.authenticationService.refreshToken();
+
 	}
 
 	ngOnInit(): void {
@@ -30,6 +39,12 @@ export class NavbarComponent implements OnInit, AuthenticationObserverService {
 			username: new FormControl('', [Validators.required, Validators.minLength(3)]),
 			password: new FormControl(''),
 		});
+
+		if (this.authenticationService.isAuthentication() && !this.accountModel) {
+			this.accountService
+				.getCurrentAccount()
+				.subscribe(account => this.accountModel = account);
+		}
 
 		this.authenticationService.registerObserver(this);
 	}
@@ -106,21 +121,18 @@ export class NavbarComponent implements OnInit, AuthenticationObserverService {
 	}
 
 	login(account: AccountModel): void {
-
+		this.accountModel = account;
 	}
 
-	logout(account: AccountModel): void {
-
+	logout(): void {
+		this.accountModel = undefined;
 	}
 
 	logoutSubmit(): void {
 		this.authenticationService.logout()
 			.subscribe(
-				(req: any) => {
-
-				},
-				(error: any) => {
-					console.log(error);
-				});
+				req => {},
+				error => console.log(error)
+			);
 	}
 }

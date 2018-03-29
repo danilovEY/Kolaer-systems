@@ -1,17 +1,26 @@
-import {Component, OnInit} from '@angular/core';
-import {Location} from '@angular/common';
-
-declare var $: any;
+import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
 
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
-	styleUrls: ['./home.component.css']
+	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 
-	ngOnInit() {
+    @ViewChild('container')
+    container: ElementRef;
 
+    constructor(private _render: Renderer2) {
+
+	}
+
+    ngOnInit() {
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+    	if (window.screen.height > this.container.nativeElement.offsetHeight) {
+		}
 	}
 
 }

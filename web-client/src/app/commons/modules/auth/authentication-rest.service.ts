@@ -10,6 +10,7 @@ import {catchError, mergeMap, tap} from 'rxjs/operators';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/empty';
+import {AccountService} from '../../services/account.service';
 
 @Injectable()
 export class AuthenticationRestService implements AuthenticationService {
@@ -17,13 +18,13 @@ export class AuthenticationRestService implements AuthenticationService {
     private _loginUrl: string = this._authUrl + '/login';
     private _logoutUrl: string = this._authUrl + '/logout';
     private _refreshUrl: string = this._authUrl + '/refresh';
-    private _getAuthUserUrl: string = environment.publicServerUrl + '/user/get';
+
     private _authObserversList: Array<AuthenticationObserverService> = [];
 	private _isAuthentication: boolean = false;
 
-    private _accountModel: AccountModel = undefined;
     private _token: ServerToken;
-	constructor(private _httpClient: HttpClient) {
+
+	constructor(private _httpClient: HttpClient, private _accountService: AccountService) {
 
 	}
 
@@ -51,11 +52,9 @@ export class AuthenticationRestService implements AuthenticationService {
 					this._isAuthentication = true;
 				}),
 				mergeMap((token: ServerToken) =>
-					this._httpClient
-						.get<AccountModel>(this._getAuthUserUrl)
+						this._accountService.getCurrentAccount()
 						.pipe(
 							tap((accountModel: AccountModel) => {
-								this._accountModel = accountModel;
 								for (const observer of this._authObserversList) {
 									observer.login(accountModel);
 								}
@@ -73,12 +72,11 @@ export class AuthenticationRestService implements AuthenticationService {
             return this._httpClient.post<void>(this._logoutUrl, undefined)
                 .pipe(tap((response: any) => {
                     for (const observer of this._authObserversList) {
-                        observer.login(this._accountModel);
+                        observer.logout();
                     }
 
                     this._isAuthentication = false;
                     this.setToken(undefined);
-                    this._accountModel = undefined;
                 }));
         } else {
 			return Observable.empty<void>();
@@ -130,10 +128,6 @@ export class AuthenticationRestService implements AuthenticationService {
             this._authObserversList.splice(index, 1);
         }
 	}
-
-    getAccountModel(): AccountModel {
-        return this._accountModel;
-    }
 
     getToken(): ServerToken {
         return this._token;

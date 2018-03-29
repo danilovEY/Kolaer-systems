@@ -14,6 +14,5 @@ export interface AuthenticationService extends OnInit {
 
 	refreshToken(): Observable<ServerToken>;
 
-    getAccountModel(): AccountModel;
     getToken(): ServerToken;
 }

@@ -5,6 +5,7 @@ import {AuthenticationService} from './authentication.service';
 import {TokenApplyInterceptor} from './token-apply.interceptor';
 import {AuthInterceptor} from './auth.interceptor';
 import {TokenRefreshInterceptor} from './token-refresh.interceptor';
+import {AccountService} from '../../services/account.service';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import {TokenRefreshInterceptor} from './token-refresh.interceptor';
         HttpClientModule
     ],
     providers: [
+        AccountService,
         {
             provide: 'AuthenticationService',
             useClass: AuthenticationRestService
