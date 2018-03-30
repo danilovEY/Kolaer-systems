@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
@@ -21,8 +22,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
@@ -31,7 +36,6 @@ import ru.kolaer.server.webportal.mvc.model.servirces.impl.TokenService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
 import ru.kolaer.server.webportal.spring.ExceptionHandlerFilter;
-import ru.kolaer.server.webportal.spring.SimpleCorsFilter;
 import ru.kolaer.server.webportal.spring.UnauthorizedEntryPoint;
 
 import javax.annotation.Resource;
@@ -104,15 +108,31 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         //Отключаем csrf хак
         http.csrf().disable()
                 .httpBasic()
-                .authenticationEntryPoint(new SimpleCorsFilter())
+//                .authenticationEntryPoint(new SimpleCorsFilter())
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new UnauthorizedEntryPoint(exceptionHandlerService))
                 .and()
+                .addFilterBefore(corsFilter(), ChannelProcessingFilter.class)
                 //Фильтер для проверки http request'а на наличие правильного токена
                 .addFilterBefore(authenticationTokenProcessingFilter(userDetailsService(accountDao, ldapContext())), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new ExceptionHandlerFilter(exceptionHandlerService), AuthenticationTokenProcessingFilter.class)
                 //Фильтер для проверки URL'ов.
                 .addFilter(filter(urlSecurityService));
+    }
+
+    private CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod(HttpMethod.OPTIONS);
+        config.addAllowedMethod(HttpMethod.GET);
+        config.addAllowedMethod(HttpMethod.POST);
+        config.addAllowedMethod(HttpMethod.PUT);
+        config.addAllowedMethod(HttpMethod.DELETE);
+        corsConfigurationSource.registerCorsConfiguration("/**", config);
+        return new CorsFilter(corsConfigurationSource);
     }
 
     @Bean
