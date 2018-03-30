@@ -9,6 +9,7 @@ import {Logger} from 'angular2-logger/core';
 export class DashboardComponent implements OnInit {
 
 	constructor(private _logger: Logger) {
+
 	}
 
 	ngOnInit() {
