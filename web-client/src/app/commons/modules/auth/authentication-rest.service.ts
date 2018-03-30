@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Injector} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {UsernamePasswordModel} from '../../models/username-password.model';
 import {AuthenticationService} from './authentication.service';
@@ -11,20 +11,24 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/empty';
 import {AccountService} from '../../services/account.service';
+import {Router} from "@angular/router";
+import "rxjs/add/operator/finally";
 
 @Injectable()
 export class AuthenticationRestService implements AuthenticationService {
-	private _authUrl: string = environment.publicServerUrl + '/authentication';
-    private _loginUrl: string = this._authUrl + '/login';
-    private _logoutUrl: string = this._authUrl + '/logout';
-    private _refreshUrl: string = this._authUrl + '/refresh';
+	private readonly _authUrl: string = environment.publicServerUrl + '/authentication';
+    private readonly _loginUrl: string = this._authUrl + '/login';
+    private readonly _logoutUrl: string = this._authUrl + '/logout';
+    private readonly _refreshUrl: string = this._authUrl + '/refresh';
 
     private _authObserversList: Array<AuthenticationObserverService> = [];
 	private _isAuthentication: boolean = false;
 
     private _token: ServerToken;
 
-	constructor(private _httpClient: HttpClient, private _accountService: AccountService) {
+	constructor(private _httpClient: HttpClient,
+				private _accountService: AccountService,
+                private _injector: Injector) {
 
 	}
 
@@ -68,19 +72,20 @@ export class AuthenticationRestService implements AuthenticationService {
 	}
 
 	logout(): Observable<void> {
-		if (this._isAuthentication) {
-            return this._httpClient.post<void>(this._logoutUrl, undefined)
-                .pipe(tap((response: any) => {
-                    for (const observer of this._authObserversList) {
-                        observer.logout();
-                    }
+		const obsLogout: Observable<void> = this._isAuthentication
+			? this._httpClient.post<void>(this._logoutUrl, undefined)
+			: Observable.empty<void>();
 
-                    this._isAuthentication = false;
-                    this.setToken(undefined);
-                }));
-        } else {
-			return Observable.empty<void>();
-		}
+        return obsLogout.pipe(tap(() => {
+        	for (const observer of this._authObserversList) {
+				observer.logout();
+			}
+
+			this._isAuthentication = false;
+			this.setToken(undefined);
+
+			this._injector.get(Router).navigate(['/home']);
+		}));
 	}
 
     refreshToken(): Observable<ServerToken> {
@@ -109,9 +114,9 @@ export class AuthenticationRestService implements AuthenticationService {
 			const token: string = this._token.token;
 			const arrayTokenSplit: string[] = token.split(':');
 			if (arrayTokenSplit.length > 1) {
-                const expires: number = Number(arrayTokenSplit[2]);
-
-                return expires ? new Date().getTime() > (expires - 60000) : false;
+				const refreshTime: number = 518400; // мин. время обновления токена
+                const expires: number = Number(arrayTokenSplit[1]);
+                return expires ? new Date().getTime() > (expires - refreshTime) : false;
 			}
 		}
 

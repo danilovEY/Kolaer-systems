@@ -6,6 +6,7 @@ import {TokenApplyInterceptor} from './token-apply.interceptor';
 import {AuthInterceptor} from './auth.interceptor';
 import {TokenRefreshInterceptor} from './token-refresh.interceptor';
 import {AccountService} from '../../services/account.service';
+import {Router} from "@angular/router";
 
 
 @NgModule({
@@ -40,12 +41,14 @@ export class AuthModule {
 
     constructor(@Inject('AuthenticationService') private _authService: AuthenticationService,
                 private _injector: Injector,
-                private _http: HttpClient) {
+                private _http: HttpClient,
+                private _router: Router) {
+        this._authService.ngOnInit();
+
         const interceptors: AuthInterceptor[] = _injector.get<AuthInterceptor[]>(HTTP_INTERCEPTORS)
             .filter(interceptor => interceptor.init);
-        interceptors.forEach(interceptor => interceptor.init(this._http, this._authService));
 
-        this._authService.ngOnInit();
+        interceptors.forEach(interceptor => interceptor.init(this._http, this._authService));
 
     }
 }

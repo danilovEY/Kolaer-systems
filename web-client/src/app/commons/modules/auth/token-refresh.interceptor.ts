@@ -4,6 +4,8 @@ import {Observable} from 'rxjs/Observable';
 import {AuthInterceptor} from './auth.interceptor';
 import {AuthenticationService} from './authentication.service';
 import {Subscriber} from 'rxjs/Subscriber';
+import {Router} from '@angular/router';
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class TokenRefreshInterceptor implements HttpInterceptor, AuthInterceptor {
@@ -11,6 +13,7 @@ export class TokenRefreshInterceptor implements HttpInterceptor, AuthInterceptor
     private _isRefreshToken: boolean = false;
     private _http: HttpClient;
     private _requestMap: Map<Subscriber<any>, HttpRequest<any>> = new Map<Subscriber<any>, HttpRequest<any>>();
+    private _router: Router;
 
     init(http: HttpClient, authService: AuthenticationService) {
         this._authService = authService;
@@ -33,9 +36,9 @@ export class TokenRefreshInterceptor implements HttpInterceptor, AuthInterceptor
                     error => {
                         if (error.status === 401) {
                             this.processErrorRequest(subscriber, req);
-                        } else {
-                            subscriber.error(error);
                         }
+
+                        subscriber.error(error);
                     },
                     () => subscriber.complete()
                 );
@@ -45,15 +48,16 @@ export class TokenRefreshInterceptor implements HttpInterceptor, AuthInterceptor
     }
 
     processErrorRequest(subscribe: Subscriber<any>, request: HttpRequest<any>) {
-        if (this._isRefreshToken) {
-            this._requestMap.set(subscribe, request);
-        } else {
+        this._requestMap.set(subscribe, request);
+        if (!this._isRefreshToken) {
             this._isRefreshToken = true;
-
+            
             this._authService.refreshToken()
                 .subscribe(
-                    token => this.repeatFailedRequest(),
-                    error => this._authService.logout(),
+                    next => this.repeatFailedRequest(),
+                    error => {
+                        this._authService.logout().subscribe(result => {});
+                    },
                     () => {
                         this._isRefreshToken = false;
                         this._requestMap.clear();
@@ -66,7 +70,7 @@ export class TokenRefreshInterceptor implements HttpInterceptor, AuthInterceptor
         if (this._authService.getToken()) {
             this._requestMap.forEach((value: HttpRequest<any>, key: Subscriber<any>) => {
                 const requestWithToken = value.clone({
-                    headers: value.headers.set('token', this._authService.getToken().token)
+                    headers: value.headers.set('x-token', this._authService.getToken().token)
                 });
 
                 this.repeatRequest(requestWithToken, key);
@@ -80,7 +84,7 @@ export class TokenRefreshInterceptor implements HttpInterceptor, AuthInterceptor
                 response => subscribe.next(response),
                 error => {
                     if (error.status === 401) {
-                        this._authService.logout();
+                        this._authService.logout().subscribe(result => {});
                     }
 
                     subscribe.error(error);

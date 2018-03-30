@@ -15,11 +15,13 @@ export class HomeComponent implements OnInit {
 	}
 
     ngOnInit() {
+        this.onResize(undefined);
     }
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
     	if (window.screen.height > this.container.nativeElement.offsetHeight) {
+    	    this._render.addClass(this.container.nativeElement, 'fix-content-height');
 		}
 	}
 

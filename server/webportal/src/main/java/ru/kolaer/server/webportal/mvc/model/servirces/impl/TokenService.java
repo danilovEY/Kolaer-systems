@@ -32,7 +32,7 @@ public class TokenService {
      * @return токен
      */
     public String createToken(String username, String password, String postfix) {
-        long expires = System.currentTimeMillis() + 1000L * 60 * 60 * 24;
+        long expires = System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7;
 
         StringBuilder tokenBuilder = new StringBuilder();
         try {
