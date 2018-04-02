@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {Logger} from 'angular2-logger/core';
+import {EmployeeModel} from '../../commons/models/employee.model';
+import {DashboardService} from './dashboard.service';
+import {ServerExceptionModel} from '../../commons/models/server-exception.model';
+import {OtherEmployeeModel} from '../../commons/models/other-employee.model';
 
 @Component({
 	selector: 'app-dashboard',
@@ -7,13 +10,29 @@ import {Logger} from 'angular2-logger/core';
 	styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-
-	constructor(private _logger: Logger) {
+	employeesBirthdayToday: EmployeeModel[] = [];
+	otherEmployeesBirthdayToday: OtherEmployeeModel[] = [];
+	today: Date = new Date();
+	
+	constructor(private _dashboardService: DashboardService) {
 
 	}
 
 	ngOnInit() {
+		this._dashboardService.getEmployeesBirthdayToday()
+			.subscribe(
+				(employees: EmployeeModel[]) => this.employeesBirthdayToday = employees,
+				(error: ServerExceptionModel) => console.log(error)
+			);
 
+		this._dashboardService.getOtherEmployeesBirthdayToday()
+			.subscribe(
+				(employees: OtherEmployeeModel[]) => {
+					this.otherEmployeesBirthdayToday = employees;
+					console.log(employees);
+					},
+				(error: ServerExceptionModel) => console.log(error)
+			);
 	}
 
 }

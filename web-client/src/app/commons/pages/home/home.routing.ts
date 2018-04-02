@@ -10,7 +10,7 @@ import {TestModule} from '../../../applications/test/test.module';
 const routes: Routes = [
 	{
 		path: 'home', component: HomeComponent, children: [
-			// {path: '', pathMatch: 'full', redirectTo: 'dashboard'},
+			{path: '', pathMatch: 'full', redirectTo: 'dashboard'},
 			{path: '', loadChildren: () => DashboardModule},
 			{path: '', loadChildren: () => TestModule}
 		]

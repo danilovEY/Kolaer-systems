@@ -1,4 +1,5 @@
 import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {FooterComponent} from '../../modules/footer/footer.component';
 
 @Component({
 	selector: 'app-home',
@@ -9,6 +10,9 @@ export class HomeComponent implements OnInit {
 
     @ViewChild('container')
     container: ElementRef;
+
+    @ViewChild(FooterComponent)
+    footer: FooterComponent;
 
     fixFooter: boolean;
 
@@ -22,7 +26,7 @@ export class HomeComponent implements OnInit {
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
-    	if (window.innerHeight > this.container.nativeElement.offsetHeight) {
+    	if (window.innerHeight > this.container.nativeElement.offsetHeight + this.footer.footerHeight) {
     	    this.fixFooter = true;
 		} else {
             this.fixFooter = false;

@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {NavbarComponent} from './navbar.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
 
 import {AppCoreModule} from '../../app-core.module';
 
@@ -20,7 +21,8 @@ import {
 		BsDropdownModule.forRoot(),
 		ModalModule.forRoot(),
 		ActiveModule.forRoot(),
-		RippleModule
+		RippleModule,
+        RouterModule
 	],
 	declarations: [
 		NavbarComponent

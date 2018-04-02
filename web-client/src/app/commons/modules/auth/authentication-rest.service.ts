@@ -16,10 +16,10 @@ import "rxjs/add/operator/finally";
 
 @Injectable()
 export class AuthenticationRestService implements AuthenticationService {
-	private readonly _authUrl: string = environment.publicServerUrl + '/authentication';
-    private readonly _loginUrl: string = this._authUrl + '/login';
-    private readonly _logoutUrl: string = this._authUrl + '/logout';
-    private readonly _refreshUrl: string = this._authUrl + '/refresh';
+	private readonly _authUrl: string = `${environment.publicServerUrl}/authentication`;
+    private readonly _loginUrl: string = `${this._authUrl}/login`;
+    private readonly _logoutUrl: string = `${this._authUrl}/logout`;
+    private readonly _refreshUrl: string = `${this._authUrl}/refresh`;
 
     private _authObserversList: Array<AuthenticationObserverService> = [];
 	private _isAuthentication: boolean = false;

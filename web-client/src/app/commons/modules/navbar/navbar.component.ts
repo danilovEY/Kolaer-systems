@@ -64,13 +64,13 @@ export class NavbarComponent implements OnInit, AuthenticationObserverService {
                     	if (this.successModal.isShown) {
                             this.successModal.hide();
                         }
+
+                        this.loginForm.reset();
                     }, 2000);
 				},
 				(error: ServerExceptionModel) => {
 					this.serverError = error;
                 });
-
-        this.loginForm.reset();
 	}
 
 	// @HostListener('window:resize', ['$event'])
