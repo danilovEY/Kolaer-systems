@@ -10,6 +10,8 @@ export class HomeComponent implements OnInit {
     @ViewChild('container')
     container: ElementRef;
 
+    fixFooter: boolean;
+
     constructor(private _render: Renderer2) {
 
 	}
@@ -20,9 +22,11 @@ export class HomeComponent implements OnInit {
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
-    	if (window.screen.height > this.container.nativeElement.offsetHeight) {
-    	    this._render.addClass(this.container.nativeElement, 'fix-content-height');
-		}
+    	if (window.innerHeight > this.container.nativeElement.offsetHeight) {
+    	    this.fixFooter = true;
+		} else {
+            this.fixFooter = false;
+        }
 	}
 
 }
