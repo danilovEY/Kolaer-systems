@@ -2,4 +2,11 @@
 
 .container-bottom-navbar {
   padding-top: $navbar-height;
+  //min-height: calc(100vh - 70px);
+  padding-left: $sidebar-width;
 }
+
+//.main-wrapper {
+//  display: flex;
+//  align-items: stretch;
+//}

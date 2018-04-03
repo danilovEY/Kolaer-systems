@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostBinding, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 
 @Component({
 	selector: 'app-footer',
@@ -6,10 +6,6 @@ import {Component, ElementRef, HostBinding, Input, OnInit, ViewChild} from '@ang
 	styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-
-    @HostBinding('class.isFixFooter')
-	@Input()
-	fixFooter: boolean = false;
 
     @Input()
     footerHeight: number = 0;

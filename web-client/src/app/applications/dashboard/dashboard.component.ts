@@ -7,7 +7,7 @@ import {OtherEmployeeModel} from '../../commons/models/other-employee.model';
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
-	styleUrls: ['./dashboard.component.css']
+	styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
 	employeesBirthdayToday: EmployeeModel[] = [];
@@ -27,10 +27,7 @@ export class DashboardComponent implements OnInit {
 
 		this._dashboardService.getOtherEmployeesBirthdayToday()
 			.subscribe(
-				(employees: OtherEmployeeModel[]) => {
-					this.otherEmployeesBirthdayToday = employees;
-					console.log(employees);
-					},
+				(employees: OtherEmployeeModel[]) => this.otherEmployeesBirthdayToday = employees,
 				(error: ServerExceptionModel) => console.log(error)
 			);
 	}

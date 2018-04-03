@@ -1,7 +1,5 @@
-:host {
-  &.isFixFooter{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-  }
+@import "../../../variables";
+
+footer {
+  margin-left: $sidebar-width;
 }

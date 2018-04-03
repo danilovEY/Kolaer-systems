@@ -1,14 +1,13 @@
-<!--<app-sidebar></app-sidebar>-->
 
-<app-navbar></app-navbar>
+<main class="main-wrapper">
+    <app-navbar></app-navbar>
 
-<main>
-    <div class="main-wrapper">
+    <app-sidebar></app-sidebar>
 
-        <div class="container container-bottom-navbar" #container>
-                <router-outlet></router-outlet>
-        </div>
+    <div class="container container-bottom-navbar" #container>
+            <router-outlet></router-outlet>
     </div>
+
+    <app-footer #footer></app-footer>
 </main>
 
-<app-footer #footer [fixFooter]="fixFooter"></app-footer>

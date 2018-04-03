@@ -1,4 +1,9 @@
+@import "../../../variables";
+
 .loginErrorMessage {
   margin-bottom: 20px;
+}
 
+.navbar-with-sidebar {
+  margin-left: $sidebar-width;
 }
