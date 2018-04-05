@@ -50,6 +50,8 @@ public class ExcelReaderDepartment implements ExcelReader<DepartmentEntity> {
             departmentEntity.setAbbreviatedName(depName);
         }
 
+        log.debug("Parse department: {}", departmentEntity);
+
         return departmentEntity;
     }
 

@@ -40,6 +40,8 @@ public class ExcelReaderPost implements ExcelReader<PostEntity> {
         String postCode = getStringValue(nameColumns, POST_CODE, row);
         postEntity.setCode(postCode);
 
+        log.debug("Parse post: {}", postEntity);
+
         return postEntity;
     }
 

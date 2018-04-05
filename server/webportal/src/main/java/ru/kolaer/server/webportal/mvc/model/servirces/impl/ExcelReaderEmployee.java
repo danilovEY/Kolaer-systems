@@ -124,6 +124,8 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
             log.warn("User initials can't encode to UTF-8", newEmployeeEntity.getInitials());
         }
 
+        log.debug("Parse employee: {}", newEmployeeEntity);
+
         return newEmployeeEntity;
     }
 
