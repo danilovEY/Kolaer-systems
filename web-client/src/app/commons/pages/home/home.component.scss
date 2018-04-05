@@ -1,10 +1,10 @@
 @import "../../../variables";
 
-.container-bottom-navbar {
-  margin-top: $navbar-height;
-  width: 100%;
-  //min-height: calc(100vh - 70px);
-  margin-left: $sidebar-width;
+main {
+  padding-left: $sidebar-width + 20px;
+  padding-top: $navbar-height;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 @media (min-width: 768px) {

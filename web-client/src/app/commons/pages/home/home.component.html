@@ -1,15 +1,15 @@
+<app-navbar></app-navbar>
+
+<app-sidebar></app-sidebar>
 
 <main>
     <div class="main-wrapper">
-        <app-navbar></app-navbar>
 
-        <app-sidebar></app-sidebar>
-
-        <div class="container-fluid container-bottom-navbar" #container>
+        <div class="container-fluid" #container>
                 <router-outlet></router-outlet>
         </div>
 
-        <app-footer [fixFooter]="fixFooter" #footer></app-footer>
     </div>
 </main>
 
+<app-footer [fixFooter]="fixFooter" #footer></app-footer>
