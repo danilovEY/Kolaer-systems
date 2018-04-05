@@ -1,5 +1,16 @@
 @import "../../../variables";
 
+:host {
+  &.isFixFooter{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+  &.notFixFooter{
+    position: unset;
+  }
+}
+
 footer {
   margin-left: $sidebar-width;
 }

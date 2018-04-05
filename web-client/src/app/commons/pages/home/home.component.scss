@@ -1,12 +1,15 @@
 @import "../../../variables";
 
 .container-bottom-navbar {
-  padding-top: $navbar-height;
+  margin-top: $navbar-height;
+  width: 100%;
   //min-height: calc(100vh - 70px);
-  padding-left: $sidebar-width;
+  margin-left: $sidebar-width;
 }
 
-//.main-wrapper {
-//  display: flex;
-//  align-items: stretch;
-//}
+@media (min-width: 768px) {
+  .equal {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

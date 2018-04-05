@@ -1,20 +1,21 @@
-<div class="container">
-    <div class="row" >
+<!--<div class="container">-->
+    <div class="d-flex flex-wrap" >
 
         <!-- Birthday -->
-        <div class="col-lg-6 col-md-12 card-padding">
+        <div class="card-padding">
             <div class="card">
                 <h3 class="card-header primary-color white-text" *ngIf="employeesBirthdayToday.length > 0">Сегодня день рождения</h3>
                 <h3 class="card-header primary-color white-text" *ngIf="employeesBirthdayToday.length === 0">Сегодня нет дней рождений</h3>
                 <div class="card-body">
                     <h4 class="card-title">Сотрудники КолАЭР</h4>
+                    <spinner [show]="loadingEmployeesBirthdayToday" [medium]="true"></spinner>
                     <div class="list-group" *ngFor="let employee of employeesBirthdayToday">
                         <div class="list-group-item list-group-item-action flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">{{ employee.initials }}</h5>
                                 <small *ngIf="(today.getFullYear() - employee.birthday.getFullYear()) % 10 === 0">Юбилей</small>
                             </div>
-                            <small>{{ employee.post.name }} ({{ employee.department.abbreviatedName || employee.department.name }})</small>
+                            <small>{{ employee.post.abbreviatedName || employee.post.name }} ({{ employee.department.abbreviatedName || employee.department.name }})</small>
                         </div>
                     </div>
                 </div>
@@ -34,7 +35,23 @@
         </div>
 
         <!-- Temperature -->
-        <div class="col-lg-6 col-md-12 card-padding">
+        <div class="card-padding">
+            <div class="card">
+                <h3 class="card-header primary-color white-text">Температура в Полярных Зорях</h3>
+                <img class="img-fluid" src="http://iportal/store/weather/informer_graf-640.gif" alt="Температура в Полярных Зорях">
+            </div>
+        </div>
+
+        <!-- Temperature -->
+        <div class="card-padding">
+            <div class="card">
+                <h3 class="card-header primary-color white-text">Температура в Полярных Зорях</h3>
+                <img class="img-fluid" src="http://iportal/store/weather/informer_graf-640.gif" alt="Температура в Полярных Зорях">
+            </div>
+        </div>
+
+        <!-- Temperature -->
+        <div class="card-padding">
             <div class="card">
                 <h3 class="card-header primary-color white-text">Температура в Полярных Зорях</h3>
                 <img class="img-fluid" src="http://iportal/store/weather/informer_graf-640.gif" alt="Температура в Полярных Зорях">
@@ -42,4 +59,4 @@
         </div>
 
     </div>
-</div>
+<!--</div>-->

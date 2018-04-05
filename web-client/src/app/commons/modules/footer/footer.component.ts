@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostBinding, Input, OnInit, ViewChild} from '@angular/core';
 
 @Component({
 	selector: 'app-footer',
@@ -12,6 +12,13 @@ export class FooterComponent implements OnInit {
 
     @ViewChild('footer')
 	footerElement: ElementRef;
+
+    @HostBinding('class.isFixFooter')
+    @Input()
+    fixFooter: boolean = false;
+
+    @HostBinding('class.notFixFooter')
+    notFixFooter: boolean = !this.fixFooter;
 
 	constructor() {
 	}
