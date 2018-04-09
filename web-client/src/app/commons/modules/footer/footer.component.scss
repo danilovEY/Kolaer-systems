@@ -1,14 +1,13 @@
 @import "../../../variables";
 
-:host {
-  &.isFixFooter{
+.isFixFooter {
     position: fixed;
     bottom: 0;
     width: 100%;
-  }
-  &.notFixFooter{
-    position: unset;
-  }
+}
+
+.notFixFooter {
+  position: unset;
 }
 
 footer {

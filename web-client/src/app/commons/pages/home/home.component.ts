@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
-        if (window.innerHeight > this.container.nativeElement.offsetHeight) {
+        if (window.innerHeight > this.container.nativeElement.offsetHeight + this.footer.footerHeight) {
             this.fixFooter = true;
         } else {
             this.fixFooter = false;
