@@ -6,7 +6,6 @@ import {AppComponent} from './app.component';
 import {HomeModule} from './commons/pages/home/home.module';
 import {NotFoundComponent} from './commons/pages/not-found/not-found.component';
 import {LOG_LOGGER_PROVIDERS} from 'angular2-logger/core';
-import {SettingModule} from './commons/pages/setting/setting.module';
 
 @NgModule({
 	declarations: [
@@ -15,7 +14,6 @@ import {SettingModule} from './commons/pages/setting/setting.module';
 	],
 	imports: [
 		HomeModule,
-		SettingModule,
 		AppRoutingModule
 	],
 	providers: [

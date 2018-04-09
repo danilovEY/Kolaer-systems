@@ -6,7 +6,8 @@ import {TokenApplyInterceptor} from './token-apply.interceptor';
 import {AuthInterceptor} from './auth.interceptor';
 import {TokenRefreshInterceptor} from './token-refresh.interceptor';
 import {AccountService} from '../../services/account.service';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
+import {AuthGuardService} from './auth-guard.service';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import {Router} from "@angular/router";
     ],
     providers: [
         AccountService,
+        AuthGuardService,
         {
             provide: 'AuthenticationService',
             useClass: AuthenticationRestService

@@ -1,14 +1,8 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar light-blue lighten-2 navbar-with-sidebar" #nav>
 
     <div class="collapse navbar-collapse">
-        <!--<ul class="navbar-nav mr-auto">-->
-            <!--<li class="nav-item" routerLinkActive="active">-->
-                <!--<a class="nav-link" [routerLink]="['/home/dashboard']" mdbRippleRadius>Информационная панель <span class="sr-only">(current)</span></a>-->
-            <!--</li>-->
-        <!--</ul>-->
-
         <ul class="navbar-nav ml-auto nav-flex-icons">
-            <li class="nav-item avatar dropdown" dropdown>
+            <li class="nav-item avatar dropdown" #dropdownMenu="bs-dropdown" dropdown>
 
                 <a *ngIf="!authenticationService.isAuthentication()" dropdownToggle mdbRippleRadius class="nav-link dropdown-toggle waves-effect waves-light">
                     <img src="assets/img/no_photo.jpg" class="rounded-circle z-depth-0" alt="avatar image" style="height: 35px;">
@@ -22,6 +16,8 @@
 
                 <div class="dropdown-menu dropdown-primary">
                     <a *ngIf="!authenticationService.isAuthentication()" class="dropdown-item" (click)="loginModal.show()" mdbRippleRadius>Авторизация</a>
+
+                    <a *ngIf="authenticationService.isAuthentication()" class="dropdown-item" (click)="navigateToSetting()" mdbRippleRadius>Настройки</a>
                     <a *ngIf="authenticationService.isAuthentication()" class="dropdown-item" (click)="logoutSubmit()" mdbRippleRadius>Выход</a>
                 </div>
             </li>

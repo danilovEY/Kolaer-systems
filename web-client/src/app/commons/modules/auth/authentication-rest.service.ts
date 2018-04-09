@@ -11,7 +11,6 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/empty';
 import {AccountService} from '../../services/account.service';
-import {Router} from "@angular/router";
 import "rxjs/add/operator/finally";
 
 @Injectable()
@@ -84,7 +83,7 @@ export class AuthenticationRestService implements AuthenticationService {
 			this._isAuthentication = false;
 			this.setToken(undefined);
 
-			this._injector.get(Router).navigate(['/home']);
+			// this._injector.get(Router).navigate(['/home']);
 		}));
 	}
 

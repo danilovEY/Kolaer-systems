@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
-import {Routes, RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {NotFoundComponent} from './commons/pages/not-found/not-found.component';
 
 const routes: Routes = [
-	{path: '', redirectTo: 'home', pathMatch: 'full'},
+	{ path: '', redirectTo: 'home', pathMatch: 'full' },
 	{ path: '**', component: NotFoundComponent }
 ];
 

@@ -1,13 +1,11 @@
 import {NgModule} from '@angular/core';
-import {NavbarModule} from '../../modules/navbar/navbar.module';
 import {SettingComponent} from './setting.component';
 import {SettingRoutingModule} from './setting.routing';
-import {BrowserModule} from '@angular/platform-browser';
+import {AppCoreModule} from '../../app-core.module';
 
 @NgModule({
     imports: [
-        BrowserModule,
-        NavbarModule,
+        AppCoreModule,
         SettingRoutingModule
     ],
     declarations: [
