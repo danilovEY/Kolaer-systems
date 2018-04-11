@@ -18,6 +18,7 @@ export class EmployeeModel extends BaseModel {
     photo: string;
     workPhoneNumber: string;
     homePhoneNumber: string;
+    personnelNumber: number;
     gender: Gender;
     post: PostModel;
 }

@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterContentInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {FooterComponent} from '../../modules/footer/footer.component';
 
 @Component({
@@ -6,7 +6,7 @@ import {FooterComponent} from '../../modules/footer/footer.component';
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterContentInit {
 
     @ViewChild('container')
     container: ElementRef;
@@ -21,16 +21,20 @@ export class HomeComponent implements OnInit {
 	}
 
     ngOnInit() {
+
+    }
+
+    ngAfterContentInit(): void {
         this.onResize(undefined);
     }
 
-    @HostListener('window:resize', ['$event'])
+    @HostListener('window:scroll', ['$event'])
     onResize(event: any) {
-        if (window.innerHeight > this.container.nativeElement.offsetHeight + this.footer.footerHeight) {
+        const footerHeight = this.footer.footerHeight === 0 ? 60 : this.footer.footerHeight;
+        if (window.innerHeight > this.container.nativeElement.offsetHeight + footerHeight * 6) {
             this.fixFooter = true;
         } else {
             this.fixFooter = false;
         }
     }
-
 }

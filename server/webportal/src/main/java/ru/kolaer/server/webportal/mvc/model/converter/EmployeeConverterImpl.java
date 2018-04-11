@@ -149,6 +149,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
 
         entity.setId(dto.getId());
         entity.setEmail(dto.getEmail());
+        entity.setPersonnelNumber(dto.getPersonnelNumber());
         entity.setInitials(dto.getInitials());
         entity.setFirstName(dto.getFirstName());
         entity.setSecondName(dto.getSecondName());
@@ -171,6 +172,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         }
 
         dto.setId(entity.getId());
+        dto.setPersonnelNumber(entity.getPersonnelNumber());
         dto.setEmail(entity.getEmail());
         dto.setFirstName(entity.getFirstName());
         dto.setSecondName(entity.getSecondName());
