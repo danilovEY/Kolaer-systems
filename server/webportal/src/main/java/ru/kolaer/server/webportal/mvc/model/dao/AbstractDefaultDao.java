@@ -54,19 +54,19 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
     @Override
     public T persist(@NonNull T obj) {
-        getSession().persist(checkValue(obj));
+        getSession().persist(checkValueBeforePersist(obj));
         return obj;
     }
 
     @Override
     public List<T> persist(@NonNull List<T> objs) {
         Session currentSession = getSession();
-        return batchForeach(checkValue(objs), batchSize, currentSession, currentSession::persist);
+        return batchForeach(checkValueBeforePersist(objs), batchSize, currentSession, currentSession::persist);
     }
 
     @Override
     public T delete(@NonNull T obj) {
-        sessionFactory.getCurrentSession().delete(checkValue(obj));
+        sessionFactory.getCurrentSession().delete(checkValueBeforeDelete(obj));
         return obj;
     }
 
@@ -90,14 +90,14 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
     @Override
     public T update(@NonNull T obj) {
-        getSession().update(checkValue(obj));
+        getSession().merge(checkValueBeforeUpdate(obj));
         return obj;
     }
 
     @Override
     public List<T> update(@NonNull List<T> objs) {
         Session currentSession = getSession();
-        return batchForeach(checkValue(objs), batchSize, currentSession, currentSession::update);
+        return batchForeach(checkValueBeforeUpdate(objs), batchSize, currentSession, currentSession::merge);
     }
 
     @Override

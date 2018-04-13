@@ -77,6 +77,9 @@ public class EmployeeConverterImpl implements EmployeeConverter {
     public EmployeeDto convertToDto(EmployeeEntity model) {
         EmployeeDto employeeDto = updateStatic(new EmployeeDto(), model);
 
+        if(employeeDto == null) {
+            return employeeDto;
+        }
 
         if(model.getPostId() != null) {
             Optional.ofNullable(model.getPost())

@@ -8,13 +8,15 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
+import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
+import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
 import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
-import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.security.ServerAuthType;
@@ -23,6 +25,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 31.08.2016.
@@ -33,7 +36,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private AccountDto defaultAccount;
 
     private final ServerAuthType serverAuthType;
-    private final AccountService accountService;
+    private final AccountDao accountDao;
+    private final AccountConverter accountConverter;
     private final EmployeeService employeeService;
     private final AccountLDAP accountLDAP;
     private final EmployeeLDAP employeeLDAP;
@@ -41,12 +45,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     public AuthenticationServiceImpl(@Value("${server.auth.type}") String serverAuthType,
-                                     AccountService accountService,
+                                     AccountDao accountDao,
+                                     AccountConverter accountConverter,
                                      EmployeeService employeeService,
                                      AccountLDAP accountLDAP,
                                      EmployeeLDAP employeeLDAP) {
         this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
-        this.accountService = accountService;
+        this.accountDao = accountDao;
+        this.accountConverter = accountConverter;
         this.employeeService = employeeService;
         this.accountLDAP = accountLDAP;
         this.employeeLDAP = employeeLDAP;
@@ -76,7 +82,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public String getCurrentLogin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && !auth.getName().equals("anonymousUser")){
+            return auth.getName();
+        }
+
+        return null;
+    }
+
+    @Override
     @Cacheable(value = "accounts", cacheManager = "springCM")
+    @Transactional(readOnly = true)
     public AccountDto getAccountWithEmployeeByLogin(String login) {
         AccountDto account;
 
@@ -96,7 +113,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 }
             }
         } else {
-            account = accountService.getByLogin(login);
+            account = accountConverter.convertToDto(accountDao.findName(login));
         }
 
         if (account.getEmployee() == null) {
@@ -108,12 +125,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AccountDto getAccountByAuthentication() {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && !auth.getName().equals("anonymousUser")){
-            return self.getAccountWithEmployeeByLogin(auth.getName());
-        }
-
-        return this.defaultAccount;
+        return Optional.ofNullable(getCurrentLogin())
+                .map(self::getAccountWithEmployeeByLogin)
+                .orElse(this.defaultAccount);
     }
 
     @Override

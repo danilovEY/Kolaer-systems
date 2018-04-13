@@ -1,59 +1,70 @@
 <div class="container">
-    <div class="row">
+    <spinner [show]="loadCurrentAccount" [medium]="true"></spinner>
+    <div class="row" *ngIf="!loadCurrentAccount">
         <div class="col-md-6" [ngClass]="{'col-md-6': currentAccount?.employee !== undefined && currentAccount?.employee.id !== null,
         'col-md-12': currentAccount?.employee === undefined || currentAccount?.employee.id === null}">
             <div class="card-padding">
                 <div class="card">
                     <h3 class="card-header primary-color white-text">Аккаунт</h3>
+
                     <div class="card-body">
                         <h4 class="card-title">Общая информация</h4>
-                        <div class="row">
-                            <!--First column-->
-                            <div class="col-md-6">
-                                <div class="md-form">
-                                    <i class="fa fa-user prefix"></i>
-                                    <input mdbActive type="text" id="form1" class="form-control" value="{{ currentAccount?.username }}">
-                                    <label for="form1">Логин</label>
+                        <form (ngSubmit)="submitAccountForm()" [formGroup]="accountForm">
+                            <div class="row">
+                                <!--First column-->
+                                <div class="col-md-6">
+                                    <div class="md-form">
+                                        <i class="fa fa-user prefix"></i>
+                                        <input mdbActive type="text" id="login" formControlName="login"
+                                               class="form-control" value="{{ currentAccount?.username }}">
+                                        <label for="login">Логин</label>
+                                    </div>
+                                </div>
+
+                                <!--Second column-->
+                                <div class="col-md-6">
+                                    <div class="md-form">
+                                        <i class="fa fa-envelope prefix"></i>
+                                        <input mdbActive type="text" id="email" formControlName="email"
+                                               class="form-control" value="{{ currentAccount?.email }}">
+                                        <label for="email">Email</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="md-form">
+                                        <i class="fa fa-smile-o prefix"></i>
+                                        <input mdbActive type="text" id="chatName" formControlName="chatName"
+                                               class="form-control" value="{{ currentAccount?.chatName }}">
+                                        <label for="chatName">Имя в чате</label>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!--Second column-->
-                            <div class="col-md-6">
-                                <div class="md-form">
-                                    <i class="fa fa-envelope prefix"></i>
-                                    <input mdbActive type="text" id="form2" class="form-control" value="{{ currentAccount?.email }}">
-                                    <label for="form2">Email</label>
+                            <h4 class="card-title">Доступы</h4>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input mdbDeepDirective type="checkbox" disabled class="filled-in"
+                                               [checked]="currentAccount?.accessUser" id="checkbox1">
+                                        <label for="checkbox1">Доступ в систему</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input mdbDeepDirective type="checkbox" disabled class="filled-in"
+                                               [checked]="currentAccount?.accessOit" id="checkbox2">
+                                        <label for="checkbox2">Администратор системы</label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="md-form">
-                                    <i class="fa fa-smile-o prefix"></i>
-                                    <input mdbActive type="text" id="form3" class="form-control" value="{{ currentAccount?.chatName }}">
-                                    <label for="form3">Имя в чате</label>
-                                </div>
+
+                            <div class="text-right">
+                                <button type="submit" class="btn btn-primary waves-light" mdbRippleRadius [disabled]="accountForm.invalid">
+                                    Сохранить
+                                </button>
                             </div>
-                        </div>
-
-                        <h4 class="card-title">Доступы</h4>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <input mdbDeepDirective type="checkbox" disabled class="filled-in" [checked]="currentAccount?.accessUser" id="checkbox1">
-                                    <label for="checkbox1">Доступ в систему</label>
-                                </div>
-                                <div class="form-group">
-                                    <input mdbDeepDirective type="checkbox" disabled class="filled-in" [checked]="currentAccount?.accessOit" id="checkbox2">
-                                    <label for="checkbox2">Администратор системы</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-right">
-                            <a href="#" class="btn btn-primary waves-light" mdbRippleRadius>Сохранить</a>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -67,27 +78,31 @@
                     <div class="card-body">
                         <h4 class="card-title">Общая информация</h4>
                         <!--Card image-->
-                        <img class="mx-auto d-block" src="{{ currentAccount?.employee.photo }}" alt="{{ currentAccount?.employee?.initials }}" style="margin-bottom: 20px;">
+                        <img class="mx-auto d-block" src="{{ currentAccount?.employee.photo }}"
+                             alt="{{ currentAccount?.employee?.initials }}" style="margin-bottom: 20px;">
 
                         <div class="row">
                             <!--First column-->
                             <div class="col-md-4">
                                 <div class="md-form">
-                                    <input mdbActive type="text" id="secondName" disabled class="form-control" value="{{ currentAccount?.employee?.secondName }}">
+                                    <input mdbActive type="text" id="secondName" disabled class="form-control"
+                                           value="{{ currentAccount?.employee?.secondName }}">
                                     <label for="secondName">Фамилия</label>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="md-form">
-                                    <input mdbActive type="text" id="firstName" disabled class="form-control" value="{{ currentAccount?.employee.firstName }}">
+                                    <input mdbActive type="text" id="firstName" disabled class="form-control"
+                                           value="{{ currentAccount?.employee.firstName }}">
                                     <label for="firstName">Имя</label>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="md-form">
-                                    <input mdbActive type="text" id="thirdName" disabled class="form-control" value="{{ currentAccount?.employee.thirdName }}">
+                                    <input mdbActive type="text" id="thirdName" disabled class="form-control"
+                                           value="{{ currentAccount?.employee.thirdName }}">
                                     <label for="thirdName">Отчество</label>
                                 </div>
                             </div>
@@ -96,14 +111,16 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="md-form">
-                                    <input mdbActive type="text" id="personnelNumber" disabled class="form-control" value="{{ currentAccount?.employee?.personnelNumber }}">
+                                    <input mdbActive type="text" id="personnelNumber" disabled class="form-control"
+                                           value="{{ currentAccount?.employee?.personnelNumber }}">
                                     <label for="personnelNumber">Табельный нормер</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="md-form">
-                                    <input mdbActive type="text" id="birthday" disabled class="form-control" value="{{ currentAccount?.employee?.birthday }}">
+                                    <input mdbActive type="text" id="birthday" disabled class="form-control"
+                                           value="{{ currentAccount?.employee?.birthday }}">
                                     <label for="birthday">Дата рождения</label>
                                 </div>
                             </div>
@@ -112,14 +129,16 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="md-form">
-                                    <input mdbActive type="text" id="workPhoneNumber" class="form-control" value="{{ currentAccount?.employee?.workPhoneNumber }}">
+                                    <input mdbActive type="text" id="workPhoneNumber" class="form-control"
+                                           value="{{ currentAccount?.employee?.workPhoneNumber }}">
                                     <label for="workPhoneNumber">Рабочий номер телефона</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="md-form">
-                                    <input mdbActive type="text" id="homePhoneNumber" class="form-control" value="{{ currentAccount?.employee?.homePhoneNumber }}">
+                                    <input mdbActive type="text" id="homePhoneNumber" class="form-control"
+                                           value="{{ currentAccount?.employee?.homePhoneNumber }}">
                                     <label for="homePhoneNumber">Домашний номер телефона</label>
                                 </div>
                             </div>
@@ -128,7 +147,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="md-form">
-                                    <input mdbActive type="text" id="postName" disabled class="form-control" value="{{ currentAccount?.employee?.post.name }}">
+                                    <input mdbActive type="text" id="postName" disabled class="form-control"
+                                           value="{{ currentAccount?.employee?.post.name }}">
                                     <label for="postName">Должность</label>
                                 </div>
                             </div>
@@ -137,7 +157,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="md-form">
-                                    <input mdbActive type="text" id="departmentName" disabled class="form-control" value="{{ currentAccount?.employee?.department.name }}">
+                                    <input mdbActive type="text" id="departmentName" disabled class="form-control"
+                                           value="{{ currentAccount?.employee?.department.name }}">
                                     <label for="departmentName">Цех/Отдел</label>
                                 </div>
                             </div>

@@ -119,7 +119,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     }
 
     @Override
-    public EmployeeEntity checkValue(EmployeeEntity entity) {
+    public EmployeeEntity checkValueBeforePersist(EmployeeEntity entity) {
         if(entity == null) {
             throw new IllegalArgumentException("Сотрудник NULL");
         }

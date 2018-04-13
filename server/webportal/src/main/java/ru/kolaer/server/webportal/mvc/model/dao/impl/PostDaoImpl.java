@@ -19,7 +19,7 @@ public class PostDaoImpl extends AbstractDefaultDao<PostEntity> implements PostD
     }
 
     @Override
-    public PostEntity checkValue(PostEntity entity) {
+    public PostEntity checkValueBeforePersist(PostEntity entity) {
         if(entity == null) {
             throw new IllegalArgumentException("Должность NULL");
         }

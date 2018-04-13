@@ -7,6 +7,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,16 +41,36 @@ public interface DefaultDao<T extends BaseEntity> {
 
     int clear();
 
-    default T checkValue(T entity) {
-        return entity;
-    }
-
-    default List<T> checkValue(List<T> entities) {
+    default List<T> checkValues(Function<T, T> consumer, List<T> entities) {
         return entities == null || entities.isEmpty()
                 ? Collections.emptyList()
                 : entities.stream()
-                .map(this::checkValue)
+                .map(consumer)
                 .collect(Collectors.toList());
+    }
+
+    default T checkValueBeforeUpdate(T entity) {
+        return entity;
+    }
+
+    default List<T> checkValueBeforeUpdate(List<T> entities) {
+        return this.checkValues(this::checkValueBeforeUpdate, entities);
+    }
+
+    default T checkValueBeforePersist(T entity) {
+        return entity;
+    }
+
+    default List<T> checkValueBeforePersist(List<T> entities) {
+        return this.checkValues(this::checkValueBeforePersist, entities);
+    }
+
+    default T checkValueBeforeDelete(T entity) {
+        return entity;
+    }
+
+    default List<T> checkValueBeforeDelete(List<T> entities) {
+        return this.checkValues(this::checkValueBeforePersist, entities);
     }
 
     default T save(@NonNull T entity) {

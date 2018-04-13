@@ -30,7 +30,7 @@ public class DepartmentDaoImpl extends AbstractDefaultDao<DepartmentEntity> impl
     }
 
     @Override
-    public DepartmentEntity checkValue(DepartmentEntity entity) {
+    public DepartmentEntity checkValueBeforePersist(DepartmentEntity entity) {
         if(entity == null) {
             throw new IllegalArgumentException("Подразделение NULL");
         }
