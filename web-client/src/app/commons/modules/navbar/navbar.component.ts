@@ -1,20 +1,30 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    HostListener,
+    OnDestroy,
+    OnInit,
+    Renderer2,
+    ViewChild
+} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationObserverService} from '../../services/authentication-observer.service';
 import {AccountModel} from '../../models/account.model';
-import {AuthenticationService} from '../auth/authentication.service';
 import {ModalDirective} from 'angular-bootstrap-md/modals/modal.directive';
 import {ServerExceptionModel} from '../../models/server-exception.model';
 import {AccountService} from '../../services/account.service';
 import {Router} from '@angular/router';
 import {BsDropdownDirective} from 'angular-bootstrap-md/dropdown/dropdown.directive';
+import {AuthenticationRestService} from '../auth/authentication-rest.service';
 
 @Component({
     selector: 'app-navbar',
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit, AfterViewInit, AuthenticationObserverService {
+export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy, AuthenticationObserverService {
+
 
     loginForm: FormGroup;
     serverError: ServerExceptionModel = undefined;
@@ -34,7 +44,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, AuthenticationObs
     navbar: ElementRef;
 
 
-    constructor(@Inject('AuthenticationService') public authenticationService: AuthenticationService,
+    constructor(public authenticationService: AuthenticationRestService,
                 public accountService: AccountService,
                 private _renderer: Renderer2,
                 private _router: Router) {
@@ -42,7 +52,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, AuthenticationObs
     }
 
     ngAfterViewInit(): void {
-        if (!this.authenticationService.isAuthentication() && !this.loginModal.isShown &&
+        if (!this.authenticationService.authentication && !this.loginModal.isShown &&
             this._router.routerState.snapshot.root.queryParams['login'] !== undefined) {
             this.loginModal.show();
         }
@@ -54,13 +64,17 @@ export class NavbarComponent implements OnInit, AfterViewInit, AuthenticationObs
             password: new FormControl(''),
         });
 
-        if (this.authenticationService.isAuthentication() && !this.accountModel) {
+        if (this.authenticationService.authentication && !this.accountModel) {
             this.accountService
                 .getCurrentAccount()
                 .subscribe(account => this.accountModel = account);
         }
 
         this.authenticationService.registerObserver(this);
+    }
+
+    ngOnDestroy(): void {
+        console.log(this.authenticationService.authentication);
     }
 
     navigateToSetting(): void {
@@ -103,12 +117,15 @@ export class NavbarComponent implements OnInit, AfterViewInit, AuthenticationObs
         }
     }
 
-    login(account: AccountModel): void {
-        this.accountModel = account;
+    login(): void {
+        this.accountService
+            .getCurrentAccount()
+            .subscribe(account => this.accountModel = account);
     }
 
     logout(): void {
         this.accountModel = undefined;
+
     }
 
     logoutSubmit(): void {

@@ -1,9 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {AccountService} from '../../services/account.service';
 import {AccountModel} from '../../models/account.model';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {environment} from '../../../../environments/environment';
+import {ServerExceptionModel} from '../../models/server-exception.model';
+import {Observable} from 'rxjs/Observable';
+import {AuthenticationRestService} from '../../modules/auth/authentication-rest.service';
 
 @Component({
     selector: 'app-setting',
@@ -16,9 +19,12 @@ export class SettingComponent implements OnInit {
     loadCurrentAccount: boolean = true;
     currentAccount: AccountModel;
 
+    serverError: ServerExceptionModel;
+
     accountForm: FormGroup;
 
-    constructor(private _accountService: AccountService,
+    constructor(private _authService: AuthenticationRestService,
+                private _accountService: AccountService,
                 private _httpClient: HttpClient) {
     }
 
@@ -34,21 +40,33 @@ export class SettingComponent implements OnInit {
             .subscribe(account => {
                 this.currentAccount = account;
 
-                this.accountForm.value.chatName = account.chatName;
-                this.accountForm.value.login = account.username;
-                this.accountForm.value.email = account.email;
+                this.accountForm.controls['chatName'].setValue(account.chatName);
+                this.accountForm.controls['login'].setValue(account.username);
+                this.accountForm.controls['email'].setValue(account.email);
             });
     }
 
     submitAccountForm() {
-        this.currentAccount.chatName = this.accountForm.value.chatName;
-        this.currentAccount.username = this.accountForm.value.login;
-        this.currentAccount.email = this.accountForm.value.email;
+        const currentAccountToSend: AccountModel = new AccountModel();
+        currentAccountToSend.chatName = this.accountForm.value.chatName;
+        currentAccountToSend.username = this.accountForm.value.login;
+        currentAccountToSend.email = this.accountForm.value.email;
+        currentAccountToSend.accessOit = this.currentAccount.accessOit;
+        currentAccountToSend.accessUser = this.currentAccount.accessUser;
+        currentAccountToSend.employee = this.currentAccount.employee;
+        currentAccountToSend.id = this.currentAccount.id;
 
-        this._httpClient.post(this.updateAccountUrl, this.currentAccount)
+        this._httpClient.post(this.updateAccountUrl, currentAccountToSend)
             .subscribe(
-                (result: AccountModel) => console.log(result),
-                    error => console.log(error));
+                (result: any) => {
+                    if (currentAccountToSend.username !== this.currentAccount.username) {
+                        this._authService.logout().subscribe(Observable.empty);
+                    }
+                },
+                (error: HttpErrorResponse) => {
+                    this.serverError = error.error;
+                });
     }
+
 }
 

@@ -2,13 +2,13 @@ import {HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {AuthInterceptor} from './auth.interceptor';
-import {AuthenticationService} from './authentication.service';
+import {AuthenticationRestService} from './authentication-rest.service';
 
 @Injectable()
 export class TokenApplyInterceptor implements HttpInterceptor, AuthInterceptor {
-    private _authService: AuthenticationService;
+    private _authService: AuthenticationRestService;
     
-    init(http: HttpClient, authService: AuthenticationService) {
+    init(http: HttpClient, authService: AuthenticationRestService) {
         this._authService = authService;
     }
     

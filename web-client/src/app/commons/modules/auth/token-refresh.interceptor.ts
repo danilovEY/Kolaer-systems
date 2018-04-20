@@ -2,20 +2,20 @@ import {HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {AuthInterceptor} from './auth.interceptor';
-import {AuthenticationService} from './authentication.service';
 import {Subscriber} from 'rxjs/Subscriber';
 import {Router} from '@angular/router';
 import 'rxjs/add/operator/catch';
+import {AuthenticationRestService} from './authentication-rest.service';
 
 @Injectable()
 export class TokenRefreshInterceptor implements HttpInterceptor, AuthInterceptor {
-    private _authService: AuthenticationService;
+    private _authService: AuthenticationRestService;
     private _isRefreshToken: boolean = false;
     private _http: HttpClient;
     private _requestMap: Map<Subscriber<any>, HttpRequest<any>> = new Map<Subscriber<any>, HttpRequest<any>>();
     private _router: Router;
 
-    init(http: HttpClient, authService: AuthenticationService) {
+    init(http: HttpClient, authService: AuthenticationRestService) {
         this._authService = authService;
         this._http = http;
     }

@@ -1,11 +1,9 @@
-import {APP_INITIALIZER, Inject, Injector, NgModule} from '@angular/core';
+import {APP_INITIALIZER, Injector, NgModule} from '@angular/core';
 import {AuthenticationRestService} from './authentication-rest.service';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
-import {AuthenticationService} from './authentication.service';
 import {TokenApplyInterceptor} from './token-apply.interceptor';
 import {AuthInterceptor} from './auth.interceptor';
 import {TokenRefreshInterceptor} from './token-refresh.interceptor';
-import {AccountService} from '../../services/account.service';
 import {Router} from '@angular/router';
 import {AuthGuardService} from './auth-guard.service';
 
@@ -15,16 +13,12 @@ import {AuthGuardService} from './auth-guard.service';
         HttpClientModule
     ],
     providers: [
-        AccountService,
         AuthGuardService,
-        {
-            provide: 'AuthenticationService',
-            useClass: AuthenticationRestService
-        },
+        AuthenticationRestService,
         {
             provide: APP_INITIALIZER,
             useFactory: refreshToken,
-            deps: ['AuthenticationService'],
+            deps: [AuthenticationRestService],
             multi: true
         },
         {
@@ -41,7 +35,7 @@ import {AuthGuardService} from './auth-guard.service';
 })
 export class AuthModule {
 
-    constructor(@Inject('AuthenticationService') private _authService: AuthenticationService,
+    constructor(private _authService: AuthenticationRestService,
                 private _injector: Injector,
                 private _http: HttpClient,
                 private _router: Router) {
@@ -55,7 +49,7 @@ export class AuthModule {
     }
 }
 
-export function refreshToken(auth: AuthenticationService) {
+export function refreshToken(auth: AuthenticationRestService) {
     return () => auth.refreshToken();
 }
 

@@ -1,11 +1,11 @@
-import {Inject, Injectable} from '@angular/core';
-import {AuthenticationService} from '../../commons/modules/auth/authentication.service';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {EmployeeModel} from '../../commons/models/employee.model';
 import {Observable} from 'rxjs/Observable';
 import {environment} from '../../../environments/environment';
 import 'rxjs/add/operator/map';
-import {OtherEmployeeModel} from "../../commons/models/other-employee.model";
+import {OtherEmployeeModel} from '../../commons/models/other-employee.model';
+import {AuthenticationRestService} from '../../commons/modules/auth/authentication-rest.service';
 
 @Injectable()
 export class DashboardService {
@@ -13,7 +13,7 @@ export class DashboardService {
     private readonly getAllOtherEmployeeBithdayToday: string =
         `${environment.publicServerUrl}/organizations/employees/get/users/birthday/today`;
 
-    constructor(@Inject('AuthenticationService') private _authService: AuthenticationService,
+    constructor(private _authService: AuthenticationRestService,
                 private _httpClient: HttpClient) {
 
     }

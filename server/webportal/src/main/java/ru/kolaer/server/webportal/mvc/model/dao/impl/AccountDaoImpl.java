@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -46,6 +47,9 @@ public class AccountDaoImpl extends AbstractDefaultDao<AccountEntity> implements
 
     @Override
     public AccountEntity checkValueBeforeUpdate(AccountEntity entity) {
+        Session session = getSession();
+        session.detach(entity);
+
         List<AccountEntity> result = getSession()
                 .createQuery("FROM " + getEntityName() + " ac WHERE ac.id <> :id AND " +
                         "(ac.username=:username OR ac.chatName=:chatName OR ac.email=:email)", getEntityClass())

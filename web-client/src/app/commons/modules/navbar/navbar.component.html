@@ -4,21 +4,22 @@
         <ul class="navbar-nav ml-auto nav-flex-icons">
             <li class="nav-item avatar dropdown" #dropdownMenu="bs-dropdown" dropdown>
 
-                <a *ngIf="!authenticationService.isAuthentication()" dropdownToggle mdbRippleRadius class="nav-link dropdown-toggle waves-effect waves-light">
+                <a *ngIf="!authenticationService.authentication" dropdownToggle mdbRippleRadius class="nav-link dropdown-toggle waves-effect waves-light">
                     <img src="assets/img/no_photo.jpg" class="rounded-circle z-depth-0" alt="avatar image" style="height: 35px;">
                     Вы не авторизованы
                 </a>
 
-                <a *ngIf="authenticationService.isAuthentication()" dropdownToggle mdbRippleRadius class="nav-link dropdown-toggle waves-effect waves-light">
+                <a *ngIf="authenticationService.authentication" dropdownToggle mdbRippleRadius class="nav-link dropdown-toggle waves-effect waves-light">
                     <img src="assets/img/no_photo.jpg" class="rounded-circle z-depth-0" alt="avatar image" style="height: 35px;">
                     {{ accountModel?.username }}
                 </a>
 
                 <div class="dropdown-menu dropdown-primary">
-                    <a *ngIf="!authenticationService.isAuthentication()" class="dropdown-item" (click)="loginModal.show()" mdbRippleRadius>Авторизация</a>
+                    <a *ngIf="!authenticationService.authentication" class="dropdown-item" (click)="loginModal.show()" mdbRippleRadius>Авторизация</a>
 
-                    <a *ngIf="authenticationService.isAuthentication()" class="dropdown-item" (click)="navigateToSetting()" mdbRippleRadius>Настройки</a>
-                    <a *ngIf="authenticationService.isAuthentication()" class="dropdown-item" (click)="logoutSubmit()" mdbRippleRadius>Выход</a>
+                    <a *ngIf="authenticationService.authentication" class="dropdown-item" (click)="navigateToSetting()" mdbRippleRadius>Настройки</a>
+                    <a *ngIf="authenticationService.authentication" class="dropdown-item" (click)="logoutSubmit()" mdbRippleRadius>Выход</a>
+                    <a class="dropdown-item" (click)="logoutSubmit()" mdbRippleRadius>{{ authenticationService._authObserversList.length }}</a>
                 </div>
             </li>
         </ul>

@@ -9,6 +9,13 @@
 
                     <div class="card-body">
                         <h4 class="card-title">Общая информация</h4>
+
+                        <ul class="list-group loginErrorMessage" *ngIf="serverError != undefined">
+                            <li class="list-group-item list-group-item-danger"> {{ serverError?.message }}</li>
+                        </ul>
+
+                        <br/>
+
                         <form (ngSubmit)="submitAccountForm()" [formGroup]="accountForm">
                             <div class="row">
                                 <!--First column-->
