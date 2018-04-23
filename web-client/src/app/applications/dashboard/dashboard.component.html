@@ -2,9 +2,9 @@
         <!-- Birthday -->
         <div class="card-padding">
             <div class="card">
-                <h3 class="card-header primary-color white-text" *ngIf="employeesBirthdayToday.length > 0">Сегодня день рождения</h3>
-                <h3 class="card-header primary-color white-text" *ngIf="employeesBirthdayToday.length === 0">Сегодня нет дней рождений</h3>
-                <div class="card-body">
+                <h3 class="card-header primary-color white-text" *ngIf="employeesBirthdayToday.length > 0 || otherEmployeesBirthdayToday.length > 0">Сегодня день рождения</h3>
+                <h3 class="card-header primary-color white-text" *ngIf="employeesBirthdayToday.length === 0 && otherEmployeesBirthdayToday.length === 0">Сегодня нет дней рождений</h3>
+                <div class="card-body" *ngIf="employeesBirthdayToday.length > 0">
                     <h4 class="card-title">Сотрудники КолАЭР</h4>
                     <spinner [show]="loadingEmployeesBirthdayToday" [medium]="true"></spinner>
                     <div class="list-group" *ngFor="let employee of employeesBirthdayToday">
