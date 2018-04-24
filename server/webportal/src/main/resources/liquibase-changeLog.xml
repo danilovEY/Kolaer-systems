@@ -23,4 +23,6 @@
     <include file="classpath:SQL/14-chat-message-table.xml"/>
     <include file="classpath:SQL/15-chat-message-read-table.xml"/>
 
+    <include file="classpath:SQL/19-bank-account-table.xml"/>
+
 </databaseChangeLog>

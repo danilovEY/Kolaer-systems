@@ -21,13 +21,13 @@ public class BankAccountEntity implements BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "employee_id", nullable = false)
+    @Column(name = "employee_id")
     private Long employeeId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", insertable=false, updatable=false)
     private EmployeeEntity employeeEntity;
 
-    @Column(name = "check", nullable = false, length = 16)
+    @Column(name = "check", nullable = false, length = 16, unique = true)
     private String check;
 }

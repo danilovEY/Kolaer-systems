@@ -99,7 +99,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             Map<String, String> employeeKeyPostMap = new HashMap<>();
             Map<String, String> employeeKeyDepMap = new HashMap<>();
 
-            for (int i = 1; i < sheetAt.getLastRowNum(); i++) {
+            for (int i = 1; i <= sheetAt.getLastRowNum(); i++) {
                 XSSFRow row = sheetAt.getRow(i);
 
                 EmployeeEntity newEmployeeEntity = excelReaderEmployee.process(row, nameColumns);
