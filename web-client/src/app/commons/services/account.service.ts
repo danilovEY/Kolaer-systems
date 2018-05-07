@@ -33,7 +33,7 @@ export class AccountService implements AuthenticationObserverService {
             return this._httpClient.get<AccountModel>(this._getAuthUserUrl)
                 .pipe(
                     catchError(error => {
-                        if (error.status === 403) {
+                        if (error.status === 403 || error.status === 401) {
                            this._authService.logout().subscribe(Observable.empty);
                         }
                         return error;

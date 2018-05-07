@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AccountService} from '../../services/account.service';
 import {AccountModel} from '../../models/account.model';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -7,6 +7,8 @@ import {environment} from '../../../../environments/environment';
 import {ServerExceptionModel} from '../../models/server-exception.model';
 import {Observable} from 'rxjs/Observable';
 import {AuthenticationRestService} from '../../modules/auth/authentication-rest.service';
+import {ModalDirective} from 'angular-bootstrap-md/modals/modal.directive';
+import {ChangePasswordModel} from "../../models/change-password.model";
 
 @Component({
     selector: 'app-setting',
@@ -15,6 +17,7 @@ import {AuthenticationRestService} from '../../modules/auth/authentication-rest.
 })
 export class SettingComponent implements OnInit {
     private readonly updateAccountUrl: string = `${environment.publicServerUrl}/user/update`;
+    private readonly updatePasswordUrl: string = `${environment.publicServerUrl}/user/update/password`;
 
     loadCurrentAccount: boolean = true;
     currentAccount: AccountModel;
@@ -22,6 +25,13 @@ export class SettingComponent implements OnInit {
     serverError: ServerExceptionModel;
 
     accountForm: FormGroup;
+    changePassForm: FormGroup;
+
+    @ViewChild('changePasswordModal')
+    changePasswordModal: ModalDirective;
+
+    @ViewChild('successModal')
+    successModal: ModalDirective;
 
     constructor(private _authService: AuthenticationRestService,
                 private _accountService: AccountService,
@@ -33,6 +43,11 @@ export class SettingComponent implements OnInit {
             login: new FormControl('', [Validators.minLength(3)]),
             email: new FormControl('', [Validators.email]),
             chatName: new FormControl('', [Validators.minLength(3)]),
+        });
+
+        this.changePassForm = new FormGroup({
+            oldPassword: new FormControl('', []),
+            newPassword: new FormControl('', []),
         });
 
         this._accountService.getCurrentAccount()
@@ -62,6 +77,33 @@ export class SettingComponent implements OnInit {
                     if (currentAccountToSend.username !== this.currentAccount.username) {
                         this._authService.logout().subscribe(Observable.empty);
                     }
+                },
+                (error: HttpErrorResponse) => {
+                    this.serverError = error.error;
+                });
+    }
+
+    sibmitUpdatePassword() {
+        const changePassword: ChangePasswordModel = new ChangePasswordModel();
+        changePassword.oldPassword = this.changePassForm.value.oldPassword;
+        changePassword.newPassword = this.changePassForm.value.newPassword;
+
+        this._httpClient.post(this.updatePasswordUrl, changePassword)
+            .finally(() => {
+                this.changePasswordModal.hide();
+                this.changePassForm.reset();
+            })
+            .subscribe(
+                (result: any) => {
+                    this.successModal.show();
+
+                    setTimeout(() => {
+                        if (this.successModal.isShown) {
+                            this.successModal.hide();
+                        }
+
+                        this._authService.logout().subscribe(Observable.empty);
+                    }, 2000)
                 },
                 (error: HttpErrorResponse) => {
                     this.serverError = error.error;
