@@ -19,7 +19,6 @@
 
                     <a *ngIf="authenticationService.authentication" class="dropdown-item" (click)="navigateToSetting()" mdbRippleRadius>Настройки</a>
                     <a *ngIf="authenticationService.authentication" class="dropdown-item" (click)="logoutSubmit()" mdbRippleRadius>Выход</a>
-                    <a class="dropdown-item" (click)="logoutSubmit()" mdbRippleRadius>{{ authenticationService._authObserversList.length }}</a>
                 </div>
             </li>
         </ul>

@@ -26,7 +26,6 @@ export class AuthenticationRestService {
 
 	constructor(private _httpClient: HttpClient,
                 private _injector: Injector) {
-
 	}
 
     ngOnInit(): void {

@@ -74,7 +74,6 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy, Authen
     }
 
     ngOnDestroy(): void {
-        console.log(this.authenticationService.authentication);
     }
 
     navigateToSetting(): void {

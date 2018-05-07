@@ -1,6 +1,5 @@
-import {NgModule} from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {AuthModule} from './modules/auth/auth.module';
 import {SpinnerComponent} from './components/spinner/spinner.component';
 
 @NgModule({
@@ -8,15 +7,20 @@ import {SpinnerComponent} from './components/spinner/spinner.component';
 		SpinnerComponent
 	],
 	imports: [
-		CommonModule,
-		AuthModule
+		CommonModule
 	],
 	exports: [
 		CommonModule,
-        AuthModule,
         SpinnerComponent
 	]
 })
 export class AppCoreModule {
+    static forRoot(): ModuleWithProviders {
+        return {
+            ngModule: AppCoreModule,
+            providers: [
+            ]
+        };
+    }
 
 }

@@ -6,7 +6,8 @@ import {AppComponent} from './app.component';
 import {HomeModule} from './commons/pages/home/home.module';
 import {NotFoundComponent} from './commons/pages/not-found/not-found.component';
 import {LOG_LOGGER_PROVIDERS} from 'angular2-logger/core';
-import {AppCoreModule} from "./commons/app-core.module";
+import {AppCoreModule} from './commons/app-core.module';
+import {AuthModule} from './commons/modules/auth/auth.module';
 
 @NgModule({
 	declarations: [
@@ -14,7 +15,8 @@ import {AppCoreModule} from "./commons/app-core.module";
 		NotFoundComponent
 	],
 	imports: [
-        AppCoreModule,
+        AuthModule.forRoot(),
+        AppCoreModule.forRoot(),
 		HomeModule,
 		AppRoutingModule
 	],
@@ -24,4 +26,5 @@ import {AppCoreModule} from "./commons/app-core.module";
 	bootstrap: [AppComponent]
 })
 export class AppModule {
+
 }
