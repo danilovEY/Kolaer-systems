@@ -144,7 +144,7 @@ public class RegisterTicketScheduler {
     private boolean sendMail(List<SendTicketDto> tickets, String header, String typeTickets, String text) {
         if (tickets.size() > 0) {
             try {
-                final File genFile = this.generateTextFile(tickets, header, typeTickets, text);
+                final File genFile = this.generateTextFile(tickets, header, typeTickets);
                 if (genFile != null) {
                     this.mailSender.send(mimeMessage -> {
                         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -163,7 +163,7 @@ public class RegisterTicketScheduler {
         return false;
     }
 
-    private File generateTextFile(List<SendTicketDto> tickets, String header, String type, String text) throws IOException {
+    private File generateTextFile(List<SendTicketDto> tickets, String header, String type) throws IOException {
         File dirTickets = new File("tickets");
         if(!dirTickets.exists()) {
             dirTickets.mkdir();
@@ -193,7 +193,6 @@ public class RegisterTicketScheduler {
             printWriter.printf("H %s %s %s", dateTime[0], dateTime[1], header);
             printWriter.printf(System.lineSeparator());
             int countTickets = 0;
-            StringBuilder textBuilder = new StringBuilder(text);
             for(final SendTicketDto ticket : tickets) {
                 String initials = ticket.getInitials().toUpperCase();
                 String check = ticket.getCheck();
@@ -201,11 +200,8 @@ public class RegisterTicketScheduler {
                     printWriter.printf("%s%" + String.valueOf(116 - initials.length()) + "s              %s%s", initials, check, type, ticket.getCount());
                     printWriter.printf(System.lineSeparator());
                     countTickets++;
-                } else {
-                    textBuilder.append("\nВНИМАНИЕ! Для \"").append(initials).append("\" счет не найден!");
                 }
             }
-            text = textBuilder.toString();
             printWriter.printf("T         %10d", countTickets);
             printWriter.printf(System.lineSeparator());
         } catch (FileNotFoundException | UnsupportedEncodingException e) {

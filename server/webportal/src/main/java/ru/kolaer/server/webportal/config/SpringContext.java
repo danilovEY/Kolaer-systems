@@ -204,6 +204,7 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.getJavaMailProperties().put("mail.smtps.auth", env.getRequiredProperty("mail.smtps.auth"));
         javaMailSender.setHost(env.getRequiredProperty("mail.host"));
+        javaMailSender.setDefaultEncoding("UTF-8");
         javaMailSender.setPort(Integer.valueOf(env.getRequiredProperty("mail.port")));
         javaMailSender.setUsername(env.getRequiredProperty("mail.username"));
         javaMailSender.setPassword(env.getRequiredProperty("mail.password"));
