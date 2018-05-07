@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
@@ -9,10 +10,13 @@ import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
+import ru.kolaer.server.webportal.mvc.model.dto.ChangePasswordDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
+
+import java.util.Optional;
 
 /**
  * Created by danilovey on 09.08.2016.
@@ -20,15 +24,17 @@ import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 @Service
 @Slf4j
 public class AccountServiceImpl extends AbstractDefaultService<AccountDto, AccountEntity, AccountDao, AccountConverter> implements AccountService {
-
+    private final PasswordEncoder passwordEncoder;
     private final AuthenticationService authenticationService;
 
     @Autowired
     protected AccountServiceImpl(AuthenticationService authenticationService,
                                  AccountDao defaultEntityDao,
-                                 AccountConverter accountConverter) {
+                                 AccountConverter accountConverter,
+                                 PasswordEncoder passwordEncoder) {
         super(defaultEntityDao, accountConverter);
         this.authenticationService = authenticationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -63,5 +69,21 @@ public class AccountServiceImpl extends AbstractDefaultService<AccountDto, Accou
         authenticationService.resetOnLogin(dto.getUsername());
 
         return result;
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(ChangePasswordDto changePasswordDto) {
+        if(changePasswordDto == null) {
+            throw new UnexpectedRequestParams("Не указан пароль аккаунта");
+        }
+
+        AccountEntity currentAccount = defaultEntityDao.findName(authenticationService.getCurrentLogin());
+
+        if(passwordEncoder.matches(Optional.ofNullable(changePasswordDto.getOldPassword()).orElse(""), currentAccount.getPassword())) {
+            currentAccount.setPassword(passwordEncoder.encode(Optional.ofNullable(changePasswordDto.getNewPassword()).orElse("")));
+        } else {
+            throw new UnexpectedRequestParams("Неправильный старый пароль!");
+        }
     }
 }

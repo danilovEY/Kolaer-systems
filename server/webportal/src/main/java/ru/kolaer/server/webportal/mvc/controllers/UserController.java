@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.mvc.model.dto.ChangePasswordDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 
@@ -46,6 +47,13 @@ public class UserController {
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updateUser(@RequestBody AccountDto accountEntity) {
         this.accountService.update(accountEntity);
+    }
+
+    /**Изменить пароль.*/
+    @UrlDeclaration(description = "Изменить пароль.")
+    @RequestMapping(value = "/update/password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void updatePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        accountService.updatePassword(changePasswordDto);
     }
 
     /**Получить все аккаунты.*/

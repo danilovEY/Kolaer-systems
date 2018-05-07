@@ -6,16 +6,24 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import {catchError, tap} from 'rxjs/operators';
 import {AuthenticationRestService} from '../modules/auth/authentication-rest.service';
+import {AuthenticationObserverService} from "./authentication-observer.service";
 
 @Injectable()
-export class AccountService {
+export class AccountService implements AuthenticationObserverService {
     private _getAuthUserUrl: string = environment.publicServerUrl + '/user/get';
 
     private _currentAccountModel: AccountModel = undefined;
 
     constructor(private _httpClient: HttpClient,
                 private _authService: AuthenticationRestService) {
-        
+        this._authService.registerObserver(this);
+    }
+
+    login(): void {
+    }
+
+    logout(): void {
+        this._currentAccountModel = undefined;
     }
     
     getCurrentAccount(): Observable<AccountModel> {
