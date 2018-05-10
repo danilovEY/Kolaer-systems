@@ -1,30 +1,31 @@
+import {APP_BASE_HREF} from '@angular/common';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
-
-import {AppRoutingModule} from './app.routing';
+import {HttpClientModule} from '@angular/common/http';
+import {CoreModule} from './@core/core.module';
 
 import {AppComponent} from './app.component';
-import {HomeModule} from './commons/pages/home/home.module';
-import {NotFoundComponent} from './commons/pages/not-found/not-found.component';
-import {LOG_LOGGER_PROVIDERS} from 'angular2-logger/core';
-import {AppCoreModule} from './commons/app-core.module';
-import {AuthModule} from './commons/modules/auth/auth.module';
+import {AppRoutingModule} from './app-routing.module';
+import {ThemeModule} from './@theme/theme.module';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-	declarations: [
-		AppComponent,
-		NotFoundComponent
-	],
-	imports: [
-        AuthModule.forRoot(),
-        AppCoreModule.forRoot(),
-		HomeModule,
-		AppRoutingModule
-	],
-	providers: [
-		LOG_LOGGER_PROVIDERS
-	],
-	bootstrap: [AppComponent]
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        AppRoutingModule,
+
+        NgbModule.forRoot(),
+        ThemeModule.forRoot(),
+        CoreModule.forRoot(),
+    ],
+    bootstrap: [AppComponent],
+    providers: [
+        {provide: APP_BASE_HREF, useValue: '/'},
+    ],
 })
 export class AppModule {
-
 }

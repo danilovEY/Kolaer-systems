@@ -1,10 +1,8 @@
-import {Level} from 'angular2-logger/core';
-
+/**
+ * @license
+ * Copyright Akveo. All Rights Reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ */
 export const environment = {
-	production: true,
-	logger: {
-		level: Level.WARN
-	}
+  production: true,
 };
-
-export const publicServerUrl: string = 'http://aerdc02:8080/kolaer-web/rest';
