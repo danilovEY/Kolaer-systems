@@ -36,7 +36,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (UsernameNotFoundException ex) {
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
             ServerExceptionMessage serverExceptionMessage = exceptionHandlerService
                     .authExceptionHandler(request, response, ex);
