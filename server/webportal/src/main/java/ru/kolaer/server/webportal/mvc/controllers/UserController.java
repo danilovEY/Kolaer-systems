@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.ChangePasswordDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
@@ -36,10 +37,19 @@ public class UserController {
     @ApiOperation(
             value = "Получить авторизированный аккаунт"
     )
-    @UrlDeclaration(description = "Получить авторизированный аккаунт", isUser = true)
+    @UrlDeclaration(description = "Получить авторизированный аккаунт с сотрудником", isUser = true)
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public AccountDto getUser() {
         return this.authenticationService.getAccountByAuthentication();
+    }
+
+    @ApiOperation(
+            value = "Получить авторизированный аккаунт"
+    )
+    @UrlDeclaration(description = "Получить авторизированный аккаунт", isUser = true)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public AccountSimpleDto getSimpleUser() {
+        return this.authenticationService.getAccountSimpleByAuthentication();
     }
 
     /**Добавить аккаунт.*/

@@ -3,16 +3,14 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
-import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
+import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
@@ -23,7 +21,6 @@ import ru.kolaer.server.webportal.security.ServerAuthType;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,23 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @PostConstruct
     public void init() {
-        PostDto postDto = new PostDto();
-        postDto.setAbbreviatedName("Anonymous");
-        postDto.setName("Anonymous");
-
-        DepartmentDto departmentDto = new DepartmentDto();
-        departmentDto.setAbbreviatedName("Anonymous");
-        departmentDto.setName("Anonymous");
-
-        EmployeeDto employeeDto = new EmployeeDto();
-        employeeDto.setInitials("Anon");
-        employeeDto.setDepartment(departmentDto);
-        employeeDto.setPost(postDto);
-        employeeDto.setBirthday(new Date());
-        employeeDto.setPhoto("http://asupkolaer.local/app_ie8/assets/images/vCard/no_photo.jpg");
-
         defaultAccount = new AccountDto();
-        defaultAccount.setEmployee(employeeDto);
         defaultAccount.setUsername("empty");
         defaultAccount.setAccessUser(true);
     }
@@ -92,7 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    @Cacheable(value = "accounts", cacheManager = "springCM")
+//    @Cacheable(value = "accounts", cacheManager = "springCM")
     @Transactional(readOnly = true)
     public AccountDto getAccountWithEmployeeByLogin(String login) {
         AccountDto account;
@@ -131,13 +112,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    @CacheEvict(value = "accounts", key = "#login", cacheManager = "springCM")
+    public AccountSimpleDto getAccountSimpleByAuthentication() {
+        return Optional.ofNullable(this.getCurrentLogin())
+                .map(accountDao::findName)
+                .map(accountConverter::convertToSimpleDto)
+                .orElseThrow(() -> new ForbiddenException("У вас нет доступа"));
+    }
+
+    @Override
+//    @CacheEvict(value = "accounts", key = "#login", cacheManager = "springCM")
     public AccountDto resetOnLogin(String login) {
         return getAccountWithEmployeeByLogin(login);
     }
 
     @PreDestroy
-    @CacheEvict(value = "accounts", cacheManager = "springCM")
+//    @CacheEvict(value = "accounts", cacheManager = "springCM")
     public void destroy() {
     }
 
