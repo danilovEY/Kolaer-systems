@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
-import ru.kolaer.server.webportal.exception.CustomHttpCodeException;
-import ru.kolaer.server.webportal.exception.NotFoundDataException;
-import ru.kolaer.server.webportal.exception.ServerException;
-import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.webportal.exception.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,12 +72,20 @@ public class ErrorsController /*extends ResponseEntityExceptionHandler*/ {
         return exceptionHandlerService.notFoundDataExceptionHandler(hRequest, hResponse, exception);
     }
 
-    /**Перехват {@link AuthenticationException}*/
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(value = AuthenticationException.class)
+    /**Перехват {@link ForbiddenException}*/
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(value =  AuthenticationException.class)
     public @ResponseBody ServerExceptionMessage authExceptionHandler(
-            HttpServletRequest hRequest, HttpServletResponse hResponse, AuthenticationException exception) {
+            HttpServletRequest hRequest, HttpServletResponse hResponse,  AuthenticationException exception) {
         return exceptionHandlerService.authExceptionHandler(hRequest, hResponse, exception);
+    }
+
+    /**Перехват {@link ForbiddenException}*/
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = ForbiddenException.class)
+    public @ResponseBody ServerExceptionMessage authExceptionHandler(
+            HttpServletRequest hRequest, HttpServletResponse hResponse, ForbiddenException exception) {
+        return exceptionHandlerService.forbiddenExceptionHandler(hRequest, hResponse, exception);
     }
 
     /**Перехват {@link CustomHttpCodeException}*/

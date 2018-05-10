@@ -10,10 +10,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
-import ru.kolaer.server.webportal.exception.CustomHttpCodeException;
-import ru.kolaer.server.webportal.exception.NotFoundDataException;
-import ru.kolaer.server.webportal.exception.ServerException;
-import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.webportal.exception.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -52,9 +49,12 @@ public interface ExceptionHandlerService {
     ServerExceptionMessage notFoundDataExceptionHandler(
             HttpServletRequest hRequest, HttpServletResponse hResponse, NotFoundDataException exception);
 
-    /**Перехват {@link AuthenticationException}*/
     ServerExceptionMessage authExceptionHandler(
             HttpServletRequest hRequest, HttpServletResponse hResponse, AuthenticationException exception);
+
+    /**Перехват {@link AuthenticationException}*/
+    ServerExceptionMessage forbiddenExceptionHandler(
+            HttpServletRequest hRequest, HttpServletResponse hResponse, ForbiddenException exception);
 
     /**Перехват {@link CustomHttpCodeException}*/
     ServerExceptionMessage customExceptionHandler(

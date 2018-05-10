@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.exception;
 
 import ru.kolaer.api.mvp.model.error.ErrorCode;
+import ru.kolaer.api.mvp.model.error.UnexpectedParamsDescription;
 
 /**
  * Ошибка при получении неправильных данных от клиента.
@@ -8,6 +9,10 @@ import ru.kolaer.api.mvp.model.error.ErrorCode;
  * Created by Danilov on 27.04.2017.
  */
 public class UnexpectedRequestParams extends ServerException {
+
+    public UnexpectedRequestParams(UnexpectedParamsDescription ... unexpectedParamsDescriptions) {
+        super(ErrorCode.INCORRECT_REQUEST_VALUE.getMessage(), ErrorCode.INCORRECT_REQUEST_VALUE, unexpectedParamsDescriptions);
+    }
 
     public UnexpectedRequestParams(String message) {
         super(message, ErrorCode.INCORRECT_REQUEST_VALUE);
