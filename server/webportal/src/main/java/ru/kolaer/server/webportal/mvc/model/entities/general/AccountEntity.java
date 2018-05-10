@@ -30,6 +30,9 @@ public class AccountEntity implements BaseEntity {
     @Column(name = "chat_name")
     private String chatName;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @Column(name = "username", nullable = false)
     private String username;
 
