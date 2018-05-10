@@ -47,4 +47,10 @@
         <dropColumn tableName="account" columnName="access_write_main_chat"/>
     </changeSet>
 
+    <changeSet id="1-4" author="Danilov">
+        <addColumn tableName="account">
+            <column name="avatar_url" type="VARCHAR(500)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
