@@ -10,7 +10,7 @@
                 </a>
 
                 <a *ngIf="authenticationService.authentication" dropdownToggle mdbRippleRadius class="nav-link dropdown-toggle waves-effect waves-light">
-                    <img src="assets/img/no_photo.jpg" class="rounded-circle z-depth-0" alt="avatar image" style="height: 35px;">
+                    <img *ngIf="accountModel" src="{{ accountModel.avatarUrl ? accountModel.avatarUrl : 'assets/img/no_photo.jpg' }}" class="rounded-circle z-depth-0" alt="avatar image" style="height: 35px;">
                     {{ accountModel?.username }}
                 </a>
 

@@ -3,7 +3,6 @@ import {environment} from '../../../../environments/environment';
 import {UsernamePasswordModel} from '../../models/username-password.model';
 import {AuthenticationObserverService} from '../../services/authentication-observer.service';
 import {ServerToken} from '../../models/server-token.model';
-import {AccountModel} from '../../models/account.model';
 import {Observable} from 'rxjs/Observable';
 import {catchError, tap} from 'rxjs/operators';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -36,7 +35,7 @@ export class AuthenticationRestService {
         }
     }
 
-	login(login: string, password: string = '', rememberMe: boolean = true): Observable<AccountModel> {
+	login(login: string, password: string = '', rememberMe: boolean = true): Observable<ServerToken> {
 		const userPasswordModel: UsernamePasswordModel =
 			new UsernamePasswordModel(login.trim().toLocaleLowerCase(), password.trim().toLocaleLowerCase());
 

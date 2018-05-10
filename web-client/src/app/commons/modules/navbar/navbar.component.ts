@@ -17,6 +17,7 @@ import {AccountService} from '../../services/account.service';
 import {Router} from '@angular/router';
 import {BsDropdownDirective} from 'angular-bootstrap-md/dropdown/dropdown.directive';
 import {AuthenticationRestService} from '../auth/authentication-rest.service';
+import {ServerToken} from "../../models/server-token.model";
 
 @Component({
     selector: 'app-navbar',
@@ -89,7 +90,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy, Authen
 
         this.authenticationService.login(username, password)
             .subscribe(
-                (account: AccountModel) => {
+                (token: ServerToken) => {
                     this.loginModal.hide();
                     this.successModal.show();
                     setTimeout(() => {
@@ -119,7 +120,10 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy, Authen
     login(): void {
         this.accountService
             .getCurrentAccount()
-            .subscribe(account => this.accountModel = account);
+            .subscribe(account => {
+                console.log(account);
+                this.accountModel = account
+            });
     }
 
     logout(): void {
