@@ -87,12 +87,16 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     final RequestMapping classMappingAnnotation = (RequestMapping) beanClass.getAnnotation(RequestMapping.class);
 
                     if (classMappingAnnotation != null) {
-                        urlBuilder.append(classMappingAnnotation.value()[0]);
+                        if(classMappingAnnotation.value().length > 0) {
+                            urlBuilder.append(classMappingAnnotation.value()[0]);
+                        }
                     }
 
                     final RequestMapping methodMappingAnnotation = method.getAnnotation(RequestMapping.class);
 
-                    urlBuilder.append(methodMappingAnnotation.value()[0]);
+                    if(methodMappingAnnotation.value().length > 0) {
+                        urlBuilder.append(methodMappingAnnotation.value()[0]);
+                    }
 
                     final String url = urlBuilder.toString();
                     final String description = urlDeclaration.description();
