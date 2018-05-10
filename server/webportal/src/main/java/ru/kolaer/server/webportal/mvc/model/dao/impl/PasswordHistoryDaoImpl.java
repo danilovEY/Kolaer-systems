@@ -47,10 +47,19 @@ public class PasswordHistoryDaoImpl extends AbstractDefaultDao<PasswordHistoryEn
     }
 
     @Override
-    public void deleteByIdRep(Long id) {
+    public void deleteAllByIdRep(Long id) {
         getSession()
                 .createQuery("DELETE FROM " + getEntityName() + " r WHERE r.repositoryPassword.id = :id")
                 .setParameter("id", id)
                 .executeUpdate();
+    }
+
+    @Override
+    public PasswordHistoryEntity findByRepAndId(Long repId, Long passId) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " p WHERE p.id = :passId AND p.repositoryPassword.id = :repId", getEntityClass())
+                .setParameter("repId", repId)
+                .setParameter("passId", passId)
+                .uniqueResult();
     }
 }

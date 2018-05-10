@@ -3,6 +3,9 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.error.UnexpectedParamsDescription;
+import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PasswordRepositoryDao;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordRepositoryEntity;
@@ -21,37 +24,37 @@ public class PasswordRepositoryDaoImpl extends AbstractDefaultDao<PasswordReposi
     }
 
     @Override
-    public Long findCountAllByPnumber(Long pnumber, Integer number, Integer pageSize) {
+    public Long findCountAllAccountId(Long accountId, Integer number, Integer pageSize) {
         return getSession()
-                .createQuery("SELECT COUNT(r.id) FROM " + getEntityName() + " r WHERE r.employee.personnelNumber = :pnumber", Long.class)
-                .setParameter("pnumber", pnumber)
+                .createQuery("SELECT COUNT(r.id) FROM " + getEntityName() + " r WHERE r.accountId = :accountId", Long.class)
+                .setParameter("accountId", accountId)
                 .uniqueResult();
     }
 
     @Override
-    public List<PasswordRepositoryEntity> findAllByPnumber(Long pnumber, Integer number, Integer pageSize) {
+    public List<PasswordRepositoryEntity> findAllByAccountId(Long accountId, Integer number, Integer pageSize) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " r WHERE r.employee.personnelNumber = :pnumber", getEntityClass())
-                .setParameter("pnumber", pnumber)
+                .createQuery("FROM " + getEntityName() + " r WHERE r.accountId = :accountId", getEntityClass())
+                .setParameter("accountId", accountId)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .list();
     }
 
     @Override
-    public PasswordRepositoryEntity findByNameAndPnumber(String name, Long pnumber) {
+    public List<PasswordRepositoryEntity> findAllByAccountId(List<Long> idsAccount) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " r WHERE r.employee.personnelNumber = :pnumber AND r.name = :name", getEntityClass())
-                .setParameter("pnumber", pnumber)
-                .setParameter("name", name)
-                .uniqueResult();
+                .createQuery("FROM " + getEntityName() + " r WHERE r.accountId IN :ids", getEntityClass())
+                .setParameterList("ids", idsAccount)
+                .list();
     }
 
     @Override
-    public List<PasswordRepositoryEntity> findAllByPnumbers(List<Long> idsChief) {
-        return getSession()
-                .createQuery("FROM " + getEntityName() + " r WHERE r.employee.personnelNumber IN :ids", getEntityClass())
-                .setParameterList("ids", idsChief)
-                .list();
+    public PasswordRepositoryEntity checkValueBeforePersist(PasswordRepositoryEntity entity) {
+        if(StringUtils.isEmpty(entity.getName())) {
+            throw new UnexpectedRequestParams(new UnexpectedParamsDescription("name", "Имя не может быть пустым"));
+        }
+
+        return entity;
     }
 }

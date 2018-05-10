@@ -14,6 +14,10 @@ public interface DefaultService<T extends BaseDto> {
     List<T> getById(List<Long> ids);
     T save(T dto);
     List<T> save(List<T> dtos);
+    T add(T dto);
+    List<T> add(List<T> dtos);
+    T update(T dto);
+    List<T> update(List<T> dtos);
     void delete(T dto);
     void delete(List<T> dtos);
     Page<T> getAll(Integer number, Integer pageSize);

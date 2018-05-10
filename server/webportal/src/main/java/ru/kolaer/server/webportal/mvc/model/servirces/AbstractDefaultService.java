@@ -56,6 +56,30 @@ public abstract class AbstractDefaultService<T extends BaseDto,
 
     @Override
     @Transactional
+    public T add(T dto) {
+        return defaultConverter.updateData(dto, defaultEntityDao.persist(defaultConverter.convertToModel(dto)));
+    }
+
+    @Override
+    @Transactional
+    public List<T> add(List<T> dtos) {
+        return defaultConverter.convertToDto(defaultEntityDao.persist(defaultConverter.convertToModel(dtos)));
+    }
+
+    @Override
+    @Transactional
+    public T update(T dto) {
+        return defaultConverter.updateData(dto, defaultEntityDao.update(defaultConverter.convertToModel(dto)));
+    }
+
+    @Override
+    @Transactional
+    public List<T> update(List<T> dtos) {
+        return defaultConverter.convertToDto(defaultEntityDao.update(defaultConverter.convertToModel(dtos)));
+    }
+
+    @Override
+    @Transactional
     public void delete(T dto) {
         defaultEntityDao.delete(defaultConverter.convertToModel(dto));
     }

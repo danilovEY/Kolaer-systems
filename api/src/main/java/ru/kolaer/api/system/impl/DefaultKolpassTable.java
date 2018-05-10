@@ -43,7 +43,6 @@ public class DefaultKolpassTable implements KolpassTable {
         log.info("Добавлен пароль");
         PasswordRepositoryDto repositoryPasswordBase = new PasswordRepositoryDto();
         repositoryPasswordBase.setId(idRep);
-        repositoryPasswordBase.setLastPassword(repositoryPasswordHistory);
         return ServerResponse.createServerResponse(repositoryPasswordBase);
     }
 
