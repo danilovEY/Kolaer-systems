@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
@@ -31,6 +32,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setEmail(dto.getEmail());
         accountEntity.setUsername(dto.getUsername());
         accountEntity.setChatName(dto.getChatName());
+        accountEntity.setAvatarUrl(dto.getAvatarUrl());
         accountEntity.setAccessUser(dto.isAccessUser());
         accountEntity.setAccessOit(dto.isAccessOit());
 
@@ -56,6 +58,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setEmail(model.getEmail());
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
+        accountDto.setAvatarUrl(model.getAvatarUrl());
         accountDto.setAccessUser(model.isAccessUser());
         accountDto.setAccessOit(model.isAccessOit());
 
@@ -76,6 +79,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
         accountDto.setAccessUser(model.isAccessUser());
+        accountDto.setAvatarUrl(model.getAvatarUrl());
         accountDto.setAccessOit(model.isAccessOit());
 
         Optional.ofNullable(model.getEmployeeId())
@@ -94,6 +98,7 @@ public class AccountConverterImpl implements AccountConverter {
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setEmployeeId(employeeEntity.getId());
         accountEntity.setEmail(employeeEntity.getEmail());
+        accountEntity.setAvatarUrl(employeeEntity.getPhoto());
         accountEntity.setUsername(employeeEntity.getPersonnelNumber().toString());
         accountEntity.setChatName(employeeEntity.getInitials());
 
@@ -104,5 +109,20 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setAccessUser(true);
 
         return accountEntity;
+    }
+
+    @Override
+    public AccountSimpleDto convertToSimpleDto(AccountEntity accountEntity) {
+        AccountSimpleDto accountSimpleDto = new AccountSimpleDto();
+        accountSimpleDto.setId(accountEntity.getId());
+        accountSimpleDto.setEmployeeId(accountEntity.getEmployeeId());
+        accountSimpleDto.setEmail(accountEntity.getEmail());
+        accountSimpleDto.setUsername(accountEntity.getUsername());
+        accountSimpleDto.setChatName(accountEntity.getChatName());
+        accountSimpleDto.setAvatarUrl(accountEntity.getAvatarUrl());
+        accountSimpleDto.setAccessOit(accountEntity.isAccessOit());
+        accountSimpleDto.setAccessUser(accountEntity.isAccessUser());
+
+        return accountSimpleDto;
     }
 }

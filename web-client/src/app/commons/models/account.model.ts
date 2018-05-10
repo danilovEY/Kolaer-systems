@@ -5,6 +5,7 @@ export class AccountModel extends BaseModel {
 	username: string;
 	chatName: string;
 	email: string;
+    avatarUrl: string;
 	employee: EmployeeModel;
 	accessOit: boolean;
 	accessUser: boolean;

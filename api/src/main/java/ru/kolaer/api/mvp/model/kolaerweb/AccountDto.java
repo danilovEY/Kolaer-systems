@@ -12,6 +12,7 @@ public class AccountDto implements BaseDto{
     private String chatName;
     private String username;
     private String email;
+    private String avatarUrl;
     private EmployeeDto employee;
     private boolean accessOit;
     private boolean accessUser = true;
