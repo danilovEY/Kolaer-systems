@@ -10,6 +10,7 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/finally';
 import {Router} from '@angular/router';
+import {ServerExceptionModel} from "../../models/server-exception.model";
 
 @Injectable()
 export class AuthenticationRestService {
@@ -50,7 +51,11 @@ export class AuthenticationRestService {
                     }
 				}),
                 catchError((err: HttpErrorResponse, caught) => {
-                    return Observable.throw(err.error);
+                	const serverException: ServerExceptionModel = new ServerExceptionModel();
+                    serverException.status = 0;
+                    serverException.message = 'Сервер недоступен.';
+
+                    return err.status === 0 ? Observable.throw(serverException) : Observable.throw(err.error);
                 }),
 			);
 	}

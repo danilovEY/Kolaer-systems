@@ -21,12 +21,11 @@ import {
 
 import {NbSecurityModule} from '@nebular/security';
 
-import {FooterComponent, HeaderComponent, SearchInputComponent} from './components';
+import {FooterComponent, HeaderComponent, KolLoginComponent, SearchInputComponent} from './components';
 import {CapitalizePipe, PluralPipe, RoundPipe, TimingPipe} from './pipes';
-import {SampleLayoutComponent,} from './layouts';
+import {DefaultLayoutComponent} from './layouts';
 import {DEFAULT_THEME} from './styles/theme.default';
 import {COSMIC_THEME} from './styles/theme.cosmic';
-import {CustomLoginComponent} from './components/login/custom-login.component';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 
@@ -51,8 +50,8 @@ const COMPONENTS = [
     HeaderComponent,
     FooterComponent,
     SearchInputComponent,
-    SampleLayoutComponent,
-    CustomLoginComponent
+    DefaultLayoutComponent,
+    KolLoginComponent
 ];
 
 const PIPES = [

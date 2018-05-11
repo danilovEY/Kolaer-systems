@@ -111,13 +111,13 @@
     "directive-selector": [
       false,
       "attribute",
-      "app",
+      "kol",
       "camelCase"
     ],
     "component-selector": [
       false,
       "element",
-      "app",
+      "kol",
       "kebab-case"
     ],
     "use-input-property-decorator": true,

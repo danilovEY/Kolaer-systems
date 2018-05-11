@@ -28,7 +28,7 @@ public class KolpassController {
 
     @ApiOperation(value = "Получить все свои хранилища")
     @UrlDeclaration(description = "Получить все свои хранилища")
-    @RequestMapping(value = "rep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/rep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PasswordRepositoryDto> getAllPersonalRepositoryPasswords(
             @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
@@ -36,16 +36,16 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Добавить новое хранилище")
-    @UrlDeclaration(description = "Добавить новое хранилище")
-    @RequestMapping(value = "rep", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @UrlDeclaration(description = "Добавить новое хранилище", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/rep", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PasswordRepositoryDto addRepositoryPasswords(
             @ApiParam("Наименование хранилища") @RequestBody PasswordRepositoryDto repositoryPassword) {
         return passwordRepositoryService.add(repositoryPassword);
     }
 
     @ApiOperation(value = "Добавить новый пароль в хранилище")
-    @UrlDeclaration(description = "Добавить новый пароль в хранилище")
-    @RequestMapping(value = "rep/{repId}/passwords", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @UrlDeclaration(description = "Добавить новый пароль в хранилище", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/rep/{repId}/passwords", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PasswordHistoryDto addPasswordHistory(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
             @ApiParam("Пароль") @RequestBody PasswordHistoryDto passwordHistoryDto) {
@@ -53,8 +53,8 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Удалить новый пароль в хранилище")
-    @UrlDeclaration(description = "Удалить новый пароль в хранилище")
-    @RequestMapping(value = "rep/{repId}/passwords/{passId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @UrlDeclaration(description = "Удалить новый пароль в хранилище", requestMethod = RequestMethod.DELETE)
+    @RequestMapping(value = "/rep/{repId}/passwords/{passId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deletePasswordHistory(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
             @ApiParam("ID Пароля") @PathVariable("passId") Long passId) {
@@ -62,14 +62,14 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Удалить хранилище")
-    @UrlDeclaration(description = "Удалить хранилище")
+    @UrlDeclaration(description = "Удалить хранилище", requestMethod = RequestMethod.DELETE)
     @RequestMapping(value = "/rep/{repId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteRepositoryPassword(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId) {
         this.passwordRepositoryService.deleteByIdRep(repId);
     }
 
     @ApiOperation(value = "Обновить хранилище")
-    @UrlDeclaration(description = "Обновить хранилище")
+    @UrlDeclaration(description = "Обновить хранилище", requestMethod = RequestMethod.PATCH)
     @RequestMapping(value = "/rep/{repId}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updateRepositoryPassword(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
                                          @ApiParam("Наименование хранилища") @RequestBody PasswordRepositoryDto repositoryPassword) {
@@ -78,8 +78,8 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Очистить хранилище")
-    @UrlDeclaration(description = "Очистить хранилище")
-    @RequestMapping(value = "/rep/{repId}/clear", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @UrlDeclaration(description = "Очистить хранилище", requestMethod = RequestMethod.DELETE)
+    @RequestMapping(value = "/rep/{repId}/clear", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void clearRepositoryPassword(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId) {
         this.passwordRepositoryService.clearRepository(repId);
     }

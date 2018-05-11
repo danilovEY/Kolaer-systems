@@ -7,6 +7,10 @@
   justify-content: space-between;
   width: 100%;
 
+  nb-user /deep/ .image {
+    background-position-x: -2px;
+  }
+
   .left {
     display: flex;
     width: 100%;
