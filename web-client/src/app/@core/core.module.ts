@@ -5,7 +5,7 @@ import {NbRoleProvider, NbSecurityModule} from '@nebular/security';
 import {of as observableOf} from 'rxjs/observable/of';
 
 import {throwIfAlreadyLoaded} from './module-import-guard';
-import {DataModule} from "./data/data.module";
+import {DataModule} from './data/data.module';
 
 const NB_CORE_PROVIDERS = [
     ...DataModule.forRoot().providers,

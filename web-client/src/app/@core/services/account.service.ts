@@ -6,7 +6,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import {catchError, tap} from 'rxjs/operators';
 import {AuthenticationRestService} from '../modules/auth/authentication-rest.service';
-import {AuthenticationObserverService} from "./authentication-observer.service";
+import {AuthenticationObserverService} from './authentication-observer.service';
 
 @Injectable()
 export class AccountService implements AuthenticationObserverService {

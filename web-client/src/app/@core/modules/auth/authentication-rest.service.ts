@@ -10,7 +10,7 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/finally';
 import {Router} from '@angular/router';
-import {ServerExceptionModel} from "../../models/server-exception.model";
+import {ServerExceptionModel} from '../../models/server-exception.model';
 
 @Injectable()
 export class AuthenticationRestService {
