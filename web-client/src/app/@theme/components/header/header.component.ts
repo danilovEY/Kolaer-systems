@@ -3,8 +3,8 @@ import {Component, OnInit} from '@angular/core';
 import {NbMenuService, NbSidebarService} from '@nebular/theme';
 import {NbMenuItem} from '@nebular/theme/components/menu/menu.service';
 import {AuthenticationRestService} from '../../../@core/modules/auth/authentication-rest.service';
-import {AccountModel} from '../../../@core/models/account.model';
 import {AccountService} from '../../../@core/services/account.service';
+import {SimpleAccountModel} from "../../../@core/models/simple-account.model";
 
 @Component({
     selector: 'ngx-header',
@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
     private readonly singInMenuItem: NbMenuItem = new NbMenuItem();
 
     userMenu: NbMenuItem[] = [];
-    accountModel: AccountModel = undefined;
+    accountModel: SimpleAccountModel = undefined;
 
     constructor(private sidebarService: NbSidebarService,
                 private menuService: NbMenuService,
@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit {
         if (this.authService.authentication && !this.accountModel) {
             this.accountService
                 .getCurrentAccount()
-                .subscribe((account: AccountModel) => this.accountModel = account,
+                .subscribe((account: SimpleAccountModel) => this.accountModel = account,
                     error2 => {console.log(error2)});
         }
 
@@ -53,10 +53,6 @@ export class HeaderComponent implements OnInit {
         }
 
         this.userMenu.push(this.profileMenuItem, this.singOutMenuItem, this.singInMenuItem);
-
-        // this.menuService.onItemClick()
-        //     .pipe(filter((menuBag: NbMenuBag) => menuBag.item === this.profileMenuItem))
-        //     .subscribe((menuBag: NbMenuBag) => {this.profileMenuItem.hidden = true});
     }
 
     toggleSidebar(): boolean {

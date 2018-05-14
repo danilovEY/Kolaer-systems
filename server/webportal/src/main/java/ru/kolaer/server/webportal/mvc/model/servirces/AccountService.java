@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.server.webportal.mvc.model.dto.ChangePasswordDto;
 
 /**
@@ -9,7 +10,7 @@ import ru.kolaer.server.webportal.mvc.model.dto.ChangePasswordDto;
 public interface AccountService extends DefaultService<AccountDto> {
     AccountDto getByLogin(String login);
 
-    AccountDto update(AccountDto dto);
-
     void updatePassword(ChangePasswordDto changePasswordDto);
+
+    AccountSimpleDto update(AccountSimpleDto accountSimpleDto);
 }

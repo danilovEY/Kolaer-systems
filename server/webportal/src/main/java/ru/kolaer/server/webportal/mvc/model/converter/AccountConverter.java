@@ -12,4 +12,6 @@ import ru.kolaer.server.webportal.mvc.model.servirces.BaseConverter;
 public interface AccountConverter extends BaseConverter<AccountDto, AccountEntity> {
     AccountEntity convertToModel(EmployeeEntity employeeEntity);
     AccountSimpleDto convertToSimpleDto(AccountEntity accountEntity);
+
+    AccountSimpleDto convertToSimpleDto(AccountDto dto);
 }

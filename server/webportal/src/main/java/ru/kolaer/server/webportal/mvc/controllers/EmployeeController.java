@@ -44,6 +44,13 @@ public class EmployeeController {
         return this.employeeService.getAll(number, pageSize);
     }
 
+    @ApiOperation(value = "Получить сотрудника")
+    @UrlDeclaration(description = "Получить сотрудника.", isAccessAll = true)
+    @RequestMapping(value = "/{employeeId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public EmployeeDto getAllEmployees(@PathVariable(value = "employeeId") Long employeeId) {
+        return this.employeeService.getById(employeeId);
+    }
+
     @ApiOperation(
             value = "Получить всех сотрудников из подразделения по ID"
     )

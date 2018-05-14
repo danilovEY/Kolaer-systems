@@ -55,7 +55,7 @@ public class UserController {
     /**Добавить аккаунт.*/
     @UrlDeclaration(description = "Обновить аккаунт.", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void updateUser(@RequestBody AccountDto accountEntity) {
+    public void updateUser(@RequestBody AccountSimpleDto accountEntity) {
         this.accountService.update(accountEntity);
     }
 

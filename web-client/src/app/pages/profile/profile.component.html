@@ -8,6 +8,11 @@
                         <div>{{ serverErrorForChangeAccount.message }}</div>
                     </div>
 
+                    <div *ngIf="successChangeAccount" class="alert alert-success" role="alert">
+                        <div><strong>Успешное изменение!</strong></div>
+                        <div *ngIf="needLogout">Сейчас будет выход из системы...</div>
+                    </div>
+
                     <form (ngSubmit)="submitAccountForm()" [formGroup]="formAccount">
                         <div class="row">
                             <!--First column-->
@@ -67,11 +72,8 @@
 
                     </form>
                 </nb-tab>
-                <nb-tab *ngIf="currentAccount?.employee !== undefined" tabTitle="Сотрудник">
-                    <!--<div class="contact" *ngFor="let c of recent">-->
-                    <!--<nb-user [picture]="c.user.picture" [name]="c.user.name" [title]="c.type" size="large"></nb-user>-->
-                    <!--<span class="time">{{ c.time }}</span>-->
-                    <!--</div>-->
+                <nb-tab *ngIf="currentAccount?.employeeId !== undefined" tabTitle="Сотрудник">
+
                 </nb-tab>
             </nb-tabset>
         </nb-card>

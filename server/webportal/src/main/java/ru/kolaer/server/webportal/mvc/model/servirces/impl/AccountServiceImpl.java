@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
@@ -49,30 +50,6 @@ public class AccountServiceImpl extends AbstractDefaultService<AccountDto, Accou
 
     @Override
     @Transactional
-    public AccountDto update(AccountDto dto) {
-        if(dto == null || dto.getId() == null) {
-            throw new UnexpectedRequestParams("Не указан ID аккаунта");
-        }
-
-        AccountEntity currentAccount = defaultEntityDao.findName(authenticationService.getCurrentLogin());
-
-        if(!currentAccount.isAccessOit() && !currentAccount.getId().equals(dto.getId())) {
-            throw new ForbiddenException("У вас нет доступа для редактирования");
-        }
-
-        currentAccount.setUsername(dto.getUsername());
-        currentAccount.setChatName(dto.getChatName());
-        currentAccount.setEmail(dto.getEmail());
-
-        AccountDto result = defaultConverter.convertToDto(defaultEntityDao.update(currentAccount));
-
-        authenticationService.resetOnLogin(dto.getUsername());
-
-        return result;
-    }
-
-    @Override
-    @Transactional
     public void updatePassword(ChangePasswordDto changePasswordDto) {
         if(changePasswordDto == null) {
             throw new UnexpectedRequestParams("Не указан пароль аккаунта");
@@ -85,5 +62,28 @@ public class AccountServiceImpl extends AbstractDefaultService<AccountDto, Accou
         } else {
             throw new UnexpectedRequestParams("Неправильный старый пароль!");
         }
+    }
+
+    @Override
+    public AccountSimpleDto update(AccountSimpleDto accountSimpleDto) {
+        if(accountSimpleDto == null || accountSimpleDto.getId() == null) {
+            throw new UnexpectedRequestParams("Не указан ID аккаунта");
+        }
+
+        AccountEntity currentAccount = defaultEntityDao.findName(authenticationService.getCurrentLogin());
+
+        if(!currentAccount.isAccessOit() && !currentAccount.getId().equals(accountSimpleDto.getId())) {
+            throw new ForbiddenException("У вас нет доступа для редактирования");
+        }
+
+        currentAccount.setUsername(accountSimpleDto.getUsername());
+        currentAccount.setChatName(accountSimpleDto.getChatName());
+        currentAccount.setEmail(accountSimpleDto.getEmail());
+
+        AccountSimpleDto result = defaultConverter.convertToSimpleDto(defaultEntityDao.update(currentAccount));
+
+        authenticationService.resetOnLogin(accountSimpleDto.getUsername());
+
+        return result;
     }
 }

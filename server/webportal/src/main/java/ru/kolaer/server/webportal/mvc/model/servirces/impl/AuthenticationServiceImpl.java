@@ -112,6 +112,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AccountSimpleDto getAccountSimpleByAuthentication() {
         return Optional.ofNullable(this.getCurrentLogin())
                 .map(accountDao::findName)

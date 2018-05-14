@@ -125,4 +125,20 @@ public class AccountConverterImpl implements AccountConverter {
 
         return accountSimpleDto;
     }
+
+    @Override
+    public AccountSimpleDto convertToSimpleDto(AccountDto dto) {
+        AccountSimpleDto accountSimpleDto = new AccountSimpleDto();
+        accountSimpleDto.setId(dto.getId());
+        accountSimpleDto.setEmail(dto.getEmail());
+        accountSimpleDto.setUsername(dto.getUsername());
+        accountSimpleDto.setChatName(dto.getChatName());
+        accountSimpleDto.setAvatarUrl(dto.getAvatarUrl());
+        accountSimpleDto.setAccessOit(dto.isAccessOit());
+        accountSimpleDto.setAccessUser(dto.isAccessUser());
+
+        Optional.ofNullable(dto.getEmployee()).map(EmployeeDto::getId).ifPresent(accountSimpleDto::setEmployeeId);
+
+        return accountSimpleDto;
+    }
 }

@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {AccountService} from '../../@core/services/account.service';
-import {AccountModel} from '../../@core/models/account.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
@@ -9,6 +8,9 @@ import {AuthenticationRestService} from '../../@core/modules/auth/authentication
 import {ServerExceptionModel} from '../../@core/models/server-exception.model';
 import {ChangePasswordModel} from '../../@core/models/change-password.model';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {SimpleAccountModel} from '../../@core/models/simple-account.model';
+import {EmployeeService} from "../../@core/services/employee.service";
+import {EmployeeModel} from "../../@core/models/employee.model";
 
 @Component({
     selector: 'profile',
@@ -19,16 +21,19 @@ export class ProfileComponent implements OnInit {
     private readonly updateAccountUrl: string = `${environment.publicServerUrl}/user/update`;
     private readonly updatePasswordUrl: string = `${environment.publicServerUrl}/user/update/password`;
 
-    currentAccount: AccountModel;
+    currentAccount: SimpleAccountModel;
     serverErrorForChangeAccount: ServerExceptionModel;
     serverErrorForChangePassword: ServerExceptionModel;
     successChangePassword: boolean = false;
+    successChangeAccount: boolean = false;
+    needLogout: boolean = false;
 
     formAccount: FormGroup;
     changePassForm: FormGroup;
     openedChangePasswordModal: NgbModalRef;
 
     constructor(private accountService: AccountService,
+                private employeeService: EmployeeService,
                 private authService: AuthenticationRestService,
                 private modalService: NgbModal,
                 private httpClient: HttpClient) {
@@ -47,9 +52,17 @@ export class ProfileComponent implements OnInit {
             confirmPassword: new FormControl('', []),
         }, this.passwordMatchValidator);
 
+       this.updateCurrentAccount();
+
+        this.employeeService.getCurrentEmployee().subscribe(
+            (employee: EmployeeModel) => console.log(employee),
+                error2 => console.log(error2));
+    }
+
+    private updateCurrentAccount(cache: boolean = true) {
         this.accountService
-            .getCurrentAccount()
-            .subscribe((account: AccountModel) => {
+            .getCurrentAccount(cache)
+            .subscribe((account: SimpleAccountModel) => {
                 this.currentAccount = account;
 
                 this.formAccount.controls['chatName'].setValue(account.chatName);
@@ -65,25 +78,31 @@ export class ProfileComponent implements OnInit {
 
     submitAccountForm() {
         this.serverErrorForChangeAccount = undefined;
+        this.successChangeAccount = false;
+        this.needLogout = false;
 
-        const currentAccountToSend: AccountModel = new AccountModel();
+        const currentAccountToSend: SimpleAccountModel = new SimpleAccountModel();
         currentAccountToSend.chatName = this.formAccount.value.chatName;
         currentAccountToSend.username = this.formAccount.value.login;
         currentAccountToSend.email = this.formAccount.value.email;
         currentAccountToSend.accessOit = this.currentAccount.accessOit;
         currentAccountToSend.accessUser = this.currentAccount.accessUser;
-        currentAccountToSend.employee = this.currentAccount.employee;
+        currentAccountToSend.employeeId = this.currentAccount.employeeId;
         currentAccountToSend.id = this.currentAccount.id;
 
         this.httpClient.post(this.updateAccountUrl, currentAccountToSend)
             .subscribe(
                 (result: any) => {
+                    this.successChangeAccount = true;
+
                     if (currentAccountToSend.username !== this.currentAccount.username) {
-                        this.authService.logout(true).subscribe(Observable.empty);
+                        this.needLogout = true;
+                        setTimeout(() => this.authService.logout(true).subscribe(Observable.empty), 2000);
+                    } else {
+                        this.updateCurrentAccount(false);
                     }
                 },
                 (error: HttpErrorResponse) => {
-                    console.log(error);
                     this.serverErrorForChangeAccount = error.error;
                 });
     }
