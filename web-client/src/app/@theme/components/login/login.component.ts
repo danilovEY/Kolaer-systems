@@ -10,7 +10,7 @@ import {ServerToken} from '../../../@core/models/server-token.model';
     selector: 'kol-login',
     templateUrl: './login.component.html',
 })
-export class KolLoginComponent implements OnInit {
+export class CustomLoginComponent implements OnInit {
     @ViewChild('form')
     form: NgForm;
 

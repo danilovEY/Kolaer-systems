@@ -22,10 +22,10 @@ import {
 import {NbSecurityModule} from '@nebular/security';
 
 import {
+    CustomLoginComponent,
+    CustomLogoutComponent,
     FooterComponent,
     HeaderComponent,
-    KolLoginComponent,
-    KolLogoutComponent,
     SearchInputComponent
 } from './components';
 import {CapitalizePipe, PluralPipe, RoundPipe, TimingPipe} from './pipes';
@@ -57,8 +57,9 @@ const COMPONENTS = [
     FooterComponent,
     SearchInputComponent,
     DefaultLayoutComponent,
-    KolLoginComponent,
-    KolLogoutComponent
+    CustomLoginComponent,
+    CustomLogoutComponent
+
 ];
 
 const PIPES = [

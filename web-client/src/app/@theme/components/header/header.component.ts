@@ -34,6 +34,7 @@ export class HeaderComponent implements OnInit {
         }
 
         this.profileMenuItem.title = 'Профиль';
+        this.profileMenuItem.link = '/pages/profile';
         this.profileMenuItem.icon = 'fa fa-user';
 
         this.singOutMenuItem.title = 'Выход';

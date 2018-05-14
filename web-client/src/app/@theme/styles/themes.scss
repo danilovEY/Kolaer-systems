@@ -7,21 +7,19 @@
 $nb-enabled-themes: (default, cosmic);
 
 $nb-themes: nb-register-theme((
- // app wise variables for each theme
-  sidebar-header-gap: 2rem,
-  sidebar-header-height: initial,
-  layout-content-width: 1400px,
-
-  font-main: Roboto,
-  font-secondary: Exo,
+  // app wise variables for each theme
+        sidebar-header-gap: 2rem,
+        sidebar-header-height: initial,
+        layout-content-width: 1400px,
+        font-main: Roboto,
+        font-secondary: Roboto,
 ), default, default);
 
 $nb-themes: nb-register-theme((
   // app wise variables for each theme
-  sidebar-header-gap: 2rem,
-  sidebar-header-height: initial,
-  layout-content-width: 1400px,
-
-  font-main: Roboto,
-  font-secondary: Exo,
+        sidebar-header-gap: 2rem,
+        sidebar-header-height: initial,
+        layout-content-width: 1400px,
+        font-main: Roboto,
+        font-secondary: Roboto,
 ), cosmic, cosmic);

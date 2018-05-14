@@ -7,7 +7,7 @@ import {Observable} from 'rxjs/Observable';
     selector: 'kol-logout',
     templateUrl: './logout.component.html',
 })
-export class KolLogoutComponent implements OnInit {
+export class CustomLogoutComponent implements OnInit {
 
     constructor(protected authenticationService: AuthenticationRestService,
                 protected router: Router) {
