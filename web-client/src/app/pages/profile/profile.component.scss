@@ -1,6 +1,25 @@
 @import '../../@theme/styles/themes';
 @import '~bootstrap/scss/mixins/breakpoints';
+@import '~font-awesome/scss/_variables';
 @import '~@nebular/theme/styles/global/bootstrap/breakpoints';
+
+@mixin input-field-icon($content-icon, $padding-text) {
+  position: relative;
+
+  .form-control {
+    padding-left: $padding-text;
+  }
+
+  &::before {
+    content: $content-icon;
+    font-family: 'FontAwesome';
+    font-size: 2rem;
+    position: absolute;
+    z-index: 100;
+    left: 1rem;
+    top: 0.25rem;
+  }
+}
 
 @include nb-install-component() {
   nb-tabset {
@@ -17,6 +36,27 @@
     display: block;
     padding: nb-theme(padding);
   }
+
+  .input-group.has-user-icon {
+    @include input-field-icon($fa-var-user, 3rem);
+  }
+
+  .input-group.has-email-icon {
+    @include input-field-icon($fa-var-envelope, 3.5rem);
+  }
+
+  .input-group.has-smile-icon {
+    @include input-field-icon($fa-var-smile-o, 3.5rem);
+  }
+
+  .input-group.has-password-icon {
+    @include input-field-icon($fa-var-lock, 3.5rem);
+  }
+
+  .inner-title {
+    margin: 1.5rem;
+  }
+
 
   @include media-breakpoint-down(xs) {
     nb-tabset /deep/ ul {

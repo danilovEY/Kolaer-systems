@@ -1,37 +1,47 @@
-<h2 class="title">Вход в систему</h2>
-<form (ngSubmit)="login()" #form="ngForm" autocomplete="nope">
-    <div *ngIf="error && !submitted" class="alert alert-danger" role="alert">
-        <div><strong>Ошибка!</strong></div>
-        <div>{{ error.message }}</div>
-    </div>
-    <div *ngIf="success && !submitted" class="alert alert-success" role="alert">
-        <div><strong>Успешная авторизация!</strong></div>
-    </div>
-    <div class="form-group">
-        <label for="input-username" class="sr-only">Логин</label>
-        <input name="username" [(ngModel)]="user.username" id="input-username"
-               class="form-control" placeholder="Логин" #username="ngModel"
-               [class.form-control-danger]="username.invalid && username.touched" autofocus
-               [minlength]="3"
-               required>
-        <small class="form-text error" *ngIf="username.invalid && username.touched && username?.errors['required']">
-            Логин должен быть обязателен!
-        </small>
-        <small class="form-text error" *ngIf="username.invalid && username.touched && username?.errors['minlength']">
-            Логин должен быть больше 3 символов!
-        </small>
-    </div>
-    <div class="form-group">
-        <label for="input-password" class="sr-only">Пароль</label>
-        <input name="password" [(ngModel)]="user.password" type="password" id="input-password"
-               class="form-control" placeholder="Пароль" #password="ngModel"
-               [class.form-control-danger]="password.invalid && password.touched">
-    </div>
-    <!--<div class="form-group accept-group col-sm-12">-->
-        <!--<a class="forgot-password" routerLink="../request-password">Forgot Password?</a>-->
-    <!--</div>-->
-    <button [disabled]="submitted || !form.valid" class="btn btn-block btn-hero-success"
-            [class.btn-pulse]="submitted">
-        Войти
-    </button>
-</form>
+<nb-layout>
+    <nb-layout-column>
+        <nb-card>
+            <nb-card-body>
+                <div class="flex-centered col-xl-4 col-lg-6 col-md-8 col-sm-12">
+                    <h2 class="title">Вход в систему</h2>
+                    <form (ngSubmit)="login()" #form="ngForm" autocomplete="nope">
+                        <div *ngIf="error && !submitted" class="alert alert-danger" role="alert">
+                            <div><strong>Ошибка!</strong></div>
+                            <div>{{ error.message }}</div>
+                        </div>
+                        <div *ngIf="success && !submitted" class="alert alert-success" role="alert">
+                            <div><strong>Успешная авторизация!</strong></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-username" class="sr-only">Логин</label>
+                            <input name="username" [(ngModel)]="user.username" id="input-username"
+                                   class="form-control" placeholder="Логин" #username="ngModel"
+                                   [class.form-control-danger]="username.invalid && username.touched" autofocus
+                                   [minlength]="3"
+                                   required>
+                            <small class="form-text error" *ngIf="username.invalid && username.touched && username?.errors['required']">
+                                Логин должен быть обязателен!
+                            </small>
+                            <small class="form-text error" *ngIf="username.invalid && username.touched && username?.errors['minlength']">
+                                Логин должен быть больше 3 символов!
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-password" class="sr-only">Пароль</label>
+                            <input name="password" [(ngModel)]="user.password" type="password" id="input-password"
+                                   class="form-control" placeholder="Пароль" #password="ngModel"
+                                   [class.form-control-danger]="password.invalid && password.touched">
+                        </div>
+                        <!--<div class="form-group accept-group col-sm-12">-->
+                        <!--<a class="forgot-password" routerLink="../request-password">Forgot Password?</a>-->
+                        <!--</div>-->
+                        <button [disabled]="submitted || !form.valid" class="btn btn-block btn-hero-success"
+                                [class.btn-pulse]="submitted">
+                            Войти
+                        </button>
+                    </form>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </nb-layout-column>
+</nb-layout>

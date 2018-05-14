@@ -1,6 +1,6 @@
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NbAuthModule, NbDummyAuthProvider} from '@nebular/auth';
+import {NbAuthModule} from '@nebular/auth';
 import {NbRoleProvider, NbSecurityModule} from '@nebular/security';
 import {of as observableOf} from 'rxjs/observable/of';
 
@@ -9,13 +9,6 @@ import {DataModule} from './data/data.module';
 
 const NB_CORE_PROVIDERS = [
     ...DataModule.forRoot().providers,
-    ...NbAuthModule.forRoot({
-        providers: {
-            email: {
-                service: NbDummyAuthProvider
-            }
-        }
-    }).providers,
     NbSecurityModule.forRoot({
         accessControl: {
             guest: {

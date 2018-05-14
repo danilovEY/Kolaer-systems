@@ -7,7 +7,7 @@ import {ProfileComponent} from './profile.component';
         ThemeModule,
     ],
     declarations: [
-        ProfileComponent
+        ProfileComponent,
     ]
 })
 export class ProfileModule {

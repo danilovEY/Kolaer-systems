@@ -7,19 +7,19 @@ import {ThemeModule} from '../@theme/theme.module';
 import {ProfileModule} from './profile/profile.module';
 
 const PAGES_COMPONENTS = [
-  PagesComponent,
+    PagesComponent,
 ];
 
 @NgModule({
-  imports: [
-    PagesRoutingModule,
-    ThemeModule,
-    DashboardModule,
-    ProfileModule,
-  ],
-  declarations: [
-    ...PAGES_COMPONENTS,
-  ],
+    imports: [
+        PagesRoutingModule,
+        ThemeModule,
+        DashboardModule,
+        ProfileModule
+    ],
+    declarations: [
+        ...PAGES_COMPONENTS,
+    ],
 })
 export class PagesModule {
 }

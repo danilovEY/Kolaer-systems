@@ -39,7 +39,8 @@ export class AuthModule {
         return {
             ngModule: AuthModule,
             providers: [
-                AuthenticationRestService
+                AuthenticationRestService,
+                AuthGuardService
             ]
         };
     }

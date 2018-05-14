@@ -3,23 +3,71 @@
         <nb-card [size]="'xlarge'">
             <nb-tabset fullWidth>
                 <nb-tab tabTitle="Аккаунт">
-                    <form>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Email address</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                    <div *ngIf="serverErrorForChangeAccount" class="alert alert-danger" role="alert">
+                        <div><strong>Ошибка!</strong></div>
+                        <div>{{ serverErrorForChangeAccount.message }}</div>
+                    </div>
+
+                    <form (ngSubmit)="submitAccountForm()" [formGroup]="formAccount">
+                        <div class="row">
+                            <!--First column-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="login">Логин</label>
+                                    <div class="input-group has-user-icon">
+                                        <input type="text" id="login" formControlName="login"
+                                               class="form-control" value="{{ currentAccount?.username }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Second column-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <div class="input-group has-email-icon">
+                                        <input type="text" id="email" formControlName="email"
+                                               class="form-control" value="{{ currentAccount?.email }}">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Password</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                        </div>
-                        <div class="form-group">
-                            <nb-checkbox>Check me out</nb-checkbox>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="chatName">Имя в чате</label>
+                                    <div class="input-group has-smile-icon">
+                                        <input type="text" id="chatName" formControlName="chatName"
+                                               class="form-control" value="{{ currentAccount?.chatName }}">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-danger">Submit</button>
+                        <h5 class="inner-title">Доступы</h5>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <nb-checkbox disabled [value]="currentAccount?.accessUser">Доступ в систему
+                                </nb-checkbox>
+                                <nb-checkbox disabled [value]="currentAccount?.accessOit">Администратор системы
+                                </nb-checkbox>
+                            </div>
+                        </div>
+
+                        <div class="text-right">
+                            <button class="btn btn-outline-primary" (click)="openChangePasswordModal(content)">
+                                Изменить пароль
+                            </button>
+
+                            <button type="submit" class="btn btn-primary" [disabled]="formAccount.invalid">
+                                Сохранить
+                            </button>
+                        </div>
+
                     </form>
                 </nb-tab>
-                <nb-tab tabTitle="Сотрудник">
+                <nb-tab *ngIf="currentAccount?.employee !== undefined" tabTitle="Сотрудник">
                     <!--<div class="contact" *ngFor="let c of recent">-->
                     <!--<nb-user [picture]="c.user.picture" [name]="c.user.name" [title]="c.type" size="large"></nb-user>-->
                     <!--<span class="time">{{ c.time }}</span>-->
@@ -29,3 +77,67 @@
         </nb-card>
     </div>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Смена пароля</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form (ngSubmit)="submitUpdatePassword()" [formGroup]="changePassForm">
+        <div class="modal-body">
+            <div *ngIf="serverErrorForChangePassword" class="alert alert-danger" role="alert">
+                <div><strong>Ошибка!</strong></div>
+                <div>{{ serverErrorForChangePassword.message }}</div>
+            </div>
+
+            <div *ngIf="successChangePassword" class="alert alert-success" role="alert">
+                <div><strong>Успешное изменение!</strong></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="oldPasswordInput">Старый пароль</label>
+                        <div class="input-group has-password-icon">
+                            <input type="password" id="oldPasswordInput" formControlName="oldPassword"
+                                   class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="newPasswordInput">Новый пароль</label>
+                        <div class="input-group has-password-icon">
+                            <input type="password" id="newPasswordInput" formControlName="newPassword"
+                                   class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="confirmPasswordInput">Подтверждение пароля</label>
+                        <div class="input-group has-password-icon">
+                            <input type="password" id="confirmPasswordInput" formControlName="confirmPassword"
+                                   class="form-control"
+                                   [ngClass]="{'form-control-danger': changePassForm.get('confirmPassword').touched &&
+                                   changePassForm.errors &&
+                                   changePassForm.errors['mismatch'] !== undefined}">
+                        </div>
+                        <small class="form-text error" *ngIf="changePassForm.get('confirmPassword').touched &&
+                        changePassForm.errors &&
+                        changePassForm.errors['mismatch'] !== undefined">
+                            Пароли не совпадают!
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-hero-success" [disabled]="changePassForm.invalid">Изменить</button>
+        </div>
+    </form>
+</ng-template>

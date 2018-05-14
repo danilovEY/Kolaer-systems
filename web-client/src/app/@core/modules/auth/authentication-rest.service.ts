@@ -60,7 +60,7 @@ export class AuthenticationRestService {
 			);
 	}
 
-	logout(): Observable<any> {
+	logout(redirectToLoginPage: boolean = false): Observable<any> {
 		const obsLogout: Observable<void> = this.authentication
 			? this._httpClient.post<void>(this._logoutUrl, undefined)
 			: Observable.empty<void>();
@@ -73,7 +73,11 @@ export class AuthenticationRestService {
 				observer.logout();
 			}
 
-            this._injector.get(Router).navigate(['/']);
+			if(redirectToLoginPage) {
+                this._injector.get(Router).navigate(['/auth/login']);
+			} else {
+                this._injector.get(Router).navigate(['/']);
+			}
 		});
 	}
 

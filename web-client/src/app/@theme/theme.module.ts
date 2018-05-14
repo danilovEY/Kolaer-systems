@@ -58,7 +58,7 @@ const COMPONENTS = [
     SearchInputComponent,
     DefaultLayoutComponent,
     CustomLoginComponent,
-    CustomLogoutComponent
+    CustomLogoutComponent,
 
 ];
 

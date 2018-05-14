@@ -8,6 +8,7 @@ import {ServerToken} from '../../../@core/models/server-token.model';
 
 @Component({
     selector: 'kol-login',
+    styleUrls: ['./login.component.scss'],
     templateUrl: './login.component.html',
 })
 export class CustomLoginComponent implements OnInit {
