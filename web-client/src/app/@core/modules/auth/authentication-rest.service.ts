@@ -73,7 +73,7 @@ export class AuthenticationRestService {
 				observer.logout();
 			}
 
-            this._injector.get(Router).navigate(['/home']);
+            this._injector.get(Router).navigate(['/']);
 		});
 	}
 

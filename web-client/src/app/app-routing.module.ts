@@ -1,7 +1,7 @@
 import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {NbAuthComponent} from '@nebular/auth';
-import {KolLoginComponent} from './@theme/components';
+import {KolLoginComponent, KolLogoutComponent} from './@theme/components';
 
 const routes: Routes = [
   { path: 'pages', loadChildren: 'app/pages/pages.module#PagesModule' },
@@ -16,6 +16,10 @@ const routes: Routes = [
       {
         path: 'login',
         component: KolLoginComponent,
+      },
+      {
+        path: 'logout',
+        component: KolLogoutComponent,
       }
     ],
   },

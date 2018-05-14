@@ -29,13 +29,15 @@ export class HeaderComponent implements OnInit {
         if (this.authService.authentication && !this.accountModel) {
             this.accountService
                 .getCurrentAccount()
-                .subscribe(account => this.accountModel = account);
+                .subscribe((account: AccountModel) => this.accountModel = account,
+                    error2 => {console.log(error2)});
         }
 
         this.profileMenuItem.title = 'Профиль';
         this.profileMenuItem.icon = 'fa fa-user';
 
         this.singOutMenuItem.title = 'Выход';
+        this.singOutMenuItem.link = '/auth/logout';
         this.singOutMenuItem.icon = 'ion-log-out';
 
         this.singInMenuItem.title = 'Вход';

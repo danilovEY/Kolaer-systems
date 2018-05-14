@@ -4,7 +4,7 @@ import {AccountModel} from '../models/account.model';
 import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import {catchError, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {AuthenticationRestService} from '../modules/auth/authentication-rest.service';
 import {AuthenticationObserverService} from './authentication-observer.service';
 
@@ -31,15 +31,13 @@ export class AccountService implements AuthenticationObserverService {
             return Observable.of(this._currentAccountModel);
         } else {
             return this._httpClient.get<AccountModel>(this._getAuthUserUrl)
-                .pipe(
-                    catchError(error => {
-                        if (error.status === 403 || error.status === 401) {
-                           this._authService.logout().subscribe(Observable.empty);
-                        }
-                        return error;
-                    }),
-                    tap((account: AccountModel) => this._currentAccountModel = account)
-                );
+                .pipe(tap((account: AccountModel) => this._currentAccountModel = account))
+                .catch(error => {
+                    if (error.status === 403 || error.status === 401) {
+                        this._authService.logout().subscribe(Observable.empty);
+                    }
+                    return Observable.throw(error);
+                });
         }
     }
 }
