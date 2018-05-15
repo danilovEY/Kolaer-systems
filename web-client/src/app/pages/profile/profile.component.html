@@ -17,7 +17,6 @@
                         <div class="col-12 col-md-12 picture">
                             <img src="{{ currentAccount?.avatarUrl }}" alt="аватар">
                         </div>
-
                     </div>
 
                     <form (ngSubmit)="submitAccountForm()" [formGroup]="formAccount">
@@ -80,6 +79,13 @@
                     </form>
                 </nb-tab>
                 <nb-tab *ngIf="currentAccount?.employeeId !== undefined && currentEmployee" tabTitle="Сотрудник">
+
+                    <div class="row">
+                        <div class="col-12 col-md-12 picture">
+                            <img src="{{ currentEmployee?.photo }}" alt="аватар">
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
