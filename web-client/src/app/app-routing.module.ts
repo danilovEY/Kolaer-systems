@@ -1,6 +1,6 @@
 import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
-import {CustomLoginComponent, CustomLogoutComponent} from './@theme/components';
+import {CustomLoginComponent, CustomLogoutComponent, NotFoundComponent} from './@theme/components';
 
 const routes: Routes = [
     {path: 'pages', loadChildren: 'app/pages/pages.module#PagesModule'},
@@ -23,7 +23,7 @@ const routes: Routes = [
         ],
     },
     {path: '', redirectTo: 'pages', pathMatch: 'full'},
-    {path: '**', redirectTo: 'pages'},
+    {path: '**', component: NotFoundComponent},
 ];
 
 const config: ExtraOptions = {

@@ -26,6 +26,7 @@ import {
     CustomLogoutComponent,
     FooterComponent,
     HeaderComponent,
+    NotFoundComponent,
     SearchInputComponent
 } from './components';
 import {CapitalizePipe, PluralPipe, RoundPipe, TimingPipe} from './pipes';
@@ -59,6 +60,7 @@ const COMPONENTS = [
     DefaultLayoutComponent,
     CustomLoginComponent,
     CustomLogoutComponent,
+    NotFoundComponent,
 
 ];
 
