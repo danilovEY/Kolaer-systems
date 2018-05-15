@@ -5,6 +5,7 @@ import {PagesComponent} from './pages.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {ProfileComponent} from './profile/profile.component';
 import {AuthGuardService} from '../@core/modules/auth/auth-guard.service';
+import {ApplicationsModule} from "./applications/applications.module";
 
 const routes: Routes = [{
     path: '',
@@ -23,6 +24,10 @@ const routes: Routes = [{
             path: 'profile',
             component: ProfileComponent,
             canActivate: [AuthGuardService]
+        },
+        {
+            path: 'app',
+            loadChildren: () => ApplicationsModule
         },
     ],
 }];
