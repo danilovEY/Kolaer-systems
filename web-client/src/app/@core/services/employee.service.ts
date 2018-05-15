@@ -9,12 +9,32 @@ import {AuthenticationObserverService} from './authentication-observer.service';
 import {SimpleAccountModel} from '../models/simple-account.model';
 import {EmployeeModel} from '../models/employee.model';
 import {AccountService} from './account.service';
+import {OtherEmployeeModel} from '../models/other-employee.model';
 
 @Injectable()
 export class EmployeeService implements AuthenticationObserverService {
-    private _getEmployeeUrl: string = environment.publicServerUrl + '/employees';
+    private readonly getEmployeeUrl: string = environment.publicServerUrl + '/employees';
+    private readonly getAllEmployeeBirthdayToday: string = `${this.getEmployeeUrl}/get/birthday/today`;
+    private readonly getAllOtherEmployeeBirthdayToday: string =
+        `${environment.publicServerUrl}/organizations/employees/get/users/birthday/today`;
 
     private _currentEmployeeModel: EmployeeModel = undefined;
+
+    static getShortNameOrganization(organization: string): string {
+        switch (organization) {
+            case 'БалаковоАтомэнергоремонт': return 'БалАЭР';
+            case 'ВолгодонскАтомэнергоремонт': return 'ВДАЭР';
+            case 'КалининАтомэнергоремонт': return 'КАЭР';
+            case 'КурскАтомэнергоремонт': return 'КурскАЭР';
+            case 'ЛенАтомэнергоремонт': return 'ЛенАЭР';
+            case 'НововоронежАтомэнергоремонт': return 'НВАЭР';
+            case 'СмоленскАтомэнергоремонт': return 'САЭР';
+            case 'УралАтомэнергоремонт': return 'УралАЭР';
+            case 'Центральный аппарат': return 'ЦА';
+            case 'КолАтомэнергоремонт': return 'КолАЭР';
+            default: return organization;
+        }
+    }
 
     constructor(private _httpClient: HttpClient,
                 private _authService: AuthenticationRestService,
@@ -22,13 +42,14 @@ export class EmployeeService implements AuthenticationObserverService {
         this._authService.registerObserver(this);
     }
 
+
     login(): void {
     }
 
     logout(): void {
         this._currentEmployeeModel = undefined;
     }
-    
+
     getCurrentEmployee(cache: boolean = true): Observable<EmployeeModel> {
         if (cache && this._currentEmployeeModel) {
             return Observable.of(this._currentEmployeeModel);
@@ -36,7 +57,7 @@ export class EmployeeService implements AuthenticationObserverService {
             return this.accountService.getCurrentAccount().pipe(
                 switchMap((account: SimpleAccountModel) =>
                     account.employeeId
-                        ? this._httpClient.get<EmployeeModel>(this._getEmployeeUrl + `/${account.employeeId}`)
+                        ? this._httpClient.get<EmployeeModel>(this.getEmployeeUrl + `/${account.employeeId}`)
                         : Observable.empty()
                 ),
                 tap((employee: EmployeeModel) => this._currentEmployeeModel = employee)
@@ -48,4 +69,36 @@ export class EmployeeService implements AuthenticationObserverService {
             });
         }
     }
+
+    getEmployeesBirthdayToday(): Observable<EmployeeModel[]> {
+        return this._httpClient.get<EmployeeModel[]>(this.getAllEmployeeBirthdayToday)
+            .pipe(tap((employees: EmployeeModel[]) => {
+                for (const emp of employees) {
+                    if (emp.birthday) {
+                        emp.birthday = new Date(emp.birthday);
+                    }
+
+                    if (emp.dismissalDate) {
+                        emp.dismissalDate = new Date(emp.dismissalDate);
+                    }
+
+                    if (emp.employmentDate) {
+                        emp.employmentDate = new Date(emp.employmentDate);
+                    }
+                }
+            }));
+    }
+
+    getOtherEmployeesBirthdayToday(): Observable<OtherEmployeeModel[]> {
+        return this._httpClient.get<OtherEmployeeModel[]>(this.getAllOtherEmployeeBirthdayToday)
+            .pipe(tap((employees: OtherEmployeeModel[]) => {
+                for (const emp of employees) {
+                    if (emp.birthday) {
+                        emp.birthday = new Date(emp.birthday);
+                    }
+                }
+                return employees;
+            }));
+    }
+
 }

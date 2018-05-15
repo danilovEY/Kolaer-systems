@@ -1,0 +1,115 @@
+@import '../../@theme/styles/themes';
+@import '~@nebular/theme/styles/global/bootstrap/breakpoints';
+@import '~bootstrap/scss/mixins/breakpoints';
+
+@include nb-install-component() {
+
+  $padding: 1rem;
+
+  nb-tabset {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  nb-tab {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  nb-card-body {
+    overflow: hidden;
+    padding: $padding;
+  }
+
+  .info {
+    margin-left: 45%;
+    padding-top: 1.5rem;
+    color: nb-theme(color-fg);
+  }
+
+  .value {
+    font-family: nb-theme(font-secondary);
+    font-size: 2rem;
+    font-weight: nb-theme(font-weight-bold);
+    color: nb-theme(color-fg-heading);
+  }
+
+  .details {
+    font-size: 1.25rem;
+    font-weight: nb-theme(font-weight-bolder);
+    line-height: 1;
+    span {
+      font-size: 1rem;
+      font-weight: nb-theme(font-weight-light);
+    }
+  }
+
+  .text-hint {
+    font-size: 1rem;
+  }
+
+  @include nb-for-theme(cosmic) {
+    color: nb-theme(color-fg-heading);
+
+    .value {
+      color: nb-theme(color-fg-highlight);
+    }
+
+    .details span {
+      color: nb-theme(color-fg);
+    }
+  }
+
+  .contact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: nb-theme(color-fg);
+    padding: 1rem;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid nb-theme(separator);
+    }
+  }
+
+  .i-contact {
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .time {
+    font-size: 0.875rem;
+    font-weight: nb-theme(font-weight-light);
+  }
+
+  nb-user /deep/ {
+    .info-container {
+      margin-left: 0.875rem;
+    }
+
+    .user-name {
+      font-family: nb-theme(font-secondary);
+      font-weight: nb-theme(font-weight-bold);
+      color: nb-theme(color-fg-heading);
+      font-size: 1.25rem;
+
+      @include nb-for-theme(cosmic) {
+        font-weight: nb-theme(font-weight-bolder);
+      }
+    }
+
+    .user-title {
+      font-size: 0.875rem;
+      font-weight: nb-theme(font-weight-light);
+      text-transform: uppercase;
+    }
+  }
+
+  @include media-breakpoint-down(xs) {
+    .value {
+      font-size: 1.75rem;
+    }
+  }
+}

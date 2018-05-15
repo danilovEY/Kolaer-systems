@@ -1,5 +1,40 @@
 <div class="row">
-  <nb-card>
-    <nb-card-body>Hello from ngx-admin sandbox project.</nb-card-body>
-  </nb-card>
+    <div class="col-lg-6 col-md-6">
+        <nb-card size="medium">
+            <div class="consumption-table">
+                <div class="table-header">
+                    <div *ngIf="employeesBirthdayToday.length > 0 || otherEmployeesBirthdayToday.length > 0">Сегодня день рождения</div>
+                    <div *ngIf="employeesBirthdayToday.length === 0 && otherEmployeesBirthdayToday.length === 0">Сегодня нет дней рождений</div>
+                    <div class="subtitle">{{ today | date: 'dd.MM.yyyy' }}</div>
+                </div>
+            <nb-tabset fullWidth>
+                <nb-tab tabTitle="Сотрудники КолАЭР" active="true">
+                    <div class="contact" *ngFor="let employee of employeesBirthdayToday">
+                        <nb-user [picture]="employee.photo" [name]="employee.initials"
+                                 [title]="(employee.post.abbreviatedName || employee.post.name)" size="large"></nb-user>
+                        <small class="time" *ngIf="(today.getFullYear() - employee.birthday.getFullYear()) % 5 === 0">Юбилей</small>
+                    </div>
+                </nb-tab>
+                <nb-tab *ngIf="otherEmployeesBirthdayToday.length > 0" [tabTitle]="'Сотрудники АЭР'">
+                    <div class="contact" *ngFor="let employee of otherEmployeesBirthdayToday">
+                        <nb-user [picture]="employee.photo" [name]="employee.initials"
+                                 [badgeText]="getShortNameOrganization(employee.organization)" badgePosition="bottom left"
+                                 [title]="employee.post" size="large"></nb-user>
+                        <small class="time" *ngIf="(today.getFullYear() - employee.birthday.getFullYear()) % 5 === 0">Юбилей</small>
+                    </div>
+                </nb-tab>
+            </nb-tabset>
+            </div>
+        </nb-card>
+    </div>
+
+    <div class="col-lg-6 col-md-6">
+        <nb-card>
+            <nb-card-header>Температура в Полярных Зорях</nb-card-header>
+            <nb-card-body>
+                <img class="img-fluid" src="http://iportal/store/weather/informer_graf-640.gif"
+                     alt="Температура в Полярных Зорях">
+            </nb-card-body>
+        </nb-card>
+    </div>
 </div>
