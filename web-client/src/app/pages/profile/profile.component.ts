@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
     private readonly updatePasswordUrl: string = `${environment.publicServerUrl}/user/update/password`;
 
     currentAccount: SimpleAccountModel;
+    currentEmployee: EmployeeModel;
     serverErrorForChangeAccount: ServerExceptionModel;
     serverErrorForChangePassword: ServerExceptionModel;
     successChangePassword: boolean = false;
@@ -55,7 +56,7 @@ export class ProfileComponent implements OnInit {
        this.updateCurrentAccount();
 
         this.employeeService.getCurrentEmployee().subscribe(
-            (employee: EmployeeModel) => console.log(employee),
+            (employee: EmployeeModel) => this.currentEmployee = employee,
                 error2 => console.log(error2));
     }
 

@@ -65,6 +65,7 @@ public class AccountServiceImpl extends AbstractDefaultService<AccountDto, Accou
     }
 
     @Override
+    @Transactional
     public AccountSimpleDto update(AccountSimpleDto accountSimpleDto) {
         if(accountSimpleDto == null || accountSimpleDto.getId() == null) {
             throw new UnexpectedRequestParams("Не указан ID аккаунта");

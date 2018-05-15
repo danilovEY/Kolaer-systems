@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <nb-card [size]="'xlarge'">
+        <nb-card>
             <nb-tabset fullWidth>
                 <nb-tab tabTitle="Аккаунт">
                     <div *ngIf="serverErrorForChangeAccount" class="alert alert-danger" role="alert">
@@ -11,6 +11,13 @@
                     <div *ngIf="successChangeAccount" class="alert alert-success" role="alert">
                         <div><strong>Успешное изменение!</strong></div>
                         <div *ngIf="needLogout">Сейчас будет выход из системы...</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-12 picture">
+                            <img src="{{ currentAccount?.avatarUrl }}" alt="аватар">
+                        </div>
+
                     </div>
 
                     <form (ngSubmit)="submitAccountForm()" [formGroup]="formAccount">
@@ -72,8 +79,103 @@
 
                     </form>
                 </nb-tab>
-                <nb-tab *ngIf="currentAccount?.employeeId !== undefined" tabTitle="Сотрудник">
+                <nb-tab *ngIf="currentAccount?.employeeId !== undefined && currentEmployee" tabTitle="Сотрудник">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="secondName">Фамилия</label>
+                                <div class="input-group">
+                                    <input type="text" disabled id="secondName" class="form-control" value="{{ currentEmployee?.secondName }}">
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="firstName">Имя</label>
+                                <div class="input-group">
+                                    <input type="text" disabled id="firstName" class="form-control" value="{{ currentEmployee?.firstName }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="thirdName">Отчество</label>
+                                <div class="input-group">
+                                    <input type="text" disabled id="thirdName" class="form-control" value="{{ currentEmployee?.thirdName }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="personnelNumber">Табельный номер</label>
+                                <div class="input-group">
+                                    <input type="text" disabled id="personnelNumber" class="form-control" value="{{ currentEmployee?.personnelNumber }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="birthday">Дата рождения</label>
+                                <div class="input-group">
+                                    <input type="text" disabled id="birthday" class="form-control" value="{{ currentEmployee?.birthday | date: 'dd.MM.yyyy' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="workPhoneNumber">Рабочий номер телефона</label>
+                                <div class="input-group">
+                                    <input type="text" disabled id="workPhoneNumber" class="form-control" value="{{ currentEmployee?.workPhoneNumber }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="homePhoneNumber">Домашний номер телефона</label>
+                                <div class="input-group">
+                                    <input type="text" disabled id="homePhoneNumber" class="form-control" value="{{ currentEmployee?.homePhoneNumber }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="post">Должность</label>
+                                <div class="input-group">
+                                    <input type="text" disabled id="post" class="form-control" value="{{ currentEmployee?.post.name }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="department">Подразделение</label>
+                                <div class="input-group">
+                                    <input type="text" disabled id="department" class="form-control" value="{{ currentEmployee?.department.name }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary" disabled>
+                            Сохранить
+                        </button>
+                    </div>
                 </nb-tab>
             </nb-tabset>
         </nb-card>
