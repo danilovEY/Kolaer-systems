@@ -33,8 +33,13 @@ import {CapitalizePipe, PluralPipe, RoundPipe, TimingPipe} from './pipes';
 import {DefaultLayoutComponent} from './layouts';
 import {DEFAULT_THEME} from './styles/theme.default';
 import {COSMIC_THEME} from './styles/theme.cosmic';
+import {LoadingModule} from "ngx-loading";
 
-const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
+const BASE_MODULES = [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
+];
 
 const NB_MODULES = [
     NbCardModule,
@@ -51,6 +56,7 @@ const NB_MODULES = [
     NbContextMenuModule,
     NgbModule,
     NbSecurityModule, // *nbIsGranted directive
+    LoadingModule,
 ];
 
 const COMPONENTS = [

@@ -9,17 +9,13 @@ import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordRepositoryE
  */
 @Component
 public class PasswordRepositoryConverterImpl implements PasswordRepositoryConverter {
-    private final PasswordHistoryConverter passwordHistoryConverter;
-
-    public PasswordRepositoryConverterImpl(PasswordHistoryConverter passwordHistoryConverter) {
-        this.passwordHistoryConverter = passwordHistoryConverter;
-    }
 
     @Override
     public PasswordRepositoryEntity convertToModel(PasswordRepositoryDto dto) {
         PasswordRepositoryEntity passwordRepositoryEntity = new PasswordRepositoryEntity();
         passwordRepositoryEntity.setId(dto.getId());
         passwordRepositoryEntity.setName(dto.getName());
+        passwordRepositoryEntity.setAccountId(dto.getAccountId());
         passwordRepositoryEntity.setUrlImage(dto.getUrlImage());
 
         return passwordRepositoryEntity;
@@ -35,6 +31,7 @@ public class PasswordRepositoryConverterImpl implements PasswordRepositoryConver
         oldDto.setId(newModel.getId());
         oldDto.setName(newModel.getName());
         oldDto.setUrlImage(newModel.getUrlImage());
+        oldDto.setAccountId(newModel.getAccountId());
         return oldDto;
     }
 }

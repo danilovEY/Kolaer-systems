@@ -23,7 +23,7 @@ public class PasswordHistoryDaoImpl extends AbstractDefaultDao<PasswordHistoryEn
     @Override
     public Long findCountHistoryByIdRepository(Long id, Integer number, Integer pageSize) {
         return getSession()
-                .createQuery("SELECT COUNT(p.id) FROM " + getEntityName() + " p WHERE p.repositoryPassword.id = :id", Long.class)
+                .createQuery("SELECT COUNT(p.id) FROM " + getEntityName() + " p WHERE p.repositoryPassId = :id", Long.class)
                 .setParameter("id", id)
                 .uniqueResult();
     }
@@ -31,7 +31,7 @@ public class PasswordHistoryDaoImpl extends AbstractDefaultDao<PasswordHistoryEn
     @Override
     public List<PasswordHistoryEntity> findHistoryByIdRepository(Long id, Integer number, Integer pageSize) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " p WHERE p.repositoryPassword.id = :id", getEntityClass())
+                .createQuery("FROM " + getEntityName() + " p WHERE p.repositoryPassId = :id", getEntityClass())
                 .setParameter("id", id)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
@@ -41,7 +41,7 @@ public class PasswordHistoryDaoImpl extends AbstractDefaultDao<PasswordHistoryEn
     @Override
     public List<PasswordHistoryEntity> findAllHistoryByIdRepository(Long id) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " p WHERE p.repositoryPassword.id = :id", getEntityClass())
+                .createQuery("FROM " + getEntityName() + " p WHERE p.repositoryPassId = :id", getEntityClass())
                 .setParameter("id", id)
                 .list();
     }
@@ -49,7 +49,7 @@ public class PasswordHistoryDaoImpl extends AbstractDefaultDao<PasswordHistoryEn
     @Override
     public void deleteAllByIdRep(Long id) {
         getSession()
-                .createQuery("DELETE FROM " + getEntityName() + " r WHERE r.repositoryPassword.id = :id")
+                .createQuery("DELETE FROM " + getEntityName() + " r WHERE r.repositoryPassId = :id")
                 .setParameter("id", id)
                 .executeUpdate();
     }
@@ -57,7 +57,7 @@ public class PasswordHistoryDaoImpl extends AbstractDefaultDao<PasswordHistoryEn
     @Override
     public PasswordHistoryEntity findByRepAndId(Long repId, Long passId) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " p WHERE p.id = :passId AND p.repositoryPassword.id = :repId", getEntityClass())
+                .createQuery("FROM " + getEntityName() + " p WHERE p.id = :passId AND p.repositoryPassId = :repId", getEntityClass())
                 .setParameter("repId", repId)
                 .setParameter("passId", passId)
                 .uniqueResult();

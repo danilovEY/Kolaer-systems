@@ -21,6 +21,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PasswordRepositoryService;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,7 +107,13 @@ public class PasswordRepositoryServiceImpl
             throw new ForbiddenException();
         }
 
-        return passwordHistoryConverter.convertToDto(passwordHistoryDao.persist(passwordHistoryConverter.convertToModel(passwordHistoryDto)));
+        PasswordHistoryEntity passwordHistoryEntity = passwordHistoryConverter.convertToModel(passwordHistoryDto);
+
+        passwordHistoryEntity.setId(null);
+        passwordHistoryEntity.setPasswordWriteDate(new Date());
+        passwordHistoryEntity.setRepositoryPassId(repId);
+
+        return passwordHistoryConverter.convertToDto(passwordHistoryDao.persist(passwordHistoryEntity));
     }
 
     @Override

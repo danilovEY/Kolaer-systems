@@ -32,8 +32,10 @@ export class DashboardComponent implements OnInit {
 
         this.employeeService.getOtherEmployeesBirthdayToday()
             .subscribe(
-                (employees: OtherEmployeeModel[]) => this.otherEmployeesBirthdayToday = employees,
-                (error: ServerExceptionModel) => console.log(error)
+                (employees: OtherEmployeeModel[]) => {
+                    this.otherEmployeesBirthdayToday = employees;
+                    },
+                        (error: ServerExceptionModel) => console.log(error)
             );
     }
 

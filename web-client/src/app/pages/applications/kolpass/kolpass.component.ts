@@ -1,6 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {LocalDataSource} from 'ng2-smart-table';
 import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
+import {PasswordRepositoryDataSource} from './password-repository.data-source';
+import {DataSource} from 'ng2-smart-table/lib/data-source/data-source';
+import {KolpassService} from "./kolpass.service";
 
 @Component({
     selector: 'app-kolpass',
@@ -11,7 +13,9 @@ export class KolpassComponent implements OnInit {
     
     @ViewChild('table')
     table: Ng2SmartTableComponent;
-    
+
+    loading: boolean = false;
+
     settings = {
         actions: {
             columnTitle: 'Действия',
@@ -23,7 +27,7 @@ export class KolpassComponent implements OnInit {
         },
         pager: {
             display: true,
-            perPage: 15,
+            perPage: 1,
         },
         noDataMessage: 'Парольница пустая',
         selectMode: 'single',
@@ -46,148 +50,19 @@ export class KolpassComponent implements OnInit {
                 title: 'ID',
                 type: 'number',
             },
-            firstName: {
-                title: 'First Name',
+            name: {
+                title: 'Name',
                 type: 'string',
-            },
-            lastName: {
-                title: 'Last Name',
-                type: 'string',
-            },
-            username: {
-                title: 'Username',
-                type: 'string',
-            },
-            email: {
-                title: 'E-mail',
-                type: 'string',
-            },
-            age: {
-                title: 'Age',
-                type: 'number',
-            },
+            }
         },
     };
 
-    source: LocalDataSource = new LocalDataSource();
+    source: DataSource;
 
 
-    constructor() {
-        const data = [{
-            id: 1,
-            firstName: 'Mark',
-            lastName: 'Otto',
-            username: '@mdo',
-            email: 'mdo@gmail.com',
-            age: '28',
-        }, {
-            id: 2,
-            firstName: 'Jacob',
-            lastName: 'Thornton',
-            username: '@fat',
-            email: 'fat@yandex.ru',
-            age: '45',
-        }, {
-            id: 3,
-            firstName: 'Larry',
-            lastName: 'Bird',
-            username: '@twitter',
-            email: 'twitter@outlook.com',
-            age: '18',
-        }, {
-            id: 4,
-            firstName: 'John',
-            lastName: 'Snow',
-            username: '@snow',
-            email: 'snow@gmail.com',
-            age: '20',
-        }, {
-            id: 5,
-            firstName: 'Jack',
-            lastName: 'Sparrow',
-            username: '@jack',
-            email: 'jack@yandex.ru',
-            age: '30',
-        }, {
-            id: 6,
-            firstName: 'Ann',
-            lastName: 'Smith',
-            username: '@ann',
-            email: 'ann@gmail.com',
-            age: '21',
-        }, {
-            id: 7,
-            firstName: 'Barbara',
-            lastName: 'Black',
-            username: '@barbara',
-            email: 'barbara@yandex.ru',
-            age: '43',
-        }, {
-            id: 8,
-            firstName: 'Sevan',
-            lastName: 'Bagrat',
-            username: '@sevan',
-            email: 'sevan@outlook.com',
-            age: '13',
-        }, {
-            id: 9,
-            firstName: 'Ruben',
-            lastName: 'Vardan',
-            username: '@ruben',
-            email: 'ruben@gmail.com',
-            age: '22',
-        }, {
-            id: 10,
-            firstName: 'Karen',
-            lastName: 'Sevan',
-            username: '@karen',
-            email: 'karen@yandex.ru',
-            age: '33',
-        }, {
-            id: 11,
-            firstName: 'Mark',
-            lastName: 'Otto',
-            username: '@mark',
-            email: 'mark@gmail.com',
-            age: '38',
-        }, {
-            id: 12,
-            firstName: 'Jacob',
-            lastName: 'Thornton',
-            username: '@jacob',
-            email: 'jacob@yandex.ru',
-            age: '48',
-        }, {
-            id: 13,
-            firstName: 'Haik',
-            lastName: 'Hakob',
-            username: '@haik',
-            email: 'haik@outlook.com',
-            age: '48',
-        }, {
-            id: 14,
-            firstName: 'Garegin',
-            lastName: 'Jirair',
-            username: '@garegin',
-            email: 'garegin@gmail.com',
-            age: '40',
-        }, {
-            id: 15,
-            firstName: 'Krikor',
-            lastName: 'Bedros',
-            username: '@krikor',
-            email: 'krikor@yandex.ru',
-            age: '32',
-        }, {
-            'id': 16,
-            'firstName': 'Francisca',
-            'lastName': 'Brady',
-            'username': '@Gibson',
-            'email': 'franciscagibson@comtours.com',
-            'age': 11,
-        }];
-
-        this.source.load(data);
+    constructor(private kolpassService: KolpassService) {
+        this.source = new PasswordRepositoryDataSource(kolpassService);
+        this.source.onChanged().subscribe(value => console.log(value.action));
     }
 
     onDeleteConfirm(event): void {
@@ -199,9 +74,7 @@ export class KolpassComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.table.sort = (event: any) => {
-            // console.log(event);
-        }
+
     }
 
 }

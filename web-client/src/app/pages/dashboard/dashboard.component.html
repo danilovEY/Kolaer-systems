@@ -9,10 +9,13 @@
                 </div>
             <nb-tabset fullWidth>
                 <nb-tab tabTitle="Сотрудники КолАЭР" active="true">
-                    <div class="contact" *ngFor="let employee of employeesBirthdayToday">
-                        <nb-user [picture]="employee.photo" [name]="employee.initials"
-                                 [title]="(employee.post.abbreviatedName || employee.post.name)" size="large"></nb-user>
-                        <small class="time" *ngIf="(today.getFullYear() - employee.birthday.getFullYear()) % 5 === 0">Юбилей</small>
+                    <div>
+                        <ngx-loading [show]="true" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+                        <div class="contact" *ngFor="let employee of employeesBirthdayToday">
+                            <nb-user [picture]="employee.photo" [name]="employee.initials"
+                                     [title]="(employee.post.abbreviatedName || employee.post.name)" size="large"></nb-user>
+                            <small class="time" *ngIf="(today.getFullYear() - employee.birthday.getFullYear()) % 5 === 0">Юбилей</small>
+                        </div>
                     </div>
                 </nb-tab>
                 <nb-tab *ngIf="otherEmployeesBirthdayToday.length > 0" [tabTitle]="'Сотрудники АЭР'">

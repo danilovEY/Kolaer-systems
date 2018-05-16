@@ -29,7 +29,7 @@ public class PasswordHistoryEntity implements BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date passwordWriteDate;
 
-    @Column(name = "repository_pass_id", nullable = false)
+    @Column(name = "password_repository_id", nullable = false)
     private Long repositoryPassId;
 
 }

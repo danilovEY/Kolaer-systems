@@ -4,7 +4,11 @@
     </nb-card-header>
 
     <nb-card-body>
-        <ng2-smart-table #table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
-        </ng2-smart-table>
+        <div>
+            <ngx-loading [show]="loading" ></ngx-loading>
+            <ng2-smart-table #table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
+            </ng2-smart-table>
+        </div>
+
     </nb-card-body>
 </nb-card>
