@@ -22,8 +22,11 @@ import {
 import {NbSecurityModule} from '@nebular/security';
 
 import {
+    CustomActionEditComponent,
+    CustomActionViewComponent,
     CustomLoginComponent,
     CustomLogoutComponent,
+    CustomTableComponent,
     FooterComponent,
     HeaderComponent,
     NotFoundComponent,
@@ -33,7 +36,8 @@ import {CapitalizePipe, PluralPipe, RoundPipe, TimingPipe} from './pipes';
 import {DefaultLayoutComponent} from './layouts';
 import {DEFAULT_THEME} from './styles/theme.default';
 import {COSMIC_THEME} from './styles/theme.cosmic';
-import {LoadingModule} from "ngx-loading";
+import {LoadingModule} from 'ngx-loading';
+import {Ng2SmartTableModule} from "ng2-smart-table";
 
 const BASE_MODULES = [
     CommonModule,
@@ -56,7 +60,9 @@ const NB_MODULES = [
     NbContextMenuModule,
     NgbModule,
     NbSecurityModule, // *nbIsGranted directive
+
     LoadingModule,
+    Ng2SmartTableModule,
 ];
 
 const COMPONENTS = [
@@ -67,6 +73,10 @@ const COMPONENTS = [
     CustomLoginComponent,
     CustomLogoutComponent,
     NotFoundComponent,
+    CustomActionViewComponent,
+    CustomActionEditComponent,
+    CustomTableComponent,
+
 
 ];
 
@@ -92,6 +102,11 @@ const NB_THEME_PROVIDERS = [
     imports: [...BASE_MODULES, ...NB_MODULES],
     exports: [...BASE_MODULES, ...NB_MODULES, ...COMPONENTS, ...PIPES],
     declarations: [...COMPONENTS, ...PIPES],
+    entryComponents: [
+        CustomActionViewComponent,
+        CustomActionEditComponent,
+        CustomTableComponent,
+    ]
 })
 export class ThemeModule {
     static forRoot(): ModuleWithProviders {

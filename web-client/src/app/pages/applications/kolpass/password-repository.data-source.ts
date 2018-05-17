@@ -3,11 +3,14 @@ import {LocalDataSource} from 'ng2-smart-table';
 import {OnInit} from '@angular/core';
 import {KolpassService} from './kolpass.service';
 import {Page} from '../../../@core/models/page.model';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
 
 export class PasswordRepositoryDataSource extends LocalDataSource implements OnInit {
+    private readonly onChangedLoading = new Subject<boolean>();
     private dataPage: Page<RepositoryPasswordModel> = {
         data: [],
-        page: 0,
+        number: 0,
         pageSize: 1,
         total: 0
     };
@@ -25,21 +28,22 @@ export class PasswordRepositoryDataSource extends LocalDataSource implements OnI
         return data;
     }
 
+    onLoading(): Observable<boolean> {
+        return this.onChangedLoading.asObservable();
+    }
 
     getElements(): Promise<any> {
-        console.log('getElements');
-        console.log(this.dataPage);
-
-        if (this.dataPage.page !== Number(this.pagingConf['page'])) {
+        if (this.dataPage.number !== this.pagingConf['page'] || this.dataPage.pageSize !== this.pagingConf['perPage']) {
+            this.onChangedLoading.next(true);
             return this.kolpassService.getAllMyRepositories(this.pagingConf['page'], this.pagingConf['perPage'])
                 .toPromise()
                 .then((response: Page<RepositoryPasswordModel>) => {
                     this.dataPage = response;
+                    this.data = response.data;
 
-                    this.data = this.dataPage.data;
-                    console.log(this.dataPage);
+                    this.onChangedLoading.next(false);
 
-                    return this.dataPage.data;
+                    return this.data;
                 });
         } else {
             return super.getElements();

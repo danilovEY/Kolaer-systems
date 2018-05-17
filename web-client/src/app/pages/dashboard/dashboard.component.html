@@ -3,23 +3,24 @@
         <nb-card size="medium">
             <div class="consumption-table">
                 <div class="table-header">
-                    <div *ngIf="employeesBirthdayToday.length > 0 || otherEmployeesBirthdayToday.length > 0">Сегодня день рождения</div>
-                    <div *ngIf="employeesBirthdayToday.length === 0 && otherEmployeesBirthdayToday.length === 0">Сегодня нет дней рождений</div>
+                    <div *ngIf="employeesBirthdayToday.length > 0">Сегодня день рождения</div>
+                    <div *ngIf="employeesBirthdayToday.length === 0">Сегодня нет дней рождений</div>
                     <div class="subtitle">{{ today | date: 'dd.MM.yyyy' }}</div>
                 </div>
-            <nb-tabset fullWidth>
-                <nb-tab tabTitle="Сотрудники КолАЭР" active="true">
-                    <div>
-                        <ngx-loading [show]="true" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
-                        <div class="contact" *ngFor="let employee of employeesBirthdayToday">
-                            <nb-user [picture]="employee.photo" [name]="employee.initials"
-                                     [title]="(employee.post.abbreviatedName || employee.post.name)" size="large"></nb-user>
-                            <small class="time" *ngIf="(today.getFullYear() - employee.birthday.getFullYear()) % 5 === 0">Юбилей</small>
-                        </div>
+            <nb-tabset #birthdayTab fullWidth>
+                <nb-tab #employeeTab [tabTitle]="employeeBirthdayTabTitle" active="true">
+                    <ngx-loading [show]="loadingEmployeesBirthdayToday"></ngx-loading>
+
+                    <div class="contact" *ngFor="let employee of employeesBirthdayToday">
+                        <nb-user [picture]="employee.photo" [name]="employee.initials"
+                                 [title]="(employee.post.abbreviatedName || employee.post.name)" size="large"></nb-user>
+                        <small class="time" *ngIf="(today.getFullYear() - employee.birthday.getFullYear()) % 5 === 0">Юбилей</small>
                     </div>
                 </nb-tab>
-                <nb-tab *ngIf="otherEmployeesBirthdayToday.length > 0" [tabTitle]="'Сотрудники АЭР'">
-                    <div class="contact" *ngFor="let employee of otherEmployeesBirthdayToday">
+                <nb-tab [tabTitle]="otherEmployeeBirthdayTabTitle" active="false">
+                    <ngx-loading [show]="loadingOtherEmployeesBirthdayToday"></ngx-loading>
+
+                    <div class="contact" *ngFor="let employee of otherEmployeesBirthdayToday" >
                         <nb-user [picture]="employee.photo" [name]="employee.initials"
                                  [badgeText]="getShortNameOrganization(employee.organization)" badgePosition="bottom left"
                                  [title]="employee.post" size="large"></nb-user>
