@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {ThemeModule} from '../../../@theme/theme.module';
 import {KolpassRouteModule} from './kolpass-route.module';
 import {KolpassComponent} from './kolpass.component';
-import {KolpassService} from "./kolpass.service";
+import {KolpassService} from './kolpass.service';
 
 
 @NgModule({

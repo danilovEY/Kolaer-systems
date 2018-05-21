@@ -93,4 +93,11 @@ public class KolpassController {
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return this.passwordRepositoryService.getHistoryByIdRepository(repId, number, pageSize);
     }
+
+    @ApiOperation(value = "Получить последний логин хранилища")
+    @UrlDeclaration(description = "Получить последний логин хранилища")
+    @RequestMapping(value = "/rep/{repId}/passwords/last", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PasswordHistoryDto getLastHistoryInRepository(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId){
+        return this.passwordRepositoryService.getLastHistoryInRepository(repId);
+    }
 }

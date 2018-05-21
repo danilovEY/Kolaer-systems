@@ -24,4 +24,6 @@ public interface PasswordRepositoryService extends DefaultService<PasswordReposi
     void clearRepository(Long repId);
 
     void deletePassword(Long repId, Long passId);
+
+    PasswordHistoryDto getLastHistoryInRepository(Long repId);
 }

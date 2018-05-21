@@ -193,6 +193,30 @@ public class PasswordRepositoryServiceImpl
         passwordHistoryDao.delete(passwordHistoryEntity);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public PasswordHistoryDto getLastHistoryInRepository(Long repId) {
+        if(repId == null) {
+            throw new UnexpectedRequestParams(new UnexpectedParamsDescription("id", "ID не должен быть пустым"));
+        }
+
+        AccountSimpleDto accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+
+        PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
+
+        if(passwordRepositoryEntity == null) {
+            throw new NotFoundDataException("Такого репозитория нет");
+        }
+
+        if(!accountSimpleByAuthentication.isAccessOit() &&
+                !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
+
+        PasswordHistoryEntity lastHistory = this.passwordHistoryDao.findLastHistoryInRepository(repId);
+
+        return passwordHistoryConverter.convertToDto(lastHistory);
+    }
 
     @Override
     @Transactional

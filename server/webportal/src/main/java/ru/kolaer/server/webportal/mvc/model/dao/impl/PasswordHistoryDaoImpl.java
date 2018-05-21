@@ -62,4 +62,13 @@ public class PasswordHistoryDaoImpl extends AbstractDefaultDao<PasswordHistoryEn
                 .setParameter("passId", passId)
                 .uniqueResult();
     }
+
+    @Override
+    public PasswordHistoryEntity findLastHistoryInRepository(Long repId) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " p WHERE p.repositoryPassId = :repId ORDER BY p.passwordWriteDate DESC", getEntityClass())
+                .setParameter("repId", repId)
+                .setMaxResults(1)
+                .uniqueResult();
+    }
 }

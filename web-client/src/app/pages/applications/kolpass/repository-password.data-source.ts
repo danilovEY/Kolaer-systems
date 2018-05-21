@@ -6,7 +6,7 @@ import {Page} from '../../../@core/models/page.model';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 
-export class PasswordRepositoryDataSource extends LocalDataSource implements OnInit {
+export class RepositoryPasswordDataSource extends LocalDataSource implements OnInit {
     private readonly onChangedLoading = new Subject<boolean>();
     private dataPage: Page<RepositoryPasswordModel> = {
         data: [],

@@ -1,8 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {DataSource} from 'ng2-smart-table/lib/data-source/data-source';
 import {CustomActionEditComponent} from './custom-action-edit.component';
 import {CustomActionViewComponent} from './custom-action-view.component';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
+import {Ng2SmartTableComponent} from "ng2-smart-table/ng2-smart-table.component";
+import {CustomActionModel} from "./custom-action.model";
 
 @Component({
     selector: 'custom-table',
@@ -16,24 +18,30 @@ export class CustomTableComponent implements OnInit {
     @Input() actionAdd: boolean = true;
     @Input() actionEdit: boolean = true;
     @Input() actionDelete: boolean = true;
+    @Input() actionWidth: string = '30px';
 
-    @Input() columns: Map<string, Column> = new Map<string, Column>();
+    @Input() columns: Column[] = [];
+    @Input() actions: CustomActionModel[] = [];
 
+    @Output() action = new EventEmitter<any>();
+    @Output() actionBeforeValueView: Function;
 
+    @ViewChild('table')
+    table: Ng2SmartTableComponent;
 
     settings = {
         actions: {
             columnTitle: 'Действия',
-            add: true,
-            edit: true,
-            delete: true,
+            add: this.actionAdd,
+            edit: this.actionEdit,
+            delete: this.actionDelete,
             position: 'right',
         },
         pager: {
             display: true,
             perPage: 15,
         },
-        noDataMessage: 'Парольница пустая',
+        noDataMessage: 'Пусто',
         selectMode: 'single',
         add: {
             addButtonContent: '<i class="nb-plus"></i>',
@@ -49,52 +57,44 @@ export class CustomTableComponent implements OnInit {
             deleteButtonContent: '<i class="nb-trash"></i>',
             confirmDelete: true,
         },
-        columns:  {
-            id: {
-                title: 'ID',
-                type: 'number',
-                editable: false,
-                addable: false,
-                width: '15px',
-            },
-            name: {
-                title: 'Имя',
-                type: 'string',
-            },
-            customActions: {
-                title: 'Прочие действия',
-                type: 'custom',
-                editable: false,
-                addable: false,
-                filter: false,
-                sort: false,
-                width: '30px',
-                editor: {
-                    type: 'custom',
-                    component: CustomActionEditComponent,
-                },
-                renderComponent: CustomActionViewComponent,
-                onComponentInitFunction(instance: CustomActionViewComponent) {
-                    instance.actions = [
-                        {
-                            name: 'open',
-                            content: '<i class="fa fa-eye"></i>',
-                            description: 'Открыть'
-                        }
-                    ];
-                    instance.custom.asObservable().subscribe(value => {
-                        console.log(value);
-                    });
-                }
-            }
-        },
+        columns:  {},
     };
 
     ngOnInit() {
+        this.settings.columns = {};
+
         this.settings.actions.add = this.actionAdd;
         this.settings.actions.edit = this.actionEdit;
         this.settings.actions.delete = this.actionDelete;
 
-    }
+        const tempActions = this.actions;
+        const tempAction = this.action;
+        const tempActionBeforeValueView = this.actionBeforeValueView;
+        const customActions: Column = new Column('customActions', {
+            title: 'Прочие действия',
+            type: 'custom',
+            editable: false,
+            addable: false,
+            filter: false,
+            sort: false,
+            width: this.actionWidth,
+            editor: {
+                type: 'custom',
+                component: CustomActionEditComponent,
+            },
+            renderComponent: CustomActionViewComponent,
+            onComponentInitFunction(instance: CustomActionViewComponent) {
+                instance.actions = tempActions;
+                instance.custom = tempAction;
+                instance.actionBeforeValueView = tempActionBeforeValueView;
+            }
+        }, undefined);
 
+
+        this.columns.push(customActions);
+
+        for (const col of this.columns) {
+            this.settings.columns[col.id] = col;
+        }
+    }
 }

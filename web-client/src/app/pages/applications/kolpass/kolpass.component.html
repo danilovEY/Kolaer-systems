@@ -5,6 +5,7 @@
 
     <nb-card-body>
         <ngx-loading [show]="loading" ></ngx-loading>
-        <custom-table #customTable [source]="source"></custom-table>
+        <custom-table #customTable [columns]="columns" [actions]="actions" [source]="source" actionWidth="60px"
+                      (action)="action($event)"></custom-table>
     </nb-card-body>
 </nb-card>

@@ -27,6 +27,10 @@ public class PasswordHistoryConverterImpl implements PasswordHistoryConverter {
 
     @Override
     public PasswordHistoryDto updateData(PasswordHistoryDto oldDto, PasswordHistoryEntity newModel) {
+        if(newModel == null) {
+            return null;
+        }
+
         oldDto.setId(newModel.getId());
         oldDto.setLogin(newModel.getLogin());
         oldDto.setPassword(newModel.getPassword());
