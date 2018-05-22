@@ -1,0 +1,8 @@
+@import '../../../../@theme/styles/themes';
+@import '../../../../../../node_modules/@nebular/theme/styles/global/bootstrap/breakpoints';
+@import '../../../../../../node_modules/bootstrap/scss/mixins/breakpoints';
+@import '../../../../../../node_modules/angular2-toaster/toaster.css';
+
+@include nb-install-component() {
+
+}
