@@ -1,7 +1,7 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {DataSource} from 'ng2-smart-table/lib/data-source/data-source';
 import {KolpassService} from '../kolpass.service';
-import {CustomTableComponent} from '../../../../@theme/components/index';
+import {CustomTableComponent} from '../../../../@theme/components';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {CustomActionModel} from '../../../../@theme/components/table/custom-action.model';
 import {RepositoryPasswordDataSource} from '../repository-password.data-source';
@@ -11,19 +11,23 @@ import {PasswordHistoryModel} from '../password-history.model';
 import {ClipboardService} from 'ngx-clipboard';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 import {ServerExceptionModel} from '../../../../@core/models/server-exception.model';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'repositories',
     styleUrls: ['./repositories.component.scss'],
     templateUrl: './repositories.component.html'
 })
-export class RepositoriesComponent implements OnInit {
+export class RepositoriesComponent implements OnInit, OnDestroy {
     private readonly openActionName: string = 'open';
     private readonly copyPassActionName: string = 'copy-pass';
     private readonly copyLoginActionName: string = 'copy-login';
 
     @ViewChild('customTable')
     customTable: CustomTableComponent;
+
+    @ViewChild('card')
+    card: ElementRef;
     
     loading: boolean = true;
     columns: Column[] = [];
@@ -46,6 +50,8 @@ export class RepositoriesComponent implements OnInit {
     });
 
     constructor(private toasterService: ToasterService,
+                private router: Router,
+                private renderer: Renderer2,
                 private chipboardService: ClipboardService,
     private kolpassService: KolpassService) {
         const source: RepositoryPasswordDataSource = new RepositoryPasswordDataSource(kolpassService);
@@ -117,6 +123,8 @@ export class RepositoriesComponent implements OnInit {
                     });
 
             this.copyPasswordHistoryToChipboard();
+        } else if (event.action.name === this.openActionName) {
+            this.router.navigate([`/pages/app/kolpass/repository/${event.data.id}`])
         }
     }
 
@@ -153,6 +161,14 @@ export class RepositoriesComponent implements OnInit {
                     this.copyPasswordHistoryToChipboard(index - 1);
                 }
             }, 500);
+        }
+    }
+
+    ngOnDestroy(): void {
+        const elements = document.getElementsByTagName('nb-popover'); // BUG POPUP
+
+        for (let index = elements.length - 1; index >= 0; index--) {
+            this.renderer.setStyle(elements[index], 'display', 'none');
         }
     }
 
