@@ -38,6 +38,7 @@ import {DEFAULT_THEME} from './styles/theme.default';
 import {COSMIC_THEME} from './styles/theme.cosmic';
 import {LoadingModule} from 'ngx-loading';
 import {Ng2SmartTableModule} from "ng2-smart-table";
+import {ToasterModule} from "angular2-toaster";
 
 const BASE_MODULES = [
     CommonModule,
@@ -63,6 +64,7 @@ const NB_MODULES = [
 
     LoadingModule,
     Ng2SmartTableModule,
+    ToasterModule,
 ];
 
 const COMPONENTS = [
@@ -96,6 +98,7 @@ const NB_THEME_PROVIDERS = [
     ).providers,
     ...NbSidebarModule.forRoot().providers,
     ...NbMenuModule.forRoot().providers,
+    ...ToasterModule.forRoot().providers,
 ];
 
 @NgModule({

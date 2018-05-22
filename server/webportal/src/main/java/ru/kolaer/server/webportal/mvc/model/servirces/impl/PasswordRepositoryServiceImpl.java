@@ -214,6 +214,9 @@ public class PasswordRepositoryServiceImpl
         }
 
         PasswordHistoryEntity lastHistory = this.passwordHistoryDao.findLastHistoryInRepository(repId);
+        if(lastHistory == null) {
+            throw new NotFoundDataException("Репозиторий пуст");
+        }
 
         return passwordHistoryConverter.convertToDto(lastHistory);
     }

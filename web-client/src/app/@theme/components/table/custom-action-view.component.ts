@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit} from '@angular/core';
 import {ViewCell} from 'ng2-smart-table';
 import {CustomActionModel} from './custom-action.model';
+import {CustomActionEventModel} from "./custom-action-event.model";
 
 @Component({
     selector: 'custom-action-view',
@@ -31,14 +32,11 @@ export class CustomActionViewComponent implements ViewCell, OnInit {
     onCustom(action: any, event: any) {
         event.preventDefault();
         event.stopPropagation();
-        this.actionBeforeValueView(null);
-        this.custom.emit({
-            action: action.name,
-            data: this.rowData,
-        });
+
+        this.custom.emit(new CustomActionEventModel(action, this.rowData));
     }
 
     beforeValueView(action: CustomActionModel, data: any): boolean {
-        return this.actionBeforeValueView ? this.actionBeforeValueView(action, data) : true;
+        return this.actionBeforeValueView ? this.actionBeforeValueView(new CustomActionEventModel(action, data)) : true;
     }
 }

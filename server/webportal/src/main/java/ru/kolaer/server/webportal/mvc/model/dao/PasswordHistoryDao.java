@@ -19,4 +19,6 @@ public interface PasswordHistoryDao extends DefaultDao<PasswordHistoryEntity> {
     PasswordHistoryEntity findByRepAndId(Long repId, Long passId);
 
     PasswordHistoryEntity findLastHistoryInRepository(Long repId);
+
+
 }

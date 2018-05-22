@@ -12,4 +12,5 @@ public class PasswordRepositoryDto implements BaseDto {
     private String name;
     private Long accountId;
     private String urlImage;
+    private boolean empty;
 }
