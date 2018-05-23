@@ -31,7 +31,7 @@ public class PasswordHistoryDaoImpl extends AbstractDefaultDao<PasswordHistoryEn
     @Override
     public List<PasswordHistoryEntity> findHistoryByIdRepository(Long id, Integer number, Integer pageSize) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " p WHERE p.repositoryPassId = :id", getEntityClass())
+                .createQuery("FROM " + getEntityName() + " p WHERE p.repositoryPassId = :id ORDER BY p.passwordWriteDate DESC", getEntityClass())
                 .setParameter("id", id)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)

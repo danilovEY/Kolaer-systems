@@ -9,7 +9,7 @@ import {CustomActionModel} from './custom-action.model';
 @Component({
     selector: 'custom-table',
     template: `
-        <ng2-smart-table #table [settings]="settings" [source]="source"></ng2-smart-table>
+        <ng2-smart-table #table [settings]="settings" [source]="source" (deleteConfirm)="deleteConfirm($event)"></ng2-smart-table>
     `
 })
 export class CustomTableComponent implements OnInit {
@@ -24,6 +24,8 @@ export class CustomTableComponent implements OnInit {
 
     @Output() action = new EventEmitter<any>();
     @Output() actionBeforeValueView: Function;
+
+    @Output() delete = new EventEmitter<any>();
 
     @ViewChild('table')
     table: Ng2SmartTableComponent;
@@ -95,5 +97,10 @@ export class CustomTableComponent implements OnInit {
         for (const col of this.columns) {
             this.settings.columns[col.id] = col;
         }
+    }
+
+    deleteConfirm(event: any) {
+        this.delete.emit(event);
+        return false;
     }
 }

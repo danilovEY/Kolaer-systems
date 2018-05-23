@@ -1,7 +1,7 @@
 <toaster-container [toasterconfig]="config"></toaster-container>
 
 <div class="row">
-    <div class="col-4">
+    <div class="col-12">
         <nb-card>
             <nb-card-header>
                 Последний пароль
@@ -9,10 +9,48 @@
 
             <nb-card-body>
                 <ngx-loading [show]="loadingLastPass" ></ngx-loading>
+
+                <form (ngSubmit)="submitUpdatePassForm()" [formGroup]="formUpdatePass">
+                    <div class="row">
+                        <!--First column-->
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="login">Логин</label>
+                                <div class="input-group has-user-icon">
+                                    <input type="text" id="login" formControlName="login"
+                                           class="form-control" value="{{ currentPassword?.login }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Second column-->
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="email">Пароль</label>
+                                <div class="input-group has-email-icon">
+                                    <input type="text" id="email" formControlName="password"
+                                           class="form-control" value="{{ currentPassword?.password }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <button type="button" class="btn btn-outline-primary" (click)="confirmToDelete(content)">
+                            Очистить репозиторий
+                        </button>
+
+                        <button type="submit" class="btn btn-primary" [disabled]="formUpdatePass.invalid">
+                            Сохранить
+                        </button>
+                    </div>
+
+                </form>
             </nb-card-body>
         </nb-card>
     </div>
-    <div class="col-8">
+
+    <div class="col-12">
         <nb-card>
             <nb-card-header>
                 История
@@ -20,9 +58,28 @@
 
             <nb-card-body>
                 <ngx-loading [show]="loadingHistory" ></ngx-loading>
-                <custom-table #customTable [columns]="columns" [source]="source" [actionAdd]="false" [actionDelete]="false" [actionEdit]="false"></custom-table>
+                <custom-table #customTable [columns]="columns" [source]="source"
+                              [actionAdd]="false" [actionDelete]="true" [actionEdit]="false"
+                (delete)="delete($event)">
+                </custom-table>
             </nb-card-body>
         </nb-card>
 
     </div>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Очистить репозиторий</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+        <div class="modal-body">
+            <p>Вы действительно хотите очистить репозиторий?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-success" (click)="d('Cross click')">Отмена</button>
+            <button type="submit" class="btn btn-hero-success" (click)="clearHistory()">Очистить</button>
+        </div>
+</ng-template>

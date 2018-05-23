@@ -5,12 +5,13 @@ import {Page} from '../../../@core/models/page.model';
 import {environment} from '../../../../environments/environment';
 import {Observable} from 'rxjs/Observable';
 import {AuthenticationRestService} from '../../../@core/modules/auth/authentication-rest.service';
-import {PasswordHistoryModel} from "./password-history.model";
+import {PasswordHistoryModel} from './password-history.model';
 
 @Injectable()
 export class KolpassService {
     private readonly repositoryUrl: string = `${environment.publicServerUrl}/kolpass/rep`;
     private readonly getHistoryByRepositoryUrl: string = `/passwords`;
+    private readonly clearHistoryByRepositoryUrl: string = `/clear`;
     private readonly getLastHistoryByRepositoryUrl: string = `${this.getHistoryByRepositoryUrl}/last`;
 
     constructor(private httpClient: HttpClient,
@@ -56,5 +57,38 @@ export class KolpassService {
         const url: string = `${this.repositoryUrl}/${repId}${this.getLastHistoryByRepositoryUrl}`;
 
         return this.httpClient.get<PasswordHistoryModel>(url);
+    }
+
+    removeHistoryFromRepository(repId: number, passwordId: number): Observable<any> {
+        if (!this.authService.authentication) {
+            return Observable.empty();
+        }
+
+        const url: string = `${this.repositoryUrl}/${repId}${this.getHistoryByRepositoryUrl}/${passwordId}`;
+
+        return this.httpClient.delete<any>(url);
+    }
+
+    clearHistoryFromRepository(repId: number): Observable<any> {
+        if (!this.authService.authentication) {
+            return Observable.empty();
+        }
+
+        const url: string = `${this.repositoryUrl}/${repId}${this.clearHistoryByRepositoryUrl}`;
+
+        return this.httpClient.delete<any>(url);
+    }
+
+    addPasswordToRepository(repId: number, newPassword: PasswordHistoryModel): Observable<PasswordHistoryModel>  {
+        if (!this.authService.authentication) {
+            return Observable.empty();
+        }
+
+        const url: string = `${this.repositoryUrl}/${repId}${this.getHistoryByRepositoryUrl}`;
+
+        newPassword.id = null;
+        newPassword.passwordWriteDate = null;
+
+        return this.httpClient.post<PasswordHistoryModel>(url, newPassword);
     }
 }
