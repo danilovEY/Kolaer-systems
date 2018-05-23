@@ -133,7 +133,7 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
                 this.loadingLastPass = false;
             })
             .subscribe(value => {
-                this.source.remove(event.data);
+                event.confirm.resolve();
 
                 if (this.currentPassword && this.currentPassword.id === event.data.id) {
                     this.loadLastPass();

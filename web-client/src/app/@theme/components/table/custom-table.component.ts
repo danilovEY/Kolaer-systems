@@ -9,7 +9,11 @@ import {CustomActionModel} from './custom-action.model';
 @Component({
     selector: 'custom-table',
     template: `
-        <ng2-smart-table #table [settings]="settings" [source]="source" (deleteConfirm)="deleteConfirm($event)"></ng2-smart-table>
+        <ng2-smart-table #table [settings]="settings" [source]="source" 
+                         (deleteConfirm)="deleteConfirm($event)" 
+                         (createConfirm)="createConfirm($event)" 
+                         (editConfirm)="editConfirm($event)">
+        </ng2-smart-table>
     `
 })
 export class CustomTableComponent implements OnInit {
@@ -26,6 +30,8 @@ export class CustomTableComponent implements OnInit {
     @Output() actionBeforeValueView: Function;
 
     @Output() delete = new EventEmitter<any>();
+    @Output() create = new EventEmitter<any>();
+    @Output() edit = new EventEmitter<any>();
 
     @ViewChild('table')
     table: Ng2SmartTableComponent;
@@ -49,11 +55,14 @@ export class CustomTableComponent implements OnInit {
             addButtonContent: '<i class="nb-plus"></i>',
             createButtonContent: '<i class="nb-checkmark"></i>',
             cancelButtonContent: '<i class="nb-close"></i>',
+            confirmCreate: true,
+
         },
         edit: {
             editButtonContent: '<i class="nb-edit"></i>',
             saveButtonContent: '<i class="nb-checkmark"></i>',
             cancelButtonContent: '<i class="nb-close"></i>',
+            confirmSave: true,
         },
         delete: {
             deleteButtonContent: '<i class="nb-trash"></i>',
@@ -96,11 +105,22 @@ export class CustomTableComponent implements OnInit {
 
         for (const col of this.columns) {
             this.settings.columns[col.id] = col;
+            this.settings.columns[col.id].editable = col.isEditable; // BAD API table
+            this.settings.columns[col.id].addable = col.isAddable;   //
         }
+
+        console.log(this.settings.columns);
     }
 
     deleteConfirm(event: any) {
         this.delete.emit(event);
-        return false;
+    }
+
+    editConfirm(event: any) {
+        this.edit.emit(event);
+    }
+
+    createConfirm(event: any) {
+        this.create.emit(event);
     }
 }

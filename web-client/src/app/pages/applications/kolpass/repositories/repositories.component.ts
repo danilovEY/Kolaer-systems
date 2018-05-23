@@ -12,6 +12,9 @@ import {ClipboardService} from 'ngx-clipboard';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 import {ServerExceptionModel} from '../../../../@core/models/server-exception.model';
 import {Router} from '@angular/router';
+import {TableEventEditModel} from "../../../../@theme/components/table/table-event-edit.model";
+import {TableEventAddModel} from "../../../../@theme/components/table/table-event-add.model";
+import {TableEventDeleteModel} from "../../../../@theme/components/table/table-event-delete.model";
 
 @Component({
     selector: 'repositories',
@@ -59,10 +62,10 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         const idColumn: Column = new Column('id', {
-            title: 'ID',
-            type: 'number',
             editable: false,
             addable: false,
+            title: 'ID',
+            type: 'number',
             width: '15px',
         }, undefined);
 
@@ -126,7 +129,7 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
     }
 
     /**
-     *
+     * BUG copy to chipboard after observer
      * @param {number} index
      */
     copyPasswordHistoryToChipboard(index: number = 5): void {
@@ -171,6 +174,18 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
         for (let index = elements.length - 1; index >= 0; index--) {
             this.renderer.setStyle(elements[index], 'display', 'none');
         }
+    }
+
+    edit(event: TableEventEditModel<RepositoryPasswordModel>) {
+        console.log(event);
+    }
+
+    create(event: TableEventAddModel<RepositoryPasswordModel>) {
+        console.log(event);
+    }
+
+    delete(event: TableEventDeleteModel<RepositoryPasswordModel>) {
+        console.log(event);
     }
 
     //

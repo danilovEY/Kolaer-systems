@@ -91,4 +91,18 @@ export class KolpassService {
 
         return this.httpClient.post<PasswordHistoryModel>(url, newPassword);
     }
+
+    addRepository(newRepository: RepositoryPasswordModel): Observable<RepositoryPasswordModel>  {
+        if (!this.authService.authentication) {
+            return Observable.empty();
+        }
+
+        const url: string = `${this.repositoryUrl}`;
+
+        newRepository.id = null;
+        newRepository.accountId = null;
+        newRepository.urlImage = null;
+
+        return this.httpClient.post<RepositoryPasswordModel>(url, newRepository);
+    }
 }
