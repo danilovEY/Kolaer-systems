@@ -33,6 +33,42 @@ export class KolpassService {
         return this.httpClient.get<Page<RepositoryPasswordModel>>(this.repositoryUrl, { params: params });
     }
 
+    addRepository(newRepository: RepositoryPasswordModel): Observable<RepositoryPasswordModel>  {
+        if (!this.authService.authentication) {
+            return Observable.empty();
+        }
+
+        const url: string = `${this.repositoryUrl}`;
+
+        newRepository.id = null;
+        newRepository.accountId = null;
+        newRepository.urlImage = null;
+
+        return this.httpClient.post<RepositoryPasswordModel>(url, newRepository);
+    }
+
+    deleteRepository(repId: number): Observable<any>  {
+        if (!this.authService.authentication) {
+            return Observable.empty();
+        }
+
+        const url: string = `${this.repositoryUrl}/${repId}`;
+
+        return this.httpClient.delete<any>(url);
+    }
+
+    editRepository(newRepository: RepositoryPasswordModel): Observable<RepositoryPasswordModel>  {
+        if (!this.authService.authentication) {
+            return Observable.empty();
+        }
+
+        const url: string = `${this.repositoryUrl}/${newRepository.id}`;
+
+        newRepository.accountId = null;
+
+        return this.httpClient.put<RepositoryPasswordModel>(url, newRepository);
+    }
+
     getHistoryInRepository(repId: number, page: number = 1, pageSize: number = 15): Observable<Page<PasswordHistoryModel>> {
         if (!this.authService.authentication) {
             return Observable.empty();
@@ -90,19 +126,5 @@ export class KolpassService {
         newPassword.passwordWriteDate = null;
 
         return this.httpClient.post<PasswordHistoryModel>(url, newPassword);
-    }
-
-    addRepository(newRepository: RepositoryPasswordModel): Observable<RepositoryPasswordModel>  {
-        if (!this.authService.authentication) {
-            return Observable.empty();
-        }
-
-        const url: string = `${this.repositoryUrl}`;
-
-        newRepository.id = null;
-        newRepository.accountId = null;
-        newRepository.urlImage = null;
-
-        return this.httpClient.post<RepositoryPasswordModel>(url, newRepository);
     }
 }

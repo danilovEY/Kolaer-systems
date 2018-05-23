@@ -5,6 +5,9 @@ import {CustomActionViewComponent} from './custom-action-view.component';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
 import {CustomActionModel} from './custom-action.model';
+import {TableEventDeleteModel} from "./table-event-delete.model";
+import {TableEventEditModel} from "./table-event-edit.model";
+import {TableEventAddModel} from "./table-event-add.model";
 
 @Component({
     selector: 'custom-table',
@@ -108,19 +111,24 @@ export class CustomTableComponent implements OnInit {
             this.settings.columns[col.id].editable = col.isEditable; // BAD API table
             this.settings.columns[col.id].addable = col.isAddable;   //
         }
-
-        console.log(this.settings.columns);
     }
 
-    deleteConfirm(event: any) {
+    deleteConfirm(event: TableEventDeleteModel<any>) {
+        delete event.data['customActions'];
+
         this.delete.emit(event);
     }
 
-    editConfirm(event: any) {
+    editConfirm(event: TableEventEditModel<any>) {
+        delete event.data['customActions'];
+        delete event.newData['customActions'];
+
         this.edit.emit(event);
     }
 
-    createConfirm(event: any) {
+    createConfirm(event: TableEventAddModel<any>) {
+        delete event.newData['customActions'];
+
         this.create.emit(event);
     }
 }

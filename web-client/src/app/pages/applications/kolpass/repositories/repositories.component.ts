@@ -12,9 +12,9 @@ import {ClipboardService} from 'ngx-clipboard';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 import {ServerExceptionModel} from '../../../../@core/models/server-exception.model';
 import {Router} from '@angular/router';
-import {TableEventEditModel} from "../../../../@theme/components/table/table-event-edit.model";
-import {TableEventAddModel} from "../../../../@theme/components/table/table-event-add.model";
-import {TableEventDeleteModel} from "../../../../@theme/components/table/table-event-delete.model";
+import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
+import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
+import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 
 @Component({
     selector: 'repositories',
@@ -177,15 +177,26 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
     }
 
     edit(event: TableEventEditModel<RepositoryPasswordModel>) {
-        console.log(event);
+        if (event.newData.name.length > 0) {
+            this.kolpassService.editRepository(event.newData)
+                .subscribe((value: RepositoryPasswordModel) => event.confirm.resolve(value));
+        } else {
+            event.confirm.reject();
+        }
     }
 
     create(event: TableEventAddModel<RepositoryPasswordModel>) {
-        console.log(event);
+        if (event.newData.name.length > 0) {
+            this.kolpassService.addRepository(event.newData)
+                .subscribe((value: RepositoryPasswordModel) => event.confirm.resolve(value));
+        } else {
+            event.confirm.reject();
+        }
     }
 
     delete(event: TableEventDeleteModel<RepositoryPasswordModel>) {
-        console.log(event);
+            this.kolpassService.deleteRepository(event.data.id)
+                .subscribe(value => event.confirm.resolve());
     }
 
     //

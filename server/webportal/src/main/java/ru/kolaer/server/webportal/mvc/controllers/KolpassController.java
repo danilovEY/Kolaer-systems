@@ -69,8 +69,8 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Обновить хранилище")
-    @UrlDeclaration(description = "Обновить хранилище", requestMethod = RequestMethod.PATCH)
-    @RequestMapping(value = "/rep/{repId}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @UrlDeclaration(description = "Обновить хранилище", requestMethod = RequestMethod.PUT)
+    @RequestMapping(value = "/rep/{repId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updateRepositoryPassword(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
                                          @ApiParam("Наименование хранилища") @RequestBody PasswordRepositoryDto repositoryPassword) {
         repositoryPassword.setId(repId);
