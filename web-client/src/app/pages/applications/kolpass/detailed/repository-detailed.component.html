@@ -1,10 +1,28 @@
-<nb-card>
-    <nb-card-header>
-        Репозиторий
-    </nb-card-header>
+<toaster-container [toasterconfig]="config"></toaster-container>
 
-    <nb-card-body>
-        <toaster-container [toasterconfig]="config"></toaster-container>
-        <ngx-loading [show]="loading" ></ngx-loading>
-    </nb-card-body>
-</nb-card>
+<div class="row">
+    <div class="col-4">
+        <nb-card>
+            <nb-card-header>
+                Последний пароль
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="loadingLastPass" ></ngx-loading>
+            </nb-card-body>
+        </nb-card>
+    </div>
+    <div class="col-8">
+        <nb-card>
+            <nb-card-header>
+                История
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="loadingHistory" ></ngx-loading>
+                <custom-table #customTable [columns]="columns" [source]="source" [actionAdd]="false" [actionDelete]="false" [actionEdit]="false"></custom-table>
+            </nb-card-body>
+        </nb-card>
+
+    </div>
+</div>

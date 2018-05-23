@@ -10,7 +10,8 @@ import {PasswordHistoryModel} from "./password-history.model";
 @Injectable()
 export class KolpassService {
     private readonly repositoryUrl: string = `${environment.publicServerUrl}/kolpass/rep`;
-    private readonly getLastHistoryByRepositoryUrl: string = `/passwords/last`;
+    private readonly getHistoryByRepositoryUrl: string = `/passwords`;
+    private readonly getLastHistoryByRepositoryUrl: string = `${this.getHistoryByRepositoryUrl}/last`;
 
     constructor(private httpClient: HttpClient,
                 private authService: AuthenticationRestService) {
@@ -29,6 +30,22 @@ export class KolpassService {
         params = params.append('pagesize', pageSize.toString());
         
         return this.httpClient.get<Page<RepositoryPasswordModel>>(this.repositoryUrl, { params: params });
+    }
+
+    getHistoryInRepository(repId: number, page: number = 1, pageSize: number = 15): Observable<Page<PasswordHistoryModel>> {
+        if (!this.authService.authentication) {
+            return Observable.empty();
+        }
+
+
+        let params = new HttpParams();
+
+        params = params.append('page', page.toString());
+        params = params.append('pagesize', pageSize.toString());
+
+        const url: string = `${this.repositoryUrl}/${repId}${this.getHistoryByRepositoryUrl}`;
+
+        return this.httpClient.get<Page<PasswordHistoryModel>>(url, { params: params });
     }
 
     getLastHistoryByRepository(repId: number): Observable<PasswordHistoryModel> {

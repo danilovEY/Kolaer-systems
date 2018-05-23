@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {DataSource} from 'ng2-smart-table/lib/data-source/data-source';
 import {KolpassService} from '../kolpass.service';
 import {CustomTableComponent} from '../../../../@theme/components';
@@ -25,9 +25,6 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
 
     @ViewChild('customTable')
     customTable: CustomTableComponent;
-
-    @ViewChild('card')
-    card: ElementRef;
     
     loading: boolean = true;
     columns: Column[] = [];
@@ -124,10 +121,14 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
 
             this.copyPasswordHistoryToChipboard();
         } else if (event.action.name === this.openActionName) {
-            this.router.navigate([`/pages/app/kolpass/repository/${event.data.id}`])
+            this.router.navigate([`/pages/app/kolpass/repository/${event.data.id}`]);
         }
     }
 
+    /**
+     *
+     * @param {number} index
+     */
     copyPasswordHistoryToChipboard(index: number = 5): void {
         if (index > 0 && !this.errorResponse) {
             setTimeout(() => {

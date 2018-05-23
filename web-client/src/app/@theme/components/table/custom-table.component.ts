@@ -3,14 +3,13 @@ import {DataSource} from 'ng2-smart-table/lib/data-source/data-source';
 import {CustomActionEditComponent} from './custom-action-edit.component';
 import {CustomActionViewComponent} from './custom-action-view.component';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
-import {Ng2SmartTableComponent} from "ng2-smart-table/ng2-smart-table.component";
-import {CustomActionModel} from "./custom-action.model";
+import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
+import {CustomActionModel} from './custom-action.model';
 
 @Component({
     selector: 'custom-table',
     template: `
-        <ng2-smart-table #table [settings]="settings" [source]="source">
-        </ng2-smart-table>
+        <ng2-smart-table #table [settings]="settings" [source]="source"></ng2-smart-table>
     `
 })
 export class CustomTableComponent implements OnInit {
@@ -30,6 +29,7 @@ export class CustomTableComponent implements OnInit {
     table: Ng2SmartTableComponent;
 
     settings = {
+        hideSubHeader: false,
         actions: {
             columnTitle: 'Действия',
             add: this.actionAdd,
@@ -61,37 +61,36 @@ export class CustomTableComponent implements OnInit {
     };
 
     ngOnInit() {
-        this.settings.columns = {};
-
         this.settings.actions.add = this.actionAdd;
         this.settings.actions.edit = this.actionEdit;
         this.settings.actions.delete = this.actionDelete;
 
-        const tempActions = this.actions;
-        const tempAction = this.action;
-        const tempActionBeforeValueView = this.actionBeforeValueView;
-        const customActions: Column = new Column('customActions', {
-            title: 'Прочие действия',
-            type: 'custom',
-            editable: false,
-            addable: false,
-            filter: false,
-            sort: false,
-            width: this.actionWidth,
-            editor: {
+        if (this.actions.length > 0) {
+            const tempActions = this.actions;
+            const tempAction = this.action;
+            const tempActionBeforeValueView = this.actionBeforeValueView;
+            const customActions: Column = new Column('customActions', {
+                title: 'Прочие действия',
                 type: 'custom',
-                component: CustomActionEditComponent,
-            },
-            renderComponent: CustomActionViewComponent,
-            onComponentInitFunction(instance: CustomActionViewComponent) {
-                instance.actions = tempActions;
-                instance.custom = tempAction;
-                instance.actionBeforeValueView = tempActionBeforeValueView;
-            }
-        }, undefined);
+                editable: false,
+                addable: false,
+                filter: false,
+                sort: false,
+                width: this.actionWidth,
+                editor: {
+                    type: 'custom',
+                    component: CustomActionEditComponent,
+                },
+                renderComponent: CustomActionViewComponent,
+                onComponentInitFunction(instance: CustomActionViewComponent) {
+                    instance.actions = tempActions;
+                    instance.custom = tempAction;
+                    instance.actionBeforeValueView = tempActionBeforeValueView;
+                }
+            }, undefined);
 
-
-        this.columns.push(customActions);
+            this.columns.push(customActions);
+        }
 
         for (const col of this.columns) {
             this.settings.columns[col.id] = col;
