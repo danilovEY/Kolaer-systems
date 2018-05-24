@@ -6,7 +6,6 @@
     "baseUrl": "./",
     "types": [],
     "paths": {
-      "ngx-clipboard": ["../node_modules/ngx-clipboard/*"],
       "@angular/*": [
         "../node_modules/@angular/*"
       ],

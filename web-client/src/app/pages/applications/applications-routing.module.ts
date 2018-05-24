@@ -1,7 +1,6 @@
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {ApplicationsComponent} from './applications.component';
-import {KolpassModule} from './kolpass/kolpass.module';
 import {AuthGuardService} from '../../@core/modules/auth/auth-guard.service';
 
 
@@ -11,7 +10,7 @@ const routes: Routes = [{
     children: [
         {
             path: 'kolpass',
-            loadChildren: () => KolpassModule,
+            loadChildren: 'app/pages/applications/kolpass/kolpass.module#KolpassModule',
             canActivate: [AuthGuardService]
         },
     ]
