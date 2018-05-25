@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.tickets;
 
 import lombok.Data;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,8 +21,8 @@ public class TicketEntity implements Serializable, BaseEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", insertable = false, updatable = false)
-    private EmployeeEntity employee;
+    @JoinColumn(name = "bank_account_id", insertable = false, updatable = false)
+    private BankAccountEntity bankAccount;
 
     @Column(name = "count", nullable = false)
     private Integer count;
@@ -30,7 +30,11 @@ public class TicketEntity implements Serializable, BaseEntity {
     @Column(name = "register_id", nullable = false)
     private Long registerId;
 
-    @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    @Column(name = "bank_account_id", nullable = false)
+    private Long bankAccountId;
+
+    @Column(name = "type_operation", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TypeOperation typeOperation;
 
 }
