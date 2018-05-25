@@ -79,7 +79,6 @@ class KolpassTableImpl implements KolpassTable, TokenToHeader, RestTemplateServi
                                                                 PasswordHistoryDto passwordHistoryDto) {
         PasswordRepositoryDto repositoryPassword = new PasswordRepositoryDto();
         repositoryPassword.setId(idRep);
-        repositoryPassword.setLastPassword(passwordHistoryDto);
 
         return getServerResponse(restTemplate.exchange(this.ADD_HISTORY_PASSWORD_TO_REP,
                 HttpMethod.POST,
