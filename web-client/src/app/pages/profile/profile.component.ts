@@ -28,7 +28,6 @@ export class ProfileComponent implements OnInit {
     successChangePassword: boolean = false;
     successChangeAccount: boolean = false;
     needLogout: boolean = false;
-    selectedFiles: FileList;
 
     formAccount: FormGroup;
     changePassForm: FormGroup;
@@ -140,10 +139,6 @@ export class ProfileComponent implements OnInit {
                 (error: HttpErrorResponse) => {
                     this.serverErrorForChangePassword = error.error;
                 });
-    }
-
-    selectImage(event: any) {
-        this.selectedFiles = event.target.files;
     }
 }
 

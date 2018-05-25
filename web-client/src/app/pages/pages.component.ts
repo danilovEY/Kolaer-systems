@@ -46,6 +46,20 @@ export class PagesComponent implements OnInit {
             kolpassMenuItem.children.push(kolpassMainMenuItem);
 
             this.menu.push(kolpassMenuItem);
+
+
+            const ticketsMenuItem: NbMenuItem = new NbMenuItem();
+            ticketsMenuItem.title = 'Парольница';
+            ticketsMenuItem.icon = 'ticket-alt';
+            ticketsMenuItem.children = [];
+
+            const ticketsMainMenuItem: NbMenuItem = new NbMenuItem();
+            ticketsMainMenuItem.title = 'Главная';
+            ticketsMainMenuItem.link = 'app/tickets';
+
+            ticketsMenuItem.children.push(ticketsMainMenuItem);
+
+            this.menu.push(ticketsMenuItem);
         }
 
     }

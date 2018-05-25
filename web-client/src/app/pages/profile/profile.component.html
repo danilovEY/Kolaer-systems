@@ -13,23 +13,27 @@
                         <div *ngIf="needLogout">Сейчас будет выход из системы...</div>
                     </div>
 
-                    <div class="row" *ngIf="currentAccount?.avatarUrl">
-                        <div class="col-12 col-md-12 picture">
+                    <div class="row">
+                        <div class="col-12 col-md-12 picture" *ngIf="currentAccount?.avatarUrl">
                             <img src="{{ currentAccount?.avatarUrl }}" alt="аватар">
                         </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="login">Аватар</label>
-                                <div class="input-group">
-                                    <input type="file"  accept="image/*" class="form-control" placeholder="Загрузить фото" (change)="selectImage($event)">
-                                    <span class="input-group-append">
-                                    <button class="btn btn-warning input-group-text">
-                                      Загрузить
-                                    </button>
-                                  </span>
-                                </div>
-                            </div>
+
+                        <div class="col-12 col-md-12 picture" *ngIf="!currentAccount?.avatarUrl && currentEmployee?.photo">
+                            <img src="{{ currentEmployee?.photo }}" alt="аватар">
                         </div>
+                        <!--<div class="col-12">-->
+                            <!--<div class="form-group">-->
+                                <!--<label for="login">Аватар</label>-->
+                                <!--<div class="input-group">-->
+                                    <!--<input type="file"  accept="image/*" class="form-control" placeholder="Загрузить фото" (change)="selectImage($event)">-->
+                                    <!--<span class="input-group-append">-->
+                                    <!--<button class="btn btn-warning input-group-text">-->
+                                      <!--Загрузить-->
+                                    <!--</button>-->
+                                  <!--</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
                     </div>
 
 

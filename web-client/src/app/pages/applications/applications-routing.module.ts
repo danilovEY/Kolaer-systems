@@ -13,6 +13,10 @@ const routes: Routes = [{
             loadChildren: 'app/pages/applications/kolpass/kolpass.module#KolpassModule',
             canActivate: [AuthGuardService]
         },
+        {
+            path: 'tickets',
+            loadChildren: 'app/pages/applications/tickets/tickets.module#TicketsModule'
+        },
     ]
 }];
 
