@@ -63,4 +63,13 @@ public class TicketRegisterDaoImpl extends AbstractDefaultDao<TicketRegisterEnti
                 .createQuery("FROM " + getEntityName() + " tr WHERE tr.close = false", getEntityClass())
                 .list();
     }
+
+    @Override
+    public TicketRegisterEntity findIncludeAllOnLastMonth() {
+        return getSession()
+                .createQuery("FROM " + getEntityName() +
+                        " tr WHERE tr.includeAll = TRUE AND MONTH(tr.createRegister) = MONTH(CURRENT_TIMESTAMP)", getEntityClass())
+                .uniqueResultOptional()
+                .orElse(null);
+    }
 }

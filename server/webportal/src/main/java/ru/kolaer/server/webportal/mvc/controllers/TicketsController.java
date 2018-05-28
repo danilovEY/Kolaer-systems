@@ -4,18 +4,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
+import ru.kolaer.server.webportal.mvc.model.dto.GenerateTicketRegister;
+import ru.kolaer.server.webportal.mvc.model.dto.ReportTicketsConfig;
 import ru.kolaer.server.webportal.mvc.model.dto.TicketRegisterDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
-import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -27,16 +27,13 @@ import java.util.List;
 @Slf4j
 public class TicketsController {
     private final TicketRegisterService ticketRegisterService;
-    private final EmployeeService employeeService;
     private final RegisterTicketScheduler registerTicketScheduler;
     private final AuthenticationService authenticationService;
 
     public TicketsController(TicketRegisterService ticketRegisterService,
-                             EmployeeService employeeService,
                              RegisterTicketScheduler registerTicketScheduler,
                              AuthenticationService authenticationService) {
         this.ticketRegisterService = ticketRegisterService;
-        this.employeeService = employeeService;
         this.registerTicketScheduler = registerTicketScheduler;
         this.authenticationService = authenticationService;
     }
@@ -103,10 +100,34 @@ public class TicketsController {
 
     @ApiOperation(value = "Получить все реестры талонов")
     @UrlDeclaration(description = "Получить все реестры талонов")
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<TicketRegisterDto> getAllRegister(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                                      @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
             return this.ticketRegisterService.getAll(number, pageSize);
+    }
+
+    @ApiOperation(value = "Сгенерировать реестр с добавлением всех аккаунтов")
+    @UrlDeclaration(description = "Сгенерировать реестр с добавлением всех аккаунтов", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/full", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public TicketRegisterDto generateNewRegisterAndAddAllAccounts(@RequestBody GenerateTicketRegister generateTicketRegister) {
+        return this.ticketRegisterService.generateRegisterForAllAccounts(generateTicketRegister);
+    }
+
+    @ApiOperation(value = "Сформировать отчет реестра и скачать")
+    @UrlDeclaration(description = "Сформировать отчет реестра и скачать", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/{regId}/report", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity generateReportForRegisterAndDownload(@PathVariable("regId") Long regId,
+                                                    @RequestBody ReportTicketsConfig reportTicketsConfig,
+                                                    HttpServletResponse response) {
+        return this.ticketRegisterService.generateReportByRegisterAndDownload(regId, reportTicketsConfig, response);
+    }
+
+    @ApiOperation(value = "Сформировать отчет реестра и отправить")
+    @UrlDeclaration(description = "Сформировать отчет реестра и отправить", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/{regId}/report/send", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public boolean generateReportForRegisterAndSend(@PathVariable("regId") Long regId,
+                                                    @RequestBody ReportTicketsConfig reportTicketsConfig) {
+        return this.ticketRegisterService.generateReportByRegisterAndSend(regId, reportTicketsConfig);
     }
 
 //    @ApiOperation(value = "Добавить талон в реестр")

@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 public class UploadFileDto implements BaseDto {
     private Long id;
     private String path;
-    private String name;
-    private LocalDateTime create;
+    private String fileName;
+    private LocalDateTime fileCreate;
     private Long accountId;
 
 }

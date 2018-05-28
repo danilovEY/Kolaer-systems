@@ -1,17 +1,20 @@
 package ru.kolaer.server.webportal.beans;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.dto.SendTicketDto;
 import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,24 +29,24 @@ public class RegisterTicketScheduler {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
     private final List<String> emails = new ArrayList<>();
 
-    private final UploadFileService storageService;
+    private final UploadFileService uploadFileService;
     private JavaMailSender mailSender;
     private SimpleMailMessage mailMessage;
-    private BankAccountDao bankAccountDao;
+    private final Environment environment;
 
-    public RegisterTicketScheduler(UploadFileService storageService,
+    public RegisterTicketScheduler(UploadFileService uploadFileService,
                                    JavaMailSender mailSender,
                                    SimpleMailMessage mailMessage,
-                                   BankAccountDao bankAccountDao) {
-        this.storageService = storageService;
+                                   Environment environment) {
+        this.uploadFileService = uploadFileService;
         this.mailSender = mailSender;
         this.mailMessage = mailMessage;
-        this.bankAccountDao = bankAccountDao;
+        this.environment = environment;
     }
 
     @PostConstruct
     public void init() {
-        this.emails.add("oit@kolaer.ru");
+        this.emails.add(environment.getProperty("tickets.email"));
     }
 
     //@Scheduled(cron = "0 0 14 * * *", zone = "Europe/Moscow")
@@ -69,7 +72,7 @@ public class RegisterTicketScheduler {
 //        }
 //    }
 
-    public boolean generateAddTicketDocument() {
+//    public boolean generateAddTicketDocument() {
 //        final List<TicketRegisterEntity> allOpenRegister = ticketRegisterDao.findAllOpenRegister();
 //        if(allOpenRegister.size() > 0) {
 //            allOpenRegister.forEach(ticketRegister -> ticketRegister.setClose(true));
@@ -93,19 +96,20 @@ public class RegisterTicketScheduler {
 //                return true;
 //            }
 //        }
-        return false;
-    }
+//        return false;
+//    }
 
-    public boolean generateReportTickets(List<SendTicketDto> tickets, LocalDateTime inTime) {
+    public UploadFileEntity generateReportTickets(List<SendTicketDto> tickets, LocalDateTime inTime) {
         String dateToUpdate = DateTimeFormatter.ofPattern("yyyyMMdd hhmmss").format(inTime);
 
-        return this.sendMail(tickets, String.format("IN-TIME  %s", dateToUpdate),
-                "Сформированные талоны ЛПП и время исполнения файла: " + dateToUpdate + ". Файл во вложении!");
+        return this.generateTextFile(tickets, String.format("IN-TIME  %s", dateToUpdate));
+
+//        return this.sendMail(tickets, ,
+//                "Сформированные талоны ЛПП и время исполнения файла: " + dateToUpdate + ". Файл во вложении!");
     }
 
-    public boolean generateReportTickets(List<SendTicketDto> tickets) {
-        return this.sendMail(tickets, "IMMEDIATE",
-                "Сформированные талоны ЛПП и время исполнения файла: сразу. Файл во вложении!");
+    public UploadFileEntity generateReportTickets(List<SendTicketDto> tickets) {
+        return this.generateTextFile(tickets, "IMMEDIATE");
     }
 
 //    public boolean generateZeroTicketDocument(List<SendTicketDto> allTickets) {
@@ -152,21 +156,21 @@ public class RegisterTicketScheduler {
 //                }).collect(Collectors.toList());
 //    }
 
-    private boolean sendMail(List<SendTicketDto> tickets, String header, String text) {
-        if (tickets.size() > 0) {
-            UploadFileEntity genFile = this.generateTextFile(tickets, header);
-            if (genFile != null) {
-                this.mailSender.send(mimeMessage -> {
-                    MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
-                    messageHelper.setFrom(mailMessage.getFrom());
-                    messageHelper.setTo(this.emails.toArray(new String[this.emails.size()]));
-                    messageHelper.setSubject("Сформированные талоны ЛПП");
-                    messageHelper.setText(text);
-                    messageHelper.addAttachment(genFile.getName(), () -> new FileInputStream(new File(genFile.getPath())));
-                });
-                return true;
-            }
+    public boolean sendMail(UploadFileEntity uploadFileEntity, String text) {
+        if (uploadFileEntity != null) {
+            this.mailSender.send(mimeMessage -> {
+                Resource resource = uploadFileService.loadFile(uploadFileEntity.getPath());
+
+                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+                messageHelper.setFrom(mailMessage.getFrom());
+                messageHelper.setTo(this.emails.toArray(new String[this.emails.size()]));
+                messageHelper.setSubject("Сформированные талоны ЛПП");
+                messageHelper.setText(text);
+                messageHelper.addAttachment(uploadFileEntity.getFileName(), resource);
+            });
+            return true;
         }
+
         return false;
     }
 
@@ -177,18 +181,17 @@ public class RegisterTicketScheduler {
 
         int index = 1;
 
-        String fileName = "Z001000.KOLAER_ENROLL001";
-
         UploadFileEntity uploadFileEntity = null;
 
         while (uploadFileEntity == null) {
-            uploadFileEntity = storageService
-                    .createFile("tiskets",fileName + String.format("%04d", ++index) + String.format(".%03d",now.getDayOfYear()), false);
+            uploadFileEntity = uploadFileService
+                    .createFile("tickets", String.format("Z001000.KOLAER_ENROLL001%04d.%03d", index++, now.getDayOfYear()), false);
         }
+        String absolutePath = this.uploadFileService.getAbsolutePath(uploadFileEntity);
 
         PrintWriter printWriter = null;
         try {
-            printWriter = new PrintWriter(uploadFileEntity.getPath(), "windows-1251");
+            printWriter = new PrintWriter(absolutePath, "windows-1251");
             printWriter.printf("H %s %s %s", dateTime[0], dateTime[1], header);
             printWriter.printf(System.lineSeparator());
             for(final SendTicketDto ticket : tickets) {

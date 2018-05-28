@@ -2,12 +2,10 @@ package ru.kolaer.server.webportal.mvc.model.entities.tickets;
 
 import lombok.Data;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Created by danilovey on 30.11.2016.
@@ -28,17 +26,16 @@ public class TicketRegisterEntity implements Serializable, BaseEntity {
     @Column(name = "department_id")
     private Long departmentId;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<TicketEntity> tickets;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_department", insertable=false, updatable=false)
-    private DepartmentEntity department;
-
     @Column(name = "create_register")
     private LocalDateTime createRegister;
 
     @Column(name = "send_register_time")
     private LocalDateTime sendRegisterTime;
+
+    @Column(name = "attachment_id")
+    private Long attachmentId;
+
+    @Column(name = "include_all")
+    private boolean includeAll;
 
 }

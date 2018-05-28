@@ -17,27 +17,27 @@ public class TicketRegisterConverterImpl implements TicketRegisterConverter {
         ticketRegisterEntity.setClose(dto.isClose());
         ticketRegisterEntity.setCreateRegister(dto.getCreateRegister());
         ticketRegisterEntity.setSendRegisterTime(dto.getSendRegisterTime());
+        ticketRegisterEntity.setAttachmentId(dto.getAttachmentId());
 
         return ticketRegisterEntity;
     }
 
     @Override
     public TicketRegisterDto convertToDto(TicketRegisterEntity model) {
-        TicketRegisterDto ticketRegisterDto = new TicketRegisterDto();
-        ticketRegisterDto.setId(model.getId());
-        ticketRegisterDto.setClose(model.isClose());
-        ticketRegisterDto.setCreateRegister(model.getCreateRegister());
-        ticketRegisterDto.setSendRegisterTime(model.getSendRegisterTime());
-
-        return ticketRegisterDto;
+        return updateData(new TicketRegisterDto(), model);
     }
 
     @Override
     public TicketRegisterDto updateData(TicketRegisterDto oldDto, TicketRegisterEntity newModel) {
+        if(oldDto == null || newModel == null) {
+            return null;
+        }
+
         oldDto.setId(newModel.getId());
         oldDto.setClose(newModel.isClose());
         oldDto.setCreateRegister(newModel.getCreateRegister());
         oldDto.setSendRegisterTime(newModel.getSendRegisterTime());
+        oldDto.setAttachmentId(newModel.getAttachmentId());
 
         return oldDto;
     }

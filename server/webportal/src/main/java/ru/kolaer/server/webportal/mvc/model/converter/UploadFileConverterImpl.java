@@ -17,8 +17,8 @@ public class UploadFileConverterImpl implements UploadFileConverter {
         uploadFileEntity.setId(dto.getId());
         uploadFileEntity.setAccountId(dto.getAccountId());
         uploadFileEntity.setPath(dto.getPath());
-        uploadFileEntity.setName(dto.getName());
-        uploadFileEntity.setCreate(dto.getCreate());
+        uploadFileEntity.setFileName(dto.getFileName());
+        uploadFileEntity.setFileCreate(dto.getFileCreate());
 
         return uploadFileEntity;
     }
@@ -38,8 +38,8 @@ public class UploadFileConverterImpl implements UploadFileConverter {
         uploadFileDto.setId(newModel.getId());
         uploadFileDto.setAccountId(newModel.getAccountId());
         uploadFileDto.setPath(newModel.getPath());
-        uploadFileDto.setName(newModel.getName());
-        uploadFileDto.setCreate(newModel.getCreate());
+        uploadFileDto.setFileName(newModel.getFileName());
+        uploadFileDto.setFileCreate(newModel.getFileCreate());
 
         return uploadFileDto;
     }

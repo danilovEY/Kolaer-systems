@@ -18,11 +18,11 @@ public class UploadFileEntity implements BaseEntity {
     @Column(name = "path", unique = true, nullable = false)
     private String path;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "file_name", nullable = false)
+    private String fileName;
 
-    @Column(name = "create", nullable = false)
-    private LocalDateTime create;
+    @Column(name = "file_create", nullable = false)
+    private LocalDateTime fileCreate;
 
     @Column(name = "account_id")
     private Long accountId;

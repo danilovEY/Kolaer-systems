@@ -71,7 +71,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     }
 
     @Override
-    public int delete(@NonNull Long id) {
+    public long delete(@NonNull Long id) {
         if(id < 1) {
             return 0;
         }

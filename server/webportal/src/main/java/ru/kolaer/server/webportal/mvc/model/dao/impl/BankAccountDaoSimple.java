@@ -72,7 +72,7 @@ public class BankAccountDaoSimple implements BankAccountDao {
     }
 
     @Override
-    public int delete(@NonNull Long id) {
+    public long delete(@NonNull Long id) {
         return 0;
     }
 

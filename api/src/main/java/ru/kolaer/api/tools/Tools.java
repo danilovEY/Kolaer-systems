@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -16,6 +18,7 @@ public class Tools {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY");
     private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
     private static final Logger LOG = LoggerFactory.getLogger(Tools.class);
 
     public static String dateToString(Date date) {
@@ -91,5 +94,9 @@ public class Tools {
         } else {
             Platform.runLater(runnable);
         }
+    }
+
+    public static String dateTimeToString(LocalDateTime inTime) {
+        return dateTimeFormatter.format(inTime);
     }
 }

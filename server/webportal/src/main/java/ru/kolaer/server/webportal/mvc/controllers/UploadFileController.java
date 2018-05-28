@@ -3,21 +3,15 @@ package ru.kolaer.server.webportal.mvc.controllers;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.UploadFileDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URLConnection;
-import java.util.Optional;
 
 /**
  * Created by danilovey on 07.02.2017.
@@ -62,25 +56,11 @@ public class UploadFileController {
 //    }
 
     @RequestMapping(value = "/file/{id}/{filename:.+}", method = RequestMethod.GET)
-    @UrlDeclaration(description = "Скачать файл с сервера", isUser = true)
+    @UrlDeclaration(description = "Скачать файл с сервера")
     @ApiOperation("Скачать файл с сервера")
-    public ResponseEntity getFile(@PathVariable("id") Long id, @PathVariable("filename") String filename, HttpServletResponse response) throws IOException {
-        UploadFileDto uploadFileDto = uploadFileService.getById(id);
-        if(uploadFileDto != null && uploadFileDto.getName().equals(filename)) {
-            Resource resource = uploadFileService.loadFile(uploadFileDto.getPath());
-
-            String mimeType = Optional.ofNullable(URLConnection.guessContentTypeFromName(uploadFileDto.getPath()))
-                    .orElse("application/octet-stream");
-
-            response.setContentType(mimeType);
-            response.setHeader("Content-Disposition", "inline; filename=\"" + uploadFileDto.getName() +"\"");
-            response.setContentLength(Long.valueOf(resource.contentLength()).intValue());
-
-            FileCopyUtils.copy(resource.getInputStream(), response.getOutputStream());
-
-            return ResponseEntity.ok(null);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity getFile(@PathVariable("id") Long id,
+                                  @PathVariable("filename") String filename,
+                                  HttpServletResponse response) {
+        return uploadFileService.loadFile(id, filename, response);
     }
 }

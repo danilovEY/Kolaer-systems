@@ -36,4 +36,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="20-2" author="Danilov">
+        <renameColumn tableName="upload_file" oldColumnName="name" newColumnName="file_name" columnDataType="VARCHAR(255)"/>
+    </changeSet>
+
+    <changeSet id="20-3" author="Danilov">
+        <renameColumn tableName="upload_file" oldColumnName="create" newColumnName="file_create" columnDataType="TIMESTAMP"/>
+    </changeSet>
+
 </databaseChangeLog>

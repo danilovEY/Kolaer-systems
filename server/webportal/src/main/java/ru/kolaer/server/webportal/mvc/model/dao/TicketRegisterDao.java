@@ -17,4 +17,6 @@ public interface TicketRegisterDao extends DefaultDao<TicketRegisterEntity> {
     List<TicketRegisterEntity> getTicketRegisterByDateAndDep(Date date, String depName);
 
     List<TicketRegisterEntity> findAllOpenRegister();
+
+    TicketRegisterEntity findIncludeAllOnLastMonth();
 }
