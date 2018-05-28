@@ -27,7 +27,6 @@ import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -130,6 +129,13 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
         return defaultConverter.convertToDto(ticketRegisterEntity);
     }
 
+//    @Override
+//    public List<TicketDto> getTicketsByRegisterId(Long id) {
+//        return ticketDao.findAllByRegisterId(id)
+//                .stream()
+//                .map(defaultConverter::convertToDto)
+//                .collect(Collectors.toList());
+//    }
 
 
     @Override
@@ -192,7 +198,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
                 : registerTicketScheduler.generateReportTickets(allSendTickets, config.getInTime());
 
         if (send) {
-            registerEntity.setSendRegisterTime(new Date());
+            registerEntity.setSendRegisterTime(LocalDateTime.now());
             return defaultConverter.convertToDto(this.defaultEntityDao.update(registerEntity));
         } else {
             throw new ServerException("Не удалось отправить отчет");

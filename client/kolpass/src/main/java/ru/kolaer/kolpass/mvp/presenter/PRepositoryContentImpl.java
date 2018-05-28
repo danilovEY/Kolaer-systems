@@ -53,7 +53,7 @@ public class PRepositoryContentImpl implements PRepositoryContent {
                             .getAuthorizedUser().getEmployee().getPersonnelNumber())) {
                 //repositoryPassword = this.kolpassTable.addRepositoryPassword(rep); // TODO!
             } else {
-                rep.setEmployee(this.employeeEntity);
+//                rep.setEmployee(this.employeeEntity);
                 //repositoryPassword = this.kolpassTable.addRepToOtherEmployee(rep); // TODO!
             }
 

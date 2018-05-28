@@ -90,16 +90,6 @@ public class PEmployeeRepositoryListImpl implements PEmployeeRepositoryList {
         });*/ // TODO: !!!
     }
 
-    private void put(PasswordRepositoryDto repositoryPassword) {
-        if(this.employeeRepMap.containsKey(repositoryPassword.getEmployee())) {
-            this.employeeRepMap.get(repositoryPassword.getEmployee()).add(repositoryPassword);
-        } else {
-            ArrayList<PasswordRepositoryDto> repositoryPasswords = new ArrayList<>();
-            repositoryPasswords.add(repositoryPassword);
-            this.employeeRepMap.put(repositoryPassword.getEmployee(), repositoryPasswords);
-        }
-    }
-
     @Override
     public void clear() {
         this.employeeRepMap.keySet().forEach(this.view::removeEmployee);

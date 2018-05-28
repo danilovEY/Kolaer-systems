@@ -1,23 +1,24 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.UploadFile;
-import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
+import ru.kolaer.server.webportal.mvc.model.dto.UploadFileDto;
+import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 
-import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLConnection;
+import java.util.Optional;
+
 /**
  * Created by danilovey on 07.02.2017.
  */
@@ -26,40 +27,60 @@ import java.io.IOException;
 @Slf4j
 public class UploadFileController {
 
-    @Resource
-    private Environment env;
-
-    private final AuthenticationService authenticationService;
+    private final UploadFileService uploadFileService;
 
     @Autowired
-    public UploadFileController(AuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
+    public UploadFileController(UploadFileService uploadFileService) {
+        this.uploadFileService = uploadFileService;
     }
 
-    @RequestMapping(value = "/file", method = RequestMethod.POST)
-    @UrlDeclaration(description = "Загрузить файл на сервер", isUser = true)
-    @ApiOperation("Загрузить файл на сервер")
-    public UploadFile uploadFile(@ApiParam("Файл") @RequestParam("file") MultipartFile file) throws IOException {
-        final String pathToResources = env.getProperty("path.to_resources");
-        final String urlToResources = env.getProperty("url.to_resources");
+//    @RequestMapping(value = "/file", method = RequestMethod.POST)
+//    @UrlDeclaration(description = "Загрузить файл на сервер", isUser = true)
+//    @ApiOperation("Загрузить файл на сервер")
+//    public UploadFile uploadFile(@ApiParam("Файл") @RequestParam("file") MultipartFile file) throws IOException {
+//        final String pathToResources = env.getProperty("path.to_resources");
+//        final String urlToResources = env.getProperty("url.to_resources");
+//
+//        final String userName = this.authenticationService.getAccountByAuthentication().getUsername();
+//
+//        String resourceDirPath = pathToResources + userName;
+//
+//        final File resourceDir = new File(resourceDirPath);
+//        resourceDir.mkdirs();
+//
+//        final String filePath = resourceDirPath + "\\" + file.getOriginalFilename();
+//
+//        try(final FileOutputStream fileToResource = new FileOutputStream(filePath)) {
+//            fileToResource.write(file.getBytes());
+//        } catch (IOException e) {
+//            log.error("Невозможно записать в файл {}", filePath, e);
+//            throw e;
+//        }
+//
+//        return new UploadFile(urlToResources + userName + '/' + file.getOriginalFilename(),
+//                file.getSize(), file.getOriginalFilename());
+//    }
 
-        final String userName = this.authenticationService.getAccountByAuthentication().getUsername();
+    @RequestMapping(value = "/file/{id}/{filename:.+}", method = RequestMethod.GET)
+    @UrlDeclaration(description = "Скачать файл с сервера", isUser = true)
+    @ApiOperation("Скачать файл с сервера")
+    public ResponseEntity getFile(@PathVariable("id") Long id, @PathVariable("filename") String filename, HttpServletResponse response) throws IOException {
+        UploadFileDto uploadFileDto = uploadFileService.getById(id);
+        if(uploadFileDto != null && uploadFileDto.getName().equals(filename)) {
+            Resource resource = uploadFileService.loadFile(uploadFileDto.getPath());
 
-        String resourceDirPath = pathToResources + userName;
+            String mimeType = Optional.ofNullable(URLConnection.guessContentTypeFromName(uploadFileDto.getPath()))
+                    .orElse("application/octet-stream");
 
-        final File resourceDir = new File(resourceDirPath);
-        resourceDir.mkdirs();
+            response.setContentType(mimeType);
+            response.setHeader("Content-Disposition", "inline; filename=\"" + uploadFileDto.getName() +"\"");
+            response.setContentLength(Long.valueOf(resource.contentLength()).intValue());
 
-        final String filePath = resourceDirPath + "\\" + file.getOriginalFilename();
+            FileCopyUtils.copy(resource.getInputStream(), response.getOutputStream());
 
-        try(final FileOutputStream fileToResource = new FileOutputStream(filePath)) {
-            fileToResource.write(file.getBytes());
-        } catch (IOException e) {
-            log.error("Невозможно записать в файл {}", filePath, e);
-            throw e;
+            return ResponseEntity.ok(null);
+        } else {
+            return ResponseEntity.notFound().build();
         }
-
-        return new UploadFile(urlToResources + userName + '/' + file.getOriginalFilename(),
-                file.getSize(), file.getOriginalFilename());
     }
 }

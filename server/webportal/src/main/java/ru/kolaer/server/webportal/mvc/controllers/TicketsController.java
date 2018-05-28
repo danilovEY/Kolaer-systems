@@ -4,7 +4,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
@@ -12,7 +15,6 @@ import ru.kolaer.server.webportal.mvc.model.dto.TicketRegisterDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
-import ru.kolaer.server.webportal.mvc.model.servirces.TicketService;
 
 import java.util.List;
 
@@ -25,18 +27,15 @@ import java.util.List;
 @Slf4j
 public class TicketsController {
     private final TicketRegisterService ticketRegisterService;
-    private final TicketService ticketService;
     private final EmployeeService employeeService;
     private final RegisterTicketScheduler registerTicketScheduler;
     private final AuthenticationService authenticationService;
 
     public TicketsController(TicketRegisterService ticketRegisterService,
-                             TicketService ticketService,
                              EmployeeService employeeService,
                              RegisterTicketScheduler registerTicketScheduler,
                              AuthenticationService authenticationService) {
         this.ticketRegisterService = ticketRegisterService;
-        this.ticketService = ticketService;
         this.employeeService = employeeService;
         this.registerTicketScheduler = registerTicketScheduler;
         this.authenticationService = authenticationService;
@@ -49,12 +48,12 @@ public class TicketsController {
 //        registerTicketScheduler.generateZeroTicketsLastDayOfMonthScheduled();
 //    }
 
-    @ApiOperation(value = "Сформировать отчет реестра")
-    @UrlDeclaration(description = "Сформировать отчет реестра", requestMethod = RequestMethod.POST)
-    @RequestMapping(value = "{registerId}/report", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public TicketRegisterDto generateAndMailSend(@PathVariable("registerId")Long registerId) {
-        return ticketRegisterService.generateReportByRegister(registerId);
-    }
+//    @ApiOperation(value = "Сформировать отчет реестра")
+//    @UrlDeclaration(description = "Сформировать отчет реестра", requestMethod = RequestMethod.POST)
+//    @RequestMapping(value = "{registerId}/report", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    public TicketRegisterDto generateAndMailSend(@PathVariable("registerId")Long registerId) {
+//        return ticketRegisterService.generateReportByRegister(registerId);
+//    }
 
 //    @ApiOperation(value = "Сформировать отчет для всех счетов")
 //    @UrlDeclaration(description = "Сформировать отчет для всех счетов", requestMethod = RequestMethod.POST)

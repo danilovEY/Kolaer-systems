@@ -7,7 +7,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.dto.SendTicketDto;
-import ru.kolaer.server.webportal.mvc.model.servirces.impl.StorageService;
+import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
+import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -25,12 +26,12 @@ public class RegisterTicketScheduler {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
     private final List<String> emails = new ArrayList<>();
 
-    private final StorageService storageService;
+    private final UploadFileService storageService;
     private JavaMailSender mailSender;
     private SimpleMailMessage mailMessage;
     private BankAccountDao bankAccountDao;
 
-    public RegisterTicketScheduler(StorageService storageService,
+    public RegisterTicketScheduler(UploadFileService storageService,
                                    JavaMailSender mailSender,
                                    SimpleMailMessage mailMessage,
                                    BankAccountDao bankAccountDao) {
@@ -153,84 +154,62 @@ public class RegisterTicketScheduler {
 
     private boolean sendMail(List<SendTicketDto> tickets, String header, String text) {
         if (tickets.size() > 0) {
-            try {
-                final File genFile = this.generateTextFile(tickets, header);
-                if (genFile != null) {
-                    this.mailSender.send(mimeMessage -> {
-                        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
-                        messageHelper.setFrom(mailMessage.getFrom());
-                        messageHelper.setTo(this.emails.toArray(new String[this.emails.size()]));
-                        messageHelper.setSubject("Сформированные талоны ЛПП");
-                        messageHelper.setText(text);
-                        messageHelper.addAttachment(genFile.getName(), () -> new FileInputStream(genFile));
-                    });
-                    return true;
-                }
-            } catch (IOException e) {
-                log.error("Ошибка при генерации фала!", e);
+            UploadFileEntity genFile = this.generateTextFile(tickets, header);
+            if (genFile != null) {
+                this.mailSender.send(mimeMessage -> {
+                    MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+                    messageHelper.setFrom(mailMessage.getFrom());
+                    messageHelper.setTo(this.emails.toArray(new String[this.emails.size()]));
+                    messageHelper.setSubject("Сформированные талоны ЛПП");
+                    messageHelper.setText(text);
+                    messageHelper.addAttachment(genFile.getName(), () -> new FileInputStream(new File(genFile.getPath())));
+                });
+                return true;
             }
         }
         return false;
     }
 
-    private File generateTextFile(List<SendTicketDto> tickets, String header) throws IOException {
-//        File dirTickets = new File("tickets");
-//        if(!dirTickets.exists()) {
-//            dirTickets.mkdir();
-//        }
-
+    private UploadFileEntity generateTextFile(List<SendTicketDto> tickets, String header) {
         LocalDateTime now = LocalDateTime.now();
+
+        String[] dateTime = dateTimeFormatter.format(now).split("-");
 
         int index = 1;
 
-        String fileName = "Z001000.KOLAER_ENROLL001000";
-        String absoluteFileName = storageService
-                .createFile("tiskets",fileName + String.valueOf(index) + String.format(".%03d",now.getDayOfYear()), true);
-        String[] dateTime = dateTimeFormatter.format(now).split("-");
+        String fileName = "Z001000.KOLAER_ENROLL001";
 
-        File file = new File(absoluteFileName);
+        UploadFileEntity uploadFileEntity = null;
 
-        while (file.exists()) {
-            absoluteFileName = "tickets/" + fileName + String.valueOf(++index) + String.format(".%03d",now.getDayOfYear());
-            file = new File(absoluteFileName);
+        while (uploadFileEntity == null) {
+            uploadFileEntity = storageService
+                    .createFile("tiskets",fileName + String.format("%04d", ++index) + String.format(".%03d",now.getDayOfYear()), false);
         }
-
-        if(!file.createNewFile())
-            return null;
 
         PrintWriter printWriter = null;
         try {
-            printWriter = new PrintWriter(absoluteFileName, "windows-1251");
+            printWriter = new PrintWriter(uploadFileEntity.getPath(), "windows-1251");
             printWriter.printf("H %s %s %s", dateTime[0], dateTime[1], header);
             printWriter.printf(System.lineSeparator());
-            int countTickets = 0;
             for(final SendTicketDto ticket : tickets) {
                 String initials = ticket.getInitials().toUpperCase();
-                String check = ticket.getCheck();
-                if(check != null) {
-                    printWriter.printf("%s%" + String.valueOf(116 - initials.length()) + "s              %s%s",
-                            initials,
-                            check,
-                            ticket.getTypeOperation().name(),
-                            ticket.getCount());
-                    printWriter.printf(System.lineSeparator());
-                    countTickets++;
-                }
+                printWriter.printf("%s%" + String.valueOf(116 - initials.length()) + "s              %s%s",
+                        initials,
+                        ticket.getCheck(),
+                        ticket.getTypeOperation().name(),
+                        ticket.getCount());
+                printWriter.printf(System.lineSeparator());
             }
-            printWriter.printf("T         %10d", countTickets);
+            printWriter.printf("T         %10d", tickets.size());
             printWriter.printf(System.lineSeparator());
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
-            log.error("Файл {} не найден!", absoluteFileName);
+            log.error("Файл {} не найден!", uploadFileEntity.getPath());
         } finally {
             if(printWriter != null)
                 printWriter.close();
         }
 
-        return file;
-    }
-
-    public LocalDateTime getLastSend() {
-        return lastSend;
+        return uploadFileEntity;
     }
 
     public void addEmail(String email) {

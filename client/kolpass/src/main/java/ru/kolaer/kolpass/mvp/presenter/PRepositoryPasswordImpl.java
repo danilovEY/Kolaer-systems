@@ -9,7 +9,6 @@ import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPassword;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPasswordImpl;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -83,18 +82,7 @@ public class PRepositoryPasswordImpl implements PRepositoryPassword {
 
         this.vRepositoryPassword.setImageUrl(url);
 
-        this.lastPassword = this.setIfExist(this.lastPassword, this.passwordDto.getLastPassword(), true);
         this.vRepositoryPassword.setLastPassword(this.lastPassword.getView());
-
-        Optional.ofNullable(this.passwordDto.getPrevPassword())
-                .filter(Objects::nonNull)
-                .map(dto -> this.prevPassword = this.setIfExist(this.prevPassword, dto, false))
-                .ifPresent(pass -> this.vRepositoryPassword.setPrevPassword(pass.getView()));
-
-        Optional.ofNullable(this.passwordDto.getFirstPassword())
-                .filter(Objects::nonNull)
-                .map(dto -> this.firstPassword = this.setIfExist(this.firstPassword, dto, false))
-                .ifPresent(pass -> this.vRepositoryPassword.setFirstPassword(pass.getView()));
 
     }
 

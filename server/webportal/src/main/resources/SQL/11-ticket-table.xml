@@ -29,6 +29,7 @@
     </changeSet>
 
     <changeSet id="11-1" author="Danilov">
+        <dropForeignKeyConstraint baseTableName="ticket" constraintName="ticket_employee_fk"/>
         <dropColumn tableName="ticket" columnName="employee_id"/>
 
         <addColumn tableName="ticket">

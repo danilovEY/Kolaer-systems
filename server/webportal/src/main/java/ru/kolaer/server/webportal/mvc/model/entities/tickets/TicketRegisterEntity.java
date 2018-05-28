@@ -7,7 +7,6 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,12 +35,10 @@ public class TicketRegisterEntity implements Serializable, BaseEntity {
     @JoinColumn(name = "id_department", insertable=false, updatable=false)
     private DepartmentEntity department;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_register")
     private LocalDateTime createRegister;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "send_register_time")
-    private Date sendRegisterTime;
+    private LocalDateTime sendRegisterTime;
 
 }
