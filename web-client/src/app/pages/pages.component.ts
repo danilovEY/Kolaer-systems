@@ -49,8 +49,8 @@ export class PagesComponent implements OnInit {
 
 
             const ticketsMenuItem: NbMenuItem = new NbMenuItem();
-            ticketsMenuItem.title = 'Парольница';
-            ticketsMenuItem.icon = 'ticket-alt';
+            ticketsMenuItem.title = 'Талоны ЛПП';
+            ticketsMenuItem.icon = 'fa fa-ticket';
             ticketsMenuItem.children = [];
 
             const ticketsMainMenuItem: NbMenuItem = new NbMenuItem();

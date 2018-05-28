@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import liquibase.integration.spring.SpringLiquibase;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -230,7 +231,8 @@ public class SpringContext extends WebMvcConfigurerAdapter {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Hibernate5Module());
-        mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.registerModule(new JSR310Module());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         messageConverter.setObjectMapper(mapper);
         return messageConverter;
 

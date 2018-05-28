@@ -1,1 +1,18 @@
-<h1>TEST!</h1>
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                История реестров с талонами
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="loadingRegisters" ></ngx-loading>
+                <custom-table #customTable [columns]="columns" [source]="source"
+                              [actionAdd]="true" [actionDelete]="true" [actionEdit]="false"
+                              (delete)="delete($event)">
+                </custom-table>
+            </nb-card-body>
+        </nb-card>
+
+    </div>
+</div>
