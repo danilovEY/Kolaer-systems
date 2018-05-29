@@ -29,6 +29,7 @@ export class TicketsMainComponent implements OnInit {
 
     private confirmToSendModal: NgbModalRef;
     private selectedTicketRegister: TicketRegisterModel;
+    private send: boolean = false;
 
     @ViewChild('customTable')
     customTable: CustomTableComponent;
@@ -138,10 +139,15 @@ export class TicketsMainComponent implements OnInit {
     action(event: CustomActionEventModel<TicketRegisterModel>) {
         if (event.action.name === TicketsMainComponent.generateAndDownloadActionName) {
             const attachment: UploadFileModel = event.data.attachment;
-            if (attachment !== undefined) {
+            if (attachment !== undefined && attachment !== null) {
                 window.open(`${environment.publicServerUrl}/upload/file/${attachment.id}/${attachment.fileName}`);
+            } else {
+                this.send = false;
+                this.selectedTicketRegister = event.data;
+                this.confirmToSendModal = this.modalService.open(this.content, {size: 'lg', container: 'nb-layout'});
             }
         } else if (event.action.name === TicketsMainComponent.generateAndSendActionName) {
+            this.send = true;
             this.selectedTicketRegister = event.data;
             this.confirmToSendModal = this.modalService.open(this.content, {size: 'lg', container: 'nb-layout'});
         }
@@ -164,20 +170,38 @@ export class TicketsMainComponent implements OnInit {
             const datePipe = new DatePipe('en-US');
             const config: ReportTicketsConfigModel =
                 new ReportTicketsConfigModel(!this.isInTime, datePipe.transform(this.inTime, 'yyyy-MM-dd\'T\'HH:mm:ss'));
-            this.ticketsService.generateAndSendReport(this.selectedTicketRegister.id, config)
-                .subscribe((value: TicketRegisterModel) => {
-                    if (value) {
+            if (this.send) {
+                this.ticketsService.generateAndSendReport(this.selectedTicketRegister.id, config)
+                    .subscribe((value: TicketRegisterModel) => {
                         this.source.update(this.selectedTicketRegister, value);
-                    }
 
-                    const toast: Toast = {
-                        type: value ? 'success' : 'error',
-                        title: value ? 'Успешная операция' : 'Ошибка в операции',
-                        body: value ? 'Отчет был отправлен на email' : 'Не удалось отправить отчет',
-                    };
+                        const toast: Toast = {
+                            type: 'success',
+                            title: 'Успешная операция',
+                            body: 'Отчет был отправлен на email',
+                        };
 
-                    this.toasterService.popAsync(toast);
-                });
+                        this.toasterService.popAsync(toast);
+                    });
+            } else {
+                this.ticketsService.generateReportAndDownloadUrl(this.selectedTicketRegister.id, config)
+                    .subscribe((value: TicketRegisterModel) => {
+                        this.source.update(this.selectedTicketRegister, value);
+
+                        const toast: Toast = {
+                            type: 'success',
+                            title: 'Успешная операция',
+                            body: 'Отчет сформирован',
+                        };
+
+                        this.toasterService.popAsync(toast);
+
+                        const attachment: UploadFileModel = value.attachment;
+                        if (attachment !== undefined && attachment !== null) {
+                            window.open(`${environment.publicServerUrl}/upload/file/${attachment.id}/${attachment.fileName}`);
+                        }
+                    });
+            }
 
             if (this.confirmToSendModal) {
                 this.confirmToSendModal.close({});

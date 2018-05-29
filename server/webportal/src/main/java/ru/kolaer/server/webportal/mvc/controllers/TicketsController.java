@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
@@ -113,10 +112,10 @@ public class TicketsController {
         return this.ticketRegisterService.generateRegisterForAllAccounts(generateTicketRegister);
     }
 
-    @ApiOperation(value = "Сформировать отчет реестра и скачать")
-    @UrlDeclaration(description = "Сформировать отчет реестра и скачать", requestMethod = RequestMethod.POST)
+    @ApiOperation(value = "Сформировать отчет реестра")
+    @UrlDeclaration(description = "Сформировать отчет реестра", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/{regId}/report", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity generateReportForRegisterAndDownload(@PathVariable("regId") Long regId,
+    public TicketRegisterDto generateReportForRegisterAndDownload(@PathVariable("regId") Long regId,
                                                     @RequestBody ReportTicketsConfig reportTicketsConfig,
                                                     HttpServletResponse response) {
         return this.ticketRegisterService.generateReportByRegisterAndDownload(regId, reportTicketsConfig, response);

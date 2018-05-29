@@ -24,13 +24,15 @@ export class TicketsService {
         return this.http.get<Page<TicketRegisterModel>>(this.getAllTicketRegister, {params: params});
     }
 
-    generateReportAndDownloadUrl(id: number): string {
-        return `${this.getAllTicketRegister}/${id}/${this.reportTicketRegister}`;
+    generateReportAndDownloadUrl(id: number, config: ReportTicketsConfigModel): Observable<TicketRegisterModel>  {
+        const url: string = `${this.getAllTicketRegister}/${id}/${this.reportTicketRegister}`;
+
+        return this.http.post<TicketRegisterModel>(url, config);
     }
 
-    generateAndSendReport(id: number, config: ReportTicketsConfigModel): Observable<any> {
+    generateAndSendReport(id: number, config: ReportTicketsConfigModel): Observable<TicketRegisterModel> {
         const url: string = `${this.getAllTicketRegister}/${id}/${this.reportTicketRegister}/send`;
 
-        return this.http.post(url, config);
+        return this.http.post<TicketRegisterModel>(url, config);
     }
 }

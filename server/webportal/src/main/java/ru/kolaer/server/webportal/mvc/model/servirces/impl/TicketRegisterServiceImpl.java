@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -234,7 +233,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
 
     @Override
     @Transactional
-    public ResponseEntity generateReportByRegisterAndDownload(Long registerId, ReportTicketsConfig config, HttpServletResponse response) {
+    public TicketRegisterDto generateReportByRegisterAndDownload(Long registerId, ReportTicketsConfig config, HttpServletResponse response) {
         TicketRegisterEntity registerEntity = defaultEntityDao.findById(registerId);
 
         UploadFileEntity uploadFileEntity = this.generateReportByRegister(registerId, config);
@@ -243,9 +242,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
             registerEntity.setAttachmentId(uploadFileEntity.getId());
             registerEntity.setClose(true);
 
-            defaultEntityDao.update(registerEntity);
-
-            return uploadFileService.loadFile(uploadFileEntity.getId(), uploadFileEntity.getFileName(), response);
+            return defaultConverter.convertToDto(defaultEntityDao.update(registerEntity));
         } else {
             throw new ServerException("Не удалось сгенерировать отчет");
         }
