@@ -12,14 +12,7 @@ export class TicketsRegisterDataSource extends CustomDataSource<TicketRegisterMo
     loadElements(page: number, pageSize: number): Promise<TicketRegisterModel[]> {
         return this.ticketsService.getAllTicketRegisters(page, pageSize)
             .toPromise()
-            .then((response: Page<TicketRegisterModel>) => {
-                for (const register of response.data) {
-                    register.createRegister = new Date(register.createRegister);
-                    register.sendRegisterTime = new Date(register.sendRegisterTime);
-                }
-
-                return this.setData(response);
-            });
+            .then((response: Page<TicketRegisterModel>) => this.setData(response));
     }
 
 }

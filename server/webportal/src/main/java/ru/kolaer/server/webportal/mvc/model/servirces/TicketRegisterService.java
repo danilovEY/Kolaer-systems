@@ -15,6 +15,6 @@ public interface TicketRegisterService extends DefaultService<TicketRegisterDto>
 
     void generateZeroTicketsLastDayOfMonthScheduled();
 
-    boolean generateReportByRegisterAndSend(Long registerId, ReportTicketsConfig config);
+    TicketRegisterDto generateReportByRegisterAndSend(Long registerId, ReportTicketsConfig config);
     ResponseEntity generateReportByRegisterAndDownload(Long registerId, ReportTicketsConfig config, HttpServletResponse response);
 }

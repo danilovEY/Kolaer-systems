@@ -27,7 +27,7 @@ export class AccountService implements AuthenticationObserverService {
     }
     
     getCurrentAccount(cache: boolean = true): Observable<SimpleAccountModel> {
-        if (cache && this._currentAccountModel) {
+        if (cache && this._currentAccountModel || !this._authService.authentication) {
             return Observable.of(this._currentAccountModel);
         } else {
             return this._httpClient.get<SimpleAccountModel>(this._getAuthUserUrl)

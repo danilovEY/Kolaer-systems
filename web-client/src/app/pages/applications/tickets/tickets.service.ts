@@ -4,10 +4,12 @@ import {Observable} from 'rxjs/Observable';
 import {TicketRegisterModel} from './ticket-register.model';
 import {Page} from '../../../@core/models/page.model';
 import {environment} from '../../../../environments/environment';
+import {ReportTicketsConfigModel} from "./report-tickets-config.model";
 
 @Injectable()
 export class TicketsService {
     private readonly getAllTicketRegister: string = `${environment.publicServerUrl}/tickets`;
+    private readonly reportTicketRegister: string = `report`;
 
     constructor(private http: HttpClient) {
 
@@ -22,4 +24,13 @@ export class TicketsService {
         return this.http.get<Page<TicketRegisterModel>>(this.getAllTicketRegister, {params: params});
     }
 
+    generateReportAndDownloadUrl(id: number): string {
+        return `${this.getAllTicketRegister}/${id}/${this.reportTicketRegister}`;
+    }
+
+    generateAndSendReport(id: number, config: ReportTicketsConfigModel): Observable<any> {
+        const url: string = `${this.getAllTicketRegister}/${id}/${this.reportTicketRegister}/send`;
+
+        return this.http.post(url, config);
+    }
 }

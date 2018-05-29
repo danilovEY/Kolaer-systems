@@ -210,7 +210,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
 
     @Override
     @Transactional
-    public boolean generateReportByRegisterAndSend(Long registerId, ReportTicketsConfig config) {
+    public TicketRegisterDto generateReportByRegisterAndSend(Long registerId, ReportTicketsConfig config) {
         TicketRegisterEntity registerEntity = defaultEntityDao.findById(registerId);
         UploadFileEntity uploadFileEntity = this.generateReportByRegister(registerId, config);
         if(uploadFileEntity != null) {
@@ -226,9 +226,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
                 registerEntity.setSendRegisterTime(LocalDateTime.now());
             }
 
-            defaultEntityDao.update(registerEntity);
-
-            return send;
+            return defaultConverter.convertToDto(defaultEntityDao.update(registerEntity));
         } else {
             throw new ServerException("Не удалось сгенерировать отчет");
         }

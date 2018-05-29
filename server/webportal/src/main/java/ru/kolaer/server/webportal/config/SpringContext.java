@@ -232,7 +232,7 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Hibernate5Module());
         mapper.registerModule(new JSR310Module());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         messageConverter.setObjectMapper(mapper);
         return messageConverter;
 

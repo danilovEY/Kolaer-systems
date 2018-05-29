@@ -9,7 +9,7 @@ import {CustomActionEventModel} from "./custom-action-event.model";
         <div class="ng2-smart-actions" style="display: flex;">
             <ng-container *ngFor="let action of actions">
                 <a *ngIf="beforeValueView(action, rowData)" href="#" [nbPopover]="action.description"
-                   nbPopoverMode="hint"
+                   nbPopoverMode="hint" nbPopoverPlacement="left"
                    class="ng2-smart-action"
                    style="margin: 0 5px;"
                    [innerHTML]="action.content"

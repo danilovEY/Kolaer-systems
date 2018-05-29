@@ -1,3 +1,5 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+
 <div class="row">
     <div class="col-12">
         <nb-card>
@@ -7,12 +9,55 @@
 
             <nb-card-body>
                 <ngx-loading [show]="loadingRegisters" ></ngx-loading>
-                <custom-table #customTable [columns]="columns" [source]="source"
+                <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
                               [actionAdd]="true" [actionDelete]="true" [actionEdit]="false"
-                              (delete)="delete($event)">
+                              (delete)="delete($event)" (create)="create($event)" (action)="action($event)">
                 </custom-table>
             </nb-card-body>
+
         </nb-card>
 
     </div>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Настройки для формирование отчета</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group row">
+            <label for="executeTime" class="col-sm-3 col-form-label">Время обработки</label>
+            <div class="col-sm-9">
+                <input type="datetime-local" class="form-control" id="executeTime"
+                       placeholder="Время выполнения" [disabled]="!isInTime"
+                       [ngModel]="inTime | date: 'yyyy-MM-ddTHH:mm:ss'"
+                       (ngModelChange)="inTime = $event">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-9">
+                <div class="form-check">
+                    <label class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" name="gridRadios" [checked]="isInTime" (change)="onChangeHeader()">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description">Обработка файла по времени</span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" name="gridRadios" [checked]="!isInTime" (change)="onChangeHeader()">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description">Моментальная обработка файла</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success" (click)="d('Cross click')">Отмена</button>
+        <button type="submit" class="btn btn-hero-success" (click)="generateReportAndSend()">Сформировать</button>
+    </div>
+</ng-template>

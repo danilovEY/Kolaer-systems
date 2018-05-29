@@ -125,7 +125,7 @@ public class TicketsController {
     @ApiOperation(value = "Сформировать отчет реестра и отправить")
     @UrlDeclaration(description = "Сформировать отчет реестра и отправить", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/{regId}/report/send", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public boolean generateReportForRegisterAndSend(@PathVariable("regId") Long regId,
+    public TicketRegisterDto generateReportForRegisterAndSend(@PathVariable("regId") Long regId,
                                                     @RequestBody ReportTicketsConfig reportTicketsConfig) {
         return this.ticketRegisterService.generateReportByRegisterAndSend(regId, reportTicketsConfig);
     }

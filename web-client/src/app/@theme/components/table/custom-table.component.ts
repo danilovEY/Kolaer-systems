@@ -41,6 +41,7 @@ export class CustomTableComponent implements OnInit {
 
     settings = {
         hideSubHeader: false,
+        mode: 'inline',
         actions: {
             columnTitle: 'Действия',
             add: this.actionAdd,
@@ -71,7 +72,8 @@ export class CustomTableComponent implements OnInit {
             deleteButtonContent: '<i class="nb-trash"></i>',
             confirmDelete: true,
         },
-        columns:  {},
+        columns:  {
+        },
     };
 
     ngOnInit() {
@@ -110,6 +112,8 @@ export class CustomTableComponent implements OnInit {
             this.settings.columns[col.id] = col;
             this.settings.columns[col.id].editable = col.isEditable; // BAD API table
             this.settings.columns[col.id].addable = col.isAddable;   //
+            this.settings.columns[col.id].filter = col.isFilterable; //
+            this.settings.columns[col.id].sort = col.isSortable;     //
         }
     }
 
