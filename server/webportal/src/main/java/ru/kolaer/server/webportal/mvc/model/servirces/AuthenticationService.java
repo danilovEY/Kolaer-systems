@@ -8,6 +8,9 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
  */
 public interface AuthenticationService {
     String getCurrentLogin();
+
+    boolean isAuth();
+
     AccountDto getAccountWithEmployeeByLogin(String login);
     AccountDto getAccountByAuthentication();
     AccountSimpleDto getAccountSimpleByAuthentication();

@@ -73,6 +73,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public boolean isAuth() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && !auth.getName().equals("anonymousUser");
+    }
+
+    @Override
 //    @Cacheable(value = "accounts", cacheManager = "springCM")
     @Transactional(readOnly = true)
     public AccountDto getAccountWithEmployeeByLogin(String login) {

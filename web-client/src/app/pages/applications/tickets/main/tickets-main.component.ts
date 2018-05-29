@@ -14,8 +14,9 @@ import {environment} from '../../../../../environments/environment';
 import {UploadFileModel} from '../../../../@core/models/upload-file.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
-import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
-import {ReportTicketsConfigModel} from "../report-tickets-config.model";
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {ReportTicketsConfigModel} from '../report-tickets-config.model';
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'main-tickets',
@@ -28,14 +29,20 @@ export class TicketsMainComponent implements OnInit {
     private static readonly generateAndSendActionName = 'send';
 
     private confirmToSendModal: NgbModalRef;
+    private createRegisterModal: NgbModalRef;
     private selectedTicketRegister: TicketRegisterModel;
     private send: boolean = false;
 
     @ViewChild('customTable')
     customTable: CustomTableComponent;
 
-    @ViewChild('content')
-    content: ElementRef;
+    @ViewChild('generateReportModalElement')
+    generateReportModalElement: ElementRef;
+
+    @ViewChild('createRegisterModal')
+    createRegisterModalElement: ElementRef;
+
+    createRegisterForm: FormGroup;
 
     columns: Column[] = [];
     actions: CustomActionModel[] = [];
@@ -62,6 +69,11 @@ export class TicketsMainComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.createRegisterForm = new FormGroup({
+            countTickets: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(99)]),
+            type: new FormControl('DR'),
+        });
+
         const idColumn: Column = new Column('id', {
             title: 'ID',
             type: 'number',
@@ -144,12 +156,12 @@ export class TicketsMainComponent implements OnInit {
             } else {
                 this.send = false;
                 this.selectedTicketRegister = event.data;
-                this.confirmToSendModal = this.modalService.open(this.content, {size: 'lg', container: 'nb-layout'});
+                this.confirmToSendModal = this.modalService.open(this.generateReportModalElement, {size: 'lg', container: 'nb-layout'});
             }
         } else if (event.action.name === TicketsMainComponent.generateAndSendActionName) {
             this.send = true;
             this.selectedTicketRegister = event.data;
-            this.confirmToSendModal = this.modalService.open(this.content, {size: 'lg', container: 'nb-layout'});
+            this.confirmToSendModal = this.modalService.open(this.generateReportModalElement, {size: 'lg', container: 'nb-layout'});
         }
     }
 
@@ -211,5 +223,13 @@ export class TicketsMainComponent implements OnInit {
 
     onChangeHeader() {
         this.isInTime = !this.isInTime;
+    }
+
+    openCreateRegisterModal() {
+        this.createRegisterModal = this.modalService.open(this.createRegisterModalElement, {size: 'lg', container: 'nb-layout'});
+    }
+
+    createRegisterSubmit() {
+        console.log(this.createRegisterForm);
     }
 }

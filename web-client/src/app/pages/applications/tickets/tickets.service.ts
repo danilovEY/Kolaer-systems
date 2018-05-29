@@ -5,6 +5,7 @@ import {TicketRegisterModel} from './ticket-register.model';
 import {Page} from '../../../@core/models/page.model';
 import {environment} from '../../../../environments/environment';
 import {ReportTicketsConfigModel} from "./report-tickets-config.model";
+import {CreateTicketsConfigModel} from "./create-tickets-config.model";
 
 @Injectable()
 export class TicketsService {
@@ -32,6 +33,12 @@ export class TicketsService {
 
     generateAndSendReport(id: number, config: ReportTicketsConfigModel): Observable<TicketRegisterModel> {
         const url: string = `${this.getAllTicketRegister}/${id}/${this.reportTicketRegister}/send`;
+
+        return this.http.post<TicketRegisterModel>(url, config);
+    }
+
+    createTicketRegister(config: CreateTicketsConfigModel): Observable<TicketRegisterModel> {
+        const url: string = `${this.getAllTicketRegister}/full`;
 
         return this.http.post<TicketRegisterModel>(url, config);
     }

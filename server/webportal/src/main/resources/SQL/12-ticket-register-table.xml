@@ -55,5 +55,15 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="12-5" author="Danilov">
+        <dropForeignKeyConstraint baseTableName="ticket_register" constraintName="ticket_register_department_fk"/>
+        <renameColumn tableName="ticket_register" oldColumnName="department_id" newColumnName="account_id" columnDataType="BIGINT"/>
+
+        <addForeignKeyConstraint baseTableName="ticket_register" baseColumnNames="account_id" constraintName="ticket_register_account_fk"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+
 
 </databaseChangeLog>

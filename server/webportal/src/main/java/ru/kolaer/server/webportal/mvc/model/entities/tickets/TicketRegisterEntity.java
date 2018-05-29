@@ -23,8 +23,8 @@ public class TicketRegisterEntity implements Serializable, BaseEntity {
     @Column(name = "close", nullable = false)
     private boolean close;
 
-    @Column(name = "department_id")
-    private Long departmentId;
+    @Column(name = "account_id")
+    private Long accountId;
 
     @Column(name = "create_register")
     private LocalDateTime createRegister;

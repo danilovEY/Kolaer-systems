@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
 import ru.kolaer.server.webportal.beans.TypeServer;
@@ -25,6 +26,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntit
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TypeOperation;
 import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
+import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 
@@ -49,6 +51,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
     private final BankAccountDao bankAccountDao;
     private final EmployeeDao employeeDao;
     private final UploadFileService uploadFileService;
+    private final AuthenticationService authenticationService;
 
     public TicketRegisterServiceImpl(TicketRegisterConverter defaultConverter,
                                      TicketRegisterDao ticketRegisterDao,
@@ -57,7 +60,8 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
                                      RegisterTicketScheduler registerTicketScheduler,
                                      BankAccountDao bankAccountDao,
                                      EmployeeDao employeeDao,
-                                     UploadFileService uploadFileService) {
+                                     UploadFileService uploadFileService,
+                                     AuthenticationService authenticationService) {
         super(ticketRegisterDao, defaultConverter);
         this.typeServer = typeServer;
         this.ticketDao = ticketDao;
@@ -65,8 +69,10 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
         this.bankAccountDao = bankAccountDao;
         this.employeeDao = employeeDao;
         this.uploadFileService = uploadFileService;
+        this.authenticationService = authenticationService;
     }
 
+    @Override
     @Scheduled(cron = "0 0 8 26-31 * ?", zone = "Europe/Moscow")
     public void generateZeroTicketsLastDayOfMonthScheduled() {
         if(!typeServer.isTest()) {
@@ -78,7 +84,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
             if (now.getDayOfMonth() == lastDay) {
                 TicketRegisterEntity ticketRegisterEntity = this.defaultEntityDao.findIncludeAllOnLastMonth();
                 if(ticketRegisterEntity == null) {
-                    TicketRegisterDto ticketRegisterDto = generateRegisterForAllAccounts(new GenerateTicketRegister(TypeOperation.DR, 25));
+                    TicketRegisterDto ticketRegisterDto = createRegisterForAllAccounts(new GenerateTicketRegister(TypeOperation.DR, 25));
 
                     LocalDateTime localDateTimeToExecute = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 10).plusMonths(1);
 
@@ -115,14 +121,11 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
 
     @Override
     @Transactional
-    public TicketRegisterDto generateRegisterForAllAccounts(GenerateTicketRegister generateTicketRegister) {
+    public TicketRegisterDto addToRegisterAllAccounts(Long regId, GenerateTicketRegister generateTicketRegister) {
         List<BankAccountEntity> allBankAccount = this.bankAccountDao.findAll();
 
-        TicketRegisterEntity ticketRegisterEntity = new TicketRegisterEntity();
+        TicketRegisterEntity ticketRegisterEntity = defaultEntityDao.findById(regId);
         ticketRegisterEntity.setIncludeAll(true);
-        ticketRegisterEntity.setCreateRegister(LocalDateTime.now());
-        ticketRegisterEntity.setId(defaultEntityDao.save(ticketRegisterEntity).getId());
-
 
         Integer countTicket = Optional.ofNullable(generateTicketRegister.getCountForAll())
                 .orElse(25);
@@ -135,13 +138,40 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
                     ticketEntity.setCount(countTicket);
                     ticketEntity.setTypeOperation(typeOperation);
                     ticketEntity.setBankAccountId(bankAccount.getId());
-                    ticketEntity.setRegisterId(ticketRegisterEntity.getId());
+                    ticketEntity.setRegisterId(regId);
                     return ticketEntity;
                 }).collect(Collectors.toList());
 
         ticketDao.save(tickets);
 
+        return defaultConverter.convertToDto(defaultEntityDao.update(ticketRegisterEntity));
+    }
+
+    @Override
+    @Transactional
+    public TicketRegisterDto createRegisterForAllAccounts(GenerateTicketRegister generateTicketRegister) {
+        TicketRegisterEntity ticketRegisterEntity = this.createRegister();
+        addToRegisterAllAccounts(ticketRegisterEntity.getId(), generateTicketRegister);
+
         return defaultConverter.convertToDto(ticketRegisterEntity);
+    }
+
+    @Override
+    @Transactional
+    public TicketRegisterDto createEmptyRegister() {
+        return defaultConverter.convertToDto(createRegister());
+    }
+
+    private TicketRegisterEntity createRegister() {
+        TicketRegisterEntity ticketRegisterEntity = new TicketRegisterEntity();
+        ticketRegisterEntity.setCreateRegister(LocalDateTime.now());
+
+        if(this.authenticationService.isAuth()) {
+            AccountSimpleDto accountSimpleByAuthentication = this.authenticationService.getAccountSimpleByAuthentication();
+            ticketRegisterEntity.setAccountId(accountSimpleByAuthentication.getId());
+        }
+
+        return defaultEntityDao.save(ticketRegisterEntity);
     }
 
     private UploadFileEntity generateReportByRegister(Long registerId, ReportTicketsConfig config) {

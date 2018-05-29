@@ -11,7 +11,6 @@ import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
 import ru.kolaer.server.webportal.mvc.model.dto.GenerateTicketRegister;
 import ru.kolaer.server.webportal.mvc.model.dto.ReportTicketsConfig;
 import ru.kolaer.server.webportal.mvc.model.dto.TicketRegisterDto;
-import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,14 +26,11 @@ import java.util.List;
 public class TicketsController {
     private final TicketRegisterService ticketRegisterService;
     private final RegisterTicketScheduler registerTicketScheduler;
-    private final AuthenticationService authenticationService;
 
     public TicketsController(TicketRegisterService ticketRegisterService,
-                             RegisterTicketScheduler registerTicketScheduler,
-                             AuthenticationService authenticationService) {
+                             RegisterTicketScheduler registerTicketScheduler) {
         this.ticketRegisterService = ticketRegisterService;
         this.registerTicketScheduler = registerTicketScheduler;
-        this.authenticationService = authenticationService;
     }
 
 //    @ApiOperation(value = "Сформировать отчет таймера")
@@ -105,11 +101,26 @@ public class TicketsController {
             return this.ticketRegisterService.getAll(number, pageSize);
     }
 
+    @ApiOperation(value = "Добавить все аккаунты в реестр")
+    @UrlDeclaration(description = "Добавить все аккаунты в реестр", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/{regId}/full", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public TicketRegisterDto addToRegisterAllAccounts(@PathVariable("regId") Long regId,
+                                                      @RequestBody GenerateTicketRegister generateTicketRegister) {
+        return this.ticketRegisterService.addToRegisterAllAccounts(regId, generateTicketRegister);
+    }
+
     @ApiOperation(value = "Сгенерировать реестр с добавлением всех аккаунтов")
     @UrlDeclaration(description = "Сгенерировать реестр с добавлением всех аккаунтов", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/full", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TicketRegisterDto generateNewRegisterAndAddAllAccounts(@RequestBody GenerateTicketRegister generateTicketRegister) {
-        return this.ticketRegisterService.generateRegisterForAllAccounts(generateTicketRegister);
+        return this.ticketRegisterService.createRegisterForAllAccounts(generateTicketRegister);
+    }
+
+    @ApiOperation(value = "Сгенерировать пустой реестр")
+    @UrlDeclaration(description = "Сгенерировать пустой реестр", requestMethod = RequestMethod.POST)
+    @RequestMapping(value = "/empty", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public TicketRegisterDto generateNewEmptyRegister() {
+        return this.ticketRegisterService.createEmptyRegister();
     }
 
     @ApiOperation(value = "Сформировать отчет реестра")
