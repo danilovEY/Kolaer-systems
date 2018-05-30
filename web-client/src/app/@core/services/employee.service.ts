@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -10,10 +10,12 @@ import {SimpleAccountModel} from '../models/simple-account.model';
 import {EmployeeModel} from '../models/employee.model';
 import {AccountService} from './account.service';
 import {OtherEmployeeModel} from '../models/other-employee.model';
+import {Page} from "../models/page.model";
 
 @Injectable()
 export class EmployeeService implements AuthenticationObserverService {
     private readonly getEmployeeUrl: string = environment.publicServerUrl + '/employees';
+    private readonly getAllEmployeesUrl: string = `${this.getEmployeeUrl}/get/all`;
     private readonly getAllEmployeeBirthdayToday: string = `${this.getEmployeeUrl}/get/birthday/today`;
     private readonly getAllOtherEmployeeBirthdayToday: string =
         `${environment.publicServerUrl}/organizations/employees/get/users/birthday/today`;
@@ -68,6 +70,15 @@ export class EmployeeService implements AuthenticationObserverService {
                 return Observable.throw(error);
             });
         }
+    }
+
+    getAllEmployees(page: number = 1, pageSize: number = 15): Observable<Page<EmployeeModel>> {
+        let params = new HttpParams();
+
+        params = params.append('page', page.toString());
+        params = params.append('pagesize', pageSize.toString());
+
+        return this._httpClient.get<Page<EmployeeModel>>(this.getAllEmployeesUrl, {params: params});
     }
 
     getEmployeesBirthdayToday(): Observable<EmployeeModel[]> {

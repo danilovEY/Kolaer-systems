@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 
 import {NbMenuItem} from '@nebular/theme';
 import {AuthenticationRestService} from '../@core/modules/auth/authentication-rest.service';
+import {AccountService} from "../@core/services/account.service";
+import {SimpleAccountModel} from "../@core/models/simple-account.model";
 
 @Component({
     selector: 'ngx-pages',
@@ -15,7 +17,8 @@ import {AuthenticationRestService} from '../@core/modules/auth/authentication-re
 export class PagesComponent implements OnInit {
     menu: NbMenuItem[] = [];
 
-    constructor(private authService: AuthenticationRestService) {
+    constructor(private authService: AuthenticationRestService,
+                private accountService: AccountService) {
 
     }
 
@@ -58,6 +61,17 @@ export class PagesComponent implements OnInit {
             ticketsMainMenuItem.link = 'app/tickets';
 
             ticketsMenuItem.children.push(ticketsMainMenuItem);
+
+            this.accountService.getCurrentAccount()
+                .subscribe((account: SimpleAccountModel) => {
+                   if (account.accessOit) {
+                       const bankAccountMenuItem: NbMenuItem = new NbMenuItem();
+                       bankAccountMenuItem.title = 'Счета';
+                       bankAccountMenuItem.link = 'app/tickets/bank-accounts';
+
+                       ticketsMenuItem.children.push(bankAccountMenuItem);
+                   }
+                });
 
             this.menu.push(ticketsMenuItem);
         }

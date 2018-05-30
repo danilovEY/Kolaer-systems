@@ -39,6 +39,8 @@ import {COSMIC_THEME} from './styles/theme.cosmic';
 import {LoadingModule} from 'ngx-loading';
 import {Ng2SmartTableModule} from "ng2-smart-table";
 import {ToasterModule} from "angular2-toaster";
+import {EmployeeEditComponent} from "./components/table/employee-edit.component";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 const BASE_MODULES = [
     CommonModule,
@@ -65,6 +67,7 @@ const NB_MODULES = [
     LoadingModule,
     Ng2SmartTableModule,
     ToasterModule,
+    NgSelectModule,
 ];
 
 const COMPONENTS = [
@@ -78,7 +81,7 @@ const COMPONENTS = [
     CustomActionViewComponent,
     CustomActionEditComponent,
     CustomTableComponent,
-
+    EmployeeEditComponent,
 
 ];
 
@@ -109,6 +112,7 @@ const NB_THEME_PROVIDERS = [
         CustomActionViewComponent,
         CustomActionEditComponent,
         CustomTableComponent,
+        EmployeeEditComponent,
     ]
 })
 export class ThemeModule {

@@ -1,5 +1,5 @@
-import {BaseModel} from '../../../@core/models/base.model';
-import {UploadFileModel} from '../../../@core/models/upload-file.model';
+import {BaseModel} from '../../../../@core/models/base.model';
+import {UploadFileModel} from '../../../../@core/models/upload-file.model';
 
 export class TicketRegisterModel extends BaseModel {
     public close: boolean = false;

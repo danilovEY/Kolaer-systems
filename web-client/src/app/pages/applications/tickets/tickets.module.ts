@@ -4,6 +4,8 @@ import {TicketsMainComponent} from './main/tickets-main.component';
 import {TicketsComponent} from './tickets.component';
 import {ThemeModule} from '../../../@theme/theme.module';
 import {TicketsService} from './tickets.service';
+import {BankAccountsComponent} from './bank-accounts/bank-accounts.component';
+import {BankAccountService} from './bank-accounts/bank-account.service';
 
 @NgModule({
     imports: [
@@ -12,10 +14,12 @@ import {TicketsService} from './tickets.service';
     ],
     declarations: [
         TicketsMainComponent,
-        TicketsComponent
+        TicketsComponent,
+        BankAccountsComponent
     ],
     providers: [
-        TicketsService
+        TicketsService,
+        BankAccountService,
     ]
 })
 export class TicketsModule {

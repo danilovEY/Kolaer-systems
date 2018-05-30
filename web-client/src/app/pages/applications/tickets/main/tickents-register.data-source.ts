@@ -1,7 +1,7 @@
-import {CustomDataSource} from '../../../@core/models/custom.data-source';
+import {CustomDataSource} from '../../../../@core/models/custom.data-source';
 import {TicketRegisterModel} from './ticket-register.model';
-import {TicketsService} from './tickets.service';
-import {Page} from '../../../@core/models/page.model';
+import {TicketsService} from '../tickets.service';
+import {Page} from '../../../../@core/models/page.model';
 
 export class TicketsRegisterDataSource extends CustomDataSource<TicketRegisterModel> {
 

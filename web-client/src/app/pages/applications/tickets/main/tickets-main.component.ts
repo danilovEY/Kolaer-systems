@@ -3,9 +3,9 @@ import {CustomTableComponent} from '../../../../@theme/components';
 import {DatePipe} from '@angular/common';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
-import {TicketsRegisterDataSource} from '../tickents-register.data-source';
+import {TicketsRegisterDataSource} from './tickents-register.data-source';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
-import {TicketRegisterModel} from '../ticket-register.model';
+import {TicketRegisterModel} from './ticket-register.model';
 import {TicketsService} from '../tickets.service';
 import {CustomActionModel} from '../../../../@theme/components/table/custom-action.model';
 import {CustomActionEventModel} from '../../../../@theme/components/table/custom-action-event.model';
@@ -15,9 +15,9 @@ import {UploadFileModel} from '../../../../@core/models/upload-file.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {ReportTicketsConfigModel} from '../report-tickets-config.model';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {CreateTicketsConfigModel} from "../create-tickets-config.model";
+import {ReportTicketsConfigModel} from './report-tickets-config.model';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {CreateTicketsConfigModel} from './create-tickets-config.model';
 
 @Component({
     selector: 'main-tickets',

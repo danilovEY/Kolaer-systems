@@ -284,7 +284,8 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
 
         TicketRegisterEntity ticketRegisterEntity = defaultEntityDao.findById(regId);
 
-        uploadFileService.delete(ticketRegisterEntity.getAttachmentId());
+        Optional.ofNullable(ticketRegisterEntity.getAttachmentId())
+                .ifPresent(uploadFileService::delete);
 
         defaultEntityDao.delete(ticketRegisterEntity);
         return 0;

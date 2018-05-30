@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
-import {TicketRegisterModel} from './ticket-register.model';
+import {TicketRegisterModel} from './main/ticket-register.model';
 import {Page} from '../../../@core/models/page.model';
 import {environment} from '../../../../environments/environment';
-import {ReportTicketsConfigModel} from './report-tickets-config.model';
-import {CreateTicketsConfigModel} from './create-tickets-config.model';
+import {ReportTicketsConfigModel} from './main/report-tickets-config.model';
+import {CreateTicketsConfigModel} from './main/create-tickets-config.model';
+import {TicketModel} from './ticket.model';
 
 @Injectable()
 export class TicketsService {
@@ -23,6 +24,17 @@ export class TicketsService {
         params = params.append('pagesize', pageSize.toString());
 
         return this.http.get<Page<TicketRegisterModel>>(this.getAllTicketRegister, {params: params});
+    }
+
+    getAllTicketsByRegisterId(regId: number, page: number = 1, pageSize: number = 15): Observable<Page<TicketModel>> {
+        let params = new HttpParams();
+
+        params = params.append('page', page.toString());
+        params = params.append('pagesize', pageSize.toString());
+
+        const url: string = `${this.getAllTicketRegister}/${regId}/tickets`;
+
+        return this.http.get<Page<TicketModel>>(this.getAllTicketRegister, {params: params});
     }
 
     generateReportAndDownloadUrl(id: number, config: ReportTicketsConfigModel): Observable<TicketRegisterModel>  {

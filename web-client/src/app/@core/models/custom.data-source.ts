@@ -13,6 +13,26 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
         total: 0
     };
 
+    public static FILTER = (value: string, search: string) => {
+        return value.toString().toLowerCase().includes(search.toString().toLowerCase());
+    };
+
+    public static COMPARE = (direction: number, a: any, b: any) => {
+        if (a < b) {
+            return -1 * direction;
+        }
+        if (a > b) {
+            return direction;
+        }
+        return 0;
+    };
+
+    public static getDirection(direction: string) {
+        return direction === 'asc' ? 1 : -1
+    }
+
+
+
     protected paginate(data: Array<any>): Array<any> {
         return data;
     }

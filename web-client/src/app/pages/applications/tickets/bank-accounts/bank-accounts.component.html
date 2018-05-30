@@ -1,0 +1,23 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                <span>Талоны</span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="loadingBankAccounts" ></ngx-loading>
+                <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
+                              [actionAdd]="true" [actionDelete]="true" [actionEdit]="true"
+                              (delete)="delete($event)" (create)="create($event)" (action)="action($event)">
+                </custom-table>
+            </nb-card-body>
+
+        </nb-card>
+
+    </div>
+
+
+</div>
