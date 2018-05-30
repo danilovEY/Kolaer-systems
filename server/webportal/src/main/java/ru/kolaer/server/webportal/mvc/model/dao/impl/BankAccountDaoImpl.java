@@ -33,4 +33,13 @@ public class BankAccountDaoImpl extends AbstractDefaultDao<BankAccountEntity> im
                 .createQuery("SELECT count(id) FROM " + getEntityName(), Integer.class)
                 .uniqueResult();
     }
+
+    @Override
+    public BankAccountEntity findByEmployeeId(Long employeeId) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + "b WHERE b.employeeId = :employeeId", BankAccountEntity.class)
+                .setParameter("employeeId", employeeId)
+                .uniqueResultOptional()
+                .orElse(null);
+    }
 }

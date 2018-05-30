@@ -4,8 +4,8 @@ import {Observable} from 'rxjs/Observable';
 import {TicketRegisterModel} from './ticket-register.model';
 import {Page} from '../../../@core/models/page.model';
 import {environment} from '../../../../environments/environment';
-import {ReportTicketsConfigModel} from "./report-tickets-config.model";
-import {CreateTicketsConfigModel} from "./create-tickets-config.model";
+import {ReportTicketsConfigModel} from './report-tickets-config.model';
+import {CreateTicketsConfigModel} from './create-tickets-config.model';
 
 @Injectable()
 export class TicketsService {
@@ -41,5 +41,11 @@ export class TicketsService {
         const url: string = `${this.getAllTicketRegister}/full`;
 
         return this.http.post<TicketRegisterModel>(url, config);
+    }
+
+    deleteTicketRegister(id: number): Observable<any> {
+        const url: string = `${this.getAllTicketRegister}/${id}`;
+
+        return this.http.delete(url);
     }
 }

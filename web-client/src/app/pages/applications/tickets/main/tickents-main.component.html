@@ -27,7 +27,7 @@
     </div>
 </div>
 
-<ng-template #generateReportModal let-c="close" let-d="dismiss">
+<ng-template #generateReportModalElement let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">Настройки для формирование отчета</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -69,7 +69,7 @@
     </div>
 </ng-template>
 
-<ng-template #createRegisterModal let-c="close" let-d="dismiss">
+<ng-template #createRegisterModalElement let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">Добавление нового реестра</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">

@@ -21,5 +21,5 @@ public interface UploadFileService extends DefaultService<UploadFileDto> {
 
     ResponseEntity loadFile(Long id, String filename, HttpServletResponse response);
 
-    UploadFileEntity delete(Long attachmentId);
+    long delete(Long attachmentId);
 }

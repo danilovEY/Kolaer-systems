@@ -17,6 +17,7 @@ import {SimpleAccountModel} from '../../../../@core/models/simple-account.model'
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ReportTicketsConfigModel} from '../report-tickets-config.model';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {CreateTicketsConfigModel} from "../create-tickets-config.model";
 
 @Component({
     selector: 'main-tickets',
@@ -39,7 +40,7 @@ export class TicketsMainComponent implements OnInit {
     @ViewChild('generateReportModalElement')
     generateReportModalElement: ElementRef;
 
-    @ViewChild('createRegisterModal')
+    @ViewChild('createRegisterModalElement')
     createRegisterModalElement: ElementRef;
 
     createRegisterForm: FormGroup;
@@ -141,7 +142,8 @@ export class TicketsMainComponent implements OnInit {
     }
 
     delete(event: TableEventDeleteModel<TicketRegisterModel>) {
-        console.log(event);
+        this.ticketsService.deleteTicketRegister(event.data.id)
+            .subscribe(response => event.confirm.resolve());
     }
 
     create(event: TableEventAddModel<TicketRegisterModel>) {
@@ -230,6 +232,25 @@ export class TicketsMainComponent implements OnInit {
     }
 
     createRegisterSubmit() {
-        console.log(this.createRegisterForm);
+        const config: CreateTicketsConfigModel =
+            new CreateTicketsConfigModel(this.createRegisterForm.controls['type'].value,
+                this.createRegisterForm.controls['countTickets'].value);
+
+        if (this.createRegisterModal) {
+            this.createRegisterModal.close({});
+        }
+
+        this.ticketsService.createTicketRegister(config)
+            .subscribe((response: TicketRegisterModel) => {
+                this.source.prepend(response);
+
+                const toast: Toast = {
+                    type: 'success',
+                    title: 'Успешная операция',
+                    body: 'Реестр добавлен',
+                };
+
+                this.toasterService.popAsync(toast);
+            });
     }
 }

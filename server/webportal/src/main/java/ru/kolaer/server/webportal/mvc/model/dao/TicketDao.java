@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface TicketDao extends DefaultDao<TicketEntity> {
     List<TicketEntity> findAllByRegisterId(Long id);
+
+    int deleteByRegisterId(Long regId);
 }

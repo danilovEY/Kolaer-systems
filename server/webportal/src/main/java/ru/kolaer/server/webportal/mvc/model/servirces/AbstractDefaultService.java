@@ -86,6 +86,18 @@ public abstract class AbstractDefaultService<T extends BaseDto,
 
     @Override
     @Transactional
+    public long delete(Long id) {
+        return defaultEntityDao.delete(id);
+    }
+
+    @Override
+    @Transactional
+    public long deleteAll(List<Long> ids) {
+        return defaultEntityDao.deleteAll(ids);
+    }
+
+    @Override
+    @Transactional
     public void delete(List<T> dtos) {
         defaultEntityDao.delete(defaultConverter.convertToModel(dtos));
     }

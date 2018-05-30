@@ -8,4 +8,6 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 public interface BankAccountDao extends DefaultDao<BankAccountEntity> {
     BankAccountEntity findByInitials(String initials);
     Integer getCountAllAccount();
+
+    BankAccountEntity findByEmployeeId(Long employeeId);
 }

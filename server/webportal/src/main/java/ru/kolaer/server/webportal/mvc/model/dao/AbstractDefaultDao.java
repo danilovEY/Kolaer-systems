@@ -83,6 +83,18 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     }
 
     @Override
+    public long deleteAll(@NonNull List<Long> ids) {
+        if(ids == null || ids.isEmpty()) {
+            return 0;
+        }
+
+        return getSession()
+                .createQuery("DELETE FROM " + getEntityName() + " WHERE id IN(:ids)", getEntityClass())
+                .setParameter("ids", ids)
+                .executeUpdate();
+    }
+
+    @Override
     public List<T> delete(@NonNull List<T> objs) {
         Session currentSession = getSession();
         return batchForeach(objs, batchSize, currentSession, currentSession::delete);

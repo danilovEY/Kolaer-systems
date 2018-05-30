@@ -32,6 +32,8 @@ public interface DefaultDao<T extends BaseEntity> {
     /**Удалить объект в БД.*/
     long delete(@NonNull Long id);
     /**Удалить объекты в БД.*/
+    long deleteAll(@NonNull List<Long> ids);
+    /**Удалить объекты в БД.*/
     List<T> delete(@NonNull List<T> objs);
 
     /**Обновить объект в БД.*/

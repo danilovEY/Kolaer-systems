@@ -24,4 +24,8 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="19-1" author="Danilov">
+        <addUniqueConstraint tableName="bank_account" columnNames="employee_id"/>
+    </changeSet>
+
 </databaseChangeLog>

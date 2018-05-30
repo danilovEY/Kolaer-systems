@@ -15,10 +15,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketDao;
 import ru.kolaer.server.webportal.mvc.model.dao.TicketRegisterDao;
-import ru.kolaer.server.webportal.mvc.model.dto.GenerateTicketRegister;
-import ru.kolaer.server.webportal.mvc.model.dto.ReportTicketsConfig;
-import ru.kolaer.server.webportal.mvc.model.dto.SendTicketDto;
-import ru.kolaer.server.webportal.mvc.model.dto.TicketRegisterDto;
+import ru.kolaer.server.webportal.mvc.model.dto.*;
 import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
@@ -122,15 +119,17 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
     @Override
     @Transactional
     public TicketRegisterDto addToRegisterAllAccounts(Long regId, GenerateTicketRegister generateTicketRegister) {
+        if(generateTicketRegister.getCountForAll() == null || generateTicketRegister.getTypeOperationForAll() == null) {
+            throw new UnexpectedRequestParams("Все параметры обязательны");
+        }
+
         List<BankAccountEntity> allBankAccount = this.bankAccountDao.findAll();
 
         TicketRegisterEntity ticketRegisterEntity = defaultEntityDao.findById(regId);
         ticketRegisterEntity.setIncludeAll(true);
 
-        Integer countTicket = Optional.ofNullable(generateTicketRegister.getCountForAll())
-                .orElse(25);
-        TypeOperation typeOperation = Optional.ofNullable(generateTicketRegister.getTypeOperationForAll())
-                .orElse(TypeOperation.DR);
+        Integer countTicket = generateTicketRegister.getCountForAll();
+        TypeOperation typeOperation = generateTicketRegister.getTypeOperationForAll();
 
         List<TicketEntity> tickets = allBankAccount.stream()
                 .map(bankAccount -> {
@@ -276,5 +275,69 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
         } else {
             throw new ServerException("Не удалось сгенерировать отчет");
         }
+    }
+
+    @Override
+    @Transactional
+    public long delete(Long regId) {
+        ticketDao.deleteByRegisterId(regId);
+
+        TicketRegisterEntity ticketRegisterEntity = defaultEntityDao.findById(regId);
+
+        uploadFileService.delete(ticketRegisterEntity.getAttachmentId());
+
+        defaultEntityDao.delete(ticketRegisterEntity);
+        return 0;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TicketDto> getTicketsByRegisterId(Long regId) {
+        return defaultConverter.convertToTicketDto(ticketDao.findAllByRegisterId(regId));
+    }
+
+    @Override
+    @Transactional
+    public TicketDto addTicket(Long regId, RequestTicketDto ticketDto) {
+        BankAccountEntity bankAccountEntity = bankAccountDao.findByEmployeeId(ticketDto.getEmployeeId());
+
+        TicketEntity ticketEntity = new TicketEntity();
+        ticketEntity.setRegisterId(regId);
+        ticketEntity.setBankAccountId(bankAccountEntity.getId());
+        ticketEntity.setTypeOperation(ticketDto.getType());
+        ticketEntity.setCount(ticketDto.getCount());
+
+        return defaultConverter.convertToTicketDto(ticketDao.persist(ticketEntity));
+    }
+
+    @Override
+    @Transactional
+    public void deleteTicket(Long regId, Long ticketId) {
+        TicketEntity ticketEntity = ticketDao.findById(ticketId);
+
+        if(ticketEntity.getRegisterId().equals(regId)) {
+            ticketDao.delete(ticketEntity);
+        } else {
+            throw new NotFoundDataException("Талон с ID " + ticketId + " не найден в реестре");
+        }
+    }
+
+    @Override
+    @Transactional
+    public TicketDto updateTicket(Long regId, Long ticketId, RequestTicketDto ticketDto) {
+        TicketEntity ticketEntity = ticketDao.findById(ticketId);
+
+        if(!ticketEntity.getRegisterId().equals(regId)) {
+            throw new NotFoundDataException("Талон с ID " + ticketId + " не найден в реестре");
+        }
+
+        BankAccountEntity bankAccountEntity = bankAccountDao.findByEmployeeId(ticketDto.getEmployeeId());
+
+        ticketEntity.setRegisterId(regId);
+        ticketEntity.setCount(ticketDto.getCount());
+        ticketEntity.setTypeOperation(ticketDto.getType());
+        ticketEntity.setBankAccountId(bankAccountEntity.getId());
+
+        return defaultConverter.convertToTicketDto(ticketDao.update(ticketEntity));
     }
 }

@@ -1,8 +1,17 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
+import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
+import ru.kolaer.server.webportal.mvc.model.dto.TicketDto;
 import ru.kolaer.server.webportal.mvc.model.dto.TicketRegisterDto;
 import ru.kolaer.server.webportal.mvc.model.dto.UploadFileDto;
+import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 
@@ -16,9 +25,18 @@ import java.util.stream.Collectors;
 @Service
 public class TicketRegisterConverterImpl implements TicketRegisterConverter {
     private final UploadFileService uploadFileService;
+    private final EmployeeDao employeeDao;
+    private final EmployeeConverter employeeConverter;
+    private final BankAccountDao bankAccountDao;
 
-    public TicketRegisterConverterImpl(UploadFileService uploadFileService) {
+    public TicketRegisterConverterImpl(UploadFileService uploadFileService,
+                                       EmployeeDao employeeDao,
+                                       EmployeeConverter employeeConverter,
+                                       BankAccountDao bankAccountDao) {
         this.uploadFileService = uploadFileService;
+        this.employeeDao = employeeDao;
+        this.employeeConverter = employeeConverter;
+        this.bankAccountDao = bankAccountDao;
     }
 
     @Override
@@ -105,5 +123,61 @@ public class TicketRegisterConverterImpl implements TicketRegisterConverter {
                 .ifPresent(dto::setAttachment);
 
         return dto;
+    }
+
+    @Override
+    public List<TicketDto> convertToTicketDto(List<TicketEntity> ticketEntities) {
+        if(CollectionUtils.isEmpty(ticketEntities)) {
+            return Collections.emptyList();
+        }
+
+        List<Long> backAccountIds = ticketEntities.stream()
+                .map(TicketEntity::getBankAccountId)
+                .collect(Collectors.toList());
+
+        Map<Long, BankAccountEntity> bankAccountMap = bankAccountDao.findById(backAccountIds)
+                .stream()
+                .collect(Collectors.toMap(BankAccountEntity::getId, Function.identity()));
+
+
+        List<Long> employeeIds = bankAccountMap.values()
+                .stream()
+                .map(BankAccountEntity::getEmployeeId)
+                .collect(Collectors.toList());
+
+        Map<Long, EmployeeDto> employeesMap = employeeConverter.convertToDto(employeeDao.findById(employeeIds))
+                .stream()
+                .collect(Collectors.toMap(EmployeeDto::getId, Function.identity()));
+
+        List<TicketDto> results =  new ArrayList<>();
+
+        for (TicketEntity ticketEntity : ticketEntities) {
+            TicketDto ticketDto = convertToDtoWithOutSubEntity(ticketEntity);
+            Optional.ofNullable(bankAccountMap.get(ticketEntity.getBankAccountId()))
+                    .map(BankAccountEntity::getEmployeeId)
+                    .map(employeesMap::get)
+                    .ifPresent(ticketDto::setEmployee);
+            results.add(ticketDto);
+        }
+
+        return results;
+    }
+
+    @Override
+    @Transactional
+    public TicketDto convertToTicketDto(@NonNull TicketEntity ticketEntity) {
+        TicketDto ticketDto = convertToDtoWithOutSubEntity(ticketEntity);
+        ticketDto.setEmployee(employeeConverter.convertToDto(ticketEntity.getBankAccount().getEmployeeEntity()));
+        return ticketDto;
+    }
+
+    @Override
+    public TicketDto convertToDtoWithOutSubEntity(@NonNull TicketEntity ticketEntity) {
+        TicketDto ticketDto = new TicketDto();
+        ticketDto.setId(ticketEntity.getId());
+        ticketDto.setType(ticketEntity.getTypeOperation());
+        ticketDto.setCount(ticketEntity.getCount());
+
+        return ticketDto;
     }
 }

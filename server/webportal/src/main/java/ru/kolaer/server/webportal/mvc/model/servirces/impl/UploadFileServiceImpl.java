@@ -157,16 +157,11 @@ public class UploadFileServiceImpl
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public UploadFileEntity delete(Long attachmentId) {
+    public long delete(Long attachmentId) {
         UploadFileEntity fileEntity = this.defaultEntityDao.findById(attachmentId);
-        UploadFileEntity delete = this.defaultEntityDao.delete(fileEntity);
+        long delete = this.defaultEntityDao.delete(attachmentId);
         FileSystemUtils.deleteRecursively(rootLocation.resolve(fileEntity.getPath()).toFile());
         return delete;
-
-    }
-
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
 
     @PostConstruct

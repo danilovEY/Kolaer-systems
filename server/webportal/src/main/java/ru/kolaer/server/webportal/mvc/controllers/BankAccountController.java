@@ -1,83 +1,56 @@
 package ru.kolaer.server.webportal.mvc.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
-import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.mvc.model.dto.BankAccountDto;
+import ru.kolaer.server.webportal.mvc.model.dto.BankAccountRequest;
+import ru.kolaer.server.webportal.mvc.model.servirces.BankAccountService;
 
 /**
  * Created by danilovey on 03.10.2017.
  */
 @RestController
+@Api(tags = "Банковские счета")
 @RequestMapping("/bank")
 @RequiredArgsConstructor
 @Slf4j
 public class BankAccountController {
-    private final BankAccountDao bankAccountDao;
-    private final EmployeeDao employeeDao;
+    private final BankAccountService bankAccountService;
 
-    @RequestMapping(value = "add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public BankAccountEntity addAccount(@RequestBody BankAccountEntity bankAccount) {
-        bankAccountDao.persist(bankAccount);
-        return bankAccount;
+    @ApiOperation(value = "Получить все счета")
+    @UrlDeclaration(description = "Получить все счета", isUser = false)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<BankAccountDto> getAll(@RequestParam(value = "page", defaultValue = "0") Integer number,
+                                       @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+        return bankAccountService.getAll(number, pageSize);
     }
 
-
-    @RequestMapping(value = "update", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BankAccountEntity> updateAccount() {
-        List<BankAccountEntity> accounts = new ArrayList<>();
-
-        XSSFWorkbook myExcelBook = null;
-        try {
-            Resource resource = new ClassPathResource("bank_account.xlsx");
-            myExcelBook = new XSSFWorkbook(resource.getInputStream());
-            XSSFSheet myExcelSheet = myExcelBook.getSheetAt(0);
-            myExcelSheet.forEach(row -> {
-                String initials = row.getCell(0).getStringCellValue();
-                String cache = row.getCell(1).getStringCellValue();
-
-                if(initials!= null){
-                    initials = initials.trim();
-                    cache = cache.trim();
-                    if(!initials.isEmpty() && !cache.isEmpty()) {
-                        List<EmployeeEntity> employeeByInitials = employeeDao.findEmployeeByInitials(initials);
-                        if(!employeeByInitials.isEmpty()) {
-                            EmployeeEntity employeeEntity = employeeByInitials.stream().findFirst().get();
-                            final BankAccountEntity account = new BankAccountEntity(null, null, employeeEntity, cache);
-                            this.bankAccountDao.persist(account);
-                            accounts.add(account);
-                        }
-                    }
-                }
-            });
-            log.info("BackAccount size: {}", this.bankAccountDao.getCountAllAccount());
-        } catch (IOException e) {
-            log.error("Ошибка при чтении файла!", e);
-        } finally {
-            if(myExcelBook != null) {
-                try {
-                    myExcelBook.close();
-                } catch (IOException e) {
-                    log.error("Ошибка закрытии файла!", e);
-                }
-            }
-        }
-
-        return accounts;
+    @ApiOperation(value = "Добавить счет")
+    @UrlDeclaration(description = "Добавить счет", isUser = false, requestMethod = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public BankAccountDto addBankAccount(@RequestBody BankAccountRequest bankAccountRequest) {
+        return bankAccountService.add(bankAccountRequest);
     }
+
+    @ApiOperation(value = "Обновит счет")
+    @UrlDeclaration(description = "Обновит счет", isUser = false, requestMethod = RequestMethod.PUT)
+    @RequestMapping(value = "/{bankId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void deleteBankAccount(@PathVariable("bankId") Long bankId,
+                                  @RequestBody BankAccountRequest bankAccountRequest) {
+        bankAccountService.update(bankId, bankAccountRequest);
+    }
+
+    @ApiOperation(value = "Удалить счет")
+    @UrlDeclaration(description = "Удалить счет", isUser = false, requestMethod = RequestMethod.DELETE)
+    @RequestMapping(value = "/{bankId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void deleteBankAccount(@PathVariable("bankId") Long bankId) {
+        bankAccountService.delete(bankId);
+    }
+
 }

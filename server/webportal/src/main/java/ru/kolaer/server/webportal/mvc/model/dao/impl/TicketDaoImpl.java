@@ -25,4 +25,12 @@ public class TicketDaoImpl extends AbstractDefaultDao<TicketEntity> implements T
                 .setParameter("id", id)
                 .list();
     }
+
+    @Override
+    public int deleteByRegisterId(Long regId) {
+        return getSession()
+                .createQuery("DELETE FROM " + getEntityName() + " t WHERE t.registerId = :id")
+                .setParameter("id", regId)
+                .executeUpdate();
+    }
 }
