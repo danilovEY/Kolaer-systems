@@ -167,7 +167,7 @@ public class TicketRegisterConverterImpl implements TicketRegisterConverter {
     @Transactional
     public TicketDto convertToTicketDto(@NonNull TicketEntity ticketEntity) {
         TicketDto ticketDto = convertToDtoWithOutSubEntity(ticketEntity);
-        ticketDto.setEmployee(employeeConverter.convertToDto(ticketEntity.getBankAccount().getEmployeeEntity()));
+        ticketDto.setEmployee(employeeConverter.convertToDto(ticketEntity.getBankAccount().getEmployee()));
         return ticketDto;
     }
 

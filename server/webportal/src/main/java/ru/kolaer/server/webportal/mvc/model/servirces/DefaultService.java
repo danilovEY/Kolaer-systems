@@ -2,6 +2,8 @@ package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.mvc.model.dto.FilterParam;
+import ru.kolaer.server.webportal.mvc.model.dto.SortParam;
 
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
  */
 public interface DefaultService<T extends BaseDto> {
     List<T> getAll();
+    List<T> getAll(SortParam sortParam, FilterParam filterParam);
 
     T getById(Long id);
     List<T> getById(List<Long> ids);
@@ -30,5 +33,6 @@ public interface DefaultService<T extends BaseDto> {
     void delete(List<T> dtos);
 
     Page<T> getAll(Integer number, Integer pageSize);
+    Page<T> getAll(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize);
 
 }

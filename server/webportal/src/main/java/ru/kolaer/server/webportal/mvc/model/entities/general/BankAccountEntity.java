@@ -26,7 +26,7 @@ public class BankAccountEntity implements BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", insertable=false, updatable=false)
-    private EmployeeEntity employeeEntity;
+    private EmployeeEntity employee;
 
     @Column(name = "check", nullable = false, length = 16, unique = true)
     private String check;
