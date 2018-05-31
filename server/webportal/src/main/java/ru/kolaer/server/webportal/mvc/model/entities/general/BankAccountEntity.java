@@ -28,6 +28,6 @@ public class BankAccountEntity implements BaseEntity {
     @JoinColumn(name = "employee_id", insertable=false, updatable=false)
     private EmployeeEntity employee;
 
-    @Column(name = "check", nullable = false, length = 16, unique = true)
+    @Column(name = "account_check", nullable = false, length = 16, unique = true)
     private String check;
 }

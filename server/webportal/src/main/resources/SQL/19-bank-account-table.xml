@@ -28,4 +28,8 @@
         <addUniqueConstraint tableName="bank_account" columnNames="employee_id"/>
     </changeSet>
 
+    <changeSet id="19-2" author="Danilov">
+        <renameColumn tableName="bank_account" oldColumnName="check" newColumnName="account_check" columnDataType="VARCHAR(16)"/>
+    </changeSet>
+
 </databaseChangeLog>

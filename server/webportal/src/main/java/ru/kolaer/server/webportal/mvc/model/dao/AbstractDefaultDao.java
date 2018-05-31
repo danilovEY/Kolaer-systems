@@ -164,7 +164,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
         }
 
         return getSession()
-                .createQuery("DELETE FROM " + getEntityName() + " WHERE id = :id", getEntityClass())
+                .createQuery("DELETE FROM " + getEntityName() + " WHERE id = :id")
                 .setParameter("id", id)
                 .executeUpdate();
     }
