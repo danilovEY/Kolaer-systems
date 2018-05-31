@@ -3,6 +3,7 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {Page} from './page.model';
 import {BaseModel} from './base.model';
+import {SortTypeEnum} from "./sort-type.enum";
 
 export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSource {
     protected readonly onChangedLoading = new Subject<boolean>();
@@ -27,11 +28,13 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
         return 0;
     };
 
-    public static getDirection(direction: string) {
+    public static getDirection(direction: string): number {
         return direction === 'asc' ? 1 : -1
     }
 
-
+    public static getSortType(direction: string): SortTypeEnum {
+        return direction === 'asc' ? SortTypeEnum.ASC : SortTypeEnum.DESC
+    }
 
     protected paginate(data: Array<any>): Array<any> {
         return data;
@@ -42,12 +45,20 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
     }
 
     getElements(): Promise<any> {
-        if (this.dataPage.number !== this.pagingConf['page'] || this.dataPage.pageSize !== this.pagingConf['perPage']) {
+        // if (this.dataPage.number !== this.getPage() || this.dataPage.pageSize !== this.getPageSize()) {
             this.onChangedLoading.next(true);
-            return this.loadElements(this.pagingConf['page'], this.pagingConf['perPage']);
-        } else {
-            return super.getElements();
-        }
+            return this.loadElements(this.getPage(), this.getPageSize());
+        // } else {
+        //     return super.getElements();
+        // }
+    }
+
+    getPage(): number {
+        return this.pagingConf['page'];
+    }
+
+    getPageSize() {
+        return this.pagingConf['perPage'];
     }
 
     abstract loadElements(page: number, pageSize: number): Promise<T[]>;
@@ -59,10 +70,6 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
         this.onChangedLoading.next(false);
 
         return this.data
-    }
-
-    getFilteredAndSorted(): Promise<any> {
-        return super.getFilteredAndSorted();
     }
 
     getAll(): Promise<any> {

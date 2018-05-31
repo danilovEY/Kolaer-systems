@@ -11,6 +11,8 @@ import {EmployeeModel} from '../models/employee.model';
 import {AccountService} from './account.service';
 import {OtherEmployeeModel} from '../models/other-employee.model';
 import {Page} from "../models/page.model";
+import {SortModel} from "../models/sort.model";
+import {EmployeeFilter} from "../models/employee-filter.model";
 
 @Injectable()
 export class EmployeeService implements AuthenticationObserverService {
@@ -72,11 +74,24 @@ export class EmployeeService implements AuthenticationObserverService {
         }
     }
 
-    getAllEmployees(page: number = 1, pageSize: number = 15): Observable<Page<EmployeeModel>> {
+    getAllEmployees(sort?: SortModel, filter?: EmployeeFilter, 
+                    page: number = 1, pageSize: number = 15): Observable<Page<EmployeeModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
-        params = params.append('pagesize', pageSize.toString());
+        params = params.append('page', page.toString())
+            .append('pagesize', pageSize.toString());
+        
+        if (sort) {
+            params = sort.sortField ? params.append('sortField', sort.sortField) : params;
+            params = sort.sortType ? params.append('sortType', sort.sortType.toString()) : params;
+        }
+
+        if (filter) {
+            params = filter.id ? params.append('id', filter.id.toString()) : params;
+            params = filter.postName ? params.append('postName', filter.postName) : params;
+            params = filter.departmentName ? params.append('departmentName', filter.departmentName) : params;
+            params = filter.initials ? params.append('initials', filter.initials) : params;
+        }
 
         return this._httpClient.get<Page<EmployeeModel>>(this.getAllEmployeesUrl, {params: params});
     }

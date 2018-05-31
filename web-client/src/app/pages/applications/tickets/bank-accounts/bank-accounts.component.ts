@@ -4,7 +4,6 @@ import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {ToasterConfig} from 'angular2-toaster';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 import {CustomActionModel} from '../../../../@theme/components/table/custom-action.model';
-import {CustomActionEventModel} from '../../../../@theme/components/table/custom-action-event.model';
 import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +15,8 @@ import {Cell} from "ng2-smart-table";
 import {CustomDataSource} from "../../../../@core/models/custom.data-source";
 import {EmployeeService} from "../../../../@core/services/employee.service";
 import {EmployeeEditComponent} from "../../../../@theme/components/table/employee-edit.component";
+import {TableEventEditModel} from "../../../../@theme/components/table/table-event-edit.model";
+import {BankAccountRequestModel} from "./bank-account-request.model";
 
 @Component({
     selector: 'bank-accounts',
@@ -52,6 +53,7 @@ export class BankAccountsComponent implements OnInit {
         const idColumn: Column = new Column('id', {
             title: 'ID',
             type: 'number',
+            width: '10px',
             editable: false,
             addable: false,
         }, undefined);
@@ -79,7 +81,7 @@ export class BankAccountsComponent implements OnInit {
             }
         }, undefined);
 
-        const postColumn: Column = new Column('post', {
+        const postColumn: Column = new Column('employee.post.name', {
             title: 'Должность',
             type: 'string',
             editable: false,
@@ -89,13 +91,13 @@ export class BankAccountsComponent implements OnInit {
             }
         }, undefined);
 
-        const departmentColumn: Column = new Column('department', {
+        const departmentColumn: Column = new Column('employee.department.name', {
             title: 'Подразделние',
             type: 'string',
             editable: false,
             addable: false,
             valuePrepareFunction(a: any, value: BankAccountModel, cell: Cell) {
-                return value.employee.department.abbreviatedName;
+                return value.employee.department.name;
             }
         }, undefined);
 
@@ -103,14 +105,25 @@ export class BankAccountsComponent implements OnInit {
     }
 
     delete(event: TableEventDeleteModel<BankAccountModel>) {
-        console.log(event);
+       this.bankAccountService.deleteBankAccount(event.data.id)
+           .subscribe(request => event.confirm.resolve());
     }
 
     create(event: TableEventAddModel<BankAccountModel>) {
-        console.log(event);
+        const bankAccount: BankAccountRequestModel = new BankAccountRequestModel();
+        bankAccount.check = event.newData.check;
+        bankAccount.employeeId = event.newData.employee.id;
+
+        this.bankAccountService.addBankAccount(bankAccount)
+            .subscribe((request: BankAccountModel) => event.confirm.resolve(request));
     }
 
-    action(event: CustomActionEventModel<BankAccountModel>) {
-        console.log(event);
+    edit(event: TableEventEditModel<BankAccountModel>) {
+        const bankAccount: BankAccountRequestModel = new BankAccountRequestModel();
+        bankAccount.check = event.newData.check;
+        bankAccount.employeeId = event.newData.employee.id;
+
+        this.bankAccountService.editBankAccount(event.data.id, bankAccount)
+            .subscribe((request: BankAccountModel) => event.confirm.resolve(request));
     }
 }

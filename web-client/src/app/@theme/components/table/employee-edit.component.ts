@@ -5,31 +5,31 @@ import {EmployeeModel} from '../../../@core/models/employee.model';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators'
-import {concat} from 'rxjs/observable/concat';
 import {of} from 'rxjs/observable/of';
 import {Page} from '../../../@core/models/page.model';
+import {SortModel} from "../../../@core/models/sort.model";
+import {SortTypeEnum} from "../../../@core/models/sort-type.enum";
+import {EmployeeFilter} from "../../../@core/models/employee-filter.model";
 
 @Component({
     selector: 'edit-employee',
-    template: `
-        <!--<select [ngClass]="inputClass"-->
-                <!--class="form-control"-->
-                <!--[(ngModel)]="cell.newValue"-->
-                <!--[name]="cell.getId()"-->
-                <!--[disabled]="!cell.isEditable()"-->
-                <!--(click)="onClick.emit($event)"-->
-                <!--(keydown.enter)="onEdited.emit($event)"-->
-                <!--(keydown.esc)="onStopEditing.emit()">-->
-            <!--<option *ngFor="let employee of employees" [value]="employee"-->
-                    <!--[selected]="employee === cell.getValue()">{{ employee.initials }}-->
-            <!--</option>-->
-        <!--</select>-->
-
-        <ng-select [items]="people3$ | async"
+    styles: ['/deep/ ng-dropdown-panel { width: auto!important;}'],
+    template: `        
+        <div class="input-group" *ngIf="!cell.isEditable()">
+            <input type="text" placeholder="Project" class="form-control" [ngModel]="cell.value" [disabled]="!cell.isEditable()"/>
+        </div>
+        
+        <ng-select [ngClass]="inputClass" 
+                   class="custom form-control"
+                   *ngIf="cell.isEditable()"
+                   [items]="people3$ | async"
                    bindLabel="initials"
+                   (click)="onClick.emit($event)"
+                   (keydown.enter)="onEdited.emit($event)"
+                   (keydown.esc)="onStopEditing.emit()"
                    [loading]="people3Loading"
                    [typeahead]="people3input$"
-                   [(ngModel)]="selectedPersons">
+                   [(ngModel)]="cell.newValue">
         </ng-select>
     `
 })
@@ -37,32 +37,23 @@ export class EmployeeEditComponent extends DefaultEditor implements OnInit {
     people3$: Observable<EmployeeModel[]>;
     people3Loading = false;
     people3input$ = new Subject<string>();
-    selectedPersons: EmployeeModel[] = <any>[{ initials: 'Karyn Wright' }, { initials: 'Other' }];
-    // employees: EmployeeModel[] = [];
 
     constructor(private employeeService: EmployeeService) {
         super();
     }
 
     ngOnInit(): void {
-        // this.employeeService.getAllEmployees(0, 0)
-        //     .subscribe((response: Page<EmployeeModel>) => {
-        //         this.employees = response.data;
-        //     });
-
-        this.people3$ = concat(
-            of([]), // default items
-            this.people3input$.pipe(
-                debounceTime(200),
-                distinctUntilChanged(),
-                tap(() => this.people3Loading = true),
-                switchMap(term => this.employeeService.getAllEmployees()
-                    .map((request: Page<EmployeeModel>) => request.data)
-                    .pipe(
-                    catchError(() => of([])), // empty list on error
-                    tap(() => this.people3Loading = false)
-                ))
-            )
+        this.people3$ = this.people3input$.pipe(
+            debounceTime(1000),
+            distinctUntilChanged(),
+            tap(() => this.people3Loading = true),
+            switchMap(term => this.employeeService
+                .getAllEmployees(new SortModel('initials', SortTypeEnum.ASC), new EmployeeFilter(null, `%${term}%`), 0, 0)
+                .map((request: Page<EmployeeModel>) => request.data)
+                .pipe(
+                catchError(() => of([])), // empty list on error
+                tap(() => this.people3Loading = false)
+            ))
         );
     }
 

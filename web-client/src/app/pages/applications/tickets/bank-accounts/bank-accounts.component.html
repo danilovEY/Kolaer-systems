@@ -11,7 +11,7 @@
                 <ngx-loading [show]="loadingBankAccounts" ></ngx-loading>
                 <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
                               [actionAdd]="true" [actionDelete]="true" [actionEdit]="true"
-                              (delete)="delete($event)" (create)="create($event)" (action)="action($event)">
+                              (delete)="delete($event)" (create)="create($event)" (edit)="edit($event)">
                 </custom-table>
             </nb-card-body>
 

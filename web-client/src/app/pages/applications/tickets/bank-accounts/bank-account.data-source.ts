@@ -4,60 +4,54 @@ import {BankAccountModel} from './bank-account.model';
 import {BankAccountService} from './bank-account.service';
 import {TableFilters} from '../../../../@theme/components/table/table-filter';
 import {ColumnSort} from "../../../../@theme/components/table/column-sort";
+import {SortModel} from "../../../../@core/models/sort.model";
+import {BankAccountFilterModel} from "./bank-account-filter.model";
 
 export class BankAccountDataSource extends CustomDataSource<BankAccountModel> {
 
     constructor(private bankAccountService: BankAccountService) {
         super();
+
+        const columnSort: ColumnSort = new ColumnSort();
+        columnSort.field = 'id';
+
+        this.setSort([columnSort]);
     }
 
     loadElements(page: number, pageSize: number): Promise<BankAccountModel[]> {
-        return this.bankAccountService.getAllBankAccount(page, pageSize)
-            .toPromise()
-            .then((response: Page<BankAccountModel>) => this.setData(response));
+        return this.getFilteredAndSorted();
     }
 
+    getFilteredAndSorted(): Promise<any> {
+        const tableFilters: TableFilters = this.getFilter();
+        const columnSorts: ColumnSort[] = this.getSort();
 
-    protected sort(data: Array<any>): Array<any> {
-        const sorts: ColumnSort[] = this.getSort();
-        for (const sort of sorts) {
-            const dir: number = CustomDataSource.getDirection(sort.direction);
-            if (sort.field === 'post') {
-               data = data.sort((a: BankAccountModel, b: BankAccountModel) => {
-                   return CustomDataSource.COMPARE(dir,
-                       a.employee.post.name,
-                       b.employee.post.name);
-               });
-            } if (sort.field === 'department') {
-                data = data.sort((a: BankAccountModel, b: BankAccountModel) => {
-                    return CustomDataSource.COMPARE(dir,
-                        a.employee.department.abbreviatedName,
-                        b.employee.department.abbreviatedName);
-                });
-            }
-        }
-        return super.sort(data);
-    }
+        console.log(tableFilters);
+        console.log(columnSorts);
 
-    protected filter(data: Array<BankAccountModel>): Array<any> {
-        const filter: TableFilters = this.getFilter();
+        const bankAccountSort: SortModel = new SortModel(columnSorts[0].field, CustomDataSource.getSortType(columnSorts[0].direction));
+        let bankAccountFilter: BankAccountFilterModel = null;
 
-        if (filter.filters.length > 0) {
-            for (const filer of filter.filters) {
-                if (filer.field === 'post') {
-                    data = data.filter((bankAccountModel: BankAccountModel) => {
-                        return CustomDataSource.FILTER(bankAccountModel.employee.post.name, filer.search);
-                    });
-                    filer.search = '';
-                } if (filer.field === 'department') {
-                    data = data.filter((bankAccountModel: BankAccountModel) => {
-                        return CustomDataSource.FILTER(bankAccountModel.employee.department.abbreviatedName, filer.search);
-                    });
-                    filer.search = '';
+        if (tableFilters.filters.length > 0) {
+            bankAccountFilter = new BankAccountFilterModel();
+            for (const filer of tableFilters.filters) {
+                if (filer.field === 'employee.post.name') {
+                    bankAccountFilter.employeePost = filer.search;
+                } if (filer.field === 'employee.department.name') {
+                    bankAccountFilter.employeeDepartment = filer.search;
+                } else if (filer.field === 'employee') {
+                    bankAccountFilter.employeeInitials = filer.search;
+                } else if (filer.field === 'check') {
+                    bankAccountFilter.check = filer.search;
+                } else {
+                    bankAccountFilter.id = Number(filer.search);
                 }
             }
         }
 
-        return super.filter(data);
+        return this.bankAccountService.getAllBankAccount(bankAccountSort, bankAccountFilter,
+            this.getPage(), this.getPageSize())
+            .toPromise()
+            .then((response: Page<BankAccountModel>) => this.setData(response));
     }
 }
