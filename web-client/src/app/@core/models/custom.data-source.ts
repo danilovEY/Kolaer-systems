@@ -3,9 +3,11 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {Page} from './page.model';
 import {BaseModel} from './base.model';
-import {SortTypeEnum} from "./sort-type.enum";
+import {ColumnSort} from '../../@theme/components/table/column-sort';
 
 export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSource {
+    private initDataSource: boolean = false;
+
     protected readonly onChangedLoading = new Subject<boolean>();
     protected dataPage: Page<T> = {
         data: [],
@@ -14,26 +16,8 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
         total: 0
     };
 
-    public static FILTER = (value: string, search: string) => {
-        return value.toString().toLowerCase().includes(search.toString().toLowerCase());
-    };
-
-    public static COMPARE = (direction: number, a: any, b: any) => {
-        if (a < b) {
-            return -1 * direction;
-        }
-        if (a > b) {
-            return direction;
-        }
-        return 0;
-    };
-
-    public static getDirection(direction: string): number {
-        return direction === 'asc' ? 1 : -1
-    }
-
-    public static getSortType(direction: string): SortTypeEnum {
-        return direction === 'asc' ? SortTypeEnum.ASC : SortTypeEnum.DESC
+    constructor(protected defaultSortConfig?: ColumnSort) {
+        super();
     }
 
     protected paginate(data: Array<any>): Array<any> {
@@ -44,13 +28,19 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
         return this.onChangedLoading.asObservable();
     }
 
+
+    setSort(conf: Array<any>, doEmit?: boolean): LocalDataSource {
+        if (!this.initDataSource) {
+            this.initDataSource = true;
+            return this.defaultSortConfig ? super.setSort([this.defaultSortConfig], doEmit) : this;
+        } else {
+            return super.setSort(conf, doEmit);
+        }
+    }
+
     getElements(): Promise<any> {
-        // if (this.dataPage.number !== this.getPage() || this.dataPage.pageSize !== this.getPageSize()) {
-            this.onChangedLoading.next(true);
-            return this.loadElements(this.getPage(), this.getPageSize());
-        // } else {
-        //     return super.getElements();
-        // }
+        this.onChangedLoading.next(true);
+        return this.loadElements(this.getPage(), this.getPageSize());
     }
 
     getPage(): number {

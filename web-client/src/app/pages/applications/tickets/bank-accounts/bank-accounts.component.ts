@@ -10,13 +10,13 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BankAccountDataSource} from './bank-account.data-source';
 import {BankAccountService} from './bank-account.service';
 import {BankAccountModel} from './bank-account.model';
-import {EmployeeModel} from "../../../../@core/models/employee.model";
-import {Cell} from "ng2-smart-table";
-import {CustomDataSource} from "../../../../@core/models/custom.data-source";
-import {EmployeeService} from "../../../../@core/services/employee.service";
-import {EmployeeEditComponent} from "../../../../@theme/components/table/employee-edit.component";
-import {TableEventEditModel} from "../../../../@theme/components/table/table-event-edit.model";
-import {BankAccountRequestModel} from "./bank-account-request.model";
+import {EmployeeModel} from '../../../../@core/models/employee.model';
+import {Cell} from 'ng2-smart-table';
+import {EmployeeService} from '../../../../@core/services/employee.service';
+import {EmployeeEditComponent} from '../../../../@theme/components/table/employee-edit.component';
+import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
+import {BankAccountRequestModel} from './bank-account-request.model';
+import {Utils} from '../../../../@core/utils/utils';
 
 @Component({
     selector: 'bank-accounts',
@@ -74,10 +74,10 @@ export class BankAccountsComponent implements OnInit {
                 return value.initials;
             },
             filterFunction(value: EmployeeModel, search: string) {
-                return CustomDataSource.FILTER(value.initials, search);
+                return Utils.filter(value.initials, search);
             },
             compareFunction(dir: number, a: EmployeeModel, b: EmployeeModel) {
-                return CustomDataSource.COMPARE(dir, a.initials, b.initials);
+                return Utils.compare(dir, a.initials, b.initials);
             }
         }, undefined);
 

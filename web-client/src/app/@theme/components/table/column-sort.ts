@@ -1,4 +1,5 @@
 export class ColumnSort {
-    direction: string = 'asc';
-    field: string = '';
+    constructor(public direction: string = 'asc',
+                public field: string = 'id') {
+    }
 }
