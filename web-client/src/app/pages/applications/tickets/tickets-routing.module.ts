@@ -4,6 +4,7 @@ import {TicketsComponent} from './tickets.component';
 import {TicketsMainComponent} from './main/tickets-main.component';
 import {BankAccountsComponent} from './bank-accounts/bank-accounts.component';
 import {AdminGuardService} from '../../../@core/modules/auth/admin-guard.service';
+import {RegisterDetailedComponent} from './register-detailed/register-detailed.component';
 
 const routes: Routes = [
     {
@@ -14,6 +15,10 @@ const routes: Routes = [
     {
         path: 'main',
         component: TicketsMainComponent
+    },
+    {
+        path: 'register/:id',
+        component: RegisterDetailedComponent
     },
     {
         path: 'bank-accounts',

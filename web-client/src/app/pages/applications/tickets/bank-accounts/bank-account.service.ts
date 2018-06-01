@@ -5,8 +5,8 @@ import {Observable} from 'rxjs/Observable';
 import {environment} from '../../../../../environments/environment';
 import {BankAccountModel} from './bank-account.model';
 import {BankAccountRequestModel} from './bank-account-request.model';
-import {SortModel} from '../../../../@core/models/sort.model';
 import {BankAccountFilterModel} from './bank-account-filter.model';
+import {BankAccountSortModel} from './bank-account-sort.model';
 
 @Injectable()
 export class BankAccountService {
@@ -16,7 +16,7 @@ export class BankAccountService {
 
     }
 
-    getAllBankAccount(sort?: SortModel, filter?: BankAccountFilterModel,
+    getAllBankAccount(sort?: BankAccountSortModel, filter?: BankAccountFilterModel,
                       page: number = 1, pageSize: number = 15): Observable<Page<BankAccountModel>> {
         let params = new HttpParams();
 
@@ -24,16 +24,19 @@ export class BankAccountService {
         params = params.append('pagesize', pageSize.toString());
 
         if (sort) {
-            params = sort.sortField ? params.append('sortField', sort.sortField) : params;
-            params = sort.sortType ? params.append('sortType', sort.sortType.toString()) : params;
+            params = sort.sortId ? params.append('sortId', sort.sortId) : params;
+            params = sort.sortCheck ? params.append('sortCheck', sort.sortCheck) : params;
+            params = sort.sortEmployeeInitials ? params.append('sortEmployeeInitials', sort.sortEmployeeInitials) : params;
+            params = sort.sortEmployeePost ? params.append('sortEmployeePost', sort.sortEmployeePost) : params;
+            params = sort.sortEmployeeDepartment ? params.append('sortEmployeeDepartment', sort.sortEmployeeDepartment) : params;
         }
 
         if (filter) {
-            params = filter.id ? params.append('id', filter.id.toString()) : params;
-            params = filter.check ? params.append('check', filter.check) : params;
-            params = filter.employeeInitials ? params.append('employeeInitials', filter.employeeInitials) : params;
-            params = filter.employeePost ? params.append('employeePost', filter.employeePost) : params;
-            params = filter.employeeDepartment ? params.append('employeeDepartment', filter.employeeDepartment) : params;
+            params = filter.filterId ? params.append('filterId', filter.filterId.toString()) : params;
+            params = filter.filterCheck ? params.append('filterCheck', filter.filterCheck) : params;
+            params = filter.filterEmployeeInitials ? params.append('filterEmployeeInitials', filter.filterEmployeeInitials) : params;
+            params = filter.filterEmployeePost ? params.append('filterEmployeePost', filter.filterEmployeePost) : params;
+            params = filter.filterEmployeeDepartment ? params.append('filterEmployeeDepartment', filter.filterEmployeeDepartment) : params;
         }
 
         return this.http.get<Page<BankAccountModel>>(this.bankAccountUrl, {params: params});

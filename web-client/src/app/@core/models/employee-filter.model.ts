@@ -1,7 +1,7 @@
-export class EmployeeFilter {
-    constructor(public id?: number,
-                public initials?: string,
-                public postName?: string,
-                public departmentName?: string) {
+export class EmployeeFilterModel {
+    constructor(public filterId?: number,
+                public filterInitials?: string,
+                public filterPostName?: string,
+                public filterDepartmentName?: string) {
     }
 }

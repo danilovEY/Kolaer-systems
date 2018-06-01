@@ -11,8 +11,8 @@ import {EmployeeModel} from '../models/employee.model';
 import {AccountService} from './account.service';
 import {OtherEmployeeModel} from '../models/other-employee.model';
 import {Page} from "../models/page.model";
-import {SortModel} from "../models/sort.model";
-import {EmployeeFilter} from "../models/employee-filter.model";
+import {EmployeeSortModel} from "../models/employee-sort.model";
+import {EmployeeFilterModel} from "../models/employee-filter.model";
 
 @Injectable()
 export class EmployeeService implements AuthenticationObserverService {
@@ -74,7 +74,7 @@ export class EmployeeService implements AuthenticationObserverService {
         }
     }
 
-    getAllEmployees(sort?: SortModel, filter?: EmployeeFilter, 
+    getAllEmployees(sort?: EmployeeSortModel, filter?: EmployeeFilterModel,
                     page: number = 1, pageSize: number = 15): Observable<Page<EmployeeModel>> {
         let params = new HttpParams();
 
@@ -82,15 +82,17 @@ export class EmployeeService implements AuthenticationObserverService {
             .append('pagesize', pageSize.toString());
         
         if (sort) {
-            params = sort.sortField ? params.append('sortField', sort.sortField) : params;
-            params = sort.sortType ? params.append('sortType', sort.sortType.toString()) : params;
+            params = sort.sortId ? params.append('sortId', sort.sortId) : params;
+            params = sort.sortInitials ? params.append('sortInitials', sort.sortInitials) : params;
+            params = sort.sortPostName ? params.append('sortPostName', sort.sortPostName) : params;
+            params = sort.sortDepartmentName ? params.append('sortDepartmentName', sort.sortDepartmentName) : params;
         }
 
         if (filter) {
-            params = filter.id ? params.append('id', filter.id.toString()) : params;
-            params = filter.postName ? params.append('postName', filter.postName) : params;
-            params = filter.departmentName ? params.append('departmentName', filter.departmentName) : params;
-            params = filter.initials ? params.append('initials', filter.initials) : params;
+            params = filter.filterId ? params.append('filterId', filter.filterId.toString()) : params;
+            params = filter.filterInitials ? params.append('filterInitials', filter.filterInitials) : params;
+            params = filter.filterPostName ? params.append('filterPostName', filter.filterPostName) : params;
+            params = filter.filterDepartmentName ? params.append('filterDepartmentName', filter.filterDepartmentName) : params;
         }
 
         return this._httpClient.get<Page<EmployeeModel>>(this.getAllEmployeesUrl, {params: params});

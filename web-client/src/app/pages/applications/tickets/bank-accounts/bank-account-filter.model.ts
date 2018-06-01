@@ -1,41 +1,41 @@
 export class BankAccountFilterModel {
-    constructor(public id?: number,
-                public _check?: string,
-                public _employeeInitials?: string,
-                public _employeePost?: string,
-                public _employeeDepartment?: string) {
+    constructor(public filterId?: number,
+                private _filterCheck?: string,
+                private _filterEmployeeInitials?: string,
+                private _filterEmployeePost?: string,
+                private _filterEmployeeDepartment?: string) {
     }
 
 
-    public get check(): string {
-        return this._check;
+    public get filterCheck(): string {
+        return this._filterCheck;
     }
 
-    public get employeeInitials(): string {
-        return this._employeeInitials;
+    public set filterCheck(value: string) {
+        this._filterCheck = `%${value}%`;
     }
 
-    public get employeePost(): string {
-        return this._employeePost;
+    public get filterEmployeeInitials(): string {
+        return this._filterEmployeeInitials;
     }
 
-    public get employeeDepartment(): string {
-        return this._employeeDepartment;
+    public set filterEmployeeInitials(value: string) {
+        this._filterEmployeeInitials = `%${value}%`;
     }
 
-    public set check(value: string) {
-        this._check = `%${value}%`;
+    public get filterEmployeePost(): string {
+        return this._filterEmployeePost;
     }
 
-    public set employeeInitials(value: string) {
-        this._employeeInitials = `%${value}%`;
+    public set filterEmployeePost(value: string) {
+        this._filterEmployeePost = `%${value}%`;
     }
 
-    public set employeePost(value: string) {
-        this._employeePost = `%${value}%`;
+    public get filterEmployeeDepartment(): string {
+        return this._filterEmployeeDepartment;
     }
 
-    public set employeeDepartment(value: string) {
-        this._employeeDepartment = `%${value}%`;
+    public set filterEmployeeDepartment(value: string) {
+        this._filterEmployeeDepartment = `%${value}%`;
     }
 }

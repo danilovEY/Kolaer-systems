@@ -3,7 +3,6 @@ import {CustomTableComponent} from '../../../../@theme/components';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {ToasterConfig} from 'angular2-toaster';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
-import {CustomActionModel} from '../../../../@theme/components/table/custom-action.model';
 import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -28,7 +27,6 @@ export class BankAccountsComponent implements OnInit {
     customTable: CustomTableComponent;
 
     columns: Column[] = [];
-    actions: CustomActionModel[] = [];
     source: BankAccountDataSource;
     loadingBankAccounts: boolean = true;
     config: ToasterConfig = new ToasterConfig({

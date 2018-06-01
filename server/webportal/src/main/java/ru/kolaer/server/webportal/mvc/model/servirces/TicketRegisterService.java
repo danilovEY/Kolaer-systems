@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.dto.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,4 +29,6 @@ public interface TicketRegisterService extends DefaultService<TicketRegisterDto>
     void deleteTicket(Long regId, Long ticketId);
 
     TicketDto updateTicket(Long regId, Long ticketId, RequestTicketDto ticketDto);
+
+    Page<TicketDto> getTicketsByRegisterId(Long regId, Integer number, Integer pageSize, SortParam sortParam, TicketFilter ticketFilter);
 }

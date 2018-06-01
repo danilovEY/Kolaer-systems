@@ -36,4 +36,13 @@ export class Utils {
     public static getSortType(direction: string): SortTypeEnum {
         return direction === 'asc' ? SortTypeEnum.ASC : SortTypeEnum.DESC
     }
+
+    public static keyFromValue(stringEnum: any, value: string): string | undefined {
+        for (const k of Object.keys(stringEnum)) {
+            if (stringEnum[k] === value) {
+                return k;
+            }
+        }
+        return undefined;
+    }
 }

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {CustomTableComponent} from '../../../../@theme/components';
 import {DatePipe} from '@angular/common';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
@@ -15,16 +15,17 @@ import {UploadFileModel} from '../../../../@core/models/upload-file.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {ReportTicketsConfigModel} from './report-tickets-config.model';
+import {ReportTicketsConfigModel} from '../report-tickets-config.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {CreateTicketsConfigModel} from './create-tickets-config.model';
+import {CreateTicketsConfigModel} from '../create-tickets-config.model';
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'main-tickets',
     styleUrls: ['./tickents-main.component.scss'],
     templateUrl: './tickents-main.component.html'
 })
-export class TicketsMainComponent implements OnInit {
+export class TicketsMainComponent implements OnInit, OnDestroy {
     private static readonly openRegisterActionName = 'open';
     private static readonly generateAndDownloadActionName = 'download';
     private static readonly generateAndSendActionName = 'send';
@@ -64,6 +65,8 @@ export class TicketsMainComponent implements OnInit {
     constructor(private ticketsService: TicketsService,
                 private toasterService: ToasterService,
                 private modalService: NgbModal,
+                private router: Router,
+                private renderer: Renderer2,
                 private accountService: AccountService) {
         this.source = new TicketsRegisterDataSource(this.ticketsService);
         this.source.onLoading().subscribe(value => this.loadingRegisters = value);
@@ -147,7 +150,8 @@ export class TicketsMainComponent implements OnInit {
     }
 
     create(event: TableEventAddModel<TicketRegisterModel>) {
-        console.log(event);
+        this.ticketsService.createTicketRegisterEmpty()
+            .subscribe((response: TicketRegisterModel) => event.confirm.resolve(response));
     }
 
     action(event: CustomActionEventModel<TicketRegisterModel>) {
@@ -164,6 +168,9 @@ export class TicketsMainComponent implements OnInit {
             this.send = true;
             this.selectedTicketRegister = event.data;
             this.confirmToSendModal = this.modalService.open(this.generateReportModalElement, {size: 'lg', container: 'nb-layout'});
+        } else if (event.action.name === TicketsMainComponent.openRegisterActionName) {
+            this.selectedTicketRegister = event.data;
+            this.router.navigate([`/pages/app/tickets/register/${event.data.id}`]);
         }
     }
 
@@ -240,7 +247,7 @@ export class TicketsMainComponent implements OnInit {
             this.createRegisterModal.close({});
         }
 
-        this.ticketsService.createTicketRegister(config)
+        this.ticketsService.createTicketRegisterForAll(config)
             .subscribe((response: TicketRegisterModel) => {
                 this.source.prepend(response);
 
@@ -252,5 +259,13 @@ export class TicketsMainComponent implements OnInit {
 
                 this.toasterService.popAsync(toast);
             });
+    }
+
+    ngOnDestroy(): void {
+        const elements = document.getElementsByTagName('nb-popover'); // BUG POPUP
+
+        for (let index = elements.length - 1; index >= 0; index--) {
+            this.renderer.setStyle(elements[index], 'display', 'none');
+        }
     }
 }

@@ -7,9 +7,9 @@ import {Subject} from 'rxjs/Subject';
 import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators'
 import {of} from 'rxjs/observable/of';
 import {Page} from '../../../@core/models/page.model';
-import {SortModel} from "../../../@core/models/sort.model";
-import {SortTypeEnum} from "../../../@core/models/sort-type.enum";
-import {EmployeeFilter} from "../../../@core/models/employee-filter.model";
+import {SortTypeEnum} from '../../../@core/models/sort-type.enum';
+import {EmployeeSortModel} from "../../../@core/models/employee-sort.model";
+import {EmployeeFilterModel} from "../../../@core/models/employee-filter.model";
 
 @Component({
     selector: 'edit-employee',
@@ -48,10 +48,10 @@ export class EmployeeEditComponent extends DefaultEditor implements OnInit {
             distinctUntilChanged(),
             tap(() => this.people3Loading = true),
             switchMap(term => this.employeeService
-                .getAllEmployees(new SortModel('initials', SortTypeEnum.ASC), new EmployeeFilter(null, `%${term}%`), 0, 0)
+                .getAllEmployees(new EmployeeSortModel(null, SortTypeEnum.ASC), new EmployeeFilterModel(null, `%${term}%`), 0, 0)
                 .map((request: Page<EmployeeModel>) => request.data)
                 .pipe(
-                catchError(() => of([])), // empty list on error
+                catchError(() => of([])),
                 tap(() => this.people3Loading = false)
             ))
         );

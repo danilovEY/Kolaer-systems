@@ -4,9 +4,9 @@ import {BankAccountModel} from './bank-account.model';
 import {BankAccountService} from './bank-account.service';
 import {TableFilters} from '../../../../@theme/components/table/table-filter';
 import {ColumnSort} from '../../../../@theme/components/table/column-sort';
-import {SortModel} from '../../../../@core/models/sort.model';
 import {BankAccountFilterModel} from './bank-account-filter.model';
 import {Utils} from '../../../../@core/utils/utils';
+import {BankAccountSortModel} from './bank-account-sort.model';
 
 export class BankAccountDataSource extends CustomDataSource<BankAccountModel> {
 
@@ -18,26 +18,39 @@ export class BankAccountDataSource extends CustomDataSource<BankAccountModel> {
         const tableFilters: TableFilters = this.getFilter();
         const columnSorts: ColumnSort[] = this.getSort();
 
-        let bankAccountSort: SortModel = null;
+        let bankAccountSort: BankAccountSortModel = null;
         let bankAccountFilter: BankAccountFilterModel = null;
 
         if (columnSorts.length > 0) {
-            bankAccountSort = new SortModel(columnSorts[0].field, Utils.getSortType(columnSorts[0].direction));
+            const columnSort: ColumnSort = columnSorts[0];
+            bankAccountSort = new BankAccountSortModel();
+
+            if (columnSort.field === 'employee.post.name') {
+                bankAccountSort.sortEmployeePost = Utils.getSortType(columnSort.direction)
+            } else if (columnSort.field === 'employee.department.name') {
+                bankAccountSort.sortEmployeeDepartment = Utils.getSortType(columnSort.direction)
+            } else if (columnSort.field === 'employee') {
+                bankAccountSort.sortEmployeeInitials = Utils.getSortType(columnSort.direction)
+            } else if (columnSort.field === 'check') {
+                bankAccountSort.sortCheck = Utils.getSortType(columnSort.direction)
+            } else {
+                bankAccountSort.sortId = Utils.getSortType(columnSort.direction)
+            }
         }
 
         if (tableFilters.filters.length > 0) {
             bankAccountFilter = new BankAccountFilterModel();
             for (const filer of tableFilters.filters) {
                 if (filer.field === 'employee.post.name') {
-                    bankAccountFilter.employeePost = filer.search;
+                    bankAccountFilter.filterEmployeePost = filer.search;
                 } else if (filer.field === 'employee.department.name') {
-                    bankAccountFilter.employeeDepartment = filer.search;
+                    bankAccountFilter.filterEmployeeDepartment = filer.search;
                 } else if (filer.field === 'employee') {
-                    bankAccountFilter.employeeInitials = filer.search;
+                    bankAccountFilter.filterEmployeeInitials = filer.search;
                 } else if (filer.field === 'check') {
-                    bankAccountFilter.check = filer.search;
+                    bankAccountFilter.filterCheck = filer.search;
                 } else {
-                    bankAccountFilter.id = Number(filer.search);
+                    bankAccountFilter.filterId = Number(filer.search);
                 }
             }
         }

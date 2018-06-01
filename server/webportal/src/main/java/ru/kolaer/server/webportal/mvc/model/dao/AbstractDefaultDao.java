@@ -10,7 +10,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.server.webportal.mvc.model.dto.FilterType;
 import ru.kolaer.server.webportal.mvc.model.dto.FilterValue;
-import ru.kolaer.server.webportal.mvc.model.dto.SortParam;
+import ru.kolaer.server.webportal.mvc.model.dto.SortField;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.criteria.CriteriaQuery;
@@ -51,9 +51,9 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     }
 
     @Override
-    public List<T> findAll(SortParam sortParam, Map<String, FilterValue> filter, Integer number, Integer pageSize) {
-        String queryOrderBy = Optional.ofNullable(sortParam)
-                .map(SortParam::toString)
+    public List<T> findAll(SortField sortField, Map<String, FilterValue> filter, Integer number, Integer pageSize) {
+        String queryOrderBy = Optional.ofNullable(sortField)
+                .map(SortField::toString)
                 .orElse("");
 
         String queryFilter = filtersToString(filter);
@@ -114,8 +114,8 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     }
 
     @Override
-    public List<T> findAll(SortParam sortParam, Map<String, FilterValue> filter) {
-        return findAll(sortParam, filter, null, null);
+    public List<T> findAll(SortField sortField, Map<String, FilterValue> filter) {
+        return findAll(sortField, filter, null, null);
     }
 
     @Override

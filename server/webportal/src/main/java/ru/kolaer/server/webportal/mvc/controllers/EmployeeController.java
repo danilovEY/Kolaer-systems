@@ -11,7 +11,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.EmployeeFilter;
-import ru.kolaer.server.webportal.mvc.model.dto.SortParam;
+import ru.kolaer.server.webportal.mvc.model.dto.EmployeeSort;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 
 import java.text.ParseException;
@@ -43,7 +43,7 @@ public class EmployeeController {
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<EmployeeDto> getAllEmployees(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                              @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
-                                             SortParam sortParam,
+                                             EmployeeSort sortParam,
                                              EmployeeFilter filter) {
         return this.employeeService.getAll(sortParam, filter, number, pageSize);
     }

@@ -14,7 +14,7 @@ import {TableEventAddModel} from "./table-event-add.model";
     template: `
         <ng2-smart-table #table [settings]="settings" [source]="source" 
                          (deleteConfirm)="deleteConfirm($event)" 
-                         (createConfirm)="createConfirm($event)" 
+                         (createConfirm)="createConfirm($event)"
                          (editConfirm)="editConfirm($event)">
         </ng2-smart-table>
     `
@@ -39,7 +39,7 @@ export class CustomTableComponent implements OnInit {
     @ViewChild('table')
     table: Ng2SmartTableComponent;
 
-    settings = {
+    settings: any = {
         hideSubHeader: false,
         mode: 'inline',
         actions: {

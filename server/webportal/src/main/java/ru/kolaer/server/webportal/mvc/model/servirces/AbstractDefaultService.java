@@ -21,7 +21,7 @@ public abstract class AbstractDefaultService<T extends BaseDto,
         D extends DefaultDao<K>,
         C extends BaseConverter<T, K>> implements DefaultService<T> {
 
-    protected static final SortParam DEFAULT_SORT = new SortParam("id", SortType.ASC);
+    protected static final SortField DEFAULT_SORT = new SortField("id", SortType.ASC);
     protected final D defaultEntityDao;
     protected final C defaultConverter;
 
@@ -40,7 +40,7 @@ public abstract class AbstractDefaultService<T extends BaseDto,
     @Transactional(readOnly = true)
     public List<T> getAll(SortParam sortParam, FilterParam filterParam) {
         Map<String, FilterValue> filters = getFilters(filterParam);
-        SortParam sort = Optional.ofNullable(sortParam).orElse(DEFAULT_SORT);
+        SortField sort = this.getSortField(sortParam);
 
         return defaultConverter.convertToDto(defaultEntityDao.findAll(sort, filters));
     }
@@ -130,7 +130,7 @@ public abstract class AbstractDefaultService<T extends BaseDto,
         List<T> results;
 
         Map<String, FilterValue> filters = getFilters(filterParam);
-        SortParam sort = Optional.ofNullable(sortParam).orElse(DEFAULT_SORT);
+        SortField sort = this.getSortField(sortParam);
 
         if(pageSize == null || pageSize == 0) {
             results = getAll(sortParam, filterParam);
@@ -144,6 +144,41 @@ public abstract class AbstractDefaultService<T extends BaseDto,
         return new Page<>(results, number, count, pageSize);
     }
 
+    protected SortField getSortField(SortParam sortParam) {
+        if(sortParam == null) {
+            return DEFAULT_SORT;
+        }
+
+        try {
+            Class<? extends SortParam> filterParamClass = sortParam.getClass();
+            for (Field field : filterParamClass.getDeclaredFields()) {
+                if(field.isAnnotationPresent(EntityFieldName.class)) {
+                    field.setAccessible(true);
+                    String fieldName = field.getName();
+                    Object fieldValue = FieldUtils.getFieldValue(sortParam, fieldName);
+
+                    if(fieldValue != null) {
+                        EntityFieldName entityFieldName = field.getAnnotation(EntityFieldName.class);
+
+                        String filterName = entityFieldName.name().isEmpty()
+                                ? fieldName
+                                : entityFieldName.name();
+
+                        SortField sortField = new SortField();
+                        sortField.setSortField(filterName);
+                        sortField.setSortType((SortType) fieldValue);
+
+                        return sortField;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            log.error("Can't read fields", ex);
+        }
+
+        return DEFAULT_SORT;
+    }
+
     protected Map<String, FilterValue> getFilters(FilterParam filterParam) {
         if(filterParam == null) {
             return Collections.emptyMap();
@@ -154,17 +189,17 @@ public abstract class AbstractDefaultService<T extends BaseDto,
         try {
             Class<? extends FilterParam> filterParamClass = filterParam.getClass();
             for (Field field : filterParamClass.getDeclaredFields()) {
-                if(field.isAnnotationPresent(FilterValueName.class)) {
+                if(field.isAnnotationPresent(EntityFieldName.class)) {
                     field.setAccessible(true);
                     String fieldName = field.getName();
                     Object fieldValue = FieldUtils.getFieldValue(filterParam, fieldName);
 
                     if(fieldValue != null) {
-                        FilterValueName filterValueName = field.getAnnotation(FilterValueName.class);
+                        EntityFieldName entityFieldName = field.getAnnotation(EntityFieldName.class);
 
-                        String filterName = filterValueName.name().isEmpty()
+                        String filterName = entityFieldName.name().isEmpty()
                                 ? fieldName
-                                : filterValueName.name();
+                                : entityFieldName.name();
 
                         FilterValue filterValue = new FilterValue();
                         filterValue.setParamName(filterName);

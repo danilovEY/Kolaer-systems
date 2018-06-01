@@ -71,6 +71,13 @@ public class TicketsController {
         return this.ticketRegisterService.addToRegisterAllAccounts(regId, generateTicketRegister);
     }
 
+    @ApiOperation(value = "Получить реестр по ID")
+    @UrlDeclaration(description = "Получить реестр по ID", requestMethod = RequestMethod.GET)
+    @RequestMapping(value = "/{regId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public TicketRegisterDto getRegister(@PathVariable("regId") Long regId) {
+        return this.ticketRegisterService.getById(regId);
+    }
+
     @ApiOperation(value = "Сгенерировать реестр с добавлением всех аккаунтов")
     @UrlDeclaration(description = "Сгенерировать реестр с добавлением всех аккаунтов", requestMethod = RequestMethod.POST)
     @RequestMapping(value = "/full", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -112,8 +119,12 @@ public class TicketsController {
     @ApiOperation(value = "Получить талоны по ID реестра")
     @UrlDeclaration(description = "Получить талоны по ID реестра")
     @RequestMapping(value = "/{regId}/tickets", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<TicketDto> getTickets(@ApiParam(value = "ID реестра", required = true) @PathVariable("regId") Long regId) {
-        return this.ticketRegisterService.getTicketsByRegisterId(regId);
+    public Page<TicketDto> getTickets(@ApiParam(value = "ID реестра", required = true) @PathVariable("regId") Long regId,
+                                      @RequestParam(value = "page", defaultValue = "0") Integer number,
+                                      @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
+                                      TicketSort sortParam,
+                                      TicketFilter ticketFilter) {
+        return this.ticketRegisterService.getTicketsByRegisterId(regId, number, pageSize, sortParam, ticketFilter);
     }
 
     @ApiOperation(value = "Добавить талон по ID реестра")

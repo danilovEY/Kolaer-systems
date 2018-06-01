@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.dao;
 import lombok.NonNull;
 import org.hibernate.Session;
 import ru.kolaer.server.webportal.mvc.model.dto.FilterValue;
-import ru.kolaer.server.webportal.mvc.model.dto.SortParam;
+import ru.kolaer.server.webportal.mvc.model.dto.SortField;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import java.util.Collections;
@@ -22,8 +22,8 @@ public interface DefaultDao<T extends BaseEntity> {
     /**Получить все объекты.*/
     List<T> findAll();
     List<T> findAll(Integer number, Integer pageSize);
-    List<T> findAll(SortParam sortParam, Map<String, FilterValue> filter);
-    List<T> findAll(SortParam sortParam, Map<String, FilterValue> filter, Integer number, Integer pageSize);
+    List<T> findAll(SortField sortField, Map<String, FilterValue> filter);
+    List<T> findAll(SortField sortField, Map<String, FilterValue> filter, Integer number, Integer pageSize);
     long findAllCount();
     long findAllCount(Map<String, FilterValue> filter);
 

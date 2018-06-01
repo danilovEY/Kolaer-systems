@@ -6,6 +6,7 @@ import {ThemeModule} from '../../../@theme/theme.module';
 import {TicketsService} from './tickets.service';
 import {BankAccountsComponent} from './bank-accounts/bank-accounts.component';
 import {BankAccountService} from './bank-accounts/bank-account.service';
+import {RegisterDetailedComponent} from './register-detailed/register-detailed.component';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {BankAccountService} from './bank-accounts/bank-account.service';
     declarations: [
         TicketsMainComponent,
         TicketsComponent,
-        BankAccountsComponent
+        BankAccountsComponent,
+        RegisterDetailedComponent
     ],
     providers: [
         TicketsService,

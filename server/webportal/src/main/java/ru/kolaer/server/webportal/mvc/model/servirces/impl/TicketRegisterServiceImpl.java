@@ -4,6 +4,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.tools.Tools;
 import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
 import ru.kolaer.server.webportal.beans.TypeServer;
@@ -90,31 +91,6 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
             }
         }
     }
-
-//    @Override
-//    public TicketRegisterDto save(TicketRegisterDto entity) {
-//        List<TicketRegisterEntity> ticketRegisterByDateAndDep = defaultEntityDao.
-//                getTicketRegisterByDateAndDep(entity.getCreateRegister(), entity.getDepartment().getName());
-//
-//        List<TicketRegisterEntity> collect = ticketRegisterByDateAndDep.stream().filter(ticketRegister ->
-//                !ticketRegister.isClose()
-//        ).collect(Collectors.toList());
-//        if(collect.size() > 0) {
-//            throw new UnexpectedRequestParams("Открытый реестр уже существует в этом месяце и году!");
-//        } else {
-//            int day = entity.getCreateRegister()
-//                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-//                    .getDayOfMonth();
-//            ticketRegisterByDateAndDep.forEach(ticketRegister -> {
-//                    if(ticketRegister.getCreateRegister()
-//                            .toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-//                            .getDayOfMonth() == day)
-//                        throw new UnexpectedRequestParams("Реестр существует!");
-//            });
-//        }
-//
-//        return defaultConverter.convertToDto(defaultEntityDao.persist(defaultConverter.convertToModel(entity)));
-//    }
 
     @Override
     @Transactional
@@ -340,5 +316,23 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
         ticketEntity.setBankAccountId(bankAccountEntity.getId());
 
         return defaultConverter.convertToTicketDto(ticketDao.update(ticketEntity));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TicketDto> getTicketsByRegisterId(Long regId, Integer number, Integer pageSize, SortParam sortParam, TicketFilter ticketFilter) {
+        if(ticketFilter == null) {
+            ticketFilter = new TicketFilter();
+        }
+
+        ticketFilter.setFilterRegisterId(regId);
+
+        Map<String, FilterValue> filters = getFilters(ticketFilter);
+        SortField sort = getSortField(sortParam);
+
+        Long count = ticketDao.findAllCount(filters);
+        List<TicketDto> results = defaultConverter.convertToTicketDto(ticketDao.findAll(sort, filters, number, pageSize));
+
+        return new Page<>(results, number, count, pageSize);
     }
 }

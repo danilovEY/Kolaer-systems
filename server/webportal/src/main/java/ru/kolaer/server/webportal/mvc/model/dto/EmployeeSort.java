@@ -3,13 +3,13 @@ package ru.kolaer.server.webportal.mvc.model.dto;
 import lombok.Data;
 
 @Data
-public class EmployeeFilter implements FilterParam {
+public class EmployeeSort implements SortParam {
     @EntityFieldName(name = "id")
-    private Long filterId;
+    private SortType sortId;
     @EntityFieldName(name = "initials")
-    private String filterInitials;
+    private SortType sortInitials;
     @EntityFieldName(name = "post.name")
-    private String filterPostName;
+    private SortType sortPostName;
     @EntityFieldName(name = "department.name")
-    private String filterDepartmentName;
+    private SortType sortDepartmentName;
 }
