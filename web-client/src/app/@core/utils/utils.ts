@@ -1,6 +1,9 @@
 import {SortTypeEnum} from '../models/sort-type.enum';
+import {DatePipe} from "@angular/common";
 
 export class Utils {
+    private static datePipe = new DatePipe('en-US');
+
     public static copyToChipboard(content: string = '') {
         const selBox = document.createElement('textarea');
         selBox.style.position = 'fixed';
@@ -44,5 +47,13 @@ export class Utils {
             }
         }
         return undefined;
+    }
+
+    public static getDateTimeFormatFromString(date: string): string {
+        return Utils.getDateTimeFormat(new Date(date));
+    }
+
+    public static getDateTimeFormat(date: Date): string {
+        return Utils.datePipe.transform(date, 'dd.MM.yyyy HH:mm:ss');
     }
 }

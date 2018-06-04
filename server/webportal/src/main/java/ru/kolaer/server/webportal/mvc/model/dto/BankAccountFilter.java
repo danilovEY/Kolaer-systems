@@ -9,7 +9,7 @@ public class BankAccountFilter implements FilterParam {
     @EntityFieldName(name = "check")
     private String filterCheck;
     @EntityFieldName(name = "employee.initials")
-    private String filterEmployeeInitials;
+    private String filterEmployee;
     @EntityFieldName(name = "employee.post.name")
     private String filterEmployeePost;
     @EntityFieldName(name = "employee.department.name")

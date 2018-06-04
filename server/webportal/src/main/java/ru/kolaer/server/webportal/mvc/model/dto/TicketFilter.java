@@ -18,11 +18,11 @@ public class TicketFilter implements FilterParam {
     private FilterType typeFilterCount = FilterType.EQUAL;
 
     @EntityFieldName(name = "typeOperation")
-    private TypeOperation filterTypeOperation;
-    private FilterType typeFilterTypeOperation = FilterType.EQUAL;
+    private TypeOperation filterType;
+    private FilterType typeFilterType = FilterType.EQUAL;
 
     @EntityFieldName(name = "bankAccount.employee.initials")
-    private String filterEmployeeInitials;
+    private String filterEmployee;
     @EntityFieldName(name = "bankAccount.employee.post.name")
     private String filterEmployeePost;
     @EntityFieldName(name = "bankAccount.employee.department.name")

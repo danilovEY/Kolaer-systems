@@ -68,8 +68,8 @@ export class BankAccountsComponent implements OnInit {
                 type: 'custom',
                 component: EmployeeEditComponent,
             },
-            valuePrepareFunction(value: EmployeeModel) {
-                return value.initials;
+            valuePrepareFunction(a: any, value: BankAccountModel, cell: Cell) {
+                return value.employee.initials;
             },
             filterFunction(value: EmployeeModel, search: string) {
                 return Utils.filter(value.initials, search);

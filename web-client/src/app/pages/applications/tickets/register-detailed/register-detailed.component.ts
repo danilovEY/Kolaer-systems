@@ -85,7 +85,7 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
             addable: false,
         }, undefined);
 
-        const typeOperationColumn: Column = new Column('typeOperation', {
+        const typeOperationColumn: Column = new Column('type', {
             title: 'Операция',
             type: 'string',
             filter: {
@@ -119,7 +119,7 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
             type: 'number',
         }, undefined);
 
-        const employeeColumn: Column = new Column('employeeInitials', {
+        const employeeColumn: Column = new Column('employee', {
             title: 'Сотрудник',
             type: 'string',
             editor: {
@@ -159,7 +159,7 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
             .subscribe(response => event.confirm.resolve());
     }
 
-    create(event: TableEventAddModel<any>) {
+    create(event: TableEventAddModel<TicketModel>) {
         const ticketModel: TicketModel = new TicketModel();
         ticketModel.id = event.newData.id;
         ticketModel.count = event.newData.count;

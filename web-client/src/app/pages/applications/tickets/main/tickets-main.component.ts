@@ -19,6 +19,7 @@ import {ReportTicketsConfigModel} from '../report-tickets-config.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {CreateTicketsConfigModel} from '../create-tickets-config.model';
 import {Router} from "@angular/router";
+import {Utils} from "../../../../@core/utils/utils";
 
 @Component({
     selector: 'main-tickets',
@@ -29,6 +30,7 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
     private static readonly openRegisterActionName = 'open';
     private static readonly generateAndDownloadActionName = 'download';
     private static readonly generateAndSendActionName = 'send';
+    static currentAccount: SimpleAccountModel;
 
     private confirmToSendModal: NgbModalRef;
     private createRegisterModal: NgbModalRef;
@@ -62,8 +64,6 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
     isInTime: boolean = false;
     inTime: Date = new Date();
 
-    static currentAccount: SimpleAccountModel;
-
     constructor(private ticketsService: TicketsService,
                 private toasterService: ToasterService,
                 private modalService: NgbModal,
@@ -90,9 +90,10 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
             type: 'date',
             editable: false,
             addable: false,
+            filter: false,
+            sort: false,
             valuePrepareFunction(value: string) {
-                const datePipe = new DatePipe('en-US');
-                return datePipe.transform(new Date(value), 'dd.MM.yyyy HH:mm:ss');
+                return Utils.getDateTimeFormatFromString(value);
             }
         }, undefined);
 
@@ -101,15 +102,14 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
             type: 'date',
             editable: false,
             addable: false,
+            filter: false,
+            sort: false,
             valuePrepareFunction(value: string) {
                 if (value) {
-                    const datePipe = new DatePipe('en-US');
-                    return datePipe.transform(new Date(value), 'dd.MM.yyyy HH:mm:ss');
+                    return Utils.getDateTimeFormatFromString(value);
                 } else {
                     return undefined;
                 }
-
-
             }
         }, undefined);
 
@@ -277,6 +277,10 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
 
                 this.toasterService.popAsync(toast);
             });
+    }
+
+    getCurrentAccount(): SimpleAccountModel {
+        return TicketsMainComponent.currentAccount;
     }
 
     ngOnDestroy(): void {

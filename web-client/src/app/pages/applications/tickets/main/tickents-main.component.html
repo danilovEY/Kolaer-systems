@@ -5,7 +5,7 @@
         <nb-card>
             <nb-card-header>
                 <span>История реестров с талонами</span>
-                <button *ngIf="currentAccount && currentAccount.accessOit"
+                <button *ngIf="getCurrentAccount() && getCurrentAccount().accessOit"
                         class="btn btn-primary" type="button"
                         (click)="openCreateRegisterModal()"
                         nbPopover="Добавить реест с талонами для всех счетов"
