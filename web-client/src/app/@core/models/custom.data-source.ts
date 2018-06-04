@@ -4,6 +4,8 @@ import {Observable} from 'rxjs/Observable';
 import {Page} from './page.model';
 import {BaseModel} from './base.model';
 import {ColumnSort} from '../../@theme/components/table/column-sort';
+import {TableFilters} from "../../@theme/components/table/table-filter";
+import {Utils} from "../utils/utils";
 
 export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSource {
     private initDataSource: boolean = false;
@@ -68,5 +70,37 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
 
     count(): number {
         return this.dataPage.total;
+    }
+
+    getFilterModel<C>(filterModel: C): C {
+        const tableFilters: TableFilters = this.getFilter();
+
+        if (tableFilters.filters.length > 0) {
+            for (const filer of tableFilters.filters) {
+                const fieldName: string = 'filter' +
+                    filer.field.charAt(0).toUpperCase() +
+                    filer.field.slice(1);
+
+                filterModel[fieldName] = filer.search;
+            }
+        }
+
+        return filterModel;
+    }
+
+    getSortModel<C>(sortModel: C): C {
+        const columnSorts: ColumnSort[] = this.getSort();
+
+        if (columnSorts.length > 0) {
+            const columnSort: ColumnSort = columnSorts[0];
+
+            const fieldName: string = 'sort' +
+                columnSort.field.charAt(0).toUpperCase() +
+                columnSort.field.slice(1);
+
+            sortModel[fieldName] = Utils.getSortType(columnSort.direction);
+        }
+
+        return sortModel;
     }
 }

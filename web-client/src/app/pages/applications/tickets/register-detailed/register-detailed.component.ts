@@ -9,13 +9,13 @@ import {CustomTableComponent} from '../../../../@theme/components';
 import {ActivatedRoute} from '@angular/router';
 import {TicketsDataSource} from './tickents.data-source';
 import {Subscription} from 'rxjs/Subscription';
-import {EmployeeEditComponent} from '../../../../@theme/components/table/employee-edit.component';
 import {Cell} from 'ng2-smart-table';
 import {Utils} from '../../../../@core/utils/utils';
 import {EmployeeModel} from '../../../../@core/models/employee.model';
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {TicketModel} from '../ticket.model';
 import {TypeOperationEnum} from "../main/type-operation.enum";
+import {EmployeeWithAccountEditComponent} from "./employee-with-account-edit.component";
 
 @Component({
     selector: 'register-detailed',
@@ -101,7 +101,7 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
             type: 'string',
             editor: {
                 type: 'custom',
-                component: EmployeeEditComponent,
+                component: EmployeeWithAccountEditComponent,
             },
             valuePrepareFunction(value: EmployeeModel) {
                 return value.initials;
@@ -114,7 +114,7 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
             }
         }, undefined);
 
-        const postColumn: Column = new Column('employee.post.name', {
+        const postColumn: Column = new Column('employeePost', {
             title: 'Должность',
             type: 'string',
             editable: false,
@@ -124,7 +124,7 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
             }
         }, undefined);
 
-        const departmentColumn: Column = new Column('employee.department.name', {
+        const departmentColumn: Column = new Column('employeeDepartment', {
             title: 'Подразделние',
             type: 'string',
             editable: false,
@@ -138,14 +138,23 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
     }
 
     delete(event: TableEventDeleteModel<TicketModel>) {
-        console.log(event);
+        this.ticketsService.deleteTicket(this.registerId, event.data.id)
+            .subscribe(response => event.confirm.resolve());
     }
 
-    create(event: TableEventAddModel<TicketModel>) {
-        console.log(event);
+    create(event: TableEventAddModel<any>) {
+        const ticketModel: TicketModel = new TicketModel();
+        ticketModel.id = event.newData.id;
+        ticketModel.count = event.newData.count;
+        ticketModel.type = event.newData.type;
+        ticketModel.employee = event.newData.employee;
+
+        this.ticketsService.createTicket(this.registerId, ticketModel)
+            .subscribe((response: TicketModel) => event.confirm.resolve(response));
     }
 
     edit(event: TableEventEditModel<TicketModel>) {
-        console.log(event);
+        this.ticketsService.updateTicket(this.registerId, event.newData)
+            .subscribe((response: TicketModel) => event.confirm.resolve(response));
     }
 }

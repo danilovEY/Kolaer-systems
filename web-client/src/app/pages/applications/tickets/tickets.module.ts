@@ -7,6 +7,7 @@ import {TicketsService} from './tickets.service';
 import {BankAccountsComponent} from './bank-accounts/bank-accounts.component';
 import {BankAccountService} from './bank-accounts/bank-account.service';
 import {RegisterDetailedComponent} from './register-detailed/register-detailed.component';
+import {EmployeeWithAccountEditComponent} from './register-detailed/employee-with-account-edit.component';
 
 @NgModule({
     imports: [
@@ -17,11 +18,15 @@ import {RegisterDetailedComponent} from './register-detailed/register-detailed.c
         TicketsMainComponent,
         TicketsComponent,
         BankAccountsComponent,
-        RegisterDetailedComponent
+        RegisterDetailedComponent,
+        EmployeeWithAccountEditComponent
     ],
     providers: [
         TicketsService,
         BankAccountService,
+    ],
+    entryComponents: [
+        EmployeeWithAccountEditComponent
     ]
 })
 export class TicketsModule {

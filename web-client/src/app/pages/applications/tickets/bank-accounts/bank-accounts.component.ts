@@ -79,7 +79,7 @@ export class BankAccountsComponent implements OnInit {
             }
         }, undefined);
 
-        const postColumn: Column = new Column('employee.post.name', {
+        const postColumn: Column = new Column('employeePost', {
             title: 'Должность',
             type: 'string',
             editable: false,
@@ -89,7 +89,7 @@ export class BankAccountsComponent implements OnInit {
             }
         }, undefined);
 
-        const departmentColumn: Column = new Column('employee.department.name', {
+        const departmentColumn: Column = new Column('employeeDepartment', {
             title: 'Подразделние',
             type: 'string',
             editable: false,
