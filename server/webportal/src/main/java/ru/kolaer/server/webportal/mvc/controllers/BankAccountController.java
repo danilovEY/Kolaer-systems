@@ -6,12 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.BankAccountDto;
-import ru.kolaer.server.webportal.mvc.model.dto.BankAccountFilter;
-import ru.kolaer.server.webportal.mvc.model.dto.BankAccountRequest;
-import ru.kolaer.server.webportal.mvc.model.dto.SortParam;
+import ru.kolaer.server.webportal.mvc.model.dto.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.BankAccountService;
 
 /**
@@ -30,9 +28,19 @@ public class BankAccountController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<BankAccountDto> getAll(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                        @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
-                                       SortParam sortParam,
+                                       BankAccountSort sortParam,
                                        BankAccountFilter filter) {
         return bankAccountService.getAll(sortParam, filter, number, pageSize);
+    }
+
+    @ApiOperation(value = "Получить сотрудников которые имеют счета")
+    @UrlDeclaration(description = "Получить сотрудников которые имеют счета")
+    @RequestMapping(value = "/employees", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<EmployeeDto> getAllEmployees(@RequestParam(value = "page", defaultValue = "0") Integer number,
+                                             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
+                                             EmployeeSort sortParam,
+                                             EmployeeFilter filter) {
+        return bankAccountService.getAllEntityWithAccount(sortParam, filter, number, pageSize);
     }
 
     @ApiOperation(value = "Добавить счет")

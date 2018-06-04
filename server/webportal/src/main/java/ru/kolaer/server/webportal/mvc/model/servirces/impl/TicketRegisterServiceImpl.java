@@ -278,6 +278,10 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
     public TicketDto addTicket(Long regId, RequestTicketDto ticketDto) {
         BankAccountEntity bankAccountEntity = bankAccountDao.findByEmployeeId(ticketDto.getEmployeeId());
 
+        if (bankAccountEntity == null) {
+            throw new NotFoundDataException("Счет для этого сотрудника не найден");
+        }
+
         TicketEntity ticketEntity = new TicketEntity();
         ticketEntity.setRegisterId(regId);
         ticketEntity.setBankAccountId(bankAccountEntity.getId());

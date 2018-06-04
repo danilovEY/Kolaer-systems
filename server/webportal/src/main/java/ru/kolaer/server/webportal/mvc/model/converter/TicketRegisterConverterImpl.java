@@ -164,10 +164,16 @@ public class TicketRegisterConverterImpl implements TicketRegisterConverter {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public TicketDto convertToTicketDto(@NonNull TicketEntity ticketEntity) {
         TicketDto ticketDto = convertToDtoWithOutSubEntity(ticketEntity);
-        ticketDto.setEmployee(employeeConverter.convertToDto(ticketEntity.getBankAccount().getEmployee()));
+
+        Optional.ofNullable(bankAccountDao.findById(ticketEntity.getBankAccountId()))
+                .map(BankAccountEntity::getEmployeeId)
+                .map(employeeDao::findById)
+                .map(employeeConverter::convertToDto)
+                .ifPresent(ticketDto::setEmployee);
+
         return ticketDto;
     }
 

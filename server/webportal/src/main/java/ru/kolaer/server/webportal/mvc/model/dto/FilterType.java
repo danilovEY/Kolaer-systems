@@ -4,5 +4,6 @@ public enum FilterType {
     MORE,
     LESS,
     LIKE,
-    EQUAL
+    EQUAL,
+    IN
 }

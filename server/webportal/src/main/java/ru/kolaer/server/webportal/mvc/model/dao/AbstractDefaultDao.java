@@ -67,7 +67,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
             }
         }
 
-        if(number != null && pageSize != null) {
+        if(number != null && number > 0 && pageSize != null && pageSize > 0) {
             query = query.setFirstResult((number - 1) * pageSize)
                     .setMaxResults(pageSize);
         }
@@ -82,17 +82,18 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
         return " WHERE " + filter.entrySet()
                 .stream()
-                .map(entry -> entry.getValue().getParamName() + filterTypeToString(entry.getValue().getType()) + ":" + entry.getKey())
+                .map(entry -> entry.getValue().getParamName() + filterTypeToString(entry.getValue().getType(), entry.getKey()))
                 .collect(Collectors.joining(" AND "));
     }
 
-    private String filterTypeToString(FilterType type) {
+    private String filterTypeToString(FilterType type, String key) {
         switch (Optional.ofNullable(type).orElse(FilterType.LIKE)) {
-            case MORE: return " < ";
-            case LESS: return " > ";
-            case LIKE: return " LIKE ";
-            case EQUAL: return " = ";
-            default: return " = ";
+            case MORE: return " < :" + key;
+            case LESS: return " > :" + key;
+            case LIKE: return " LIKE :" + key;
+            case EQUAL: return " = :" + key;
+            case IN: return " IN (:" + key + ")";
+            default: return " = :" + key;
         }
     }
 
