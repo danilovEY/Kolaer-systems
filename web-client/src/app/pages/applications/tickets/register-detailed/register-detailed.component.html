@@ -10,7 +10,7 @@
       <nb-card-body>
         <ngx-loading [show]="loadingTickets" ></ngx-loading>
         <custom-table #customTable [columns]="columns" [source]="source"
-                      [actionAdd]="selectedTicketRegister ? true : false" [actionDelete]="true" [actionEdit]="true"
+                      [actionAdd]="false" [actionDelete]="false" [actionEdit]="false"
                       (delete)="delete($event)" (create)="create($event)" (edit)="edit($event)">
         </custom-table>
       </nb-card-body>

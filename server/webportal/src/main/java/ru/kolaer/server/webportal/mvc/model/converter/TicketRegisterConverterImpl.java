@@ -46,6 +46,7 @@ public class TicketRegisterConverterImpl implements TicketRegisterConverter {
         ticketRegisterEntity.setClose(dto.isClose());
         ticketRegisterEntity.setCreateRegister(dto.getCreateRegister());
         ticketRegisterEntity.setSendRegisterTime(dto.getSendRegisterTime());
+        ticketRegisterEntity.setAccountId(dto.getAccountId());
 
         Optional.ofNullable(dto.getAttachment())
                 .map(UploadFileDto::getId)
@@ -69,6 +70,7 @@ public class TicketRegisterConverterImpl implements TicketRegisterConverter {
         oldDto.setClose(newModel.isClose());
         oldDto.setCreateRegister(newModel.getCreateRegister());
         oldDto.setSendRegisterTime(newModel.getSendRegisterTime());
+        oldDto.setAccountId(newModel.getAccountId());
 
         if(newModel.getAttachmentId() != null) {
             Optional.ofNullable(this.uploadFileService.getById(newModel.getAttachmentId()))
@@ -117,6 +119,7 @@ public class TicketRegisterConverterImpl implements TicketRegisterConverter {
         dto.setClose(model.isClose());
         dto.setCreateRegister(model.getCreateRegister());
         dto.setSendRegisterTime(model.getSendRegisterTime());
+        dto.setAccountId(model.getAccountId());
 
         Optional.ofNullable(model.getAttachmentId())
                 .map(UploadFileDto::new)

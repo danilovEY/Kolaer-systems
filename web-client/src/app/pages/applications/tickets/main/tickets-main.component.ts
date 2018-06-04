@@ -62,14 +62,14 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
     isInTime: boolean = false;
     inTime: Date = new Date();
 
+    static currentAccount: SimpleAccountModel;
+
     constructor(private ticketsService: TicketsService,
                 private toasterService: ToasterService,
                 private modalService: NgbModal,
                 private router: Router,
                 private renderer: Renderer2,
                 private accountService: AccountService) {
-        this.source = new TicketsRegisterDataSource(this.ticketsService);
-        this.source.onLoading().subscribe(value => this.loadingRegisters = value);
     }
 
     ngOnInit() {
@@ -124,13 +124,21 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
 
         this.accountService.getCurrentAccount()
             .subscribe((account: SimpleAccountModel) => {
-               if (account && account.accessOit) {
-                   const generateAndDownloadAction: CustomActionModel = new CustomActionModel();
-                   generateAndDownloadAction.name = TicketsMainComponent.generateAndDownloadActionName;
-                   generateAndDownloadAction.content = '<i class="fa fa-download"></i>';
-                   generateAndDownloadAction.description = 'Сформировать отчет и скачать';
-                   this.actions.push(generateAndDownloadAction);
-               }
+                TicketsMainComponent.currentAccount = account;
+
+                if (account && account.accessOit) {
+                    const generateAndDownloadAction: CustomActionModel = new CustomActionModel();
+                    generateAndDownloadAction.name = TicketsMainComponent.generateAndDownloadActionName;
+                    generateAndDownloadAction.content = '<i class="fa fa-download"></i>';
+                    generateAndDownloadAction.description = 'Сформировать отчет и скачать';
+                    this.actions.push(generateAndDownloadAction);
+
+                    this.customTable.settings.actions.delete = true;
+                    this.customTable.table.initGrid();
+                }
+
+                this.source = new TicketsRegisterDataSource(this.ticketsService);
+                this.source.onLoading().subscribe(value => this.loadingRegisters = value);
             });
 
         const generateAndSendAction: CustomActionModel = new CustomActionModel();
@@ -139,7 +147,6 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
         generateAndSendAction.description = 'Сформировать отчет и отправить';
 
         this.actions.push(generateAndSendAction);
-
 
         this.customTable.actionBeforeValueView = this.actionBeforeValueView;
     }
@@ -162,12 +169,18 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
             } else {
                 this.send = false;
                 this.selectedTicketRegister = event.data;
-                this.confirmToSendModal = this.modalService.open(this.generateReportModalElement, {size: 'lg', container: 'nb-layout'});
+                this.confirmToSendModal = this.modalService.open(this.generateReportModalElement, {
+                    size: 'lg',
+                    container: 'nb-layout'
+                });
             }
         } else if (event.action.name === TicketsMainComponent.generateAndSendActionName) {
             this.send = true;
             this.selectedTicketRegister = event.data;
-            this.confirmToSendModal = this.modalService.open(this.generateReportModalElement, {size: 'lg', container: 'nb-layout'});
+            this.confirmToSendModal = this.modalService.open(this.generateReportModalElement, {
+                size: 'lg',
+                container: 'nb-layout'
+            });
         } else if (event.action.name === TicketsMainComponent.openRegisterActionName) {
             this.selectedTicketRegister = event.data;
             this.router.navigate([`/pages/app/tickets/register/${event.data.id}`]);
@@ -176,7 +189,9 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
 
     actionBeforeValueView(event: CustomActionEventModel<TicketRegisterModel>): boolean {
         if (event.action.name === TicketsMainComponent.generateAndSendActionName) {
-           return event.data.sendRegisterTime !== undefined;
+            return (TicketsMainComponent.currentAccount && TicketsMainComponent.currentAccount.accessOit ||
+                TicketsMainComponent.currentAccount && event.data.accountId &&
+                event.data.accountId === TicketsMainComponent.currentAccount.id && !event.data.close)
         }
 
         if (event.action.name === TicketsMainComponent.generateAndDownloadActionName && event.data.attachment) {
@@ -235,7 +250,10 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
     }
 
     openCreateRegisterModal() {
-        this.createRegisterModal = this.modalService.open(this.createRegisterModalElement, {size: 'lg', container: 'nb-layout'});
+        this.createRegisterModal = this.modalService.open(this.createRegisterModalElement, {
+            size: 'lg',
+            container: 'nb-layout'
+        });
     }
 
     createRegisterSubmit() {

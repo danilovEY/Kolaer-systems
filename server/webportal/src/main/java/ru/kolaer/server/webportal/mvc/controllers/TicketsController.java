@@ -59,8 +59,10 @@ public class TicketsController {
     @UrlDeclaration(description = "Получить все реестры талонов")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<TicketRegisterDto> getAllRegister(@RequestParam(value = "page", defaultValue = "0") Integer number,
-                                                     @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-            return this.ticketRegisterService.getAll(number, pageSize);
+                                                  @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
+                                                  RegisterTicketSort sortParam,
+                                                  RegisterTicketFilter ticketFilter) {
+            return this.ticketRegisterService.getAll(sortParam, ticketFilter, number, pageSize);
     }
 
     @ApiOperation(value = "Добавить все аккаунты в реестр")

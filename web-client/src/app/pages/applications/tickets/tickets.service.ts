@@ -9,8 +9,10 @@ import {CreateTicketsConfigModel} from './create-tickets-config.model';
 import {TicketModel} from './ticket.model';
 import {TicketsFilterModel} from './tickets-filter.model';
 import {TicketsSortModel} from './tickets-sort.model';
-import {BaseService} from "../../../@core/services/base.service";
-import {TicketRequestModel} from "./ticket-request.model";
+import {BaseService} from '../../../@core/services/base.service';
+import {TicketRequestModel} from './ticket-request.model';
+import {RegisterTicketsSortModel} from './register-tickets-sort.model';
+import {RegisterTicketsFilterModel} from './register-tickets-filter.model';
 
 @Injectable()
 export class TicketsService extends BaseService {
@@ -21,11 +23,13 @@ export class TicketsService extends BaseService {
         super();
     }
 
-    getAllTicketRegisters(page: number = 1, pageSize: number = 15): Observable<Page<TicketRegisterModel>> {
+    getAllTicketRegisters(sort?: RegisterTicketsSortModel, filter?: RegisterTicketsFilterModel,
+                          page: number = 1, pageSize: number = 15): Observable<Page<TicketRegisterModel>> {
         let params = new HttpParams();
 
         params = params.append('page', page.toString());
         params = params.append('pagesize', pageSize.toString());
+        params = this.getSortAndFilterParam(params, sort, filter);
 
         return this.http.get<Page<TicketRegisterModel>>(this.getAllTicketRegister, {params: params});
     }
@@ -103,8 +107,6 @@ export class TicketsService extends BaseService {
         ticketRequest.count = ticket.count;
         ticketRequest.type = ticket.type;
         ticketRequest.employeeId = ticket.employee.id;
-
-        console.log(ticketRequest);
 
         return this.http.post<TicketModel>(url, ticketRequest);
     }

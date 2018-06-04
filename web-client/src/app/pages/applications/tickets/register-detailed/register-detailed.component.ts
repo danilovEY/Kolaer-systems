@@ -11,11 +11,12 @@ import {TicketsDataSource} from './tickents.data-source';
 import {Subscription} from 'rxjs/Subscription';
 import {Cell} from 'ng2-smart-table';
 import {Utils} from '../../../../@core/utils/utils';
-import {EmployeeModel} from '../../../../@core/models/employee.model';
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {TicketModel} from '../ticket.model';
 import {TypeOperationEnum} from "../main/type-operation.enum";
 import {EmployeeWithAccountEditComponent} from "./employee-with-account-edit.component";
+import {AccountService} from "../../../../@core/services/account.service";
+import {SimpleAccountModel} from "../../../../@core/models/simple-account.model";
 
 @Component({
     selector: 'register-detailed',
@@ -45,6 +46,7 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
 
     constructor(private ticketsService: TicketsService,
                 private toasterService: ToasterService,
+                private accountService: AccountService,
                 private activatedRoute: ActivatedRoute) {
         this.sub = this.activatedRoute.params.subscribe(params => {
             this.registerId = params['id'];
@@ -59,8 +61,18 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
         this.ticketsService.getTicketRegister(this.registerId)
             .subscribe((response: TicketRegisterModel) => {
                 this.selectedTicketRegister = response;
-                this.customTable.settings.actions.add = true;
-                this.customTable.table.initGrid();
+
+                this.accountService.getCurrentAccount()
+                    .subscribe((account: SimpleAccountModel) => {
+                        if (account.accessOit ||
+                            account.id === this.selectedTicketRegister.accountId && !this.selectedTicketRegister.close) {
+                            this.customTable.settings.actions.add = true;
+                            this.customTable.settings.actions.edit = true;
+                            this.customTable.settings.actions.delete = true;
+
+                            this.customTable.table.initGrid();
+                        }
+                    });
 
                 this.source = new TicketsDataSource(this.registerId, this.ticketsService);
                 this.source.onLoading().subscribe(value => this.loadingTickets = value);
@@ -73,9 +85,20 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
             addable: false,
         }, undefined);
 
-        const typeOperationColumn: Column = new Column('type', {
+        const typeOperationColumn: Column = new Column('typeOperation', {
             title: 'Операция',
             type: 'string',
+            filter: {
+                type: 'list',
+                config: {
+                    selectText: 'Операция...',
+                    list: [
+                        { value: Utils.keyFromValue(TypeOperationEnum, TypeOperationEnum.DR), title: TypeOperationEnum.DR },
+                        { value: Utils.keyFromValue(TypeOperationEnum, TypeOperationEnum.CR), title: TypeOperationEnum.CR },
+                        { value: Utils.keyFromValue(TypeOperationEnum, TypeOperationEnum.ZR), title: TypeOperationEnum.ZR },
+                    ],
+                },
+            },
             editor: {
                 type: 'list',
                 config: {
@@ -86,8 +109,8 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
                     ],
                 },
             },
-            valuePrepareFunction(value: TypeOperationEnum) {
-                return TypeOperationEnum[value];
+            valuePrepareFunction(a: any, value: TicketModel, cell: Cell) {
+                return TypeOperationEnum[value.type];
             }
         }, undefined);
 
@@ -96,21 +119,15 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
             type: 'number',
         }, undefined);
 
-        const employeeColumn: Column = new Column('employee', {
+        const employeeColumn: Column = new Column('employeeInitials', {
             title: 'Сотрудник',
             type: 'string',
             editor: {
                 type: 'custom',
                 component: EmployeeWithAccountEditComponent,
             },
-            valuePrepareFunction(value: EmployeeModel) {
-                return value.initials;
-            },
-            filterFunction(value: EmployeeModel, search: string) {
-                return Utils.filter(value.initials, search);
-            },
-            compareFunction(dir: number, a: EmployeeModel, b: EmployeeModel) {
-                return Utils.compare(dir, a.initials, b.initials);
+            valuePrepareFunction(a: any, value: TicketModel, cell: Cell) {
+                return value.employee.initials;
             }
         }, undefined);
 

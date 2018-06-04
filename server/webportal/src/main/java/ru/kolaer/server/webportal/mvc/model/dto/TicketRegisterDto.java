@@ -15,4 +15,5 @@ public class TicketRegisterDto implements BaseDto {
     private LocalDateTime createRegister;
     private LocalDateTime sendRegisterTime;
     private UploadFileDto attachment;
+    private Long accountId;
 }

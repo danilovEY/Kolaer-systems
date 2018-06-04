@@ -5,7 +5,8 @@
         <nb-card>
             <nb-card-header>
                 <span>История реестров с талонами</span>
-                <button class="btn btn-primary" type="button"
+                <button *ngIf="currentAccount && currentAccount.accessOit"
+                        class="btn btn-primary" type="button"
                         (click)="openCreateRegisterModal()"
                         nbPopover="Добавить реест с талонами для всех счетов"
                         nbPopoverMode="hint"
@@ -17,7 +18,7 @@
             <nb-card-body>
                 <ngx-loading [show]="loadingRegisters" ></ngx-loading>
                 <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
-                              [actionAdd]="true" [actionDelete]="true" [actionEdit]="false"
+                              [actionAdd]="true" [actionDelete]="false" [actionEdit]="false"
                               (delete)="delete($event)" (create)="create($event)" (action)="action($event)">
                 </custom-table>
             </nb-card-body>

@@ -208,11 +208,13 @@ public abstract class AbstractDefaultService<T extends BaseDto,
                         String typeFiled = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 
                         try {
-                            Optional.ofNullable(filterParamClass.getDeclaredField("type" + typeFiled))
+                            FilterType filterType = Optional.ofNullable(filterParamClass.getDeclaredField("type" + typeFiled))
                                     .map(Field::getName)
                                     .map(name -> FieldUtils.getProtectedFieldValue(name, filterParam))
                                     .map(type -> (FilterType) type)
-                                    .ifPresent(filterValue::setType);
+                                    .orElse(FilterType.LIKE);
+
+                            filterValue.setType(filterType);
                         } catch (Throwable ignored) { }
 
                         params.put(fieldName, filterValue);

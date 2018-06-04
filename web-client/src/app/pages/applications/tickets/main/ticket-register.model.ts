@@ -6,5 +6,6 @@ export class TicketRegisterModel extends BaseModel {
     public createRegister: Date;
     public sendRegisterTime: Date;
     public attachment: UploadFileModel;
+    public accountId: number;
 
 }

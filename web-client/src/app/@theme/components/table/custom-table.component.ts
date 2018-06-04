@@ -112,7 +112,7 @@ export class CustomTableComponent implements OnInit {
             this.settings.columns[col.id] = col;
             this.settings.columns[col.id].editable = col.isEditable; // BAD API table
             this.settings.columns[col.id].addable = col.isAddable;   //
-            this.settings.columns[col.id].filter = col.isFilterable; //
+            this.settings.columns[col.id].filter = col.isFilterable ? col.filter : false; //
             this.settings.columns[col.id].sort = col.isSortable;     //
         }
     }

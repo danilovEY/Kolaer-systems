@@ -48,7 +48,7 @@ export class EmployeeEditComponent extends DefaultEditor implements OnInit {
             distinctUntilChanged(),
             tap(() => this.people3Loading = true),
             switchMap(term => this.employeeService
-                .getAllEmployees(new EmployeeSortModel(null, SortTypeEnum.ASC), new EmployeeFilterModel(null, `%${term}%`), 0, 0)
+                .getAllEmployees(new EmployeeSortModel(null, SortTypeEnum.ASC), new EmployeeFilterModel(null, term), 0, 0)
                 .map((request: Page<EmployeeModel>) => request.data)
                 .pipe(
                 catchError(() => of([])),

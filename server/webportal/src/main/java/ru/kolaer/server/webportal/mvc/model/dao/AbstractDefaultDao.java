@@ -63,7 +63,11 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
         if(!StringUtils.isEmpty(queryFilter)) {
             for (Map.Entry<String, FilterValue> entry : filter.entrySet()) {
-                query = query.setParameter(entry.getKey(), entry.getValue().getValue());
+                if(entry.getValue().getType() != null && entry.getValue().getType() == FilterType.LIKE) {
+                    query = query.setParameter(entry.getKey(), "%" + entry.getValue().getValue().toString() + "%");
+                } else {
+                    query = query.setParameter(entry.getKey(), entry.getValue().getValue());
+                }
             }
         }
 
