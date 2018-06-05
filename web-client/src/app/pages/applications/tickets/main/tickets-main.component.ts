@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {CustomTableComponent} from '../../../../@theme/components';
-import {DatePipe} from '@angular/common';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 import {TicketsRegisterDataSource} from './tickents-register.data-source';
@@ -233,11 +232,14 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
 
     generateReportAndSend() {
         if (this.selectedTicketRegister) {
-            const datePipe = new DatePipe('en-US');
             const config: ReportTicketsConfigModel =
-                new ReportTicketsConfigModel(!this.isInTime, datePipe.transform(this.inTime, 'yyyy-MM-dd\'T\'HH:mm:ss'));
+                new ReportTicketsConfigModel(!this.isInTime, Utils.getDateTimeToSend(this.inTime));
+
+            this.loadingRegisters = true;
+
             if (this.send) {
                 this.ticketsService.generateAndSendReport(this.selectedTicketRegister.id, config)
+                    .finally(() => this.loadingRegisters = false)
                     .subscribe((value: TicketRegisterModel) => {
                         this.source.update(this.selectedTicketRegister, value);
 
@@ -251,6 +253,7 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
                     });
             } else {
                 this.ticketsService.generateReportAndDownloadUrl(this.selectedTicketRegister.id, config)
+                    .finally(() => this.loadingRegisters = false)
                     .subscribe((value: TicketRegisterModel) => {
                         this.source.update(this.selectedTicketRegister, value);
 
