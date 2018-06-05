@@ -2,8 +2,10 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.BankAccountConverter;
 import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
@@ -36,6 +38,14 @@ public class BankAccountServiceImpl
     @Override
     @Transactional
     public BankAccountDto add(BankAccountRequest bankAccountRequest) {
+        if (StringUtils.isEmpty(bankAccountRequest.getCheck())) {
+            throw new UnexpectedRequestParams("Счет не должен быть пустым");
+        }
+
+        if (defaultEntityDao.findByCheck(bankAccountRequest.getCheck()).isPresent()) {
+            throw new UnexpectedRequestParams("Такой счет уже существует");
+        }
+
         BankAccountEntity bankAccountEntity = new BankAccountEntity();
         bankAccountEntity.setCheck(bankAccountRequest.getCheck());
         bankAccountEntity.setEmployeeId(bankAccountRequest.getEmployeeId());
@@ -46,7 +56,17 @@ public class BankAccountServiceImpl
     @Override
     @Transactional
     public BankAccountDto update(Long bankId, BankAccountRequest bankAccountRequest) {
+        if (StringUtils.isEmpty(bankAccountRequest.getCheck())) {
+            throw new UnexpectedRequestParams("Счет не должен быть пустым");
+        }
+
         BankAccountEntity bankAccountEntity = defaultEntityDao.findById(bankId);
+
+        if (!bankAccountEntity.getCheck().equals(bankAccountRequest.getCheck()) &&
+                defaultEntityDao.findByCheck(bankAccountRequest.getCheck()).isPresent()) {
+            throw new UnexpectedRequestParams("Такой счет уже существует");
+        }
+
         bankAccountEntity.setEmployeeId(bankAccountRequest.getEmployeeId());
         bankAccountEntity.setCheck(bankAccountRequest.getCheck());
 

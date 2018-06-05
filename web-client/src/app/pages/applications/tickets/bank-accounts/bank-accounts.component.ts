@@ -1,11 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {CustomTableComponent} from '../../../../@theme/components';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
-import {ToasterConfig} from 'angular2-toaster';
+import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
 import {AccountService} from '../../../../@core/services/account.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BankAccountDataSource} from './bank-account.data-source';
 import {BankAccountService} from './bank-account.service';
 import {BankAccountModel} from './bank-account.model';
@@ -16,6 +15,8 @@ import {EmployeeEditComponent} from '../../../../@theme/components/table/employe
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {BankAccountRequestModel} from './bank-account-request.model';
 import {Utils} from '../../../../@core/utils/utils';
+import {HttpErrorResponse} from "@angular/common/http";
+import {ServerExceptionModel} from "../../../../@core/models/server-exception.model";
 
 @Component({
     selector: 'bank-accounts',
@@ -41,7 +42,7 @@ export class BankAccountsComponent implements OnInit {
 
     constructor(private bankAccountService: BankAccountService,
                 private employeeService: EmployeeService,
-                private modalService: NgbModal,
+                private toasterService: ToasterService,
                 private accountService: AccountService) {
         this.source = new BankAccountDataSource(this.bankAccountService);
         this.source.onLoading().subscribe(value => this.loadingBankAccounts = value);
@@ -105,7 +106,20 @@ export class BankAccountsComponent implements OnInit {
     delete(event: TableEventDeleteModel<BankAccountModel>) {
         if (confirm(`Вы действительно хотите удалить счет: ${event.data.check}?`)) {
             this.bankAccountService.deleteBankAccount(event.data.id)
-                .subscribe(request => event.confirm.resolve());
+                .subscribe(request => event.confirm.resolve(),
+                    (errorResponse: HttpErrorResponse) => {
+                        event.confirm.reject();
+
+                        const error: ServerExceptionModel = errorResponse.error;
+
+                        const toast: Toast = {
+                            type: 'error',
+                            title: 'Ошибка',
+                            body: error.message,
+                        };
+
+                        this.toasterService.popAsync(toast);
+                    });
         } else {
             event.confirm.reject();
         }
@@ -117,7 +131,20 @@ export class BankAccountsComponent implements OnInit {
         bankAccount.employeeId = event.newData.employee.id;
 
         this.bankAccountService.addBankAccount(bankAccount)
-            .subscribe((request: BankAccountModel) => event.confirm.resolve(request));
+            .subscribe((request: BankAccountModel) => event.confirm.resolve(request),
+                (errorResponse: HttpErrorResponse) => {
+                    event.confirm.reject();
+
+                    const error: ServerExceptionModel = errorResponse.error;
+
+                    const toast: Toast = {
+                        type: 'error',
+                        title: 'Ошибка',
+                        body: error.message,
+                    };
+
+                    this.toasterService.popAsync(toast);
+                });
     }
 
     edit(event: TableEventEditModel<BankAccountModel>) {
@@ -126,6 +153,19 @@ export class BankAccountsComponent implements OnInit {
         bankAccount.employeeId = event.newData.employee.id;
 
         this.bankAccountService.editBankAccount(event.data.id, bankAccount)
-            .subscribe((request: BankAccountModel) => event.confirm.resolve(request));
+            .subscribe((request: BankAccountModel) => event.confirm.resolve(request),
+                (errorResponse: HttpErrorResponse) => {
+                    event.confirm.reject();
+
+                    const error: ServerExceptionModel = errorResponse.error;
+
+                    const toast: Toast = {
+                        type: 'error',
+                        title: 'Ошибка',
+                        body: error.message,
+                    };
+
+                    this.toasterService.popAsync(toast);
+                });
     }
 }

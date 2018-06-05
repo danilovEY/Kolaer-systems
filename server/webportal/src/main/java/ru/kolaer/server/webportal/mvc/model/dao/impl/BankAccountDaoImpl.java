@@ -7,6 +7,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 04.04.2017.
@@ -50,5 +51,13 @@ public class BankAccountDaoImpl extends AbstractDefaultDao<BankAccountEntity> im
         return getSession()
                 .createQuery("SELECT (employeeId) FROM " + getEntityName(), Long.class)
                 .list();
+    }
+
+    @Override
+    public Optional<BankAccountEntity> findByCheck(String check) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " b WHERE b.check = :check", BankAccountEntity.class)
+                .setParameter("check", check)
+                .uniqueResultOptional();
     }
 }
