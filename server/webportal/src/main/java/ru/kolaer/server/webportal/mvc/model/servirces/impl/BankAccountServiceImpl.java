@@ -15,6 +15,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.BankAccountService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -76,7 +77,7 @@ public class BankAccountServiceImpl
     @Override
     @Transactional(readOnly = true)
     public Page<EmployeeDto> getAllEntityWithAccount(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize) {
-        Map<String, FilterValue> filtersForEmployee = getFilters(filterParam);
+        Map<String, FilterValue> filtersForEmployee = new HashMap<>();
         filtersForEmployee.put("deleted", new FilterValue("deleted", false, FilterType.EQUAL));
 
         List<Long> allEmployeeIds = this.defaultEntityDao.findAllEmployeeIds(filtersForEmployee);
