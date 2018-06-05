@@ -1,8 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
+import ru.kolaer.server.webportal.mvc.model.dto.FilterValue;
 import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -14,7 +16,7 @@ public interface BankAccountDao extends DefaultDao<BankAccountEntity> {
 
     BankAccountEntity findByEmployeeId(Long employeeId);
 
-    List<Long> findAllEmployeeIds();
+    List<Long> findAllEmployeeIds(Map<String, FilterValue> filters);
 
     Optional<BankAccountEntity> findByCheck(String check);
 }

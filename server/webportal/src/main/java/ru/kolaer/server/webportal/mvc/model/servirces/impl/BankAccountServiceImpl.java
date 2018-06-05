@@ -76,12 +76,16 @@ public class BankAccountServiceImpl
     @Override
     @Transactional(readOnly = true)
     public Page<EmployeeDto> getAllEntityWithAccount(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize) {
-        List<Long> allEmployeeIds = this.defaultEntityDao.findAllEmployeeIds();
+        Map<String, FilterValue> filtersForEmployee = getFilters(filterParam);
+        filtersForEmployee.put("deleted", new FilterValue("deleted", false, FilterType.EQUAL));
+
+        List<Long> allEmployeeIds = this.defaultEntityDao.findAllEmployeeIds(filtersForEmployee);
 
         Map<String, FilterValue> filters = getFilters(filterParam);
-        SortField sort = getSortField(sortParam);
         filters.put("ids", new FilterValue("id", allEmployeeIds, FilterType.IN));
-        filters.put("deleted", new FilterValue("deleted", false, FilterType.EQUAL));
+
+        SortField sort = getSortField(sortParam);
+
 
         Long employeeCount = employeeDao.findAllCount(filters);
         List<EmployeeDto> employeeAll = employeeConverter.convertToDto(employeeDao.findAll(sort, filters, number, pageSize));

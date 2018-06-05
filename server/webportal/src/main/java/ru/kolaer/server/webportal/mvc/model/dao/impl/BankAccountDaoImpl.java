@@ -1,12 +1,15 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
+import ru.kolaer.server.webportal.mvc.model.dto.FilterValue;
 import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -47,10 +50,13 @@ public class BankAccountDaoImpl extends AbstractDefaultDao<BankAccountEntity> im
     }
 
     @Override
-    public List<Long> findAllEmployeeIds() {
-        return getSession()
-                .createQuery("SELECT (employeeId) FROM " + getEntityName(), Long.class)
-                .list();
+    public List<Long> findAllEmployeeIds(Map<String, FilterValue> filtersForEmployee) {
+        String queryFilter = filtersToString(filtersForEmployee);
+
+        Query<Long> query = getSession()
+                .createQuery("SELECT (employeeId) FROM " + getEntityName() + " " + queryFilter, Long.class);
+
+        return setParams(query, filtersForEmployee).list();
     }
 
     @Override

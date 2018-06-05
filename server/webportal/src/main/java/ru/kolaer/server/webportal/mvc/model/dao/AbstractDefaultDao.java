@@ -61,15 +61,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
         Query<T> query = getSession().createQuery("FROM " + getEntityName() +
                 queryFilter + " " + queryOrderBy, getEntityClass());
 
-        if(!StringUtils.isEmpty(queryFilter)) {
-            for (Map.Entry<String, FilterValue> entry : filter.entrySet()) {
-                if(entry.getValue().getType() != null && entry.getValue().getType() == FilterType.LIKE) {
-                    query = query.setParameter(entry.getKey(), "%" + entry.getValue().getValue().toString() + "%");
-                } else {
-                    query = query.setParameter(entry.getKey(), entry.getValue().getValue());
-                }
-            }
-        }
+        query = setParams(query, filter);
 
         if(number != null && number > 0 && pageSize != null && pageSize > 0) {
             query = query.setFirstResult((number - 1) * pageSize)
@@ -79,7 +71,19 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
         return query.list();
     }
 
-    private String filtersToString(Map<String, FilterValue> filter) {
+    protected <R> Query<R> setParams(Query<R> query, Map<String, FilterValue> filter) {
+        for (Map.Entry<String, FilterValue> entry : filter.entrySet()) {
+            if(entry.getValue().getType() != null && entry.getValue().getType() == FilterType.LIKE) {
+                query = query.setParameter(entry.getKey(), "%" + entry.getValue().getValue().toString() + "%");
+            } else {
+                query = query.setParameter(entry.getKey(), entry.getValue().getValue());
+            }
+        }
+
+        return query;
+    }
+
+    protected String filtersToString(Map<String, FilterValue> filter) {
         if(CollectionUtils.isEmpty(filter)) {
             return "";
         }
