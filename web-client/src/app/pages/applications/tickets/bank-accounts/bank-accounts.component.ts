@@ -103,8 +103,12 @@ export class BankAccountsComponent implements OnInit {
     }
 
     delete(event: TableEventDeleteModel<BankAccountModel>) {
-       this.bankAccountService.deleteBankAccount(event.data.id)
-           .subscribe(request => event.confirm.resolve());
+        if (confirm(`Вы действительно хотите удалить счет: ${event.data.check}?`)) {
+            this.bankAccountService.deleteBankAccount(event.data.id)
+                .subscribe(request => event.confirm.resolve());
+        } else {
+            event.confirm.reject();
+        }
     }
 
     create(event: TableEventAddModel<BankAccountModel>) {
