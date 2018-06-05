@@ -20,6 +20,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {CreateTicketsConfigModel} from '../model/create-tickets-config.model';
 import {Router} from "@angular/router";
 import {Utils} from "../../../../@core/utils/utils";
+import {ServerExceptionModel} from "../../../../@core/models/server-exception.model";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
     selector: 'main-tickets',
@@ -131,10 +133,8 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
                     generateAndDownloadAction.name = TicketsMainComponent.generateAndDownloadActionName;
                     generateAndDownloadAction.content = '<i class="fa fa-download"></i>';
                     generateAndDownloadAction.description = 'Сформировать отчет и скачать';
-                    this.actions.push(generateAndDownloadAction);
 
-                    this.customTable.settings.actions.delete = true;
-                    this.customTable.table.initGrid();
+                    this.actions.push(generateAndDownloadAction);
                 }
 
                 this.source = new TicketsRegisterDataSource(this.ticketsService);
@@ -152,13 +152,43 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
     }
 
     delete(event: TableEventDeleteModel<TicketRegisterModel>) {
-        this.ticketsService.deleteTicketRegister(event.data.id)
-            .subscribe(response => event.confirm.resolve());
+        if (confirm(`Вы действительно хотите удалить реестр талонов за ${Utils.getDateTimeFormat(event.data.createRegister)}`)) {
+            this.ticketsService.deleteTicketRegister(event.data.id)
+                .subscribe(response => event.confirm.resolve(),
+                    (errorResponse: HttpErrorResponse) => {
+                        event.confirm.reject();
+
+                        const error: ServerExceptionModel = errorResponse.error;
+
+                        const toast: Toast = {
+                            type: 'error',
+                            title: 'Ошибка',
+                            body: error.message,
+                        };
+
+                        this.toasterService.popAsync(toast);
+                    });
+        } else {
+            event.confirm.reject();
+        }
     }
 
     create(event: TableEventAddModel<TicketRegisterModel>) {
         this.ticketsService.createTicketRegisterEmpty()
-            .subscribe((response: TicketRegisterModel) => event.confirm.resolve(response));
+            .subscribe((response: TicketRegisterModel) => event.confirm.resolve(response),
+                (errorResponse: HttpErrorResponse) => {
+                    event.confirm.reject();
+
+                    const error: ServerExceptionModel = errorResponse.error;
+
+                    const toast: Toast = {
+                        type: 'error',
+                        title: 'Ошибка',
+                        body: error.message,
+                    };
+
+                    this.toasterService.popAsync(toast);
+                });
     }
 
     action(event: CustomActionEventModel<TicketRegisterModel>) {
