@@ -15,9 +15,9 @@ import {UploadFileModel} from '../../../../@core/models/upload-file.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {ReportTicketsConfigModel} from '../report-tickets-config.model';
+import {ReportTicketsConfigModel} from '../model/report-tickets-config.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {CreateTicketsConfigModel} from '../create-tickets-config.model';
+import {CreateTicketsConfigModel} from '../model/create-tickets-config.model';
 import {Router} from "@angular/router";
 import {Utils} from "../../../../@core/utils/utils";
 

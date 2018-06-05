@@ -1,4 +1,4 @@
-import {SortTypeEnum} from '../../../@core/models/sort-type.enum';
+import {SortTypeEnum} from '../../../../@core/models/sort-type.enum';
 
 export class TicketsSortModel {
     constructor(public sortId?: SortTypeEnum,

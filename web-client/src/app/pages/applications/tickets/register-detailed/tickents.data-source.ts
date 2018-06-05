@@ -1,9 +1,9 @@
 import {CustomDataSource} from '../../../../@core/models/custom.data-source';
 import {TicketsService} from '../tickets.service';
 import {Page} from '../../../../@core/models/page.model';
-import {TicketModel} from '../ticket.model';
-import {TicketsFilterModel} from '../tickets-filter.model';
-import {TicketsSortModel} from "../tickets-sort.model";
+import {TicketModel} from '../model/ticket.model';
+import {TicketsFilterModel} from '../model/tickets-filter.model';
+import {TicketsSortModel} from "../model/tickets-sort.model";
 
 export class TicketsDataSource extends CustomDataSource<TicketModel> {
 

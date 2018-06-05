@@ -4,15 +4,15 @@ import {Observable} from 'rxjs/Observable';
 import {TicketRegisterModel} from './main/ticket-register.model';
 import {Page} from '../../../@core/models/page.model';
 import {environment} from '../../../../environments/environment';
-import {ReportTicketsConfigModel} from './report-tickets-config.model';
-import {CreateTicketsConfigModel} from './create-tickets-config.model';
-import {TicketModel} from './ticket.model';
-import {TicketsFilterModel} from './tickets-filter.model';
-import {TicketsSortModel} from './tickets-sort.model';
+import {ReportTicketsConfigModel} from './model/report-tickets-config.model';
+import {CreateTicketsConfigModel} from './model/create-tickets-config.model';
+import {TicketModel} from './model/ticket.model';
+import {TicketsFilterModel} from './model/tickets-filter.model';
+import {TicketsSortModel} from './model/tickets-sort.model';
 import {BaseService} from '../../../@core/services/base.service';
-import {TicketRequestModel} from './ticket-request.model';
-import {RegisterTicketsSortModel} from './register-tickets-sort.model';
-import {RegisterTicketsFilterModel} from './register-tickets-filter.model';
+import {TicketRequestModel} from './model/ticket-request.model';
+import {RegisterTicketsSortModel} from './model/register-tickets-sort.model';
+import {RegisterTicketsFilterModel} from './model/register-tickets-filter.model';
 
 @Injectable()
 export class TicketsService extends BaseService {

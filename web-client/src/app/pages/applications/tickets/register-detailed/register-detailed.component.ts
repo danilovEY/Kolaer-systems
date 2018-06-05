@@ -12,7 +12,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Cell} from 'ng2-smart-table';
 import {Utils} from '../../../../@core/utils/utils';
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
-import {TicketModel} from '../ticket.model';
+import {TicketModel} from '../model/ticket.model';
 import {TypeOperationEnum} from "../main/type-operation.enum";
 import {EmployeeWithAccountEditComponent} from "./employee-with-account-edit.component";
 import {AccountService} from "../../../../@core/services/account.service";
