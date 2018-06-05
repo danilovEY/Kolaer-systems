@@ -8,6 +8,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntit
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 30.11.2016.
@@ -65,11 +66,10 @@ public class TicketRegisterDaoImpl extends AbstractDefaultDao<TicketRegisterEnti
     }
 
     @Override
-    public TicketRegisterEntity findIncludeAllOnLastMonth() {
+    public Optional<TicketRegisterEntity> findIncludeAllOnLastMonth() {
         return getSession()
                 .createQuery("FROM " + getEntityName() +
                         " tr WHERE tr.includeAll = TRUE AND MONTH(tr.createRegister) = MONTH(CURRENT_TIMESTAMP)", getEntityClass())
-                .uniqueResultOptional()
-                .orElse(null);
+                .uniqueResultOptional();
     }
 }

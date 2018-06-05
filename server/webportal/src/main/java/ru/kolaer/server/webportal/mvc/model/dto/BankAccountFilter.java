@@ -8,6 +8,9 @@ public class BankAccountFilter implements FilterParam {
     private Long filterId;
     @EntityFieldName(name = "check")
     private String filterCheck;
+    @EntityFieldName(name = "deleted")
+    private Boolean filterDeleted;
+    private FilterType typeFilterDeleted = FilterType.EQUAL;
     @EntityFieldName(name = "employee.initials")
     private String filterEmployee;
     @EntityFieldName(name = "employee.post.name")

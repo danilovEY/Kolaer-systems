@@ -1,8 +1,9 @@
 export class BankAccountFilterModel {
     constructor(public filterId?: number,
-                private filterCheck?: string,
-                private filterEmployeeInitials?: string,
-                private filterEmployeePost?: string,
-                private filterEmployeeDepartment?: string) {
+                public filterCheck?: string,
+                public filterDeleted: boolean = false,
+                public filterEmployeeInitials?: string,
+                public filterEmployeePost?: string,
+                public filterEmployeeDepartment?: string) {
     }
 }

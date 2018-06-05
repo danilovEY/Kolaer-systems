@@ -80,8 +80,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
                     || end.getDayOfWeek().getValue() == 6 ? 6 :  end.getDayOfMonth();
 
             if (now.getDayOfMonth() == lastDay) {
-                TicketRegisterEntity ticketRegisterEntity = this.defaultEntityDao.findIncludeAllOnLastMonth();
-                if(ticketRegisterEntity == null) {
+                if(this.defaultEntityDao.findIncludeAllOnLastMonth().isPresent()) {
                     TicketRegisterDto ticketRegisterDto = createRegisterForAllAccounts(new GenerateTicketRegister(TypeOperation.DR, 25));
 
                     LocalDateTime localDateTimeToExecute = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 10).plusMonths(1);
@@ -99,7 +98,12 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
             throw new UnexpectedRequestParams("Все параметры обязательны");
         }
 
-        List<BankAccountEntity> allBankAccount = this.bankAccountDao.findAll();
+        BankAccountFilter bankAccountFilter = new BankAccountFilter();
+        bankAccountFilter.setFilterDeleted(Boolean.FALSE);
+
+        Map<String, FilterValue> filters = getFilters(bankAccountFilter);
+
+        List<BankAccountEntity> allBankAccount = this.bankAccountDao.findAll(null, filters);
 
         TicketRegisterEntity ticketRegisterEntity = defaultEntityDao.findById(regId);
         ticketRegisterEntity.setIncludeAll(true);

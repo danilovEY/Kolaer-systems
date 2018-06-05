@@ -61,10 +61,21 @@ public class BankAccountServiceImpl
         Map<String, FilterValue> filters = getFilters(filterParam);
         SortField sort = getSortField(sortParam);
         filters.put("ids", new FilterValue("id", allEmployeeIds, FilterType.IN));
+        filters.put("deleted", new FilterValue("deleted", false, FilterType.EQUAL));
 
         Long employeeCount = employeeDao.findAllCount(filters);
         List<EmployeeDto> employeeAll = employeeConverter.convertToDto(employeeDao.findAll(sort, filters, number, pageSize));
 
         return new Page<>(employeeAll, number, employeeCount, pageSize);
+    }
+
+    @Override
+    @Transactional
+    public long delete(Long id) {
+        BankAccountEntity bankAccountEntity = defaultEntityDao.findById(id);
+        bankAccountEntity.setDeleted(true);
+
+        defaultEntityDao.update(bankAccountEntity);
+        return 1;
     }
 }

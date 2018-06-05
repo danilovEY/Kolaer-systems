@@ -32,4 +32,12 @@
         <renameColumn tableName="bank_account" oldColumnName="check" newColumnName="account_check" columnDataType="VARCHAR(16)"/>
     </changeSet>
 
+    <changeSet id="19-3" author="Danilov">
+        <addColumn tableName="bank_account">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

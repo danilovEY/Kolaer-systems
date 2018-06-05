@@ -30,4 +30,7 @@ public class BankAccountEntity implements BaseEntity {
 
     @Column(name = "account_check", nullable = false, length = 16, unique = true)
     private String check;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
 }

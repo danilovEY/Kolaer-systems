@@ -4,6 +4,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntit
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 30.11.2016.
@@ -18,5 +19,5 @@ public interface TicketRegisterDao extends DefaultDao<TicketRegisterEntity> {
 
     List<TicketRegisterEntity> findAllOpenRegister();
 
-    TicketRegisterEntity findIncludeAllOnLastMonth();
+    Optional<TicketRegisterEntity> findIncludeAllOnLastMonth();
 }
