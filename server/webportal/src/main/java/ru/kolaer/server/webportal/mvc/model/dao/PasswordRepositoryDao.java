@@ -13,4 +13,9 @@ public interface PasswordRepositoryDao extends DefaultDao<PasswordRepositoryEnti
     List<PasswordRepositoryEntity> findAllByAccountId(Long accountId, Integer number, Integer pageSize);
 
     List<PasswordRepositoryEntity> findAllByAccountId(List<Long> idsAccount);
+
+    boolean shareRepositoryToAccount(Long repId, Long accountId);
+    int deleteShareRepositoryToAccount(Long repId, Long accountId);
+
+    List<Long> findAllAccountFromShareRepository(Long repId);
 }

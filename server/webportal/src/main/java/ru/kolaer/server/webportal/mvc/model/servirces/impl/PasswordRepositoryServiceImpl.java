@@ -2,7 +2,9 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import ru.kolaer.api.mvp.model.error.UnexpectedParamsDescription;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
@@ -14,14 +16,16 @@ import ru.kolaer.server.webportal.mvc.model.converter.PasswordHistoryConverter;
 import ru.kolaer.server.webportal.mvc.model.converter.PasswordRepositoryConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.PasswordHistoryDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PasswordRepositoryDao;
+import ru.kolaer.server.webportal.mvc.model.dto.ShareRepositoryDto;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordHistoryEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordRepositoryEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
+import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PasswordRepositoryService;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,16 +39,19 @@ public class PasswordRepositoryServiceImpl
 
     private final PasswordHistoryDao passwordHistoryDao;
     private final PasswordHistoryConverter passwordHistoryConverter;
+    private final AccountService accountService;
     private final AuthenticationService authenticationService;
 
     public PasswordRepositoryServiceImpl(PasswordRepositoryDao passwordRepositoryDao,
                                          PasswordRepositoryConverter converter,
                                          PasswordHistoryDao passwordHistoryDao,
                                          PasswordHistoryConverter passwordHistoryConverter,
+                                         AccountService accountService,
                                          AuthenticationService authenticationService) {
         super(passwordRepositoryDao, converter);
         this.passwordHistoryDao = passwordHistoryDao;
         this.passwordHistoryConverter = passwordHistoryConverter;
+        this.accountService = accountService;
         this.authenticationService = authenticationService;
     }
 
@@ -110,7 +117,7 @@ public class PasswordRepositoryServiceImpl
         PasswordHistoryEntity passwordHistoryEntity = passwordHistoryConverter.convertToModel(passwordHistoryDto);
 
         passwordHistoryEntity.setId(null);
-        passwordHistoryEntity.setPasswordWriteDate(new Date());
+        passwordHistoryEntity.setPasswordWriteDate(LocalDateTime.now());
         passwordHistoryEntity.setRepositoryPassId(repId);
 
         return passwordHistoryConverter.convertToDto(passwordHistoryDao.persist(passwordHistoryEntity));
@@ -171,6 +178,56 @@ public class PasswordRepositoryServiceImpl
         }
 
         passwordHistoryDao.deleteAllByIdRep(repId);
+    }
+
+    @Override
+    @Transactional
+    public void shareRepository(Long repId, ShareRepositoryDto shareRepositoryDto) {
+        if(shareRepositoryDto == null || CollectionUtils.isEmpty(shareRepositoryDto.getAccountIds())) {
+            throw new UnexpectedRequestParams("Не указаны пользователи");
+        }
+
+        AccountSimpleDto accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+
+        PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
+
+        if(!accountSimpleByAuthentication.isAccessOit() && !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
+
+        List<Long> allAccountFromShareRepository = defaultEntityDao.findAllAccountFromShareRepository(repId);
+
+        for (Long accountId : shareRepositoryDto.getAccountIds()) {
+            if(!allAccountFromShareRepository.contains(accountId)) {
+                defaultEntityDao.shareRepositoryToAccount(repId, accountId);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteAccountFromShare(Long repId, Long accountId) {
+        AccountSimpleDto accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+
+        PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
+
+        if(!accountSimpleByAuthentication.isAccessOit() && !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
+
+        defaultEntityDao.deleteShareRepositoryToAccount(repId, accountId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccountDto> getAllAccountFromShare(Long repId) {
+        List<Long> allAccountFromShareRepository = defaultEntityDao.findAllAccountFromShareRepository(repId);
+
+        if(allAccountFromShareRepository.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return this.accountService.getById(allAccountFromShareRepository);
     }
 
     @Override

@@ -4,7 +4,7 @@ import lombok.Data;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Created by danilovey on 20.01.2017.
@@ -27,9 +27,13 @@ public class PasswordHistoryEntity implements BaseEntity {
 
     @Column(name = "password_write_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date passwordWriteDate;
+    private LocalDateTime passwordWriteDate;
 
     @Column(name = "password_repository_id", nullable = false)
     private Long repositoryPassId;
+
+    @Column(name = "deadline")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime deadline;
 
 }

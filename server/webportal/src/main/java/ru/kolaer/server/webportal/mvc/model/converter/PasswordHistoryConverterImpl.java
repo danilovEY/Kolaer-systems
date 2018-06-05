@@ -17,6 +17,7 @@ public class PasswordHistoryConverterImpl implements PasswordHistoryConverter {
         passwordHistoryEntity.setLogin(dto.getLogin());
         passwordHistoryEntity.setPassword(dto.getPassword());
         passwordHistoryEntity.setPasswordWriteDate(dto.getPasswordWriteDate());
+        passwordHistoryEntity.setDeadline(dto.getDeadline());
         return passwordHistoryEntity;
     }
 
@@ -35,6 +36,7 @@ public class PasswordHistoryConverterImpl implements PasswordHistoryConverter {
         oldDto.setLogin(newModel.getLogin());
         oldDto.setPassword(newModel.getPassword());
         oldDto.setPasswordWriteDate(newModel.getPasswordWriteDate());
+        oldDto.setPasswordWriteDate(newModel.getDeadline());
         return oldDto;
     }
 }

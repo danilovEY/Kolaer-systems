@@ -9,6 +9,7 @@ import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PasswordRepositoryDao;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordRepositoryEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordRepositoryShareEntity;
 
 import java.util.List;
 
@@ -46,6 +47,37 @@ public class PasswordRepositoryDaoImpl extends AbstractDefaultDao<PasswordReposi
         return getSession()
                 .createQuery("FROM " + getEntityName() + " r WHERE r.accountId IN :ids", getEntityClass())
                 .setParameterList("ids", idsAccount)
+                .list();
+    }
+
+    @Override
+    public boolean shareRepositoryToAccount(Long repId, Long accountId) {
+        PasswordRepositoryShareEntity passwordRepositoryShareEntity = new PasswordRepositoryShareEntity();
+        passwordRepositoryShareEntity.setRepositoryId(repId);
+        passwordRepositoryShareEntity.setAccountId(accountId);
+
+        getSession().persist(passwordRepositoryShareEntity);
+
+        return passwordRepositoryShareEntity.getId() != null;
+    }
+
+    @Override
+    public int deleteShareRepositoryToAccount(Long repId, Long accountId) {
+        return getSession()
+                .createQuery("DELETE FROM " +
+                        PasswordRepositoryShareEntity.class.getSimpleName() +
+                        " WHERE accountId = :accountId AND repositoryId = :repId")
+                .setParameter("repId", repId)
+                .setParameter("accountId", accountId)
+                .executeUpdate();
+    }
+
+    @Override
+    public List<Long> findAllAccountFromShareRepository(Long repId) {
+        return getSession()
+                .createQuery("SELECT accountId FROM " + PasswordRepositoryShareEntity.class.getSimpleName() +
+                        " WHERE  repositoryId = :repositoryId", Long.class)
+                .setParameter("repId", repId)
                 .list();
     }
 
