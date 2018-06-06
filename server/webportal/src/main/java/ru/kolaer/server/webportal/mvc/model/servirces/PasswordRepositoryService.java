@@ -4,7 +4,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
-import ru.kolaer.server.webportal.mvc.model.dto.ShareRepositoryDto;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public interface PasswordRepositoryService extends DefaultService<PasswordReposi
 
     void clearRepository(Long repId);
 
-    void shareRepository(Long repId, ShareRepositoryDto shareRepositoryDto);
+    void shareRepository(Long repId, Long accountId);
 
     void deleteAccountFromShare(Long repId, Long accountId);
     List<AccountDto> getAllAccountFromShare(Long repId);

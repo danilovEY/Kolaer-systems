@@ -10,12 +10,13 @@ import {SimpleAccountModel} from '../models/simple-account.model';
 import {EmployeeModel} from '../models/employee.model';
 import {AccountService} from './account.service';
 import {OtherEmployeeModel} from '../models/other-employee.model';
-import {Page} from "../models/page.model";
-import {EmployeeSortModel} from "../models/employee-sort.model";
-import {EmployeeFilterModel} from "../models/employee-filter.model";
+import {Page} from '../models/page.model';
+import {EmployeeSortModel} from '../models/employee-sort.model';
+import {EmployeeFilterModel} from '../models/employee-filter.model';
+import {BaseService} from './base.service';
 
 @Injectable()
-export class EmployeeService implements AuthenticationObserverService {
+export class EmployeeService extends BaseService implements AuthenticationObserverService {
     private readonly getEmployeeUrl: string = environment.publicServerUrl + '/employees';
     private readonly getAllEmployeesUrl: string = `${this.getEmployeeUrl}/get/all`;
     private readonly getAllEmployeeBirthdayToday: string = `${this.getEmployeeUrl}/get/birthday/today`;
@@ -43,6 +44,7 @@ export class EmployeeService implements AuthenticationObserverService {
     constructor(private _httpClient: HttpClient,
                 private _authService: AuthenticationRestService,
                 private accountService: AccountService) {
+        super();
         this._authService.registerObserver(this);
     }
 
@@ -78,22 +80,8 @@ export class EmployeeService implements AuthenticationObserverService {
                     page: number = 1, pageSize: number = 15): Observable<Page<EmployeeModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString())
-            .append('pagesize', pageSize.toString());
-        
-        if (sort) {
-            params = sort.sortId ? params.append('sortId', sort.sortId) : params;
-            params = sort.sortInitials ? params.append('sortInitials', sort.sortInitials) : params;
-            params = sort.sortPostName ? params.append('sortPostName', sort.sortPostName) : params;
-            params = sort.sortDepartmentName ? params.append('sortDepartmentName', sort.sortDepartmentName) : params;
-        }
-
-        if (filter) {
-            params = filter.filterId ? params.append('filterId', filter.filterId.toString()) : params;
-            params = filter.filterInitials ? params.append('filterInitials', filter.filterInitials) : params;
-            params = filter.filterPostName ? params.append('filterPostName', filter.filterPostName) : params;
-            params = filter.filterDepartmentName ? params.append('filterDepartmentName', filter.filterDepartmentName) : params;
-        }
+        params = params.append('page', page.toString()).append('pagesize', pageSize.toString());
+        params = this.getSortAndFilterParam(params, sort, filter);
 
         return this._httpClient.get<Page<EmployeeModel>>(this.getAllEmployeesUrl, {params: params});
     }

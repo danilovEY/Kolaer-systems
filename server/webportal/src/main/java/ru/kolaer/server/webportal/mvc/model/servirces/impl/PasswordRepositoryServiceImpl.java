@@ -2,7 +2,6 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import ru.kolaer.api.mvp.model.error.UnexpectedParamsDescription;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
@@ -16,7 +15,6 @@ import ru.kolaer.server.webportal.mvc.model.converter.PasswordHistoryConverter;
 import ru.kolaer.server.webportal.mvc.model.converter.PasswordRepositoryConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.PasswordHistoryDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PasswordRepositoryDao;
-import ru.kolaer.server.webportal.mvc.model.dto.ShareRepositoryDto;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordHistoryEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordRepositoryEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
@@ -182,8 +180,8 @@ public class PasswordRepositoryServiceImpl
 
     @Override
     @Transactional
-    public void shareRepository(Long repId, ShareRepositoryDto shareRepositoryDto) {
-        if(shareRepositoryDto == null || CollectionUtils.isEmpty(shareRepositoryDto.getAccountIds())) {
+    public void shareRepository(Long repId, Long accountId) {
+        if(accountId == null || accountId < 1) {
             throw new UnexpectedRequestParams("Не указаны пользователи");
         }
 
@@ -197,10 +195,10 @@ public class PasswordRepositoryServiceImpl
 
         List<Long> allAccountFromShareRepository = defaultEntityDao.findAllAccountFromShareRepository(repId);
 
-        for (Long accountId : shareRepositoryDto.getAccountIds()) {
-            if(!allAccountFromShareRepository.contains(accountId)) {
-                defaultEntityDao.shareRepositoryToAccount(repId, accountId);
-            }
+        if(!allAccountFromShareRepository.contains(accountId)) {
+            defaultEntityDao.shareRepositoryToAccount(repId, accountId);
+        } else {
+            throw new UnexpectedRequestParams("Данный пароль пользователю уже расшарин");
         }
     }
 

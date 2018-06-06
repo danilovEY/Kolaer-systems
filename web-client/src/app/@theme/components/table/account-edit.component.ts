@@ -4,16 +4,14 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators'
 import {of} from 'rxjs/observable/of';
-import {BankAccountService} from '../bank-accounts/bank-account.service';
-import {EmployeeModel} from '../../../../@core/models/employee.model';
-import {EmployeeSortModel} from '../../../../@core/models/employee-sort.model';
-import {EmployeeFilterModel} from '../../../../@core/models/employee-filter.model';
-import {Page} from '../../../../@core/models/page.model';
-import {SortTypeEnum} from '../../../../@core/models/sort-type.enum';
+import {Page} from '../../../@core/models/page.model';
+import {AccountService} from "../../../@core/services/account.service";
+import {AccountFilterModel} from "../../../@core/models/account-filter.model";
+import {AccountModel} from "../../../@core/models/account.model";
 
 @Component({
-    selector: 'edit-employee',
-    styles: ['/deep/ ng-dropdown-panel { width: auto!important;}'],
+    selector: 'edit-account',
+    styles: ['/deep/ ng-dropdown-panel { width: auto!important; z-index: 3000;}'],
     template: `        
         <div class="input-group" *ngIf="!cell.isEditable()">
             <input type="text" placeholder="Project" class="form-control" [ngModel]="cell.value" [disabled]="!cell.isEditable()"/>
@@ -23,25 +21,24 @@ import {SortTypeEnum} from '../../../../@core/models/sort-type.enum';
                    class="custom form-control"
                    *ngIf="cell.isEditable()"
                    [items]="people3$ | async"
-                   bindLabel="initials"
+                   bindLabel="label"
+                   bindValue="account"
                    appendTo="body"
+                   (click)="onClick.emit($event)"
+                   (keydown.enter)="onEdited.emit($event)"
+                   (keydown.esc)="onStopEditing.emit()"
                    [loading]="people3Loading"
                    [typeahead]="people3input$"
                    [(ngModel)]="cell.newValue">
         </ng-select>
-
-        <!--(click)="onClick.emit($event)"-->
-        <!--(keydown.enter)="onEdited.emit($event)"-->
-        <!--(keydown.esc)="onStopEditing.emit()"-->
     `
-
 })
-export class EmployeeWithAccountEditComponent extends DefaultEditor implements OnInit {
-    people3$: Observable<EmployeeModel[]>;
+export class AccountEditComponent extends DefaultEditor implements OnInit {
+    people3$: Observable<AccountView[]>;
     people3Loading = false;
     people3input$ = new Subject<string>();
 
-    constructor(private bankAccountService: BankAccountService) {
+    constructor(private accountService: AccountService) {
         super();
     }
 
@@ -50,9 +47,12 @@ export class EmployeeWithAccountEditComponent extends DefaultEditor implements O
             debounceTime(1000),
             distinctUntilChanged(),
             tap(() => this.people3Loading = true),
-            switchMap(term => this.bankAccountService
-                .getAllEmployeesWithAccount(new EmployeeSortModel(null, SortTypeEnum.ASC), new EmployeeFilterModel(null, `%${term}%`), 0, 0)
-                .map((request: Page<EmployeeModel>) => request.data)
+            switchMap(term => this.accountService
+                .getAllAccounts(null, new AccountFilterModel(null, term), 0, 0)
+                .map((request: Page<AccountModel>) => request.data)
+                .map((accounts: AccountModel[]) =>
+                    accounts.map((account: AccountModel) =>
+                        new AccountView(account, account.employee ? account.employee.initials : account.username)))
                 .pipe(
                 catchError(() => of([])),
                 tap(() => this.people3Loading = false)
@@ -60,4 +60,11 @@ export class EmployeeWithAccountEditComponent extends DefaultEditor implements O
         );
     }
 
+}
+
+export class AccountView {
+    constructor(public account: AccountModel,
+                public label: string = account.username) {
+
+    }
 }

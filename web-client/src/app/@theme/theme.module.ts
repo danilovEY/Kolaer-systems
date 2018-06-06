@@ -41,6 +41,7 @@ import {Ng2SmartTableModule} from "ng2-smart-table";
 import {ToasterModule} from "angular2-toaster";
 import {EmployeeEditComponent} from "./components/table/employee-edit.component";
 import {NgSelectModule} from "@ng-select/ng-select";
+import {AccountEditComponent} from "./components/table/account-edit.component";
 
 const BASE_MODULES = [
     CommonModule,
@@ -82,6 +83,7 @@ const COMPONENTS = [
     CustomActionEditComponent,
     CustomTableComponent,
     EmployeeEditComponent,
+    AccountEditComponent,
 
 ];
 
@@ -113,6 +115,7 @@ const NB_THEME_PROVIDERS = [
         CustomActionEditComponent,
         CustomTableComponent,
         EmployeeEditComponent,
+        AccountEditComponent,
     ]
 })
 export class ThemeModule {

@@ -4,13 +4,20 @@ import {KolpassService} from '../kolpass.service';
 import {ToasterConfig} from 'angular2-toaster';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {CustomTableComponent} from '../../../../@theme/components';
-import {PasswordHistoryDataSource} from '../password-history.data-source';
+import {PasswordHistoryDataSource} from './password-history.data-source';
 import {DatePipe} from '@angular/common';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {PasswordHistoryModel} from '../password-history.model';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AccountModel} from "../../../../@core/models/account.model";
+import {RepositoryPasswordShareDataSource} from "./repository-password-share.data-source";
+import {Cell} from "ng2-smart-table";
+import {AccountEditComponent} from "../../../../@theme/components/table/account-edit.component";
+import {TableEventAddModel} from "../../../../@theme/components/table/table-event-add.model";
+import {AccountService} from "../../../../@core/services/account.service";
+import {SimpleAccountModel} from "../../../../@core/models/simple-account.model";
 
 @Component({
     selector: 'repository-detailed',
@@ -21,17 +28,27 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
     private sub: any;
     private confirmToDeleteModal: NgbModalRef;
     private repositoryId: number = 0;
+    private currentAccount: SimpleAccountModel;
 
-    @ViewChild('customTable')
+    @ViewChild('historyTable')
     customTable: CustomTableComponent;
+
+    @ViewChild('shareTable')
+    shareTable: CustomTableComponent;
 
     formUpdatePass: FormGroup;
 
     currentPassword: PasswordHistoryModel;
-    columns: Column[] = [];
-    source: PasswordHistoryDataSource;
+
+    historyColumns: Column[] = [];
+    historySource: PasswordHistoryDataSource;
+
+    shareColumns: Column[] = [];
+    shareSource: RepositoryPasswordShareDataSource;
+
     loadingLastPass: boolean = true;
     loadingHistory: boolean = true;
+    loadingSharingAccounts: boolean = true;
     config: ToasterConfig = new ToasterConfig({
         positionClass: 'toast-top-right',
         timeout: 5000,
@@ -44,10 +61,13 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
 
     constructor(private activatedRoute: ActivatedRoute,
                 private modalService: NgbModal,
+                private accountService: AccountService,
                 private kolpassService: KolpassService) {
         this.sub = this.activatedRoute.params.subscribe(params => {
             this.repositoryId = params['id'];
-            this.source = new PasswordHistoryDataSource(this.repositoryId, this.kolpassService);
+
+            this.historySource = new PasswordHistoryDataSource(this.repositoryId, this.kolpassService);
+            this.shareSource = new RepositoryPasswordShareDataSource(this.repositoryId, this.kolpassService);
         });
     }
 
@@ -61,12 +81,8 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
             ? {'mismatch': true} : null
         );
 
-        // const idColumn: Column = new Column('id', {
-        //     title: 'ID',
-        //     type: 'number',
-        //     editable: false,
-        //     addable: false,
-        // }, undefined);
+        this.accountService.getCurrentAccount()
+            .subscribe((account: SimpleAccountModel) => this.currentAccount = account);
 
         const dateColumn: Column = new Column('passwordWriteDate', {
             title: 'Время создания',
@@ -87,10 +103,51 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
             type: 'string',
         }, undefined);
 
-        this.columns.push(loginColumn, passColumn, dateColumn);
+        this.historyColumns.push(loginColumn, passColumn, dateColumn);
+
+        const accountColumn: Column = new Column('initials', {
+            title: 'Пользователь',
+            type: 'string',
+            sort: false,
+            filter: false,
+            editor: {
+                type: 'custom',
+                component: AccountEditComponent,
+            },
+            valuePrepareFunction(a: any, value: AccountModel, cell: Cell) {
+                return value.employee ? value.employee.initials : value.username;
+            }
+        }, undefined);
+
+        const postColumn: Column = new Column('employeePost', {
+            title: 'Должность',
+            type: 'string',
+            editable: false,
+            addable: false,
+            sort: false,
+            filter: false,
+            valuePrepareFunction(a: any, value: AccountModel, cell: Cell) {
+                return value.employee ? value.employee.post.abbreviatedName : '';
+            }
+        }, undefined);
+
+        const departmentColumn: Column = new Column('employeeDepartment', {
+            title: 'Подразделние',
+            type: 'string',
+            editable: false,
+            addable: false,
+            sort: false,
+            filter: false,
+            valuePrepareFunction(a: any, value: AccountModel, cell: Cell) {
+                return value.employee ? value.employee.department.abbreviatedName : '';
+            }
+        }, undefined);
+
+        this.shareColumns.push(accountColumn, postColumn, departmentColumn);
 
         if (this.repositoryId > 0) {
-            this.source.onLoading().subscribe(load => this.loadingHistory = load);
+            this.historySource.onLoading().subscribe(load => this.loadingHistory = load);
+            this.shareSource.onLoading().subscribe(load => this.loadingSharingAccounts = load);
 
            this.loadLastPass();
         }
@@ -121,7 +178,32 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
         this.sub.unsubscribe();
     }
 
-    delete(event: TableEventDeleteModel<PasswordHistoryModel>) {
+    shareCreate(event: TableEventAddModel<any>) {
+        const account: AccountModel = event.newData.initials;
+        if (account.id === this.currentAccount.id) {
+            event.confirm.reject();
+        } else {
+            this.kolpassService.shareRepositoryToAccount(this.repositoryId, account)
+                .subscribe(
+                    response => event.confirm.resolve(),
+                    error => event.confirm.reject()
+                );
+        }
+    }
+
+    shareDelete(event: TableEventDeleteModel<AccountModel>) {
+        if (confirm(`Вы действительно хотите удалить ${event.data.employee ? event.data.employee.initials : event.data.username}?`)) {
+            this.kolpassService.deleteShareRepositoryToAccount(this.repositoryId, event.data)
+                .subscribe(
+                    response => event.confirm.resolve(),
+                    error => event.confirm.reject()
+                );
+        } else {
+            event.confirm.reject();
+        }
+    }
+
+    historyDelete(event: TableEventDeleteModel<PasswordHistoryModel>) {
         this.loadingHistory = true;
         if (this.currentPassword && this.currentPassword.id === event.data.id) {
             this.loadingLastPass = true;
@@ -164,7 +246,7 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
                 this.formUpdatePass.controls['login'].setValue(value.login);
                 this.formUpdatePass.controls['password'].setValue(value.password);
 
-                this.source.prepend(value);
+                this.historySource.prepend(value);
             });
     }
 
@@ -186,7 +268,7 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
                 this.formUpdatePass.controls['password'].setValue('');
                 this.currentPassword = undefined;
 
-                this.source.load([]);
+                this.historySource.load([]);
             });
     }
 }

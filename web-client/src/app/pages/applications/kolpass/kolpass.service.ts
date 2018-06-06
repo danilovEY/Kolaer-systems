@@ -6,6 +6,7 @@ import {environment} from '../../../../environments/environment';
 import {Observable} from 'rxjs/Observable';
 import {AuthenticationRestService} from '../../../@core/modules/auth/authentication-rest.service';
 import {PasswordHistoryModel} from './password-history.model';
+import {AccountModel} from "../../../@core/models/account.model";
 
 @Injectable()
 export class KolpassService {
@@ -126,5 +127,41 @@ export class KolpassService {
         newPassword.passwordWriteDate = null;
 
         return this.httpClient.post<PasswordHistoryModel>(url, newPassword);
+    }
+
+    getSharedAccountsByRepId(repId: number, page: number = 1, pageSize: number = 15): Observable<AccountModel[]> {
+        if (!this.authService.authentication) {
+            return Observable.empty();
+        }
+
+
+        let params = new HttpParams();
+
+        params = params.append('page', page.toString());
+        params = params.append('pagesize', pageSize.toString());
+
+        const url: string = `${this.repositoryUrl}/${repId}/share`;
+
+        return this.httpClient.get<AccountModel[]>(url, { params: params });
+    }
+
+    shareRepositoryToAccount(repositoryId: number, account: AccountModel): Observable<any> {
+        const url: string = `${this.repositoryUrl}/${repositoryId}/share`;
+
+        let params = new HttpParams();
+
+        params = params.append('accountId', account.id.toString());
+
+        return this.httpClient.post<any>(url, {}, { params: params });
+    }
+
+    deleteShareRepositoryToAccount(repositoryId: number, account: AccountModel): Observable<any> {
+        const url: string = `${this.repositoryUrl}/${repositoryId}/share`;
+
+        let params = new HttpParams();
+
+        params = params.append('accountId', account.id.toString());
+
+        return this.httpClient.delete<any>(url, { params: params });
     }
 }

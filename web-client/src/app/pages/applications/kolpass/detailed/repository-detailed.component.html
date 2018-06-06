@@ -2,65 +2,88 @@
 
 <div class="row">
     <div class="col-12">
-        <nb-card>
-            <nb-card-header>
-                Последний пароль
-            </nb-card-header>
 
-            <nb-card-body>
-                <ngx-loading [show]="loadingLastPass" ></ngx-loading>
+        <div class="row">
+            <div class="col-4">
+                <nb-card>
+                    <nb-card-header>
+                        Последний пароль
+                    </nb-card-header>
 
-                <form (ngSubmit)="submitUpdatePassForm()" [formGroup]="formUpdatePass">
-                    <div class="row">
-                        <!--First column-->
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="login">Логин</label>
-                                <div class="input-group has-user-icon">
-                                    <input type="text" id="login" formControlName="login"
-                                           class="form-control" value="{{ currentPassword?.login }}">
+                    <nb-card-body>
+                        <ngx-loading [show]="loadingLastPass" ></ngx-loading>
+
+                        <form (ngSubmit)="submitUpdatePassForm()" [formGroup]="formUpdatePass">
+                            <div class="row">
+                                <!--First column-->
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="login">Логин</label>
+                                        <div class="input-group has-user-icon">
+                                            <input type="text" id="login" formControlName="login"
+                                                   class="form-control" value="{{ currentPassword?.login }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--Second column-->
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="email">Пароль</label>
+                                        <div class="input-group has-email-icon">
+                                            <input type="text" id="email" formControlName="password"
+                                                   class="form-control" value="{{ currentPassword?.password }}">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!--Second column-->
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="email">Пароль</label>
-                                <div class="input-group has-email-icon">
-                                    <input type="text" id="email" formControlName="password"
-                                           class="form-control" value="{{ currentPassword?.password }}">
-                                </div>
+
+                            <div class="text-right">
+                                <button type="submit" class="btn btn-primary" [disabled]="formUpdatePass.invalid">
+                                    Сохранить
+                                </button>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="text-right">
-                        <button type="button" class="btn btn-outline-primary" (click)="confirmToDelete(content)">
-                            Очистить репозиторий
-                        </button>
+                        </form>
+                    </nb-card-body>
+                </nb-card>
+            </div>
 
-                        <button type="submit" class="btn btn-primary" [disabled]="formUpdatePass.invalid">
-                            Сохранить
-                        </button>
-                    </div>
+            <div class="col-8">
+                <nb-card>
+                    <nb-card-header>
+                        Доступ к паролю
+                    </nb-card-header>
 
-                </form>
-            </nb-card-body>
-        </nb-card>
+                    <nb-card-body>
+                        <ngx-loading [show]="loadingSharingAccounts"></ngx-loading>
+
+                        <custom-table #shareTable [columns]="shareColumns" [source]="shareSource"
+                                      [actionAdd]="true" [actionDelete]="true" [actionEdit]="false"
+                                      (create)="shareCreate($event)" (delete)="shareDelete($event)">
+                        </custom-table>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+
+        </div>
     </div>
 
     <div class="col-12">
         <nb-card>
             <nb-card-header>
-                История
+                <h4 class="modal-title">История</h4>
+                <button type="button" class="btn btn-outline-primary" (click)="confirmToDelete(content)">
+                    Очистить репозиторий
+                </button>
             </nb-card-header>
 
             <nb-card-body>
                 <ngx-loading [show]="loadingHistory" ></ngx-loading>
-                <custom-table #customTable [columns]="columns" [source]="source"
+                <custom-table #historyTable [columns]="historyColumns" [source]="historySource"
                               [actionAdd]="false" [actionDelete]="true" [actionEdit]="false"
-                (delete)="delete($event)">
+                              (delete)="historyDelete($event)">
                 </custom-table>
             </nb-card-body>
         </nb-card>

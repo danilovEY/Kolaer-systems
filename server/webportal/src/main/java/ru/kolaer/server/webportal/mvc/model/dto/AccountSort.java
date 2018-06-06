@@ -6,10 +6,10 @@ import lombok.Data;
 public class AccountSort implements SortParam {
     @EntityFieldName(name = "id")
     private SortType sortId;
-    @EntityFieldName(name = "username")
+    @EntityFieldName(name = "employee.initials")
     private SortType sortInitials;
-    @EntityFieldName(name = "post.name")
+    @EntityFieldName(name = "employee.post.name")
     private SortType sortPostName;
-    @EntityFieldName(name = "department.name")
+    @EntityFieldName(name = "employee.department.name")
     private SortType sortDepartmentName;
 }

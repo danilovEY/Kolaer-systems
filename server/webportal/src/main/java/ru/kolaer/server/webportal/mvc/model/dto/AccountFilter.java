@@ -6,10 +6,10 @@ import lombok.Data;
 public class AccountFilter implements FilterParam {
     @EntityFieldName(name = "id")
     private Long filterId;
-    @EntityFieldName(name = "username")
+    @EntityFieldName(name = "employee.initials")
     private String filterInitials;
-    @EntityFieldName(name = "post.name")
+    @EntityFieldName(name = "employee.post.name")
     private String filterPostName;
-    @EntityFieldName(name = "department.name")
+    @EntityFieldName(name = "employee.department.name")
     private String filterDepartmentName;
 }

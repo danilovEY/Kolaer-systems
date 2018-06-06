@@ -11,7 +11,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.ShareRepositoryDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.PasswordRepositoryService;
 
 import java.util.List;
@@ -61,8 +60,8 @@ public class KolpassController {
     @RequestMapping(value = "/rep/{repId}/share", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void sharePasswordRepository(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
-            @RequestBody ShareRepositoryDto shareRepositoryDto) {
-        this.passwordRepositoryService.shareRepository(repId, shareRepositoryDto);
+            @ApiParam("ID пользователя") @RequestParam("accountId") Long accountId) {
+        this.passwordRepositoryService.shareRepository(repId, accountId);
     }
 
     @ApiOperation(value = "Удалить пользователя из расшаривания")

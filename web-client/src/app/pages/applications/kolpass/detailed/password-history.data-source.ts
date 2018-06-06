@@ -1,7 +1,7 @@
-import {KolpassService} from './kolpass.service';
-import {Page} from '../../../@core/models/page.model';
-import {PasswordHistoryModel} from './password-history.model';
-import {CustomDataSource} from '../../../@core/models/custom.data-source';
+import {KolpassService} from '../kolpass.service';
+import {Page} from '../../../../@core/models/page.model';
+import {PasswordHistoryModel} from '../password-history.model';
+import {CustomDataSource} from '../../../../@core/models/custom.data-source';
 
 export class PasswordHistoryDataSource extends CustomDataSource<PasswordHistoryModel> {
 

@@ -4,9 +4,5 @@
 @import '~@nebular/theme/styles/global/bootstrap/breakpoints';
 
 @include nb-install-component() {
-  nb-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+
 }

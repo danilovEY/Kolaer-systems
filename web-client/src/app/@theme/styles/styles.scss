@@ -20,6 +20,12 @@
     border-radius: 50%; // TODO: quickfix for https://github.com/akveo/nebular/issues/275
   }
 
+  nb-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   nb-user .image {
     background-position-x: -2px;
   }

@@ -1,6 +1,7 @@
 export class Page<T> {
-    data: T[];
-    number: number;
-    pageSize: number;
-    total: number;
+    constructor(public data: T[] = [],
+                public number: number = 1,
+                public pageSize: number = 15,
+                public total: number = data.length) {
+    }
 }

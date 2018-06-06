@@ -24,6 +24,7 @@ import {EmployeeFilterModel} from "../../../@core/models/employee-filter.model";
                    *ngIf="cell.isEditable()"
                    [items]="people3$ | async"
                    bindLabel="initials"
+                   appendTo="body"
                    (click)="onClick.emit($event)"
                    (keydown.enter)="onEdited.emit($event)"
                    (keydown.esc)="onStopEditing.emit()"

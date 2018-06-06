@@ -3,20 +3,14 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
-import ru.kolaer.server.webportal.mvc.model.dto.FilterValue;
-import ru.kolaer.server.webportal.mvc.model.dto.SortField;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Created by danilovey on 27.07.2016.
@@ -86,73 +80,5 @@ public class AccountDaoImpl extends AbstractDefaultDao<AccountEntity> implements
         }
 
         throw new UnexpectedRequestParams(message.toString());
-    }
-
-    @Override
-    public List<AccountEntity> findAll(SortField sortField, Map<String, FilterValue> filter, Integer number, Integer pageSize) {
-        String queryOrderBy = Optional.ofNullable(sortField)
-                .map(SortField::toString)
-                .orElse("");
-
-        Map<String, FilterValue> tempFilter = new HashMap<>(filter);
-        FilterValue username = tempFilter.get("filterInitials");
-
-        if(username != null) {
-            tempFilter.remove("filterInitials");
-        }
-
-        String queryFilter = filtersToString(tempFilter);
-
-        if(username != null) {
-            queryFilter += tempFilter.isEmpty()
-                    ? " WHERE username LIKE :username OR employee.initials LIKE :username"
-                    : " AND (username LIKE :username OR employee.initials LIKE :username)";
-        }
-
-        Query<AccountEntity> query = getSession().createQuery("FROM " + getEntityName() +
-                queryFilter + " " + queryOrderBy, getEntityClass());
-
-        query = setParams(query, tempFilter);
-
-        if(username != null) {
-            query = query.setParameter("username", "%" + username.getValue() + "%");
-        }
-
-        if(number != null && number > 0 && pageSize != null && pageSize > 0) {
-            query = query.setFirstResult((number - 1) * pageSize)
-                    .setMaxResults(pageSize);
-        }
-
-        return query.list();
-    }
-
-    @Override
-    public long findAllCount(Map<String, FilterValue> filter) {
-        Map<String, FilterValue> tempFilter = new HashMap<>(filter);
-        FilterValue username = tempFilter.get("filterInitials");
-
-        if(username != null) {
-            tempFilter.remove("filterInitials");
-        }
-
-        String queryFilter = filtersToString(tempFilter);
-
-        if(username != null) {
-            queryFilter += tempFilter.isEmpty()
-                    ? " WHERE username LIKE :username OR employee.initials LIKE :username"
-                    : " AND (username LIKE :username OR employee.initials LIKE :username)";
-        }
-
-        Query<Long> query = getSession()
-                .createQuery("SELECT COUNT(id) FROM " + getEntityName() + queryFilter,
-                        Long.class);
-
-        query = setParams(query, tempFilter);
-
-        if(username != null) {
-            query = query.setParameter("username", "%" + username.getValue() + "%");
-        }
-
-        return query.uniqueResult();
     }
 }
