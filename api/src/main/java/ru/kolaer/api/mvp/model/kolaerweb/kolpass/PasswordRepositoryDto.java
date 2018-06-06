@@ -1,6 +1,7 @@
 package ru.kolaer.api.mvp.model.kolaerweb.kolpass;
 
 import lombok.Data;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
 
 /**
@@ -10,7 +11,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
 public class PasswordRepositoryDto implements BaseDto {
     private Long id;
     private String name;
-    private Long accountId;
+    private AccountDto account;
     private String urlImage;
     private boolean empty;
 }

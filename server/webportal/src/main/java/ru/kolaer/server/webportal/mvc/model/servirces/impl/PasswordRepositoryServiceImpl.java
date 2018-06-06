@@ -15,6 +15,9 @@ import ru.kolaer.server.webportal.mvc.model.converter.PasswordHistoryConverter;
 import ru.kolaer.server.webportal.mvc.model.converter.PasswordRepositoryConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.PasswordHistoryDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PasswordRepositoryDao;
+import ru.kolaer.server.webportal.mvc.model.dto.FilterType;
+import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordSort;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordHistoryEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordRepositoryEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
@@ -25,6 +28,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.PasswordRepositoryService;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -55,39 +59,36 @@ public class PasswordRepositoryServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PasswordRepositoryDto> getAllAuthAccount(Integer number, Integer pageSize) {
-        return this.getAllByAccountId(this.authenticationService.getAccountSimpleByAuthentication().getId(), number, pageSize);
+    public Page<PasswordRepositoryDto> getAll(RepositoryPasswordSort sortParam, RepositoryPasswordFilter filterParam,
+                                       Integer number, Integer pageSize) {
+        RepositoryPasswordFilter filter = Optional.ofNullable(filterParam)
+                .orElse(new RepositoryPasswordFilter());
+
+        filter.setFilterAccountId(authenticationService.getAccountSimpleByAuthentication().getId());
+
+        return super.getAll(sortParam, filterParam, number, pageSize);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PasswordRepositoryDto> getAllByAccountId(Long accountId, Integer number, Integer pageSize) {
-        AccountSimpleDto accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+    public Page<PasswordRepositoryDto> getAllShared(RepositoryPasswordSort sortParam, RepositoryPasswordFilter filterParam,
+                                                    Integer number, Integer pageSize) {
 
-        if(!accountSimpleByAuthentication.isAccessOit() && !accountSimpleByAuthentication.getId().equals(accountId)) {
-            throw new ForbiddenException();
+        AccountSimpleDto currentAccount = authenticationService.getAccountSimpleByAuthentication();
+
+        List<Long> repIds = defaultEntityDao.findAllRepositoryFromShare(currentAccount.getId());
+        if(repIds.isEmpty()) {
+            return new Page<>();
         }
 
-        if(pageSize == null || pageSize == 0) {
-            List<PasswordRepositoryDto> result = this.getAllByAccountIds(Collections.singletonList(accountId));
-            return new Page<>(result, 0, 0, result.size());
-        } else {
-            Long count = defaultEntityDao.findCountAllAccountId(accountId, number, pageSize);
-            List<PasswordRepositoryDto> result = defaultEntityDao.findAllByAccountId(accountId, number, pageSize)
-                    .stream()
-                    .map(defaultConverter::convertToDto)
-                    .collect(Collectors.toList());
-            return new Page<>(result, number, count, pageSize);
-        }
-    }
+        RepositoryPasswordFilter filter = Optional.ofNullable(filterParam)
+                .orElse(new RepositoryPasswordFilter());
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<PasswordRepositoryDto> getAllByAccountIds(List<Long> idsChief) {
-        return defaultEntityDao.findAllByAccountId(idsChief)
-                .stream()
-                .map(defaultConverter::convertToDto)
-                .collect(Collectors.toList());
+        filter.setFilterIds(repIds);
+        filter.setTypeFilterIds(FilterType.IN);
+        filter.setFilterAccountId(null);
+
+        return super.getAll(sortParam, filter, number, pageSize);
     }
 
     @Override
@@ -95,10 +96,10 @@ public class PasswordRepositoryServiceImpl
     public PasswordRepositoryDto add(PasswordRepositoryDto dto) {
         AccountSimpleDto accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
 
-        dto.setId(null);
-        dto.setAccountId(accountSimpleByAuthentication.getId());
+        PasswordRepositoryEntity passwordRepositoryEntity = defaultConverter.convertToModel(dto);
+        passwordRepositoryEntity.setAccountId(accountSimpleByAuthentication.getId());
 
-        return super.add(dto);
+        return defaultConverter.convertToDto(defaultEntityDao.persist(passwordRepositoryEntity));
     }
 
     @Override
@@ -289,7 +290,8 @@ public class PasswordRepositoryServiceImpl
 
         if(!accountSimpleByAuthentication.isAccessOit() &&
                 !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId()) ||
-                (!accountSimpleByAuthentication.isAccessOit() && !passwordRepositoryEntity.getAccountId().equals(dto.getAccountId()))) {
+                (!accountSimpleByAuthentication.isAccessOit() &&
+                        !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId()))) {
             throw new ForbiddenException();
         }
 

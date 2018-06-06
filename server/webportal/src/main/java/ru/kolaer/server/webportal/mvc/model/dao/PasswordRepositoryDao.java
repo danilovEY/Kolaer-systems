@@ -18,4 +18,6 @@ public interface PasswordRepositoryDao extends DefaultDao<PasswordRepositoryEnti
     int deleteShareRepositoryToAccount(Long repId, Long accountId);
 
     List<Long> findAllAccountFromShareRepository(Long repId);
+
+    List<Long> findAllRepositoryFromShare(Long accountId);
 }

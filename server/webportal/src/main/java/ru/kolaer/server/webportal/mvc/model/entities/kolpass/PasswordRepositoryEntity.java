@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.entities.kolpass;
 
 import lombok.Data;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 
 import javax.persistence.*;
 
@@ -26,5 +27,9 @@ public class PasswordRepositoryEntity implements BaseEntity {
 
     @Column(name = "account_id")
     private Long accountId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", insertable = false, updatable = false)
+    private AccountEntity account;
 
 }

@@ -27,7 +27,7 @@ public class Page<T> implements Serializable {
     private int pageSize = 0;
 
     public Page() {
-
+        this(Collections.emptyList(), 1, 0, 0);
     }
 
     public Page(List<T> data, int number, int total, int pageSize) {

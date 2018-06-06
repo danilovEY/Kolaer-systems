@@ -11,6 +11,8 @@ import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordSort;
 import ru.kolaer.server.webportal.mvc.model.servirces.PasswordRepositoryService;
 
 import java.util.List;
@@ -34,8 +36,21 @@ public class KolpassController {
     @RequestMapping(value = "/rep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PasswordRepositoryDto> getAllPersonalRepositoryPasswords(
             @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
-            @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-        return passwordRepositoryService.getAllAuthAccount(number, pageSize);
+            @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
+            RepositoryPasswordSort sort,
+            RepositoryPasswordFilter filter) {
+        return passwordRepositoryService.getAll(sort, filter, number, pageSize);
+    }
+
+    @ApiOperation(value = "Получить всех расширенных пользователей")
+    @UrlDeclaration(description = "Получить всех расширенных пользователей", requestMethod = RequestMethod.GET)
+    @RequestMapping(value = "/rep/share", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<PasswordRepositoryDto> getAccountsFromSharePasswordRepository(
+            @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
+            @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
+            RepositoryPasswordSort sort,
+            RepositoryPasswordFilter filter) {
+        return passwordRepositoryService.getAllShared(sort, filter, number, pageSize);
     }
 
     @ApiOperation(value = "Добавить новое хранилище")

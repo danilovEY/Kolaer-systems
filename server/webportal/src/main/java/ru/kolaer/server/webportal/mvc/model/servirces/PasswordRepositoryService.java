@@ -4,6 +4,8 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
+import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordSort;
 
 import java.util.List;
 
@@ -11,10 +13,11 @@ import java.util.List;
  * Created by danilovey on 20.01.2017.
  */
 public interface PasswordRepositoryService extends DefaultService<PasswordRepositoryDto> {
-    Page<PasswordRepositoryDto> getAllAuthAccount(Integer number, Integer pageSize);
-    Page<PasswordRepositoryDto> getAllByAccountId(Long accountId, Integer number, Integer pageSize);
+    Page<PasswordRepositoryDto> getAll(RepositoryPasswordSort sortParam, RepositoryPasswordFilter filterParam,
+                                       Integer number, Integer pageSize);
 
-    List<PasswordRepositoryDto> getAllByAccountIds(List<Long> idsAccount);
+    Page<PasswordRepositoryDto> getAllShared(RepositoryPasswordSort sortParam, RepositoryPasswordFilter filterParam,
+                                             Integer number, Integer pageSize);
 
     PasswordHistoryDto addPassword(Long repId, PasswordHistoryDto passwordHistoryDto);
 

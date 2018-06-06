@@ -82,6 +82,15 @@ public class PasswordRepositoryDaoImpl extends AbstractDefaultDao<PasswordReposi
     }
 
     @Override
+    public List<Long> findAllRepositoryFromShare(Long accountId) {
+        return getSession()
+                .createQuery("SELECT repositoryId FROM " + PasswordRepositoryShareEntity.class.getSimpleName() +
+                        " WHERE  accountId = :accountId", Long.class)
+                .setParameter("accountId", accountId)
+                .list();
+    }
+
+    @Override
     public PasswordRepositoryEntity checkValueBeforePersist(PasswordRepositoryEntity entity) {
         if(StringUtils.isEmpty(entity.getName())) {
             throw new UnexpectedRequestParams(new UnexpectedParamsDescription("name", "Имя не может быть пустым"));
