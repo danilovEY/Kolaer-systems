@@ -76,7 +76,7 @@ public class PasswordRepositoryDaoImpl extends AbstractDefaultDao<PasswordReposi
     public List<Long> findAllAccountFromShareRepository(Long repId) {
         return getSession()
                 .createQuery("SELECT accountId FROM " + PasswordRepositoryShareEntity.class.getSimpleName() +
-                        " WHERE  repositoryId = :repositoryId", Long.class)
+                        " WHERE  repositoryId = :repId", Long.class)
                 .setParameter("repId", repId)
                 .list();
     }
