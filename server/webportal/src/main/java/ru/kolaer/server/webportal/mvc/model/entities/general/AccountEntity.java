@@ -25,7 +25,7 @@ public class AccountEntity implements BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", insertable=false, updatable=false)
-    private EmployeeEntity employeeEntity;
+    private EmployeeEntity employee;
 
     @Column(name = "chat_name")
     private String chatName;

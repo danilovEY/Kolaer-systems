@@ -3,13 +3,17 @@ package ru.kolaer.server.webportal.mvc.model.converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 09.10.2017.
@@ -18,7 +22,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountConverterImpl implements AccountConverter {
 
-    private final EmployeeConverterImpl employeeConverter;
+    private final EmployeeConverter employeeConverter;
+    private final EmployeeDao employeeDao;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -63,12 +68,46 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setAccessOit(model.isAccessOit());
 
         if(model.getEmployeeId() != null) {
-            accountDto.setEmployee(employeeConverter.convertToDto(model.getEmployeeEntity()));
+            accountDto.setEmployee(employeeConverter.convertToDto(model.getEmployee()));
         } else {
             accountDto.setEmployee(null);
         }
 
         return accountDto;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccountDto> convertToDto(List<AccountEntity> model) {
+        if(model == null || model.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Long> employeeIds = model.stream()
+                .map(AccountEntity::getEmployeeId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        if (employeeIds.isEmpty()) {
+            return model.stream()
+                    .map(this::convertToDto).
+                    collect(Collectors.toList());
+        }
+
+        Map<Long, EmployeeDto> employeeMap = employeeConverter.convertToDto(employeeDao.findById(employeeIds))
+                .stream()
+                .collect(Collectors.toMap(EmployeeDto::getId, Function.identity()));
+
+        ArrayList<AccountDto> results = new ArrayList<>();
+
+        for (AccountEntity accountEntity : model) {
+            AccountDto accountDto = this.convertToDtoWithOutSubEntity(accountEntity);
+            accountDto.setEmployee(employeeMap.getOrDefault(accountEntity.getEmployeeId(), accountDto.getEmployee()));
+
+            results.add(accountDto);
+        }
+
+        return results;
     }
 
     @Override

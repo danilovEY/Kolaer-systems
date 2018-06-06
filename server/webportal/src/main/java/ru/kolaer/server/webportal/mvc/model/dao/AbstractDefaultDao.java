@@ -7,7 +7,6 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import ru.kolaer.server.webportal.mvc.model.dto.FilterType;
 import ru.kolaer.server.webportal.mvc.model.dto.FilterValue;
 import ru.kolaer.server.webportal.mvc.model.dto.SortField;
@@ -113,13 +112,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
                 .createQuery("SELECT COUNT(id) FROM " + getEntityName() + queryFilter,
                         Long.class);
 
-        if(!StringUtils.isEmpty(queryFilter)) {
-            for (Map.Entry<String, FilterValue> entry : filter.entrySet()) {
-                query = query.setParameter(entry.getKey(), entry.getValue().getValue());
-            }
-        }
-
-        return query.uniqueResult();
+        return setParams(query, filter).uniqueResult();
     }
 
     @Override

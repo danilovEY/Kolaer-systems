@@ -560,7 +560,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
         String username = accountEntity.getChatName();
         if(StringUtils.isEmpty(username)) {
-            EmployeeEntity employee = accountEntity.getEmployeeEntity();
+            EmployeeEntity employee = accountEntity.getEmployee();
             if(employee != null) {
                 username = employee.getInitials();
             } else {
