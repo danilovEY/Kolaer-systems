@@ -79,12 +79,12 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
             type: new FormControl('DR'),
         });
 
-        const idColumn: Column = new Column('id', {
-            title: 'ID',
-            type: 'number',
-            editable: false,
-            addable: false,
-        }, undefined);
+        // const idColumn: Column = new Column('id', {
+        //     title: 'ID',
+        //     type: 'number',
+        //     editable: false,
+        //     addable: false,
+        // }, undefined);
 
         const dateCreateColumn: Column = new Column('createRegister', {
             title: 'Время создания',
@@ -114,7 +114,7 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
             }
         }, undefined);
 
-        this.columns.push(idColumn, dateCreateColumn, dateSendColumn);
+        this.columns.push(dateCreateColumn, dateSendColumn);
 
         const openAction: CustomActionModel = new CustomActionModel();
         openAction.name = TicketsMainComponent.openRegisterActionName;

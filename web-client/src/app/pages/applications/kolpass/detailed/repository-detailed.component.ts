@@ -61,12 +61,12 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
             ? {'mismatch': true} : null
         );
 
-        const idColumn: Column = new Column('id', {
-            title: 'ID',
-            type: 'number',
-            editable: false,
-            addable: false,
-        }, undefined);
+        // const idColumn: Column = new Column('id', {
+        //     title: 'ID',
+        //     type: 'number',
+        //     editable: false,
+        //     addable: false,
+        // }, undefined);
 
         const dateColumn: Column = new Column('passwordWriteDate', {
             title: 'Время создания',
@@ -87,7 +87,7 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
             type: 'string',
         }, undefined);
 
-        this.columns.push(idColumn, loginColumn, passColumn, dateColumn);
+        this.columns.push(loginColumn, passColumn, dateColumn);
 
         if (this.repositoryId > 0) {
             this.source.onLoading().subscribe(load => this.loadingHistory = load);

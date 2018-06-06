@@ -49,13 +49,13 @@ export class BankAccountsComponent implements OnInit {
     }
 
     ngOnInit() {
-        const idColumn: Column = new Column('id', {
-            title: 'ID',
-            type: 'number',
-            width: '10px',
-            editable: false,
-            addable: false,
-        }, undefined);
+        // const idColumn: Column = new Column('id', {
+        //     title: 'ID',
+        //     type: 'number',
+        //     width: '10px',
+        //     editable: false,
+        //     addable: false,
+        // }, undefined);
 
         const checkColumn: Column = new Column('check', {
             title: 'Номер счета',
@@ -100,7 +100,7 @@ export class BankAccountsComponent implements OnInit {
             }
         }, undefined);
 
-        this.columns.push(idColumn, checkColumn, employeeColumn, postColumn, departmentColumn);
+        this.columns.push(checkColumn, employeeColumn, postColumn, departmentColumn);
     }
 
     delete(event: TableEventDeleteModel<BankAccountModel>) {

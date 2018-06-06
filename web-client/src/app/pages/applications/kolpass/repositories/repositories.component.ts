@@ -61,20 +61,20 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        const idColumn: Column = new Column('id', {
-            editable: false,
-            addable: false,
-            title: 'ID',
-            type: 'number',
-            width: '15px',
-        }, undefined);
+        // const idColumn: Column = new Column('id', {
+        //     editable: false,
+        //     addable: false,
+        //     title: 'ID',
+        //     type: 'number',
+        //     width: '15px',
+        // }, undefined);
 
         const nameColumn: Column = new Column('name', {
             title: 'Имя',
             type: 'string',
         }, undefined);
 
-        this.columns.push(idColumn, nameColumn);
+        this.columns.push(nameColumn);
 
         const openAction: CustomActionModel = new CustomActionModel();
         openAction.name = this.openActionName;

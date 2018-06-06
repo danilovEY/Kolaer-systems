@@ -78,12 +78,12 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
                 this.source.onLoading().subscribe(value => this.loadingTickets = value);
             });
 
-        const idColumn: Column = new Column('id', {
-            title: 'ID',
-            type: 'number',
-            editable: false,
-            addable: false,
-        }, undefined);
+        // const idColumn: Column = new Column('id', {
+        //     title: 'ID',
+        //     type: 'number',
+        //     editable: false,
+        //     addable: false,
+        // }, undefined);
 
         const typeOperationColumn: Column = new Column('type', {
             title: 'Операция',
@@ -151,7 +151,7 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
             }
         }, undefined);
 
-        this.columns.push(idColumn, typeOperationColumn, countColumn, employeeColumn, postColumn, departmentColumn);
+        this.columns.push(typeOperationColumn, countColumn, employeeColumn, postColumn, departmentColumn);
     }
 
     delete(event: TableEventDeleteModel<TicketModel>) {
