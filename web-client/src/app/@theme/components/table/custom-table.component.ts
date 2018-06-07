@@ -24,7 +24,6 @@ export class CustomTableComponent implements OnInit {
     @Input() actionAdd: boolean = true;
     @Input() actionEdit: boolean = true;
     @Input() actionDelete: boolean = true;
-    @Input() actionWidth: string = '30px';
 
     @Input() columns: Column[] = [];
     @Input() actions: CustomActionModel[] = [];
@@ -92,7 +91,6 @@ export class CustomTableComponent implements OnInit {
                 addable: false,
                 filter: false,
                 sort: false,
-                width: this.actionWidth,
                 editor: {
                     type: 'custom',
                     component: CustomActionEditComponent,

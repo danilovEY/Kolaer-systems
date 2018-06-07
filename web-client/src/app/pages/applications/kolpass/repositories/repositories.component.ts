@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {DataSource} from 'ng2-smart-table/lib/data-source/data-source';
 import {KolpassService} from '../kolpass.service';
 import {CustomTableComponent} from '../../../../@theme/components';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {CustomActionModel} from '../../../../@theme/components/table/custom-action.model';
-import {RepositoryPasswordDataSource} from '../repository-password.data-source';
+import {RepositoryPasswordDataSource} from './repository-password.data-source';
 import {CustomActionEventModel} from '../../../../@theme/components/table/custom-action-event.model';
 import {RepositoryPasswordModel} from '../repository-password.model';
 import {PasswordHistoryModel} from '../password-history.model';
@@ -15,6 +14,8 @@ import {Router} from '@angular/router';
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
+import {RepositoryPasswordShareDataSource} from './repository-password-share.data-source';
+import {Cell} from "ng2-smart-table";
 
 @Component({
     selector: 'repositories',
@@ -26,13 +27,17 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
     private readonly copyPassActionName: string = 'copy-pass';
     private readonly copyLoginActionName: string = 'copy-login';
 
-    @ViewChild('customTable')
-    customTable: CustomTableComponent;
-    
-    loading: boolean = true;
-    columns: Column[] = [];
-    actions: CustomActionModel[] = [];
-    source: DataSource;
+    @ViewChild('myPassTable')
+    myPassTable: CustomTableComponent;
+
+    shareLoading: boolean = true;
+    shareColumns: Column[] = [];
+    shareSource: RepositoryPasswordShareDataSource;
+
+    myPassLoading: boolean = true;
+    myPassColumns: Column[] = [];
+    myPassActions: CustomActionModel[] = [];
+    myPassSource: RepositoryPasswordDataSource;
 
 
     private passwordHistoryForCopy: PasswordHistoryModel;
@@ -54,27 +59,30 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
                 private renderer: Renderer2,
                 private chipboardService: ClipboardService,
     private kolpassService: KolpassService) {
-        const source: RepositoryPasswordDataSource = new RepositoryPasswordDataSource(kolpassService);
-        source.onLoading().subscribe(load => this.loading = load);
+        this.myPassSource = new RepositoryPasswordDataSource(kolpassService);
+        this.myPassSource.onLoading().subscribe(load => this.myPassLoading = load);
 
-        this.source = source;
+        this.shareSource = new RepositoryPasswordShareDataSource(kolpassService);
+        this.shareSource.onLoading().subscribe(load => this.shareLoading = load);
     }
 
     ngOnInit(): void {
-        // const idColumn: Column = new Column('id', {
-        //     editable: false,
-        //     addable: false,
-        //     title: 'ID',
-        //     type: 'number',
-        //     width: '15px',
-        // }, undefined);
-
         const nameColumn: Column = new Column('name', {
             title: 'Имя',
             type: 'string',
         }, undefined);
 
-        this.columns.push(nameColumn);
+        const initialsColumn: Column = new Column('initials', {
+            title: 'Пользователь',
+            type: 'string',
+            valuePrepareFunction(a: any, value: RepositoryPasswordModel, cell: Cell) {
+                return value.account.employee ? value.account.employee.initials : value.account.username;
+            }
+        }, undefined);
+
+        this.myPassColumns.push(nameColumn);
+
+        this.shareColumns.push(nameColumn, initialsColumn);
 
         const openAction: CustomActionModel = new CustomActionModel();
         openAction.name = this.openActionName;
@@ -91,21 +99,21 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
         copyLoginAction.content = '<i class="fa fa-user-secret"></i>';
         copyLoginAction.description = 'Копировать последний логин';
 
-        this.actions.push(openAction, copyLoginAction, copyPassAction);
+        this.myPassActions.push(openAction, copyLoginAction, copyPassAction);
 
-        // this.customTable.actionBeforeValueView = this.actionBeforeValueView;
+        // this.myPassTable.actionBeforeValueView = this.actionBeforeValueView;
     }
 
-    action(event: CustomActionEventModel<RepositoryPasswordModel>) {
+    myPassAction(event: CustomActionEventModel<RepositoryPasswordModel>) {
         this.passwordHistoryForCopy = undefined;
         this.activeAction = undefined;
         this.errorResponse = undefined;
 
 
         if (event.action.name === this.copyLoginActionName || event.action.name === this.copyPassActionName) {
-            this.loading = true;
+            this.myPassLoading = true;
             this.kolpassService.getLastHistoryByRepository(event.data.id)
-                .finally(() => this.loading = false)
+                .finally(() => this.myPassLoading = false)
                 .subscribe(
                     (value: PasswordHistoryModel) => {
                         this.passwordHistoryForCopy = value;
@@ -176,7 +184,7 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
         }
     }
 
-    edit(event: TableEventEditModel<RepositoryPasswordModel>) {
+    myPassEdit(event: TableEventEditModel<RepositoryPasswordModel>) {
         if (event.newData.name.length > 0) {
             this.kolpassService.editRepository(event.newData)
                 .subscribe((value: RepositoryPasswordModel) => event.confirm.resolve(value));
@@ -185,7 +193,7 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
         }
     }
 
-    create(event: TableEventAddModel<RepositoryPasswordModel>) {
+    myPassCreate(event: TableEventAddModel<RepositoryPasswordModel>) {
         if (event.newData.name.length > 0) {
             this.kolpassService.addRepository(event.newData)
                 .subscribe((value: RepositoryPasswordModel) => event.confirm.resolve(value));
@@ -194,7 +202,7 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
         }
     }
 
-    delete(event: TableEventDeleteModel<RepositoryPasswordModel>) {
+    myPassDelete(event: TableEventDeleteModel<RepositoryPasswordModel>) {
             this.kolpassService.deleteRepository(event.data.id)
                 .subscribe(value => event.confirm.resolve());
     }

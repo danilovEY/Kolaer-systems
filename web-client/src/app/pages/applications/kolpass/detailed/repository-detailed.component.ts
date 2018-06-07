@@ -10,14 +10,16 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {PasswordHistoryModel} from '../password-history.model';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 import {HttpErrorResponse} from '@angular/common/http';
-import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
-import {AccountModel} from "../../../../@core/models/account.model";
-import {RepositoryPasswordShareDataSource} from "./repository-password-share.data-source";
-import {Cell} from "ng2-smart-table";
-import {AccountEditComponent} from "../../../../@theme/components/table/account-edit.component";
-import {TableEventAddModel} from "../../../../@theme/components/table/table-event-add.model";
-import {AccountService} from "../../../../@core/services/account.service";
-import {SimpleAccountModel} from "../../../../@core/models/simple-account.model";
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {AccountModel} from '../../../../@core/models/account.model';
+import {Cell} from 'ng2-smart-table';
+import {AccountEditComponent} from '../../../../@theme/components/table/account-edit.component';
+import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
+import {AccountService} from '../../../../@core/services/account.service';
+import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
+import {PasswordHistoryShareDataSource} from './password-history-share.data-source';
+import {RepositoryPasswordModel} from '../repository-password.model';
+import {switchMap, tap} from "rxjs/operators";
 
 @Component({
     selector: 'repository-detailed',
@@ -28,7 +30,7 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
     private sub: any;
     private confirmToDeleteModal: NgbModalRef;
     private repositoryId: number = 0;
-    private currentAccount: SimpleAccountModel;
+
 
     @ViewChild('historyTable')
     customTable: CustomTableComponent;
@@ -39,12 +41,14 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
     formUpdatePass: FormGroup;
 
     currentPassword: PasswordHistoryModel;
+    currentRepository: RepositoryPasswordModel;
+    currentAccount: SimpleAccountModel;
 
     historyColumns: Column[] = [];
     historySource: PasswordHistoryDataSource;
 
     shareColumns: Column[] = [];
-    shareSource: RepositoryPasswordShareDataSource;
+    shareSource: PasswordHistoryShareDataSource;
 
     loadingLastPass: boolean = true;
     loadingHistory: boolean = true;
@@ -67,7 +71,7 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
             this.repositoryId = params['id'];
 
             this.historySource = new PasswordHistoryDataSource(this.repositoryId, this.kolpassService);
-            this.shareSource = new RepositoryPasswordShareDataSource(this.repositoryId, this.kolpassService);
+            this.historySource.onLoading().subscribe(load => this.loadingHistory = load);
         });
     }
 
@@ -82,7 +86,25 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
         );
 
         this.accountService.getCurrentAccount()
-            .subscribe((account: SimpleAccountModel) => this.currentAccount = account);
+            .pipe(
+                tap((account: SimpleAccountModel) => this.currentAccount = account),
+                switchMap((account: SimpleAccountModel) =>
+                    this.kolpassService.getRepository(this.repositoryId)
+                        .pipe(
+                            tap((response: RepositoryPasswordModel) => {
+                                this.currentRepository = response;
+
+                                if (!response.account) {
+                                    this.shareSource = new PasswordHistoryShareDataSource(this.repositoryId, this.kolpassService);
+                                    this.shareSource.onLoading().subscribe(load => this.loadingSharingAccounts = load);
+                                } else {
+                                    this.customTable.settings.actions.delete = false;
+                                    this.customTable.table.initGrid();
+                                }
+                            })
+                        ))
+            ).subscribe((response: RepositoryPasswordModel) => {
+            });
 
         const dateColumn: Column = new Column('passwordWriteDate', {
             title: 'Время создания',
@@ -146,9 +168,6 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
         this.shareColumns.push(accountColumn, postColumn, departmentColumn);
 
         if (this.repositoryId > 0) {
-            this.historySource.onLoading().subscribe(load => this.loadingHistory = load);
-            this.shareSource.onLoading().subscribe(load => this.loadingSharingAccounts = load);
-
            this.loadLastPass();
         }
     }

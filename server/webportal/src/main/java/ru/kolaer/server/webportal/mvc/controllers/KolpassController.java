@@ -42,6 +42,13 @@ public class KolpassController {
         return passwordRepositoryService.getAll(sort, filter, number, pageSize);
     }
 
+    @ApiOperation(value = "Получить хранилище")
+    @UrlDeclaration(description = "Получить хранилище")
+    @RequestMapping(value = "/rep/{repId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PasswordRepositoryDto getRepositoryPasswords(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId) {
+        return passwordRepositoryService.getById(repId);
+    }
+
     @ApiOperation(value = "Получить всех расширенных пользователей")
     @UrlDeclaration(description = "Получить всех расширенных пользователей", requestMethod = RequestMethod.GET)
     @RequestMapping(value = "/rep/share", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

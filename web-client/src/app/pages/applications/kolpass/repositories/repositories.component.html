@@ -1,12 +1,48 @@
-<nb-card>
-    <nb-card-header>
-        Пароли
-    </nb-card-header>
+<toaster-container [toasterconfig]="config"></toaster-container>
 
-    <nb-card-body>
-        <toaster-container [toasterconfig]="config"></toaster-container>
-        <ngx-loading [show]="loading" ></ngx-loading>
-        <custom-table #customTable [columns]="columns" [actions]="actions" [source]="source" actionWidth="60px"
-                      (action)="action($event)" (edit)="edit($event)" (delete)="delete($event)" (create)="create($event)"></custom-table>
-    </nb-card-body>
-</nb-card>
+<div class="row">
+    <div class="col-6">
+        <nb-card>
+            <nb-card-header>
+                Ваши пароли
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="myPassLoading" ></ngx-loading>
+                <custom-table #myPassTable
+                              [columns]="myPassColumns"
+                              [actions]="myPassActions"
+                              [source]="myPassSource"
+                              (action)="myPassAction($event)"
+                              (edit)="myPassEdit($event)"
+                              (delete)="myPassDelete($event)"
+                              (create)="myPassCreate($event)">
+
+                </custom-table>
+            </nb-card-body>
+        </nb-card>
+    </div>
+
+    <div class="col-6">
+        <nb-card>
+            <nb-card-header>
+                Расшаренные пароли
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="shareLoading" ></ngx-loading>
+                <custom-table #myPassTable
+                              [columns]="shareColumns"
+                              [actions]="myPassActions"
+                              [source]="shareSource"
+                              (action)="myPassAction($event)"
+                              [actionEdit]="false"
+                              [actionDelete]="false"
+                              [actionAdd]="false">
+
+                </custom-table>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>
+
