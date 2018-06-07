@@ -243,7 +243,7 @@ public class TableWithUsersBirthdayVcImpl implements TableWithUsersBirthdayVc {
 			}
 
 			Tools.runOnWithOutThreadFX(() -> {
-				titleLabel.setText("Сегодня день рожденя у:");
+				titleLabel.setText("Сегодня день рождения у:");
 				updateUsers(userModels);
 			});
 		});
