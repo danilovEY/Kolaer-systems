@@ -76,7 +76,11 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
             title: 'Пользователь',
             type: 'string',
             valuePrepareFunction(a: any, value: RepositoryPasswordModel, cell: Cell) {
-                return value.account.employee ? value.account.employee.initials : value.account.username;
+                if(value.account) {
+                    return value.account.employee ? value.account.employee.initials : value.account.username;
+                } else {
+                    return '';
+                }
             }
         }, undefined);
 

@@ -98,6 +98,9 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
                                     this.shareSource = new PasswordHistoryShareDataSource(this.repositoryId, this.kolpassService);
                                     this.shareSource.onLoading().subscribe(load => this.loadingSharingAccounts = load);
                                 } else {
+                                    this.formUpdatePass.get('login').disable();
+                                    this.formUpdatePass.get('password').disable();
+
                                     this.customTable.settings.actions.delete = false;
                                     this.customTable.table.initGrid();
                                 }

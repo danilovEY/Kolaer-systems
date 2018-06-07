@@ -57,6 +57,8 @@ public class PasswordRepositoryServiceImpl
         this.authenticationService = authenticationService;
     }
 
+
+
     @Override
     @Transactional(readOnly = true)
     public Page<PasswordRepositoryDto> getAll(RepositoryPasswordSort sortParam, RepositoryPasswordFilter filterParam,
@@ -326,6 +328,9 @@ public class PasswordRepositoryServiceImpl
             throw new ForbiddenException();
         }
 
-        return super.update(dto);
+        passwordRepositoryEntity.setName(dto.getName());
+        passwordRepositoryEntity.setUrlImage(dto.getUrlImage());
+
+        return defaultConverter.convertToDto(defaultEntityDao.update(passwordRepositoryEntity));
     }
 }

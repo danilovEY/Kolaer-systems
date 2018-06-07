@@ -11,7 +11,7 @@
                     </nb-card-header>
 
                     <nb-card-body>
-                        <ngx-loading [show]="loadingLastPass" ></ngx-loading>
+                        <ngx-loading [show]="loadingLastPass"></ngx-loading>
 
                         <form (ngSubmit)="submitUpdatePassForm()" [formGroup]="formUpdatePass">
                             <div class="row">
@@ -19,7 +19,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label for="login">Логин</label>
-                                        <div class="input-group has-user-icon">
+                                        <div class="input-group">
                                             <input type="text" id="login" formControlName="login"
                                                    class="form-control" value="{{ currentPassword?.login }}">
                                         </div>
@@ -30,7 +30,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label for="email">Пароль</label>
-                                        <div class="input-group has-email-icon">
+                                        <div class="input-group">
                                             <input type="text" id="email" formControlName="password"
                                                    class="form-control" value="{{ currentPassword?.password }}">
                                         </div>
