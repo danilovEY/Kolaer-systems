@@ -3,10 +3,14 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.exception.NotFoundDataException;
+import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
+import ru.kolaer.server.webportal.mvc.model.dto.EmployeeRequestDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
@@ -80,6 +84,39 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
                 .convertToDto(defaultEntityDao.findByDepartmentById(page, pageSize, id));
 
         return new Page<>(result, page, count, pageSize);
+    }
+
+    @Override
+    public EmployeeDto update(Long employeeId, EmployeeRequestDto employeeRequestDto) {
+        if (!StringUtils.hasLength(employeeRequestDto.getFirstName()) ||
+                !StringUtils.hasLength(employeeRequestDto.getSecondName()) ||
+                !StringUtils.hasLength(employeeRequestDto.getThirdName())) {
+            throw new UnexpectedRequestParams("ФИО не должно быть пустым");
+        }
+
+
+        EmployeeEntity employeeEntity = defaultEntityDao.findById(employeeId);
+        if (employeeEntity == null) {
+            throw new NotFoundDataException("Сотрудник не найден");
+        }
+
+        employeeEntity.setFirstName(employeeRequestDto.getFirstName());
+        employeeEntity.setSecondName(employeeRequestDto.getSecondName());
+        employeeEntity.setThirdName(employeeRequestDto.getThirdName());
+
+        employeeEntity.setInitials(employeeEntity.getSecondName() + " " +
+                employeeEntity.getFirstName() + " " + employeeEntity.getThirdName());
+
+        employeeEntity.setEmail(employeeRequestDto.getEmail());
+        employeeEntity.setDepartmentId(employeeRequestDto.getDepartmentId());
+        employeeEntity.setPostId(employeeRequestDto.getPostId());
+        employeeEntity.setHomePhoneNumber(employeeRequestDto.getHomePhoneNumber());
+        employeeEntity.setWorkPhoneNumber(employeeRequestDto.getWorkPhoneNumber());
+        employeeEntity.setBirthday(employeeRequestDto.getBirthday());
+        employeeEntity.setGender(employeeRequestDto.getGender());
+        employeeEntity.setCategory(employeeRequestDto.getCategory());
+
+        return defaultConverter.convertToDto(defaultEntityDao.save(employeeEntity));
     }
 
     @Override

@@ -7,7 +7,9 @@ import {TableEventAddModel} from '../../../../@theme/components/table/table-even
 import {EmployeeModel} from '../../../../@core/models/employee.model';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
-import {Cell} from "ng2-smart-table";
+import {Cell} from 'ng2-smart-table';
+import {Category} from '../../../../@core/models/category.enum';
+import {Utils} from '../../../../@core/utils/utils';
 
 @Component({
     selector: 'employees',
@@ -30,7 +32,8 @@ export class EmployeesComponent implements OnInit {
     ngOnInit() {
         const personnelNumberColumn: Column = new Column('personnelNumber', {
             title: 'Имя',
-            type: 'number'
+            type: 'number',
+            editable: false
         }, null);
 
         const firstNameColumn: Column = new Column('firstName', {
@@ -64,13 +67,76 @@ export class EmployeesComponent implements OnInit {
             }
         }, null);
 
+        const birthdayColumn: Column = new Column('birthday', {
+            title: 'День рождения',
+            type: 'string',
+            valuePrepareFunction(a: any, value: EmployeeModel, cell: Cell) {
+                return Utils.getDateFormat(value.birthday);
+            }
+        }, null);
+
+        // const genderColumn: Column = new Column('gender', {
+        //     title: 'Пол',
+        //     type: 'string',
+        //     valuePrepareFunction(a: any, value: EmployeeModel, cell: Cell) {
+        //         return Gender[value.gender];
+        //     }
+        // }, null);
+
+        const categoryColumn: Column = new Column('category', {
+            title: 'Категория',
+            type: 'string',
+            valuePrepareFunction(a: any, value: EmployeeModel, cell: Cell) {
+                return Category[value.category];
+            }
+        }, null);
+
+        const workPhoneNumberColumn: Column = new Column('workPhoneNumber', {
+            title: 'Рабочий телефон',
+            type: 'string'
+        }, null);
+
+        // const homePhoneNumberColumn: Column = new Column('homePhoneNumber', {
+        //     title: 'Домашний телефон',
+        //     type: 'string'
+        // }, null);
+
+        // const emailColumn: Column = new Column('email', {
+        //     title: 'Email',
+        //     type: 'string'
+        // }, null);
+
+        // const employmentDateColumn: Column = new Column('employmentDate', {
+        //     title: 'Дата устройства',
+        //     type: 'string',
+        //     valuePrepareFunction(a: any, value: EmployeeModel, cell: Cell) {
+        //         return Utils.getDateFormat(value.employmentDate);
+        //     }
+        // }, null);
+        //
+        // const dismissalDateColumn: Column = new Column('dismissalDate', {
+        //     title: 'Дата увольнения',
+        //     type: 'string',
+        //     valuePrepareFunction(a: any, value: EmployeeModel, cell: Cell) {
+        //         return Utils.getDateFormat(value.dismissalDate);
+        //     }
+        // }, null);
 
         this.employeesColumns.push(personnelNumberColumn,
             secondNameColumn,
             firstNameColumn,
             thirdNameColumn,
             postColumn,
-            departmentColumn);
+            departmentColumn,
+            // genderColumn,
+            birthdayColumn,
+            categoryColumn,
+            workPhoneNumberColumn,
+            // homePhoneNumberColumn,
+            // emailColumn,
+            // employmentDateColumn,
+            // dismissalDateColumn
+        );
     }
 
     employeesEdit(event: TableEventEditModel<EmployeeModel>) {

@@ -49,6 +49,14 @@ export class Utils {
         return undefined;
     }
 
+    public static getDateFormatFromString(date: string): string {
+        return Utils.getDateFormat(new Date(date));
+    }
+
+    public static getDateFormat(date: Date): string {
+        return Utils.datePipe.transform(date, 'dd.MM.yyyy');
+    }
+
     public static getDateTimeFormatFromString(date: string): string {
         return Utils.getDateTimeFormat(new Date(date));
     }

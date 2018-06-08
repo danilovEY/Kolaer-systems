@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.mvc.model.dto.EmployeeRequestDto;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface EmployeeService extends BirthdayService<EmployeeDto>, DefaultSe
     List<EmployeeDto> getUsersByDepartmentId(Long id);
 
     Page<EmployeeDto> getUsersByDepartmentId(int page, int pageSize, Long id);
+
+    EmployeeDto update(Long employeeId, EmployeeRequestDto employeeRequestDto);
 }

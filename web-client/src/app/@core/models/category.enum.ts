@@ -1,3 +1,5 @@
 export enum Category {
-    WORKER, SPECIALIST, LEADER
+    WORKER = 'Рабочий',
+    SPECIALIST = 'Специалист',
+    LEADER = 'Руководитель'
 }

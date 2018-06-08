@@ -11,6 +11,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.EmployeeFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.EmployeeRequestDto;
 import ru.kolaer.server.webportal.mvc.model.dto.EmployeeSort;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 
@@ -53,6 +54,14 @@ public class EmployeeController {
     @RequestMapping(value = "/{employeeId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public EmployeeDto getAllEmployees(@PathVariable(value = "employeeId") Long employeeId) {
         return this.employeeService.getById(employeeId);
+    }
+
+    @ApiOperation(value = "Обновить сотрудника")
+    @UrlDeclaration(description = "Обновить сотрудника.", isUser = false, requestMethod = RequestMethod.PUT)
+    @RequestMapping(value = "/{employeeId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public EmployeeDto updateEmployee(@PathVariable(value = "employeeId") Long employeeId,
+                                      @RequestBody EmployeeRequestDto employeeRequestDto) {
+        return this.employeeService.update(employeeId, employeeRequestDto);
     }
 
     @ApiOperation(
