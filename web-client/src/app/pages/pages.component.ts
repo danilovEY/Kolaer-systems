@@ -19,7 +19,6 @@ export class PagesComponent implements OnInit {
 
     constructor(private authService: AuthenticationRestService,
                 private accountService: AccountService) {
-
     }
 
     ngOnInit() {
@@ -39,7 +38,7 @@ export class PagesComponent implements OnInit {
         if (this.authService.authentication) {
             const kolpassMenuItem: NbMenuItem = new NbMenuItem();
             kolpassMenuItem.title = 'Парольница';
-            kolpassMenuItem.icon = 'nb-locked';
+            kolpassMenuItem.icon = 'icon ion-md-lock';
             kolpassMenuItem.children = [];
 
             const kolpassMainMenuItem: NbMenuItem = new NbMenuItem();
@@ -47,7 +46,6 @@ export class PagesComponent implements OnInit {
             kolpassMainMenuItem.link = 'app/kolpass';
 
             kolpassMenuItem.children.push(kolpassMainMenuItem);
-
             this.menu.push(kolpassMenuItem);
 
 
@@ -60,8 +58,6 @@ export class PagesComponent implements OnInit {
             ticketsMainMenuItem.title = 'Главная';
             ticketsMainMenuItem.link = 'app/tickets';
 
-            ticketsMenuItem.children.push(ticketsMainMenuItem);
-
             this.accountService.getCurrentAccount()
                 .subscribe((account: SimpleAccountModel) => {
                    if (account.accessOit) {
@@ -73,7 +69,21 @@ export class PagesComponent implements OnInit {
                    }
                 });
 
+            ticketsMenuItem.children.push(ticketsMainMenuItem);
             this.menu.push(ticketsMenuItem);
+
+
+            const orgStructureMenuItem: NbMenuItem = new NbMenuItem();
+            orgStructureMenuItem.title = 'Структура организации';
+            orgStructureMenuItem.icon = 'icon ion-md-business';
+            orgStructureMenuItem.children = [];
+
+            const employeesMenuItem: NbMenuItem = new NbMenuItem();
+            employeesMenuItem.title = 'Сотрудники';
+            employeesMenuItem.link = 'app/org-structures/employees';
+
+            orgStructureMenuItem.children.push(employeesMenuItem);
+            this.menu.push(orgStructureMenuItem);
         }
 
     }

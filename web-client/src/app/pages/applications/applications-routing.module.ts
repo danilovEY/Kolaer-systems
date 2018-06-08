@@ -17,6 +17,10 @@ const routes: Routes = [{
             path: 'tickets',
             loadChildren: 'app/pages/applications/tickets/tickets.module#TicketsModule'
         },
+        {
+            path: 'org-structures',
+            loadChildren: 'app/pages/applications/org-structures/org-structures.module#OrgStructuresModule'
+        },
     ]
 }];
 
