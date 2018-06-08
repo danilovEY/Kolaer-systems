@@ -4,21 +4,21 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.mvc.model.dto.DepartmentFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.DepartmentRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.DepartmentSort;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
-
-import java.util.List;
 
 /**
  * Created by danilovey on 30.11.2016.
  */
 @Api(tags = "Подразделения")
 @RestController
-@RequestMapping(value = "/department")
+@RequestMapping(value = "/departments")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
@@ -29,12 +29,35 @@ public class DepartmentController {
     }
 
     @ApiOperation(value = "Получить все подразделения")
-    @UrlDeclaration(description = "Получить все подразделения", isAccessAll = true)
-    @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<DepartmentDto> getAllDepartment() {
-        return this.departmentService.getAll();
+    @UrlDeclaration(description = "Получить все подразделения")
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<DepartmentDto> getAllDepartment(@RequestParam(value = "page", defaultValue = "0") Integer number,
+                                                @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
+                                                DepartmentSort sortParam,
+                                                DepartmentFilter filter) {
+        return departmentService.getAll(sortParam, filter, number, pageSize);
     }
 
+    @ApiOperation(value = "Добавить подразделение")
+    @UrlDeclaration(description = "Добавить подразделение", isUser = false, requestMethod = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public DepartmentDto addDepartment(@RequestBody DepartmentRequestDto departmentRequestDto) {
+        return departmentService.add(departmentRequestDto);
+    }
 
+    @ApiOperation(value = "Обновит подразделение")
+    @UrlDeclaration(description = "Обновит подразделение", isUser = false, requestMethod = RequestMethod.PUT)
+    @RequestMapping(value = "/{depId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public DepartmentDto updateDepartment(@PathVariable("depId") Long depId,
+                                  @RequestBody DepartmentRequestDto departmentRequestDto) {
+        return departmentService.update(depId, departmentRequestDto);
+    }
+
+    @ApiOperation(value = "Удалить подразделение")
+    @UrlDeclaration(description = "Удалить подразделение", isUser = false, requestMethod = RequestMethod.DELETE)
+    @RequestMapping(value = "/{depId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void deleteDepartment(@PathVariable("depId") Long depId) {
+        departmentService.delete(depId);
+    }
 
 }

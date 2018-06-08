@@ -6,17 +6,15 @@
             </nb-card-header>
 
             <nb-card-body>
-                <!--<ngx-loading [show]="employeesLoading"></ngx-loading>-->
-                <!--<custom-table #myPassTable-->
-                              <!--[columns]="employeesColumns"-->
-                              <!--[actions]="employeesActions"-->
-                              <!--[source]="employeesSource"-->
-                              <!--(action)="employeesAction($event)"-->
-                              <!--(edit)="employeesEdit($event)"-->
-                              <!--(delete)="employeesDelete($event)"-->
-                              <!--(create)="employeesCreate($event)">-->
+                <ngx-loading [show]="employeesLoading"></ngx-loading>
+                <custom-table #employeeTable
+                              [columns]="employeesColumns"
+                              [source]="employeesSource"
+                              (edit)="employeesEdit($event)"
+                              (delete)="employeesDelete($event)"
+                              (create)="employeesCreate($event)">
 
-                <!--</custom-table>-->
+                </custom-table>
             </nb-card-body>
         </nb-card>
     </div>

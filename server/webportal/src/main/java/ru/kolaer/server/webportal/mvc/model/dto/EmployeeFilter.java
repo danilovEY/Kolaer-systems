@@ -8,6 +8,9 @@ public class EmployeeFilter implements FilterParam {
     private Long filterId;
     @EntityFieldName(name = "initials")
     private String filterInitials;
+    @EntityFieldName(name = "deleted")
+    private Boolean filterDeleted;
+    private FilterType typeFilterDeleted = FilterType.EQUAL;
     @EntityFieldName(name = "post.name")
     private String filterPostName;
     @EntityFieldName(name = "department.name")

@@ -7,6 +7,10 @@ import ru.kolaer.api.mvp.model.error.ErrorCode;
  */
 public class NotFoundDataException extends ServerException {
 
+    public NotFoundDataException() {
+        super("Не найдено", ErrorCode.OBJECT_NOT_FOUND);
+    }
+
     public NotFoundDataException(String message) {
         super(message, ErrorCode.OBJECT_NOT_FOUND);
     }

@@ -82,7 +82,17 @@ export class PagesComponent implements OnInit {
             employeesMenuItem.title = 'Сотрудники';
             employeesMenuItem.link = 'app/org-structures/employees';
 
-            orgStructureMenuItem.children.push(employeesMenuItem);
+            const postsMenuItem: NbMenuItem = new NbMenuItem();
+            postsMenuItem.title = 'Должности';
+            postsMenuItem.link = 'app/org-structures/posts';
+
+            const departmentsMenuItem: NbMenuItem = new NbMenuItem();
+            departmentsMenuItem.title = 'Подразделения';
+            departmentsMenuItem.link = 'app/org-structures/departments';
+
+            orgStructureMenuItem.children.push(employeesMenuItem,
+                postsMenuItem,
+                departmentsMenuItem);
             this.menu.push(orgStructureMenuItem);
         }
 
