@@ -8,6 +8,7 @@ import {BaseService} from './base.service';
 import {PostSortModel} from '../models/post-sort.model';
 import {PostFilterModel} from '../models/post-filter.model';
 import {PostModel} from '../models/post.model';
+import {PostRequestModel} from "../models/post-request.model";
 
 @Injectable()
 export class PostService extends BaseService {
@@ -25,5 +26,19 @@ export class PostService extends BaseService {
         params = this.getSortAndFilterParam(params, sort, filter);
 
         return this._httpClient.get<Page<PostModel>>(this.getPostUrl, {params: params});
+    }
+
+    createPost(post: PostRequestModel): Observable<PostModel> {
+        return this._httpClient.post<PostModel>(this.getPostUrl, post);
+    }
+
+    updateDepartment(postId: number, department: PostRequestModel): Observable<PostModel> {
+        const url = `${this.getPostUrl}/${postId}`;
+        return this._httpClient.put<PostModel>(url, department);
+    }
+
+    deleteDepartment(postId: number): Observable<any> {
+        const url = `${this.getPostUrl}/${postId}`;
+        return this._httpClient.delete(url);
     }
 }

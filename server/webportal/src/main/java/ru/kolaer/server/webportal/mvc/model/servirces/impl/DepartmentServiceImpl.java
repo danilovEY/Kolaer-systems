@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
@@ -34,6 +35,7 @@ public class DepartmentServiceImpl
     }
 
     @Override
+    @Transactional
     public DepartmentDto add(DepartmentRequestDto departmentRequestDto) {
         if(departmentRequestDto == null ||
                 StringUtils.isEmpty(departmentRequestDto.getName()) ||
@@ -49,6 +51,7 @@ public class DepartmentServiceImpl
     }
 
     @Override
+    @Transactional
     public DepartmentDto update(Long depId, DepartmentRequestDto departmentRequestDto) {
         if(departmentRequestDto == null ||
                 StringUtils.isEmpty(departmentRequestDto.getName()) ||
@@ -66,5 +69,4 @@ public class DepartmentServiceImpl
 
         return defaultConverter.convertToDto(defaultEntityDao.save(departmentEntity));
     }
-
 }

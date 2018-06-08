@@ -7,6 +7,7 @@ import {TableEventEditModel} from '../../../../@theme/components/table/table-eve
 import {DepartmentsDataSource} from './departments.data-source';
 import {DepartmentService} from '../../../../@core/services/department.service';
 import {DepartmentModel} from '../../../../@core/models/department.model';
+import {DepartmentRequestModel} from "../../../../@core/models/department-request.model";
 
 @Component({
     selector: 'departments',
@@ -43,14 +44,30 @@ export class DepartmentsComponent implements OnInit {
     }
 
     departmentsEdit(event: TableEventEditModel<DepartmentModel>) {
+        const departmentRequestModel: DepartmentRequestModel = new DepartmentRequestModel();
+        departmentRequestModel.abbreviatedName = event.newData.abbreviatedName;
+        departmentRequestModel.name = event.newData.name;
 
+        this.departmentService.updateDepartment(event.data.id, departmentRequestModel)
+            .subscribe((response: DepartmentModel) => event.confirm.resolve(response),
+                error2 => event.confirm.reject({}));
     }
 
     departmentsCreate(event: TableEventAddModel<DepartmentModel>) {
+        const departmentRequestModel: DepartmentRequestModel = new DepartmentRequestModel();
+        departmentRequestModel.abbreviatedName = event.newData.abbreviatedName;
+        departmentRequestModel.name = event.newData.name;
 
+        this.departmentService.createDepartment(departmentRequestModel)
+            .subscribe((response: DepartmentModel) => event.confirm.resolve(response),
+                error2 => event.confirm.reject({}));
     }
 
     departmentsDelete(event: TableEventDeleteModel<DepartmentModel>) {
-
+        if (confirm(`Вы действительно хотите удалить: ${event.data.abbreviatedName}`)) {
+            this.departmentService.deleteDepartment(event.data.id)
+                .subscribe(response => event.confirm.resolve({}),
+                    error2 => event.confirm.reject({}));
+        }
     }
 }

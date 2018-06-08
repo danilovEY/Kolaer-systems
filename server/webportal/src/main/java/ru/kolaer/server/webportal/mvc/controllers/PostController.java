@@ -56,7 +56,7 @@ public class PostController {
     @UrlDeclaration(description = "Удалить должность", isUser = false, requestMethod = RequestMethod.DELETE)
     @RequestMapping(value = "/{depId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deletePost(@PathVariable("postId") Long postId) {
-        postService.delete(postId);
+        postService.delete(postId, true);
     }
 
 }

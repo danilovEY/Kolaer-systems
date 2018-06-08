@@ -27,6 +27,7 @@ public interface DefaultService<T extends BaseDto> {
     List<T> update(List<T> dtos);
 
 
+    long delete(Long id, boolean deletedColumn);
     long delete(Long id);
     void delete(T dto);
     long deleteAll(List<Long> ids);

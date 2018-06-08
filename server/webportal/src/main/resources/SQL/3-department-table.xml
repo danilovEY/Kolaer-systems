@@ -21,9 +21,10 @@
             </column>
         </createTable>
         <addPrimaryKey tableName="department" columnNames="id"/>
-        <!--<addForeignKeyConstraint baseTableName="department" baseColumnNames="id_chief_employee" constraintName="department_employee_fk"-->
-                                 <!--referencedTableName="employee"-->
-                                 <!--referencedColumnNames="id"/>-->
+    </changeSet>
+
+    <changeSet id="3-1" author="Danilov">
+        <dropUniqueConstraint tableName="department" constraintName="abbreviated_name" uniqueColumns="abbreviated_name"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -57,7 +57,7 @@ public class DepartmentController {
     @UrlDeclaration(description = "Удалить подразделение", isUser = false, requestMethod = RequestMethod.DELETE)
     @RequestMapping(value = "/{depId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteDepartment(@PathVariable("depId") Long depId) {
-        departmentService.delete(depId);
+        departmentService.delete(depId, true);
     }
 
 }

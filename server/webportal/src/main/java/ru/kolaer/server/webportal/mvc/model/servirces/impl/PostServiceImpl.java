@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
@@ -25,6 +26,7 @@ public class PostServiceImpl
     }
 
     @Override
+    @Transactional
     public PostDto add(PostRequestDto postRequestDto) {
         if (postRequestDto == null ||
                 StringUtils.isEmpty(postRequestDto.getName()) ||
@@ -43,6 +45,7 @@ public class PostServiceImpl
     }
 
     @Override
+    @Transactional
     public PostDto update(Long postId, PostRequestDto postRequestDto) {
         if (postId == null || postRequestDto == null ||
                 StringUtils.isEmpty(postRequestDto.getName()) ||

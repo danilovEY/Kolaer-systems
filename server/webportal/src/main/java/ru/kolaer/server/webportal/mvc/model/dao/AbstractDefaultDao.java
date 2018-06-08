@@ -161,12 +161,21 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
     @Override
     public long delete(@NonNull Long id) {
+        return delete(id, false);
+    }
+
+    @Override
+    public long delete(@NonNull Long id, boolean deletedColumn) {
         if(id < 1) {
             return 0;
         }
 
+        String sqlQuery = deletedColumn
+                ? "UPDATE " + getEntityName() + " SET deleted = true WHERE id = :id"
+                : "DELETE FROM " + getEntityName() + " WHERE id = :id";
+
         return getSession()
-                .createQuery("DELETE FROM " + getEntityName() + " WHERE id = :id")
+                .createQuery(sqlQuery)
                 .setParameter("id", id)
                 .executeUpdate();
     }

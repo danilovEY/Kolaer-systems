@@ -8,6 +8,7 @@ import {BaseService} from './base.service';
 import {DepartmentModel} from '../models/department.model';
 import {DepartmentSortModel} from '../models/department-sort.model';
 import {DepartmentFilterModel} from '../models/department-filter.model';
+import {DepartmentRequestModel} from "../models/department-request.model";
 
 @Injectable()
 export class DepartmentService extends BaseService {
@@ -25,5 +26,19 @@ export class DepartmentService extends BaseService {
         params = this.getSortAndFilterParam(params, sort, filter);
 
         return this._httpClient.get<Page<DepartmentModel>>(this.getDepartmentUrl, {params: params});
+    }
+
+    createDepartment(department: DepartmentRequestModel): Observable<DepartmentModel> {
+        return this._httpClient.post<DepartmentModel>(this.getDepartmentUrl, department);
+    }
+
+    updateDepartment(depId: number, department: DepartmentRequestModel): Observable<DepartmentModel> {
+        const url = `${this.getDepartmentUrl}/${depId}`;
+        return this._httpClient.put<DepartmentModel>(url, department);
+    }
+
+    deleteDepartment(depId: number): Observable<any> {
+        const url = `${this.getDepartmentUrl}/${depId}`;
+        return this._httpClient.delete(url);
     }
 }

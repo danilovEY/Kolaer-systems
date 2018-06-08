@@ -10,6 +10,7 @@ import {PostModel} from '../../../../@core/models/post.model';
 import {Cell} from "ng2-smart-table";
 import {TypePost} from "../../../../@core/models/type-post.emun";
 import {Utils} from "../../../../@core/utils/utils";
+import {PostRequestModel} from "../../../../@core/models/post-request.model";
 
 @Component({
     selector: 'posts',
@@ -48,7 +49,6 @@ export class PostsComponent implements OnInit {
                 config: {
                     selectText: 'Тип...',
                     list: [
-                        { value: null, title: 'Нет' },
                         { value: Utils.keyFromValue(TypePost, TypePost.CATEGORY), title: TypePost.CATEGORY },
                         { value: Utils.keyFromValue(TypePost, TypePost.DISCHARGE), title: TypePost.DISCHARGE },
                         { value: Utils.keyFromValue(TypePost, TypePost.GROUP), title: TypePost.GROUP },
@@ -59,7 +59,6 @@ export class PostsComponent implements OnInit {
                 type: 'list',
                 config: {
                     list: [
-                        { value: null, title: 'Нет' },
                         { value: Utils.keyFromValue(TypePost, TypePost.CATEGORY), title: TypePost.CATEGORY },
                         { value: Utils.keyFromValue(TypePost, TypePost.DISCHARGE), title: TypePost.DISCHARGE },
                         { value: Utils.keyFromValue(TypePost, TypePost.GROUP), title: TypePost.GROUP },
@@ -84,14 +83,40 @@ export class PostsComponent implements OnInit {
     }
 
     postsEdit(event: TableEventEditModel<PostModel>) {
+        const postRequestModel: PostRequestModel = new PostRequestModel();
+        postRequestModel.name = event.newData.name;
+        postRequestModel.abbreviatedName = event.newData.abbreviatedName;
+        postRequestModel.rang = event.newData.rang;
+        postRequestModel.type = event.newData.type;
 
+        this.postService.updateDepartment(event.data.id, postRequestModel)
+            .subscribe((response: PostModel) => event.confirm.resolve(response),
+                error2 => event.confirm.reject({}));
     }
 
     postsCreate(event: TableEventAddModel<PostModel>) {
+        const postRequestModel: PostRequestModel = new PostRequestModel();
+        postRequestModel.name = event.newData.name;
+        postRequestModel.abbreviatedName = event.newData.abbreviatedName;
+        postRequestModel.rang = event.newData.rang;
+        postRequestModel.type = event.newData.type;
 
+        this.postService.createPost(postRequestModel)
+            .subscribe((response: PostModel) => event.confirm.resolve(response),
+                error2 => event.confirm.reject({}));
     }
 
     postsDelete(event: TableEventDeleteModel<PostModel>) {
+        if (confirm(`Вы действительно хотите удалить: ${event.data.abbreviatedName}`)) {
+            const postRequestModel: PostRequestModel = new PostRequestModel();
+            postRequestModel.name = event.data.name;
+            postRequestModel.abbreviatedName = event.data.abbreviatedName;
+            postRequestModel.rang = event.data.rang;
+            postRequestModel.type = event.data.type;
 
+            this.postService.deleteDepartment(event.data.id)
+                .subscribe(response => event.confirm.resolve({}),
+                    error2 => event.confirm.reject({}));
+        }
     }
 }
