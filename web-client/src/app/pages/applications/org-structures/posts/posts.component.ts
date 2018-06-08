@@ -7,10 +7,10 @@ import {TableEventEditModel} from '../../../../@theme/components/table/table-eve
 import {PostService} from '../../../../@core/services/post.service';
 import {PostsDataSource} from './posts.data-source';
 import {PostModel} from '../../../../@core/models/post.model';
-import {Cell} from "ng2-smart-table";
-import {TypePost} from "../../../../@core/models/type-post.emun";
-import {Utils} from "../../../../@core/utils/utils";
-import {PostRequestModel} from "../../../../@core/models/post-request.model";
+import {Cell} from 'ng2-smart-table';
+import {TypePost} from '../../../../@core/models/type-post.emun';
+import {Utils} from '../../../../@core/utils/utils';
+import {PostRequestModel} from '../../../../@core/models/post-request.model';
 
 @Component({
     selector: 'posts',
@@ -49,9 +49,9 @@ export class PostsComponent implements OnInit {
                 config: {
                     selectText: 'Тип...',
                     list: [
-                        { value: Utils.keyFromValue(TypePost, TypePost.CATEGORY), title: TypePost.CATEGORY },
-                        { value: Utils.keyFromValue(TypePost, TypePost.DISCHARGE), title: TypePost.DISCHARGE },
-                        { value: Utils.keyFromValue(TypePost, TypePost.GROUP), title: TypePost.GROUP },
+                        {value: Utils.keyFromValue(TypePost, TypePost.CATEGORY), title: TypePost.CATEGORY},
+                        {value: Utils.keyFromValue(TypePost, TypePost.DISCHARGE), title: TypePost.DISCHARGE},
+                        {value: Utils.keyFromValue(TypePost, TypePost.GROUP), title: TypePost.GROUP},
                     ],
                 },
             },
@@ -59,9 +59,9 @@ export class PostsComponent implements OnInit {
                 type: 'list',
                 config: {
                     list: [
-                        { value: Utils.keyFromValue(TypePost, TypePost.CATEGORY), title: TypePost.CATEGORY },
-                        { value: Utils.keyFromValue(TypePost, TypePost.DISCHARGE), title: TypePost.DISCHARGE },
-                        { value: Utils.keyFromValue(TypePost, TypePost.GROUP), title: TypePost.GROUP },
+                        {value: Utils.keyFromValue(TypePost, TypePost.CATEGORY), title: TypePost.CATEGORY},
+                        {value: Utils.keyFromValue(TypePost, TypePost.DISCHARGE), title: TypePost.DISCHARGE},
+                        {value: Utils.keyFromValue(TypePost, TypePost.GROUP), title: TypePost.GROUP},
                     ],
                 },
             },
