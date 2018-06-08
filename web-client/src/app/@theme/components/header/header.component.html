@@ -7,6 +7,7 @@
             Система КолАЭР
         </div>
     </div>
+
 </div>
 
 <nb-actions size="medium" class="header-container right">
@@ -15,9 +16,11 @@
                  [showName]="accountModel !== undefined" [name]="accountModel?.username"
                  [picture]="accountModel !== undefined ? accountModel?.avatarUrl : 'assets/images/no_photo.jpg'"></nb-user>
     </nb-action>
-    <!--<nb-action class="control-item" disabled icon="nb-notifications"></nb-action>-->
-    <!--<nb-action class="control-item" icon="nb-email"></nb-action>-->
-    <!--<nb-action class="control-item">-->
-        <!--<nb-search type="rotate-layout" (click)="startSearch()"></nb-search>-->
-    <!--</nb-action>-->
+
+    <!--<nb-action disabled icon="nb-notifications"></nb-action>-->
+    <!--<nb-action icon="nb-email"></nb-action>-->
+    <!--<nb-action icon="nb-search"></nb-action>-->
+
+    <nb-action *ngIf="routerNavigatorService.canNextUrl()" icon="nb-arrow-thin-right" (click)="navNext()"></nb-action>
+    <nb-action *ngIf="routerNavigatorService.canPrevUrl()" icon="nb-arrow-thin-left" (click)="navPrev()"></nb-action>
 </nb-actions>

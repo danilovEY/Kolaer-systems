@@ -5,6 +5,7 @@ import {NbMenuItem} from '@nebular/theme/components/menu/menu.service';
 import {AuthenticationRestService} from '../../../@core/modules/auth/authentication-rest.service';
 import {AccountService} from '../../../@core/services/account.service';
 import {SimpleAccountModel} from "../../../@core/models/simple-account.model";
+import {RouterNavigatorService} from "../../../@core/services/router-navigator.service";
 
 @Component({
     selector: 'ngx-header',
@@ -22,7 +23,8 @@ export class HeaderComponent implements OnInit {
     constructor(private sidebarService: NbSidebarService,
                 private menuService: NbMenuService,
                 private accountService: AccountService,
-                public authService: AuthenticationRestService) {
+                public authService: AuthenticationRestService,
+                public routerNavigatorService: RouterNavigatorService) {
     }
 
     ngOnInit() {
@@ -64,4 +66,11 @@ export class HeaderComponent implements OnInit {
         this.menuService.navigateHome();
     }
 
+    navPrev() {
+        this.routerNavigatorService.navigateToPreviousUrl();
+    }
+
+    navNext() {
+        this.routerNavigatorService.navigateToNextUrl();
+    }
 }
