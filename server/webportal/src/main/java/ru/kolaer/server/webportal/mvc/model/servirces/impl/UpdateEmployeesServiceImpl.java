@@ -5,11 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.error.ErrorCode;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
 import ru.kolaer.api.mvp.model.kolaerweb.TypePostEnum;
@@ -40,7 +37,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
 
-    private final JdbcTemplate jdbcTemplateKolaerBase;
+//    private final JdbcTemplate jdbcTemplateKolaerBase;
 
     private final EmployeeDao employeeDao;
     private final PostDao postDao;
@@ -52,7 +49,8 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
     private final ExcelReaderDepartment excelReaderDepartment;
     private final ExcelReaderPost excelReaderPost;
 
-    public UpdateEmployeesServiceImpl(@Qualifier("dataSourceKolaerBase") JdbcTemplate jdbcTemplateKolaerBase,
+    public UpdateEmployeesServiceImpl(
+//            @Qualifier("dataSourceKolaerBase") JdbcTemplate jdbcTemplateKolaerBase,
                                       EmployeeDao employeeDao,
                                       PostDao postDao,
                                       DepartmentDao departmentDao,
@@ -61,7 +59,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                                       ExcelReaderEmployee excelReaderEmployee,
                                       ExcelReaderDepartment excelReaderDepartment,
                                       ExcelReaderPost excelReaderPost) {
-        this.jdbcTemplateKolaerBase = jdbcTemplateKolaerBase;
+//        this.jdbcTemplateKolaerBase = jdbcTemplateKolaerBase;
         this.employeeDao = employeeDao;
         this.postDao = postDao;
         this.departmentDao = departmentDao;
@@ -107,8 +105,8 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                     continue;
                 }
 
-                DepartmentEntity departmentEntity = excelReaderDepartment.process(row, nameColumns);;
-                PostEntity postEntity = excelReaderPost.parse(row, nameColumns);;
+                DepartmentEntity departmentEntity = excelReaderDepartment.process(row, nameColumns);
+                PostEntity postEntity = excelReaderPost.parse(row, nameColumns);
 
                 String postKey = generateKey(postEntity);
                 String depKey = generateKey(departmentEntity);
@@ -163,20 +161,20 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                                                    Map<String, DepartmentEntity> depMap,
                                                    Map<String, PostEntity> postMap) {
 
-        Map<String, EmployeeEntity> kolaerBaseEmployeeMap = jdbcTemplateKolaerBase
-                .query("SELECT person_number, phone, mobile_phone, email FROM db_data_all", (rs, rowNum) -> {
-                    EmployeeEntity employeeEntity = new EmployeeEntity();
-                    String workPhone = Optional.ofNullable(rs.getString("phone")).orElse("");
-                    String mobilePhone = Optional.ofNullable(rs.getString("mobile_phone")).orElse("");
-                    if (StringUtils.hasText(mobilePhone))
-                        workPhone += "; " + mobilePhone;
-
-                    employeeEntity.setEmail(rs.getString("email"));
-                    employeeEntity.setPersonnelNumber(rs.getLong("person_number"));
-                    employeeEntity.setWorkPhoneNumber(workPhone);
-                    return employeeEntity;
-                }).stream()
-                .collect(Collectors.toMap(e -> String.valueOf(17240000L + e.getPersonnelNumber()), e -> e));
+//        Map<String, EmployeeEntity> kolaerBaseEmployeeMap = jdbcTemplateKolaerBase
+//                .query("SELECT person_number, phone, mobile_phone, email FROM db_data_all", (rs, rowNum) -> {
+//                    EmployeeEntity employeeEntity = new EmployeeEntity();
+//                    String workPhone = Optional.ofNullable(rs.getString("phone")).orElse("");
+//                    String mobilePhone = Optional.ofNullable(rs.getString("mobile_phone")).orElse("");
+//                    if (StringUtils.hasText(mobilePhone))
+//                        workPhone += "; " + mobilePhone;
+//
+//                    employeeEntity.setEmail(rs.getString("email"));
+//                    employeeEntity.setPersonnelNumber(rs.getLong("person_number"));
+//                    employeeEntity.setWorkPhoneNumber(workPhone);
+//                    return employeeEntity;
+//                }).stream()
+//                .collect(Collectors.toMap(e -> String.valueOf(17240000L + e.getPersonnelNumber()), e -> e));
 
         for (Map.Entry<String, EmployeeEntity> employeeEntityEntry : newEmployeesMap.entrySet()) {
             String employeeKey = employeeEntityEntry.getKey();
@@ -207,11 +205,11 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                     .map(DepartmentEntity::getId)
                     .ifPresent(employeeEntity::setDepartmentId);
 
-            EmployeeEntity kolaerBaseEntity = kolaerBaseEmployeeMap.get(employeeKey);
-            if(kolaerBaseEntity != null) {
-                employeeEntity.setEmail(kolaerBaseEntity.getEmail());
-                employeeEntity.setWorkPhoneNumber(kolaerBaseEntity.getWorkPhoneNumber());
-            }
+//            EmployeeEntity kolaerBaseEntity = kolaerBaseEmployeeMap.get(employeeKey);
+//            if(kolaerBaseEntity != null) {
+//                employeeEntity.setEmail(kolaerBaseEntity.getEmail());
+//                employeeEntity.setWorkPhoneNumber(kolaerBaseEntity.getWorkPhoneNumber());
+//            }
         }
 
         employeeDao.save(newEmployeesMap.values().stream().collect(Collectors.toList()));

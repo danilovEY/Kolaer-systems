@@ -145,7 +145,7 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
         if(StringUtils.isEmpty(object.getInitials()) || StringUtils.isEmpty(object.getFirstName())
                 || StringUtils.isEmpty(object.getSecondName()) || StringUtils.isEmpty(object.getThirdName())
                 || object.getPersonnelNumber() == null || object.getGender() == null) {
-            throw new UnexpectedRequestParams("У сотрудника пустое Ф.И.О или табельный или пол! Строка: " + row.getRowNum() + 1);
+            throw new UnexpectedRequestParams("У сотрудника пустое Ф.И.О или табельный или пол! Строка: " + row.getRowNum() + 1, object);
         }
 
         return object;
