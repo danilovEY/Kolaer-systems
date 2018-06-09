@@ -13,6 +13,7 @@ import java.util.Date;
 @Data
 public class EmployeeRequestDto {
     private String firstName;
+    private Long personnelNumber;
     private String secondName;
     private String thirdName;
     private String workPhoneNumber;

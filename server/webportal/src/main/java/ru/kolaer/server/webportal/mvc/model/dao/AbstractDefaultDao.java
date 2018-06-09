@@ -72,10 +72,16 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
     protected <R> Query<R> setParams(Query<R> query, Map<String, FilterValue> filter) {
         for (Map.Entry<String, FilterValue> entry : filter.entrySet()) {
+            Object value = entry.getValue().getValue();
+
+            if(value == null) {
+                continue;
+            }
+
             if(entry.getValue().getType() != null && entry.getValue().getType() == FilterType.LIKE) {
-                query = query.setParameter(entry.getKey(), "%" + entry.getValue().getValue().toString() + "%");
+                query = query.setParameter(entry.getKey(), "%" + value + "%");
             } else {
-                query = query.setParameter(entry.getKey(), entry.getValue().getValue());
+                query = query.setParameter(entry.getKey(), value);
             }
         }
 
@@ -89,6 +95,10 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
         return " WHERE " + filter.entrySet()
                 .stream()
+                .filter(entry -> entry.getValue() != null &&
+                        entry.getValue().getValue() != null ||
+                        entry.getValue().getType() == FilterType.IS_NULL ||
+                        entry.getValue().getType() == FilterType.NOT_NULL)
                 .map(entry -> entry.getValue().getParamName() + filterTypeToString(entry.getValue().getType(), entry.getKey()))
                 .collect(Collectors.joining(" AND "));
     }
@@ -100,6 +110,8 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
             case LIKE: return " LIKE :" + key;
             case EQUAL: return " = :" + key;
             case IN: return " IN (:" + key + ")";
+            case IS_NULL: return " IS NULL";
+            case NOT_NULL: return " IS NOT NULL";
             default: return " = :" + key;
         }
     }

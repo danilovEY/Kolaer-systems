@@ -14,6 +14,7 @@ import {Page} from '../models/page.model';
 import {EmployeeSortModel} from '../models/employee-sort.model';
 import {EmployeeFilterModel} from '../models/employee-filter.model';
 import {BaseService} from './base.service';
+import {EmployeeRequestModel} from "../models/employee-request.model";
 
 @Injectable()
 export class EmployeeService extends BaseService implements AuthenticationObserverService {
@@ -115,6 +116,22 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
                 }
                 return employees;
             }));
+    }
+
+    updateEmployee(employeeId: number, employee: EmployeeRequestModel): Observable<EmployeeModel> {
+        const url = `${this.getEmployeeUrl}/${employeeId}`;
+
+        return this._httpClient.put<EmployeeModel>(url, employee);
+    }
+
+    createEmployee(employee: EmployeeRequestModel): Observable<EmployeeModel> {
+        return this._httpClient.post<EmployeeModel>(this.getEmployeeUrl, employee);
+    }
+
+    deleteEmployee(employeeId: number): Observable<any> {
+        const url = `${this.getEmployeeUrl}/${employeeId}`;
+
+        return this._httpClient.delete(url);
     }
 
 }

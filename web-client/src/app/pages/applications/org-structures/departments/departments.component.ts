@@ -49,7 +49,7 @@ export class DepartmentsComponent implements OnInit {
         departmentRequestModel.name = event.newData.name;
 
         this.departmentService.updateDepartment(event.data.id, departmentRequestModel)
-            .subscribe((response: DepartmentModel) => event.confirm.resolve(response),
+            .subscribe((response: DepartmentModel) => event.confirm.resolve(event.newData, response),
                 error2 => event.confirm.reject({}));
     }
 

@@ -63,6 +63,7 @@
     "ngx-loading": "^1.0.14",
     "normalize.css": "6.0.0",
     "pace-js": "1.0.2",
+    "primeicons": "^1.0.0-beta.6",
     "primeng": "^6.0.0-beta.1",
     "roboto-fontface": "^0.9.0",
     "rxjs": "5.5.5",

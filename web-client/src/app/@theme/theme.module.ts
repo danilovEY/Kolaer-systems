@@ -37,11 +37,15 @@ import {DefaultLayoutComponent} from './layouts';
 import {DEFAULT_THEME} from './styles/theme.default';
 import {COSMIC_THEME} from './styles/theme.cosmic';
 import {LoadingModule} from 'ngx-loading';
-import {Ng2SmartTableModule} from "ng2-smart-table";
-import {ToasterModule} from "angular2-toaster";
-import {EmployeeEditComponent} from "./components/table/employee-edit.component";
-import {NgSelectModule} from "@ng-select/ng-select";
-import {AccountEditComponent} from "./components/table/account-edit.component";
+import {Ng2SmartTableModule} from 'ng2-smart-table';
+import {ToasterModule} from 'angular2-toaster';
+import {EmployeeEditComponent} from './components/table/employee-edit.component';
+import {NgSelectModule} from '@ng-select/ng-select';
+import {AccountEditComponent} from './components/table/account-edit.component';
+import {PostEditComponent} from './components/table/post-edit.component';
+import {DepartmentEditComponent} from './components/table/department-edit.component';
+import {CalendarModule} from "primeng/primeng";
+import {DateEditComponent} from "./components/table/date-edit.component";
 
 const BASE_MODULES = [
     CommonModule,
@@ -69,6 +73,8 @@ const NB_MODULES = [
     Ng2SmartTableModule,
     ToasterModule,
     NgSelectModule,
+
+    CalendarModule,
 ];
 
 const COMPONENTS = [
@@ -84,6 +90,9 @@ const COMPONENTS = [
     CustomTableComponent,
     EmployeeEditComponent,
     AccountEditComponent,
+    PostEditComponent,
+    DepartmentEditComponent,
+    DateEditComponent,
 
 ];
 
@@ -116,6 +125,9 @@ const NB_THEME_PROVIDERS = [
         CustomTableComponent,
         EmployeeEditComponent,
         AccountEditComponent,
+        PostEditComponent,
+        DepartmentEditComponent,
+        DateEditComponent,
     ]
 })
 export class ThemeModule {

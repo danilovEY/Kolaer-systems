@@ -200,7 +200,18 @@ public abstract class AbstractDefaultService<T extends BaseDto,
                     String fieldName = field.getName();
                     Object fieldValue = FieldUtils.getFieldValue(filterParam, fieldName);
 
-                    if(fieldValue != null) {
+                    String typeFiled = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+
+                    FilterType filterType = null;
+
+                    try {
+                        filterType = (FilterType) Optional.ofNullable(filterParamClass.getDeclaredField("type" + typeFiled))
+                                .map(Field::getName)
+                                .map(name -> FieldUtils.getProtectedFieldValue(name, filterParam))
+                                .orElse(null);
+                    } catch (Throwable ignored) { }
+
+                    if(fieldValue != null || filterType != null) {
                         EntityFieldName entityFieldName = field.getAnnotation(EntityFieldName.class);
 
                         String filterName = entityFieldName.name().isEmpty()
@@ -210,18 +221,7 @@ public abstract class AbstractDefaultService<T extends BaseDto,
                         FilterValue filterValue = new FilterValue();
                         filterValue.setParamName(filterName);
                         filterValue.setValue(fieldValue);
-
-                        String typeFiled = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-
-                        try {
-                            FilterType filterType = Optional.ofNullable(filterParamClass.getDeclaredField("type" + typeFiled))
-                                    .map(Field::getName)
-                                    .map(name -> FieldUtils.getProtectedFieldValue(name, filterParam))
-                                    .map(type -> (FilterType) type)
-                                    .orElse(FilterType.LIKE);
-
-                            filterValue.setType(filterType);
-                        } catch (Throwable ignored) { }
+                        filterValue.setType(Optional.ofNullable(filterType).orElse(FilterType.LIKE));
 
                         params.put(fieldName, filterValue);
                     }

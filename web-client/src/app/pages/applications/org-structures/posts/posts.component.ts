@@ -90,7 +90,7 @@ export class PostsComponent implements OnInit {
         postRequestModel.type = event.newData.type;
 
         this.postService.updateDepartment(event.data.id, postRequestModel)
-            .subscribe((response: PostModel) => event.confirm.resolve(response),
+            .subscribe((response: PostModel) => event.confirm.resolve(event.newData, response),
                 error2 => event.confirm.reject({}));
     }
 

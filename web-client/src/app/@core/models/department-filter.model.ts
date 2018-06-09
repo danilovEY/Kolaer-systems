@@ -1,6 +1,6 @@
 export class DepartmentFilterModel {
     constructor(public filterId?: number,
-                public filterDeleted: boolean = false,
-                public filterName?: string) {
+                public filterName?: string,
+                public filterDeleted: boolean = false) {
     }
 }

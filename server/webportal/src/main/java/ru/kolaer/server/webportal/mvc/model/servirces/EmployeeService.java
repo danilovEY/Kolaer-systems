@@ -17,4 +17,6 @@ public interface EmployeeService extends BirthdayService<EmployeeDto>, DefaultSe
     Page<EmployeeDto> getUsersByDepartmentId(int page, int pageSize, Long id);
 
     EmployeeDto update(Long employeeId, EmployeeRequestDto employeeRequestDto);
+
+    EmployeeDto add(EmployeeRequestDto employeeRequestDto);
 }

@@ -40,7 +40,7 @@ public class EmployeeController {
     @ApiOperation(
             value = "Получить всех сотрудников"
     )
-    @UrlDeclaration(description = "Получить всех сотрудников.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить всех сотрудников", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<EmployeeDto> getAllEmployees(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                              @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
@@ -50,18 +50,32 @@ public class EmployeeController {
     }
 
     @ApiOperation(value = "Получить сотрудника")
-    @UrlDeclaration(description = "Получить сотрудника.", isAccessAll = true)
+    @UrlDeclaration(description = "Получить сотрудника", isAccessAll = true)
     @RequestMapping(value = "/{employeeId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public EmployeeDto getAllEmployees(@PathVariable(value = "employeeId") Long employeeId) {
         return this.employeeService.getById(employeeId);
     }
 
+    @ApiOperation(value = "Добавить сотрудника")
+    @UrlDeclaration(description = "Добавить сотрудника", isUser = false, requestMethod = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public EmployeeDto createEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
+        return this.employeeService.add(employeeRequestDto);
+    }
+
     @ApiOperation(value = "Обновить сотрудника")
-    @UrlDeclaration(description = "Обновить сотрудника.", isUser = false, requestMethod = RequestMethod.PUT)
+    @UrlDeclaration(description = "Обновить сотрудника", isUser = false, requestMethod = RequestMethod.PUT)
     @RequestMapping(value = "/{employeeId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public EmployeeDto updateEmployee(@PathVariable(value = "employeeId") Long employeeId,
                                       @RequestBody EmployeeRequestDto employeeRequestDto) {
         return this.employeeService.update(employeeId, employeeRequestDto);
+    }
+
+    @ApiOperation(value = "Удалить сотрудника")
+    @UrlDeclaration(description = "Удалить сотрудника", isUser = false, requestMethod = RequestMethod.DELETE)
+    @RequestMapping(value = "/{employeeId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void deleteEmployee(@PathVariable(value = "employeeId") Long employeeId) {
+        this.employeeService.delete(employeeId);
     }
 
     @ApiOperation(

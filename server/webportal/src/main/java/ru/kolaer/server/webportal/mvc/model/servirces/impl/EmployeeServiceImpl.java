@@ -87,11 +87,16 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
     }
 
     @Override
+    @Transactional
     public EmployeeDto update(Long employeeId, EmployeeRequestDto employeeRequestDto) {
         if (!StringUtils.hasLength(employeeRequestDto.getFirstName()) ||
                 !StringUtils.hasLength(employeeRequestDto.getSecondName()) ||
                 !StringUtils.hasLength(employeeRequestDto.getThirdName())) {
             throw new UnexpectedRequestParams("ФИО не должно быть пустым");
+        }
+
+        if (employeeRequestDto.getDepartmentId() == null || employeeRequestDto.getPostId() == null) {
+            throw new UnexpectedRequestParams("Должность и подразделение не должны быть пустыми");
         }
 
 
@@ -120,8 +125,59 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
     }
 
     @Override
+    @Transactional
+    public EmployeeDto add(EmployeeRequestDto employeeRequestDto) {
+        if (!StringUtils.hasLength(employeeRequestDto.getFirstName()) ||
+                !StringUtils.hasLength(employeeRequestDto.getSecondName()) ||
+                !StringUtils.hasLength(employeeRequestDto.getThirdName())) {
+            throw new UnexpectedRequestParams("ФИО не должно быть пустым");
+        }
+
+        if (employeeRequestDto.getDepartmentId() == null || employeeRequestDto.getPostId() == null) {
+            throw new UnexpectedRequestParams("Должность и подразделение не должны быть пустыми");
+        }
+
+
+        EmployeeEntity employeeEntity = defaultEntityDao.findByPersonnelNumber(employeeRequestDto.getPersonnelNumber());
+        if (employeeEntity != null) {
+            throw new UnexpectedRequestParams("Сотрудник с табельным номером уже существует");
+        }
+        employeeEntity = new EmployeeEntity();
+        employeeEntity.setPersonnelNumber(employeeRequestDto.getPersonnelNumber());
+        employeeEntity.setFirstName(employeeRequestDto.getFirstName());
+        employeeEntity.setSecondName(employeeRequestDto.getSecondName());
+        employeeEntity.setThirdName(employeeRequestDto.getThirdName());
+
+        employeeEntity.setInitials(employeeEntity.getSecondName() + " " +
+                employeeEntity.getFirstName() + " " + employeeEntity.getThirdName());
+
+        employeeEntity.setEmail(employeeRequestDto.getEmail());
+        employeeEntity.setDepartmentId(employeeRequestDto.getDepartmentId());
+        employeeEntity.setPostId(employeeRequestDto.getPostId());
+        employeeEntity.setHomePhoneNumber(employeeRequestDto.getHomePhoneNumber());
+        employeeEntity.setWorkPhoneNumber(employeeRequestDto.getWorkPhoneNumber());
+        employeeEntity.setBirthday(employeeRequestDto.getBirthday());
+        employeeEntity.setGender(employeeRequestDto.getGender());
+        employeeEntity.setCategory(employeeRequestDto.getCategory());
+        employeeEntity.setEmploymentDate(new Date());
+
+        return defaultConverter.convertToDto(defaultEntityDao.save(employeeEntity));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public int getCountUserBirthday(Date date) {
         return defaultEntityDao.getCountUserBirthday(date);
+    }
+
+    @Override
+    @Transactional
+    public long delete(Long id) {
+        EmployeeEntity employeeEntity = this.defaultEntityDao.findById(id);
+        employeeEntity.setDismissalDate(new Date());
+
+        defaultEntityDao.save(employeeEntity);
+
+        return 1;
     }
 }

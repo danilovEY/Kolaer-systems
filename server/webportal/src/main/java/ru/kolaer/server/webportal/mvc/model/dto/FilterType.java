@@ -5,5 +5,7 @@ public enum FilterType {
     LESS,
     LIKE,
     EQUAL,
-    IN
+    IN,
+    IS_NULL,
+    NOT_NULL
 }
