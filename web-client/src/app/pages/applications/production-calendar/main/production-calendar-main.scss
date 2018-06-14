@@ -1,0 +1,29 @@
+.my-calendar {
+  margin-bottom: 30px;
+}
+
+.custom-day {
+  text-align: center;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  border-radius: 0.25rem;
+  background: transparent;
+}
+.custom-day:hover, .custom-day.focused {
+  background-color: #e6e6e6;
+}
+.weekend {
+  color: red;
+}
+.holiday {
+  background-color: indianred;
+  color: black;
+}
+.work-day {
+  background-color: black;
+  color: white;
+}
+.hidden {
+  display: none;
+}

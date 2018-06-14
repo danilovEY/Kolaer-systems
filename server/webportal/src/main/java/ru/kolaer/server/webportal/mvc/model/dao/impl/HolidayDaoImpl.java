@@ -1,10 +1,13 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
+import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.HolidayDao;
+import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -17,8 +20,12 @@ import java.util.stream.Collectors;
  * Created by danilovey on 31.10.2016.
  */
 @Repository(value = "holidayDao")
-public class HolidayDaoImpl implements HolidayDao {
+public class HolidayDaoImpl extends AbstractDefaultDao<HolidayEntity> implements HolidayDao {
     private final List<Holiday> holidays = new ArrayList<>();
+
+    protected HolidayDaoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory, HolidayEntity.class);
+    }
 
     @Override
     public List<Holiday> getAllHolidays() {
@@ -58,6 +65,15 @@ public class HolidayDaoImpl implements HolidayDao {
     public void insertHolidays(List<Holiday> holidays) {
         this.holidays.clear();
         this.holidays.addAll(holidays);
+    }
+
+    @Override
+    public HolidayEntity findByDate(LocalDate holidayDate) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " WHERE holidayDate = :holidayDate", getEntityClass())
+                .setParameter("holidayDate", holidayDate)
+                .uniqueResultOptional()
+                .orElse(null);
     }
 
     private Holiday getHolidayByDateTime(DateTimeJson dateTimeJson) {

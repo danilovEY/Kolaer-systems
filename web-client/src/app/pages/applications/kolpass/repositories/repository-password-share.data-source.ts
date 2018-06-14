@@ -17,6 +17,6 @@ export class RepositoryPasswordShareDataSource extends CustomDataSource<Reposito
 
         return this.kolpassService.getSharedRepositories(sort, filter, page, pageSize)
             .toPromise()
-            .then((response: Page<RepositoryPasswordModel>) => this.setData(response));
+            .then((response: Page<RepositoryPasswordModel>) => this.setDataPage(response));
     }
 }

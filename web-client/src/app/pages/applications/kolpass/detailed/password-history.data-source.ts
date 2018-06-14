@@ -12,6 +12,6 @@ export class PasswordHistoryDataSource extends CustomDataSource<PasswordHistoryM
     loadElements(page: number, pageSize: number): Promise<PasswordHistoryModel[]> {
         return this.kolpassService.getHistoryInRepository(this.repId, this.pagingConf['page'], this.pagingConf['perPage'])
             .toPromise()
-            .then((response: Page<PasswordHistoryModel>) => this.setData(response));
+            .then((response: Page<PasswordHistoryModel>) => this.setDataPage(response));
     }
 }

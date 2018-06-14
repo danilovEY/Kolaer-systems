@@ -105,8 +105,8 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
     private String filterTypeToString(FilterType type, String key) {
         switch (Optional.ofNullable(type).orElse(FilterType.LIKE)) {
-            case MORE: return " < :" + key;
-            case LESS: return " > :" + key;
+            case MORE: return " <= :" + key;
+            case LESS: return " >= :" + key;
             case LIKE: return " LIKE :" + key;
             case EQUAL: return " = :" + key;
             case IN: return " IN (:" + key + ")";

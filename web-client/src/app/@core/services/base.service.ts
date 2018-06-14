@@ -19,4 +19,8 @@ export class BaseService {
 
         return httpParams;
     }
+
+    convertModel(model: any): any {
+        return model;
+    }
 }

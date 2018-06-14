@@ -11,6 +11,6 @@ export class RepositoryPasswordDataSource extends CustomDataSource<RepositoryPas
     loadElements(page: number, pageSize: number): Promise<RepositoryPasswordModel[]> {
         return this.kolpassService.getAllMyRepositories(page, pageSize)
             .toPromise()
-            .then((response: Page<RepositoryPasswordModel>) => this.setData(response));
+            .then((response: Page<RepositoryPasswordModel>) => this.setDataPage(response));
     }
 }

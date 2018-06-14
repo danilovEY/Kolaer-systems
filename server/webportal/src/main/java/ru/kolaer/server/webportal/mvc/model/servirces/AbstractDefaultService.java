@@ -211,7 +211,7 @@ public abstract class AbstractDefaultService<T extends BaseDto,
                                 .orElse(null);
                     } catch (Throwable ignored) { }
 
-                    if(fieldValue != null || filterType != null) {
+                    if(fieldValue != null || (filterType != null && (filterType == FilterType.NOT_NULL || filterType == FilterType.IS_NULL))) {
                         EntityFieldName entityFieldName = field.getAnnotation(EntityFieldName.class);
 
                         String filterName = entityFieldName.name().isEmpty()

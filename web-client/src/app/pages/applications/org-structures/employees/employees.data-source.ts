@@ -21,7 +21,7 @@ export class EmployeesDataSource extends CustomDataSource<EmployeeModel> {
         return this.employeeService.getAllEmployees(employeeSortModel, employeeFilterModel,
             page, pageSize)
             .toPromise()
-            .then((response: Page<EmployeeModel>) => this.setData(response));
+            .then((response: Page<EmployeeModel>) => this.setDataPage(response));
     }
 
 }

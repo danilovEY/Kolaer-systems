@@ -12,6 +12,6 @@ export class PasswordHistoryShareDataSource extends CustomDataSource<AccountMode
     loadElements(page: number, pageSize: number): Promise<AccountModel[]> {
             return this.kolpassService.getSharedAccountsByRepId(this.repId, page, pageSize)
                 .toPromise()
-                .then((response: AccountModel[]) => this.setData(new Page<AccountModel>(response)));
+                .then((response: AccountModel[]) => this.setDataPage(new Page<AccountModel>(response)));
     }
 }

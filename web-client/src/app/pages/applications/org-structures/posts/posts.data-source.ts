@@ -21,6 +21,6 @@ export class PostsDataSource extends CustomDataSource<PostModel> {
         return this.postService.getAllPosts(postSortModel, postFilterModel,
             page, pageSize)
             .toPromise()
-            .then((response: Page<PostModel>) => this.setData(response));
+            .then((response: Page<PostModel>) => this.setDataPage(response));
     }
 }

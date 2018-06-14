@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                Редактирование производственного календаря
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="calendarLoading"></ngx-loading>
+                <custom-table #calendarTable
+                              [columns]="calendarColumns"
+                              [source]="calendarSource"
+                              (edit)="calendarEdit($event)"
+                              (delete)="calendarDelete($event)"
+                              (create)="calendarCreate($event)">
+
+                </custom-table>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>

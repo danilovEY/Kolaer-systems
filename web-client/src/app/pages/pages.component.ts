@@ -35,6 +35,20 @@ export class PagesComponent implements OnInit {
 
         this.menu.push(dashboardMenuItem, appMenuMenuItem);
 
+
+        const productionCalendarMenuItem: NbMenuItem = new NbMenuItem();
+        productionCalendarMenuItem.title = 'Производственный календарь';
+        productionCalendarMenuItem.icon = 'icon ion-md-calendar';
+        productionCalendarMenuItem.children = [];
+
+        const productionCalendarMainMenuItem: NbMenuItem = new NbMenuItem();
+        productionCalendarMainMenuItem.title = 'Главная';
+        productionCalendarMainMenuItem.link = 'app/production-calendar/main';
+
+        productionCalendarMenuItem.children.push(productionCalendarMainMenuItem);
+        this.menu.push(productionCalendarMenuItem);
+
+
         if (this.authService.authentication) {
             const kolpassMenuItem: NbMenuItem = new NbMenuItem();
             kolpassMenuItem.title = 'Парольница';
@@ -66,6 +80,12 @@ export class PagesComponent implements OnInit {
                        bankAccountMenuItem.link = 'app/tickets/bank-accounts';
 
                        ticketsMenuItem.children.push(bankAccountMenuItem);
+
+                       const productionCalendarEditMenuItem: NbMenuItem = new NbMenuItem();
+                       productionCalendarEditMenuItem.title = 'Редактировать';
+                       productionCalendarEditMenuItem.link = 'app/production-calendar/edit';
+
+                       productionCalendarMenuItem.children.push(productionCalendarEditMenuItem);
                    }
                 });
 

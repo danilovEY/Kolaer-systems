@@ -21,7 +21,7 @@ export class DepartmentsDataSource extends CustomDataSource<DepartmentModel> {
         return this.departmentService.getAllDepartments(departmentSortModel, departmentFilterModel,
             page, pageSize)
             .toPromise()
-            .then((response: Page<DepartmentModel>) => this.setData(response));
+            .then((response: Page<DepartmentModel>) => this.setDataPage(response));
     }
 
 }

@@ -1,10 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,7 +12,12 @@ import org.w3c.dom.NodeList;
 import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
+import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.webportal.mvc.model.converter.HolidayConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.HolidayDao;
+import ru.kolaer.server.webportal.mvc.model.dto.HolidayDto;
+import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
+import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.HolidayService;
 
 import javax.annotation.PostConstruct;
@@ -24,20 +29,62 @@ import java.util.*;
 /**
  * Created by danilovey on 31.10.2016.
  */
+@Slf4j
 @Service(value = "holidayService")
-public class HolidayServiceImpl implements HolidayService {
-    private static Logger logger = LoggerFactory.getLogger(HolidayServiceImpl.class);
+public class HolidayServiceImpl
+        extends AbstractDefaultService<HolidayDto, HolidayEntity, HolidayDao, HolidayConverter>
+        implements HolidayService {
 
-    private final HolidayDao holidayDao;
+    protected HolidayServiceImpl(HolidayDao defaultEntityDao, HolidayConverter converter) {
+        super(defaultEntityDao, converter);
+    }
 
-    @Autowired
-    public HolidayServiceImpl(HolidayDao holidayDao) {
-        this.holidayDao = holidayDao;
+
+    @Override
+    @Transactional
+    public HolidayDto add(HolidayDto holidayDto) {
+        if(holidayDto.getHolidayDate() == null ||
+                holidayDto.getHolidayType() == null ||
+                StringUtils.isEmpty(holidayDto.getName())) {
+            throw new UnexpectedRequestParams("Не указаны все параметры");
+        }
+
+        if (defaultEntityDao.findByDate(holidayDto.getHolidayDate()) != null) {
+            throw new UnexpectedRequestParams("На такую дату уже есть праздник");
+        }
+
+        HolidayEntity holidayEntity = defaultConverter.convertToModel(holidayDto);
+        holidayEntity.setId(null);
+
+        return defaultConverter.convertToDto(defaultEntityDao.persist(holidayEntity));
+    }
+
+    @Override
+    @Transactional
+    public HolidayDto update(Long id, HolidayDto holidayDto) {
+        if(holidayDto.getHolidayDate() == null ||
+                holidayDto.getHolidayType() == null ||
+                StringUtils.isEmpty(holidayDto.getName())) {
+            throw new UnexpectedRequestParams("Не указаны все параметры");
+        }
+
+        HolidayEntity holidayEntity = defaultEntityDao.findById(id);
+
+        if (!holidayDto.getHolidayDate().isEqual(holidayEntity.getHolidayDate()) &&
+                defaultEntityDao.findByDate(holidayDto.getHolidayDate()) != null) {
+            throw new UnexpectedRequestParams("На такую дату уже есть праздник");
+        }
+
+        holidayEntity.setName(holidayDto.getName());
+        holidayEntity.setHolidayType(holidayDto.getHolidayType());
+        holidayEntity.setHolidayDate(holidayDto.getHolidayDate());
+
+        return defaultConverter.convertToDto(defaultEntityDao.update(holidayEntity));
     }
 
     @Override
     public List<Holiday> getAllHolidays() {
-        return holidayDao.getAllHolidays();
+        return defaultEntityDao.getAllHolidays();
     }
 
     @Override
@@ -45,14 +92,14 @@ public class HolidayServiceImpl implements HolidayService {
         if(dateTimeJson == null)
             return null;
 
-        return this.holidayDao.getHolidayByDayMonth(dateTimeJson);
+        return this.defaultEntityDao.getHolidayByDayMonth(dateTimeJson);
     }
 
     @Override
     public List<Holiday> getHolidayByMonth(DateTimeJson dateTimeJson) {
         if(dateTimeJson == null)
             return Collections.emptyList();
-        return this.holidayDao.getHolidayByMonth(dateTimeJson);
+        return this.defaultEntityDao.getHolidayByMonth(dateTimeJson);
     }
 
     @PostConstruct
@@ -66,7 +113,7 @@ public class HolidayServiceImpl implements HolidayService {
         try {
             ClassPathResource classPathResource = new ClassPathResource("/calendar.xml");
             if(!classPathResource.exists())
-                logger.warn("Нет локальных данных с http://xmlcalendar.ru в xml формате!");
+                log.warn("Нет локальных данных с http://xmlcalendar.ru в xml формате!");
 
             final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -113,12 +160,12 @@ public class HolidayServiceImpl implements HolidayService {
             }
 
             if(result.size() > 0) {
-                this.holidayDao.insertHolidays(result);
-                logger.info("Holidays size: {}", result.size());
+                this.defaultEntityDao.insertHolidays(result);
+                log.info("Holidays size: {}", result.size());
             }
 
         } catch (Exception e) {
-            logger.error("Ошибка при получении праздников!", e);
+            log.error("Ошибка при получении праздников!", e);
         }
     }
 

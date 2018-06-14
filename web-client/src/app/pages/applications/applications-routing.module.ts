@@ -21,6 +21,10 @@ const routes: Routes = [{
             path: 'org-structures',
             loadChildren: 'app/pages/applications/org-structures/org-structures.module#OrgStructuresModule'
         },
+        {
+            path: 'production-calendar',
+            loadChildren: 'app/pages/applications/production-calendar/production-calendar.module#ProductionCalendarModule'
+        },
     ]
 }];
 

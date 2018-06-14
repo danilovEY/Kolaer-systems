@@ -21,7 +21,7 @@ export class TicketsRegisterDataSource extends CustomDataSource<TicketRegisterMo
         return this.ticketsService.getAllTicketRegisters(registerTicketsSortModel, registerTicketsFilterModel,
             page, pageSize)
             .toPromise()
-            .then((response: Page<TicketRegisterModel>) => this.setData(response));
+            .then((response: Page<TicketRegisterModel>) => this.setDataPage(response));
     }
 
 }

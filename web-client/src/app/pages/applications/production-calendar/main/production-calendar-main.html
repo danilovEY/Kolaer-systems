@@ -1,0 +1,54 @@
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                <span>Производственный календарь</span>
+            </nb-card-header>
+
+
+            <nb-card-body>
+                <ngx-loading [show]="holidaysLoading"></ngx-loading>
+                <div class="row" *ngIf="!holidaysLoading">
+                    <div class="col-4 my-calendar" *ngFor="let month of months">
+                        <ngb-datepicker
+                                [startDate]="month"
+                                navigation="none"
+                                [dayTemplate]="customDay"
+                                [markDisabled]="isDisabled"
+                                outsideDays="collapsed"
+                                [showWeekNumbers]="true">
+                        </ngb-datepicker>
+                    </div>
+
+                    <ng-template #customDay let-date="date"
+                                 let-currentMonth="currentMonth"
+                                 let-selected="selected"
+                                 let-disabled="disabled"
+                                 let-focused="focused">
+
+                        <div *ngIf="isHoliday(currentMonth, date)"
+                             class="custom-day btn-light"
+                             nbPopover="{{ dateToPopup(date) }}"
+                             nbPopoverMode="hint"
+                             nbPopoverPlacement="bottom"
+                             [class.holiday]="isOutput(currentMonth, date)"
+                             [class.work-day]="!isOutput(currentMonth, date)"
+                             [class.focused]="focused">
+                            {{ date.day }}*
+                        </div>
+
+                        <div *ngIf="!isHoliday(currentMonth, date)"
+                             class="custom-day btn-light"
+                             [class.weekend]="isWeekend(date)"
+                             [class.focused]="focused">
+                            {{ date.day }}
+                        </div>
+                    </ng-template>
+                </div>
+
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>
+
+

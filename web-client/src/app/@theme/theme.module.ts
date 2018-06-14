@@ -1,7 +1,7 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDatepickerI18n, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {
     NbActionsModule,
@@ -44,8 +44,8 @@ import {NgSelectModule} from '@ng-select/ng-select';
 import {AccountEditComponent} from './components/table/account-edit.component';
 import {PostEditComponent} from './components/table/post-edit.component';
 import {DepartmentEditComponent} from './components/table/department-edit.component';
-import {CalendarModule} from "primeng/primeng";
-import {DateEditComponent} from "./components/table/date-edit.component";
+import {DateEditComponent} from './components/table/date-edit.component';
+import {CustomDatePickerLangService} from "../@core/services/custom-date-picker-lang.service";
 
 const BASE_MODULES = [
     CommonModule,
@@ -73,8 +73,6 @@ const NB_MODULES = [
     Ng2SmartTableModule,
     ToasterModule,
     NgSelectModule,
-
-    CalendarModule,
 ];
 
 const COMPONENTS = [
@@ -113,6 +111,8 @@ const NB_THEME_PROVIDERS = [
     ...NbSidebarModule.forRoot().providers,
     ...NbMenuModule.forRoot().providers,
     ...ToasterModule.forRoot().providers,
+    {provide: NgbDatepickerI18n, useClass: CustomDatePickerLangService}
+
 ];
 
 @NgModule({

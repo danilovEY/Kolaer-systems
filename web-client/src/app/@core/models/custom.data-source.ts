@@ -55,7 +55,18 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
 
     abstract loadElements(page: number, pageSize: number): Promise<T[]>;
 
-    setData(response: Page<T>): T[] {
+    setData(response: T[]): T[] {
+        this.dataPage.number = 1;
+        this.dataPage.data = response;
+        this.dataPage.total = response.length;
+        this.data = response;
+
+        this.onChangedLoading.next(false);
+
+        return this.data
+    }
+
+    setDataPage(response: Page<T>): T[] {
         this.dataPage = response;
         this.data = response.data;
 

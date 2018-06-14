@@ -33,6 +33,7 @@
 
     <include file="classpath:SQL/19-bank-account-table.xml"/>
 
+    <include file="classpath:SQL/22-holiday-table.xml"/>
 
 
 </databaseChangeLog>

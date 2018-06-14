@@ -18,6 +18,6 @@ export class BankAccountDataSource extends CustomDataSource<BankAccountModel> {
         return this.bankAccountService.getAllBankAccount(bankAccountSort, bankAccountFilter,
             page, pageSize)
             .toPromise()
-            .then((response: Page<BankAccountModel>) => this.setData(response));
+            .then((response: Page<BankAccountModel>) => this.setDataPage(response));
     }
 }

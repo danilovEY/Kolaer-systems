@@ -1,34 +1,42 @@
 import {DefaultEditor} from 'ng2-smart-table';
 import {Component, OnInit} from '@angular/core';
-import {Utils} from '../../../@core/utils/utils';
+import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'edit-date',
-    template: `        
-        <div class="input-group" style="margin-right: 35px;">
-            <p-calendar [locale]="locale"
-                        (onValueChange)="setValue($event)"
-                        [ngModel]="currentDate" 
-                        dateFormat="dd.mm.yy"
-                        [disabled]="!cell.isEditable()"
-                        (click)="onClick.emit($event)"
-                        (keydown.enter)="onEdited.emit($event)"
-                        (keydown.esc)="onStopEditing.emit()"
-                        showIcon="true"></p-calendar>
+    template: `
+        <div class="input-group">
+            <input class="form-control" 
+                   placeholder="Дата"
+                   name="dp"
+                   container="body"
+                   type="text"
+                   [disabled]="!cell.isEditable()"
+                   (click)="onClick.emit($event)"
+                   (keydown.enter)="onEdited.emit($event)"
+                   (keydown.esc)="onStopEditing.emit()"
+                   (dateSelect)="setValue($event)"
+                   [startDate]="currentDate"
+                   [(ngModel)]="currentDate"
+                   ngbDatepicker #d="ngbDatepicker">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                    <i class="icon ion-md-calendar"></i>
+                </button>
+            </div>
         </div>
     `
 })
 export class DateEditComponent extends DefaultEditor implements OnInit {
-
-    readonly locale = Utils.RU_LOCAL;
-    currentDate: Date = new Date();
+    currentDate: NgbDateStruct;
 
     ngOnInit(): void {
-        this.cell.newValue = new Date(this.cell.newValue);
+        const date: Date = this.cell.newValue || new Date();
+        this.currentDate = {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()};
     }
 
     setValue(event: any) {
-        this.currentDate = event;
-        this.cell.setValue(Utils.getDateTimeToSend(event));
+        this.cell.setValue(new Date(this.currentDate.year, this.currentDate.month - 1, this.currentDate.day));
     }
 }
+

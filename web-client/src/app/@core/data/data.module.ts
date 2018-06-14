@@ -2,9 +2,11 @@ import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AccountService} from '../services/account.service';
 import {EmployeeService} from '../services/employee.service';
-import {RouterNavigatorService} from "../services/router-navigator.service";
-import {DepartmentService} from "../services/department.service";
-import {PostService} from "../services/post.service";
+import {RouterNavigatorService} from '../services/router-navigator.service';
+import {DepartmentService} from '../services/department.service';
+import {PostService} from '../services/post.service';
+import {ProductionCalendarService} from '../services/production-calendar.service';
+import {CustomDatePickerLangService} from '../services/custom-date-picker-lang.service';
 
 const SERVICES = [
     AccountService,
@@ -12,6 +14,8 @@ const SERVICES = [
     DepartmentService,
     PostService,
     RouterNavigatorService,
+    ProductionCalendarService,
+    CustomDatePickerLangService,
 ];
 
 @NgModule({
