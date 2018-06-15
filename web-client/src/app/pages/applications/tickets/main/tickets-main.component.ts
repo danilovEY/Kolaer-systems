@@ -17,10 +17,11 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ReportTicketsConfigModel} from '../model/report-tickets-config.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {CreateTicketsConfigModel} from '../model/create-tickets-config.model';
-import {Router} from "@angular/router";
-import {Utils} from "../../../../@core/utils/utils";
-import {ServerExceptionModel} from "../../../../@core/models/server-exception.model";
-import {HttpErrorResponse} from "@angular/common/http";
+import {Router} from '@angular/router';
+import {Utils} from '../../../../@core/utils/utils';
+import {ServerExceptionModel} from '../../../../@core/models/server-exception.model';
+import {HttpErrorResponse} from '@angular/common/http';
+import {finalize} from 'rxjs/internal/operators';
 
 @Component({
     selector: 'main-tickets',
@@ -239,7 +240,7 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
 
             if (this.send) {
                 this.ticketsService.generateAndSendReport(this.selectedTicketRegister.id, config)
-                    .finally(() => this.loadingRegisters = false)
+                    .pipe(finalize(() => this.loadingRegisters = false))
                     .subscribe((value: TicketRegisterModel) => {
                         this.source.update(this.selectedTicketRegister, value);
 
@@ -253,7 +254,7 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
                     });
             } else {
                 this.ticketsService.generateReportAndDownloadUrl(this.selectedTicketRegister.id, config)
-                    .finally(() => this.loadingRegisters = false)
+                    .pipe(finalize(() => this.loadingRegisters = false))
                     .subscribe((value: TicketRegisterModel) => {
                         this.source.update(this.selectedTicketRegister, value);
 

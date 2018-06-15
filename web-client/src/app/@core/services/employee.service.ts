@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import {switchMap, tap} from 'rxjs/operators';
+import {EMPTY, Observable, of} from 'rxjs/index';
 import {AuthenticationRestService} from '../modules/auth/authentication-rest.service';
 import {AuthenticationObserverService} from './authentication-observer.service';
 import {SimpleAccountModel} from '../models/simple-account.model';
@@ -14,7 +12,8 @@ import {Page} from '../models/page.model';
 import {EmployeeSortModel} from '../models/employee-sort.model';
 import {EmployeeFilterModel} from '../models/employee-filter.model';
 import {BaseService} from './base.service';
-import {EmployeeRequestModel} from "../models/employee-request.model";
+import {EmployeeRequestModel} from '../models/employee-request.model';
+import {catchError, switchMap, tap} from 'rxjs/internal/operators';
 
 @Injectable()
 export class EmployeeService extends BaseService implements AuthenticationObserverService {
@@ -59,21 +58,21 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
 
     getCurrentEmployee(cache: boolean = true): Observable<EmployeeModel> {
         if (cache && this._currentEmployeeModel) {
-            return Observable.of(this._currentEmployeeModel);
+            return of(this._currentEmployeeModel);
         } else {
             return this.accountService.getCurrentAccount().pipe(
                 switchMap((account: SimpleAccountModel) =>
                     account.employeeId
                         ? this._httpClient.get<EmployeeModel>(this.getEmployeeUrl + `/${account.employeeId}`)
-                        : Observable.empty()
+                        : EMPTY
                 ),
-                tap((employee: EmployeeModel) => this._currentEmployeeModel = employee)
-            ).catch(error => {
-                if (error.status === 403 || error.status === 401) {
-                    this._authService.logout().subscribe(Observable.empty);
-                }
-                return Observable.throw(error);
-            });
+                tap((employee: EmployeeModel) => this._currentEmployeeModel = employee),
+                catchError(error => {
+                    if (error.status === 403 || error.status === 401) {
+                        this._authService.logout().subscribe();
+                    }
+                    return Observable.throw(error);
+                }));
         }
     }
 

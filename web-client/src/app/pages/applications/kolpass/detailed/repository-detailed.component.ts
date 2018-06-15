@@ -19,7 +19,8 @@ import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {PasswordHistoryShareDataSource} from './password-history-share.data-source';
 import {RepositoryPasswordModel} from '../repository-password.model';
-import {switchMap, tap} from "rxjs/operators";
+import {switchMap, tap} from 'rxjs/operators';
+import {finalize} from "rxjs/internal/operators";
 
 @Component({
     selector: 'repository-detailed',
@@ -180,7 +181,7 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
         this.loadingLastPass = true;
 
         this.kolpassService.getLastHistoryByRepository(this.repositoryId)
-            .finally(() => this.loadingLastPass = false)
+            .pipe(finalize(() => this.loadingLastPass = false))
             .subscribe(
                 (value: PasswordHistoryModel) => {
                     this.currentPassword = value;
@@ -232,10 +233,10 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
         }
 
         this.kolpassService.removeHistoryFromRepository(this.repositoryId, event.data.id)
-            .finally(() => {
+            .pipe(finalize(() => {
                 this.loadingHistory = false;
                 this.loadingLastPass = false;
-            })
+            }))
             .subscribe(value => {
                 event.confirm.resolve();
 
@@ -258,10 +259,10 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
         newPassword.password = this.formUpdatePass.controls['password'].value;
 
         this.kolpassService.addPasswordToRepository(this.repositoryId, newPassword)
-            .finally(() => {
+            .pipe(finalize(() => {
                 this.loadingLastPass = false;
                 this.loadingHistory = false;
-            })
+            }))
             .subscribe((value: PasswordHistoryModel) => {
                 this.currentPassword = value;
 
@@ -281,10 +282,10 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
         this.loadingHistory = true;
 
         this.kolpassService.clearHistoryFromRepository(this.repositoryId)
-            .finally(() => {
+            .pipe(finalize(() => {
                 this.loadingLastPass = false;
                 this.loadingHistory = false;
-            })
+            }))
             .subscribe(value => {
                 this.formUpdatePass.controls['login'].setValue('');
                 this.formUpdatePass.controls['password'].setValue('');

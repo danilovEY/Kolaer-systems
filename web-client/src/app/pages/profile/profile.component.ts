@@ -3,14 +3,14 @@ import {AccountService} from '../../@core/services/account.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {Observable} from 'rxjs/Observable';
 import {AuthenticationRestService} from '../../@core/modules/auth/authentication-rest.service';
 import {ServerExceptionModel} from '../../@core/models/server-exception.model';
 import {ChangePasswordModel} from '../../@core/models/change-password.model';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SimpleAccountModel} from '../../@core/models/simple-account.model';
-import {EmployeeService} from "../../@core/services/employee.service";
-import {EmployeeModel} from "../../@core/models/employee.model";
+import {EmployeeService} from '../../@core/services/employee.service';
+import {EmployeeModel} from '../../@core/models/employee.model';
+import {finalize} from 'rxjs/internal/operators';
 
 @Component({
     selector: 'profile',
@@ -98,7 +98,7 @@ export class ProfileComponent implements OnInit {
 
                     if (currentAccountToSend.username !== this.currentAccount.username) {
                         this.needLogout = true;
-                        setTimeout(() => this.authService.logout(true).subscribe(Observable.empty), 2000);
+                        setTimeout(() => this.authService.logout(true).subscribe(), 2000);
                     } else {
                         this.updateCurrentAccount(false);
                     }
@@ -121,9 +121,9 @@ export class ProfileComponent implements OnInit {
         changePassword.newPassword = this.changePassForm.value.newPassword;
 
         this.httpClient.post(this.updatePasswordUrl, changePassword)
-            .finally(() => {
+            .pipe(finalize(() => {
                 this.changePassForm.reset();
-            })
+            }))
             .subscribe(
                 (result: any) => {
                     this.successChangePassword = true;
@@ -133,7 +133,7 @@ export class ProfileComponent implements OnInit {
                             this.openedChangePasswordModal.close();
                         }
 
-                        this.authService.logout(true).subscribe(Observable.empty);
+                        this.authService.logout(true).subscribe();
                     }, 2000)
                 },
                 (error: HttpErrorResponse) => {

@@ -7,9 +7,8 @@ import {
     NbThemeService,
 } from '@nebular/theme';
 
-import {Subscription} from 'rxjs/Subscription';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/delay';
+import {Subscription} from 'rxjs/index';
+import {delay, withLatestFrom} from 'rxjs/internal/operators';
 
 @Component({
     selector: 'default-layout',
@@ -26,10 +25,8 @@ export class DefaultLayoutComponent implements OnDestroy {
 
         const isBp = this.bpService.getByName('is');
         this.menuClick$ = this.menuService.onItemSelect()
-            .withLatestFrom(this.themeService.onMediaQueryChange())
-            .delay(20)
+            .pipe(withLatestFrom(this.themeService.onMediaQueryChange()), delay(20))
             .subscribe(([item, [bpFrom, bpTo]]: [any, [NbMediaBreakpoint, NbMediaBreakpoint]]) => {
-
                 if (bpTo.width <= isBp.width) {
                     this.sidebarService.collapse('menu-sidebar');
                 }

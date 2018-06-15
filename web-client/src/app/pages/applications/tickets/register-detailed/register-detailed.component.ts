@@ -8,15 +8,15 @@ import {TicketRegisterModel} from '../main/ticket-register.model';
 import {CustomTableComponent} from '../../../../@theme/components';
 import {ActivatedRoute} from '@angular/router';
 import {TicketsDataSource} from './tickents.data-source';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs/index';
 import {Cell} from 'ng2-smart-table';
 import {Utils} from '../../../../@core/utils/utils';
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {TicketModel} from '../model/ticket.model';
-import {TypeOperationEnum} from "../main/type-operation.enum";
-import {EmployeeWithAccountEditComponent} from "./employee-with-account-edit.component";
-import {AccountService} from "../../../../@core/services/account.service";
-import {SimpleAccountModel} from "../../../../@core/models/simple-account.model";
+import {TypeOperationEnum} from '../main/type-operation.enum';
+import {EmployeeWithAccountEditComponent} from './employee-with-account-edit.component';
+import {AccountService} from '../../../../@core/services/account.service';
+import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 
 @Component({
     selector: 'register-detailed',

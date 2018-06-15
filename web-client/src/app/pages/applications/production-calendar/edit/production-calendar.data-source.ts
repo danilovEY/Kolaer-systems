@@ -1,9 +1,9 @@
 import {CustomDataSource} from '../../../../@core/models/custom.data-source';
 import {HolidayModel} from '../../../../@core/models/holiday.model';
 import {ProductionCalendarService} from '../../../../@core/services/production-calendar.service';
-import {HolidaySortModel} from "../../../../@core/models/holiday-sort.model";
-import {HolidayFilterModel} from "../../../../@core/models/holiday-filter.model";
-import {Page} from "../../../../@core/models/page.model";
+import {HolidaySortModel} from '../../../../@core/models/holiday-sort.model';
+import {HolidayFilterModel} from '../../../../@core/models/holiday-filter.model';
+import {Page} from '../../../../@core/models/page.model';
 
 export class ProductionCalendarDataSource extends CustomDataSource<HolidayModel> {
 

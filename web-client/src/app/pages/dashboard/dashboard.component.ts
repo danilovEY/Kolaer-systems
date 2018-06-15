@@ -4,6 +4,7 @@ import {EmployeeModel} from '../../@core/models/employee.model';
 import {OtherEmployeeModel} from '../../@core/models/other-employee.model';
 import {ServerExceptionModel} from '../../@core/models/server-exception.model';
 import {NbTabComponent, NbTabsetComponent} from '@nebular/theme/components/tabset/tabset.component';
+import {finalize} from 'rxjs/internal/operators';
 
 @Component({
     selector: 'ngx-dashboard',
@@ -37,9 +38,9 @@ export class DashboardComponent implements OnInit {
                     this.loadingEmployeesBirthdayToday = true;
 
                     this.employeeService.getEmployeesBirthdayToday()
-                        .finally(() => {
+                        .pipe(finalize(() => {
                             this.loadingEmployeesBirthdayToday = false;
-                        })
+                        }))
                         .subscribe(
                             (employees: EmployeeModel[]) => this.employeesBirthdayToday = employees,
                             (error: ServerExceptionModel) => console.log(error)
@@ -48,9 +49,9 @@ export class DashboardComponent implements OnInit {
                     this.loadingOtherEmployeesBirthdayToday = true;
 
                     this.employeeService.getOtherEmployeesBirthdayToday()
-                        .finally(() => {
+                        .pipe(finalize(() => {
                             this.loadingOtherEmployeesBirthdayToday = false;
-                        })
+                        }))
                         .subscribe(
                             (employees: OtherEmployeeModel[]) => {
                                 this.otherEmployeesBirthdayToday = employees;

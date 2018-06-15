@@ -1,8 +1,7 @@
 import {HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable, Subscriber} from 'rxjs/index';
 import {AuthInterceptor} from './auth.interceptor';
-import {Subscriber} from 'rxjs/Subscriber';
 import {Router} from '@angular/router';
 import 'rxjs/add/operator/catch';
 import {AuthenticationRestService} from './authentication-rest.service';

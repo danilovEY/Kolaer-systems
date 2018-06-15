@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 
 import {NbMenuItem} from '@nebular/theme';
 import {AuthenticationRestService} from '../@core/modules/auth/authentication-rest.service';
-import {AccountService} from "../@core/services/account.service";
-import {SimpleAccountModel} from "../@core/models/simple-account.model";
+import {AccountService} from '../@core/services/account.service';
+import {SimpleAccountModel} from '../@core/models/simple-account.model';
 
 @Component({
     selector: 'ngx-pages',

@@ -3,12 +3,9 @@ import {environment} from '../../../../environments/environment';
 import {UsernamePasswordModel} from '../../models/username-password.model';
 import {AuthenticationObserverService} from '../../services/authentication-observer.service';
 import {ServerToken} from '../../models/server-token.model';
-import {Observable} from 'rxjs/Observable';
-import {catchError, tap} from 'rxjs/operators';
+import {EMPTY, Observable} from 'rxjs/index';
+import {catchError, finalize, tap} from 'rxjs/operators';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/observable/empty';
-import 'rxjs/add/operator/finally';
 import {Router} from '@angular/router';
 import {ServerExceptionModel} from '../../models/server-exception.model';
 
@@ -63,9 +60,9 @@ export class AuthenticationRestService {
 	logout(redirectToLoginPage: boolean = false): Observable<any> {
 		const obsLogout: Observable<void> = this.authentication
 			? this._httpClient.post<void>(this._logoutUrl, undefined)
-			: Observable.empty<void>();
+			: EMPTY;
 
-        return obsLogout.finally(() => {
+        return obsLogout.pipe(finalize(() => {
         	this.authentication = false;
 			this.setToken(undefined);
 
@@ -73,12 +70,12 @@ export class AuthenticationRestService {
 				observer.logout();
 			}
 
-			if(redirectToLoginPage) {
+			if (redirectToLoginPage) {
                 this._injector.get(Router).navigate(['/auth/login']);
 			} else {
                 this._injector.get(Router).navigate(['/']);
 			}
-		});
+		}));
 	}
 
     refreshToken(): Observable<ServerToken> {
@@ -88,7 +85,7 @@ export class AuthenticationRestService {
 					tap((token: ServerToken) => this.setToken(token))
 				);
 		} else {
-			return Observable.empty<ServerToken>();
+			return EMPTY;
 		}
     }
 

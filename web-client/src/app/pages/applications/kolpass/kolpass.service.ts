@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {RepositoryPasswordModel} from './repository-password.model';
 import {Page} from '../../../@core/models/page.model';
 import {environment} from '../../../../environments/environment';
-import {Observable} from 'rxjs/Observable';
+import {EMPTY, Observable} from 'rxjs/index';
 import {AuthenticationRestService} from '../../../@core/modules/auth/authentication-rest.service';
 import {PasswordHistoryModel} from './password-history.model';
 import {AccountModel} from '../../../@core/models/account.model';
@@ -25,7 +25,7 @@ export class KolpassService extends BaseService {
 
     getAllMyRepositories(page: number = 1, pageSize: number = 15): Observable<Page<RepositoryPasswordModel>> {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
 
@@ -39,7 +39,7 @@ export class KolpassService extends BaseService {
 
     addRepository(newRepository: RepositoryPasswordModel): Observable<RepositoryPasswordModel>  {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
         const url: string = `${this.repositoryUrl}`;
@@ -53,7 +53,7 @@ export class KolpassService extends BaseService {
 
     deleteRepository(repId: number): Observable<any>  {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
         const url: string = `${this.repositoryUrl}/${repId}`;
@@ -63,7 +63,7 @@ export class KolpassService extends BaseService {
 
     editRepository(newRepository: RepositoryPasswordModel): Observable<RepositoryPasswordModel>  {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
         const url: string = `${this.repositoryUrl}/${newRepository.id}`;
@@ -75,7 +75,7 @@ export class KolpassService extends BaseService {
 
     getRepository(repId: number): Observable<RepositoryPasswordModel>  {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
         const url: string = `${this.repositoryUrl}/${repId}`;
@@ -85,7 +85,7 @@ export class KolpassService extends BaseService {
 
     getHistoryInRepository(repId: number, page: number = 1, pageSize: number = 15): Observable<Page<PasswordHistoryModel>> {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
 
@@ -101,7 +101,7 @@ export class KolpassService extends BaseService {
 
     getLastHistoryByRepository(repId: number): Observable<PasswordHistoryModel> {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
         const url: string = `${this.repositoryUrl}/${repId}${this.getLastHistoryByRepositoryUrl}`;
@@ -111,7 +111,7 @@ export class KolpassService extends BaseService {
 
     removeHistoryFromRepository(repId: number, passwordId: number): Observable<any> {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
         const url: string = `${this.repositoryUrl}/${repId}${this.getHistoryByRepositoryUrl}/${passwordId}`;
@@ -121,7 +121,7 @@ export class KolpassService extends BaseService {
 
     clearHistoryFromRepository(repId: number): Observable<any> {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
         const url: string = `${this.repositoryUrl}/${repId}${this.clearHistoryByRepositoryUrl}`;
@@ -131,7 +131,7 @@ export class KolpassService extends BaseService {
 
     addPasswordToRepository(repId: number, newPassword: PasswordHistoryModel): Observable<PasswordHistoryModel>  {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
         const url: string = `${this.repositoryUrl}/${repId}${this.getHistoryByRepositoryUrl}`;
@@ -144,7 +144,7 @@ export class KolpassService extends BaseService {
 
     getSharedAccountsByRepId(repId: number, page: number = 1, pageSize: number = 15): Observable<AccountModel[]> {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
 
@@ -181,7 +181,7 @@ export class KolpassService extends BaseService {
     getSharedRepositories(sort: RepositoryPasswordSortModel, filter: RepositoryPasswordFilterModel,
                           page: number, pageSize: number): Observable<Page<RepositoryPasswordModel>> {
         if (!this.authService.authentication) {
-            return Observable.empty();
+            return EMPTY;
         }
 
 

@@ -1,11 +1,10 @@
 import {LocalDataSource} from 'ng2-smart-table';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
 import {Page} from './page.model';
 import {BaseModel} from './base.model';
 import {ColumnSort} from '../../@theme/components/table/column-sort';
-import {TableFilters} from "../../@theme/components/table/table-filter";
-import {Utils} from "../utils/utils";
+import {TableFilters} from '../../@theme/components/table/table-filter';
+import {Utils} from '../utils/utils';
+import {Observable, Subject} from 'rxjs/index';
 
 export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSource {
     private initDataSource: boolean = false;
@@ -34,7 +33,7 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
     setSort(conf: Array<any>, doEmit?: boolean): LocalDataSource {
         if (!this.initDataSource) {
             this.initDataSource = true;
-            return this.defaultSortConfig ? super.setSort([this.defaultSortConfig], doEmit) : this;
+            return this.defaultSortConfig ? super.setSort([this.defaultSortConfig], doEmit) : null as LocalDataSource;
         } else {
             return super.setSort(conf, doEmit);
         }
@@ -42,6 +41,7 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
 
     getElements(): Promise<any> {
         this.onChangedLoading.next(true);
+        console.log('getElements');
         return this.loadElements(this.getPage(), this.getPageSize());
     }
 
@@ -114,4 +114,21 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
 
         return sortModel;
     }
+
+
+    find(element: BaseModel): Promise<BaseModel> {
+        console.log(element);
+        console.log(this.data);
+
+        return super.find(element);
+    }
+
+// find(element: BaseModel): Promise<BaseModel> {
+    //     const filters: BaseModel[] = this.data.filter((el: BaseModel) => el.id === element.id);
+    //     if (filters.length > 0) {
+    //         return Promise.resolve(filters[0]);
+    //     }
+    //
+    //     return Promise.reject(new Error('Элемент не найден'));
+    // }
 }

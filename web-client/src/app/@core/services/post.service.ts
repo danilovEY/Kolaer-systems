@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs/index';
 import 'rxjs/add/observable/of';
 import {Page} from '../models/page.model';
 import {BaseService} from './base.service';
 import {PostSortModel} from '../models/post-sort.model';
 import {PostFilterModel} from '../models/post-filter.model';
 import {PostModel} from '../models/post.model';
-import {PostRequestModel} from "../models/post-request.model";
+import {PostRequestModel} from '../models/post-request.model';
 
 @Injectable()
 export class PostService extends BaseService {

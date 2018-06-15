@@ -2,14 +2,13 @@ import {DefaultEditor} from 'ng2-smart-table';
 import {Component, OnInit} from '@angular/core';
 import {EmployeeService} from '../../../@core/services/employee.service';
 import {EmployeeModel} from '../../../@core/models/employee.model';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {Observable, of, Subject} from 'rxjs/index';
 import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators'
-import {of} from 'rxjs/observable/of';
 import {Page} from '../../../@core/models/page.model';
 import {SortTypeEnum} from '../../../@core/models/sort-type.enum';
-import {EmployeeSortModel} from "../../../@core/models/employee-sort.model";
-import {EmployeeFilterModel} from "../../../@core/models/employee-filter.model";
+import {EmployeeSortModel} from '../../../@core/models/employee-sort.model';
+import {EmployeeFilterModel} from '../../../@core/models/employee-filter.model';
+import {map} from 'rxjs/internal/operators';
 
 @Component({
     selector: 'edit-employee',
@@ -51,11 +50,11 @@ export class EmployeeEditComponent extends DefaultEditor implements OnInit {
             tap(() => this.people3Loading = true),
             switchMap(term => this.employeeService
                 .getAllEmployees(new EmployeeSortModel(null, SortTypeEnum.ASC), new EmployeeFilterModel(null, term), 0, 0)
-                .map((request: Page<EmployeeModel>) => request.data)
                 .pipe(
-                catchError(() => of([])),
-                tap(() => this.people3Loading = false)
-            ))
+                    map((request: Page<EmployeeModel>) => request.data),
+                    catchError(() => of([])), 
+                    tap(() => this.people3Loading = false)
+                ))
         );
     }
 

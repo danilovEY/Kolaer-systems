@@ -7,7 +7,7 @@ import {TableEventEditModel} from '../../../../@theme/components/table/table-eve
 import {DepartmentsDataSource} from './departments.data-source';
 import {DepartmentService} from '../../../../@core/services/department.service';
 import {DepartmentModel} from '../../../../@core/models/department.model';
-import {DepartmentRequestModel} from "../../../../@core/models/department-request.model";
+import {DepartmentRequestModel} from '../../../../@core/models/department-request.model';
 
 @Component({
     selector: 'departments',

@@ -1,17 +1,19 @@
 import {BaseService} from './base.service';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs/index';
 import {HolidayModel} from '../models/holiday.model';
 import {environment} from '../../../environments/environment';
 import {tap} from 'rxjs/operators';
 import {Page} from '../models/page.model';
 import {HolidaySortModel} from '../models/holiday-sort.model';
 import {HolidayFilterModel} from '../models/holiday-filter.model';
+import {HolidayRequestModel} from '../models/holiday-request.model';
 
 @Injectable()
 export class ProductionCalendarService extends BaseService {
-    private readonly getAllHistory = `${environment.publicServerUrl}/non-security/holidays`;
+    private readonly utlNotSecurityHolidays = `${environment.publicServerUrl}/non-security/holidays`;
+    private readonly urlHolidays = `${environment.publicServerUrl}/holidays`;
 
     constructor(private http: HttpClient) {
         super();
@@ -19,19 +21,19 @@ export class ProductionCalendarService extends BaseService {
 
 
     createHoliday(model: HolidayModel): Observable<HolidayModel> {
-        return this.http.post<HolidayModel>(this.getAllHistory, model)
+        return this.http.post<HolidayModel>(this.urlHolidays, HolidayRequestModel.createRequestModel(model))
             .pipe(tap(this.convertModel));
     }
 
     updateHoliday(id: number, model: HolidayModel): Observable<HolidayModel> {
-        const url = `${this.getAllHistory}/${id}`;
+        const url = `${this.urlHolidays}/${id}`;
 
-        return this.http.put<HolidayModel>(url, model)
+        return this.http.put<HolidayModel>(url, HolidayRequestModel.createRequestModel(model))
             .pipe(tap(this.convertModel));
     }
 
     deleteHoliday(id: number): Observable<any> {
-        const url = `${this.getAllHistory}/${id}`;
+        const url = `${this.urlHolidays}/${id}`;
 
         return this.http.delete<HolidayModel>(url);
     }
@@ -43,14 +45,14 @@ export class ProductionCalendarService extends BaseService {
         params = params.append('page', page.toString()).append('pagesize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 
-        return this.http.get<Page<HolidayModel>>(this.getAllHistory, {params})
+        return this.http.get<Page<HolidayModel>>(this.utlNotSecurityHolidays, {params})
             .pipe(
                 tap((response: Page<HolidayModel>) => response.data.map(this.convertModel))
             );
     }
 
     getAllHolidayByYear(year?: number): Observable<HolidayModel[]> {
-        const url = `${this.getAllHistory}/get/${year ? year : new Date().getFullYear()}`;
+        const url = `${this.utlNotSecurityHolidays}/get/${year ? year : new Date().getFullYear()}`;
 
         return this.http.get<HolidayModel[]>(url)
             .pipe(

@@ -3,7 +3,8 @@ import {Utils} from '../../../../@core/utils/utils';
 import {ProductionCalendarService} from '../../../../@core/services/production-calendar.service';
 import {HolidayModel} from '../../../../@core/models/holiday.model';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {TypeDay} from "../../../../@core/models/typeday.enum";
+import {TypeDay} from '../../../../@core/models/typeday.enum';
+import {finalize} from 'rxjs/internal/operators';
 
 @Component({
     selector: 'production-calendar-main',
@@ -37,7 +38,7 @@ export class ProductionCalendarMainComponent implements OnInit {
         }
 
         this.productionCalendarService.getAllHolidayByYear(this.currentYear)
-            .finally(() => this.holidaysLoading = false)
+            .pipe(finalize(() => this.holidaysLoading = false))
             .subscribe((response: HolidayModel[]) => this.holidays = response);
     }
 

@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs/index';
 import 'rxjs/add/observable/of';
 import {Page} from '../models/page.model';
 import {BaseService} from './base.service';
 import {DepartmentModel} from '../models/department.model';
 import {DepartmentSortModel} from '../models/department-sort.model';
 import {DepartmentFilterModel} from '../models/department-filter.model';
-import {DepartmentRequestModel} from "../models/department-request.model";
+import {DepartmentRequestModel} from '../models/department-request.model';
 
 @Injectable()
 export class DepartmentService extends BaseService {

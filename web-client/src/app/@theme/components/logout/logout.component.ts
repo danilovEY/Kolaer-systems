@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticationRestService} from '../../../@core/modules/auth/authentication-rest.service';
-import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'kol-logout',
@@ -15,7 +14,7 @@ export class CustomLogoutComponent implements OnInit {
 
     ngOnInit() {
         if (this.authenticationService.authentication) {
-            this.authenticationService.logout().subscribe(Observable.empty);
+            this.authenticationService.logout().subscribe();
         } else {
             this.router.navigate(['/']);
         }

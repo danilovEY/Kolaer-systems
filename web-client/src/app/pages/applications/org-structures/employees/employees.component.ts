@@ -10,11 +10,11 @@ import {TableEventEditModel} from '../../../../@theme/components/table/table-eve
 import {Cell} from 'ng2-smart-table';
 import {Category} from '../../../../@core/models/category.enum';
 import {Utils} from '../../../../@core/utils/utils';
-import {PostEditComponent} from "../../../../@theme/components/table/post-edit.component";
-import {DepartmentEditComponent} from "../../../../@theme/components/table/department-edit.component";
-import {EmployeeRequestModel} from "../../../../@core/models/employee-request.model";
-import {DateEditComponent} from "../../../../@theme/components/table/date-edit.component";
-import {Gender} from "../../../../@core/models/gender.enum";
+import {PostEditComponent} from '../../../../@theme/components/table/post-edit.component';
+import {DepartmentEditComponent} from '../../../../@theme/components/table/department-edit.component';
+import {EmployeeRequestModel} from '../../../../@core/models/employee-request.model';
+import {DateEditComponent} from '../../../../@theme/components/table/date-edit.component';
+import {Gender} from '../../../../@core/models/gender.enum';
 
 @Component({
     selector: 'employees',

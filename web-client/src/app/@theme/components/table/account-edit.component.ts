@@ -1,13 +1,12 @@
 import {DefaultEditor} from 'ng2-smart-table';
 import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {Observable, of, Subject} from 'rxjs/index';
 import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators'
-import {of} from 'rxjs/observable/of';
 import {Page} from '../../../@core/models/page.model';
-import {AccountService} from "../../../@core/services/account.service";
-import {AccountFilterModel} from "../../../@core/models/account-filter.model";
-import {AccountModel} from "../../../@core/models/account.model";
+import {AccountService} from '../../../@core/services/account.service';
+import {AccountFilterModel} from '../../../@core/models/account-filter.model';
+import {AccountModel} from '../../../@core/models/account.model';
+import {map} from "rxjs/internal/operators";
 
 @Component({
     selector: 'edit-account',
@@ -49,13 +48,13 @@ export class AccountEditComponent extends DefaultEditor implements OnInit {
             tap(() => this.people3Loading = true),
             switchMap(term => this.accountService
                 .getAllAccounts(null, new AccountFilterModel(null, term), 0, 0)
-                .map((request: Page<AccountModel>) => request.data)
-                .map((accounts: AccountModel[]) =>
-                    accounts.map((account: AccountModel) =>
-                        new AccountView(account, account.employee ? account.employee.initials : account.username)))
                 .pipe(
-                catchError(() => of([])),
-                tap(() => this.people3Loading = false)
+                    map((request: Page<AccountModel>) => request.data),
+                    map((accounts: AccountModel[]) =>
+                        accounts.map((account: AccountModel) =>
+                            new AccountView(account, account.employee ? account.employee.initials : account.username))),
+                    catchError(() => of([])),
+                    tap(() => this.people3Loading = false)
             ))
         );
     }

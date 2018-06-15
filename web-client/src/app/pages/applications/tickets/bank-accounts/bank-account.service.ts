@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Page} from '../../../../@core/models/page.model';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs/index';
 import {environment} from '../../../../../environments/environment';
 import {BankAccountModel} from './bank-account.model';
 import {BankAccountRequestModel} from './bank-account-request.model';
 import {BankAccountFilterModel} from './bank-account-filter.model';
 import {BankAccountSortModel} from './bank-account-sort.model';
-import {BaseService} from "../../../../@core/services/base.service";
-import {EmployeeSortModel} from "../../../../@core/models/employee-sort.model";
-import {EmployeeFilterModel} from "../../../../@core/models/employee-filter.model";
-import {EmployeeModel} from "../../../../@core/models/employee.model";
+import {BaseService} from '../../../../@core/services/base.service';
+import {EmployeeSortModel} from '../../../../@core/models/employee-sort.model';
+import {EmployeeFilterModel} from '../../../../@core/models/employee-filter.model';
+import {EmployeeModel} from '../../../../@core/models/employee.model';
 
 @Injectable()
 export class BankAccountService extends BaseService {

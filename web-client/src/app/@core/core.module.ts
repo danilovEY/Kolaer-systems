@@ -2,7 +2,7 @@ import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NbAuthModule} from '@nebular/auth';
 import {NbRoleProvider, NbSecurityModule} from '@nebular/security';
-import {of as observableOf} from 'rxjs/observable/of';
+import {of as observableOf} from 'rxjs';
 
 import {throwIfAlreadyLoaded} from './module-import-guard';
 import {DataModule} from './data/data.module';

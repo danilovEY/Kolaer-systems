@@ -15,7 +15,8 @@ import {TableEventEditModel} from '../../../../@theme/components/table/table-eve
 import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 import {RepositoryPasswordShareDataSource} from './repository-password-share.data-source';
-import {Cell} from "ng2-smart-table";
+import {Cell} from 'ng2-smart-table';
+import {finalize} from "rxjs/internal/operators";
 
 @Component({
     selector: 'repositories',
@@ -76,7 +77,7 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
             title: 'Пользователь',
             type: 'string',
             valuePrepareFunction(a: any, value: RepositoryPasswordModel, cell: Cell) {
-                if(value.account) {
+                if (value.account) {
                     return value.account.employee ? value.account.employee.initials : value.account.username;
                 } else {
                     return '';
@@ -117,7 +118,7 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
         if (event.action.name === this.copyLoginActionName || event.action.name === this.copyPassActionName) {
             this.myPassLoading = true;
             this.kolpassService.getLastHistoryByRepository(event.data.id)
-                .finally(() => this.myPassLoading = false)
+                .pipe(finalize(() => this.myPassLoading = false))
                 .subscribe(
                     (value: PasswordHistoryModel) => {
                         this.passwordHistoryForCopy = value;

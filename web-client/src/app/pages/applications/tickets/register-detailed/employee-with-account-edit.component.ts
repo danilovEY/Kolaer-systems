@@ -1,9 +1,7 @@
 import {DefaultEditor} from 'ng2-smart-table';
 import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators'
-import {of} from 'rxjs/observable/of';
+import {Observable, of, Subject} from 'rxjs/index';
+import {catchError, debounceTime, distinctUntilChanged, map, switchMap, tap} from 'rxjs/operators'
 import {BankAccountService} from '../bank-accounts/bank-account.service';
 import {EmployeeModel} from '../../../../@core/models/employee.model';
 import {EmployeeSortModel} from '../../../../@core/models/employee-sort.model';
@@ -29,10 +27,6 @@ import {SortTypeEnum} from '../../../../@core/models/sort-type.enum';
                    [typeahead]="people3input$"
                    [(ngModel)]="cell.newValue">
         </ng-select>
-
-        <!--(click)="onClick.emit($event)"-->
-        <!--(keydown.enter)="onEdited.emit($event)"-->
-        <!--(keydown.esc)="onStopEditing.emit()"-->
     `
 
 })
@@ -52,11 +46,11 @@ export class EmployeeWithAccountEditComponent extends DefaultEditor implements O
             tap(() => this.people3Loading = true),
             switchMap(term => this.bankAccountService
                 .getAllEmployeesWithAccount(new EmployeeSortModel(null, SortTypeEnum.ASC), new EmployeeFilterModel(null, `%${term}%`), 0, 0)
-                .map((request: Page<EmployeeModel>) => request.data)
                 .pipe(
-                catchError(() => of([])),
-                tap(() => this.people3Loading = false)
-            ))
+                    map((request: Page<EmployeeModel>) => request.data),
+                    catchError(() => of([])),
+                    tap(() => this.people3Loading = false)
+                ))
         );
     }
 

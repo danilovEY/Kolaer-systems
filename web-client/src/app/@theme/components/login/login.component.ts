@@ -5,6 +5,7 @@ import {NgForm} from '@angular/forms';
 import {AuthenticationRestService} from '../../../@core/modules/auth/authentication-rest.service';
 import {ServerExceptionModel} from '../../../@core/models/server-exception.model';
 import {ServerToken} from '../../../@core/models/server-token.model';
+import {finalize} from "rxjs/internal/operators";
 
 @Component({
     selector: 'kol-login',
@@ -39,7 +40,7 @@ export class CustomLoginComponent implements OnInit {
         const password: string = this.form.value.password;
 
         this.authenticationService.login(username, password)
-            .finally(() => this.submitted = false)
+            .pipe(finalize(() => this.submitted = false))
             .subscribe(
                 (token: ServerToken) => {
                     this.form.reset();

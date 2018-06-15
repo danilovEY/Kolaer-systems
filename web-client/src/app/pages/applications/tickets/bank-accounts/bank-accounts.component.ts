@@ -15,8 +15,8 @@ import {EmployeeEditComponent} from '../../../../@theme/components/table/employe
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {BankAccountRequestModel} from './bank-account-request.model';
 import {Utils} from '../../../../@core/utils/utils';
-import {HttpErrorResponse} from "@angular/common/http";
-import {ServerExceptionModel} from "../../../../@core/models/server-exception.model";
+import {HttpErrorResponse} from '@angular/common/http';
+import {ServerExceptionModel} from '../../../../@core/models/server-exception.model';
 
 @Component({
     selector: 'bank-accounts',
