@@ -17,19 +17,44 @@ import java.util.regex.Pattern;
  */
 @Service
 public class ExcelReaderPost implements ExcelReader<PostEntity> {
-    private static String POST_CODE = "Штатная должность(Код)";
-    private static String POST_NAME = "Штатная должность(Название)";
+    private static String POST_ID = "ШтатДолжность";
+    private static String POST_CODE_OLD = "Штатная должность(Код)";
+    private static String POST_CODE = "Код должности";
+    private static String POST_SHORT_NAME = "Штатная должность";
+    private static String POST_FULL_NAME_OLD = "Штатная должность(Название)";
+    private static String POST_FULL_NAME_1 = "Шт.должность (полное) 1";
+    private static String POST_FULL_NAME_2 = "Шт.должность (полное) 2";
+    private static String POST_FULL_NAME_3 = "Шт.должность (полное) 3";
+    private static String POST_FULL_NAME_4 = "Шт.должность (полное) 4";
 
     @Override
     public PostEntity parse(XSSFRow row, List<String> nameColumns) {
         PostEntity postEntity = new PostEntity();
 
-        String value = getStringValue(nameColumns, POST_NAME, row);
+        String value = getStringValue(nameColumns, POST_ID, row);
+        postEntity.setExternalId(value);
+
+        value = getStringValue(nameColumns, POST_FULL_NAME_1, row);
         postEntity.setName(value);
+
+        if(StringUtils.isEmpty(value)) {
+            value = getStringValue(nameColumns, POST_FULL_NAME_OLD, row);
+            postEntity.setName(value);
+        } else {
+            String postFullName2 = getStringValue(nameColumns, POST_FULL_NAME_2, row);
+            String postFullName3 = getStringValue(nameColumns, POST_FULL_NAME_3, row);
+            String postFullName4 = getStringValue(nameColumns, POST_FULL_NAME_4, row);
+            postEntity.setName(postEntity.getName() + postFullName2 + postFullName3 + postFullName4);
+        }
+
+        value = getStringValue(nameColumns, POST_SHORT_NAME, row);
         postEntity.setAbbreviatedName(value);
 
+
+        value = postEntity.getName();
+
         String rang = value.replaceAll("[\\D]", "");
-        if (!rang.trim().isEmpty()) {
+        if (StringUtils.hasText(rang)) {
             String name = value.substring(0, value.indexOf(rang));
 
             postEntity.setName(name.trim());
@@ -39,6 +64,10 @@ public class ExcelReaderPost implements ExcelReader<PostEntity> {
 
         String postCode = getStringValue(nameColumns, POST_CODE, row);
         postEntity.setCode(postCode);
+        if(StringUtils.isEmpty(postCode)) {
+            postCode = getStringValue(nameColumns, POST_CODE_OLD, row);
+            postEntity.setCode(postCode);
+        }
 
         log.debug("Parse post: {}", postEntity);
 

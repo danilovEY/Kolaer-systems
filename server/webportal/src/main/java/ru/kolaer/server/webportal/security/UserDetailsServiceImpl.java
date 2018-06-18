@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kolaer.server.webportal.exception.UserIsBlockException;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 
@@ -28,20 +29,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String login = Optional.ofNullable(username)
-                .map(String::toLowerCase)
-                .orElse("");
 
-        AccountEntity account = accountDao.findName(login);
-        if(account != null) {
-               return new User(account.getUsername(), account.getPassword(),
-                       true,true,true,true,
-                       RoleUtils.roleToListString(account)
-                               .stream()
-                               .map(SimpleGrantedAuthority::new)
-                               .collect(Collectors.toList()));
+        AccountEntity account = Optional.ofNullable(username)
+                .map(String::toLowerCase)
+                .map(accountDao::findName)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь: " + username + " не найден!"));
+
+        if(account.isBlock()) {
+            throw new UserIsBlockException();
         }
 
-        throw new UsernameNotFoundException("Пользователь: " + username + " не найден!");
+        return new User(account.getUsername(), account.getPassword(),
+                true,true,true,true,
+                RoleUtils.roleToListString(account)
+                        .stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList()));
     }
 }

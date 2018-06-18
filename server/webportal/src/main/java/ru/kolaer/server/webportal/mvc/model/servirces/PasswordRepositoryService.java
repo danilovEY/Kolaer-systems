@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by danilovey on 20.01.2017.
  */
-public interface PasswordRepositoryService extends DefaultService<PasswordRepositoryDto> {
+public interface PasswordRepositoryService extends DefaultService<PasswordRepositoryDto>, UpdatableEmployeeService {
     Page<PasswordRepositoryDto> getAll(RepositoryPasswordSort sortParam, RepositoryPasswordFilter filterParam,
                                        Integer number, Integer pageSize);
 

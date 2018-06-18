@@ -11,9 +11,9 @@ import ru.kolaer.server.webportal.mvc.model.servirces.ExcelReader;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 13.10.2017.
@@ -22,21 +22,20 @@ import java.util.List;
 public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
     private static int YEAR_NOT_DISMISSAL = 9999;
     private static String FIO_NAME = "ФИО";
+    private static String FIO_NAME_2 = "Табельный номер";
     private static String SECOND_NAME = "Фамилия";
     private static String FIRST_NAME = "Имя";
     private static String THIRD_NAME = "Отчество";
     private static String SEX = "Пол";
     private static String EMPLOYMENT_DATE = "Поступл.";
-    private static String DISMISSAL_DATE = "Дата увольнения";
     private static String BIRTHDAY_DATE = "ДатаРожд";
     private static String PERSONNEL_NUMBER = "Таб.№";
-    private static String PHONE_NUMBER = "Телефон";
-    private static String EMAIL = "Эл. почта(MAIL)";
     private static String CATEGORY = "Категория сотрудников";
 
     private static String WORKER_CATEGORY = "РабочийОкладЧас";
     private static String SPEC_CATEGORY = "СпециалистОкладЧас";
     private static String LEADER_CATEGORY = "РуководитОкладЧас";
+    private static String EMPLOYEES_CATEGORY = "СлужащийОкладЧас";
 
     @Override
     public EmployeeEntity parse(XSSFRow row, List<String> nameColumns) {
@@ -61,7 +60,8 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
                 + newEmployeeEntity.getThirdName());
 
         if(StringUtils.isEmpty(newEmployeeEntity.getInitials())) {
-            value = getStringValue(nameColumns, FIO_NAME, row);
+            value = Optional.ofNullable(getStringValue(nameColumns, FIO_NAME_2, row))
+                    .orElse(getStringValue(nameColumns, FIO_NAME, row));
 
             newEmployeeEntity.setInitials(value);
 
@@ -88,16 +88,6 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
         date = getDateValue(nameColumns, EMPLOYMENT_DATE, row);
         newEmployeeEntity.setEmploymentDate(date);
 
-        date = getDateValue(nameColumns, DISMISSAL_DATE, row);
-        if(date != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-
-            if (calendar.get(Calendar.YEAR) != YEAR_NOT_DISMISSAL) {
-                newEmployeeEntity.setDismissalDate(date);
-            }
-        }
-
         value = getStringValue(nameColumns, SEX, row);
         if("мужской".equals(value.toLowerCase())) {
             newEmployeeEntity.setGender(EnumGender.MALE);
@@ -105,16 +95,10 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
             newEmployeeEntity.setGender(EnumGender.FEMALE);
         }
 
-        value = getStringValue(nameColumns, PHONE_NUMBER, row);
-        newEmployeeEntity.setHomePhoneNumber(value);
-
         value = getStringValue(nameColumns, CATEGORY, row);
         if(value != null) {
             newEmployeeEntity.setCategory(getCategory(value));
         }
-
-        value = getStringValue(nameColumns, EMAIL, row);
-        newEmployeeEntity.setEmail(value);
 
         try {
             newEmployeeEntity.setPhoto("http://asupkolaer.local/app_ie8/assets/images/vCard/o_"
@@ -133,6 +117,7 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
         if(WORKER_CATEGORY.equals(category)) return EnumCategory.WORKER;
         if(SPEC_CATEGORY.equals(category)) return EnumCategory.SPECIALIST;
         if(LEADER_CATEGORY.equals(category)) return EnumCategory.LEADER;
+        if(EMPLOYEES_CATEGORY.equals(category)) return EnumCategory.EMPLOYEE;
         return null;
     }
 

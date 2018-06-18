@@ -2,25 +2,28 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.error.ErrorCode;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
 import ru.kolaer.api.mvp.model.kolaerweb.TypePostEnum;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
-import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
-import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
+import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PostDao;
-import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
-import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
+import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdate;
+import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeeDto;
+import ru.kolaer.server.webportal.mvc.model.dto.UpdatableEmployee;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntity;
+import ru.kolaer.server.webportal.mvc.model.servirces.UpdatableEmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
 import java.io.File;
@@ -29,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by danilovey on 12.10.2017.
@@ -36,35 +40,33 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
-
-//    private final JdbcTemplate jdbcTemplateKolaerBase;
-
     private final EmployeeDao employeeDao;
+    private final EmployeeConverter employeeConverter;
     private final PostDao postDao;
     private final DepartmentDao departmentDao;
-    private final AccountDao accountDao;
-    private final AccountConverter accountConverter;
+
+    private final List<UpdatableEmployeeService> updatableEmployeeServices;
 
     private final ExcelReaderEmployee excelReaderEmployee;
     private final ExcelReaderDepartment excelReaderDepartment;
     private final ExcelReaderPost excelReaderPost;
 
     public UpdateEmployeesServiceImpl(
-//            @Qualifier("dataSourceKolaerBase") JdbcTemplate jdbcTemplateKolaerBase,
-                                      EmployeeDao employeeDao,
-                                      PostDao postDao,
-                                      DepartmentDao departmentDao,
-                                      AccountDao accountDao,
-                                      AccountConverter accountConverter,
-                                      ExcelReaderEmployee excelReaderEmployee,
-                                      ExcelReaderDepartment excelReaderDepartment,
-                                      ExcelReaderPost excelReaderPost) {
-//        this.jdbcTemplateKolaerBase = jdbcTemplateKolaerBase;
+            EmployeeDao employeeDao,
+            EmployeeConverter employeeConverter,
+            PostDao postDao,
+            DepartmentDao departmentDao,
+            ExcelReaderEmployee excelReaderEmployee,
+            ExcelReaderDepartment excelReaderDepartment,
+            ExcelReaderPost excelReaderPost,
+            @Autowired(required = false) List<UpdatableEmployeeService> updatableEmployeeServices) {
         this.employeeDao = employeeDao;
+        this.employeeConverter = employeeConverter;
         this.postDao = postDao;
         this.departmentDao = departmentDao;
-        this.accountDao = accountDao;
-        this.accountConverter = accountConverter;
+
+        this.updatableEmployeeServices = updatableEmployeeServices;
+
         this.excelReaderEmployee = excelReaderEmployee;
         this.excelReaderDepartment = excelReaderDepartment;
         this.excelReaderPost = excelReaderPost;
@@ -72,9 +74,9 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
 
     @Override
     @Transactional
-    public ResultUpdateEmployeesDto updateEmployees(@NonNull File file) {
+    public void updateEmployees(@NonNull File file) {
         try {
-            return updateEmployees(new FileInputStream(file));
+            updateEmployees(new FileInputStream(file));
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("Файл не найден!", e);
         }
@@ -82,26 +84,38 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
 
     @Override
     @Transactional
-    public ResultUpdateEmployeesDto updateEmployees(InputStream inputStream) {
+    public void updateEmployees(InputStream inputStream) {
+        ResultUpdateEmployeeDto resultUpdateEmployeeDto = new ResultUpdateEmployeeDto();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            if (workbook.getNumberOfSheets() < 1) {
+                throw new UnexpectedRequestParams("Книга пустая");
+            }
+
             XSSFSheet sheetAt = workbook.getSheetAt(0);
             XSSFRow firstRow = sheetAt.getRow(sheetAt.getFirstRowNum());
 
-            List<String> nameColumns = new ArrayList<>();
-            firstRow.forEach(cell -> nameColumns.add(cell.getStringCellValue()));
+            List<String> nameColumns = StreamSupport
+                    .stream(firstRow.spliterator(), false)
+                    .map(Cell::getStringCellValue)
+                    .collect(Collectors.toList());
 
             Map<String, PostEntity> postEntityMap = new HashMap<>();
             Map<String, DepartmentEntity> departmentEntityMap = new HashMap<>();
-            Map<String, EmployeeEntity> newEmployeesMap = new HashMap<>();
-            Map<String, String> employeeKeyPostMap = new HashMap<>();
-            Map<String, String> employeeKeyDepMap = new HashMap<>();
+            Map<String, UpdatableEmployee> newEmployeesMap = new HashMap<>();
 
             for (int i = 1; i <= sheetAt.getLastRowNum(); i++) {
                 XSSFRow row = sheetAt.getRow(i);
 
                 EmployeeEntity newEmployeeEntity = excelReaderEmployee.process(row, nameColumns);
-                if(newEmployeesMap.containsKey(generateKey(newEmployeeEntity))) {
+
+                UpdatableEmployee updatableEmployee;
+
+                String employeeKey = generateKey(newEmployeeEntity);
+                if (employeeKey != null && !newEmployeesMap.containsKey(employeeKey)) {
+                    updatableEmployee = new UpdatableEmployee(newEmployeeEntity);
+                    newEmployeesMap.put(employeeKey, updatableEmployee);
+                } else {
                     continue;
                 }
 
@@ -110,54 +124,43 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
 
                 String postKey = generateKey(postEntity);
                 String depKey = generateKey(departmentEntity);
-                String employeeKey = generateKey(newEmployeeEntity);
 
-                if (!postEntityMap.containsKey(postKey)) {
+                if (postKey != null && !postEntityMap.containsKey(postKey)) {
                     postEntityMap.put(postKey, postEntity);
                 }
 
-                if (!departmentEntityMap.containsKey(depKey)) {
+                if (depKey != null && !departmentEntityMap.containsKey(depKey)) {
                     departmentEntityMap.put(depKey, departmentEntity);
                 }
 
-                if (!newEmployeesMap.containsKey(employeeKey)) {
-                    newEmployeesMap.put(employeeKey, newEmployeeEntity);
-                }
-
-                employeeKeyPostMap.put(employeeKey, postKey);
-                employeeKeyDepMap.put(employeeKey, depKey);
+                updatableEmployee.setDepartmentKey(depKey);
+                updatableEmployee.setPostKey(postKey);
             }
 
-            ResultUpdateEmployeesDto resultUpdateEmployeesDto = new ResultUpdateEmployeesDto();
-            resultUpdateEmployeesDto = updatePostMap(postEntityMap, resultUpdateEmployeesDto);
-            resultUpdateEmployeesDto = updateDepMap(departmentEntityMap, resultUpdateEmployeesDto);
-            resultUpdateEmployeesDto = updateEmployeeMap(newEmployeesMap, resultUpdateEmployeesDto);
+            updatePostMap(postEntityMap);
+            updateDepMap(departmentEntityMap);
+            updateEmployeeMap(newEmployeesMap, resultUpdateEmployeeDto);
 
             saveDepartment(departmentEntityMap);
             savePost(postEntityMap);
-            saveEmployees(newEmployeesMap, employeeKeyDepMap, employeeKeyPostMap, departmentEntityMap, postEntityMap);
-
-            saveAccounts(resultUpdateEmployeesDto.getAddEmployee());
-
-            return resultUpdateEmployeesDto;
+            saveEmployees(newEmployeesMap, departmentEntityMap, postEntityMap);
         } catch (Exception ex) {
             log.error("Ошибка при чтении файла!", ex);
             throw new UnexpectedRequestParams(ex.getMessage(), ex, ErrorCode.PARSE_EXCEPTION);
         }
-    }
 
-    private void saveAccounts(List<EmployeeEntity> employee) {
-        List<AccountEntity> accounts = employee
+        ResultUpdate resultUpdate = new ResultUpdate();
+        resultUpdate.setAddEmployee(employeeConverter.convertToDto(resultUpdateEmployeeDto.getAddEmployee()));
+        resultUpdate.setDeleteEmployee(employeeConverter.convertToDto(resultUpdateEmployeeDto.getDeleteEmployee()));
+
+        Optional.ofNullable(updatableEmployeeServices)
+                .orElse(Collections.emptyList())
                 .stream()
-                .map(accountConverter::convertToModel)
-                .collect(Collectors.toList());
-
-        accountDao.save(accounts);
+                .sorted(Comparator.comparingInt(UpdatableEmployeeService::getOrder))
+                .forEach(service -> service.updateEmployee(resultUpdate));
     }
 
-    private ResultUpdateEmployeesDto saveEmployees(Map<String, EmployeeEntity> newEmployeesMap,
-                                                   Map<String, String> employeeKeyDepMap,
-                                                   Map<String, String> employeeKeyPostMap,
+    private void saveEmployees(Map<String, UpdatableEmployee> newEmployeesMap,
                                                    Map<String, DepartmentEntity> depMap,
                                                    Map<String, PostEntity> postMap) {
 
@@ -176,63 +179,44 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
 //                }).stream()
 //                .collect(Collectors.toMap(e -> String.valueOf(17240000L + e.getPersonnelNumber()), e -> e));
 
-        for (Map.Entry<String, EmployeeEntity> employeeEntityEntry : newEmployeesMap.entrySet()) {
-            String employeeKey = employeeEntityEntry.getKey();
-            EmployeeEntity employeeEntity = employeeEntityEntry.getValue();
+        for (UpdatableEmployee updatableEmployee : newEmployeesMap.values()) {
+            EmployeeEntity employeeEntity = updatableEmployee.getEmployee();
+            PostEntity postEntity = postMap.get(updatableEmployee.getPostKey());
+            DepartmentEntity departmentEntity = depMap.get(updatableEmployee.getDepartmentKey());
 
-            String postKey = employeeKeyPostMap.get(employeeKey);
-            String depKey = employeeKeyDepMap.get(employeeKey);
+            if (postEntity != null) {
+                employeeEntity.setPostId(postEntity.getId());
+            }
 
-            Optional.ofNullable(postMap.get(postKey))
-                    .ifPresent(post -> {
-                        employeeEntity.setPostId(post.getId());
-
-                        String postName = post.getName().toLowerCase();
-                        if (postName.contains("начальник") || postName.contains("директор")
-                                || postName.contains("руководитель") || postName.contains("ведущий")
-                                || postName.contains("главный")) {
-                            employeeEntity.setCategory(EnumCategory.LEADER);
-                        } else if(postName.contains("инженер") || postName.contains("специалист")
-                                || postName.contains("техник") || postName.contains("экономист")
-                                || postName.contains("юрисконсульт")) {
-                            employeeEntity.setCategory(EnumCategory.SPECIALIST);
-                        } else {
-                            employeeEntity.setCategory(EnumCategory.WORKER);
-                        }
-                    });
-
-            Optional.ofNullable(depMap.get(depKey))
-                    .map(DepartmentEntity::getId)
-                    .ifPresent(employeeEntity::setDepartmentId);
-
-//            EmployeeEntity kolaerBaseEntity = kolaerBaseEmployeeMap.get(employeeKey);
-//            if(kolaerBaseEntity != null) {
-//                employeeEntity.setEmail(kolaerBaseEntity.getEmail());
-//                employeeEntity.setWorkPhoneNumber(kolaerBaseEntity.getWorkPhoneNumber());
-//            }
+            if (departmentEntity != null) {
+                employeeEntity.setDepartmentId(departmentEntity.getId());
+            }
         }
 
-        employeeDao.save(newEmployeesMap.values().stream().collect(Collectors.toList()));
+        List<EmployeeEntity> toSaveEmployee = newEmployeesMap.values()
+                .stream()
+                .map(UpdatableEmployee::getEmployee)
+                .collect(Collectors.toList());
+
+        employeeDao.save(toSaveEmployee);
+
 
         List<DepartmentEntity> updateChifDep = new ArrayList<>();
 
-        for (Map.Entry<String, EmployeeEntity> employeeEntityEntry : newEmployeesMap.entrySet()) {
-            String employeeKey = employeeEntityEntry.getKey();
-            EmployeeEntity employeeEntity = employeeEntityEntry.getValue();
+        for (UpdatableEmployee updatableEmployee : newEmployeesMap.values()) {
+            EmployeeEntity employeeEntity = updatableEmployee.getEmployee();
+            PostEntity postEntity = postMap.get(updatableEmployee.getPostKey());
+            DepartmentEntity departmentEntity = depMap.get(updatableEmployee.getDepartmentKey());
 
-            String postKey = employeeKeyPostMap.get(employeeKey);
-            String depKey = employeeKeyDepMap.get(employeeKey);
-
-            DepartmentEntity departmentEntity = depMap.get(depKey);
-            PostEntity postEntity = postMap.get(postKey);
             if(departmentEntity != null && postEntity != null) {
                 String postName = postEntity.getName().toLowerCase();
                 Long idChief = departmentEntity.getChiefEmployeeId();
-                if ((employeeEntity.getCategory() != null && employeeEntity.getCategory() == EnumCategory.LEADER)
-                        || (postName.contains("начальник") || postName.contains("директор")
-                        || postName.contains("руководитель") || postName.contains("ведущий")
-                        || postName.contains("главный"))
-                        && (idChief == null || !idChief.equals(employeeEntity.getId()))) {
+                if (!employeeEntity.getId().equals(idChief) &&
+                        (postName.contains("начальник") ||
+                                postName.contains("директор") ||
+                                postName.contains("руководитель") ||
+                                postName.contains("ведущий") ||
+                                postName.contains("главный"))) {
                     departmentEntity.setChiefEmployeeId(employeeEntity.getId());
                     updateChifDep.add(departmentEntity);
                 }
@@ -240,98 +224,79 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
         }
 
         departmentDao.save(updateChifDep);
-
-        return null;
     }
 
-    private ResultUpdateEmployeesDto savePost(Map<String, PostEntity> postEntityMap) {
-        postDao.save(postEntityMap.values().stream().collect(Collectors.toList()));
-
-        return null;
+    private void savePost(Map<String, PostEntity> postEntityMap) {
+        postDao.save(new ArrayList<>(postEntityMap.values()));
     }
 
-    private ResultUpdateEmployeesDto saveDepartment(Map<String, DepartmentEntity> departmentEntityMap) {
-        departmentDao.save(departmentEntityMap.values().stream().collect(Collectors.toList()));
-
-        return null;
+    private void saveDepartment(Map<String, DepartmentEntity> departmentEntityMap) {
+        departmentDao.save(new ArrayList<>(departmentEntityMap.values()));
     }
 
-    private ResultUpdateEmployeesDto updateEmployeeMap(Map<String, EmployeeEntity> newEmployeesMap,
-                                                       ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
+    private void updateEmployeeMap(Map<String, UpdatableEmployee> newEmployeesMap,
+                                                      ResultUpdateEmployeeDto resultUpdateEmployeeDto) {
         List<EmployeeEntity> deletedEmployee = new ArrayList<>();
 
         for (EmployeeEntity employeeEntityFromDb : employeeDao.findAll()) {
             String originKey = generateKey(employeeEntityFromDb);
 
+            UpdatableEmployee updatableEmployee = newEmployeesMap
+                    .getOrDefault(originKey, new UpdatableEmployee(employeeEntityFromDb));
+
             if(!newEmployeesMap.containsKey(originKey)) {
                 employeeEntityFromDb.setDismissalDate(new Date());
                 deletedEmployee.add(employeeEntityFromDb);
             } else {
-                EmployeeEntity employeeEntity = newEmployeesMap.get(originKey);
+                EmployeeEntity employeeEntity = updatableEmployee.getEmployee();
                 employeeEntityFromDb.setInitials(employeeEntity.getInitials());
                 employeeEntityFromDb.setFirstName(employeeEntity.getFirstName());
                 employeeEntityFromDb.setSecondName(employeeEntity.getSecondName());
                 employeeEntityFromDb.setThirdName(employeeEntity.getThirdName());
                 employeeEntityFromDb.setGender(employeeEntity.getGender());
                 employeeEntityFromDb.setBirthday(employeeEntity.getBirthday());
-                employeeEntityFromDb.setHomePhoneNumber(employeeEntity.getHomePhoneNumber());
                 employeeEntityFromDb.setEmploymentDate(employeeEntity.getEmploymentDate());
                 employeeEntityFromDb.setCategory(employeeEntity.getCategory());
+                updatableEmployee.setEmployee(employeeEntityFromDb);
             }
 
-            newEmployeesMap.put(originKey, employeeEntityFromDb);
+            newEmployeesMap.put(originKey, updatableEmployee);
         }
 
         List<EmployeeEntity> addedEmployee = newEmployeesMap.values()
                 .stream()
-                .filter(post -> post.getId() == null && post.getDismissalDate() == null)
+                .map(UpdatableEmployee::getEmployee)
+                .filter(employee -> employee.getId() == null && employee.getDismissalDate() == null)
                 .collect(Collectors.toList());
 
-        resultUpdateEmployeesDto.setDeleteEmployee(deletedEmployee);
-        resultUpdateEmployeesDto.setAddEmployee(addedEmployee);
-        return resultUpdateEmployeesDto;
+        resultUpdateEmployeeDto.setAddEmployee(addedEmployee);
+        resultUpdateEmployeeDto.setDeleteEmployee(deletedEmployee);
     }
 
-    private ResultUpdateEmployeesDto updateDepMap(Map<String, DepartmentEntity> departmentEntityMap,
-                                                  ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
-        List<DepartmentEntity> deletedDep = new ArrayList<>();
-
+    private void updateDepMap(Map<String, DepartmentEntity> departmentEntityMap) {
         for (DepartmentEntity depEntityFromDb : departmentDao.findAll()) {
             String originKey = generateKey(depEntityFromDb);
 
             if(!departmentEntityMap.containsKey(originKey)) {
                 depEntityFromDb.setDeleted(true);
-                deletedDep.add(depEntityFromDb);
             } else {
                 DepartmentEntity departmentEntity = departmentEntityMap.get(originKey);
                 depEntityFromDb.setAbbreviatedName(departmentEntity.getAbbreviatedName());
                 depEntityFromDb.setName(departmentEntity.getName());
-                depEntityFromDb.setChiefEmployeeId(departmentEntity.getChiefEmployeeId());
+                depEntityFromDb.setExternalId(departmentEntity.getExternalId());
+                depEntityFromDb.setDeleted(false);
             }
 
             departmentEntityMap.put(originKey, depEntityFromDb);
         }
-
-        List<DepartmentEntity> addedPost = departmentEntityMap.values()
-                .stream()
-                .filter(post -> post.getId() == null && !post.isDeleted())
-                .collect(Collectors.toList());
-
-        resultUpdateEmployeesDto.setDeleteDep(deletedDep);
-        resultUpdateEmployeesDto.setAddDep(addedPost);
-        return resultUpdateEmployeesDto;
     }
 
-    private ResultUpdateEmployeesDto updatePostMap(Map<String, PostEntity> postEntityMap,
-                                                   ResultUpdateEmployeesDto resultUpdateEmployeesDto) {
-        List<PostEntity> deletedPost = new ArrayList<>();
-
+    private void updatePostMap(Map<String, PostEntity> postEntityMap) {
         for (PostEntity postEntityFromDb : postDao.findAll()) {
             String originKey = generateKey(postEntityFromDb);
 
             if(!postEntityMap.containsKey(originKey)) {
                 postEntityFromDb.setDeleted(true);
-                deletedPost.add(postEntityFromDb);
             } else {
                 PostEntity postEntity = postEntityMap.get(originKey);
                 postEntityFromDb.setAbbreviatedName(postEntity.getAbbreviatedName());
@@ -339,21 +304,12 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 postEntityFromDb.setCode(postEntity.getCode());
                 postEntityFromDb.setRang(postEntity.getRang());
                 postEntityFromDb.setType(postEntity.getType());
+                postEntityFromDb.setExternalId(postEntity.getExternalId());
                 postEntityFromDb.setDeleted(false);
             }
 
             postEntityMap.put(originKey, postEntityFromDb);
         }
-
-
-        List<PostEntity> addedPost = postEntityMap.values()
-                .stream()
-                .filter(post -> post.getId() == null && !post.isDeleted())
-                .collect(Collectors.toList());
-
-        resultUpdateEmployeesDto.setDeletePost(deletedPost);
-        resultUpdateEmployeesDto.setAddPost(addedPost);
-        return resultUpdateEmployeesDto;
     }
 
     private String generateKey(PostEntity entity) {
@@ -361,12 +317,13 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             return null;
         }
 
-        return entity.getName() + entity.getCode() +
+        return StringUtils.hasText(entity.getExternalId())
+                ? entity.getExternalId()
+                : entity.getName() + entity.getCode() +
                 Optional.ofNullable(entity.getRang())
-                        .map(rang -> rang.toString() + Optional.ofNullable(entity.getType())
-                                .map(TypePostEnum::getName)
-                                .orElse(""))
-                        .orElse("");
+                        .map(Object::toString).orElse("") +
+                Optional.ofNullable(entity.getType())
+                        .map(TypePostEnum::getName).orElse("");
     }
 
     private String generateKey(EmployeeEntity entity) {
@@ -374,7 +331,9 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             return null;
         }
 
-        return entity.getPersonnelNumber().toString();
+        return Optional.ofNullable(entity.getPersonnelNumber())
+                .map(String::valueOf)
+                .orElse(null);
     }
 
     private String generateKey(DepartmentEntity entity) {
@@ -382,6 +341,8 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             return null;
         }
 
-        return entity.getAbbreviatedName();
+        return StringUtils.hasText(entity.getExternalId())
+                ? entity.getExternalId()
+                : entity.getAbbreviatedName();
     }
 }

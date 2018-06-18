@@ -25,4 +25,10 @@
         <addPrimaryKey tableName="post" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="8-2" author="Danilov">
+        <addColumn tableName="post">
+            <column name="external_id" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

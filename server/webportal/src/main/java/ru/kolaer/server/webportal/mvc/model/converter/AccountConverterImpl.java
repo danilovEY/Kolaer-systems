@@ -129,6 +129,11 @@ public class AccountConverterImpl implements AccountConverter {
     }
 
     @Override
+    public AccountEntity convertToModel(EmployeeDto employeeDto) {
+        return convertToModel(employeeConverter.convertToModel(employeeDto));
+    }
+
+    @Override
     public AccountEntity convertToModel(EmployeeEntity employeeEntity) {
         if(employeeEntity == null) {
             return null;

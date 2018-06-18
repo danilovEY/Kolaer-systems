@@ -29,6 +29,9 @@ public class DepartmentEntity implements BaseEntity {
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
 
+    @Column(name = "external_id")
+    private String externalId;
+
     /*@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chief_employee_id", insertable=false, updatable=false)
     private EmployeeEntity chief;*/

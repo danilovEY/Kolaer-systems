@@ -33,6 +33,14 @@ public class AccountDaoImpl extends AbstractDefaultDao<AccountEntity> implements
     }
 
     @Override
+    public List<AccountEntity> findByEmployeeIds(List<Long> employeeIds) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " ac WHERE ac.employeeId IN(:employeeIds)", getEntityClass())
+                .setParameter("employeeIds", employeeIds)
+                .list();
+    }
+
+    @Override
     public AccountEntity checkValueBeforePersist(AccountEntity entity) {
         List<AccountEntity> result = getSession()
                 .createQuery("FROM " + getEntityName() + " ac WHERE " +

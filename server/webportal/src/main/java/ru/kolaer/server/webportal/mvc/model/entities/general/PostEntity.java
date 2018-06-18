@@ -37,4 +37,7 @@ public class PostEntity implements BaseEntity {
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
+
+    @Column(name = "external_id")
+    private String externalId;
 }

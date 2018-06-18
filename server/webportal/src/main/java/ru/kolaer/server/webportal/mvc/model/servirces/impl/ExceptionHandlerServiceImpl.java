@@ -14,6 +14,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 11.10.2017.
@@ -71,7 +72,7 @@ public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
 
         final String urlPath = this.logException(hRequest, exception);
 
-        return new ServerExceptionMessage(UNAUTHORIZED_CODE, urlPath, "Неправильный логин или пароль",
+        return new ServerExceptionMessage(UNAUTHORIZED_CODE, urlPath, Optional.ofNullable(exception.getMessage()).orElse("Неправильный логин или пароль"),
                 ErrorCode.UNAUTHORIZED);
     }
 

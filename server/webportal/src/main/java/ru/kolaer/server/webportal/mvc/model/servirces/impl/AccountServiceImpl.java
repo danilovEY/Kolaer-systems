@@ -7,24 +7,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
+import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.dto.ChangePasswordDto;
+import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdate;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 09.08.2016.
  */
 @Service
 @Slf4j
-public class AccountServiceImpl extends AbstractDefaultService<AccountDto, AccountEntity, AccountDao, AccountConverter> implements AccountService {
+public class AccountServiceImpl
+        extends AbstractDefaultService<AccountDto, AccountEntity, AccountDao, AccountConverter>
+        implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationService authenticationService;
 
@@ -86,5 +93,44 @@ public class AccountServiceImpl extends AbstractDefaultService<AccountDto, Accou
         authenticationService.resetOnLogin(accountSimpleDto.getUsername());
 
         return result;
+    }
+
+    @Override
+    @Transactional
+    public void updateEmployee(ResultUpdate resultUpdate) {
+        List<AccountEntity> addsAccountEntity = resultUpdate.getAddEmployee()
+                .stream()
+                .map(defaultConverter::convertToModel)
+                .collect(Collectors.toList());
+
+        List<AccountSimpleDto> addsAccount = addsAccountEntity.isEmpty()
+                ? Collections.emptyList()
+                : defaultEntityDao.save(addsAccountEntity).stream()
+                .map(defaultConverter::convertToSimpleDto)
+                .collect(Collectors.toList());
+
+        List<Long> employeeIds = resultUpdate.getDeleteEmployee()
+                .stream()
+                .map(EmployeeDto::getId)
+                .collect(Collectors.toList());
+
+        List<AccountEntity> accounts = employeeIds.isEmpty()
+                ? Collections.emptyList()
+                : defaultEntityDao.findByEmployeeIds(employeeIds);
+        accounts.forEach(account -> account.setBlock(true));
+
+        List<AccountSimpleDto> blockAccounts = accounts.isEmpty()
+                ? Collections.emptyList()
+                : defaultEntityDao.save(accounts).stream()
+                .map(defaultConverter::convertToSimpleDto)
+                .collect(Collectors.toList());
+
+        resultUpdate.setAddAccounts(addsAccount);
+        resultUpdate.setAddAccounts(blockAccounts);
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
     }
 }

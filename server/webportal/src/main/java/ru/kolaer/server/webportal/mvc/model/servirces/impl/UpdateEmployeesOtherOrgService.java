@@ -13,7 +13,6 @@ import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeOtherOrganizationDao;
-import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeesDto;
 import ru.kolaer.server.webportal.mvc.model.entities.birthday.EmployeeOtherOrganizationEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
@@ -44,9 +43,9 @@ public class UpdateEmployeesOtherOrgService implements UpdateEmployeesService {
 
     @Override
     @Transactional
-    public ResultUpdateEmployeesDto updateEmployees(File file) {
+    public void updateEmployees(File file) {
         try {
-            return updateEmployees(new FileInputStream(file));
+            updateEmployees(new FileInputStream(file));
         } catch (FileNotFoundException e) {
             throw new UnexpectedRequestParams("Не удалось прочитать файл", e, ErrorCode.PARSE_EXCEPTION);
         }
@@ -54,7 +53,7 @@ public class UpdateEmployeesOtherOrgService implements UpdateEmployeesService {
 
     @Override
     @Transactional
-    public ResultUpdateEmployeesDto updateEmployees(InputStream inputStream) {
+    public void updateEmployees(InputStream inputStream) {
         if(inputStream == null)
             throw new IllegalArgumentException("File is null!");
 
@@ -135,7 +134,5 @@ public class UpdateEmployeesOtherOrgService implements UpdateEmployeesService {
         } catch (Exception ex) {
             throw new UnexpectedRequestParams("Не удалось прочитать файл", ex, ErrorCode.PARSE_EXCEPTION);
         }
-
-        return null;
     }
 }

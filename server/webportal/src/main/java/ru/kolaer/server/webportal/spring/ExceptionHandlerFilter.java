@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
+import ru.kolaer.server.webportal.exception.UserIsBlockException;
 import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
 
 import javax.servlet.FilterChain;
@@ -40,6 +41,14 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
             ServerExceptionMessage serverExceptionMessage = exceptionHandlerService
                     .authExceptionHandler(request, response, ex);
+
+            objectMapper.writeValue(response.getWriter(), serverExceptionMessage);
+        } catch (UserIsBlockException ex) {
+            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+
+            ServerExceptionMessage serverExceptionMessage = exceptionHandlerService.forbidden(request);
+            serverExceptionMessage.setMessage(ex.getMessage());
 
             objectMapper.writeValue(response.getWriter(), serverExceptionMessage);
         } catch(RuntimeException ex) {

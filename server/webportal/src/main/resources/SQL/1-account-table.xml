@@ -53,4 +53,14 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1-5" author="Danilov">
+        <addColumn tableName="account">
+            <column name="block" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="1-6" author="Danilov">
+        <addNotNullConstraint tableName="account" columnName="block" columnDataType="BOOLEAN"/>
+    </changeSet>
+
 </databaseChangeLog>

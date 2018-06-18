@@ -18,6 +18,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.PasswordRepositoryDao;
 import ru.kolaer.server.webportal.mvc.model.dto.FilterType;
 import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordFilter;
 import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordSort;
+import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdate;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordHistoryEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordRepositoryEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
@@ -28,7 +29,9 @@ import ru.kolaer.server.webportal.mvc.model.servirces.PasswordRepositoryService;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -332,5 +335,49 @@ public class PasswordRepositoryServiceImpl
         passwordRepositoryEntity.setUrlImage(dto.getUrlImage());
 
         return defaultConverter.convertToDto(defaultEntityDao.update(passwordRepositoryEntity));
+    }
+
+    @Override
+    @Transactional
+    public void updateEmployee(ResultUpdate resultUpdate) {
+        List<AccountSimpleDto> addAccounts = resultUpdate.getAddAccounts();
+
+        if(addAccounts.isEmpty()) {
+            return;
+        }
+
+        Map<Long, AccountSimpleDto> accountMap = addAccounts.stream()
+                .collect(Collectors.toMap(AccountSimpleDto::getId, Function.identity()));
+
+        List<PasswordRepositoryEntity> repositories = addAccounts.stream()
+                .map(this::accountToRepository)
+                .collect(Collectors.toList());
+
+        repositories = defaultEntityDao.save(repositories);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        List<PasswordHistoryEntity> histories = repositories.stream()
+                .map(repository -> {
+                    AccountSimpleDto accountSimpleDto = accountMap.get(repository.getAccountId());
+
+                    PasswordHistoryEntity passwordHistoryEntity = new PasswordHistoryEntity();
+                    passwordHistoryEntity.setRepositoryPassId(repository.getId());
+                    passwordHistoryEntity.setLogin(accountSimpleDto.getUsername());
+                    passwordHistoryEntity.setPassword(accountSimpleDto.getUsername());
+                    passwordHistoryEntity.setPasswordWriteDate(now);
+
+                    return passwordHistoryEntity;
+                }).collect(Collectors.toList());
+
+        passwordHistoryDao.save(histories);
+    }
+
+    private PasswordRepositoryEntity accountToRepository(AccountSimpleDto accountSimpleDto) {
+        PasswordRepositoryEntity passwordRepositoryEntity = new PasswordRepositoryEntity();
+        passwordRepositoryEntity.setName("Система КолАЭР");
+        passwordRepositoryEntity.setAccountId(accountSimpleDto.getId());
+
+        return passwordRepositoryEntity;
     }
 }

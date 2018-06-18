@@ -27,4 +27,14 @@
         <dropUniqueConstraint tableName="department" constraintName="abbreviated_name" uniqueColumns="abbreviated_name"/>
     </changeSet>
 
+    <changeSet id="3-2" author="Danilov">
+        <addColumn tableName="department">
+            <column name="external_id" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="3-3" author="Danilov">
+        <dropUniqueConstraint tableName="department" constraintName="name" uniqueColumns="name"/>
+    </changeSet>
+
 </databaseChangeLog>

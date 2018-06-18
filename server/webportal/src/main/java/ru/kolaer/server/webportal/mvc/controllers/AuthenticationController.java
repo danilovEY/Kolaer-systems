@@ -109,10 +109,11 @@ public class AuthenticationController {
                               @ApiParam(value = "Пароль") @RequestParam(value = "password", defaultValue = "") String password){
         if(password == null)
             password = "";
-        final UsernamePasswordAuthenticationToken authenticationToken =
+
+        UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
 
-        final Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
 
         if(authentication == null) {
             throw new UsernameNotFoundException("Пользователь " + username + " не найден!");
@@ -120,7 +121,7 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
         if(userDetails == null) {
             throw new UsernameNotFoundException("Пользователь " + username + " не найден!");
         }
