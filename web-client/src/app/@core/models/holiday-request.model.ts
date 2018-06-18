@@ -14,8 +14,6 @@ export class HolidayRequestModel {
         holidayRequestModel.holidayDate = Utils.getDateTimeToSend(model.holidayDate);
         holidayRequestModel.holidayType = model.holidayType;
 
-        console.log(holidayRequestModel);
-
         return holidayRequestModel;
     }
 }

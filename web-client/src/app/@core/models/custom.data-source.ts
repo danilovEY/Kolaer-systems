@@ -16,6 +16,8 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
         pageSize: 1,
         total: 0
     };
+    private currentSort: any;
+    private currentFilter: any;
 
     constructor(protected defaultSortConfig?: ColumnSort) {
         super();
@@ -40,8 +42,20 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
     }
 
     getElements(): Promise<any> {
+        const sort = this.getSort();
+        const filter = this.getFilter();
+
+        if (this.getPage() === this.dataPage.number &&
+            this.dataPage.pageSize === this.getPageSize() &&
+                sort === this.currentSort &&
+                filter === this.currentFilter) {
+            return super.getElements();
+        }
+
+        this.currentSort = sort;
+        this.currentFilter = filter;
+
         this.onChangedLoading.next(true);
-        console.log('getElements');
         return this.loadElements(this.getPage(), this.getPageSize());
     }
 
@@ -49,7 +63,7 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
         return this.pagingConf['page'];
     }
 
-    getPageSize() {
+    getPageSize(): number {
         return this.pagingConf['perPage'];
     }
 
@@ -114,21 +128,4 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
 
         return sortModel;
     }
-
-
-    find(element: BaseModel): Promise<BaseModel> {
-        console.log(element);
-        console.log(this.data);
-
-        return super.find(element);
-    }
-
-// find(element: BaseModel): Promise<BaseModel> {
-    //     const filters: BaseModel[] = this.data.filter((el: BaseModel) => el.id === element.id);
-    //     if (filters.length > 0) {
-    //         return Promise.resolve(filters[0]);
-    //     }
-    //
-    //     return Promise.reject(new Error('Элемент не найден'));
-    // }
 }
