@@ -82,4 +82,27 @@ public class EmployeeEntity implements BaseEntity {
 
     @Column(name = "photo", length = 300)
     private String photo;
+
+    @Override
+    public String toString() {
+        return "EmployeeEntity{" +
+                "id=" + id +
+                ", personnelNumber=" + personnelNumber +
+                ", initials='" + initials + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", thirdName='" + thirdName + '\'' +
+                ", gender=" + gender +
+                ", category=" + category +
+                ", departmentId=" + departmentId +
+                ", postId=" + postId +
+                ", workPhoneNumber='" + workPhoneNumber + '\'' +
+                ", homePhoneNumber='" + homePhoneNumber + '\'' +
+                ", birthday=" + birthday +
+                ", employmentDate=" + employmentDate +
+                ", dismissalDate=" + dismissalDate +
+                ", email='" + email + '\'' +
+                ", photo='" + photo + '\'' +
+                '}';
+    }
 }

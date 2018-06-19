@@ -40,4 +40,18 @@ public class PostEntity implements BaseEntity {
 
     @Column(name = "external_id")
     private String externalId;
+
+    @Override
+    public String toString() {
+        return "PostEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", abbreviatedName='" + abbreviatedName + '\'' +
+                ", code='" + code + '\'' +
+                ", type=" + type +
+                ", rang=" + rang +
+                ", deleted=" + deleted +
+                ", externalId='" + externalId + '\'' +
+                '}';
+    }
 }

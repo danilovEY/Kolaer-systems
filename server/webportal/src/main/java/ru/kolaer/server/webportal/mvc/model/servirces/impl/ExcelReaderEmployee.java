@@ -39,12 +39,10 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
 
     @Override
     public EmployeeEntity parse(XSSFRow row, List<String> nameColumns) {
-        String value = getStringValue(nameColumns, PERSONNEL_NUMBER, row);
-
-        Long pNumber = Long.valueOf(value);
-
         EmployeeEntity newEmployeeEntity = new EmployeeEntity();
-        newEmployeeEntity.setPersonnelNumber(pNumber);
+
+        String value = getStringValue(nameColumns, PERSONNEL_NUMBER, row);
+        newEmployeeEntity.setPersonnelNumber(value != null ? Long.valueOf(value) : null);
 
         value = getStringValue(nameColumns, FIRST_NAME, row);
         newEmployeeEntity.setFirstName(value);

@@ -12,11 +12,12 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
+import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
+import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.ldap.AccountLDAP;
 import ru.kolaer.server.webportal.mvc.model.ldap.EmployeeLDAP;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
-import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.security.ServerAuthType;
 
 import javax.annotation.PostConstruct;
@@ -35,7 +36,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final ServerAuthType serverAuthType;
     private final AccountDao accountDao;
     private final AccountConverter accountConverter;
-    private final EmployeeService employeeService;
+    private final EmployeeDao employeeDao;
+    private final EmployeeConverter employeeConverter;
     private final AccountLDAP accountLDAP;
     private final EmployeeLDAP employeeLDAP;
     private AuthenticationService self;
@@ -44,13 +46,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationServiceImpl(@Value("${server.auth.type}") String serverAuthType,
                                      AccountDao accountDao,
                                      AccountConverter accountConverter,
-                                     EmployeeService employeeService,
+                                     EmployeeDao employeeDao,
+                                     EmployeeConverter employeeConverter,
                                      AccountLDAP accountLDAP,
                                      EmployeeLDAP employeeLDAP) {
         this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.accountDao = accountDao;
         this.accountConverter = accountConverter;
-        this.employeeService = employeeService;
+        this.employeeDao = employeeDao;
+        this.employeeConverter = employeeConverter;
         this.accountLDAP = accountLDAP;
         this.employeeLDAP = employeeLDAP;
     }
@@ -91,10 +95,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.debug("Employee: {}", employeeEntity.getInitials());
 
             if (employeeEntity.getPersonnelNumber() != null) {
-                final EmployeeDto employee = this.employeeService.getByPersonnelNumber(employeeEntity.getPersonnelNumber());
+                EmployeeDto employee = employeeConverter.convertToDto(employeeDao.findByPersonnelNumber(employeeEntity.getPersonnelNumber()));
                 account.setEmployee(employee);
             } else {
-                final List<EmployeeDto> generalEmployeesEntities = this.employeeService.getUsersByInitials(employeeEntity.getInitials());
+                List<EmployeeDto> generalEmployeesEntities = employeeConverter.convertToDto(employeeDao.findEmployeeByInitials(employeeEntity.getInitials()));
                 if (generalEmployeesEntities != null && generalEmployeesEntities.size() > 0) {
                     account.setEmployee(generalEmployeesEntities.get(0));
                 }

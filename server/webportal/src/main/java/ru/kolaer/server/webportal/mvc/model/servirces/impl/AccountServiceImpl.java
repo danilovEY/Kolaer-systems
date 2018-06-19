@@ -126,7 +126,7 @@ public class AccountServiceImpl
                 .collect(Collectors.toList());
 
         resultUpdate.setAddAccounts(addsAccount);
-        resultUpdate.setAddAccounts(blockAccounts);
+        resultUpdate.setBlockAccounts(blockAccounts);
     }
 
     @Override

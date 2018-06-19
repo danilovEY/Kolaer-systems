@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -40,35 +39,37 @@ public class AccountDaoImpl extends AbstractDefaultDao<AccountEntity> implements
                 .list();
     }
 
-    @Override
-    public AccountEntity checkValueBeforePersist(AccountEntity entity) {
-        List<AccountEntity> result = getSession()
-                .createQuery("FROM " + getEntityName() + " ac WHERE " +
-                        "ac.username=:username OR ac.chatName=:chatName OR ac.email=:email", getEntityClass())
-                .setParameter("username", entity.getUsername())
-                .setParameter("chatName", entity.getChatName())
-                .setParameter("email", entity.getEmail())
-                .list();
+//    @Override
+//    public AccountEntity checkValueBeforePersist(AccountEntity entity) {
+//        List<AccountEntity> result = getSession()
+//                .createQuery("FROM " + getEntityName() + " ac WHERE " +
+//                        "ac.username=:username OR ac.chatName=:chatName OR ac.email=:email", getEntityClass())
+//                .setParameter("username", entity.getUsername())
+//                .setParameter("chatName", entity.getChatName())
+//                .setParameter("email", entity.getEmail())
+//                .list();
+//
+//        return checkValue(entity, result);
+//    }
+//
+//    @Override
+//    public AccountEntity checkValueBeforeUpdate(AccountEntity entity) {
+//        Session session = getSession();
+//        session.detach(entity);
+//
+//        List<AccountEntity> result = getSession()
+//                .createQuery("FROM " + getEntityName() + " ac WHERE ac.id <> :id AND " +
+//                        "(ac.username=:username OR ac.chatName=:chatName OR ac.email=:email)", getEntityClass())
+//                .setParameter("id", entity.getId())
+//                .setParameter("username", entity.getUsername())
+//                .setParameter("chatName", entity.getChatName())
+//                .setParameter("email", entity.getEmail())
+//                .list();
+//
+//        return checkValue(entity, result);
+//    }
 
-        return checkValue(entity, result);
-    }
 
-    @Override
-    public AccountEntity checkValueBeforeUpdate(AccountEntity entity) {
-        Session session = getSession();
-        session.detach(entity);
-
-        List<AccountEntity> result = getSession()
-                .createQuery("FROM " + getEntityName() + " ac WHERE ac.id <> :id AND " +
-                        "(ac.username=:username OR ac.chatName=:chatName OR ac.email=:email)", getEntityClass())
-                .setParameter("id", entity.getId())
-                .setParameter("username", entity.getUsername())
-                .setParameter("chatName", entity.getChatName())
-                .setParameter("email", entity.getEmail())
-                .list();
-
-        return checkValue(entity, result);
-    }
 
     private AccountEntity checkValue(AccountEntity entity, List<AccountEntity> results) {
         if(results.isEmpty()) {

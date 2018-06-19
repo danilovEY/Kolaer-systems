@@ -5,8 +5,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
@@ -14,7 +16,9 @@ import ru.kolaer.server.webportal.mvc.model.dto.EmployeeFilter;
 import ru.kolaer.server.webportal.mvc.model.dto.EmployeeRequestDto;
 import ru.kolaer.server.webportal.mvc.model.dto.EmployeeSort;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
+import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,10 +35,13 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final UpdateEmployeesService updateEmployeesService;
 
     @Autowired
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService,
+                              @Qualifier("updateEmployeesServiceImpl") UpdateEmployeesService updateEmployeesService) {
         this.employeeService = employeeService;
+        this.updateEmployeesService = updateEmployeesService;
     }
 
     @ApiOperation(
@@ -160,6 +167,13 @@ public class EmployeeController {
     public List<EmployeeDto> getUsersByInitials(
             final @ApiParam(value = "Инициалы", required = true) @PathVariable String initials) {
         return this.employeeService.getUsersByInitials(initials);
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @UrlDeclaration(description = "Обновить сотрудников КолАЭР из xlsx", isUser = false)
+    @ApiOperation(value = "Обновить сотрудников КолАЭР из xlsx")
+    public void uploadEmployee(@RequestParam("file")MultipartFile file) throws IOException {
+        updateEmployeesService.updateEmployees(file.getInputStream());
     }
 
 }

@@ -27,8 +27,14 @@ public interface ExcelReader<T> {
 
     default String getStringValue(List<String> columns, String nameColumns, XSSFRow row) {
         return Optional.ofNullable(getCell(columns, nameColumns, row))
-                .map(XSSFCell::getStringCellValue)
-                .orElse(null);
+                .map(cell -> {
+                    switch (cell.getCellTypeEnum()) {
+                        case NUMERIC: return String.valueOf(cell.getNumericCellValue());
+                        case STRING: return cell.getStringCellValue();
+                        case BOOLEAN: return String.valueOf(cell.getBooleanCellValue());
+                        default: return null;
+                    }
+                }).orElse(null);
     }
 
     default Date getDateValue(List<String> columns, String nameColumns, XSSFRow row) {

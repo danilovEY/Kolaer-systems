@@ -35,4 +35,16 @@ public class DepartmentEntity implements BaseEntity {
     /*@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chief_employee_id", insertable=false, updatable=false)
     private EmployeeEntity chief;*/
+
+    @Override
+    public String toString() {
+        return "DepartmentEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", abbreviatedName='" + abbreviatedName + '\'' +
+                ", chiefEmployeeId=" + chiefEmployeeId +
+                ", deleted=" + deleted +
+                ", externalId='" + externalId + '\'' +
+                '}';
+    }
 }
