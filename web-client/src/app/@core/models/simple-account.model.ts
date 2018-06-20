@@ -8,4 +8,5 @@ export class SimpleAccountModel extends BaseModel {
 	employeeId: number;
 	accessOit: boolean;
 	accessUser: boolean;
+	accessOk: boolean;
 }

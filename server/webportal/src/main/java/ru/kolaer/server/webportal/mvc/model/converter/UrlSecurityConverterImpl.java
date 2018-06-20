@@ -27,6 +27,7 @@ public class UrlSecurityConverterImpl implements UrlSecurityConverter {
         entity.setAccessAll(dto.isAccessAll());
         entity.setAccessOit(dto.isAccessOit());
         entity.setAccessUser(dto.isAccessUser());
+        entity.setAccessOk(dto.isAccessOk());
         entity.setDescription(dto.getDescription());
         entity.setUrl(dto.getUrl());
         entity.setRequestMethod(dto.getRequestMethod());
@@ -47,6 +48,7 @@ public class UrlSecurityConverterImpl implements UrlSecurityConverter {
         dto.setAccessAll(model.isAccessAll());
         dto.setAccessOit(model.isAccessOit());
         dto.setAccessUser(model.isAccessUser());
+        dto.setAccessOk(model.isAccessOk());
         return dto;
     }
 
@@ -62,18 +64,12 @@ public class UrlSecurityConverterImpl implements UrlSecurityConverter {
         oldDto.setAccessAll(newModel.isAccessAll());
         oldDto.setAccessOit(newModel.isAccessOit());
         oldDto.setAccessUser(newModel.isAccessUser());
+        oldDto.setAccessOk(newModel.isAccessOk());
         return oldDto;
     }
 
     @Override
     public List<String> convertToAccesses(UrlSecurityDto urlPath) {
-        return Optional.ofNullable(urlPath)
-                .map(RoleUtils::roleToListString)
-                .orElse(Collections.emptyList());
-    }
-
-    @Override
-    public List<String> convertToAccesses(UrlSecurityEntity urlPath) {
         return Optional.ofNullable(urlPath)
                 .map(RoleUtils::roleToListString)
                 .orElse(Collections.emptyList());

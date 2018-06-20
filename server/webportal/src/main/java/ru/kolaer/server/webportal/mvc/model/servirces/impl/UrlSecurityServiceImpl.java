@@ -50,4 +50,10 @@ public class UrlSecurityServiceImpl extends AbstractDefaultService<UrlSecurityDt
         this.defaultEntityDao.clear();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<UrlSecurityDto> getPathByMethod(String method) {
+        return defaultConverter.convertToDto(defaultEntityDao.findPathByMethod(method));
+    }
+
 }

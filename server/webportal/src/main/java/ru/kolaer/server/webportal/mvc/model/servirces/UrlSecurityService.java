@@ -12,4 +12,6 @@ public interface UrlSecurityService extends DefaultService<UrlSecurityDto> {
     List<String> getAccesses(UrlSecurityDto urlPath);
 
     void clear();
+
+    List<UrlSecurityDto> getPathByMethod(String method);
 }

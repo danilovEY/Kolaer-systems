@@ -29,4 +29,9 @@
         <addPrimaryKey tableName="url_security" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="13-1" author="Danilov">
+        <addColumn tableName="url_security">
+            <column name="access_ok" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

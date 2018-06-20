@@ -6,6 +6,8 @@ import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.UrlSecurityDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.UrlSecurityEntity;
 
+import java.util.List;
+
 @Repository
 public class UrlSecurityDaoImpl extends AbstractDefaultDao<UrlSecurityEntity> implements UrlSecurityDao {
 
@@ -30,5 +32,13 @@ public class UrlSecurityDaoImpl extends AbstractDefaultDao<UrlSecurityEntity> im
                 .setParameter("url", url)
                 .setParameter("requestMethod", requestMethod)
                 .uniqueResult();
+    }
+
+    @Override
+    public List<UrlSecurityEntity> findPathByMethod(String method) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " u WHERE u.requestMethod = :method", getEntityClass())
+                .setParameter("method", method)
+                .list();
     }
 }

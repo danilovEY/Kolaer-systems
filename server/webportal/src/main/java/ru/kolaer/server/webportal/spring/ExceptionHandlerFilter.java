@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -51,6 +52,11 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             serverExceptionMessage.setMessage(ex.getMessage());
 
             objectMapper.writeValue(response.getWriter(), serverExceptionMessage);
+        } catch(AccessDeniedException ex) {
+            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+
+            objectMapper.writeValue(response.getWriter(), exceptionHandlerService.forbidden(request));
         } catch(RuntimeException ex) {
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

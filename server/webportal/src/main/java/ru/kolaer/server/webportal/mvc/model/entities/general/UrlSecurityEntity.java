@@ -36,4 +36,7 @@ public class UrlSecurityEntity implements BaseEntity {
 
     @Column(name="access_user", nullable = false)
     private boolean accessUser = true;
+
+    @Column(name="access_ok", nullable = false)
+    private boolean accessOk;
 }

@@ -37,7 +37,7 @@ public class UserController {
     @ApiOperation(
             value = "Получить авторизированный аккаунт"
     )
-    @UrlDeclaration(description = "Получить авторизированный аккаунт с сотрудником", isUser = true)
+    @UrlDeclaration(description = "Получить авторизированный аккаунт с сотрудником")
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public AccountDto getUser() {
         return this.authenticationService.getAccountByAuthentication();
@@ -46,7 +46,7 @@ public class UserController {
     @ApiOperation(
             value = "Получить авторизированный аккаунт"
     )
-    @UrlDeclaration(description = "Получить авторизированный аккаунт", isUser = true)
+    @UrlDeclaration(description = "Получить авторизированный аккаунт")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public AccountSimpleDto getSimpleUser() {
         return this.authenticationService.getAccountSimpleByAuthentication();
@@ -65,18 +65,4 @@ public class UserController {
     public void updatePassword(@RequestBody ChangePasswordDto changePasswordDto) {
         accountService.updatePassword(changePasswordDto);
     }
-
-    /**Получить все аккаунты.*/
-//    @UrlDeclaration(description = "Получить все аккаунты.")
-//    @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public List<AccountDto> getAllUsers() {
-//        return accountService.getAll();
-//    }
-
-    /**Добавить аккаунт.*/
-//    @UrlDeclaration(description = "Добавить аккаунт.", requestMethod = RequestMethod.POST)
-//    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public void addUser(@RequestBody AccountDto accountEntity) {
-//        this.accountService.save(accountEntity);
-//    }
 }

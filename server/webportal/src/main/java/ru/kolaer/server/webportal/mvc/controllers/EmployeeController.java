@@ -66,14 +66,14 @@ public class EmployeeController {
     }
 
     @ApiOperation(value = "Добавить сотрудника")
-    @UrlDeclaration(description = "Добавить сотрудника", isUser = false, requestMethod = RequestMethod.POST)
+    @UrlDeclaration(description = "Добавить сотрудника", isUser = false, isOk = true, requestMethod = RequestMethod.POST)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public EmployeeDto createEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
         return this.employeeService.add(employeeRequestDto);
     }
 
     @ApiOperation(value = "Обновить сотрудника")
-    @UrlDeclaration(description = "Обновить сотрудника", isUser = false, requestMethod = RequestMethod.PUT)
+    @UrlDeclaration(description = "Обновить сотрудника", isUser = false, isOk = true, requestMethod = RequestMethod.PUT)
     @RequestMapping(value = "/{employeeId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public EmployeeDto updateEmployee(@PathVariable(value = "employeeId") Long employeeId,
                                       @RequestBody EmployeeRequestDto employeeRequestDto) {
@@ -81,7 +81,7 @@ public class EmployeeController {
     }
 
     @ApiOperation(value = "Удалить сотрудника")
-    @UrlDeclaration(description = "Удалить сотрудника", isUser = false, requestMethod = RequestMethod.DELETE)
+    @UrlDeclaration(description = "Удалить сотрудника", isUser = false, isOk = true, requestMethod = RequestMethod.DELETE)
     @RequestMapping(value = "/{employeeId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteEmployee(@PathVariable(value = "employeeId") Long employeeId) {
         this.employeeService.delete(employeeId);
@@ -172,7 +172,7 @@ public class EmployeeController {
     }
 
     @RequestMapping(value = "/sync", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @UrlDeclaration(description = "Обновить сотрудников КолАЭР из xlsx", requestMethod = RequestMethod.POST, isUser = false)
+    @UrlDeclaration(description = "Обновить сотрудников КолАЭР из xlsx", requestMethod = RequestMethod.POST, isUser = false, isOk = true)
     @ApiOperation(value = "Обновить сотрудников КолАЭР из xlsx")
     public List<HistoryChangeDto> uploadEmployee(@RequestParam("file")MultipartFile file) throws IOException {
         return updateEmployeesService.updateEmployees(file.getInputStream());

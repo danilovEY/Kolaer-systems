@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.spring;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -99,13 +101,21 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     }
 
                     final String url = urlBuilder.toString();
-                    final String description = urlDeclaration.description();
-                    final String requestMethodName = urlDeclaration.requestMethod().name();
+
+                    final String description = Optional.ofNullable(method.getAnnotation(ApiOperation.class))
+                            .map(ApiOperation::value)
+                            .orElse(urlDeclaration.description());
+
+                    final String requestMethodName = Optional.of(methodMappingAnnotation.method())
+                            .filter(httpMethods -> httpMethods.length > 0)
+                            .map(httpMethods -> httpMethods[0])
+                            .map(Enum::name)
+                            .orElse(urlDeclaration.requestMethod().name());
 
                     UrlSecurityDto urlPath = new UrlSecurityDto();
                     urlPath.setAccessOit(urlDeclaration.isOit());
                     urlPath.setAccessUser(urlDeclaration.isUser());
-                    urlPath.setAccessOit(urlDeclaration.isOit());
+                    urlPath.setAccessOk(urlDeclaration.isOk());
                     urlPath.setAccessAll(urlDeclaration.isAccessAll());
                     urlPath.setUrl(url);
                     urlPath.setDescription(description);
@@ -122,7 +132,7 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
             }
         }
 
-        urlSecurityService.delete(allUrlMap.values().stream().collect(Collectors.toList()));
+        urlSecurityService.delete(new ArrayList<>(allUrlMap.values()));
         urlSecurityService.save(urlToAdd);
 
         this.isInit = true;

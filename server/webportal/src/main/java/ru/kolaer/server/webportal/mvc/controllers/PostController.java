@@ -38,14 +38,14 @@ public class PostController {
     }
 
     @ApiOperation(value = "Добавить должность")
-    @UrlDeclaration(description = "Добавить должность", isUser = false, requestMethod = RequestMethod.POST)
+    @UrlDeclaration(description = "Добавить должность", isUser = false, requestMethod = RequestMethod.POST, isOk = true)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PostDto addPost(@RequestBody PostRequestDto postRequestDto) {
         return postService.add(postRequestDto);
     }
 
     @ApiOperation(value = "Обновит должность")
-    @UrlDeclaration(description = "Обновит должность", isUser = false, requestMethod = RequestMethod.PUT)
+    @UrlDeclaration(description = "Обновит должность", isUser = false, requestMethod = RequestMethod.PUT, isOk = true)
     @RequestMapping(value = "/{postId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PostDto updatePost(@PathVariable("postId") Long postId,
                                            @RequestBody PostRequestDto postRequestDto) {
@@ -53,7 +53,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "Удалить должность")
-    @UrlDeclaration(description = "Удалить должность", isUser = false, requestMethod = RequestMethod.DELETE)
+    @UrlDeclaration(description = "Удалить должность", isUser = false, requestMethod = RequestMethod.DELETE, isOk = true)
     @RequestMapping(value = "/{depId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deletePost(@PathVariable("postId") Long postId) {
         postService.delete(postId, true);

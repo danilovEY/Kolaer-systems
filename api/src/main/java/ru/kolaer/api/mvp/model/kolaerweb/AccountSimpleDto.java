@@ -16,4 +16,5 @@ public class AccountSimpleDto implements BaseDto{
     private Long employeeId;
     private boolean accessOit;
     private boolean accessUser = true;
+    private boolean accessOk;
 }

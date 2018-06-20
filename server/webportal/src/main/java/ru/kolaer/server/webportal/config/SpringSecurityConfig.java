@@ -22,6 +22,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -115,7 +116,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(corsFilter(), ChannelProcessingFilter.class)
                 //Фильтер для проверки http request'а на наличие правильного токена
                 .addFilterBefore(authenticationTokenProcessingFilter(userDetailsService(accountDao, ldapContext())), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(exceptionHandlerService), AuthenticationTokenProcessingFilter.class)
+                .addFilterAfter(new ExceptionHandlerFilter(exceptionHandlerService), ExceptionTranslationFilter.class)
                 //Фильтер для проверки URL'ов.
                 .addFilter(filter(urlSecurityService));
     }

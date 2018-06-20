@@ -43,21 +43,21 @@ public class HolidaysController {
     }
 
     @ApiOperation(value = "Добавить праздник")
-    @UrlDeclaration(description = "Добавить праздник", requestMethod = RequestMethod.POST, isUser = false)
+    @UrlDeclaration(description = "Добавить праздник", requestMethod = RequestMethod.POST, isUser = false, isOk = true)
     @RequestMapping(value = "/holidays", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public HolidayDto addHoliday(@RequestBody HolidayDto holidayDto) {
         return this.holidayService.add(holidayDto);
     }
 
     @ApiOperation(value = "Редактировать праздник")
-    @UrlDeclaration(description = "Редактировать праздник", requestMethod = RequestMethod.PUT, isUser = false)
+    @UrlDeclaration(description = "Редактировать праздник", requestMethod = RequestMethod.PUT, isUser = false, isOk = true)
     @RequestMapping(value = "/holidays/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public HolidayDto updateHoliday(@PathVariable("id") Long id, @RequestBody HolidayDto holidayDto) {
         return this.holidayService.update(id, holidayDto);
     }
 
     @ApiOperation(value = "Удалить праздник")
-    @UrlDeclaration(description = "Удалить праздник", requestMethod = RequestMethod.DELETE, isUser = false)
+    @UrlDeclaration(description = "Удалить праздник", requestMethod = RequestMethod.DELETE, isUser = false, isOk = true)
     @RequestMapping(value = "/holidays/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updateHoliday(@PathVariable("id") Long id) {
         this.holidayService.delete(id);

@@ -40,6 +40,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setAvatarUrl(dto.getAvatarUrl());
         accountEntity.setAccessUser(dto.isAccessUser());
         accountEntity.setAccessOit(dto.isAccessOit());
+        accountEntity.setAccessOk(dto.isAccessOk());
 
         accountEntity.setEmployeeId(Optional.ofNullable(dto.getEmployee())
                 .map(EmployeeDto::getId)
@@ -66,6 +67,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setAvatarUrl(model.getAvatarUrl());
         accountDto.setAccessUser(model.isAccessUser());
         accountDto.setAccessOit(model.isAccessOit());
+        accountDto.setAccessOk(model.isAccessOk());
 
         if(model.getEmployeeId() != null) {
             accountDto.setEmployee(employeeConverter.convertToDto(model.getEmployee()));
@@ -120,6 +122,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setAccessUser(model.isAccessUser());
         accountDto.setAvatarUrl(model.getAvatarUrl());
         accountDto.setAccessOit(model.isAccessOit());
+        accountDto.setAccessOk(model.isAccessOk());
 
         Optional.ofNullable(model.getEmployeeId())
                 .map(EmployeeDto::new)
@@ -166,6 +169,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountSimpleDto.setAvatarUrl(accountEntity.getAvatarUrl());
         accountSimpleDto.setAccessOit(accountEntity.isAccessOit());
         accountSimpleDto.setAccessUser(accountEntity.isAccessUser());
+        accountSimpleDto.setAccessOk(accountEntity.isAccessOk());
 
         return accountSimpleDto;
     }
@@ -180,6 +184,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountSimpleDto.setAvatarUrl(dto.getAvatarUrl());
         accountSimpleDto.setAccessOit(dto.isAccessOit());
         accountSimpleDto.setAccessUser(dto.isAccessUser());
+        accountSimpleDto.setAccessOk(dto.isAccessOk());
 
         Optional.ofNullable(dto.getEmployee()).map(EmployeeDto::getId).ifPresent(accountSimpleDto::setEmployeeId);
 

@@ -63,4 +63,10 @@
         <addNotNullConstraint tableName="account" columnName="block" columnDataType="BOOLEAN"/>
     </changeSet>
 
+    <changeSet id="1-7" author="Danilov">
+        <addColumn tableName="account">
+            <column name="access_ok" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

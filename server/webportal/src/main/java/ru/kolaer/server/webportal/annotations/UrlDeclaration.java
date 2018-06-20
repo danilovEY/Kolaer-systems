@@ -18,4 +18,5 @@ public @interface UrlDeclaration {
     boolean isAccessAll() default false;
     boolean isOit() default true;
     boolean isUser() default true;
+    boolean isOk() default false;
 }

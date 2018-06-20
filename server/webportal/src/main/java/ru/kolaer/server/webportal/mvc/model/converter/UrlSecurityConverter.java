@@ -11,6 +11,4 @@ import java.util.List;
  */
 public interface UrlSecurityConverter extends BaseConverter<UrlSecurityDto, UrlSecurityEntity>{
     List<String> convertToAccesses(UrlSecurityDto urlPath);
-
-    List<String> convertToAccesses(UrlSecurityEntity urlPath);
 }

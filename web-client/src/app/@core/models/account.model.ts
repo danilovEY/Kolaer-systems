@@ -9,4 +9,5 @@ export class AccountModel extends BaseModel {
 	employee: EmployeeModel;
 	accessOit: boolean;
 	accessUser: boolean;
+	accessOk: boolean;
 }

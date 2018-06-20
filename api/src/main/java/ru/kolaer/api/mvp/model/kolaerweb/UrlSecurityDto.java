@@ -15,4 +15,5 @@ public class UrlSecurityDto implements BaseDto {
     private boolean accessOit;
     private boolean accessAll;
     private boolean accessUser = true;
+    private boolean accessOk;
 }
