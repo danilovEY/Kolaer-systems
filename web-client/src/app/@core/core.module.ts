@@ -1,35 +1,33 @@
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NbAuthModule} from '@nebular/auth';
-import {NbRoleProvider, NbSecurityModule} from '@nebular/security';
-import {of as observableOf} from 'rxjs';
 
 import {throwIfAlreadyLoaded} from './module-import-guard';
 import {DataModule} from './data/data.module';
 
 const NB_CORE_PROVIDERS = [
     ...DataModule.forRoot().providers,
-    NbSecurityModule.forRoot({
-        accessControl: {
-            guest: {
-                view: '*',
-            },
-            user: {
-                parent: 'guest',
-                create: '*',
-                edit: '*',
-                remove: '*',
-            },
-        },
-    }).providers,
-    {
-        provide: NbRoleProvider,
-        useValue: {
-            getRole: () => {
-                return observableOf('guest'); // here you could provide any role based on any auth flow
-            },
-        },
-    }
+    // NbSecurityModule.forRoot({
+    //     accessControl: {
+    //         guest: {
+    //             view: '*',
+    //         },
+    //         user: {
+    //             parent: 'guest',
+    //             create: '*',
+    //             edit: '*',
+    //             remove: '*',
+    //         },
+    //     },
+    // }).providers,
+    // {
+    //     provide: NbRoleProvider,
+    //     useValue: {
+    //         getRole: () => {
+    //             return observableOf('guest'); // here you could provide any role based on any auth flow
+    //         },
+    //     },
+    // }
 ];
 
 @NgModule({
