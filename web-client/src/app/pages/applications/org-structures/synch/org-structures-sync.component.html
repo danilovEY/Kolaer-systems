@@ -1,0 +1,88 @@
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                <span>Синхронизация сотрудников КолАЭР</span>
+                <button *ngIf="this.currentAccount && this.currentAccount.accessOit"
+                        class="btn btn-primary" type="button"
+                        (click)="sendReportForOldDb()">
+                    Отправить выгрузку для старой базы
+                </button>
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="loadingUploadFile"></ngx-loading>
+
+                <ngb-alert *ngIf="serverError" type="danger" [dismissible]="false">
+                    <pre>{{ serverError.message }}</pre>
+                </ngb-alert>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="file"></label>
+                            <div class="input-group">
+                                <input #uploadFileInput
+                                       id="file"
+                                       name="file"
+                                       type="file"
+                                       accept=".xlsx"
+                                       class="form-control"
+                                       placeholder="Загрузить файл"
+                                       (change)="selectFile($event)">
+                                <span class="input-group-append">
+                                    <button class="btn btn-warning input-group-text" [disabled]="!selectedFiles" (click)="uploadFile()">
+                                        Синхронизировать
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </div>
+
+    <div class="col-12" *ngIf="histories.length > 0">
+        <nb-card>
+            <nb-card-header>
+                Отчет
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngb-accordion #acc="ngbAccordion">
+                    <ngb-panel *ngFor="let history of histories"
+                               [type]="getType(history)">
+                        <ng-template ngbPanelTitle>
+                            <div class="row">
+                                <div class="col-6">
+                                    <span>{{ history.event }}</span>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <span>{{ history.eventDate | date:'dd.MM.yyyy HH:mm' }}</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ngb-alert type="secondary" [dismissible]="false">
+                                        <pre>{{convertToObject(history.valueOld) | json}}</pre>
+                                    </ngb-alert>
+                                </div>
+
+                                <div class="col-6">
+                                    <ngb-alert type="primary" [dismissible]="false">
+                                        <pre>{{convertToObject(history.valueNew) | json}}</pre>
+                                    </ngb-alert>
+                                </div>
+                            </div>
+
+                        </ng-template>
+                    </ngb-panel>
+                </ngb-accordion>
+            </nb-card-body>
+        </nb-card>
+    </div>
+
+</div>

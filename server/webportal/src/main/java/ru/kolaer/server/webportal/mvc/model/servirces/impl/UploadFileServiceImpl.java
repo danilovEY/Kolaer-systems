@@ -84,16 +84,25 @@ public class UploadFileServiceImpl
             newFileName += fileName;
 
             File file = this.rootLocation.resolve(newFileName).toFile();
+
+            if(file.exists() && !file.delete()) {
+                newFileName = new Date().getTime() + "_" + newFileName;
+                file = this.rootLocation.resolve(newFileName).toFile();
+            }
+
+            UploadFileEntity uploadFileEntity = Optional
+                    .ofNullable(this.defaultEntityDao.findByPath(newFileName))
+                    .orElse(new UploadFileEntity());
+
             if (!file.exists() && file.createNewFile()) {
-                UploadFileEntity uploadFileEntity = new UploadFileEntity();
                 uploadFileEntity.setFileCreate(LocalDateTime.now());
                 uploadFileEntity.setFileName(fileName);
                 uploadFileEntity.setPath(newFileName);
 
-                return this.defaultEntityDao.persist(uploadFileEntity);
-            } else {
-                return null;
+                uploadFileEntity = this.defaultEntityDao.save(uploadFileEntity);
             }
+
+            return uploadFileEntity;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

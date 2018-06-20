@@ -1,9 +1,13 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.server.webportal.mvc.model.dao.HistoryChangeDao;
 import ru.kolaer.server.webportal.mvc.model.dto.HistoryChangeDto;
+import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.historychange.HistoryChangeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.historychange.HistoryChangeEvent;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
@@ -13,14 +17,22 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class HistoryChangeServiceImpl implements HistoryChangeService {
     private final HistoryChangeDao historyChangeDao;
     private final AuthenticationService authenticationService;
+    private final ObjectMapper objectMapper;
 
     public HistoryChangeServiceImpl(HistoryChangeDao historyChangeDao,
                                     AuthenticationService authenticationService) {
         this.historyChangeDao = historyChangeDao;
         this.authenticationService = authenticationService;
+        this.objectMapper = new ObjectMapper();
+    }
+
+    @Override
+    public <T extends BaseEntity> HistoryChangeDto createHistoryChange(T valueOld, T valueNew, HistoryChangeEvent event) {
+        return this.createHistoryChange(objectToJson(valueOld), objectToJson(valueNew), event);
     }
 
     @Override
@@ -65,6 +77,19 @@ public class HistoryChangeServiceImpl implements HistoryChangeService {
         HistoryChangeDto historyChangeDto = convertToDto(historyChangeDao.persist(historyChangeEntity));
         historyChangeDto.setAccount(accountSimpleByAuthentication);
         return historyChangeDto;
+    }
+
+    @Override
+    public String objectToJson(Object obj) {
+        if (obj != null) {
+            try {
+                return this.objectMapper.writeValueAsString(obj);
+            } catch (JsonProcessingException e) {
+                return obj.toString();
+            }
+        }
+
+        return null;
     }
 
     private HistoryChangeDto convertToDto(HistoryChangeEntity historyChangeEntity) {

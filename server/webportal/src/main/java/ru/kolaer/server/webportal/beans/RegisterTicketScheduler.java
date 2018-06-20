@@ -49,112 +49,15 @@ public class RegisterTicketScheduler {
         this.emails.add(environment.getProperty("tickets.email"));
     }
 
-    //@Scheduled(cron = "0 0 14 * * *", zone = "Europe/Moscow")
-//    public void generateAddTicketsScheduled() {
-//        if(!typeServer.isTest())
-//            this.generateAddTicketDocument();
-//    }
-
-//    @Scheduled(cron = "0 0 8 26-31 * ?", zone = "Europe/Moscow")
-//    @Transactional(readOnly = true)
-//    public void generateZeroTicketsLastDayOfMonthScheduled() {
-//        if(!typeServer.isTest()) {
-//            final LocalDate now = LocalDate.now();
-//            final LocalDate end = now.withDayOfMonth(now.lengthOfMonth());
-//            final int lastDay = end.getDayOfWeek().getValue() == 7
-//                    || end.getDayOfWeek().getValue() == 6 ? 6 :  end.getDayOfMonth();
-//
-//            if (now.getDayOfMonth() == lastDay) {
-//                List<SendTicketDto> allTickets = getAllTickets();
-//                this.generateZeroTicketDocument(allTickets);
-//                this.generateDefaultTicketDocument(allTickets);
-//            }
-//        }
-//    }
-
-//    public boolean generateAddTicketDocument() {
-//        final List<TicketRegisterEntity> allOpenRegister = ticketRegisterDao.findAllOpenRegister();
-//        if(allOpenRegister.size() > 0) {
-//            allOpenRegister.forEach(ticketRegister -> ticketRegister.setClose(true));
-//            ticketRegisterDao.update(allOpenRegister);
-//
-//            List<SendTicketDto> allTickets = new ArrayList<>();
-//            allOpenRegister.stream()
-//                    .filter(t -> t.getTickets() != null)
-//                    .map(TicketRegisterEntity::getTickets)
-//                    .map(ticketEntities -> ticketEntities.stream().map(ticketEntity -> {
-//                        SendTicketDto sendTicketDto = new SendTicketDto();
-//                        sendTicketDto.setInitials(ticketEntity.getEmployee().getInitials().toUpperCase());
-//                        sendTicketDto.setCount(ticketEntity.getCount());
-//                        sendTicketDto.setCheck(bankAccountDao.findByInitials(ticketEntity.getEmployee().getInitials()).getCheck());
-//                        return sendTicketDto;
-//                    }))
-//                    .forEach(allTickets::addAll);
-//
-//            if(this.sendMail(allTickets, "IMMEDIATE", "DR", "Сформированные талоны ЛПП для зачисления. Файл во вложении!")) {
-//                this.lastSend = LocalDateTime.now();
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
     public UploadFileEntity generateReportTickets(List<SendTicketDto> tickets, LocalDateTime inTime) {
         String dateToUpdate = DateTimeFormatter.ofPattern("yyyyMMdd hhmmss").format(inTime);
 
         return this.generateTextFile(tickets, String.format("IN-TIME  %s", dateToUpdate));
-
-//        return this.sendMail(tickets, ,
-//                "Сформированные талоны ЛПП и время исполнения файла: " + dateToUpdate + ". Файл во вложении!");
     }
 
     public UploadFileEntity generateReportTickets(List<SendTicketDto> tickets) {
         return this.generateTextFile(tickets, "IMMEDIATE");
     }
-
-//    public boolean generateZeroTicketDocument(List<SendTicketDto> allTickets) {
-//        final LocalDateTime now = LocalDateTime.now();
-//        final String dateToUpdate = DateTimeFormatter.ofPattern("yyyyMMdd hhmmss")
-//                .format(LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 0).plusMonths(1));
-//
-//        for (SendTicketDto ticket : allTickets) {
-//            ticket.setCount(0);
-//            ticket.setTypeOperation(TypeOperation.ZR);
-//        }
-//
-//        return this.generateSetTicketDocument(allTickets, String.format("IN-TIME  %s", dateToUpdate), "ZR",
-//                "Сформированные талоны ЛПП для обнуления. Файл во вложении!");
-//    }
-//
-//    public boolean generateDefaultTicketDocument(List<SendTicketDto> allTickets) {
-//        final LocalDateTime now = LocalDateTime.now();
-//        final String dateToUpdate = DateTimeFormatter.ofPattern("yyyyMMdd hhmmss")
-//                .format(LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 10).plusMonths(1));
-//
-//        for (SendTicketDto ticket : allTickets) {
-//            ticket.setCount(25);
-//            ticket.setTypeOperation(TypeOperation.DR);
-//        }
-//
-//        return this.generateSetTicketDocument(allTickets, String.format("IN-TIME  %s", dateToUpdate), "DR",
-//                "Сформированные талоны ЛПП для зачисления. Файл во вложении!");
-//    }
-//
-////    @Transactional(readOnly = true)
-////    public boolean generateSetTicketDocument(List<SendTicketDto> allTickets, String header, String typeTicket, String textMail) {
-////        return this.sendMail(allTickets, header, typeTicket, textMail);
-////    }
-//
-//    private List<SendTicketDto> getAllTickets() {
-//        return this.bankAccountDao.findAll().stream()
-//                .filter(bankAccountEntity -> bankAccountEntity.getEmployeeId() != null)
-//                .map(bankAccount -> {
-//                    SendTicketDto ticket = new SendTicketDto();
-//                    ticket.setInitials(bankAccount.getEmployeeEntity().getInitials().toUpperCase());
-//                    ticket.setCheck(bankAccount.getCheck());
-//                    return ticket;
-//                }).collect(Collectors.toList());
-//    }
 
     public boolean sendMail(UploadFileEntity uploadFileEntity, String text) {
         if (uploadFileEntity != null) {

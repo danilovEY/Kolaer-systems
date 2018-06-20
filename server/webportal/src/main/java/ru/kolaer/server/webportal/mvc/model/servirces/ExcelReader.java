@@ -4,6 +4,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 
 import java.util.Date;
 import java.util.List;
@@ -29,10 +30,10 @@ public interface ExcelReader<T> {
         return Optional.ofNullable(getCell(columns, nameColumns, row))
                 .map(cell -> {
                     switch (cell.getCellTypeEnum()) {
-                        case NUMERIC: return String.valueOf(cell.getNumericCellValue());
-                        case STRING: return cell.getStringCellValue();
-                        case BOOLEAN: return String.valueOf(cell.getBooleanCellValue());
-                        default: return null;
+                        case STRING: return cell.getStringCellValue().trim();
+                        default:
+                            throw new UnexpectedRequestParams(String.format("Значение в строке: %d и в столбце: %d - не является строкой",
+                                row.getRowNum() + 1, cell.getColumnIndex() + 1));
                     }
                 }).orElse(null);
     }

@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -12,13 +11,10 @@ import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dto.EmployeeRequestDto;
-import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdate;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
-import ru.kolaer.server.webportal.mvc.model.servirces.UpdatableEmployeeService;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -27,15 +23,12 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, EmployeeEntity, EmployeeDao, EmployeeConverter> implements EmployeeService {
-
-    private final List<UpdatableEmployeeService> updatableEmployeeServices;
-
+public class EmployeeServiceImpl
+        extends AbstractDefaultService<EmployeeDto, EmployeeEntity, EmployeeDao, EmployeeConverter>
+        implements EmployeeService {
     protected EmployeeServiceImpl(EmployeeDao employeeDao,
-                                  @Autowired(required = false) List<UpdatableEmployeeService> updatableEmployeeServices,
                                   EmployeeConverter converter) {
         super(employeeDao, converter);
-        this.updatableEmployeeServices = updatableEmployeeServices;
     }
 
     @Override
@@ -171,9 +164,9 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
 
         EmployeeDto employeeDto = defaultConverter.convertToDto(defaultEntityDao.save(employeeEntity));
 
-        ResultUpdate resultUpdate = new ResultUpdate();
-        resultUpdate.setAddEmployee(Collections.singletonList(employeeDto));
-        updatableEmployeeServices.forEach(service -> service.updateEmployee(resultUpdate));
+//        ResultUpdate resultUpdate = new ResultUpdate();
+//        resultUpdate.setAddEmployee(Collections.singletonList(employeeDto));
+//        updatableEmployeeServices.forEach(service -> service.updateEmployee(resultUpdate));
 
         return employeeDto;
     }
@@ -192,9 +185,9 @@ public class EmployeeServiceImpl extends AbstractDefaultService<EmployeeDto, Emp
 
         EmployeeDto employeeDto = defaultConverter.convertToDto(defaultEntityDao.save(employeeEntity));
 
-        ResultUpdate resultUpdate = new ResultUpdate();
-        resultUpdate.setDeleteEmployee(Collections.singletonList(employeeDto));
-        updatableEmployeeServices.forEach(service -> service.updateEmployee(resultUpdate));
+//        ResultUpdate resultUpdate = new ResultUpdate();
+//        resultUpdate.setDeleteEmployee(Collections.singletonList(employeeDto));
+//        updatableEmployeeServices.forEach(service -> service.updateEmployee(resultUpdate));
 
         return 1;
     }

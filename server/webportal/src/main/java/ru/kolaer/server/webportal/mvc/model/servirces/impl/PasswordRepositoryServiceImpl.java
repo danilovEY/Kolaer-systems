@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.api.mvp.model.error.UnexpectedParamsDescription;
@@ -339,6 +340,7 @@ public class PasswordRepositoryServiceImpl
 
     @Override
     @Transactional
+    @Async
     public void updateEmployee(ResultUpdate resultUpdate) {
         List<AccountSimpleDto> addAccounts = resultUpdate.getAddAccounts();
 

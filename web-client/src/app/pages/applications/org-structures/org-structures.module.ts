@@ -5,6 +5,7 @@ import {OrgStructuresRouterModule} from './org-structures-router.module';
 import {ThemeModule} from '../../../@theme/theme.module';
 import {DepartmentsComponent} from './departments/departments.component';
 import {PostsComponent} from './posts/posts.component';
+import {OrgStructuresSyncComponent} from './synch/org-structures-sync.component';
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import {PostsComponent} from './posts/posts.component';
         DepartmentsComponent,
         PostsComponent,
         EmployeesComponent,
+        OrgStructuresSyncComponent,
     ]
 })
 export class OrgStructuresModule {

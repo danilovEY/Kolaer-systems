@@ -6,6 +6,8 @@ import lombok.Data;
 public class DepartmentFilter implements FilterParam {
     @EntityFieldName(name = "id")
     private Long filterId;
+    @EntityFieldName(name = "name")
+    private String filterName;
     @EntityFieldName(name = "abbreviatedName")
     private String filterAbbreviatedName;
     @EntityFieldName(name = "deleted")

@@ -72,27 +72,6 @@ export class PagesComponent implements OnInit {
             ticketsMainMenuItem.title = 'Главная';
             ticketsMainMenuItem.link = 'app/tickets';
 
-            this.accountService.getCurrentAccount()
-                .subscribe((account: SimpleAccountModel) => {
-                   if (account.accessOit) {
-                       const bankAccountMenuItem: NbMenuItem = new NbMenuItem();
-                       bankAccountMenuItem.title = 'Счета';
-                       bankAccountMenuItem.link = 'app/tickets/bank-accounts';
-
-                       ticketsMenuItem.children.push(bankAccountMenuItem);
-
-                       const productionCalendarEditMenuItem: NbMenuItem = new NbMenuItem();
-                       productionCalendarEditMenuItem.title = 'Редактировать';
-                       productionCalendarEditMenuItem.link = 'app/production-calendar/edit';
-
-                       productionCalendarMenuItem.children.push(productionCalendarEditMenuItem);
-                   }
-                });
-
-            ticketsMenuItem.children.push(ticketsMainMenuItem);
-            this.menu.push(ticketsMenuItem);
-
-
             const orgStructureMenuItem: NbMenuItem = new NbMenuItem();
             orgStructureMenuItem.title = 'Структура организации';
             orgStructureMenuItem.icon = 'icon ion-md-business';
@@ -114,6 +93,32 @@ export class PagesComponent implements OnInit {
                 postsMenuItem,
                 departmentsMenuItem);
             this.menu.push(orgStructureMenuItem);
+
+            this.accountService.getCurrentAccount()
+                .subscribe((account: SimpleAccountModel) => {
+                   if (account.accessOit) {
+                       const bankAccountMenuItem: NbMenuItem = new NbMenuItem();
+                       bankAccountMenuItem.title = 'Счета';
+                       bankAccountMenuItem.link = 'app/tickets/bank-accounts';
+
+                       ticketsMenuItem.children.push(bankAccountMenuItem);
+
+                       const productionCalendarEditMenuItem: NbMenuItem = new NbMenuItem();
+                       productionCalendarEditMenuItem.title = 'Редактировать';
+                       productionCalendarEditMenuItem.link = 'app/production-calendar/edit';
+
+                       productionCalendarMenuItem.children.push(productionCalendarEditMenuItem);
+
+                       const orgStructureSyncMenuItem: NbMenuItem = new NbMenuItem();
+                       orgStructureSyncMenuItem.title = 'Синхронизация';
+                       orgStructureSyncMenuItem.link = 'app/org-structures/sync';
+
+                       orgStructureMenuItem.children.push(orgStructureSyncMenuItem);
+                   }
+                });
+
+            ticketsMenuItem.children.push(ticketsMainMenuItem);
+            this.menu.push(ticketsMenuItem);
         }
 
     }

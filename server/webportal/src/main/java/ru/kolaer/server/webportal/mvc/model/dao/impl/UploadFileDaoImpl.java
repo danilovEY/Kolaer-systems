@@ -13,4 +13,12 @@ public class UploadFileDaoImpl extends AbstractDefaultDao<UploadFileEntity> impl
         super(sessionFactory, UploadFileEntity.class);
     }
 
+    @Override
+    public UploadFileEntity findByPath(String path) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " WHERE path = :path", getEntityClass())
+                .setParameter("path", path)
+                .uniqueResultOptional()
+                .orElse(null);
+    }
 }

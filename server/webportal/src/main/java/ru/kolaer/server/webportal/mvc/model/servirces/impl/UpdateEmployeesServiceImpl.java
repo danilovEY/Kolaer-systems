@@ -17,10 +17,7 @@ import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PostDao;
-import ru.kolaer.server.webportal.mvc.model.dto.HistoryChangeDto;
-import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdateEmployeeDto;
-import ru.kolaer.server.webportal.mvc.model.dto.UpdatableElement;
-import ru.kolaer.server.webportal.mvc.model.dto.UpdatableEmployee;
+import ru.kolaer.server.webportal.mvc.model.dto.*;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntity;
@@ -49,7 +46,9 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
     private final DepartmentDao departmentDao;
 
     private final HistoryChangeService historyChangeService;
-    private final List<UpdatableEmployeeService> updatableEmployeeServices;
+
+    @Autowired(required = false)
+    private List<UpdatableEmployeeService> updatableEmployeeServices;
 
     private final ExcelReaderEmployee excelReaderEmployee;
     private final ExcelReaderDepartment excelReaderDepartment;
@@ -63,16 +62,13 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             HistoryChangeService historyChangeService,
             ExcelReaderEmployee excelReaderEmployee,
             ExcelReaderDepartment excelReaderDepartment,
-            ExcelReaderPost excelReaderPost,
-            @Autowired(required = false) List<UpdatableEmployeeService> updatableEmployeeServices) {
+            ExcelReaderPost excelReaderPost) {
         this.employeeDao = employeeDao;
         this.employeeConverter = employeeConverter;
         this.postDao = postDao;
         this.departmentDao = departmentDao;
 
         this.historyChangeService = historyChangeService;
-
-        this.updatableEmployeeServices = updatableEmployeeServices;
 
         this.excelReaderEmployee = excelReaderEmployee;
         this.excelReaderDepartment = excelReaderDepartment;
@@ -161,15 +157,15 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             throw new UnexpectedRequestParams(ex.getMessage(), ex, ErrorCode.PARSE_EXCEPTION);
         }
 
-//        ResultUpdate resultUpdate = new ResultUpdate();
-//        resultUpdate.setAddEmployee(employeeConverter.convertToDto(resultUpdateEmployeeDto.getAddEmployee()));
-//        resultUpdate.setDeleteEmployee(employeeConverter.convertToDto(resultUpdateEmployeeDto.getDeleteEmployee()));
-//
-//        Optional.ofNullable(updatableEmployeeServices)
-//                .orElse(Collections.emptyList())
-//                .stream()
-//                .sorted(Comparator.comparingInt(UpdatableEmployeeService::getOrder))
-//                .forEach(service -> service.updateEmployee(resultUpdate));
+        ResultUpdate resultUpdate = new ResultUpdate();
+        resultUpdate.setAddEmployee(employeeConverter.convertToDto(resultUpdateEmployeeDto.getAddEmployee()));
+        resultUpdate.setDeleteEmployee(employeeConverter.convertToDto(resultUpdateEmployeeDto.getDeleteEmployee()));
+
+        Optional.ofNullable(updatableEmployeeServices)
+                .orElse(Collections.emptyList())
+                .stream()
+                .sorted(Comparator.comparingInt(UpdatableEmployeeService::getOrder))
+                .forEach(service -> service.updateEmployee(resultUpdate));
 
         return changes;
     }
@@ -235,14 +231,14 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                     deletedEmployee.add(employeeEntityFromDb);
 
                     HistoryChangeDto historyChange = historyChangeService
-                            .createHistoryChange(null, employeeEntityFromDb.toString(), HistoryChangeEvent.HIDE_EMPLOYEE);
+                            .createHistoryChange(null, employeeEntityFromDb, HistoryChangeEvent.HIDE_EMPLOYEE);
                     histories.add(historyChange);
                 }
             } else {
                 UpdatableEmployee updatableEmployee = updatableElement.getElement();
                 EmployeeEntity employeeEntity = updatableEmployee.getEmployee();
 
-                String valueOld = employeeEntityFromDb.toString();
+                String valueOld = historyChangeService.objectToJson(employeeEntityFromDb);
 
                 Long postId = Optional.ofNullable(postMap.get(updatableEmployee.getPostKey()))
                         .map(UpdatableElement::getElement)
@@ -281,7 +277,9 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
 
                 if(updatableElement.isUpdate()) {
                     HistoryChangeDto historyChange = historyChangeService
-                            .createHistoryChange(valueOld, employeeEntityFromDb.toString(), HistoryChangeEvent.UPDATE_EMPLOYEE);
+                            .createHistoryChange(valueOld,
+                                    historyChangeService.objectToJson(employeeEntityFromDb),
+                                    HistoryChangeEvent.UPDATE_EMPLOYEE);
                     histories.add(historyChange);
                 }
             }
@@ -305,7 +303,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 .map(UpdatableEmployee::getEmployee)
                 .filter(employee -> employee.getId() == null)
                 .map(employee -> historyChangeService
-                        .createHistoryChange(null, employee.toString(), HistoryChangeEvent.ADD_EMPLOYEE))
+                        .createHistoryChange(null, employee, HistoryChangeEvent.ADD_EMPLOYEE))
                 .collect(Collectors.toList());
 
         histories.addAll(historiesForAdd);
@@ -327,29 +325,33 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                     depEntityFromDb.setDeleted(true);
 
                     HistoryChangeDto historyChange = historyChangeService
-                            .createHistoryChange(null, depEntityFromDb.toString(), HistoryChangeEvent.HIDE_DEPARTMENT);
+                            .createHistoryChange(null, depEntityFromDb, HistoryChangeEvent.HIDE_DEPARTMENT);
                     histories.add(historyChange);
                 }
             } else {
                 DepartmentEntity departmentEntity = updatableElement.getElement();
 
-                String valueOld = depEntityFromDb.toString();
+                String valueOld = historyChangeService.objectToJson(depEntityFromDb);
 
-                if(!Objects.equals(depEntityFromDb.getAbbreviatedName(), departmentEntity.getAbbreviatedName()) ||
-                        !Objects.equals(depEntityFromDb.getName(), departmentEntity.getName()) ||
+                if(!Objects.equals(depEntityFromDb.getName(), departmentEntity.getName()) ||
                         !Objects.equals(depEntityFromDb.getExternalId(), departmentEntity.getExternalId()) ||
                         depEntityFromDb.isDeleted()) {
                     updatableElement.setUpdate(true);
                 }
 
-                depEntityFromDb.setAbbreviatedName(departmentEntity.getAbbreviatedName());
+                if(!Objects.equals(depEntityFromDb.getName(), departmentEntity.getName())) {
+                    depEntityFromDb.setAbbreviatedName(departmentEntity.getAbbreviatedName());
+                }
+
                 depEntityFromDb.setName(departmentEntity.getName());
                 depEntityFromDb.setExternalId(departmentEntity.getExternalId());
                 depEntityFromDb.setDeleted(false);
 
                 if(updatableElement.isUpdate()) {
                     HistoryChangeDto historyChange = historyChangeService
-                            .createHistoryChange(valueOld, depEntityFromDb.toString(), HistoryChangeEvent.UPDATE_DEPARTMENT);
+                            .createHistoryChange(valueOld,
+                                    historyChangeService.objectToJson(depEntityFromDb),
+                                    HistoryChangeEvent.UPDATE_DEPARTMENT);
                     histories.add(historyChange);
                 }
             }
@@ -362,7 +364,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 .map(UpdatableElement::getElement)
                 .filter(department -> department.getId() == null)
                 .map(department -> historyChangeService
-                        .createHistoryChange(null, department.toString(), HistoryChangeEvent.ADD_DEPARTMENT))
+                        .createHistoryChange(null, department, HistoryChangeEvent.ADD_DEPARTMENT))
                 .collect(Collectors.toList());
 
         histories.addAll(historiesForAdd);
@@ -384,7 +386,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                     postEntityFromDb.setDeleted(true);
 
                     HistoryChangeDto historyChange = historyChangeService
-                            .createHistoryChange(null, postEntityFromDb.toString(), HistoryChangeEvent.HIDE_POST);
+                            .createHistoryChange(null, postEntityFromDb, HistoryChangeEvent.HIDE_POST);
                     histories.add(historyChange);
 
                     updatableElement.setDelete(true);
@@ -394,8 +396,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
 
                 String valueOld = postEntityFromDb.toString();
 
-                if(!Objects.equals(postEntityFromDb.getAbbreviatedName(), postEntity.getAbbreviatedName()) ||
-                        !Objects.equals(postEntityFromDb.getName(), postEntity.getName()) ||
+                if(!Objects.equals(postEntityFromDb.getName(), postEntity.getName()) ||
                         !Objects.equals(postEntityFromDb.getCode(), postEntity.getCode()) ||
                         !Objects.equals(postEntityFromDb.getExternalId(), postEntity.getExternalId()) ||
                         !Objects.equals(postEntityFromDb.getRang(), postEntity.getRang()) ||
@@ -404,11 +405,14 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                     updatableElement.setUpdate(true);
                 }
 
+                if(!Objects.equals(postEntityFromDb.getName(), postEntity.getName())) {
+                    postEntityFromDb.setAbbreviatedName(postEntity.getAbbreviatedName());
+                }
+
                 postEntityFromDb.setDeleted(false);
                 postEntityFromDb.setType(postEntity.getType());
                 postEntityFromDb.setRang(postEntity.getRang());
                 postEntityFromDb.setName(postEntity.getName());
-                postEntityFromDb.setAbbreviatedName(postEntity.getAbbreviatedName());
                 postEntityFromDb.setCode(postEntity.getCode());
                 postEntityFromDb.setExternalId(postEntity.getExternalId());
 

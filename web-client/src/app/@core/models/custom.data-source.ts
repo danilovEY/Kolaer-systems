@@ -31,6 +31,9 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
         return this.onChangedLoading.asObservable();
     }
 
+    setFilter(conf: Array<any>, andOperator?: boolean, doEmit?: boolean): LocalDataSource {
+        return super.setFilter(conf, andOperator, doEmit);
+    }
 
     setSort(conf: Array<any>, doEmit?: boolean): LocalDataSource {
         if (!this.initDataSource) {
@@ -52,12 +55,14 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
             return super.getElements();
         }
 
-        this.currentSort = sort;
-        this.currentFilter = filter;
+        this.currentSort = Object.assign({}, sort);
+        this.currentFilter = Object.assign({}, filter);
 
         this.onChangedLoading.next(true);
         return this.loadElements(this.getPage(), this.getPageSize());
     }
+
+
 
     getPage(): number {
         return this.pagingConf['page'];

@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  * Created by danilovey on 05.10.2017.
  */
 public abstract class AbstractDefaultDao<T extends BaseEntity> implements DefaultDao<T> {
+    private final String ENTITY_NAME = "entity";
     protected final SessionFactory sessionFactory;
     protected final Class<T> entityClass;
     protected int batchSize = Integer.valueOf(Dialect.DEFAULT_BATCH_SIZE);
@@ -57,7 +58,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
         String queryFilter = filtersToString(filter);
 
-        Query<T> query = getSession().createQuery("FROM " + getEntityName() +
+        Query<T> query = getSession().createQuery("FROM " + getEntityName() + " " + ENTITY_NAME + " " +
                 queryFilter + " " + queryOrderBy, getEntityClass());
 
         query = setParams(query, filter);
@@ -99,7 +100,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
                         entry.getValue().getValue() != null ||
                         entry.getValue().getType() == FilterType.IS_NULL ||
                         entry.getValue().getType() == FilterType.NOT_NULL)
-                .map(entry -> entry.getValue().getParamName() + filterTypeToString(entry.getValue().getType(), entry.getKey()))
+                .map(entry -> ENTITY_NAME + "." + entry.getValue().getParamName() + filterTypeToString(entry.getValue().getType(), entry.getKey()))
                 .collect(Collectors.joining(" AND "));
     }
 
@@ -121,7 +122,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
         String queryFilter = filtersToString(filter);
 
         Query<Long> query = getSession()
-                .createQuery("SELECT COUNT(id) FROM " + getEntityName() + queryFilter,
+                .createQuery("SELECT COUNT(id) FROM " + getEntityName() + " " + ENTITY_NAME + " " + queryFilter,
                         Long.class);
 
         return setParams(query, filter).uniqueResult();

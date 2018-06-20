@@ -12,10 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.EmployeeFilter;
-import ru.kolaer.server.webportal.mvc.model.dto.EmployeeRequestDto;
-import ru.kolaer.server.webportal.mvc.model.dto.EmployeeSort;
+import ru.kolaer.server.webportal.mvc.model.dto.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
+import ru.kolaer.server.webportal.mvc.model.servirces.UpdatableEmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
 import java.io.IOException;
@@ -36,12 +35,15 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final UpdateEmployeesService updateEmployeesService;
+    private final UpdatableEmployeeService updatableEmployeeService;
 
     @Autowired
     public EmployeeController(EmployeeService employeeService,
-                              @Qualifier("updateEmployeesServiceImpl") UpdateEmployeesService updateEmployeesService) {
+                              @Qualifier("updateEmployeesServiceImpl") UpdateEmployeesService updateEmployeesService,
+                              @Qualifier("generateReportForOldDbService") UpdatableEmployeeService updatableEmployeeService) {
         this.employeeService = employeeService;
         this.updateEmployeesService = updateEmployeesService;
+        this.updatableEmployeeService = updatableEmployeeService;
     }
 
     @ApiOperation(
@@ -169,11 +171,17 @@ public class EmployeeController {
         return this.employeeService.getUsersByInitials(initials);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @UrlDeclaration(description = "Обновить сотрудников КолАЭР из xlsx", isUser = false)
+    @RequestMapping(value = "/sync", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @UrlDeclaration(description = "Обновить сотрудников КолАЭР из xlsx", requestMethod = RequestMethod.POST, isUser = false)
     @ApiOperation(value = "Обновить сотрудников КолАЭР из xlsx")
-    public void uploadEmployee(@RequestParam("file")MultipartFile file) throws IOException {
-        updateEmployeesService.updateEmployees(file.getInputStream());
+    public List<HistoryChangeDto> uploadEmployee(@RequestParam("file")MultipartFile file) throws IOException {
+        return updateEmployeesService.updateEmployees(file.getInputStream());
     }
 
+    @RequestMapping(value = "/old/report", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @UrlDeclaration(description = "Сформировать выгрузку для старой базы", requestMethod = RequestMethod.POST, isUser = false)
+    @ApiOperation(value = "Сформировать выгрузку для старой базы")
+    public void generateAndSendReportForOldDb() {
+        updatableEmployeeService.updateEmployee(new ResultUpdate());
+    }
 }

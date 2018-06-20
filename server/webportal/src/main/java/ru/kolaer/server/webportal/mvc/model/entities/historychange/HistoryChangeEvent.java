@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.entities.historychange;
 
 public enum HistoryChangeEvent {
-    UPLOAD_FILE_TO_UPDATE_EMPLOYEE("Загрузка файла для обновление сотрудников"),
     UNKNOWN("Неизвестно"),
+    UPLOAD_FILE_TO_UPDATE_EMPLOYEE("Загрузка файла для обновление сотрудников"),
     HIDE_POST("Удаление должности"),
     UPDATE_POST("Обновление должности"),
     HIDE_DEPARTMENT("Удаление подразделения"),

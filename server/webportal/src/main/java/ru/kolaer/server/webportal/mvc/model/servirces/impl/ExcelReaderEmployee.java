@@ -122,13 +122,13 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
     @Override
     public EmployeeEntity checkValues(XSSFRow row, EmployeeEntity object) {
         if(object == null) {
-            throw new IllegalArgumentException("Прочитанное подразделение NULL! Строка: " + row.getRowNum() + 1);
+            throw new IllegalArgumentException("Прочитанное подразделение NULL! Строка: " + (row.getRowNum() + 1));
         }
 
         if(StringUtils.isEmpty(object.getInitials()) || StringUtils.isEmpty(object.getFirstName())
                 || StringUtils.isEmpty(object.getSecondName()) || StringUtils.isEmpty(object.getThirdName())
                 || object.getPersonnelNumber() == null || object.getGender() == null) {
-            throw new UnexpectedRequestParams("У сотрудника пустое Ф.И.О или табельный или пол! Строка: " + row.getRowNum() + 1, object);
+            throw new UnexpectedRequestParams("У сотрудника пустое Ф.И.О или табельный или пол! Строка: " + (row.getRowNum() + 1), object);
         }
 
         return object;
