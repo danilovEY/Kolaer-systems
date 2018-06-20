@@ -23,7 +23,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
@@ -42,6 +44,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 /**
  * Created by danilovey on 14.07.2016.
@@ -54,6 +57,7 @@ import java.util.List;
 @EnableSwagger2
 @EnableScheduling
 @EnableCaching
+@EnableAsync
 @ComponentScan({"ru.kolaer.server.webportal.spring",
         "ru.kolaer.server.webportal.beans",
         "ru.kolaer.server.webportal.mvc.model.converter",
@@ -94,6 +98,16 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         registry.addRedirectViewController("/configuration/security", "/rest/swagger-resources/configuration/security");
     }
 
+    @Bean
+    public Executor asyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(5);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("ASYNC-");
+        executor.initialize();
+        return executor;
+    }
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
