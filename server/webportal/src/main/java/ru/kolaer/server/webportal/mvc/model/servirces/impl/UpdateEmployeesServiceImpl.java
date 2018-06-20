@@ -287,14 +287,39 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             newEmployeesMap.put(originKey, updatableElement);
         }
 
-        List<EmployeeEntity> addedEmployee = newEmployeesMap.values()
+        List<UpdatableEmployee> addedEmployee = newEmployeesMap.values()
                 .stream()
                 .map(UpdatableElement::getElement)
-                .map(UpdatableEmployee::getEmployee)
-                .filter(employee -> employee.getId() == null && employee.getDismissalDate() == null)
+                .filter(employee -> employee.getEmployee().getId() == null)
                 .collect(Collectors.toList());
 
-        resultUpdateEmployeeDto.setAddEmployee(addedEmployee);
+        for (UpdatableEmployee updatableEmployee : addedEmployee) {
+            EmployeeEntity employeeEntity = updatableEmployee.getEmployee();
+
+            Long postId = Optional.ofNullable(postMap.get(updatableEmployee.getPostKey()))
+                    .map(UpdatableElement::getElement)
+                    .map(PostEntity::getId)
+                    .orElseThrow(() -> new UnexpectedRequestParams("Не найдена должность для: " +
+                            employeeEntity.getPersonnelNumber(),
+                            employeeEntity));
+
+            Long departmentId = Optional.ofNullable(depMap.get(updatableEmployee.getDepartmentKey()))
+                    .map(UpdatableElement::getElement)
+                    .map(DepartmentEntity::getId)
+                    .orElseThrow(() -> new UnexpectedRequestParams("Не найдено подразделение для: " +
+                            employeeEntity.getPersonnelNumber(),
+                            employeeEntity));
+
+            employeeEntity.setPostId(postId);
+            employeeEntity.setDepartmentId(departmentId);
+        }
+
+        List<EmployeeEntity> addedEmployeeEntity = addedEmployee
+                .stream()
+                .map(UpdatableEmployee::getEmployee)
+                .collect(Collectors.toList());
+
+        resultUpdateEmployeeDto.setAddEmployee(addedEmployeeEntity);
         resultUpdateEmployeeDto.setDeleteEmployee(deletedEmployee);
 
         List<HistoryChangeDto> historiesForAdd = newEmployeesMap.values()
