@@ -12,7 +12,7 @@ public interface Resources {
 	String TRAY_PARAM = "tray";
 	String RAND_DIR_CACHE_PARAM = "rand-dir-cache";
 
-	String VERSION = "4.3.6";
+	String VERSION = "4.3.8";
 	
 	String PATH_TO_DIR_WITH_PLUGINS = "plugins";
 	StringBuilder URL_TO_PRIVATE_SERVER = new StringBuilder("localhost:8080/ru.kolaer.server.restful");
