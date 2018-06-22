@@ -37,4 +37,12 @@
         <dropUniqueConstraint tableName="department" constraintName="name" uniqueColumns="name"/>
     </changeSet>
 
+    <changeSet id="3-4" author="Danilov">
+        <addColumn tableName="department">
+            <column name="code" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

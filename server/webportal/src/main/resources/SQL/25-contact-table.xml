@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="25" author="Danilov">
+        <createTable tableName="contact">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="employee_id" type="BIGINT"/>
+            <column name="place_id" type="BIGINT"/>
+            <column name="home_phone_number" type="VARCHAR(255)"/>
+            <column name="work_phone_number" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="type" type="SMALLINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addPrimaryKey tableName="contact" columnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="contact" baseColumnNames="place_id" constraintName="contact_place_fk"
+                                 referencedTableName="placement"
+                                 referencedColumnNames="id" onDelete="SET NULL"/>
+
+        <addForeignKeyConstraint baseTableName="contact" baseColumnNames="employee_id" constraintName="contact_employee_fk"
+                                 referencedTableName="employee"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="25-1" author="Danilov">
+        <addColumn tableName="contact">
+            <column name="pager" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

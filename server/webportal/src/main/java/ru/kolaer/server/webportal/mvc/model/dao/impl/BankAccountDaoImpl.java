@@ -54,7 +54,8 @@ public class BankAccountDaoImpl extends AbstractDefaultDao<BankAccountEntity> im
         String queryFilter = filtersToString(filtersForEmployee);
 
         Query<Long> query = getSession()
-                .createQuery("SELECT (employeeId) FROM " + getEntityName() + " " + queryFilter, Long.class);
+                .createQuery("SELECT (employeeId) FROM " + getEntityName() + " "
+                        + this.ENTITY_NAME + " " + queryFilter, Long.class);
 
         return setParams(query, filtersForEmployee).list();
     }

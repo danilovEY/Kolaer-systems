@@ -53,4 +53,18 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="4-1" author="Danilov">
+        <dropColumn tableName="employee" columnName="email"/>
+        <dropColumn tableName="employee" columnName="home_phone_number"/>
+        <dropColumn tableName="employee" columnName="work_phone_number"/>
+
+        <addColumn tableName="employee">
+            <column name="contact_id" type="BIGINT"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="employee" baseColumnNames="contact_id" constraintName="employee_contact_fk"
+                                 referencedTableName="contact"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>

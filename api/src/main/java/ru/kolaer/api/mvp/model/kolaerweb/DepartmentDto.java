@@ -13,6 +13,7 @@ public class DepartmentDto implements BaseDto {
     private String name;
     private String abbreviatedName;
     private Long chiefId;
+    private int code;
 
     public DepartmentDto(Long id) {
         this.id = id;

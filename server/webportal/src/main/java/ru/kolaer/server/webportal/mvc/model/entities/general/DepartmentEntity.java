@@ -32,19 +32,7 @@ public class DepartmentEntity implements BaseEntity {
     @Column(name = "external_id")
     private String externalId;
 
-    /*@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chief_employee_id", insertable=false, updatable=false)
-    private EmployeeEntity chief;*/
+    @Column(name = "code")
+    private int code;
 
-    @Override
-    public String toString() {
-        return "DepartmentEntity{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", abbreviatedName='" + abbreviatedName + '\'' +
-                ", chiefEmployeeId=" + chiefEmployeeId +
-                ", deleted=" + deleted +
-                ", externalId='" + externalId + '\'' +
-                '}';
-    }
 }

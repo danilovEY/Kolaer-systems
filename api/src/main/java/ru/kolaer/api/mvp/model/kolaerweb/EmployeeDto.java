@@ -18,15 +18,12 @@ public class EmployeeDto implements BaseDto {
     private String firstName;
     private String secondName;
     private String thirdName;
-    private String workPhoneNumber;
-    private String homePhoneNumber;
     private EnumGender gender;
     private DepartmentDto department;
     private PostDto post;
     private Date birthday;
     private Date employmentDate;
     private Date dismissalDate;
-    private String email;
     private String photo;
     private EnumCategory category;
 

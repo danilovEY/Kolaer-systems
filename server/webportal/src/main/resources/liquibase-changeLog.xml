@@ -7,6 +7,8 @@
     <include file="classpath:SQL/5-employee-other-organization-table.xml"/>
     <include file="classpath:SQL/2-counter-table.xml"/>
     <include file="classpath:SQL/6-notification-table.xml"/>
+    <include file="classpath:SQL/24-placement-table.xml"/>
+    <include file="classpath:SQL/25-contact-table.xml"/>
 
     <include file="classpath:SQL/8-post-table.xml"/>
     <include file="classpath:SQL/3-department-table.xml"/>

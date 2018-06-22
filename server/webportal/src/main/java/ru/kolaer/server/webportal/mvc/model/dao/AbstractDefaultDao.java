@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * Created by danilovey on 05.10.2017.
  */
 public abstract class AbstractDefaultDao<T extends BaseEntity> implements DefaultDao<T> {
-    private final String ENTITY_NAME = "entity";
+    protected final String ENTITY_NAME = "entity";
     protected final SessionFactory sessionFactory;
     protected final Class<T> entityClass;
     protected int batchSize = Integer.valueOf(Dialect.DEFAULT_BATCH_SIZE);

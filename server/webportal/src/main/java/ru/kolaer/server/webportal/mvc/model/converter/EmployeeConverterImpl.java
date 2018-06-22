@@ -78,7 +78,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         EmployeeDto employeeDto = updateStatic(new EmployeeDto(), model);
 
         if(employeeDto == null) {
-            return employeeDto;
+            return null;
         }
 
         if(model.getPostId() != null) {
@@ -151,7 +151,6 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         }
 
         entity.setId(dto.getId());
-        entity.setEmail(dto.getEmail());
         entity.setPersonnelNumber(dto.getPersonnelNumber());
         entity.setInitials(dto.getInitials());
         entity.setFirstName(dto.getFirstName());
@@ -160,8 +159,6 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         entity.setBirthday(dto.getBirthday());
         entity.setDismissalDate(dto.getDismissalDate());
         entity.setEmploymentDate(dto.getEmploymentDate());
-        entity.setHomePhoneNumber(dto.getHomePhoneNumber());
-        entity.setWorkPhoneNumber(dto.getWorkPhoneNumber());
         entity.setGender(dto.getGender());
         entity.setPhoto(dto.getPhoto());
         entity.setCategory(dto.getCategory());
@@ -176,15 +173,12 @@ public class EmployeeConverterImpl implements EmployeeConverter {
 
         dto.setId(entity.getId());
         dto.setPersonnelNumber(entity.getPersonnelNumber());
-        dto.setEmail(entity.getEmail());
         dto.setFirstName(entity.getFirstName());
         dto.setSecondName(entity.getSecondName());
         dto.setThirdName(entity.getThirdName());
         dto.setBirthday(entity.getBirthday());
         dto.setDismissalDate(entity.getDismissalDate());
         dto.setEmploymentDate(entity.getEmploymentDate());
-        dto.setHomePhoneNumber(entity.getHomePhoneNumber());
-        dto.setWorkPhoneNumber(entity.getWorkPhoneNumber());
         dto.setGender(entity.getGender());
         dto.setInitials(entity.getInitials());
         dto.setCategory(entity.getCategory());

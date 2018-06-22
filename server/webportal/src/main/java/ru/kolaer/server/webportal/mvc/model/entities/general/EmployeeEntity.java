@@ -4,6 +4,7 @@ import lombok.Data;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactEntity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -59,12 +60,6 @@ public class EmployeeEntity implements BaseEntity {
     @JoinColumn(name = "post_id", insertable=false, updatable=false)
     private PostEntity post;
 
-    @Column(name = "work_phone_number")
-    private String workPhoneNumber;
-
-    @Column(name = "home_phone_number")
-    private String homePhoneNumber;
-
     @Column(name = "birthday")
     @Temporal(TemporalType.DATE)
     private Date birthday;
@@ -77,32 +72,14 @@ public class EmployeeEntity implements BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date dismissalDate;
 
-    @Column(name = "email", length = 100)
-    private String email;
-
     @Column(name = "photo", length = 300)
     private String photo;
 
-    @Override
-    public String toString() {
-        return "EmployeeEntity{" +
-                "id=" + id +
-                ", personnelNumber=" + personnelNumber +
-                ", initials='" + initials + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", thirdName='" + thirdName + '\'' +
-                ", gender=" + gender +
-                ", category=" + category +
-                ", departmentId=" + departmentId +
-                ", postId=" + postId +
-                ", workPhoneNumber='" + workPhoneNumber + '\'' +
-                ", homePhoneNumber='" + homePhoneNumber + '\'' +
-                ", birthday=" + birthday +
-                ", employmentDate=" + employmentDate +
-                ", dismissalDate=" + dismissalDate +
-                ", email='" + email + '\'' +
-                ", photo='" + photo + '\'' +
-                '}';
-    }
+    @Column(name = "contact_id")
+    private Long contactId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contact_id", insertable=false, updatable=false)
+    private ContactEntity contact;
+
 }

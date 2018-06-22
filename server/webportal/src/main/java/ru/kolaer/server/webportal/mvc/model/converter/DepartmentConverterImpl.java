@@ -17,6 +17,7 @@ public class DepartmentConverterImpl implements DepartmentConverter {
         departmentEntity.setName(dto.getName());
         departmentEntity.setAbbreviatedName(departmentEntity.getAbbreviatedName());
         departmentEntity.setChiefEmployeeId(dto.getChiefId());
+        departmentEntity.setCode(dto.getCode());
 
         return departmentEntity;
     }
@@ -27,6 +28,7 @@ public class DepartmentConverterImpl implements DepartmentConverter {
         departmentDto.setAbbreviatedName(model.getAbbreviatedName());
         departmentDto.setName(model.getName());
         departmentDto.setId(model.getId());
+        departmentDto.setCode(model.getCode());
         return departmentDto;
     }
 
@@ -35,6 +37,7 @@ public class DepartmentConverterImpl implements DepartmentConverter {
         oldDto.setAbbreviatedName(newModel.getAbbreviatedName());
         oldDto.setName(newModel.getName());
         oldDto.setId(newModel.getId());
+        oldDto.setCode(newModel.getCode());
         return oldDto;
     }
 }
