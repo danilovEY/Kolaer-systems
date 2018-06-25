@@ -37,9 +37,6 @@ public class EmployeeSort implements SortParam {
     @EntityFieldName(name = "category")
     private SortType sortCategory;
 
-    @EntityFieldName(name = "workPhoneNumber")
-    private SortType sortWorkPhoneNumber;
-
     @EntityFieldName(name = "birthday")
     private SortType sortBirthday;
 }

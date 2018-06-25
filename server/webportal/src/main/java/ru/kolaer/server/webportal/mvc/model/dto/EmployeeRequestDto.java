@@ -16,8 +16,6 @@ public class EmployeeRequestDto {
     private Long personnelNumber;
     private String secondName;
     private String thirdName;
-    private String workPhoneNumber;
-    private String homePhoneNumber;
     private EnumGender gender;
     private Long departmentId;
     private Long postId;

@@ -10,14 +10,11 @@ export class EmployeeModel extends BaseModel {
     department: DepartmentModel;
     dismissalDate: Date;
     employmentDate: Date;
-    email: string;
     firstName: string;
     secondName: string;
     thirdName: string;
     initials: string;
     photo: string;
-    workPhoneNumber: string;
-    homePhoneNumber: string;
     personnelNumber: number;
     gender: Gender;
     post: PostModel;

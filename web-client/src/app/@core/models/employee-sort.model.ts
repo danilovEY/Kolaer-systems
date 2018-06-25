@@ -12,7 +12,6 @@ export class EmployeeSortModel {
                 public sortThirdName?: SortTypeEnum,
                 public sortGender?: SortTypeEnum,
                 public sortCategory?: SortTypeEnum,
-                public sortBirthday?: SortTypeEnum,
-                public sortWorkPhoneNumber?: SortTypeEnum) {
+                public sortBirthday?: SortTypeEnum) {
     }
 }

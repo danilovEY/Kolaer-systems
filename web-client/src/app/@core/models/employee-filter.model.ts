@@ -13,7 +13,6 @@ export class EmployeeFilterModel {
                 public filterThirdName?: string,
                 public filterGender?: Gender,
                 public filterCategory?: Category,
-                public filterWorkPhoneNumber?: string,
                 public filterBirthday?: string,
                 public typeFilterDismissalDate: FilterTypeEnum = FilterTypeEnum.IS_NULL) {
     }

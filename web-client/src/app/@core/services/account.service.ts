@@ -40,7 +40,7 @@ export class AccountService extends BaseService implements AuthenticationObserve
                 .pipe(tap((account: SimpleAccountModel) => this._currentAccountModel = account),
                     catchError(error => {
                         if (error.status === 403 || error.status === 401) {
-                            this._authService.logout().subscribe();
+                            this._authService.logout(true).subscribe();
                         }
                         return throwError(error);
                     }));

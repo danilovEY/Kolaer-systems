@@ -45,9 +45,6 @@ public class EmployeeFilter implements FilterParam {
     private EnumCategory filterCategory;
     private FilterType typeFilterCategory = FilterType.EQUAL;
 
-    @EntityFieldName(name = "workPhoneNumber")
-    private String filterWorkPhoneNumber;
-
     @EntityFieldName(name = "birthday")
     private LocalDate filterBirthday;
 

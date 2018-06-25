@@ -150,21 +150,6 @@ export class EmployeesComponent implements OnInit {
             }
         }, null);
 
-        const workPhoneNumberColumn: Column = new Column('workPhoneNumber', {
-            title: 'Рабочий телефон',
-            type: 'string'
-        }, null);
-
-        // const homePhoneNumberColumn: Column = new Column('homePhoneNumber', {
-        //     title: 'Домашний телефон',
-        //     type: 'string'
-        // }, null);
-
-        // const emailColumn: Column = new Column('email', {
-        //     title: 'Email',
-        //     type: 'string'
-        // }, null);
-
         // const employmentDateColumn: Column = new Column('employmentDate', {
         //     title: 'Дата устройства',
         //     type: 'string',
@@ -190,9 +175,6 @@ export class EmployeesComponent implements OnInit {
             genderColumn,
             birthdayColumn,
             categoryColumn,
-            workPhoneNumberColumn,
-            // homePhoneNumberColumn,
-            // emailColumn,
             // employmentDateColumn,
             // dismissalDateColumn
         );
@@ -206,9 +188,6 @@ export class EmployeesComponent implements OnInit {
         employeeRequestModel.birthday = Utils.getDateTimeToSend(event.newData.birthday);
         employeeRequestModel.category = event.newData.category;
         employeeRequestModel.gender = event.newData.gender;
-        employeeRequestModel.email = event.newData.email;
-        employeeRequestModel.homePhoneNumber = event.newData.homePhoneNumber;
-        employeeRequestModel.workPhoneNumber = event.newData.workPhoneNumber;
         employeeRequestModel.personnelNumber = event.newData.personnelNumber;
         employeeRequestModel.postId = event.newData.post ? event.newData.post.id : null;
         employeeRequestModel.departmentId = event.newData.department ? event.newData.department.id : null;
@@ -227,9 +206,6 @@ export class EmployeesComponent implements OnInit {
         employeeRequestModel.birthday = Utils.getDateTimeToSend(event.newData.birthday);
         employeeRequestModel.category = event.newData.category;
         employeeRequestModel.gender = event.newData.gender;
-        employeeRequestModel.email = event.newData.email;
-        employeeRequestModel.homePhoneNumber = event.newData.homePhoneNumber;
-        employeeRequestModel.workPhoneNumber = event.newData.workPhoneNumber;
         employeeRequestModel.personnelNumber = event.newData.personnelNumber;
         employeeRequestModel.postId = event.newData.post ? event.newData.post.id : null;
         employeeRequestModel.departmentId = event.newData.department ? event.newData.department.id : null;

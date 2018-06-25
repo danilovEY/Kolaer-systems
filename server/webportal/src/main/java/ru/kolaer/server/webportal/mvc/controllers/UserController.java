@@ -77,7 +77,7 @@ public class UserController {
 
     @ApiOperation(value = "Получить контакты")
     @UrlDeclaration
-    @RequestMapping(value = "/contact", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/contact", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ContactDto getContact() {
         return accountService.getContact();
     }
