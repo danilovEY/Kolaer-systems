@@ -8,6 +8,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactType;
 @Data
 public class ContactDto {
     private Long employeeId;
+    private String photo;
     private String initials;
     private PostDto post;
     private DepartmentDto department;

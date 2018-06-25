@@ -20,6 +20,16 @@
     border-radius: 50%; // TODO: quickfix for https://github.com/akveo/nebular/issues/275
   }
 
+  /deep/ nb-card ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  /deep/ nb-layout ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
   nb-card-header {
     display: flex;
     align-items: center;

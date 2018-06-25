@@ -9,6 +9,7 @@ import ru.kolaer.api.mvp.model.error.ErrorCode;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
+import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactType;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
 import java.math.BigInteger;
@@ -111,16 +112,39 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .getSingleResult();
 
         return ((BigInteger) result).longValue();
+    }
 
-        //                .createQuery("SELECT COUNT(t.id) FROM " + getEntityName() + " t " +
-//                                " where t.initials LIKE :searchText OR " +
-//                                "t.department.name LIKE :searchText OR " +
-//                                "t.department.abbreviatedName LIKE :searchText OR " +
-//                                "t.post.abbreviatedName LIKE :searchText OR " +
-//                                "t.contact IS NOT NULL AND (t.contact.email LIKE :searchText OR " +
-//                                "t.contact.workPhoneNumber LIKE :searchText OR " +
-//                                "t.contact.pager LIKE :searchText OR " +
-//                                "t.contact.placement.name LIKE :searchText)",
+    @Override
+    public List<EmployeeEntity> findEmployeeByDepIdAndContactType(int page, int pageSize, long depId, ContactType type) {
+        return getSession()
+                .createNativeQuery("SELECT * FROM employee t " +
+                                "LEFT JOIN contact c ON c.id = t.contact_id " +
+                                "where t.department_id = :depId AND " +
+                                "((:contactType = :otherContactType AND t.contact_id IS NULL OR t.contact_id IS NOT NULL AND c.type = :contactType) OR " +
+                                "t.contact_id IS NOT NULL AND c.type = :contactType)",
+                        getEntityClass())
+                .setParameter("depId", depId)
+                .setParameter("contactType", type.ordinal())
+                .setParameter("otherContactType", ContactType.OTHER.ordinal())
+                .setFirstResult((page - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .list();
+    }
+
+    @Override
+    public Long findCountEmployeeByDepIdAndContactType(long depId, ContactType type) {
+        Object result = getSession()
+                .createNativeQuery("SELECT COUNT(t.id) FROM employee t " +
+                                "LEFT JOIN contact c ON c.id = t.contact_id " +
+                                "where t.department_id = :depId AND " +
+                                "((:contactType = :otherContactType AND t.contact_id IS NULL OR t.contact_id IS NOT NULL AND c.type = :contactType) OR " +
+                                "t.contact_id IS NOT NULL AND c.type = :contactType)")
+                .setParameter("depId", depId)
+                .setParameter("contactType", type.ordinal())
+                .setParameter("otherContactType", ContactType.OTHER.ordinal())
+                .getSingleResult();
+
+        return ((BigInteger) result).longValue();
     }
 
     @Override

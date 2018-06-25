@@ -1,12 +1,11 @@
 import {LocalDataSource} from 'ng2-smart-table';
 import {Page} from './page.model';
-import {BaseModel} from './base.model';
 import {ColumnSort} from '../../@theme/components/table/column-sort';
 import {TableFilters} from '../../@theme/components/table/table-filter';
 import {Utils} from '../utils/utils';
 import {Observable, Subject} from 'rxjs/index';
 
-export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSource {
+export abstract class CustomDataSource<T> extends LocalDataSource {
     private initDataSource: boolean = false;
 
     protected readonly onChangedLoading = new Subject<boolean>();
@@ -18,6 +17,7 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
     };
     private currentSort: any;
     private currentFilter: any;
+    private isRefresh: boolean = false;
 
     constructor(protected defaultSortConfig?: ColumnSort) {
         super();
@@ -46,13 +46,19 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
     }
 
     getElements(): Promise<any> {
+        if (this.isRefresh) {
+            this.isRefresh = false;
+            this.onChangedLoading.next(true);
+            return this.loadElements(this.getPage(), this.getPageSize());
+        }
+
         const sort = this.getSort();
         const filter = this.getFilter();
 
         if (this.getPage() === this.dataPage.number &&
             this.dataPage.pageSize === this.getPageSize() &&
-                sort === this.currentSort &&
-                filter === this.currentFilter) {
+            sort === this.currentSort &&
+            filter === this.currentFilter) {
             return super.getElements();
         }
 
@@ -61,6 +67,12 @@ export abstract class CustomDataSource<T extends BaseModel> extends LocalDataSou
 
         this.onChangedLoading.next(true);
         return this.loadElements(this.getPage(), this.getPageSize());
+    }
+
+
+    refresh(): void {
+        this.isRefresh = true;
+        super.refresh();
     }
 
     getPage(): number {

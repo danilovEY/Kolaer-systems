@@ -85,6 +85,7 @@ public class ContactConverter {
             ContactDto contactDto = new ContactDto();
             contactDto.setEmployeeId(employee.getId());
             contactDto.setInitials(employee.getInitials());
+            contactDto.setPhoto(employee.getPhoto());
 
             contactDto.setDepartment(depMap.get(employee.getDepartmentId()));
             contactDto.setPost(postMap.get(employee.getPostId()));
@@ -111,6 +112,7 @@ public class ContactConverter {
         ContactDto contactDto = new ContactDto();
         contactDto.setEmployeeId(employee.getId());
         contactDto.setInitials(employee.getInitials());
+        contactDto.setPhoto(employee.getPhoto());
 
         contactDto.setDepartment(departmentService.getById(employee.getDepartmentId()));
         contactDto.setPost(postService.getById(employee.getPostId()));

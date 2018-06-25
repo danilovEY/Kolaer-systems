@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
 
+import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactType;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
 import java.util.List;
@@ -22,4 +23,7 @@ public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<Emp
     List<EmployeeEntity> findEmployeesForContacts(int page, int pageSize, String searchText);
 
     long findCountEmployeesForContacts(String searchText);
+
+    List<EmployeeEntity> findEmployeeByDepIdAndContactType(int page, int pageSize, long depId, ContactType type);
+    Long findCountEmployeeByDepIdAndContactType(long depId, ContactType type);
 }

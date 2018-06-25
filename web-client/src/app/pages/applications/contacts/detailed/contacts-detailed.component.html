@@ -1,0 +1,15 @@
+<nb-card>
+    <nb-card-header>
+        <span>Список контактов</span>
+    </nb-card-header>
+
+    <nb-card-body>
+        <ngx-loading [show]="contactsLoading"></ngx-loading>
+        <custom-table #contactsTable
+                      [actionAdd]="false" [actionDelete]="false" [actionEdit]="false"
+                      [columns]="contactsColumn"
+                      [source]="contactsSource">
+
+        </custom-table>
+    </nb-card-body>
+</nb-card>

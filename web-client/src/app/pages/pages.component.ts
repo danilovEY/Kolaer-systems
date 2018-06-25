@@ -35,6 +35,21 @@ export class PagesComponent implements OnInit {
 
         this.menu.push(dashboardMenuItem, appMenuMenuItem);
 
+        // ======= Контакты ======
+
+        const contactsMenuItem: NbMenuItem = new NbMenuItem();
+        contactsMenuItem.title = 'Контакты';
+        contactsMenuItem.icon = 'fa fa-address-book';
+        contactsMenuItem.children = [];
+
+        const contactsMainMenuItem: NbMenuItem = new NbMenuItem();
+        contactsMainMenuItem.title = 'Главная';
+        contactsMainMenuItem.link = 'app/contacts';
+
+        contactsMenuItem.children.push(contactsMainMenuItem);
+        this.menu.push(contactsMenuItem);
+
+        // ======= Производственный календарь ======
 
         const productionCalendarMenuItem: NbMenuItem = new NbMenuItem();
         productionCalendarMenuItem.title = 'Производственный календарь';
@@ -50,6 +65,7 @@ export class PagesComponent implements OnInit {
 
 
         if (this.authService.authentication) {
+            // ======= Парольница ======
             const kolpassMenuItem: NbMenuItem = new NbMenuItem();
             kolpassMenuItem.title = 'Парольница';
             kolpassMenuItem.icon = 'icon ion-md-lock';
@@ -62,6 +78,7 @@ export class PagesComponent implements OnInit {
             kolpassMenuItem.children.push(kolpassMainMenuItem);
             this.menu.push(kolpassMenuItem);
 
+            // ======= Талоны ЛПП ======
 
             const ticketsMenuItem: NbMenuItem = new NbMenuItem();
             ticketsMenuItem.title = 'Талоны ЛПП';
@@ -71,6 +88,8 @@ export class PagesComponent implements OnInit {
             const ticketsMainMenuItem: NbMenuItem = new NbMenuItem();
             ticketsMainMenuItem.title = 'Главная';
             ticketsMainMenuItem.link = 'app/tickets';
+
+            // ======= Структура организации ======
 
             const orgStructureMenuItem: NbMenuItem = new NbMenuItem();
             orgStructureMenuItem.title = 'Структура организации';

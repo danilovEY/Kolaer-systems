@@ -11,6 +11,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PlacementDao;
 import ru.kolaer.server.webportal.mvc.model.dto.*;
 import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactType;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.ContactService;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
@@ -72,7 +73,19 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ContactDto getContactByEmployeeId(Long employeeId) {
         return contactConverter.employeeToContact(employeeDao.findById(employeeId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ContactDto> getAllContactsByDepartment(int page, int pageSize, long depId, ContactType type) {
+        ContactType contactType = Optional.ofNullable(type).orElse(ContactType.OTHER);
+
+        List<EmployeeEntity> employees = employeeDao.findEmployeeByDepIdAndContactType(page, pageSize, depId, contactType);
+        Long count = employeeDao.findCountEmployeeByDepIdAndContactType(depId, contactType);
+
+        return new Page<>(contactConverter.employeeToContact(employees), page, count, pageSize);
     }
 }

@@ -10,6 +10,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.ContactDto;
 import ru.kolaer.server.webportal.mvc.model.dto.ContactRequestDto;
+import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactType;
 import ru.kolaer.server.webportal.mvc.model.servirces.ContactService;
 
 import java.util.List;
@@ -43,6 +44,16 @@ public class ContactController {
     @RequestMapping(value = "/non-security/contact/departments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<DepartmentDto> getAllDepartments() {
         return contactService.getAllDepartments();
+    }
+
+    @ApiOperation(value = "Получить список контактов подразделения")
+    @UrlDeclaration(isAccessAll = true)
+    @RequestMapping(value = "/non-security/contact/{depId}/{type}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<ContactDto> getAllContactsByDepartment(@RequestParam(value = "page", defaultValue = "1") Integer number,
+                                                       @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
+                                                       @PathVariable("depId") long depId,
+                                                       @PathVariable("type") ContactType type) {
+        return contactService.getAllContactsByDepartment(number, pageSize, depId, type);
     }
 
     @ApiOperation(value = "Обновить контакты")

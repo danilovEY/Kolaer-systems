@@ -15,15 +15,21 @@ const routes: Routes = [{
         },
         {
             path: 'tickets',
-            loadChildren: 'app/pages/applications/tickets/tickets.module#TicketsModule'
+            loadChildren: 'app/pages/applications/tickets/tickets.module#TicketsModule',
+            canActivate: [AuthGuardService]
         },
         {
             path: 'org-structures',
-            loadChildren: 'app/pages/applications/org-structures/org-structures.module#OrgStructuresModule'
+            loadChildren: 'app/pages/applications/org-structures/org-structures.module#OrgStructuresModule',
+            canActivate: [AuthGuardService]
         },
         {
             path: 'production-calendar',
             loadChildren: 'app/pages/applications/production-calendar/production-calendar.module#ProductionCalendarModule'
+        },
+        {
+            path: 'contacts',
+            loadChildren: 'app/pages/applications/contacts/contacts.module#ContactsModule'
         },
     ]
 }];
