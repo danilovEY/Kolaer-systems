@@ -26,8 +26,6 @@ public class DefaultGeneralEmployeesTable implements GeneralEmployeesTable {
         departmentEntity.setName("Мое подразделение");
 
         EmployeeDto employeeDto = new EmployeeDto();
-        employeeDto.setWorkPhoneNumber("79876543210");
-        employeeDto.setHomePhoneNumber("76543");
         employeeDto.setGender(EnumGender.MALE);
         employeeDto.setBirthday(new Date());
         employeeDto.setDepartment(departmentEntity);

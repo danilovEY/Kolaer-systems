@@ -9,15 +9,19 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.server.webportal.exception.ForbiddenException;
+import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.AccountConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.dto.ChangePasswordDto;
+import ru.kolaer.server.webportal.mvc.model.dto.ContactDto;
+import ru.kolaer.server.webportal.mvc.model.dto.ContactRequestDto;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdate;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
+import ru.kolaer.server.webportal.mvc.model.servirces.ContactService;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,15 +38,18 @@ public class AccountServiceImpl
         implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationService authenticationService;
+    private final ContactService contactService;
 
     @Autowired
     protected AccountServiceImpl(AuthenticationService authenticationService,
                                  AccountDao defaultEntityDao,
                                  AccountConverter accountConverter,
-                                 PasswordEncoder passwordEncoder) {
+                                 PasswordEncoder passwordEncoder,
+                                 ContactService contactService) {
         super(defaultEntityDao, accountConverter);
         this.authenticationService = authenticationService;
         this.passwordEncoder = passwordEncoder;
+        this.contactService = contactService;
     }
 
     @Override
@@ -127,6 +134,29 @@ public class AccountServiceImpl
 
         resultUpdate.setAddAccounts(addsAccount);
         resultUpdate.setBlockAccounts(blockAccounts);
+    }
+
+    @Override
+    @Transactional
+    public ContactDto updateContact(ContactRequestDto contactRequestDto) {
+        AccountSimpleDto accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+
+        if (accountSimpleByAuthentication.getEmployeeId() == null) {
+            throw new NotFoundDataException("К вашей учетной записи не привязан сотрудник");
+        }
+
+        return contactService.saveContact(accountSimpleByAuthentication.getEmployeeId(), contactRequestDto);
+    }
+
+    @Override
+    public ContactDto getContact() {
+        AccountSimpleDto accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+
+        if (accountSimpleByAuthentication.getEmployeeId() == null) {
+            throw new NotFoundDataException("К вашей учетной записи не привязан сотрудник");
+        }
+
+        return contactService.getContactByEmployeeId(accountSimpleByAuthentication.getEmployeeId());
     }
 
     @Override

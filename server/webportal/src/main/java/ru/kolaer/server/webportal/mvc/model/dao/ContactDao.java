@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ContactDao extends DefaultDao<ContactEntity> {
     List<ContactEntity> searchContact(String searchText);
+
+    ContactEntity findByEmployeeId(long employeeId);
 }

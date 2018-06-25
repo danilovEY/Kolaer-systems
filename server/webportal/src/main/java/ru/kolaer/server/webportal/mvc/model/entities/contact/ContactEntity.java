@@ -24,6 +24,9 @@ public class ContactEntity implements BaseEntity {
     @Column(name = "work_phone_number")
     private String workPhoneNumber;
 
+    @Column(name = "mobile_phone_number")
+    private String mobilePhoneNumber;
+
     @Column(name = "pager")
     private String pager;
 

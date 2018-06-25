@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UrlDeclaration {
-    String description();
+    String description() default "";
     RequestMethod requestMethod() default RequestMethod.GET;
     boolean isAccessAll() default false;
     boolean isOit() default true;

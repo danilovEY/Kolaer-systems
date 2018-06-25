@@ -113,11 +113,8 @@ public class EmployeeServiceImpl
         employeeEntity.setInitials(employeeEntity.getSecondName() + " " +
                 employeeEntity.getFirstName() + " " + employeeEntity.getThirdName());
 
-        employeeEntity.setEmail(employeeRequestDto.getEmail());
         employeeEntity.setDepartmentId(employeeRequestDto.getDepartmentId());
         employeeEntity.setPostId(employeeRequestDto.getPostId());
-        employeeEntity.setHomePhoneNumber(employeeRequestDto.getHomePhoneNumber());
-        employeeEntity.setWorkPhoneNumber(employeeRequestDto.getWorkPhoneNumber());
         employeeEntity.setBirthday(employeeRequestDto.getBirthday());
         employeeEntity.setGender(employeeRequestDto.getGender());
         employeeEntity.setCategory(employeeRequestDto.getCategory());
@@ -152,23 +149,28 @@ public class EmployeeServiceImpl
         employeeEntity.setInitials(employeeEntity.getSecondName() + " " +
                 employeeEntity.getFirstName() + " " + employeeEntity.getThirdName());
 
-        employeeEntity.setEmail(employeeRequestDto.getEmail());
         employeeEntity.setDepartmentId(employeeRequestDto.getDepartmentId());
         employeeEntity.setPostId(employeeRequestDto.getPostId());
-        employeeEntity.setHomePhoneNumber(employeeRequestDto.getHomePhoneNumber());
-        employeeEntity.setWorkPhoneNumber(employeeRequestDto.getWorkPhoneNumber());
         employeeEntity.setBirthday(employeeRequestDto.getBirthday());
         employeeEntity.setGender(employeeRequestDto.getGender());
         employeeEntity.setCategory(employeeRequestDto.getCategory());
         employeeEntity.setEmploymentDate(new Date());
 
-        EmployeeDto employeeDto = defaultConverter.convertToDto(defaultEntityDao.save(employeeEntity));
+        return defaultConverter.convertToDto(defaultEntityDao.save(employeeEntity));
+    }
 
-//        ResultUpdate resultUpdate = new ResultUpdate();
-//        resultUpdate.setAddEmployee(Collections.singletonList(employeeDto));
-//        updatableEmployeeServices.forEach(service -> service.updateEmployee(resultUpdate));
+    @Override
+    public List<EmployeeDto> getEmployeesForContacts(int page, int pageSize, String searchText) {
+        return StringUtils.hasText(searchText)
+                ? defaultConverter.convertToDto(defaultEntityDao.findEmployeesForContacts(page, pageSize, searchText))
+                : defaultConverter.convertToDto(defaultEntityDao.findAll(page, pageSize));
+    }
 
-        return employeeDto;
+    @Override
+    public long getCountEmployeesForContacts(String searchText) {
+        return StringUtils.hasText(searchText)
+                ? defaultEntityDao.findCountEmployeesForContacts(searchText)
+                : defaultEntityDao.findAllCount();
     }
 
     @Override

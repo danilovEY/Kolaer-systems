@@ -19,4 +19,8 @@ public interface EmployeeService extends BirthdayService<EmployeeDto>, DefaultSe
     EmployeeDto update(Long employeeId, EmployeeRequestDto employeeRequestDto);
 
     EmployeeDto add(EmployeeRequestDto employeeRequestDto);
+
+    List<EmployeeDto> getEmployeesForContacts(int page, int pageSize, String searchText);
+
+    long getCountEmployeesForContacts(String searchText);
 }

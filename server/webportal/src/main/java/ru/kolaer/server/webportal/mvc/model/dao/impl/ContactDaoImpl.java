@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.ContactDao;
 import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
 import java.util.List;
 
@@ -25,5 +26,15 @@ public class ContactDaoImpl extends AbstractDefaultDao<ContactEntity> implements
                         getEntityClass())
                 .setParameter("searchText", "%" + searchText + "%")
                 .list();
+    }
+
+    @Override
+    public ContactEntity findByEmployeeId(long employeeId) {
+        return getSession()
+                .createQuery("SELECT contact FROM " + getEntityName(EmployeeEntity.class) + " WHERE id = :employeeId",
+                        getEntityClass())
+                .setParameter("employeeId", employeeId)
+                .uniqueResultOptional()
+                .orElse(null);
     }
 }

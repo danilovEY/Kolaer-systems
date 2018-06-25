@@ -8,6 +8,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
+import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
@@ -144,10 +145,13 @@ public class AccountConverterImpl implements AccountConverter {
 
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setEmployeeId(employeeEntity.getId());
-        accountEntity.setEmail(employeeEntity.getEmail());
         accountEntity.setAvatarUrl(employeeEntity.getPhoto());
         accountEntity.setUsername(employeeEntity.getPersonnelNumber().toString());
         accountEntity.setChatName(employeeEntity.getInitials());
+
+        Optional.ofNullable(employeeEntity.getContact())
+                .map(ContactEntity::getEmail)
+                .ifPresent(accountEntity::setEmail);
 
         Optional.ofNullable(accountEntity.getUsername())
                 .map(passwordEncoder::encode)

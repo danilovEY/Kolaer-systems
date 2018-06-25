@@ -8,4 +8,6 @@ public class DepartmentSort implements SortParam {
     private SortType sortId;
     @EntityFieldName(name = "abbreviatedName")
     private SortType sortAbbreviatedName;
+    @EntityFieldName(name = "code")
+    private SortType sortCode;
 }

@@ -13,6 +13,8 @@ import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.ChangePasswordDto;
+import ru.kolaer.server.webportal.mvc.model.dto.ContactDto;
+import ru.kolaer.server.webportal.mvc.model.dto.ContactRequestDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.AccountService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 
@@ -21,7 +23,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
  */
 @RestController
 @RequestMapping(value = "/user")
-@Api(tags = "Аккаунт")
+@Api(tags = "Мой аккаунт")
 @Slf4j
 public class UserController {
     private final AuthenticationService authenticationService;
@@ -64,5 +66,19 @@ public class UserController {
     @RequestMapping(value = "/update/password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updatePassword(@RequestBody ChangePasswordDto changePasswordDto) {
         accountService.updatePassword(changePasswordDto);
+    }
+
+    @ApiOperation(value = "Обновить контакты")
+    @UrlDeclaration
+    @RequestMapping(value = "/contact", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ContactDto updateContact(@RequestBody ContactRequestDto contactRequestDto) {
+        return accountService.updateContact(contactRequestDto);
+    }
+
+    @ApiOperation(value = "Получить контакты")
+    @UrlDeclaration
+    @RequestMapping(value = "/contact", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ContactDto getContact() {
+        return accountService.getContact();
     }
 }

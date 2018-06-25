@@ -18,4 +18,8 @@ public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<Emp
     Long findCountByDepartmentById(Long id);
 
     EmployeeEntity findByPersonnelNumber(Long id);
+
+    List<EmployeeEntity> findEmployeesForContacts(int page, int pageSize, String searchText);
+
+    long findCountEmployeesForContacts(String searchText);
 }

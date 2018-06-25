@@ -11,6 +11,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -67,6 +68,59 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .createQuery("FROM " + getEntityName() + " emp WHERE emp.personnelNumber = :id AND emp.dismissalDate IS NULL", EmployeeEntity.class)
                 .setParameter("id", id)
                 .uniqueResult();
+    }
+
+    @Override
+    public List<EmployeeEntity> findEmployeesForContacts(int page, int pageSize, String searchText) {
+        return getSession()
+                .createNativeQuery("SELECT * FROM employee t " +
+                        " LEFT JOIN contact c ON c.id = t.contact_id" +
+                        " LEFT JOIN placement pl ON pl.id = c.place_id" +
+                        " LEFT JOIN department d ON d.id = t.department_id" +
+                        " LEFT JOIN post p ON p.id = t.post_id" +
+                        " where t.initials LIKE :searchText OR " +
+                        "d.name LIKE :searchText OR " +
+                        "d.abbreviated_name LIKE :searchText OR " +
+                        "p.abbreviated_name LIKE :searchText OR " +
+                        "t.contact_id IS NOT NULL AND (c.email LIKE :searchText OR " +
+                        "c.work_phone_number LIKE :searchText OR " +
+                        "c.pager LIKE :searchText OR (c.place_id IS NOT NULL AND pl.name LIKE :searchText))",
+                        getEntityClass())
+                .setParameter("searchText", "%" + searchText + "%")
+                .setFirstResult((page - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .list();
+    }
+
+    @Override
+    public long findCountEmployeesForContacts(String searchText) {
+        Object result = getSession()
+                .createNativeQuery("SELECT COUNT(t.id) FROM employee t " +
+                        " LEFT JOIN contact c ON c.id = t.contact_id" +
+                        " LEFT JOIN placement pl ON pl.id = c.place_id" +
+                        " LEFT JOIN department d ON d.id = t.department_id" +
+                        " LEFT JOIN post p ON p.id = t.post_id" +
+                        " where t.initials LIKE :searchText OR " +
+                        "d.name LIKE :searchText OR " +
+                        "d.abbreviated_name LIKE :searchText OR " +
+                        "p.abbreviated_name LIKE :searchText OR " +
+                        "t.contact_id IS NOT NULL AND (c.email LIKE :searchText OR " +
+                        "c.work_phone_number LIKE :searchText OR " +
+                        "c.pager LIKE :searchText OR (c.place_id IS NOT NULL AND pl.name LIKE :searchText))")
+                .setParameter("searchText", "%" + searchText + "%")
+                .getSingleResult();
+
+        return ((BigInteger) result).longValue();
+
+        //                .createQuery("SELECT COUNT(t.id) FROM " + getEntityName() + " t " +
+//                                " where t.initials LIKE :searchText OR " +
+//                                "t.department.name LIKE :searchText OR " +
+//                                "t.department.abbreviatedName LIKE :searchText OR " +
+//                                "t.post.abbreviatedName LIKE :searchText OR " +
+//                                "t.contact IS NOT NULL AND (t.contact.email LIKE :searchText OR " +
+//                                "t.contact.workPhoneNumber LIKE :searchText OR " +
+//                                "t.contact.pager LIKE :searchText OR " +
+//                                "t.contact.placement.name LIKE :searchText)",
     }
 
     @Override

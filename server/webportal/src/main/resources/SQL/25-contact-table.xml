@@ -37,4 +37,13 @@
             <column name="pager" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="25-2" author="Danilov">
+        <dropForeignKeyConstraint baseTableName="contact" constraintName="contact_employee_fk"/>
+        <dropColumn tableName="contact" columnName="employee_id"/>
+    </changeSet>
+
+    <changeSet id="25-3" author="Danilov">
+        <renameColumn tableName="contact" oldColumnName="home_phone_number" newColumnName="mobile_phone_number" columnDataType="VARCHAR(255)"/>
+    </changeSet>
 </databaseChangeLog>
