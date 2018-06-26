@@ -27,6 +27,7 @@ public class ExcelReaderDepartment implements ExcelReader<DepartmentEntity> {
     @Override
     public DepartmentEntity parse(XSSFRow row, List<String> nameColumns) {
         DepartmentEntity departmentEntity = new DepartmentEntity();
+        departmentEntity.setCode(99);
 
         String value = getStringValue(nameColumns, DEP_ID, row);
         departmentEntity.setExternalId(value);
