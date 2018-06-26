@@ -19,14 +19,14 @@
   // loading progress bar
   @include ngx-pace-theme();
   
-    @include bootstrap-rtl();
+  @include bootstrap-rtl();
 
-  /deep/ nb-card ::-webkit-scrollbar {
+  nb-card ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
 
-  /deep/ nb-layout ::-webkit-scrollbar {
+  nb-layout ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
@@ -38,7 +38,7 @@
   }
 
   nb-user .image {
-    background-position-x: -2px;
+    background-position-x: -4px;
   }
 
   .consumption-table {
@@ -62,5 +62,3 @@
     }
   }
 }
-
-;

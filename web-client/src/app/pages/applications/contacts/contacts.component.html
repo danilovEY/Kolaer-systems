@@ -1,15 +1,46 @@
 <div class="row">
-    <div class="col-9">
-        <router-outlet></router-outlet>
+    <div class="col-10">
+        <nb-card>
+            <nb-card-header>
+                <span>{{cardTitle}}</span>
+
+                <div class="input-group" style="width: 300px">
+                    <input #search="ngModel"
+                           id="search"
+                           name="search"
+                           type="text"
+                           class="form-control"
+                           required
+                           minlength="3"
+                           [(ngModel)]="searchValue"
+                           placeholder="Поиск">
+                    <span class="input-group-append">
+                    <button [disabled]="search.invalid" class="btn btn-success input-group-text" (click)="findContacts()">
+                        Найти
+                    </button>
+                </span>
+                </div>
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="contactsLoading"></ngx-loading>
+                <custom-table #contactsTable
+                              [actionAdd]="false" [actionDelete]="false" [actionEdit]="false"
+                              [columns]="contactsColumn"
+                              [source]="contactsSource">
+
+                </custom-table>
+            </nb-card-body>
+        </nb-card>
     </div>
-    <div class="col-3">
+    <div class="col-2">
         <nb-card>
             <nb-card-header>
                 <span>Список подразделений</span>
             </nb-card-header>
 
             <nb-card-body>
-                <nb-menu [items]="menu"></nb-menu>
+                <nb-menu tag="departments-list" [items]="menu"></nb-menu>
             </nb-card-body>
         </nb-card>
     </div>

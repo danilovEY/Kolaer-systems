@@ -85,7 +85,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                         "p.abbreviated_name LIKE :searchText OR " +
                         "t.contact_id IS NOT NULL AND (c.email LIKE :searchText OR " +
                         "c.work_phone_number LIKE :searchText OR " +
-                        "c.pager LIKE :searchText OR (c.place_id IS NOT NULL AND pl.name LIKE :searchText))",
+                        "c.pager LIKE :searchText OR (c.place_id IS NOT NULL AND pl.name LIKE :searchText)) ORDER BY t.initials",
                         getEntityClass())
                 .setParameter("searchText", "%" + searchText + "%")
                 .setFirstResult((page - 1) * pageSize)
@@ -121,7 +121,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                                 "LEFT JOIN contact c ON c.id = t.contact_id " +
                                 "where t.department_id = :depId AND " +
                                 "((:contactType = :otherContactType AND t.contact_id IS NULL OR t.contact_id IS NOT NULL AND c.type = :contactType) OR " +
-                                "t.contact_id IS NOT NULL AND c.type = :contactType)",
+                                "t.contact_id IS NOT NULL AND c.type = :contactType) ORDER BY t.initials",
                         getEntityClass())
                 .setParameter("depId", depId)
                 .setParameter("contactType", type.ordinal())

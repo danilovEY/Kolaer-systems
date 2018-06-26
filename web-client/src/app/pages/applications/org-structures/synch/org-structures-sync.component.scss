@@ -3,11 +3,11 @@
 @import '~@nebular/theme/styles/global/bootstrap/breakpoints';
 
 @include nb-install-component() {
-  /deep/ a {
+  a {
    color: black;
   }
 
-  /deep/ .alert-danger {
+  .alert-danger {
     background-color: #ff706b;
   }
 }

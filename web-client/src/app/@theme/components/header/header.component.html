@@ -21,6 +21,12 @@
     <!--<nb-action icon="nb-email"></nb-action>-->
     <!--<nb-action icon="nb-search"></nb-action>-->
 
-    <nb-action *ngIf="routerNavigatorService.canNextUrl()" icon="nb-arrow-thin-right" (click)="navNext()"></nb-action>
-    <nb-action *ngIf="routerNavigatorService.canPrevUrl()" icon="nb-arrow-thin-left" (click)="navPrev()"></nb-action>
+    <nb-action [disabled]="!routerNavigatorService.canNextUrl()"
+               placement="bottom"
+               ngbTooltip="Вперед"
+               icon="nb-arrow-thin-right" (click)="navNext()"></nb-action>
+    <nb-action [disabled]="!routerNavigatorService.canPrevUrl()"
+               placement="bottom"
+               ngbTooltip="Назад"
+               icon="nb-arrow-thin-left" (click)="navPrev()"></nb-action>
 </nb-actions>
