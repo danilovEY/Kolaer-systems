@@ -96,6 +96,7 @@
 
                     </form>
                 </nb-tab>
+
                 <nb-tab *ngIf="currentAccount?.employeeId !== undefined && currentEmployee" tabTitle="Сотрудник">
 
                     <div class="row">
@@ -181,6 +182,64 @@
                         </button>
                     </div>
                 </nb-tab>
+
+                <nb-tab *ngIf="currentContacts" tabTitle="Контакты">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="workPhoneNumber">Рабочий телефон</label>
+                                <div class="input-group">
+                                    <input type="text" id="workPhoneNumber" class="form-control" value="{{ currentContacts?.workPhoneNumber }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="mobilePhoneNumber">Мобильный телефон</label>
+                                <div class="input-group">
+                                    <input type="text" id="mobilePhoneNumber" class="form-control" value="{{ currentContacts?.mobilePhoneNumber }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="pager">Пейджер</label>
+                                <div class="input-group">
+                                    <input type="text" id="pager" class="form-control" value="{{ currentContacts?.pager }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="contactEmail">Email</label>
+                                <div class="input-group">
+                                    <input type="text" disabled id="contactEmail" class="form-control" value="{{ currentContacts?.email }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6" *ngIf="currentContacts && currentContacts.placement">
+                            <div class="form-group">
+                                <label for="placement">Помещение</label>
+                                <div class="input-group">
+                                    <input type="text" id="placement" class="form-control" value="{{ currentContacts?.placement.name}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary" disabled>
+                            Сохранить
+                        </button>
+                    </div>
+                </nb-tab>
+
             </nb-tabset>
         </nb-card>
     </div>

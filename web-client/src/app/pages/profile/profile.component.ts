@@ -11,6 +11,8 @@ import {SimpleAccountModel} from '../../@core/models/simple-account.model';
 import {EmployeeService} from '../../@core/services/employee.service';
 import {EmployeeModel} from '../../@core/models/employee.model';
 import {finalize} from 'rxjs/internal/operators';
+import {ContactsService} from "../../@core/services/contacts.service";
+import {ContactModel} from "../../@core/models/contact.model";
 
 @Component({
     selector: 'profile',
@@ -32,9 +34,11 @@ export class ProfileComponent implements OnInit {
     formAccount: FormGroup;
     changePassForm: FormGroup;
     openedChangePasswordModal: NgbModalRef;
+    currentContacts: ContactModel;
 
     constructor(private accountService: AccountService,
                 private employeeService: EmployeeService,
+                private contactsService: ContactsService,
                 private authService: AuthenticationRestService,
                 private modalService: NgbModal,
                 private httpClient: HttpClient) {
@@ -56,8 +60,10 @@ export class ProfileComponent implements OnInit {
        this.updateCurrentAccount();
 
         this.employeeService.getCurrentEmployee().subscribe(
-            (employee: EmployeeModel) => this.currentEmployee = employee,
-                error2 => console.log(error2));
+            (employee: EmployeeModel) => this.currentEmployee = employee, error2 => console.log(error2));
+
+        this.contactsService.getMyContacts()
+            .subscribe((contact: ContactModel) => this.currentContacts = contact)
     }
 
     private updateCurrentAccount(cache: boolean = true) {

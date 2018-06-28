@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {ContactsRouterModule} from './contacts-router.module';
 import {ContactsComponent} from './contacts.component';
 import {ThemeModule} from '../../../@theme/theme.module';
-import {ContactsService} from './contacts.service';
 
 @NgModule({
     imports: [
@@ -13,7 +12,7 @@ import {ContactsService} from './contacts.service';
         ContactsComponent,
     ],
     providers: [
-        ContactsService,
+
     ]
 })
 export class ContactsModule {

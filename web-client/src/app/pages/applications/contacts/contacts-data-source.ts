@@ -1,8 +1,9 @@
 import {CustomDataSource} from '../../../@core/models/custom.data-source';
-import {ContactModel} from './contact.model';
-import {ContactTypeModel} from './contact-type.model';
-import {ContactsService} from './contacts.service';
+import {ContactModel} from '../../../@core/models/contact.model';
+import {ContactTypeModel} from '../../../@core/models/contact-type.model';
+import {ContactsService} from '../../../@core/services/contacts.service';
 import {Page} from '../../../@core/models/page.model';
+import {Utils} from "../../../@core/utils/utils";
 
 export class ContactsDataSource extends CustomDataSource<ContactModel> {
     constructor(private contactsService: ContactsService,
@@ -30,7 +31,7 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
     
     setDepAndType(depId: number, contactType: ContactTypeModel): void {
         this.departmentId = depId;
-        this.contactType = ContactTypeModel[contactType];
+        this.contactType = <ContactTypeModel>Utils.keyFromValue(ContactTypeModel, ContactTypeModel[contactType]);
 
         this.search = null;
 

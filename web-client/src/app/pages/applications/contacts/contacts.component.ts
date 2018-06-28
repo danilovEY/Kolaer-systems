@@ -1,15 +1,15 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NbMenuItem, NbMenuService} from '@nebular/theme';
-import {ContactsService} from './contacts.service';
+import {ContactsService} from '../../../@core/services/contacts.service';
 import {DepartmentModel} from '../../../@core/models/department.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ContactsDataSource} from './contacts-data-source';
 import {Subscription} from 'rxjs/Rx';
 import {Cell} from 'ng2-smart-table';
-import {ContactTypeModel} from './contact-type.model';
+import {ContactTypeModel} from '../../../@core/models/contact-type.model';
 import {NbMenuBag} from '@nebular/theme/components/menu/menu.service';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
-import {ContactModel} from './contact.model';
+import {ContactModel} from '../../../@core/models/contact.model';
 import {Params} from '@angular/router/src/shared';
 import {SimpleAccountModel} from '../../../@core/models/simple-account.model';
 import {AccountService} from '../../../@core/services/account.service';
@@ -18,7 +18,7 @@ import {DepartmentEditComponent} from '../../../@theme/components/table/departme
 import {PostEditComponent} from '../../../@theme/components/table/post-edit.component';
 import {PlacementEditComponent} from '../../../@theme/components/table/placement-edit.component';
 import {TableEventEditModel} from '../../../@theme/components/table/table-event-edit.model';
-import {ContactRequestModel} from './contact-request.model';
+import {ContactRequestModel} from '../../../@core/models/contact-request.model';
 import {Utils} from '../../../@core/utils/utils';
 
 @Component({

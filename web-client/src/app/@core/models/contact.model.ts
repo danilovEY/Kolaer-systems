@@ -1,7 +1,7 @@
-import {PostModel} from '../../../@core/models/post.model';
-import {DepartmentModel} from '../../../@core/models/department.model';
+import {PostModel} from './post.model';
+import {DepartmentModel} from './department.model';
 import {ContactTypeModel} from './contact-type.model';
-import {PlacementModel} from '../../../@core/models/placement.model';
+import {PlacementModel} from './placement.model';
 
 export class ContactModel {
     public employeeId: number;
