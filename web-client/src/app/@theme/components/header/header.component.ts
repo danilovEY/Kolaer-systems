@@ -4,8 +4,8 @@ import {NbMenuService, NbSidebarService} from '@nebular/theme';
 import {NbMenuItem} from '@nebular/theme/components/menu/menu.service';
 import {AuthenticationRestService} from '../../../@core/modules/auth/authentication-rest.service';
 import {AccountService} from '../../../@core/services/account.service';
-import {SimpleAccountModel} from "../../../@core/models/simple-account.model";
-import {RouterNavigatorService} from "../../../@core/services/router-navigator.service";
+import {SimpleAccountModel} from '../../../@core/models/simple-account.model';
+import {RouterNavigatorService} from '../../../@core/services/router-navigator.service';
 
 @Component({
     selector: 'ngx-header',
@@ -41,11 +41,11 @@ export class HeaderComponent implements OnInit {
 
         this.singOutMenuItem.title = 'Выход';
         this.singOutMenuItem.link = '/auth/logout';
-        this.singOutMenuItem.icon = 'ion-log-out';
+        this.singOutMenuItem.icon = 'icon ion-md-log-out';
 
         this.singInMenuItem.title = 'Вход';
         this.singInMenuItem.link = '/auth/login';
-        this.singInMenuItem.icon = 'ion-log-in';
+        this.singInMenuItem.icon = 'icon ion-md-log-in';
 
         if (!this.authService.authentication) {
             this.profileMenuItem.hidden = true;

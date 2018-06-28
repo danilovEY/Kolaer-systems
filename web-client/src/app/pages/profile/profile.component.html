@@ -1,3 +1,4 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
 <div class="row">
     <div class="col-md-12">
         <nb-card>
@@ -18,22 +19,10 @@
                             <img src="{{ currentAccount?.avatarUrl }}" alt="аватар">
                         </div>
 
-                        <div class="col-12 col-md-12 picture" *ngIf="!currentAccount?.avatarUrl && currentEmployee?.photo">
+                        <div class="col-12 col-md-12 picture"
+                             *ngIf="!currentAccount?.avatarUrl && currentEmployee?.photo">
                             <img src="{{ currentEmployee?.photo }}" alt="аватар">
                         </div>
-                        <!--<div class="col-12">-->
-                            <!--<div class="form-group">-->
-                                <!--<label for="login">Аватар</label>-->
-                                <!--<div class="input-group">-->
-                                    <!--<input type="file"  accept="image/*" class="form-control" placeholder="Загрузить фото" (change)="selectImage($event)">-->
-                                    <!--<span class="input-group-append">-->
-                                    <!--<button class="btn btn-warning input-group-text">-->
-                                      <!--Загрузить-->
-                                    <!--</button>-->
-                                  <!--</span>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
                     </div>
 
 
@@ -76,11 +65,18 @@
                         <h5 class="inner-title">Доступы</h5>
 
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 <nb-checkbox disabled [value]="currentAccount?.accessUser">Доступ в систему
                                 </nb-checkbox>
+                            </div>
+
+                            <div class="col-md-12">
                                 <nb-checkbox disabled [value]="currentAccount?.accessOit">Администратор системы
                                 </nb-checkbox>
+                            </div>
+
+                            <div class="col-md-12">
+                                <nb-checkbox disabled [value]="currentAccount?.accessOk">Кадры</nb-checkbox>
                             </div>
                         </div>
 
@@ -110,7 +106,8 @@
                             <div class="form-group">
                                 <label for="secondName">Фамилия</label>
                                 <div class="input-group">
-                                    <input type="text" disabled id="secondName" class="form-control" value="{{ currentEmployee?.secondName }}">
+                                    <input type="text" disabled id="secondName" class="form-control"
+                                           value="{{ currentEmployee?.secondName }}">
                                 </div>
                             </div>
                         </div>
@@ -119,7 +116,8 @@
                             <div class="form-group">
                                 <label for="firstName">Имя</label>
                                 <div class="input-group">
-                                    <input type="text" disabled id="firstName" class="form-control" value="{{ currentEmployee?.firstName }}">
+                                    <input type="text" disabled id="firstName" class="form-control"
+                                           value="{{ currentEmployee?.firstName }}">
                                 </div>
                             </div>
                         </div>
@@ -128,7 +126,8 @@
                             <div class="form-group">
                                 <label for="thirdName">Отчество</label>
                                 <div class="input-group">
-                                    <input type="text" disabled id="thirdName" class="form-control" value="{{ currentEmployee?.thirdName }}">
+                                    <input type="text" disabled id="thirdName" class="form-control"
+                                           value="{{ currentEmployee?.thirdName }}">
                                 </div>
                             </div>
                         </div>
@@ -139,7 +138,8 @@
                             <div class="form-group">
                                 <label for="personnelNumber">Табельный номер</label>
                                 <div class="input-group">
-                                    <input type="text" disabled id="personnelNumber" class="form-control" value="{{ currentEmployee?.personnelNumber }}">
+                                    <input type="text" disabled id="personnelNumber" class="form-control"
+                                           value="{{ currentEmployee?.personnelNumber }}">
                                 </div>
                             </div>
                         </div>
@@ -148,7 +148,8 @@
                             <div class="form-group">
                                 <label for="birthday">Дата рождения</label>
                                 <div class="input-group">
-                                    <input type="text" disabled id="birthday" class="form-control" value="{{ currentEmployee?.birthday | date: 'dd.MM.yyyy' }}">
+                                    <input type="text" disabled id="birthday" class="form-control"
+                                           value="{{ currentEmployee?.birthday | date: 'dd.MM.yyyy' }}">
                                 </div>
                             </div>
                         </div>
@@ -159,7 +160,8 @@
                             <div class="form-group">
                                 <label for="post">Должность</label>
                                 <div class="input-group">
-                                    <input type="text" disabled id="post" class="form-control" value="{{ currentEmployee?.post.name }}">
+                                    <input type="text" disabled id="post" class="form-control"
+                                           value="{{ currentEmployee?.post.name }}">
                                 </div>
                             </div>
                         </div>
@@ -170,7 +172,8 @@
                             <div class="form-group">
                                 <label for="department">Подразделение</label>
                                 <div class="input-group">
-                                    <input type="text" disabled id="department" class="form-control" value="{{ currentEmployee?.department.name }}">
+                                    <input type="text" disabled id="department" class="form-control"
+                                           value="{{ currentEmployee?.department.name }}">
                                 </div>
                             </div>
                         </div>
@@ -184,60 +187,94 @@
                 </nb-tab>
 
                 <nb-tab *ngIf="currentContacts" tabTitle="Контакты">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="workPhoneNumber">Рабочий телефон</label>
-                                <div class="input-group">
-                                    <input type="text" id="workPhoneNumber" class="form-control" value="{{ currentContacts?.workPhoneNumber }}">
+                    <form (ngSubmit)="submitContactsForm()" [formGroup]="formContact">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="workPhoneNumber">Рабочий телефон</label>
+                                    <div class="input-group">
+                                        <input type="text" id="workPhoneNumber"
+                                               formControlName="workPhoneNumber"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="mobilePhoneNumber">Мобильный телефон</label>
+                                    <div class="input-group">
+                                        <input type="text"
+                                               id="mobilePhoneNumber"
+                                               formControlName="mobilePhoneNumber"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="pager">Пейджер</label>
+                                    <div class="input-group">
+                                        <input type="text" id="pager" formControlName="pager" class="form-control">
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="mobilePhoneNumber">Мобильный телефон</label>
-                                <div class="input-group">
-                                    <input type="text" id="mobilePhoneNumber" class="form-control" value="{{ currentContacts?.mobilePhoneNumber }}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="contactEmail">Email</label>
+                                    <div class="input-group">
+                                        <input type="text"
+                                               id="contactEmail"
+                                               formControlName="email"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="contactType">Тип контактов</label>
+                                    <div class="input-group">
+                                        <select id="contactType" class="form-control" formControlName="type">
+                                            <option *ngFor="let contactType of contactTypes"
+                                                    [selected]="currentContacts.type === contactType">
+                                                {{contactType}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4" *ngIf="currentContacts && currentContacts.placement">
+                                <div class="form-group">
+                                    <label for="placement">Помещение</label>
+                                    <div class="input-group">
+                                        <ng-select class="form-control"
+                                                   [items]="people3$ | async"
+                                                   id="placement"
+                                                   placeholder="Помещение"
+                                                   bindLabel="name"
+                                                   appendTo="body"
+                                                   formControlName="placement"
+                                                   [loading]="people3Loading"
+                                                   [typeahead]="people3input$">
+                                        </ng-select>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="pager">Пейджер</label>
-                                <div class="input-group">
-                                    <input type="text" id="pager" class="form-control" value="{{ currentContacts?.pager }}">
-                                </div>
-                            </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-primary" [disabled]="formContact.invalid">
+                                Сохранить
+                            </button>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="contactEmail">Email</label>
-                                <div class="input-group">
-                                    <input type="text" disabled id="contactEmail" class="form-control" value="{{ currentContacts?.email }}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6" *ngIf="currentContacts && currentContacts.placement">
-                            <div class="form-group">
-                                <label for="placement">Помещение</label>
-                                <div class="input-group">
-                                    <input type="text" id="placement" class="form-control" value="{{ currentContacts?.placement.name}}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-right">
-                        <button type="submit" class="btn btn-primary" disabled>
-                            Сохранить
-                        </button>
-                    </div>
+                    </form>
                 </nb-tab>
 
             </nb-tabset>

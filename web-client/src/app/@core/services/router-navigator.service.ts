@@ -1,11 +1,11 @@
 import {Injectable, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
+import {NavigationEnd, Router, UrlTree} from '@angular/router';
 import {filter} from 'rxjs/operators';
 
 @Injectable()
 export class RouterNavigatorService implements OnInit {
     private activeUrlIndex: number = 1;
-    private historyUrl: string[] = [];
+    private historyUrl: UrlTree[] = [];
     private prevOrNextRoute: boolean = false;
 
     constructor(private router: Router) {
@@ -23,8 +23,7 @@ export class RouterNavigatorService implements OnInit {
 
                     this.activeUrlIndex = 1;
                 }
-
-                this.historyUrl.push(urlAfterRedirects.urlAfterRedirects);
+                this.historyUrl.push(this.router.parseUrl(urlAfterRedirects.urlAfterRedirects));
             });
     }
 
@@ -40,7 +39,7 @@ export class RouterNavigatorService implements OnInit {
         if (this.canPrevUrl()) {
             this.prevOrNextRoute = true;
 
-            this.router.navigate([this.historyUrl[this.historyUrl.length - ++this.activeUrlIndex]])
+            this.router.navigateByUrl(this.historyUrl[this.historyUrl.length - ++this.activeUrlIndex])
                 .then(value => {
                     this.prevOrNextRoute = false;
                     this.historyUrl.pop();
@@ -52,7 +51,7 @@ export class RouterNavigatorService implements OnInit {
         if (this.canNextUrl()) {
             this.prevOrNextRoute = true;
 
-            this.router.navigate([this.historyUrl[this.historyUrl.length - --this.activeUrlIndex]])
+            this.router.navigateByUrl(this.historyUrl[this.historyUrl.length - --this.activeUrlIndex])
                 .then(value => {
                     this.prevOrNextRoute = false;
                     this.historyUrl.pop();

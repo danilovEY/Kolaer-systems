@@ -10,9 +10,20 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SimpleAccountModel} from '../../@core/models/simple-account.model';
 import {EmployeeService} from '../../@core/services/employee.service';
 import {EmployeeModel} from '../../@core/models/employee.model';
-import {finalize} from 'rxjs/internal/operators';
-import {ContactsService} from "../../@core/services/contacts.service";
-import {ContactModel} from "../../@core/models/contact.model";
+import {catchError, finalize, map} from 'rxjs/internal/operators';
+import {ContactsService} from '../../@core/services/contacts.service';
+import {ContactModel} from '../../@core/models/contact.model';
+import {ContactRequestModel} from '../../@core/models/contact-request.model';
+import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
+import {Observable, of, Subject} from 'rxjs/index';
+import {SortTypeEnum} from '../../@core/models/sort-type.enum';
+import {Page} from '../../@core/models/page.model';
+import {PlacementService} from '../../@core/services/placement.service';
+import {PlacementFilterModel} from '../../@core/models/placement-filter.model';
+import {PlacementModel} from '../../@core/models/placement.model';
+import {PlacementSortModel} from '../../@core/models/placement-sort.model';
+import {ContactTypeModel} from "../../@core/models/contact-type.model";
+import {Toast, ToasterConfig, ToasterService} from "angular2-toaster";
 
 @Component({
     selector: 'profile',
@@ -23,6 +34,16 @@ export class ProfileComponent implements OnInit {
     private readonly updateAccountUrl: string = `${environment.publicServerUrl}/user/update`;
     private readonly updatePasswordUrl: string = `${environment.publicServerUrl}/user/update/password`;
 
+    config: ToasterConfig = new ToasterConfig({
+        positionClass: 'toast-top-right',
+        timeout: 5000,
+        newestOnTop: true,
+        tapToDismiss: true,
+        preventDuplicates: false,
+        animation: 'fade',
+        limit: 5,
+    });
+
     currentAccount: SimpleAccountModel;
     currentEmployee: EmployeeModel;
     serverErrorForChangeAccount: ServerExceptionModel;
@@ -32,13 +53,25 @@ export class ProfileComponent implements OnInit {
     needLogout: boolean = false;
 
     formAccount: FormGroup;
+    formContact: FormGroup;
     changePassForm: FormGroup;
     openedChangePasswordModal: NgbModalRef;
     currentContacts: ContactModel;
 
+    people3$: Observable<PlacementModel[]>;
+    people3Loading = false;
+    people3input$ = new Subject<string>();
+
+    contactTypes: ContactTypeModel[] = [
+        ContactTypeModel.MAIN,
+        ContactTypeModel.OTHER
+    ];
+
     constructor(private accountService: AccountService,
                 private employeeService: EmployeeService,
                 private contactsService: ContactsService,
+                private placementService: PlacementService,
+                private toasterService: ToasterService,
                 private authService: AuthenticationRestService,
                 private modalService: NgbModal,
                 private httpClient: HttpClient) {
@@ -51,11 +84,33 @@ export class ProfileComponent implements OnInit {
             chatName: new FormControl('', [Validators.minLength(3)]),
         });
 
+        this.formContact = new FormGroup({
+            workPhoneNumber: new FormControl(''),
+            mobilePhoneNumber: new FormControl(''),
+            pager: new FormControl(''),
+            placement: new FormControl(''),
+            type: new FormControl(''),
+            email: new FormControl('', [Validators.email])
+        });
+
         this.changePassForm = new FormGroup({
             oldPassword: new FormControl('', []),
             newPassword: new FormControl('', []),
             confirmPassword: new FormControl('', []),
         }, this.passwordMatchValidator);
+
+        this.people3$ = this.people3input$.pipe(
+            debounceTime(1000),
+            distinctUntilChanged(),
+            tap(() => this.people3Loading = true),
+            switchMap(term => this.placementService
+                .getAllPlacements(new PlacementSortModel(null, SortTypeEnum.ASC), new PlacementFilterModel(null, term), 0, 0)
+                .pipe(
+                    map((request: Page<PlacementModel>) => request.data),
+                    catchError(() => of([])),
+                    tap(() => this.people3Loading = false)
+                ))
+        );
 
        this.updateCurrentAccount();
 
@@ -63,7 +118,9 @@ export class ProfileComponent implements OnInit {
             (employee: EmployeeModel) => this.currentEmployee = employee, error2 => console.log(error2));
 
         this.contactsService.getMyContacts()
-            .subscribe((contact: ContactModel) => this.currentContacts = contact)
+            .subscribe((contact: ContactModel) => {
+                this.updateContactsField(contact);
+            })
     }
 
     private updateCurrentAccount(cache: boolean = true) {
@@ -75,6 +132,10 @@ export class ProfileComponent implements OnInit {
                 this.formAccount.controls['chatName'].setValue(account.chatName);
                 this.formAccount.controls['login'].setValue(account.username);
                 this.formAccount.controls['email'].setValue(account.email);
+
+                if (!account.accessOit) {
+                    this.formContact.get('email').disable();
+                }
             });
     }
 
@@ -145,6 +206,53 @@ export class ProfileComponent implements OnInit {
                 (error: HttpErrorResponse) => {
                     this.serverErrorForChangePassword = error.error;
                 });
+    }
+
+    submitContactsForm() {
+        const contactRequestModel: ContactRequestModel = new ContactRequestModel();
+        contactRequestModel.email =  this.formContact.value.email;
+        contactRequestModel.mobilePhoneNumber = this.formContact.value.mobilePhoneNumber;
+        contactRequestModel.workPhoneNumber = this.formContact.value.workPhoneNumber;
+        contactRequestModel.type = this.formContact.value.type;
+        contactRequestModel.pager = this.formContact.value.pager;
+
+        if (this.formContact.value.placement) {
+            contactRequestModel.placementId = this.formContact.value.placement.id;
+        }
+
+        this.contactsService.updateContact(this.currentEmployee.id, contactRequestModel)
+            .subscribe((contact: ContactModel) => {
+                this.updateContactsField(contact);
+
+                const toast: Toast = {
+                    type: 'success',
+                    title: 'Успех',
+                    body: 'Контакты сохранились',
+                };
+
+                this.toasterService.popAsync(toast);
+
+                }, error2 => {
+                    const toast: Toast = {
+                        type: 'error',
+                        title: 'Ошибка',
+                        body: error2.error.message,
+                    };
+
+                    this.toasterService.popAsync(toast);
+                }
+            );
+    }
+
+    private updateContactsField(contact: ContactModel) {
+        this.currentContacts = contact;
+
+        this.formContact.controls['workPhoneNumber'].setValue(contact.workPhoneNumber);
+        this.formContact.controls['mobilePhoneNumber'].setValue(contact.mobilePhoneNumber);
+        this.formContact.controls['pager'].setValue(contact.pager);
+        this.formContact.controls['placement'].setValue(contact.placement);
+        this.formContact.controls['type'].setValue(contact.type);
+        this.formContact.controls['email'].setValue(contact.email);
     }
 }
 

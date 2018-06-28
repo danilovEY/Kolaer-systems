@@ -11,7 +11,7 @@ import {PlacementFilterModel} from "../../../@core/models/placement-filter.model
 import {PlacementSortModel} from "../../../@core/models/placement-sort.model";
 
 @Component({
-    selector: 'edit-department',
+    selector: 'edit-placement',
     styles: ['/deep/ ng-dropdown-panel { width: auto!important;}'],
     template: `        
         <div class="input-group" *ngIf="!cell.isEditable()">
