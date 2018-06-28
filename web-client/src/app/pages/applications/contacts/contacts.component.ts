@@ -40,6 +40,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
     contactsLoading: boolean = true;
     contactsSource: ContactsDataSource;
     contactsColumn: Column[] = [];
+    currentAccount: SimpleAccountModel;
 
     constructor(private contactsService: ContactsService,
                 private nbMenuService: NbMenuService,
@@ -118,6 +119,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
         this.accountService.getCurrentAccount()
             .subscribe((account: SimpleAccountModel) => {
+                this.currentAccount = account;
                 if (account.accessOit || account.accessOk) {
                     this.contactsTable.settings.actions.edit = true;
 

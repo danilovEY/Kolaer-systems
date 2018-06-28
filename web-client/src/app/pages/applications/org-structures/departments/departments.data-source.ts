@@ -12,7 +12,6 @@ export class DepartmentsDataSource extends CustomDataSource<DepartmentModel> {
     }
 
     loadElements(page: number, pageSize: number): Promise<DepartmentModel[]> {
-        console.log('loading..');
         const departmentSortModel: DepartmentSortModel =
             this.getFilterModel(new DepartmentSortModel());
 
