@@ -1,17 +1,25 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NbMenuItem, NbMenuService} from '@nebular/theme';
 import {ContactsService} from './contacts.service';
 import {DepartmentModel} from '../../../@core/models/department.model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ContactsDataSource} from "./contacts-data-source";
-import {Subscription} from "rxjs/Rx";
-import {Cell} from "ng2-smart-table";
-import {ContactTypeModel} from "./contact-type.model";
-import {PlacementModel} from "../../../@core/models/placement.model";
-import {NbMenuBag} from "@nebular/theme/components/menu/menu.service";
-import {Column} from "ng2-smart-table/lib/data-set/column";
-import {ContactModel} from "./contact.model";
-import {Params} from "@angular/router/src/shared";
+import {ContactsDataSource} from './contacts-data-source';
+import {Subscription} from 'rxjs/Rx';
+import {Cell} from 'ng2-smart-table';
+import {ContactTypeModel} from './contact-type.model';
+import {NbMenuBag} from '@nebular/theme/components/menu/menu.service';
+import {Column} from 'ng2-smart-table/lib/data-set/column';
+import {ContactModel} from './contact.model';
+import {Params} from '@angular/router/src/shared';
+import {SimpleAccountModel} from '../../../@core/models/simple-account.model';
+import {AccountService} from '../../../@core/services/account.service';
+import {CustomTableComponent} from '../../../@theme/components';
+import {DepartmentEditComponent} from '../../../@theme/components/table/department-edit.component';
+import {PostEditComponent} from '../../../@theme/components/table/post-edit.component';
+import {PlacementEditComponent} from '../../../@theme/components/table/placement-edit.component';
+import {TableEventEditModel} from '../../../@theme/components/table/table-event-edit.model';
+import {ContactRequestModel} from './contact-request.model';
+import {Utils} from '../../../@core/utils/utils';
 
 @Component({
     selector: 'contacts',
@@ -23,6 +31,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
     private departmentId: number = 0;
     private contactType: ContactTypeModel;
 
+    @ViewChild('contactsTable')
+    contactsTable: CustomTableComponent;
+
     menu: NbMenuItem[] = [];
     cardTitle: string = 'Список контактов';
     searchValue: string = 'Список контактов';
@@ -32,6 +43,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
     constructor(private contactsService: ContactsService,
                 private nbMenuService: NbMenuService,
+                private accountService: AccountService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute) {
         this.contactsSource = new ContactsDataSource(this.contactsService);
@@ -104,6 +116,15 @@ export class ContactsComponent implements OnInit, OnDestroy {
                 }
             });
 
+        this.accountService.getCurrentAccount()
+            .subscribe((account: SimpleAccountModel) => {
+                if (account.accessOit || account.accessOk) {
+                    this.contactsTable.settings.actions.edit = true;
+
+                    this.contactsTable.table.initGrid();
+                }
+            });
+
         this.initColumns();
     }
 
@@ -143,9 +164,13 @@ export class ContactsComponent implements OnInit, OnDestroy {
             addable: false,
             sort: false,
             filter: false,
+            editor: {
+                type: 'custom',
+                component: PostEditComponent,
+            },
             valuePrepareFunction(a: any, value: ContactModel, cell: Cell) {
                 return value.post ? value.post.abbreviatedName : '';
-            }
+            },
         }, undefined);
 
         const departmentColumn: Column = new Column('department', {
@@ -155,6 +180,10 @@ export class ContactsComponent implements OnInit, OnDestroy {
             addable: false,
             sort: false,
             filter: false,
+            editor: {
+                type: 'custom',
+                component: DepartmentEditComponent,
+            },
             valuePrepareFunction(a: any, value: ContactModel, cell: Cell) {
                 return value.department ? value.department.abbreviatedName : '';
             }
@@ -163,8 +192,6 @@ export class ContactsComponent implements OnInit, OnDestroy {
         const workPhoneNumberColumn: Column = new Column('workPhoneNumber', {
             title: 'Рабочий телефон',
             type: 'string',
-            editable: false,
-            addable: false,
             sort: false,
             filter: false,
         }, undefined);
@@ -172,8 +199,6 @@ export class ContactsComponent implements OnInit, OnDestroy {
         const mobilePhoneNumberColumn: Column = new Column('mobilePhoneNumber', {
             title: 'Мобильный телефон',
             type: 'string',
-            editable: false,
-            addable: false,
             sort: false,
             filter: false,
         }, undefined);
@@ -181,8 +206,6 @@ export class ContactsComponent implements OnInit, OnDestroy {
         const pagerColumn: Column = new Column('pager', {
             title: 'Пейджер',
             type: 'string',
-            editable: false,
-            addable: false,
             sort: false,
             filter: false,
         }, undefined);
@@ -190,8 +213,6 @@ export class ContactsComponent implements OnInit, OnDestroy {
         const emailColumn: Column = new Column('email', {
             title: 'Email',
             type: 'string',
-            editable: false,
-            addable: false,
             sort: false,
             filter: false,
         }, undefined);
@@ -199,14 +220,36 @@ export class ContactsComponent implements OnInit, OnDestroy {
         const placementColumn: Column = new Column('placement', {
             title: 'Помещение',
             type: 'string',
-            editable: false,
+            sort: false,
+            filter: false,
+            editor: {
+                type: 'custom',
+                component: PlacementEditComponent,
+            },
+            valuePrepareFunction(a: any, value: ContactModel, cell: Cell) {
+                return value.placement ? value.placement.name : '';
+            }
+        }, undefined);
+
+        const typeColumn: Column = new Column('type', {
+            title: 'Тип',
+            type: 'string',
             addable: false,
             sort: false,
             filter: false,
-            valuePrepareFunction(a: any, value: PlacementModel, cell: Cell) {
-                return value ? value.name : '';
+            editor: {
+                type: 'list',
+                config: {
+                    list: [
+                        {value: Utils.keyFromValue(ContactTypeModel, ContactTypeModel.MAIN), title: ContactTypeModel.MAIN},
+                        {value: Utils.keyFromValue(ContactTypeModel, ContactTypeModel.OTHER), title: ContactTypeModel.OTHER},
+                    ],
+                },
+            },
+            valuePrepareFunction(a: any, value: ContactModel, cell: Cell) {
+                return ContactTypeModel[value.type];
             }
-        }, undefined);
+        }, null);
 
         this.contactsColumn.push(
             photoColumn,
@@ -217,8 +260,27 @@ export class ContactsComponent implements OnInit, OnDestroy {
             mobilePhoneNumberColumn,
             pagerColumn,
             emailColumn,
-            placementColumn
+            placementColumn,
+            typeColumn
         );
+    }
+
+
+    contactsEdit(event: TableEventEditModel<ContactModel>) {
+        const contactRequestModel: ContactRequestModel = new ContactRequestModel();
+        contactRequestModel.email = event.newData.email;
+        contactRequestModel.mobilePhoneNumber = event.newData.mobilePhoneNumber;
+        contactRequestModel.workPhoneNumber = event.newData.workPhoneNumber;
+        contactRequestModel.type = event.newData.type;
+        contactRequestModel.pager = event.newData.pager;
+
+        if (event.newData.placement) {
+            contactRequestModel.placementId = event.newData.placement.id;
+        }
+
+        this.contactsService.updateContact(event.data.employeeId, contactRequestModel)
+            .subscribe((contact: ContactModel) => event.confirm.resolve(event.newData, contact),
+                error2 => event.confirm.reject({}));
     }
 
     navigateToFirstItem(): void {

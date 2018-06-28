@@ -5,12 +5,15 @@ import {DepartmentModel} from '../../../@core/models/department.model';
 import {environment} from '../../../../environments/environment';
 import {ContactTypeModel} from './contact-type.model';
 import {ContactModel} from './contact.model';
-import {Page} from "../../../@core/models/page.model";
+import {Page} from '../../../@core/models/page.model';
+import {map} from 'rxjs/internal/operators';
+import {ContactRequestModel} from './contact-request.model';
 
 @Injectable()
 export class ContactsService {
     private readonly nonSecurityContactsUrl: string = `${environment.publicServerUrl}/non-security/contact`;
     private readonly getDepartmentsUrl: string = `${this.nonSecurityContactsUrl}/departments`;
+    private readonly updateContactUrl: string = `${environment.publicServerUrl}/contact/employee`;
 
     constructor(private http: HttpClient) {
 
@@ -40,5 +43,12 @@ export class ContactsService {
         params = params.append('search', search);
 
         return this.http.get<Page<ContactModel>>(this.nonSecurityContactsUrl, {params});
+    }
+
+    updateContact(employeeId: number, model: ContactRequestModel): Observable<ContactModel> {
+        const url = `${this.updateContactUrl}/${employeeId}`;
+
+        return this.http.put<ContactModel>(url, model)
+            .pipe(map((request: ContactModel) => request));
     }
 }

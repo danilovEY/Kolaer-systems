@@ -70,7 +70,7 @@ export abstract class CustomDataSource<T> extends LocalDataSource {
     }
 
 
-    refresh(): void {
+    refreshFromServer(): void {
         this.isRefresh = true;
         super.refresh();
     }

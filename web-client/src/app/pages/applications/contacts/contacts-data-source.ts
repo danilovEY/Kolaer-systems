@@ -20,7 +20,7 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
         }
 
         if (this.departmentId < 1) {
-           return this.empty();
+           return new Promise(resolve => this.data);
         }
 
         return this.contactsService.getContactsByDepartment(page, pageSize, this.departmentId, this.contactType)
@@ -34,7 +34,7 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
 
         this.search = null;
 
-        this.refresh();
+        this.refreshFromServer();
     }
 
     setSearch(search: string) {
@@ -43,6 +43,6 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
 
         this.search = search;
 
-        this.refresh();
+        this.refreshFromServer();
     }
 }

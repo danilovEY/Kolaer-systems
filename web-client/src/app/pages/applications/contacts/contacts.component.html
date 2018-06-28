@@ -12,6 +12,7 @@
                            class="form-control"
                            required
                            minlength="3"
+                           (keyup.enter)="findContacts()"
                            [(ngModel)]="searchValue"
                            placeholder="Поиск">
                     <span class="input-group-append">
@@ -26,6 +27,7 @@
                 <ngx-loading [show]="contactsLoading"></ngx-loading>
                 <custom-table #contactsTable
                               [actionAdd]="false" [actionDelete]="false" [actionEdit]="false"
+                              (edit)="contactsEdit($event)"
                               [columns]="contactsColumn"
                               [source]="contactsSource">
 
@@ -34,13 +36,13 @@
         </nb-card>
     </div>
     <div class="col-2">
-        <nb-card>
+        <nb-card size="xlarge">
             <nb-card-header>
                 <span>Список подразделений</span>
             </nb-card-header>
 
             <nb-card-body>
-                <nb-menu tag="departments-list" [items]="menu"></nb-menu>
+                <nb-menu tag="departments-list" [items]="menu" style="cursor: pointer;"></nb-menu>
             </nb-card-body>
         </nb-card>
     </div>

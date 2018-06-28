@@ -7,6 +7,7 @@ import {DepartmentService} from '../services/department.service';
 import {PostService} from '../services/post.service';
 import {ProductionCalendarService} from '../services/production-calendar.service';
 import {CustomDatePickerLangService} from '../services/custom-date-picker-lang.service';
+import {PlacementService} from '../services/placement.service';
 
 const SERVICES = [
     AccountService,
@@ -16,6 +17,7 @@ const SERVICES = [
     RouterNavigatorService,
     ProductionCalendarService,
     CustomDatePickerLangService,
+    PlacementService,
 ];
 
 @NgModule({

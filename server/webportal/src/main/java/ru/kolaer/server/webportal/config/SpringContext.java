@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
@@ -247,6 +248,7 @@ public class SpringContext extends WebMvcConfigurerAdapter {
         mapper.registerModule(new Hibernate5Module());
         mapper.registerModule(new JSR310Module());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         messageConverter.setObjectMapper(mapper);
         return messageConverter;
 

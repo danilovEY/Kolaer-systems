@@ -4,19 +4,19 @@ import {Observable, of, Subject} from 'rxjs/index';
 import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators'
 import {Page} from '../../../@core/models/page.model';
 import {SortTypeEnum} from '../../../@core/models/sort-type.enum';
-import {PostModel} from '../../../@core/models/post.model';
-import {PostService} from '../../../@core/services/post.service';
-import {PostSortModel} from '../../../@core/models/post-sort.model';
-import {PostFilterModel} from '../../../@core/models/post-filter.model';
-import {map} from 'rxjs/internal/operators';
+import {map} from "rxjs/internal/operators";
+import {PlacementModel} from "../../../@core/models/placement.model";
+import {PlacementService} from "../../../@core/services/placement.service";
+import {PlacementFilterModel} from "../../../@core/models/placement-filter.model";
+import {PlacementSortModel} from "../../../@core/models/placement-sort.model";
 
 @Component({
-    selector: 'edit-post',
+    selector: 'edit-department',
     styles: ['/deep/ ng-dropdown-panel { width: auto!important;}'],
     template: `        
         <div class="input-group" *ngIf="!cell.isEditable()">
             <input type="text" placeholder="Project" class="form-control" 
-                   [ngModel]="cell.newValue.abbreviatedName" 
+                   [ngModel]="cell.newValue.name" 
                    [disabled]="!cell.isEditable()"/>
         </div>
         
@@ -24,7 +24,7 @@ import {map} from 'rxjs/internal/operators';
                    class="custom form-control"
                    *ngIf="cell.isEditable()"
                    [items]="people3$ | async"
-                   bindLabel="abbreviatedName"
+                   bindLabel="name"
                    appendTo="body"
                    (click)="onClick.emit($event)"
                    (keydown.enter)="onEdited.emit($event)"
@@ -35,25 +35,24 @@ import {map} from 'rxjs/internal/operators';
         </ng-select>
     `
 })
-export class PostEditComponent extends DefaultEditor implements OnInit {
-    people3$: Observable<PostModel[]>;
+export class PlacementEditComponent extends DefaultEditor implements OnInit {
+    people3$: Observable<PlacementModel[]>;
     people3Loading = false;
     people3input$ = new Subject<string>();
 
-    constructor(private postService: PostService) {
+    constructor(private placementService: PlacementService) {
         super();
     }
-
 
     ngOnInit(): void {
         this.people3$ = this.people3input$.pipe(
             debounceTime(1000),
             distinctUntilChanged(),
             tap(() => this.people3Loading = true),
-            switchMap(term => this.postService
-                .getAllPosts(new PostSortModel(null, SortTypeEnum.ASC), new PostFilterModel(null, term), 0, 0)
+            switchMap(term => this.placementService
+                .getAllPlacements(new PlacementSortModel(null, SortTypeEnum.ASC), new PlacementFilterModel(null, term), 0, 0)
                 .pipe(
-                    map((request: Page<PostModel>) => request.data),
+                    map((request: Page<PlacementModel>) => request.data),
                     catchError(() => of([])),
                     tap(() => this.people3Loading = false)
                 ))

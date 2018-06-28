@@ -1,4 +1,4 @@
 export enum ContactTypeModel {
-    MAIN = 'MAIN',
-    OTHER = 'OTHER'
+    MAIN = 'Основной',
+    OTHER = 'Дополнительный'
 }

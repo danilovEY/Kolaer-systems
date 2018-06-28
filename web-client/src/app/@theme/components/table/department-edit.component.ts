@@ -15,7 +15,9 @@ import {map} from "rxjs/internal/operators";
     styles: ['/deep/ ng-dropdown-panel { width: auto!important;}'],
     template: `        
         <div class="input-group" *ngIf="!cell.isEditable()">
-            <input type="text" placeholder="Project" class="form-control" [ngModel]="cell.value" [disabled]="!cell.isEditable()"/>
+            <input type="text" placeholder="Project" class="form-control" 
+                   [ngModel]="cell.newValue.abbreviatedName" 
+                   [disabled]="!cell.isEditable()"/>
         </div>
         
         <ng-select [ngClass]="inputClass" 
@@ -41,7 +43,6 @@ export class DepartmentEditComponent extends DefaultEditor implements OnInit {
     constructor(private departmentService: DepartmentService) {
         super();
     }
-
 
     ngOnInit(): void {
         this.people3$ = this.people3input$.pipe(

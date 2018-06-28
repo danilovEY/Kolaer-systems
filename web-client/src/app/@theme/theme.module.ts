@@ -46,6 +46,7 @@ import {PostEditComponent} from './components/table/post-edit.component';
 import {DepartmentEditComponent} from './components/table/department-edit.component';
 import {DateEditComponent} from './components/table/date-edit.component';
 import {CustomDatePickerLangService} from "../@core/services/custom-date-picker-lang.service";
+import {PlacementEditComponent} from "./components/table/placement-edit.component";
 
 const BASE_MODULES = [
     CommonModule,
@@ -91,6 +92,7 @@ const COMPONENTS = [
     PostEditComponent,
     DepartmentEditComponent,
     DateEditComponent,
+    PlacementEditComponent,
 
 ];
 
@@ -128,6 +130,7 @@ const NB_THEME_PROVIDERS = [
         PostEditComponent,
         DepartmentEditComponent,
         DateEditComponent,
+        PlacementEditComponent,
     ]
 })
 export class ThemeModule {
