@@ -72,8 +72,6 @@ public class UserModelImpl implements UserModel {
 		}
 
 		setPost(postName);
-		setPhoneNumber(user.getWorkPhoneNumber());
-		setEmail(user.getEmail());
 		setIcon(user.getPhoto());
 		setGender(user.getGender());
 	}
