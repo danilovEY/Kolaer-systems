@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    publicServerUrl: 'http://aerdc02:8080/kolaer-web/rest',
-    version: '0.6.1',
+    publicServerUrl: 'http://localhost:8080/rest',
+    version: '0.6.2',
 };

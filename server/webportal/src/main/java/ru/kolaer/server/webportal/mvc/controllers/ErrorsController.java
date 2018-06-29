@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
@@ -72,7 +73,13 @@ public class ErrorsController /*extends ResponseEntityExceptionHandler*/ {
         return exceptionHandlerService.notFoundDataExceptionHandler(hRequest, hResponse, exception);
     }
 
-    /**Перехват {@link ForbiddenException}*/
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(value =  BadCredentialsException.class)
+    public @ResponseBody ServerExceptionMessage BadCredentialsExceptionHandler(
+            HttpServletRequest hRequest, HttpServletResponse hResponse,  BadCredentialsException exception) {
+        return exceptionHandlerService.authExceptionHandler(hRequest, hResponse, new BadCredentialsException("Неправильный логин или пароль"));
+    }
+
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value =  AuthenticationException.class)
     public @ResponseBody ServerExceptionMessage authExceptionHandler(

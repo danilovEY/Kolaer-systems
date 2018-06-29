@@ -79,14 +79,12 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
             int lastDay = end.getDayOfWeek().getValue() == 7
                     || end.getDayOfWeek().getValue() == 6 ? 6 :  end.getDayOfMonth();
 
-            if (now.getDayOfMonth() == lastDay) {
-                if(this.defaultEntityDao.findIncludeAllOnLastMonth().isPresent()) {
-                    TicketRegisterDto ticketRegisterDto = createRegisterForAllAccounts(new GenerateTicketRegister(TypeOperation.DR, 25));
+            if (now.getDayOfMonth() == lastDay && this.defaultEntityDao.findIncludeAllOnLastMonth().isEmpty()) {
+                TicketRegisterDto ticketRegisterDto = createRegisterForAllAccounts(new GenerateTicketRegister(TypeOperation.DR, 25));
 
-                    LocalDateTime localDateTimeToExecute = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 10).plusMonths(1);
+                LocalDateTime localDateTimeToExecute = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 10).plusMonths(1);
 
-                    generateReportByRegisterAndSend(ticketRegisterDto.getId(), new ReportTicketsConfig(false, localDateTimeToExecute));
-                }
+                generateReportByRegisterAndSend(ticketRegisterDto.getId(), new ReportTicketsConfig(false, localDateTimeToExecute));
             }
         }
     }

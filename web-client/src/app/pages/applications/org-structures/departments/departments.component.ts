@@ -28,6 +28,11 @@ export class DepartmentsComponent implements OnInit {
     }
 
     ngOnInit() {
+        const codeColumn: Column = new Column('code', {
+            title: 'Номер',
+            type: 'string'
+        }, null);
+
         const nameColumn: Column = new Column('name', {
             title: 'Имя',
             type: 'string'
@@ -40,13 +45,14 @@ export class DepartmentsComponent implements OnInit {
 
 
 
-        this.departmentsColumns.push(abbreviatedNameColumn, nameColumn);
+        this.departmentsColumns.push(codeColumn, abbreviatedNameColumn, nameColumn);
     }
 
     departmentsEdit(event: TableEventEditModel<DepartmentModel>) {
         const departmentRequestModel: DepartmentRequestModel = new DepartmentRequestModel();
         departmentRequestModel.abbreviatedName = event.newData.abbreviatedName;
         departmentRequestModel.name = event.newData.name;
+        departmentRequestModel.code = event.newData.code;
 
         this.departmentService.updateDepartment(event.data.id, departmentRequestModel)
             .subscribe((response: DepartmentModel) => event.confirm.resolve(event.newData, response),
@@ -57,6 +63,7 @@ export class DepartmentsComponent implements OnInit {
         const departmentRequestModel: DepartmentRequestModel = new DepartmentRequestModel();
         departmentRequestModel.abbreviatedName = event.newData.abbreviatedName;
         departmentRequestModel.name = event.newData.name;
+        departmentRequestModel.code = event.newData.code;
 
         this.departmentService.createDepartment(departmentRequestModel)
             .subscribe((response: DepartmentModel) => event.confirm.resolve(response),

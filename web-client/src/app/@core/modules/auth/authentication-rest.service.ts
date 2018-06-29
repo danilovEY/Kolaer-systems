@@ -3,7 +3,7 @@ import {environment} from '../../../../environments/environment';
 import {UsernamePasswordModel} from '../../models/username-password.model';
 import {AuthenticationObserverService} from '../../services/authentication-observer.service';
 import {ServerToken} from '../../models/server-token.model';
-import {EMPTY, Observable} from 'rxjs/index';
+import {EMPTY, Observable, throwError} from 'rxjs/index';
 import {catchError, finalize, tap} from 'rxjs/operators';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
@@ -52,7 +52,7 @@ export class AuthenticationRestService {
                     serverException.status = 0;
                     serverException.message = 'Сервер недоступен.';
 
-                    return err.status === 0 ? Observable.throw(serverException) : Observable.throw(err.error);
+                    return err.status === 0 ? throwError(serverException) : throwError(err.error);
                 }),
 			);
 	}

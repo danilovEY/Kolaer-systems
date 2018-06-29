@@ -13,6 +13,8 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 
+import java.util.Optional;
+
 /**
  * Created by danilovey on 12.09.2016.
  */
@@ -46,6 +48,7 @@ public class DepartmentServiceImpl
         DepartmentEntity departmentEntity = new DepartmentEntity();
         departmentEntity.setAbbreviatedName(departmentRequestDto.getAbbreviatedName());
         departmentEntity.setName(departmentRequestDto.getName());
+        departmentEntity.setCode(Optional.ofNullable(departmentRequestDto.getCode()).orElse(0));
 
         return defaultConverter.convertToDto(defaultEntityDao.save(departmentEntity));
     }
@@ -66,6 +69,7 @@ public class DepartmentServiceImpl
 
         departmentEntity.setAbbreviatedName(departmentRequestDto.getAbbreviatedName());
         departmentEntity.setName(departmentRequestDto.getName());
+        departmentEntity.setCode(Optional.ofNullable(departmentRequestDto.getCode()).orElse(0));
 
         return defaultConverter.convertToDto(defaultEntityDao.save(departmentEntity));
     }

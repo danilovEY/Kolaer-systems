@@ -5,7 +5,7 @@ import {NgForm} from '@angular/forms';
 import {AuthenticationRestService} from '../../../@core/modules/auth/authentication-rest.service';
 import {ServerExceptionModel} from '../../../@core/models/server-exception.model';
 import {ServerToken} from '../../../@core/models/server-token.model';
-import {finalize} from "rxjs/internal/operators";
+import {finalize} from 'rxjs/internal/operators';
 
 @Component({
     selector: 'kol-login',
