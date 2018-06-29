@@ -120,9 +120,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
         this.accountService.getCurrentAccount()
             .subscribe((account: SimpleAccountModel) => {
                 this.currentAccount = account;
-                if (account.accessOit || account.accessOk) {
-                    this.contactsTable.settings.actions.edit = true;
 
+                if (account && (account.accessOit || account.accessOk)) {
+                    this.contactsTable.settings.actions.edit = true;
                     this.contactsTable.table.initGrid();
                 }
             });

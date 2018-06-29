@@ -18,9 +18,6 @@ import {
     NbThemeModule,
     NbUserModule,
 } from '@nebular/theme';
-
-import {NbSecurityModule} from '@nebular/security';
-
 import {
     CustomActionEditComponent,
     CustomActionViewComponent,
@@ -45,8 +42,10 @@ import {AccountEditComponent} from './components/table/account-edit.component';
 import {PostEditComponent} from './components/table/post-edit.component';
 import {DepartmentEditComponent} from './components/table/department-edit.component';
 import {DateEditComponent} from './components/table/date-edit.component';
-import {CustomDatePickerLangService} from "../@core/services/custom-date-picker-lang.service";
-import {PlacementEditComponent} from "./components/table/placement-edit.component";
+import {CustomDatePickerLangService} from '../@core/services/custom-date-picker-lang.service';
+import {PlacementEditComponent} from './components/table/placement-edit.component';
+
+// import {NbSecurityModule} from '@nebular/security';
 
 const BASE_MODULES = [
     CommonModule,
@@ -68,7 +67,7 @@ const NB_MODULES = [
     NbPopoverModule,
     NbContextMenuModule,
     NgbModule,
-    NbSecurityModule, // *nbIsGranted directive
+    // NbSecurityModule, // *nbIsGranted directive
 
     LoadingModule,
     Ng2SmartTableModule,

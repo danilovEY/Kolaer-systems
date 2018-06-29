@@ -1,9 +1,8 @@
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NbAuthModule} from '@nebular/auth';
-
 import {throwIfAlreadyLoaded} from './module-import-guard';
 import {DataModule} from './data/data.module';
+// import {NbAuthModule} from '@nebular/auth';
 
 const NB_CORE_PROVIDERS = [
     ...DataModule.forRoot().providers,
@@ -35,7 +34,7 @@ const NB_CORE_PROVIDERS = [
         CommonModule,
     ],
     exports: [
-        NbAuthModule,
+        // NbAuthModule,
     ],
     declarations: [],
 })
