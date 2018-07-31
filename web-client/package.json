@@ -1,6 +1,6 @@
 {
   "name": "kolaer-web-client",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "scripts": {
     "ng": "ng",
     "conventional-changelog": "conventional-changelog",
@@ -57,11 +57,13 @@
     "nebular-icons": "1.0.8",
     "ng2-ckeditor": "1.2.0",
     "ng2-smart-table": "1.2.2",
-    "ngx-echarts": "3.1.0",
     "ngx-clipboard": "11.1.1",
+    "ngx-echarts": "3.1.0",
     "ngx-loading": "1.0.14",
     "normalize.css": "8.0.0",
     "pace-js": "1.0.2",
+    "primeicons": "^1.0.0-beta.10",
+    "primeng": "^6.0.2",
     "roboto-fontface": "0.9.0",
     "rxjs": "6.2.1",
     "rxjs-compat": "^6.2.1",

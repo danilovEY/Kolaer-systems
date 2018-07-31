@@ -38,6 +38,9 @@
     <include file="classpath:SQL/22-holiday-table.xml"/>
     <include file="classpath:SQL/23-history-change-table.xml"/>
 
+    <include file="classpath:SQL/26-queue-target-table.xml"/>
+    <include file="classpath:SQL/27-queue-request-table.xml"/>
+
 
 
 </databaseChangeLog>

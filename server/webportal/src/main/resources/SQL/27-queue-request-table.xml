@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="27" author="Danilov">
+        <createTable tableName="queue_request">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="queue_target_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comment" type="VARCHAR(255)"/>
+
+            <column name="queue_from" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="queue_to" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="type" type="INT" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addPrimaryKey tableName="queue_request" columnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="queue_request" baseColumnNames="account_id"
+                                 constraintName="queue_request_account_fk"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="queue_request" baseColumnNames="queue_target_id"
+                                 constraintName="queue_request_target_fk"
+                                 referencedTableName="queue_target"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>
