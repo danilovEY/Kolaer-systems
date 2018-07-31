@@ -72,6 +72,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
 
     @Override
     @Scheduled(cron = "0 0 8 26-31 * ?", zone = "Europe/Moscow")
+    @Transactional
     public void generateZeroTicketsLastDayOfMonthScheduled() {
         if(!typeServer.isTest()) {
             LocalDate now = LocalDate.now();
