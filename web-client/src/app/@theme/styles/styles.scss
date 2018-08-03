@@ -21,8 +21,9 @@
   
   @include bootstrap-rtl();
 
-  nb-card-body {
-    overflow: hidden;
+  .chevron {
+    color: dodgerblue;
+    cursor: pointer;
   }
 
   nb-card ::-webkit-scrollbar {

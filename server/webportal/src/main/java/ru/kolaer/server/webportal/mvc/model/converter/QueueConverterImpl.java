@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
 import ru.kolaer.server.webportal.mvc.model.dto.QueueRequestDto;
 import ru.kolaer.server.webportal.mvc.model.dto.QueueTargetDto;
@@ -69,7 +69,7 @@ public class QueueConverterImpl implements QueueConverter {
         queueRequestEntity.setQueueTo(queueRequestDto.getQueueTo());
 
         Optional.ofNullable(queueRequestDto.getAccount())
-                .map(AccountSimpleDto::getId)
+                .map(AccountDto::getId)
                 .ifPresent(queueRequestEntity::setAccountId);
 
         return queueRequestEntity;
@@ -85,7 +85,7 @@ public class QueueConverterImpl implements QueueConverter {
 
         Optional.ofNullable(queueRequestEntity.getAccountId())
                 .map(accountDao::findById)
-                .map(accountConverter::convertToSimpleDto)
+                .map(accountConverter::convertToDto)
                 .ifPresent(queueRequestDto::setAccount);
 
         return queueRequestDto;
@@ -119,10 +119,10 @@ public class QueueConverterImpl implements QueueConverter {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        Map<Long, AccountSimpleDto> accountMap = accountDao.findById(accountIds)
+        Map<Long, AccountDto> accountMap = accountConverter
+                .convertToDto(accountDao.findById(accountIds))
                 .stream()
-                .map(accountConverter::convertToSimpleDto)
-                .collect(Collectors.toMap(AccountSimpleDto::getId, Function.identity()));
+                .collect(Collectors.toMap(AccountDto::getId, Function.identity()));
 
         for (QueueRequestEntity queueRequestEntity : queueRequestEntities) {
             QueueRequestDto queueRequestDto = simpleConvertRequestToDto(queueRequestEntity);

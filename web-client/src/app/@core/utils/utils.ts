@@ -79,4 +79,8 @@ export class Utils {
     static getDateTimeToSend(date: Date): any {
         return Utils.datePipe.transform(date, 'yyyy-MM-dd\'T\'HH:mm:ss')
     }
+
+    public static getDateTimeWithOutSecondFormat(date: Date): string {
+        return Utils.datePipe.transform(date, 'dd.MM.yyyy HH:mm');
+    }
 }

@@ -12,14 +12,15 @@ import {Row} from 'ng2-smart-table/lib/data-set/row';
 
 @Component({
     selector: 'custom-table',
-    template: `        
-        <div *ngIf="actionAdd" class="row show-grid">
-            <div class="col-md-6 offset-md-9">
+    template: `
+        
+        <ng-container *ngIf="actionAdd">
+            <div class="text-right">
                 <button class="btn btn-success btn-semi-round btn-demo" (click)="addNewRow()">Добавить запись</button>
             </div>
-        </div>
-        
-        <br/>
+            
+            <br/>
+        </ng-container>
         
         <ng2-smart-table #table [settings]="settings" [source]="source" 
                          (deleteConfirm)="deleteConfirm($event)" 

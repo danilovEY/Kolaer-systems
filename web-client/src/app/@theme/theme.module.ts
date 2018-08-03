@@ -1,7 +1,7 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgbDatepickerI18n, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDateParserFormatter, NgbDatepickerI18n, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {
     NbActionsModule,
@@ -44,6 +44,10 @@ import {DepartmentEditComponent} from './components/table/department-edit.compon
 import {DateEditComponent} from './components/table/date-edit.component';
 import {CustomDatePickerLangService} from '../@core/services/custom-date-picker-lang.service';
 import {PlacementEditComponent} from './components/table/placement-edit.component';
+import {CalendarModule} from 'primeng/primeng';
+import {NgbDateTimePickerComponent} from './components/table/datetimepicker.component';
+import {DateTimeEditComponent} from './components/table/date-time-edit.component';
+import {NgbDateRusParserFormatter} from './components/table/ngb-date-rus-parser.formatter';
 
 // import {NbSecurityModule} from '@nebular/security';
 
@@ -73,6 +77,7 @@ const NB_MODULES = [
     Ng2SmartTableModule,
     ToasterModule,
     NgSelectModule,
+    CalendarModule,
 ];
 
 const COMPONENTS = [
@@ -91,6 +96,7 @@ const COMPONENTS = [
     PostEditComponent,
     DepartmentEditComponent,
     DateEditComponent,
+    DateTimeEditComponent,
     PlacementEditComponent,
 
 ];
@@ -112,7 +118,8 @@ const NB_THEME_PROVIDERS = [
     ...NbSidebarModule.forRoot().providers,
     ...NbMenuModule.forRoot().providers,
     ...ToasterModule.forRoot().providers,
-    {provide: NgbDatepickerI18n, useClass: CustomDatePickerLangService}
+    {provide: NgbDatepickerI18n, useClass: CustomDatePickerLangService},
+    {provide: NgbDateParserFormatter, useClass: NgbDateRusParserFormatter},
 
 ];
 
@@ -129,6 +136,7 @@ const NB_THEME_PROVIDERS = [
         PostEditComponent,
         DepartmentEditComponent,
         DateEditComponent,
+        DateTimeEditComponent,
         PlacementEditComponent,
     ]
 })
