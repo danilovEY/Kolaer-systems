@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.QueueRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.QueueTargetDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.QueueService;
 
@@ -27,10 +28,18 @@ public class QueueController {
         this.queueService = queueService;
     }
 
+    @ApiOperation(value = "Получить все цели")
+    @UrlDeclaration
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<QueueTargetDto> getAllTarget(@RequestParam(value = "page", defaultValue = "1") Integer number,
+                                             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+        return queueService.getAll(number, pageSize);
+    }
+
     @ApiOperation(value = "Получить все очереди у цели")
     @UrlDeclaration
     @RequestMapping(value = "/{id}/request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<QueueRequestDto> getAll(@PathVariable("id") Long id,
+    public Page<QueueRequestDto> getAllRequest(@PathVariable("id") Long id,
                                         @RequestParam(value = "page", defaultValue = "1") Integer number,
                                         @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return queueService.getAllQueueRequestByTarget(id, number, pageSize);

@@ -1,0 +1,20 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                <span>Список целей на очередь</span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="loadingQueueTarget" ></ngx-loading>
+                <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
+                              [actionAdd]="false" [actionDelete]="false" [actionEdit]="false" (action)="action($event)">
+                </custom-table>
+            </nb-card-body>
+
+        </nb-card>
+
+    </div>
+</div>

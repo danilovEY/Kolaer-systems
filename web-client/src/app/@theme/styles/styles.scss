@@ -21,6 +21,10 @@
   
   @include bootstrap-rtl();
 
+  nb-card-body {
+    overflow: hidden;
+  }
+
   nb-card ::-webkit-scrollbar {
     width: 10px;
     height: 10px;

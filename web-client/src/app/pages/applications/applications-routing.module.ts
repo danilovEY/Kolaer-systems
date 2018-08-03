@@ -31,6 +31,11 @@ const routes: Routes = [{
             path: 'contacts',
             loadChildren: 'app/pages/applications/contacts/contacts.module#ContactsModule'
         },
+        {
+            path: 'queue',
+            loadChildren: 'app/pages/applications/queue/queue.module#QueueModule',
+            canActivate: [AuthGuardService]
+        },
     ]
 }];
 

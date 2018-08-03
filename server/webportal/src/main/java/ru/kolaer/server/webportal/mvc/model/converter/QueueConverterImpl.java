@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
@@ -15,8 +16,14 @@ import java.util.stream.Collectors;
 
 @Component
 public class QueueConverterImpl implements QueueConverter {
-    private AccountDao accountDao;
-    private AccountConverter accountConverter;
+    private final AccountDao accountDao;
+    private final AccountConverter accountConverter;
+
+    @Autowired
+    public QueueConverterImpl(AccountDao accountDao, AccountConverter accountConverter) {
+        this.accountDao = accountDao;
+        this.accountConverter = accountConverter;
+    }
 
     @Override
     public QueueTargetEntity convertToModel(QueueTargetDto dto) {

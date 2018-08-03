@@ -6,6 +6,7 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import ru.kolaer.api.mvp.model.kolaerweb.UrlSecurityDto;
+import ru.kolaer.server.webportal.config.PathMapping;
 import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
 
 import java.util.Collection;
@@ -29,7 +30,7 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
 
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         FilterInvocation fi=(FilterInvocation)object;
-        String url = fi.getRequestUrl();
+        String url = PathMapping.DISPATCHER_SERVLET + fi.getRequest().getPathInfo();
         String method = fi.getHttpRequest().getMethod();
 
         return Optional.ofNullable(getUrlSecurity(url, method))

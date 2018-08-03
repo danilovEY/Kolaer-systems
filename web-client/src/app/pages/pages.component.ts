@@ -78,6 +78,19 @@ export class PagesComponent implements OnInit {
             kolpassMenuItem.children.push(kolpassMainMenuItem);
             this.menu.push(kolpassMenuItem);
 
+            // ======= Очередь ======
+            const queueMenuItem: NbMenuItem = new NbMenuItem();
+            queueMenuItem.title = 'Очередь';
+            queueMenuItem.icon = 'icon ion-md-git-pull-request';
+            queueMenuItem.children = [];
+
+            const queueMainMenuItem: NbMenuItem = new NbMenuItem();
+            queueMainMenuItem.title = 'Главная';
+            queueMainMenuItem.link = 'app/queue';
+
+            queueMenuItem.children.push(queueMainMenuItem);
+            this.menu.push(queueMenuItem);
+
             // ======= Талоны ЛПП ======
 
             const ticketsMenuItem: NbMenuItem = new NbMenuItem();

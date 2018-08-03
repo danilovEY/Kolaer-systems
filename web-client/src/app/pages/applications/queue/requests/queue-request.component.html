@@ -1,0 +1,24 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                <span>Очереди</span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="loadingQueueRequest"></ngx-loading>
+                <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
+                              [actionAdd]="true" [actionDelete]="true" [actionEdit]="true"
+                              (action)="action($event)"
+                              (create)="create($event)"
+                              (delete)="delete($event)"
+                              (edit)="edit($event)">
+                </custom-table>
+            </nb-card-body>
+
+        </nb-card>
+
+    </div>
+</div>

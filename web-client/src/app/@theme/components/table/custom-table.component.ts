@@ -5,13 +5,22 @@ import {CustomActionViewComponent} from './custom-action-view.component';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
 import {CustomActionModel} from './custom-action.model';
-import {TableEventDeleteModel} from "./table-event-delete.model";
-import {TableEventEditModel} from "./table-event-edit.model";
-import {TableEventAddModel} from "./table-event-add.model";
+import {TableEventDeleteModel} from './table-event-delete.model';
+import {TableEventEditModel} from './table-event-edit.model';
+import {TableEventAddModel} from './table-event-add.model';
+import {Row} from 'ng2-smart-table/lib/data-set/row';
 
 @Component({
     selector: 'custom-table',
-    template: `
+    template: `        
+        <div *ngIf="actionAdd" class="row show-grid">
+            <div class="col-md-6 offset-md-9">
+                <button class="btn btn-success btn-semi-round btn-demo" (click)="addNewRow()">Добавить запись</button>
+            </div>
+        </div>
+        
+        <br/>
+        
         <ng2-smart-table #table [settings]="settings" [source]="source" 
                          (deleteConfirm)="deleteConfirm($event)" 
                          (createConfirm)="createConfirm($event)"
@@ -20,6 +29,14 @@ import {TableEventAddModel} from "./table-event-add.model";
     `
 })
 export class CustomTableComponent implements OnInit {
+    public static readonly DELETE_ACTION_NAME: string = 'delete';
+    public static readonly EDIT_ACTION_NAME: string = 'edit';
+
+    public selectedRow: Row;
+    public columnActions: Column;
+
+    private readonly defaultAction = new EventEmitter<any>();
+
     @Input() source: DataSource;
     @Input() actionAdd: boolean = true;
     @Input() actionEdit: boolean = true;
@@ -43,9 +60,9 @@ export class CustomTableComponent implements OnInit {
         mode: 'inline',
         actions: {
             columnTitle: 'Действия',
-            add: this.actionAdd,
-            edit: this.actionEdit,
-            delete: this.actionDelete,
+            add: false,
+            edit: false,
+            delete: false,
             position: 'right',
         },
         pager: {
@@ -59,7 +76,6 @@ export class CustomTableComponent implements OnInit {
             createButtonContent: '<i class="nb-checkmark"></i>',
             cancelButtonContent: '<i class="nb-close"></i>',
             confirmCreate: true,
-
         },
         edit: {
             editButtonContent: '<i class="nb-edit"></i>',
@@ -72,20 +88,47 @@ export class CustomTableComponent implements OnInit {
             confirmDelete: true,
         },
         columns:  {
-        },
+        }
     };
 
     ngOnInit() {
-        this.settings.actions.add = this.actionAdd;
-        this.settings.actions.edit = this.actionEdit;
-        this.settings.actions.delete = this.actionDelete;
+        if (this.actionEdit) {
+            const editAction: CustomActionModel = new CustomActionModel();
+            editAction.name = CustomTableComponent.EDIT_ACTION_NAME;
+            editAction.content = '<i class="fa fa-edit"></i>';
+            editAction.description = 'Редактировать';
+
+            this.actions.push(editAction);
+        }
+
+        if (this.actionDelete) {
+            const deleteAction: CustomActionModel = new CustomActionModel();
+            deleteAction.name = CustomTableComponent.DELETE_ACTION_NAME;
+            deleteAction.content = '<i class="fa fa-trash"></i>';
+            deleteAction.description = 'Удалить';
+
+            this.actions.push(deleteAction);
+        }
 
         if (this.actions.length > 0) {
+            this.defaultAction.subscribe(event => {
+                if (event.action.name === CustomTableComponent.EDIT_ACTION_NAME) {
+                    this.table.grid.edit(this.selectedRow);
+                } if (event.action.name === CustomTableComponent.DELETE_ACTION_NAME) {
+                    this.table.grid.delete(this.selectedRow, this.table.deleteConfirm);
+                }
+
+                if (this.action) {
+                    this.action.emit(event);
+                }
+            });
+
             const tempActions = this.actions;
-            const tempAction = this.action;
+            const tempAction = this.defaultAction;
             const tempActionBeforeValueView = this.actionBeforeValueView;
-            const customActions: Column = new Column('customActions', {
-                title: 'Прочие действия',
+
+            this.columnActions = new Column('customActions', {
+                title: 'Действия',
                 type: 'custom',
                 editable: false,
                 addable: false,
@@ -93,6 +136,9 @@ export class CustomTableComponent implements OnInit {
                 sort: false,
                 editor: {
                     type: 'custom',
+                    config: {
+                        getGrid: () => this.table.grid // BAD API table
+                    },
                     component: CustomActionEditComponent,
                 },
                 renderComponent: CustomActionViewComponent,
@@ -103,7 +149,7 @@ export class CustomTableComponent implements OnInit {
                 }
             }, undefined);
 
-            this.columns.push(customActions);
+            this.columns.push(this.columnActions);
         }
 
         for (const col of this.columns) {
@@ -113,6 +159,12 @@ export class CustomTableComponent implements OnInit {
             this.settings.columns[col.id].filter = col.isFilterable ? col.filter : false; //
             this.settings.columns[col.id].sort = col.isSortable;     //
         }
+
+        this.table.rowHover.subscribe(row => this.selectedRow = row);
+    }
+
+    addNewRow() {
+        this.table.grid.createFormShown = true;
     }
 
     deleteConfirm(event: TableEventDeleteModel<any>) {

@@ -37,7 +37,7 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
 
     @Override
     public void deleteRequestById(Long requestId) {
-        getSession().createNamedQuery("DELETE FROM " + getEntityName(QueueRequestEntity.class) + " WHERE id = :requestId")
+        getSession().createQuery("DELETE FROM " + getEntityName(QueueRequestEntity.class) + " WHERE id = :requestId")
                 .setParameter("requestId", requestId)
                 .executeUpdate();
     }
@@ -45,7 +45,7 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
     @Override
     public List<QueueRequestEntity> findRequestByTargetId(Long targetId, Integer number, Integer pageSize) {
         return getSession()
-                .createNamedQuery("FROM " + getEntityName(QueueRequestEntity.class) + " WHERE queueTargetId = :targetId ORDER BY queueFrom", QueueRequestEntity.class)
+                .createQuery("FROM " + getEntityName(QueueRequestEntity.class) + " WHERE queueTargetId = :targetId ORDER BY queueFrom", QueueRequestEntity.class)
                 .setParameter("targetId", targetId)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
@@ -55,7 +55,7 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
     @Override
     public Long findCountRequestByTargetId(Long targetId) {
         return getSession()
-                .createNamedQuery("SELECT COUNT(id) FROM " + getEntityName(QueueRequestEntity.class) + " WHERE queueTargetId = :targetId", Long.class)
+                .createQuery("SELECT COUNT(id) FROM " + getEntityName(QueueRequestEntity.class) + " WHERE queueTargetId = :targetId", Long.class)
                 .setParameter("targetId", targetId)
                 .uniqueResult();
     }
