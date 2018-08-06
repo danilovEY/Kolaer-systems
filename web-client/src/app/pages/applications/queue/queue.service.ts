@@ -9,7 +9,7 @@ import {QueueRequestModel} from '../../../@core/models/queue-request.model';
 
 @Injectable()
 export class QueueService extends BaseService {
-    private readonly getAllQueueTargetsUrl: string = `${environment.publicServerUrl}/queue`;
+    private readonly queueTargetsUrl: string = `${environment.publicServerUrl}/queue`;
 
     constructor(private http: HttpClient) {
         super();
@@ -21,7 +21,23 @@ export class QueueService extends BaseService {
         params = params.append('page', page.toString());
         params = params.append('pagesize', pageSize.toString());
 
-        return this.http.get<Page<QueueTargetModel>>(this.getAllQueueTargetsUrl, {params: params});
+        return this.http.get<Page<QueueTargetModel>>(this.queueTargetsUrl, {params: params});
+    }
+
+    addQueueTargets(queueTarget: QueueTargetModel): Observable<QueueTargetModel> {
+        return this.http.post<QueueTargetModel>(this.queueTargetsUrl, queueTarget);
+    }
+
+    updateQueueTargets(targetId: number, queueTarget: QueueTargetModel): Observable<QueueTargetModel> {
+        const url: string = `${this.queueTargetsUrl}/${targetId}`;
+
+        return this.http.put<QueueTargetModel>(url, queueTarget);
+    }
+
+    deleteQueueTargets(targetId: number): Observable<Object> {
+        const url: string = `${this.queueTargetsUrl}/${targetId}`;
+
+        return this.http.delete<Object>(url);
     }
 
     getAllQueueRequest(targetId: number, page: number = 1, pageSize: number = 15): Observable<Page<QueueRequestModel>> {
@@ -30,8 +46,26 @@ export class QueueService extends BaseService {
         params = params.append('page', page.toString());
         params = params.append('pagesize', pageSize.toString());
 
-        const url: string = `${this.getAllQueueTargetsUrl}/${targetId}/request`;
+        const url: string = `${this.queueTargetsUrl}/${targetId}/request`;
 
         return this.http.get<Page<QueueRequestModel>>(url, {params: params});
+    }
+
+    addQueueRequest(targetId: number, queueRequest: QueueRequestModel): Observable<QueueRequestModel> {
+        const url: string = `${this.queueTargetsUrl}/${targetId}/request`;
+
+        return this.http.post<QueueRequestModel>(url, queueRequest);
+    }
+
+    updateQueueRequest(targetId: number, requestId: number, queueRequest: QueueRequestModel): Observable<QueueRequestModel> {
+        const url: string = `${this.queueTargetsUrl}/${targetId}/request/${requestId}`;
+
+        return this.http.put<QueueRequestModel>(url, queueRequest);
+    }
+
+    deleteQueueRequest(targetId: number, requestId: number): Observable<Object> {
+        const url: string = `${this.queueTargetsUrl}/${targetId}/request/${requestId}`;
+
+        return this.http.delete<Object>(url);
     }
 }

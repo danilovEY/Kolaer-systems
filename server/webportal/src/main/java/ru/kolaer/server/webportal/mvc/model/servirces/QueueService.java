@@ -13,4 +13,6 @@ public interface QueueService extends DefaultService<QueueTargetDto> {
     void deleteQueueRequest(Long targetId, Long requestId);
 
     Page<QueueRequestDto> getAllQueueRequestByTarget(Long targetId, Integer number, Integer pageSize);
+
+    QueueTargetDto update(Long targetId, QueueTargetDto queueTargetDto);
 }

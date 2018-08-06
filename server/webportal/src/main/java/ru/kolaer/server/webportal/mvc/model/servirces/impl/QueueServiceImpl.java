@@ -84,6 +84,24 @@ public class QueueServiceImpl
 
     @Override
     @Transactional
+    public QueueTargetDto update(Long targetId, QueueTargetDto queueTargetDto) {
+        if (queueTargetDto == null || targetId == null || StringUtils.isEmpty(queueTargetDto.getName())) {
+            throw new UnexpectedRequestParams("ID и Имя не должно быть пустым");
+        }
+
+        QueueTargetEntity entity = this.defaultEntityDao.findById(targetId);
+
+        if(entity == null) {
+            throw new NotFoundDataException("Цель не найдена");
+        }
+
+        entity.setName(queueTargetDto.getName());
+
+        return this.defaultConverter.convertToDto(this.defaultEntityDao.update(entity));
+    }
+
+    @Override
+    @Transactional
     public QueueTargetDto add(QueueTargetDto dto) {
         if (dto == null || StringUtils.isEmpty(dto.getName())) {
             throw new UnexpectedRequestParams("Имя не должно быть пустым");
@@ -94,19 +112,6 @@ public class QueueServiceImpl
         entity.setName(dto.getName());
 
         return this.defaultConverter.convertToDto(this.defaultEntityDao.persist(entity));
-    }
-
-    @Override
-    @Transactional
-    public QueueTargetDto update(QueueTargetDto dto) {
-        if (dto == null || dto.getId() == null || StringUtils.isEmpty(dto.getName())) {
-            throw new UnexpectedRequestParams("ID и Имя не должно быть пустым");
-        }
-
-        QueueTargetEntity entity = this.defaultEntityDao.findById(dto.getId());
-        entity.setName(dto.getName());
-
-        return this.defaultConverter.convertToDto(this.defaultEntityDao.update(entity));
     }
 
     @Override

@@ -38,16 +38,17 @@ export class CustomTableComponent implements OnInit {
 
     private readonly defaultAction = new EventEmitter<any>();
 
+    private editAction: CustomActionModel;
+    private deleteAction: CustomActionModel;
+
     @Input() source: DataSource;
     @Input() actionAdd: boolean = true;
-    @Input() actionEdit: boolean = true;
-    @Input() actionDelete: boolean = true;
 
     @Input() columns: Column[] = [];
     @Input() actions: CustomActionModel[] = [];
 
     @Output() action = new EventEmitter<any>();
-    @Output() actionBeforeValueView: Function;
+    actionBeforeValueView: Function;
 
     @Output() delete = new EventEmitter<any>();
     @Output() create = new EventEmitter<any>();
@@ -93,23 +94,18 @@ export class CustomTableComponent implements OnInit {
     };
 
     ngOnInit() {
-        if (this.actionEdit) {
-            const editAction: CustomActionModel = new CustomActionModel();
-            editAction.name = CustomTableComponent.EDIT_ACTION_NAME;
-            editAction.content = '<i class="fa fa-edit"></i>';
-            editAction.description = 'Редактировать';
+        this.editAction = new CustomActionModel();
+        this.editAction.name = CustomTableComponent.EDIT_ACTION_NAME;
+        this.editAction.content = '<i class="fa fa-edit"></i>';
+        this.editAction.description = 'Редактировать';
 
-            this.actions.push(editAction);
-        }
+        this.deleteAction = new CustomActionModel();
+        this.deleteAction.name = CustomTableComponent.DELETE_ACTION_NAME;
+        this.deleteAction.content = '<i class="fa fa-trash"></i>';
+        this.deleteAction.description = 'Удалить';
 
-        if (this.actionDelete) {
-            const deleteAction: CustomActionModel = new CustomActionModel();
-            deleteAction.name = CustomTableComponent.DELETE_ACTION_NAME;
-            deleteAction.content = '<i class="fa fa-trash"></i>';
-            deleteAction.description = 'Удалить';
-
-            this.actions.push(deleteAction);
-        }
+        this.actions.push(this.editAction);
+        this.actions.push(this.deleteAction);
 
         if (this.actions.length > 0) {
             this.defaultAction.subscribe(event => {
@@ -185,5 +181,9 @@ export class CustomTableComponent implements OnInit {
         delete event.newData['customActions'];
 
         this.create.emit(event);
+    }
+
+    setActionAdd(isAdd: boolean) {
+        this.actionAdd = isAdd;
     }
 }

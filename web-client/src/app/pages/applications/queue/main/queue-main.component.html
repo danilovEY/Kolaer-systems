@@ -10,7 +10,11 @@
             <nb-card-body>
                 <ngx-loading [show]="loadingQueueTarget" ></ngx-loading>
                 <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
-                              [actionAdd]="false" [actionDelete]="false" [actionEdit]="false" (action)="action($event)">
+                              [actionAdd]="isAdd"
+                              (action)="action($event)"
+                              (create)="create($event)"
+                              (delete)="delete($event)"
+                              (edit)="edit($event)">
                 </custom-table>
             </nb-card-body>
 

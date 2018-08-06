@@ -40,8 +40,8 @@ public class QueueController {
     @UrlDeclaration
     @RequestMapping(value = "/{id}/request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<QueueRequestDto> getAllRequest(@PathVariable("id") Long id,
-                                        @RequestParam(value = "page", defaultValue = "1") Integer number,
-                                        @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
+                                               @RequestParam(value = "page", defaultValue = "1") Integer number,
+                                               @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return queueService.getAllQueueRequestByTarget(id, number, pageSize);
     }
 
@@ -73,15 +73,16 @@ public class QueueController {
     @ApiOperation(value = "Добавить цель")
     @UrlDeclaration(isUser = false)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public QueueTargetDto addQueueTarget(QueueTargetDto queueTargetDto) {
+    public QueueTargetDto addQueueTarget(@RequestBody QueueTargetDto queueTargetDto) {
         return queueService.add(queueTargetDto);
     }
 
     @ApiOperation(value = "Обновить цель")
     @UrlDeclaration(isUser = false)
-    @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public QueueTargetDto updateQueueTarget(QueueTargetDto queueTargetDto) {
-        return queueService.update(queueTargetDto);
+    @RequestMapping(value = "/{targetId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public QueueTargetDto updateQueueTarget(@PathVariable("targetId") Long targetId,
+                                            @RequestBody QueueTargetDto queueTargetDto) {
+        return queueService.update(targetId, queueTargetDto);
     }
 
     @ApiOperation(value = "Удалить цель")

@@ -13,7 +13,6 @@ import {QueueRequestModel} from '../../../../@core/models/queue-request.model';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
 import {Utils} from '../../../../@core/utils/utils';
-import {EmployeeEditComponent} from '../../../../@theme/components/table/employee-edit.component';
 import {Cell} from 'ng2-smart-table';
 import {DateTimeEditComponent} from '../../../../@theme/components/table/date-time-edit.component';
 
@@ -105,23 +104,15 @@ export class QueueRequestComponent implements OnInit, OnDestroy {
         const employeeColumn: Column = new Column('employee', {
             title: 'Сотрудник',
             type: 'string',
-            editor: {
-                type: 'custom',
-                component: EmployeeEditComponent,
-            },
+            editable: false,
+            addable: false,
             filter: false,
             sort: false,
             valuePrepareFunction(a: any, value: QueueRequestModel, cell: Cell) {
                 return value.account.employee
                     ? value.account.employee.initials
                     : value.account.chatName;
-            },
-            // filterFunction(value: EmployeeModel, search: string) {
-            //     return Utils.filter(value.initials, search);
-            // },
-            // compareFunction(dir: number, a: EmployeeModel, b: EmployeeModel) {
-            //     return Utils.compare(dir, a.initials, b.initials);
-            // }
+            }
         }, undefined);
 
         const postColumn: Column = new Column('employeePost', {
@@ -157,16 +148,18 @@ export class QueueRequestComponent implements OnInit, OnDestroy {
     }
 
     edit(event: TableEventEditModel<QueueRequestModel>) {
-        event.confirm.resolve(event.newData);
+        this.queueService.updateQueueRequest(this.targetId, event.data.id, event.newData)
+            .subscribe(event.confirm.resolve);
     }
 
     delete(event: TableEventDeleteModel<QueueRequestModel>) {
-        event.confirm.resolve();
+        this.queueService.deleteQueueRequest(this.targetId, event.data.id)
+            .subscribe(response => event.confirm.resolve());
     }
 
     create(event: TableEventAddModel<QueueRequestModel>) {
-        event.confirm.resolve(event.newData);
-        console.log(event.newData);
+        this.queueService.addQueueRequest(this.targetId, event.newData)
+            .subscribe(event.confirm.resolve);
     }
 
 }
