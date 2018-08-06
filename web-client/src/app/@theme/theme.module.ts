@@ -45,7 +45,6 @@ import {DateEditComponent} from './components/table/date-edit.component';
 import {CustomDatePickerLangService} from '../@core/services/custom-date-picker-lang.service';
 import {PlacementEditComponent} from './components/table/placement-edit.component';
 import {CalendarModule} from 'primeng/primeng';
-import {NgbDateTimePickerComponent} from './components/table/datetimepicker.component';
 import {DateTimeEditComponent} from './components/table/date-time-edit.component';
 import {NgbDateRusParserFormatter} from './components/table/ngb-date-rus-parser.formatter';
 

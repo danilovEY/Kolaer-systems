@@ -12,7 +12,15 @@ public interface QueueDao extends DefaultDao<QueueTargetEntity> {
 
     void deleteRequestById(Long requestId);
 
-    List<QueueRequestEntity> findRequestByTargetId(Long targetId, Integer number, Integer pageSize);
+    List<QueueRequestEntity> findRequestById(Long targetId, Integer number, Integer pageSize);
 
     Long findCountRequestByTargetId(Long targetId);
+
+    void deleteRequestByIdAndTarget(Long targetId, Long requestId);
+
+    QueueRequestEntity findRequestById(Long queueRequestId);
+
+    QueueRequestEntity findRequestByTargetIdAndId(Long targetId, Long requestId);
+
+    void deleteRequestsByTargetId(Long id);
 }

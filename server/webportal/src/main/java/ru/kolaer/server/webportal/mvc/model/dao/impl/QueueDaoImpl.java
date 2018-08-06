@@ -43,7 +43,7 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
     }
 
     @Override
-    public List<QueueRequestEntity> findRequestByTargetId(Long targetId, Integer number, Integer pageSize) {
+    public List<QueueRequestEntity> findRequestById(Long targetId, Integer number, Integer pageSize) {
         return getSession()
                 .createQuery("FROM " + getEntityName(QueueRequestEntity.class) + " WHERE queueTargetId = :targetId ORDER BY queueFrom", QueueRequestEntity.class)
                 .setParameter("targetId", targetId)
@@ -58,5 +58,44 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
                 .createQuery("SELECT COUNT(id) FROM " + getEntityName(QueueRequestEntity.class) + " WHERE queueTargetId = :targetId", Long.class)
                 .setParameter("targetId", targetId)
                 .uniqueResult();
+    }
+
+    @Override
+    public void deleteRequestByIdAndTarget(Long targetId, Long requestId) {
+        getSession()
+                .createQuery("DELETE FROM " + getEntityName(QueueRequestEntity.class) +
+                        " WHERE id = :requestId AND queueTargetId=:targetId")
+                .setParameter("requestId", requestId)
+                .setParameter("targetId", targetId)
+                .executeUpdate();
+    }
+
+    @Override
+    public QueueRequestEntity findRequestById(Long queueRequestId) {
+        return getSession()
+                .createQuery("FROM " + getEntityName(QueueRequestEntity.class) + " WHERE id = :queueRequestId", QueueRequestEntity.class)
+                .setParameter("queueRequestId", queueRequestId)
+                .uniqueResultOptional()
+                .orElse(null);
+    }
+
+    @Override
+    public QueueRequestEntity findRequestByTargetIdAndId(Long targetId, Long requestId) {
+        return getSession()
+                .createQuery("FROM " + getEntityName(QueueRequestEntity.class) +
+                                " WHERE id = :requestId AND queueTargetId=:targetId", QueueRequestEntity.class)
+                .setParameter("targetId", targetId)
+                .setParameter("requestId", requestId)
+                .uniqueResultOptional()
+                .orElse(null);
+    }
+
+    @Override
+    public void deleteRequestsByTargetId(Long targetId) {
+        getSession()
+                .createQuery("DELETE FROM " + getEntityName(QueueRequestEntity.class) +
+                        " WHERE queueTargetId=:targetId")
+                .setParameter("targetId", targetId)
+                .executeUpdate();
     }
 }
