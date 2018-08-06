@@ -15,6 +15,8 @@ import {TableEventAddModel} from '../../../../@theme/components/table/table-even
 import {Utils} from '../../../../@core/utils/utils';
 import {Cell} from 'ng2-smart-table';
 import {DateTimeEditComponent} from '../../../../@theme/components/table/date-time-edit.component';
+import {CustomActionEventModel} from '../../../../@theme/components/table/custom-action-event.model';
+import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 
 @Component({
     selector: 'queue-main',
@@ -22,6 +24,8 @@ import {DateTimeEditComponent} from '../../../../@theme/components/table/date-ti
     styleUrls: ['./queue-request.component.scss']
 })
 export class QueueRequestComponent implements OnInit, OnDestroy {
+    private static currentAccount: SimpleAccountModel;
+
     private sub: Subscription;
     private targetId: number;
 
@@ -42,6 +46,7 @@ export class QueueRequestComponent implements OnInit, OnDestroy {
         limit: 5,
     });
 
+
     constructor(private queueService: QueueService,
                 private toasterService: ToasterService,
                 private router: Router,
@@ -60,6 +65,12 @@ export class QueueRequestComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.accountService.getCurrentAccount()
+            .subscribe(account => {
+                QueueRequestComponent.currentAccount = account;
+                this.customTable.table.initGrid();
+            });
+
         const queueFromColumn: Column = new Column('queueFrom', {
             title: 'Начало',
             type: 'string',
@@ -145,6 +156,21 @@ export class QueueRequestComponent implements OnInit, OnDestroy {
             employeeColumn,
             postColumn,
             departmentColumn);
+
+        this.customTable.actionBeforeValueView = this.actionBeforeValueView;
+
+    }
+
+    actionBeforeValueView(event: CustomActionEventModel<QueueRequestModel>) {
+        if (event.action.name === CustomTableComponent.EDIT_ACTION_NAME ||
+            event.action.name === CustomTableComponent.DELETE_ACTION_NAME) {
+
+            return QueueRequestComponent.currentAccount ?
+                event.data.account.id === QueueRequestComponent.currentAccount.id || QueueRequestComponent.currentAccount.accessOit
+                : false;
+        }
+
+        return true;
     }
 
     edit(event: TableEventEditModel<QueueRequestModel>) {

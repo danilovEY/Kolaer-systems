@@ -45,7 +45,7 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
     @Override
     public List<QueueRequestEntity> findRequestById(Long targetId, Integer number, Integer pageSize) {
         return getSession()
-                .createQuery("FROM " + getEntityName(QueueRequestEntity.class) + " WHERE queueTargetId = :targetId ORDER BY queueFrom", QueueRequestEntity.class)
+                .createQuery("FROM " + getEntityName(QueueRequestEntity.class) + " WHERE queueTargetId = :targetId ORDER BY queueFrom DESC", QueueRequestEntity.class)
                 .setParameter("targetId", targetId)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
