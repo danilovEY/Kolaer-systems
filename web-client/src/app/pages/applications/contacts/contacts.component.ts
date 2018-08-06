@@ -20,6 +20,7 @@ import {PlacementEditComponent} from '../../../@theme/components/table/placement
 import {TableEventEditModel} from '../../../@theme/components/table/table-event-edit.model';
 import {ContactRequestModel} from '../../../@core/models/contact-request.model';
 import {Utils} from '../../../@core/utils/utils';
+import {CustomActionEventModel} from '../../../@theme/components/table/custom-action-event.model';
 
 @Component({
     selector: 'contacts',
@@ -27,20 +28,21 @@ import {Utils} from '../../../@core/utils/utils';
     templateUrl: `./contacts.component.html`
 })
 export class ContactsComponent implements OnInit, OnDestroy {
+    private static currentAccount: SimpleAccountModel;
+
     private sub: Subscription;
     private departmentId: number = 0;
+
     private contactType: ContactTypeModel;
 
     @ViewChild('contactsTable')
     contactsTable: CustomTableComponent;
-
     menu: NbMenuItem[] = [];
     cardTitle: string = 'Список контактов';
     searchValue: string = 'Список контактов';
     contactsLoading: boolean = true;
     contactsSource: ContactsDataSource;
     contactsColumn: Column[] = [];
-    currentAccount: SimpleAccountModel;
 
     constructor(private contactsService: ContactsService,
                 private nbMenuService: NbMenuService,
@@ -119,10 +121,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
         this.accountService.getCurrentAccount()
             .subscribe((account: SimpleAccountModel) => {
-                this.currentAccount = account;
+                ContactsComponent.currentAccount = account;
 
                 if (account && (account.accessOit || account.accessOk)) {
-                    this.contactsTable.settings.actions.edit = true;
                     this.contactsTable.table.initGrid();
                 }
             });
@@ -265,8 +266,23 @@ export class ContactsComponent implements OnInit, OnDestroy {
             placementColumn,
             typeColumn
         );
+
+        this.contactsTable.actionBeforeValueView = this.actionBeforeValueView;
     }
 
+    actionBeforeValueView(event: CustomActionEventModel<ContactModel>) {
+        if (event.action.name === CustomTableComponent.DELETE_ACTION_NAME) {
+            return false;
+        }
+
+        if (event.action.name === CustomTableComponent.EDIT_ACTION_NAME) {
+            return ContactsComponent.currentAccount
+                ? ContactsComponent.currentAccount.accessOit || ContactsComponent.currentAccount.accessOk
+                : false;
+        }
+
+        return true;
+    }
 
     contactsEdit(event: TableEventEditModel<ContactModel>) {
         const contactRequestModel: ContactRequestModel = new ContactRequestModel();

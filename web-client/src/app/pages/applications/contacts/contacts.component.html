@@ -27,8 +27,6 @@
                 <ngx-loading [show]="contactsLoading"></ngx-loading>
                 <custom-table #contactsTable
                               [actionAdd]="false"
-                              [actionDelete]="false"
-                              [actionEdit]="currentAccount !== undefined  && (currentAccount.accessOit || currentAccount.accessOk)"
                               (edit)="contactsEdit($event)"
                               [columns]="contactsColumn"
                               [source]="contactsSource">
