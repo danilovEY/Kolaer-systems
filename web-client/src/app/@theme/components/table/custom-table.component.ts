@@ -43,6 +43,8 @@ export class CustomTableComponent implements OnInit {
 
     @Input() source: DataSource;
     @Input() actionAdd: boolean = true;
+    @Input() actionDelete: boolean = true;
+    @Input() actionEdit: boolean = true;
 
     @Input() columns: Column[] = [];
     @Input() actions: CustomActionModel[] = [];
@@ -104,8 +106,14 @@ export class CustomTableComponent implements OnInit {
         this.deleteAction.content = '<i class="fa fa-trash"></i>';
         this.deleteAction.description = 'Удалить';
 
-        this.actions.push(this.editAction);
-        this.actions.push(this.deleteAction);
+        if (this.actionEdit) {
+            this.actions.push(this.editAction);
+        }
+
+        if (this.actionDelete) {
+            this.actions.push(this.deleteAction);
+        }
+
 
         if (this.actions.length > 0) {
             this.defaultAction.subscribe(event => {
