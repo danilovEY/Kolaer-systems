@@ -16,7 +16,7 @@ import {TableEventAddModel} from '../../../../@theme/components/table/table-even
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 import {RepositoryPasswordShareDataSource} from './repository-password-share.data-source';
 import {Cell} from 'ng2-smart-table';
-import {finalize} from "rxjs/internal/operators";
+import {finalize} from 'rxjs/internal/operators';
 
 @Component({
     selector: 'repositories',
@@ -33,6 +33,7 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
 
     shareLoading: boolean = true;
     shareColumns: Column[] = [];
+    shareActions: CustomActionModel[] = [];
     shareSource: RepositoryPasswordShareDataSource;
 
     myPassLoading: boolean = true;
@@ -104,6 +105,7 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
         copyLoginAction.content = '<i class="fa fa-user-secret"></i>';
         copyLoginAction.description = 'Копировать последний логин';
 
+        this.shareActions.push(openAction, copyLoginAction, copyPassAction);
         this.myPassActions.push(openAction, copyLoginAction, copyPassAction);
 
         // this.myPassTable.actionBeforeValueView = this.actionBeforeValueView;

@@ -31,15 +31,13 @@
 
             <nb-card-body>
                 <ngx-loading [show]="shareLoading" ></ngx-loading>
-                <custom-table #myPassTable
-                              [columns]="shareColumns"
-                              [actions]="myPassActions"
+                <custom-table [columns]="shareColumns"
+                              [actions]="shareActions"
                               [source]="shareSource"
                               (action)="myPassAction($event)"
                               [actionEdit]="false"
                               [actionDelete]="false"
                               [actionAdd]="false">
-
                 </custom-table>
             </nb-card-body>
         </nb-card>
