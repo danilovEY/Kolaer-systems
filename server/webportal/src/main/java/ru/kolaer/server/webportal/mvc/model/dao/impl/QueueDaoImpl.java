@@ -4,16 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.QueueDao;
+import ru.kolaer.server.webportal.mvc.model.dto.PageQueueRequest;
+import ru.kolaer.server.webportal.mvc.model.dto.QueueSortType;
 import ru.kolaer.server.webportal.mvc.model.entities.queue.QueueRequestEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.queue.QueueTargetEntity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Created by danilovey on 27.07.2016.
- */
 @Repository
 @Slf4j
 public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implements QueueDao {
@@ -98,4 +100,60 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
                 .setParameter("targetId", targetId)
                 .executeUpdate();
     }
+
+    @Override
+    public Long findCountLastRequests(PageQueueRequest request) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("now", request.getAfterFrom());
+
+        StringBuilder sqlQuery = new StringBuilder();
+        sqlQuery = sqlQuery.append("SELECT COUNT(id) FROM ")
+                .append(getEntityName(QueueRequestEntity.class))
+                .append(" WHERE queueFrom >= :now");
+
+        if (StringUtils.hasText(request.getName())) {
+            sqlQuery = sqlQuery.append(" AND target.name LIKE :name");
+            params.put("name", "%" + request.getName() + "%");
+        }
+
+        return getSession()
+                .createQuery(sqlQuery.append(getOrder(request.getSort())).toString(), Long.class)
+                .setProperties(params)
+                .uniqueResultOptional()
+                .orElse(0L);
+    }
+
+    @Override
+    public List<QueueRequestEntity> findLastRequests(PageQueueRequest request) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("now", request.getAfterFrom());
+
+        StringBuilder sqlQuery = new StringBuilder();
+        sqlQuery = sqlQuery.append("FROM ")
+                .append(getEntityName(QueueRequestEntity.class))
+                .append(" WHERE queueFrom >= :now");
+
+        if (StringUtils.hasText(request.getName())) {
+            sqlQuery = sqlQuery.append(" AND target.name LIKE :name");
+            params.put("name", "%" + request.getName() + "%");
+        }
+
+        return getSession()
+                .createQuery(sqlQuery.append(getOrder(request.getSort())).toString(), QueueRequestEntity.class)
+                .setProperties(params)
+                .list();
+    }
+
+    private String getOrder(QueueSortType type) {
+        if (type == null) {
+            return " ORDER BY id DESC";
+        }
+
+        switch (type) {
+            case TARGET_TITLE_ASC: return " ORDER BY target.name ASC";
+            case TARGET_TITLE_DESC: return " ORDER BY target.name DESC";
+            default: return " ORDER BY id DESC";
+        }
+    }
+
 }

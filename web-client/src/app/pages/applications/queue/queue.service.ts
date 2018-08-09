@@ -6,10 +6,14 @@ import {environment} from '../../../../environments/environment';
 import {BaseService} from '../../../@core/services/base.service';
 import {QueueTargetModel} from '../../../@core/models/queue-target.model';
 import {QueueRequestModel} from '../../../@core/models/queue-request.model';
+import {QueueScheduleModel} from '../../../@core/models/queue-schedule.model';
+import {QueueFilterPageModel} from '../../../@core/models/page-queue-target-filter.model';
+import {QueueSortModel} from '../../../@core/models/queue-sort.model';
 
 @Injectable()
 export class QueueService extends BaseService {
     private readonly queueTargetsUrl: string = `${environment.publicServerUrl}/queue`;
+    private readonly queueSchedulersUrl: string = `${this.queueTargetsUrl}/scheduler`;
 
     constructor(private http: HttpClient) {
         super();
@@ -22,6 +26,21 @@ export class QueueService extends BaseService {
         params = params.append('pagesize', pageSize.toString());
 
         return this.http.get<Page<QueueTargetModel>>(this.queueTargetsUrl, {params: params});
+    }
+
+    getSchedulers(sort: QueueSortModel, filter: QueueFilterPageModel): Observable<Page<QueueScheduleModel>> {
+        const params: HttpParams = this.getSortAndFilterParam(new HttpParams(), sort, filter);
+
+        return this.http.get<Page<QueueScheduleModel>>(this.queueSchedulersUrl, {params: params});
+    }
+
+    getSchedulers(page: number = 1, pageSize: number = 15): Observable<Page<QueueScheduleModel>> {
+        let params = new HttpParams();
+
+        params = params.append('page', page.toString());
+        params = params.append('pagesize', pageSize.toString());
+
+        return this.http.get<Page<QueueScheduleModel>>(this.queueSchedulersUrl, {params: params});
     }
 
     addQueueTargets(queueTarget: QueueTargetModel): Observable<QueueTargetModel> {

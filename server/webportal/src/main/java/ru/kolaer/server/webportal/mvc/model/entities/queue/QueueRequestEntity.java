@@ -18,6 +18,10 @@ public class QueueRequestEntity implements BaseEntity {
     @Column(name = "queue_target_id", nullable = false)
     private Long queueTargetId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "queue_target_id", insertable = false, updatable = false)
+    private QueueTargetEntity target;
+
     @Column(name = "account_id", nullable = false)
     private Long accountId;
 

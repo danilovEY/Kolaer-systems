@@ -8,7 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.mvc.model.dto.PageQueueRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.QueueRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.QueueScheduleDto;
 import ru.kolaer.server.webportal.mvc.model.dto.QueueTargetDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.QueueService;
@@ -43,6 +45,13 @@ public class QueueController {
                                                @RequestParam(value = "page", defaultValue = "1") Integer number,
                                                @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return queueService.getAllQueueRequestByTarget(id, number, pageSize);
+    }
+
+    @ApiOperation(value = "Получить рассписание")
+    @UrlDeclaration
+    @RequestMapping(value = "/scheduler", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<QueueScheduleDto> getAllRequest(@ModelAttribute PageQueueRequest request) {
+        return queueService.getSchedulers(request);
     }
 
     @ApiOperation(value = "Добавить очередь к цели")
