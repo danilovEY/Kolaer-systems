@@ -1,8 +1,9 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {QueueComponent} from './queue.component';
-import {QueueMainComponent} from './main/queue-main.component';
+import {QueueTargetComponent} from './target/queue-target.component';
 import {QueueRequestComponent} from './requests/queue-request.component';
+import {QueueMainComponent} from './main/queue-main.component';
 
 const routes: Routes = [
     {
@@ -15,7 +16,11 @@ const routes: Routes = [
         component: QueueMainComponent
     },
     {
-        path: ':id/request',
+        path: 'target',
+        component: QueueTargetComponent
+    },
+    {
+        path: 'target/:id/request',
         component: QueueRequestComponent
     },
 ];

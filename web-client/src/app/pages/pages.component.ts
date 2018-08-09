@@ -88,7 +88,11 @@ export class PagesComponent implements OnInit {
             queueMainMenuItem.title = 'Главная';
             queueMainMenuItem.link = 'app/queue';
 
-            queueMenuItem.children.push(queueMainMenuItem);
+            const queueTargetMenuItem: NbMenuItem = new NbMenuItem();
+            queueTargetMenuItem.title = 'Цели';
+            queueTargetMenuItem.link = 'app/queue/target';
+
+            queueMenuItem.children.push(queueMainMenuItem, queueTargetMenuItem);
             this.menu.push(queueMenuItem);
 
             // ======= Талоны ЛПП ======
