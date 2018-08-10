@@ -7,7 +7,6 @@ import {BaseService} from '../../../@core/services/base.service';
 import {QueueTargetModel} from '../../../@core/models/queue-target.model';
 import {QueueRequestModel} from '../../../@core/models/queue-request.model';
 import {QueueScheduleModel} from '../../../@core/models/queue-schedule.model';
-import {QueueSortModel} from '../../../@core/models/queue-sort.model';
 import {QueueTargetFilterPageModel} from '../../../@core/models/queue-filter-page.model';
 
 @Injectable()
