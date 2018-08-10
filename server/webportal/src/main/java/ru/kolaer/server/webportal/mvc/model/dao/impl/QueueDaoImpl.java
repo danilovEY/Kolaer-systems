@@ -12,6 +12,7 @@ import ru.kolaer.server.webportal.mvc.model.dto.QueueSortType;
 import ru.kolaer.server.webportal.mvc.model.entities.queue.QueueRequestEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.queue.QueueTargetEntity;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,20 +46,28 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
     }
 
     @Override
-    public List<QueueRequestEntity> findRequestById(Long targetId, Integer number, Integer pageSize) {
+    public List<QueueRequestEntity> findRequestById(Long targetId, LocalDateTime now, Integer number, Integer pageSize) {
         return getSession()
-                .createQuery("FROM " + getEntityName(QueueRequestEntity.class) + " WHERE queueTargetId = :targetId ORDER BY queueFrom DESC", QueueRequestEntity.class)
+                .createQuery("FROM " +
+                        getEntityName(QueueRequestEntity.class) +
+                        " WHERE queueTargetId = :targetId AND queueTo >= :now ORDER BY queueFrom ASC",
+                        QueueRequestEntity.class)
                 .setParameter("targetId", targetId)
+                .setParameter("now", now)
                 .setFirstResult((number - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .list();
     }
 
     @Override
-    public Long findCountRequestByTargetId(Long targetId) {
+    public Long findCountRequestByTargetId(Long targetId, LocalDateTime now) {
         return getSession()
-                .createQuery("SELECT COUNT(id) FROM " + getEntityName(QueueRequestEntity.class) + " WHERE queueTargetId = :targetId", Long.class)
+                .createQuery("SELECT COUNT(id) FROM " +
+                        getEntityName(QueueRequestEntity.class) +
+                                " WHERE queueTargetId = :targetId AND queueTo >= :now",
+                        Long.class)
                 .setParameter("targetId", targetId)
+                .setParameter("now", now)
                 .uniqueResult();
     }
 
@@ -109,7 +118,7 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
         StringBuilder sqlQuery = new StringBuilder();
         sqlQuery = sqlQuery.append("SELECT COUNT(id) FROM ")
                 .append(getEntityName(QueueRequestEntity.class))
-                .append(" WHERE queueFrom >= :now");
+                .append(" WHERE queueFrom >= :now AND queueTo >= :now");
 
         if (StringUtils.hasText(request.getName())) {
             sqlQuery = sqlQuery.append(" AND target.name LIKE :name");
@@ -131,7 +140,7 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
         StringBuilder sqlQuery = new StringBuilder();
         sqlQuery = sqlQuery.append("FROM ")
                 .append(getEntityName(QueueRequestEntity.class))
-                .append(" WHERE queueFrom >= :now");
+                .append(" WHERE queueFrom >= :now AND queueTo >= :now");
 
         if (StringUtils.hasText(request.getName())) {
             sqlQuery = sqlQuery.append(" AND target.name LIKE :name");
@@ -152,6 +161,8 @@ public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implemen
         switch (type) {
             case TARGET_TITLE_ASC: return " ORDER BY target.name ASC";
             case TARGET_TITLE_DESC: return " ORDER BY target.name DESC";
+            case REQUEST_FROM_ASC: return " ORDER BY queueFrom ASC";
+            case REQUEST_FROM_DESC: return " ORDER BY queueFrom DESC";
             default: return " ORDER BY id DESC";
         }
     }

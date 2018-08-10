@@ -1,7 +1,6 @@
 import {PageRequestModel} from './page-request.model';
+import {QueueSortType} from './queue-sort-type';
 
 export class QueueTargetFilterPageModel extends PageRequestModel {
-    constructor(public filterTitle: string) {
-        super();
-    }
+    public sort: QueueSortType = QueueSortType.REQUEST_FROM_ASC;
 }

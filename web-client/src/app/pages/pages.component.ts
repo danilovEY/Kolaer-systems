@@ -80,7 +80,7 @@ export class PagesComponent implements OnInit {
 
             // ======= Очередь ======
             const queueMenuItem: NbMenuItem = new NbMenuItem();
-            queueMenuItem.title = 'Очередь';
+            queueMenuItem.title = 'Бронирование кабинетов';
             queueMenuItem.icon = 'icon ion-md-git-pull-request';
             queueMenuItem.children = [];
 
@@ -89,7 +89,7 @@ export class PagesComponent implements OnInit {
             queueMainMenuItem.link = 'app/queue';
 
             const queueTargetMenuItem: NbMenuItem = new NbMenuItem();
-            queueTargetMenuItem.title = 'Цели';
+            queueTargetMenuItem.title = 'Бронирование';
             queueTargetMenuItem.link = 'app/queue/target';
 
             queueMenuItem.children.push(queueMainMenuItem, queueTargetMenuItem);

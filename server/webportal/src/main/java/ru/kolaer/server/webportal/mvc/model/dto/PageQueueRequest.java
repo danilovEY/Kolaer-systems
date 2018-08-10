@@ -9,5 +9,5 @@ public class PageQueueRequest extends PaginationRequest {
     private String name;
     private LocalDateTime afterFrom;
 
-    private QueueSortType sort = QueueSortType.TARGET_TITLE_ASC;
+    private QueueSortType sort = QueueSortType.REQUEST_FROM_ASC;
 }

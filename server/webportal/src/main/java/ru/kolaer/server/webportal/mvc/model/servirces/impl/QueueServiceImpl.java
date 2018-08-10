@@ -93,8 +93,10 @@ public class QueueServiceImpl
     @Transactional
     @Override
     public Page<QueueRequestDto> getAllQueueRequestByTarget(Long targetId, Integer number, Integer pageSize) {
-        Long size = defaultEntityDao.findCountRequestByTargetId(targetId);
-        List<QueueRequestEntity> requests = defaultEntityDao.findRequestById(targetId, number, pageSize);
+        LocalDateTime now = LocalDateTime.now().minusHours(1);
+
+        Long size = defaultEntityDao.findCountRequestByTargetId(targetId, now);
+        List<QueueRequestEntity> requests = defaultEntityDao.findRequestById(targetId, now, number, pageSize);
 
         return new Page<>(defaultConverter.convertToRequestDto(requests), number, size, pageSize);
     }

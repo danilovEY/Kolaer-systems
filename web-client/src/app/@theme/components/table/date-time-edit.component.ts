@@ -5,28 +5,32 @@ import {Utils} from '../../../@core/utils/utils';
 
 @Component({
     selector: 'edit-datetime',
-    template: `
-        <div class="input-group">
-            <input class="form-control" 
-                   placeholder="Дата"
-                   name="dp"
-                   container="body"
-                   type="text"
-                   [disabled]="!cell.isEditable()"
-                   (click)="onClick.emit($event)"
-                   (keydown.enter)="onEdited.emit($event)"
-                   (keydown.esc)="onStopEditing.emit()"
-                   (dateSelect)="setValue($event)"
-                   [startDate]="currentDate"
-                   [(ngModel)]="currentDate"
-                   ngbDatepicker #d="ngbDatepicker">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
-                    <i class="icon ion-md-calendar"></i>
-                </button>
+    template: ` 
+        <div class="center-block">        
+            <div class="input-group">
+                <input class="form-control" 
+                       placeholder="Дата"
+                       name="dp"
+                       container="body"
+                       type="text"
+                       [disabled]="!cell.isEditable()"
+                       (click)="onClick.emit($event)"
+                       (keydown.enter)="onEdited.emit($event)"
+                       (keydown.esc)="onStopEditing.emit()"
+                       (dateSelect)="setValue($event)"
+                       [startDate]="currentDate"
+                       [(ngModel)]="currentDate"
+                       ngbDatepicker #d="ngbDatepicker">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                        <i class="icon ion-md-calendar"></i>
+                    </button>
+                </div>
             </div>
-
-            <ngb-timepicker [ngModel]="time" (ngModelChange)="setTimeValue($event)"></ngb-timepicker>
+        
+            <div class="input-group">
+                <ngb-timepicker [ngModel]="time" (ngModelChange)="setTimeValue($event)"></ngb-timepicker>
+            </div>
         </div>
     `
 })

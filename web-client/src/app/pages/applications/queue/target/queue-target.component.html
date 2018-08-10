@@ -4,11 +4,11 @@
     <div class="col-12">
         <nb-card>
             <nb-card-header>
-                <span>Список целей на очередь</span>
+                <span>Кабинеты</span>
             </nb-card-header>
 
             <nb-card-body>
-                <ngx-loading [show]="loadingQueueTarget" ></ngx-loading>
+                <ngx-loading [show]="loadingQueueTarget"></ngx-loading>
                 <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
                               [actionAdd]="isAdd"
                               (action)="action($event)"
