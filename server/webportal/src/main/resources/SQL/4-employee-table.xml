@@ -67,4 +67,20 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="4-2" author="Danilov">
+        <addColumn tableName="employee">
+            <column name="harmfulness" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="employee">
+            <column name="type_work_id" type="BIGINT"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="employee" baseColumnNames="type_work_id" constraintName="employee_type_work_fk"
+                                 referencedTableName="type_work"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>
