@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
 import org.springframework.stereotype.Service;
-import ru.kolaer.server.webportal.mvc.model.dto.typework.TypeWorkDto;
+import ru.kolaer.api.mvp.model.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.server.webportal.mvc.model.entities.typework.TypeWorkEntity;
 
 @Service

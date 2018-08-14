@@ -2,6 +2,7 @@ package ru.kolaer.api.mvp.model.kolaerweb;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.kolaer.api.mvp.model.kolaerweb.typework.TypeWorkDto;
 
 import java.util.Date;
 
@@ -26,6 +27,8 @@ public class EmployeeDto implements BaseDto {
     private Date dismissalDate;
     private String photo;
     private EnumCategory category;
+    private boolean harmfulness;
+    private TypeWorkDto typeWork;
 
     public EmployeeDto(Long id) {
         this.id = id;

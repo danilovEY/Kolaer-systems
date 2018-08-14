@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
+import ru.kolaer.api.mvp.model.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PostService;
+import ru.kolaer.server.webportal.mvc.model.servirces.TypeWorkService;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +28,8 @@ public class EmployeeConverterImpl implements EmployeeConverter {
     private final PostConverter postConverter;
     private final DepartmentService departmentService;
     private final DepartmentConverter departmentConverter;
+    private final TypeWorkService typeWorkService;
+    private final TypeWorkConverter typeWorkConverter;
 
     @Override
     public List<EmployeeDto> convertToDto(List<EmployeeEntity> model) {
@@ -41,6 +45,10 @@ public class EmployeeConverterImpl implements EmployeeConverter {
                 .map(EmployeeEntity::getPostId)
                 .collect(Collectors.toList());
 
+        List<Long> typeWordIds = model.stream()
+                .map(EmployeeEntity::getTypeWorkId)
+                .collect(Collectors.toList());
+
         Map<Long, PostDto> postMap = postService.getById(postIds)
                 .stream()
                 .collect(Collectors.toMap(PostDto::getId, Function.identity()));
@@ -49,11 +57,16 @@ public class EmployeeConverterImpl implements EmployeeConverter {
                 .stream()
                 .collect(Collectors.toMap(DepartmentDto::getId, Function.identity()));
 
+        Map<Long, TypeWorkDto> typeWorkMap = typeWorkService.getById(typeWordIds)
+                .stream()
+                .collect(Collectors.toMap(TypeWorkDto::getId, Function.identity()));
+
         return model.stream()
                 .map(entity -> {
                     EmployeeDto dto = updateStatic(new EmployeeDto(), entity);
                     dto.setDepartment(depMap.get(entity.getDepartmentId()));
                     dto.setPost(postMap.get(entity.getPostId()));
+                    dto.setTypeWork(typeWorkMap.get(entity.getTypeWorkId()));
                     return dto;
                 }).collect(Collectors.toList());
     }
@@ -93,6 +106,12 @@ public class EmployeeConverterImpl implements EmployeeConverter {
                     .ifPresent(employeeDto::setDepartment);
         }
 
+        if(model.getTypeWorkId() != null) {
+            Optional.ofNullable(model.getTypeWork())
+                    .map(typeWorkConverter::convertToDto)
+                    .ifPresent(employeeDto::setTypeWork);
+        }
+
         return employeeDto;
     }
 
@@ -126,6 +145,17 @@ public class EmployeeConverterImpl implements EmployeeConverter {
             oldDto.setDepartment(null);
         }
 
+        if(newModel.getTypeWorkId() != null && !newModel.getTypeWorkId().equals(Optional
+                .ofNullable(oldDto.getTypeWork())
+                .map(TypeWorkDto::getId)
+                .orElse(null))) {
+            Optional.ofNullable(newModel.getTypeWork())
+                    .map(typeWorkConverter::convertToDto)
+                    .ifPresent(oldDto::setTypeWork);
+        } else {
+            oldDto.setTypeWork(null);
+        }
+
         return oldDto;
     }
 
@@ -141,6 +171,10 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         Optional.ofNullable(model.getPostId())
                 .map(PostDto::new)
                 .ifPresent(employeeDto::setPost);
+
+        Optional.ofNullable(model.getTypeWorkId())
+                .map(TypeWorkDto::new)
+                .ifPresent(employeeDto::setTypeWork);
 
         return employeeDto;
     }
@@ -162,6 +196,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         entity.setGender(dto.getGender());
         entity.setPhoto(dto.getPhoto());
         entity.setCategory(dto.getCategory());
+        entity.setHarmfulness(dto.isHarmfulness());
 
         return entity;
     }
@@ -183,6 +218,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         dto.setInitials(entity.getInitials());
         dto.setCategory(entity.getCategory());
         dto.setPhoto(entity.getPhoto());
+        dto.setHarmfulness(entity.isHarmfulness());
 
         return dto;
     }
