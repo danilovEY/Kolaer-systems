@@ -1,10 +1,12 @@
 package ru.kolaer.server.webportal.mvc.model.entities.general;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.typework.TypeWorkEntity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -52,10 +54,12 @@ public class EmployeeEntity implements BaseEntity {
     @Column(name = "post_id")
     private Long postId;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id", insertable=false, updatable=false)
     private DepartmentEntity department;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", insertable=false, updatable=false)
     private PostEntity post;
@@ -78,8 +82,19 @@ public class EmployeeEntity implements BaseEntity {
     @Column(name = "contact_id")
     private Long contactId;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contact_id", insertable=false, updatable=false)
     private ContactEntity contact;
 
+    @Column(name = "harmfulness", nullable = false)
+    private boolean harmfulness;
+
+    @Column(name = "type_work_id")
+    private Long typeWorkId;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type_work_id", insertable=false, updatable=false)
+    private TypeWorkEntity typeWork;
 }
