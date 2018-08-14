@@ -1,10 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.dto.PageQueueRequest;
-import ru.kolaer.server.webportal.mvc.model.dto.QueueRequestDto;
-import ru.kolaer.server.webportal.mvc.model.dto.QueueScheduleDto;
-import ru.kolaer.server.webportal.mvc.model.dto.QueueTargetDto;
+import ru.kolaer.server.webportal.mvc.model.dto.queue.PageQueueRequest;
+import ru.kolaer.server.webportal.mvc.model.dto.queue.QueueRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.queue.QueueScheduleDto;
+import ru.kolaer.server.webportal.mvc.model.dto.queue.QueueTargetDto;
 
 public interface QueueService extends DefaultService<QueueTargetDto> {
 

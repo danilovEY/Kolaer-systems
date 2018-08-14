@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
-import ru.kolaer.server.webportal.mvc.model.dto.QueueRequestDto;
-import ru.kolaer.server.webportal.mvc.model.dto.QueueTargetDto;
+import ru.kolaer.server.webportal.mvc.model.dto.queue.QueueRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.queue.QueueTargetDto;
 import ru.kolaer.server.webportal.mvc.model.entities.queue.QueueRequestEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.queue.QueueTargetEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.BaseConverter;

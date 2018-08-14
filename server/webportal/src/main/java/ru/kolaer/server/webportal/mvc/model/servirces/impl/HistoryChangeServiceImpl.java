@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.server.webportal.mvc.model.dao.HistoryChangeDao;
-import ru.kolaer.server.webportal.mvc.model.dto.HistoryChangeDto;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.HistoryChangeDto;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.historychange.HistoryChangeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.historychange.HistoryChangeEvent;

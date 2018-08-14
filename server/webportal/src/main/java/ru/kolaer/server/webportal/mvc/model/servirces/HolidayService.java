@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
-import ru.kolaer.server.webportal.mvc.model.dto.HolidayDto;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.HolidayDto;
 
 import java.util.List;
 

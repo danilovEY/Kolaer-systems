@@ -1,7 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.dto.*;
+import ru.kolaer.server.webportal.mvc.model.dto.SortParam;
+import ru.kolaer.server.webportal.mvc.model.dto.ticket.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.*;
+import ru.kolaer.server.webportal.mvc.model.dto.bank.BankAccountDto;
+import ru.kolaer.server.webportal.mvc.model.dto.bank.BankAccountFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.bank.BankAccountRequest;
+import ru.kolaer.server.webportal.mvc.model.dto.bank.BankAccountSort;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeSort;
 import ru.kolaer.server.webportal.mvc.model.servirces.BankAccountService;
 
 /**

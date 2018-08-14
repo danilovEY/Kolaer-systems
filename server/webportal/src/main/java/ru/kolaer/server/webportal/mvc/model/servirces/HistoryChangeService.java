@@ -1,6 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
-import ru.kolaer.server.webportal.mvc.model.dto.HistoryChangeDto;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.HistoryChangeDto;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.historychange.HistoryChangeEvent;
 

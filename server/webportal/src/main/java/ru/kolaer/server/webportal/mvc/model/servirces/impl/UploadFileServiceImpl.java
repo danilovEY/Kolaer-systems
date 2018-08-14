@@ -12,7 +12,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kolaer.server.webportal.mvc.model.converter.UploadFileConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.UploadFileDao;
-import ru.kolaer.server.webportal.mvc.model.dto.UploadFileDto;
+import ru.kolaer.server.webportal.mvc.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;

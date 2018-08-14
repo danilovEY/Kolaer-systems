@@ -8,7 +8,7 @@ import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.PostConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.PostDao;
-import ru.kolaer.server.webportal.mvc.model.dto.PostRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.post.PostRequestDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PostService;

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.QueueDao;
-import ru.kolaer.server.webportal.mvc.model.dto.PageQueueRequest;
-import ru.kolaer.server.webportal.mvc.model.dto.QueueSortType;
+import ru.kolaer.server.webportal.mvc.model.dto.queue.PageQueueRequest;
+import ru.kolaer.server.webportal.mvc.model.dto.queue.QueueSortType;
 import ru.kolaer.server.webportal.mvc.model.entities.queue.QueueRequestEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.queue.QueueTargetEntity;
 

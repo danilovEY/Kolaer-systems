@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
 import org.springframework.stereotype.Service;
-import ru.kolaer.server.webportal.mvc.model.dto.UploadFileDto;
+import ru.kolaer.server.webportal.mvc.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
 
 @Service

@@ -2,8 +2,8 @@ package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.dto.ContactDto;
-import ru.kolaer.server.webportal.mvc.model.dto.ContactRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.concact.ContactDto;
+import ru.kolaer.server.webportal.mvc.model.dto.concact.ContactRequestDto;
 import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactType;
 
 import java.util.List;

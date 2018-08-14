@@ -11,8 +11,8 @@ import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordFilter;
-import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordSort;
+import ru.kolaer.server.webportal.mvc.model.dto.kolpass.RepositoryPasswordFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.kolpass.RepositoryPasswordSort;
 import ru.kolaer.server.webportal.mvc.model.servirces.PasswordRepositoryService;
 
 import java.util.List;

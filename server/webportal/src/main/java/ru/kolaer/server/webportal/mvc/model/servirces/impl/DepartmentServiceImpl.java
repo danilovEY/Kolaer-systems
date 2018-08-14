@@ -8,7 +8,7 @@ import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.DepartmentConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
-import ru.kolaer.server.webportal.mvc.model.dto.DepartmentRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.department.DepartmentRequestDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;

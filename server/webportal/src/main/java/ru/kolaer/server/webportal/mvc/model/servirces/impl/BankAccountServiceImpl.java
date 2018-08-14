@@ -11,6 +11,8 @@ import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dto.*;
+import ru.kolaer.server.webportal.mvc.model.dto.bank.BankAccountDto;
+import ru.kolaer.server.webportal.mvc.model.dto.bank.BankAccountRequest;
 import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.BankAccountService;

@@ -17,9 +17,9 @@ import ru.kolaer.server.webportal.mvc.model.converter.PasswordRepositoryConverte
 import ru.kolaer.server.webportal.mvc.model.dao.PasswordHistoryDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PasswordRepositoryDao;
 import ru.kolaer.server.webportal.mvc.model.dto.FilterType;
-import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordFilter;
-import ru.kolaer.server.webportal.mvc.model.dto.RepositoryPasswordSort;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdate;
+import ru.kolaer.server.webportal.mvc.model.dto.kolpass.RepositoryPasswordFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.kolpass.RepositoryPasswordSort;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordHistoryEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.kolpass.PasswordRepositoryEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;

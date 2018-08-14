@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.ldap;
 
 
-import ru.kolaer.server.webportal.mvc.model.dto.RoleDto;
+import ru.kolaer.server.webportal.mvc.model.dto.account.RoleDto;
 
 import java.util.List;
 

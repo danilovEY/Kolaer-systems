@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.beans.RegisterTicketScheduler;
-import ru.kolaer.server.webportal.mvc.model.dto.*;
+import ru.kolaer.server.webportal.mvc.model.dto.ticket.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
 
 import javax.servlet.http.HttpServletResponse;

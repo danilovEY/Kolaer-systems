@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.PlacementDto;
-import ru.kolaer.server.webportal.mvc.model.dto.PlacementFilter;
-import ru.kolaer.server.webportal.mvc.model.dto.PlacementSort;
+import ru.kolaer.server.webportal.mvc.model.dto.placement.PlacementDto;
+import ru.kolaer.server.webportal.mvc.model.dto.placement.PlacementFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.placement.PlacementSort;
 import ru.kolaer.server.webportal.mvc.model.servirces.PlacementService;
 
 

@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
 import lombok.NonNull;
-import ru.kolaer.server.webportal.mvc.model.dto.TicketDto;
-import ru.kolaer.server.webportal.mvc.model.dto.TicketRegisterDto;
+import ru.kolaer.server.webportal.mvc.model.dto.ticket.TicketDto;
+import ru.kolaer.server.webportal.mvc.model.dto.ticket.TicketRegisterDto;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.BaseConverter;

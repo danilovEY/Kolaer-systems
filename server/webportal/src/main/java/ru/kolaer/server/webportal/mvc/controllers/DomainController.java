@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.RoleDto;
+import ru.kolaer.server.webportal.mvc.model.dto.account.RoleDto;
 import ru.kolaer.server.webportal.mvc.model.ldap.RoleLDAP;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
 import org.springframework.stereotype.Component;
-import ru.kolaer.server.webportal.mvc.model.dto.HolidayDto;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.HolidayDto;
 import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
 
 @Component

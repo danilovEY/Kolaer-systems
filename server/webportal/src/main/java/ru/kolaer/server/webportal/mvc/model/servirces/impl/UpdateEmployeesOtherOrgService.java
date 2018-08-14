@@ -13,7 +13,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
 import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeOtherOrganizationDao;
-import ru.kolaer.server.webportal.mvc.model.dto.HistoryChangeDto;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.HistoryChangeDto;
 import ru.kolaer.server.webportal.mvc.model.entities.birthday.EmployeeOtherOrganizationEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 

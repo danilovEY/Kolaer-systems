@@ -7,7 +7,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import ru.kolaer.server.webportal.mvc.model.dto.SendTicketDto;
+import ru.kolaer.server.webportal.mvc.model.dto.ticket.SendTicketDto;
 import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 

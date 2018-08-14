@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.DepartmentFilter;
-import ru.kolaer.server.webportal.mvc.model.dto.DepartmentRequestDto;
-import ru.kolaer.server.webportal.mvc.model.dto.DepartmentSort;
+import ru.kolaer.server.webportal.mvc.model.dto.department.DepartmentFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.department.DepartmentRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.department.DepartmentSort;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 
 /**

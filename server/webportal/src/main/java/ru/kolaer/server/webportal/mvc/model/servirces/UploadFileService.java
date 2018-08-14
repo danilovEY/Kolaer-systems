@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
-import ru.kolaer.server.webportal.mvc.model.dto.UploadFileDto;
+import ru.kolaer.server.webportal.mvc.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
 
 import javax.servlet.http.HttpServletResponse;

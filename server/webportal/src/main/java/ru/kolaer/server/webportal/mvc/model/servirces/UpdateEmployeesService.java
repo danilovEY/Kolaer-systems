@@ -1,6 +1,6 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
-import ru.kolaer.server.webportal.mvc.model.dto.HistoryChangeDto;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.HistoryChangeDto;
 
 import java.io.File;
 import java.io.InputStream;

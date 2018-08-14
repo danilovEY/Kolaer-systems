@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.PostFilter;
-import ru.kolaer.server.webportal.mvc.model.dto.PostRequestDto;
-import ru.kolaer.server.webportal.mvc.model.dto.PostSort;
+import ru.kolaer.server.webportal.mvc.model.dto.post.PostFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.post.PostRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.post.PostSort;
 import ru.kolaer.server.webportal.mvc.model.servirces.PostService;
 
 /**

@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.server.webportal.mvc.model.dto.EmployeeRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeRequestDto;
 
 import java.util.List;
 

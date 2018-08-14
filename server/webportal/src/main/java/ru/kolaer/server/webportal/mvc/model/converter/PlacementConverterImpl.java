@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.converter;
 
 import org.springframework.stereotype.Component;
-import ru.kolaer.server.webportal.mvc.model.dto.PlacementDto;
+import ru.kolaer.server.webportal.mvc.model.dto.placement.PlacementDto;
 import ru.kolaer.server.webportal.mvc.model.entities.placement.PlacementEntity;
 
 @Component

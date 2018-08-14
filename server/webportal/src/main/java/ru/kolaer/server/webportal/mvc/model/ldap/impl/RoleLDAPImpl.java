@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.ldap.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.kolaer.server.webportal.mvc.model.dto.RoleDto;
+import ru.kolaer.server.webportal.mvc.model.dto.account.RoleDto;
 import ru.kolaer.server.webportal.mvc.model.ldap.RoleLDAP;
 
 import javax.naming.NamingEnumeration;

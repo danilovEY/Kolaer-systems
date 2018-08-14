@@ -11,9 +11,9 @@ import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.FilterType;
-import ru.kolaer.server.webportal.mvc.model.dto.HolidayDto;
-import ru.kolaer.server.webportal.mvc.model.dto.HolidayFilter;
-import ru.kolaer.server.webportal.mvc.model.dto.HolidaySort;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.HolidayDto;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.HolidayFilter;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.HolidaySort;
 import ru.kolaer.server.webportal.mvc.model.servirces.HolidayService;
 
 import java.time.LocalDate;

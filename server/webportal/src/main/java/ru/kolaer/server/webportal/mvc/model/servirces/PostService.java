@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
 import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
-import ru.kolaer.server.webportal.mvc.model.dto.PostRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.post.PostRequestDto;
 
 /**
  * Created by danilovey on 12.10.2017.

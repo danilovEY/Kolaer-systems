@@ -15,7 +15,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.HolidayConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.HolidayDao;
-import ru.kolaer.server.webportal.mvc.model.dto.HolidayDto;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.HolidayDto;
 import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.HolidayService;
