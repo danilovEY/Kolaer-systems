@@ -17,12 +17,13 @@ import {AuthModule} from './@core/modules/auth/auth.module';
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
-        AppRoutingModule,
 
         AuthModule.forRoot(),
         NgbModule.forRoot(),
         ThemeModule.forRoot(),
         CoreModule.forRoot(),
+
+        AppRoutingModule,
     ],
     bootstrap: [AppComponent],
     providers: [

@@ -18,4 +18,6 @@ export class EmployeeModel extends BaseModel {
     personnelNumber: number;
     gender: Gender;
     post: PostModel;
+    harmfulness: boolean;
+    typeWork: any;
 }

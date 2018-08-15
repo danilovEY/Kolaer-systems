@@ -12,6 +12,7 @@
 
     <include file="classpath:SQL/8-post-table.xml"/>
     <include file="classpath:SQL/3-department-table.xml"/>
+    <include file="classpath:SQL/31-type_work-table.xml"/>
     <include file="classpath:SQL/4-employee-table.xml"/>
     <include file="classpath:SQL/1-account-table.xml"/>
 
@@ -40,6 +41,12 @@
 
     <include file="classpath:SQL/26-queue-target-table.xml"/>
     <include file="classpath:SQL/27-queue-request-table.xml"/>
+
+
+    <include file="classpath:SQL/28-vacation-table.xml"/>
+    <include file="classpath:SQL/29-vacation-history-table.xml"/>
+    <include file="classpath:SQL/30-vacation-balance-table.xml"/>
+
 
 
 

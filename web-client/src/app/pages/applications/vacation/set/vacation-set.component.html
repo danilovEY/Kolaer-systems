@@ -1,0 +1,46 @@
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                <span>Выбор сотрудника</span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <div class="row">
+                    <div class="col-6">
+                    </div>
+                    <div class="col-6">
+                        <label>Сотрудник:</label>
+                        <button (click)="test()">fsdfsdf</button>
+                        <p-dropdown *ngIf="employees.length > 0"
+                                [style]="{'width':'100%'}"
+                                    [options]="employees"
+                                    [(ngModel)]="selectedEmployee"
+                                    placeholder="Выберите сотрудника..."
+                                    optionLabel="initials"
+                                    [filter]="true"
+                                    [autoWidth]="false"
+                                    appendTo="body">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </div>
+
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                <span>Задать отпуск</span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="loadingVacation"></ngx-loading>
+                <!--<custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"-->
+                <!--[actionAdd]="true" [actionDelete]="true" [actionEdit]="true"-->
+                <!--(delete)="delete($event)" (create)="create($event)" (action)="action($event)">-->
+                <!--</custom-table>-->
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>

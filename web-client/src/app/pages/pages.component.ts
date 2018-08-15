@@ -36,7 +36,6 @@ export class PagesComponent implements OnInit {
         this.menu.push(dashboardMenuItem, appMenuMenuItem);
 
         // ======= Контакты ======
-
         const contactsMenuItem: NbMenuItem = new NbMenuItem();
         contactsMenuItem.title = 'Контакты';
         contactsMenuItem.icon = 'fa fa-address-book';
@@ -50,7 +49,6 @@ export class PagesComponent implements OnInit {
         this.menu.push(contactsMenuItem);
 
         // ======= Производственный календарь ======
-
         const productionCalendarMenuItem: NbMenuItem = new NbMenuItem();
         productionCalendarMenuItem.title = 'Производственный календарь';
         productionCalendarMenuItem.icon = 'icon ion-md-calendar';
@@ -65,6 +63,24 @@ export class PagesComponent implements OnInit {
 
 
         if (this.authService.authentication) {
+            // ======= График отпусков ======
+            const vacationMenuItem: NbMenuItem = new NbMenuItem();
+            vacationMenuItem.title = 'График отпусков';
+            vacationMenuItem.icon = 'icon ion-md-airplane';
+            vacationMenuItem.children = [];
+
+            const vacationMainMenuItem: NbMenuItem = new NbMenuItem();
+            vacationMainMenuItem.title = 'Главная';
+            vacationMainMenuItem.link = 'app/vacation/main';
+
+            const vacationSetMenuItem: NbMenuItem = new NbMenuItem();
+            vacationSetMenuItem.title = 'Задать отпуск';
+            vacationSetMenuItem.link = 'app/vacation/set';
+
+            vacationMenuItem.children.push(vacationMainMenuItem, vacationSetMenuItem);
+            this.menu.push(vacationMenuItem);
+
+
             // ======= Парольница ======
             const kolpassMenuItem: NbMenuItem = new NbMenuItem();
             kolpassMenuItem.title = 'Парольница';
@@ -96,7 +112,6 @@ export class PagesComponent implements OnInit {
             this.menu.push(queueMenuItem);
 
             // ======= Талоны ЛПП ======
-
             const ticketsMenuItem: NbMenuItem = new NbMenuItem();
             ticketsMenuItem.title = 'Талоны ЛПП';
             ticketsMenuItem.icon = 'fa fa-ticket';
@@ -107,7 +122,6 @@ export class PagesComponent implements OnInit {
             ticketsMainMenuItem.link = 'app/tickets';
 
             // ======= Структура организации ======
-
             const orgStructureMenuItem: NbMenuItem = new NbMenuItem();
             orgStructureMenuItem.title = 'Структура организации';
             orgStructureMenuItem.icon = 'icon ion-md-business';

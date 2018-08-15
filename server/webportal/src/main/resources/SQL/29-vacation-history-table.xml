@@ -54,7 +54,7 @@
         <addForeignKeyConstraint baseTableName="vacation_history" baseColumnNames="account_id"
                                  constraintName="vacation_history_account_fk"
                                  referencedTableName="account"
-                                 referencedColumnNames="id" onDelete="SET NULL"/>
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

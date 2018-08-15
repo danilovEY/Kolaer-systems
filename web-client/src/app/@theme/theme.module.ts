@@ -44,9 +44,10 @@ import {DepartmentEditComponent} from './components/table/department-edit.compon
 import {DateEditComponent} from './components/table/date-edit.component';
 import {CustomDatePickerLangService} from '../@core/services/custom-date-picker-lang.service';
 import {PlacementEditComponent} from './components/table/placement-edit.component';
-import {CalendarModule} from 'primeng/primeng';
+import {CalendarModule, DropdownModule} from 'primeng/primeng';
 import {DateTimeEditComponent} from './components/table/date-time-edit.component';
 import {NgbDateRusParserFormatter} from './components/table/ngb-date-rus-parser.formatter';
+import {TableModule} from 'primeng/table';
 
 // import {NbSecurityModule} from '@nebular/security';
 
@@ -77,6 +78,8 @@ const NB_MODULES = [
     ToasterModule,
     NgSelectModule,
     CalendarModule,
+    TableModule,
+    DropdownModule
 ];
 
 const COMPONENTS = [

@@ -3,7 +3,6 @@ import {NgModule} from '@angular/core';
 import {ApplicationsComponent} from './applications.component';
 import {AuthGuardService} from '../../@core/modules/auth/auth-guard.service';
 
-
 const routes: Routes = [{
     path: '',
     component: ApplicationsComponent,
@@ -34,6 +33,11 @@ const routes: Routes = [{
         {
             path: 'queue',
             loadChildren: 'app/pages/applications/queue/queue.module#QueueModule',
+            canActivate: [AuthGuardService]
+        },
+        {
+            path: 'vacation',
+            loadChildren: 'app/pages/applications/vacation/vacation.module#VacationModule',
             canActivate: [AuthGuardService]
         },
     ]

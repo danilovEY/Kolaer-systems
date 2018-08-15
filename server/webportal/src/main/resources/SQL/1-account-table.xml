@@ -69,4 +69,14 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1-8" author="Danilov">
+        <addColumn tableName="account">
+            <column name="access_vacation_admin" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+
+        <addColumn tableName="account">
+            <column name="access_vacation_dep_edit" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
