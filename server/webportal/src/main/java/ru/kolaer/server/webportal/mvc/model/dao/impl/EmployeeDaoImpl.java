@@ -3,18 +3,24 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.error.ErrorCode;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeSortType;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactType;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Danilov on 27.07.2016.
@@ -145,6 +151,69 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .getSingleResult();
 
         return ((BigInteger) result).longValue();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long findAllEmployeeCount(FindEmployeePageRequest request) {
+        Map<String, Object> params = new HashMap<>();
+
+        StringBuilder query = new StringBuilder()
+                .append("SELECT COUNT(emp.id) FROM ")
+                .append(getEntityName())
+                .append(" AS emp");
+
+        query = query.append(" WHERE emp.dismissalDate IS NULL");
+
+        if (request.getDepartmentId() != null) {
+            query = query.append(" AND emp.departmentId = :depId");
+            params.put("depId", request.getDepartmentId());
+        }
+
+        return getSession().createQuery(query.toString(), Long.class)
+                .setProperties(params)
+                .uniqueResult();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmployeeEntity> findAllEmployee(FindEmployeePageRequest request) {
+        Map<String, Object> params = new HashMap<>();
+
+        StringBuilder query = new StringBuilder()
+                .append("FROM ")
+                .append(getEntityName())
+                .append(" AS emp");
+
+        query = query.append(" WHERE emp.dismissalDate IS NULL");
+
+        if (request.getDepartmentId() != null) {
+            query = query.append(" AND emp.departmentId = :depId");
+            params.put("depId", request.getDepartmentId());
+        }
+
+        Query<EmployeeEntity> entityQuery = getSession()
+                .createQuery(query.append(getOrder(request.getSort())).toString(), EmployeeEntity.class);
+
+        if(!request.isOnOnePage()) {
+            entityQuery = entityQuery
+                    .setFirstResult((request.getNumber() - 1) * request.getPageSize())
+                    .setMaxResults(request.getPageSize());
+        }
+
+        return entityQuery
+                .setProperties(params)
+                .list();
+    }
+
+    private String getOrder(EmployeeSortType sortType) {
+        if (sortType == null) return " ORDER BY emp.id ASC";
+
+        switch (sortType) {
+            case INITIALS_ASC: return " ORDER BY emp.initials ASC";
+            case ID_ASC:
+                default: return " ORDER BY emp.id ASC";
+        }
     }
 
     @Override

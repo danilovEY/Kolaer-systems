@@ -10,4 +10,6 @@ export class AccountModel extends BaseModel {
 	accessOit: boolean;
 	accessUser: boolean;
 	accessOk: boolean;
+	accessVacationAdmin: boolean;
+	accessVacationDepEdit: boolean;
 }

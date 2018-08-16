@@ -14,13 +14,15 @@ import {EmployeeFilterModel} from '../models/employee-filter.model';
 import {BaseService} from './base.service';
 import {EmployeeRequestModel} from '../models/employee-request.model';
 import {catchError, map, switchMap, tap} from 'rxjs/internal/operators';
-import {HistoryChangeModel} from "../models/history-change.model";
-import {HistoryChangeEventEnum} from "../models/history-change-event.enum";
+import {FindEmployeeRequestModel} from '../models/find-employee-request.model';
+import {HistoryChangeModel} from '../models/history-change.model';
+import {HistoryChangeEventEnum} from '../models/history-change-event.enum';
 
 @Injectable()
 export class EmployeeService extends BaseService implements AuthenticationObserverService {
     private readonly getEmployeeUrl: string = environment.publicServerUrl + '/employees';
     private readonly getAllEmployeesUrl: string = `${this.getEmployeeUrl}/get/all`;
+    private readonly getAllEmployeesByDepIdUrl: string = `${this.getEmployeeUrl}/get/all/by/dep`;
     private readonly uploadEmployeesUrl: string = `${this.getEmployeeUrl}/sync`;
     private readonly sendReportForOldDbUrl: string = `${this.getEmployeeUrl}/old/report`;
     private readonly getAllEmployeeBirthdayToday: string = `${this.getEmployeeUrl}/get/birthday/today`;
@@ -89,6 +91,18 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
 
         return this._httpClient.get<Page<EmployeeModel>>(this.getAllEmployeesUrl, {params: params})
             .pipe(tap((request: Page<EmployeeModel>) => request.data.map(this.convertModel)));
+    }
+
+    findAllEmployees(findRequest: FindEmployeeRequestModel): Observable<Page<EmployeeModel>> {
+        let params = new HttpParams();
+
+        params = params.append('page', String(findRequest.number))
+            .append('pagesize', String(findRequest.pageSize))
+            .append('onOnePage', String(findRequest.onOnePage))
+            .append('departmentId', String(findRequest.departmentId));
+
+        return this._httpClient.get<Page<EmployeeModel>>(this.getEmployeeUrl, {params: params})
+            .pipe(tap((request: Page<EmployeeModel>) => request.data.forEach(this.convertModel)));
     }
 
     getEmployeesBirthdayToday(): Observable<EmployeeModel[]> {

@@ -42,6 +42,8 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setAccessUser(dto.isAccessUser());
         accountEntity.setAccessOit(dto.isAccessOit());
         accountEntity.setAccessOk(dto.isAccessOk());
+        accountEntity.setAccessVacationAdmin(dto.isAccessVacationAdmin());
+        accountEntity.setAccessVacationDepEdit(dto.isAccessVacationDepEdit());
 
         accountEntity.setEmployeeId(Optional.ofNullable(dto.getEmployee())
                 .map(EmployeeDto::getId)
@@ -69,6 +71,8 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setAccessUser(model.isAccessUser());
         accountDto.setAccessOit(model.isAccessOit());
         accountDto.setAccessOk(model.isAccessOk());
+        accountDto.setAccessVacationAdmin(model.isAccessVacationAdmin());
+        accountDto.setAccessVacationDepEdit(model.isAccessVacationDepEdit());
 
         if(model.getEmployeeId() != null) {
             accountDto.setEmployee(employeeConverter.convertToDto(model.getEmployee()));
@@ -124,6 +128,8 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setAvatarUrl(model.getAvatarUrl());
         accountDto.setAccessOit(model.isAccessOit());
         accountDto.setAccessOk(model.isAccessOk());
+        accountDto.setAccessVacationAdmin(model.isAccessVacationAdmin());
+        accountDto.setAccessVacationDepEdit(model.isAccessVacationDepEdit());
 
         Optional.ofNullable(model.getEmployeeId())
                 .map(EmployeeDto::new)
@@ -174,6 +180,8 @@ public class AccountConverterImpl implements AccountConverter {
         accountSimpleDto.setAccessOit(accountEntity.isAccessOit());
         accountSimpleDto.setAccessUser(accountEntity.isAccessUser());
         accountSimpleDto.setAccessOk(accountEntity.isAccessOk());
+        accountSimpleDto.setAccessVacationAdmin(accountEntity.isAccessVacationAdmin());
+        accountSimpleDto.setAccessVacationDepEdit(accountEntity.isAccessVacationDepEdit());
 
         return accountSimpleDto;
     }
@@ -189,6 +197,8 @@ public class AccountConverterImpl implements AccountConverter {
         accountSimpleDto.setAccessOit(dto.isAccessOit());
         accountSimpleDto.setAccessUser(dto.isAccessUser());
         accountSimpleDto.setAccessOk(dto.isAccessOk());
+        accountSimpleDto.setAccessVacationAdmin(dto.isAccessVacationAdmin());
+        accountSimpleDto.setAccessVacationDepEdit(dto.isAccessVacationDepEdit());
 
         Optional.ofNullable(dto.getEmployee()).map(EmployeeDto::getId).ifPresent(accountSimpleDto::setEmployeeId);
 

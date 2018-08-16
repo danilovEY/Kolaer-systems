@@ -54,4 +54,10 @@ public class AccountEntity implements BaseEntity {
     @Column(name = "block", nullable = false)
     private boolean block;
 
+    @Column(name = "access_vacation_admin", nullable = false)
+    private boolean accessVacationAdmin;
+
+    @Column(name = "access_vacation_dep_edit", nullable = false)
+    private boolean accessVacationDepEdit;
+
 }

@@ -8,20 +8,31 @@
             <nb-card-body>
                 <div class="row">
                     <div class="col-6">
+                        <div *ngIf="departments.length > 0">
+                            <label>Подразделение:</label>
+                            <p-dropdown [style]="{'width':'100%'}"
+                                        [options]="departments"
+                                        [ngModel]="selectedDepartment"
+                                        (ngModelChange)="selectDepartment($event)"
+                                        placeholder="Выберите подразделение..."
+                                        optionLabel="abbreviatedName"
+                                        [autoWidth]="false"
+                                        appendTo="body">
+                            </p-dropdown>
+                        </div>
                     </div>
                     <div class="col-6">
-                        <label>Сотрудник:</label>
-                        <button (click)="test()">fsdfsdf</button>
-                        <p-dropdown *ngIf="employees.length > 0"
-                                [style]="{'width':'100%'}"
-                                    [options]="employees"
-                                    [(ngModel)]="selectedEmployee"
-                                    placeholder="Выберите сотрудника..."
-                                    optionLabel="initials"
-                                    [filter]="true"
-                                    [autoWidth]="false"
-                                    appendTo="body">
-                        </p-dropdown>
+                        <div *ngIf="employees.length > 0">
+                            <label>Сотрудник:</label>
+                            <p-dropdown [style]="{'width':'100%'}"
+                                        [options]="employees"
+                                        [(ngModel)]="selectedEmployee"
+                                        placeholder="Выберите сотрудника..."
+                                        optionLabel="initials"
+                                        [autoWidth]="false"
+                                        appendTo="body">
+                            </p-dropdown>
+                        </div>
                     </div>
                 </div>
             </nb-card-body>

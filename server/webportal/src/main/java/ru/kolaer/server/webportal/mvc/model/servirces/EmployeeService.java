@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.servirces;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
 
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface EmployeeService extends BirthdayService<EmployeeDto>, DefaultSe
     List<EmployeeDto> getEmployeesForContacts(int page, int pageSize, String searchText);
 
     long getCountEmployeesForContacts(String searchText);
+
+    Page<EmployeeDto> getEmployees(FindEmployeePageRequest request);
 }

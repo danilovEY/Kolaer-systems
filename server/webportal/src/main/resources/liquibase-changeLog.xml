@@ -46,6 +46,7 @@
     <include file="classpath:SQL/28-vacation-table.xml"/>
     <include file="classpath:SQL/29-vacation-history-table.xml"/>
     <include file="classpath:SQL/30-vacation-balance-table.xml"/>
+    <include file="classpath:SQL/32-vacation-period-table.xml"/>
 
 
 

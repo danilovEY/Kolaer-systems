@@ -11,6 +11,7 @@ import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
@@ -171,6 +172,14 @@ public class EmployeeServiceImpl
         return StringUtils.hasText(searchText)
                 ? defaultEntityDao.findCountEmployeesForContacts(searchText)
                 : defaultEntityDao.findAllCount();
+    }
+
+    @Override
+    public Page<EmployeeDto> getEmployees(FindEmployeePageRequest request) {
+        long count = defaultEntityDao.findAllEmployeeCount(request);
+        List<EmployeeDto> employees = defaultConverter.convertToDto(defaultEntityDao.findAllEmployee(request));
+
+        return new Page<>(employees, request.getNumber(), count, request.getPageSize());
     }
 
     @Override

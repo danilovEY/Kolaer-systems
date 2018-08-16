@@ -16,6 +16,7 @@ import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdate;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeFilter;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeRequestDto;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeSort;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.HistoryChangeDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdatableEmployeeService;
@@ -55,7 +56,7 @@ public class EmployeeController {
     )
     @UrlDeclaration(description = "Получить всех сотрудников", isAccessAll = true)
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<EmployeeDto> getAllEmployees(@RequestParam(value = "page", defaultValue = "0") Integer number,
+    public Page<EmployeeDto> getAllEmployees(@RequestParam(value = "page", defaultValue = "1") Integer number,
                                              @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                              EmployeeSort sortParam,
                                              EmployeeFilter filter) {
@@ -98,11 +99,17 @@ public class EmployeeController {
     @RequestMapping(value = "/get/all/by/dep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<EmployeeDto> getAllEmployeesByDep(
             @ApiParam("Подразделение") @RequestParam(value = "id") Long id,
-            @RequestParam(value = "page", defaultValue = "0") Integer number,
+            @RequestParam(value = "page", defaultValue = "1") Integer number,
             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return this.employeeService.getUsersByDepartmentId(number, pageSize, id);
     }
 
+    @ApiOperation(value = "Получить всех сотрудников")
+    @UrlDeclaration(description = "Получить всех сотрудников", isAccessAll = true)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<EmployeeDto> getAllEmployees(@ModelAttribute FindEmployeePageRequest request) {
+        return this.employeeService.getEmployees(request);
+    }
 
     @ApiOperation(
             value = "Получить всех сотрудников (между датами)",
