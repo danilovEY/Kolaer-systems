@@ -9,6 +9,11 @@ import {SimpleAccountModel} from '../../../../@core/models/simple-account.model'
 import {DepartmentSortModel} from '../../../../@core/models/department-sort.model';
 import {SortTypeEnum} from '../../../../@core/models/sort-type.enum';
 import {DepartmentFilterModel} from '../../../../@core/models/department-filter.model';
+import {VacationSetDataSource} from './vacation-set.data-source';
+import {VacationService} from '../vacation.service';
+import {Utils} from '../../../../@core/utils/utils';
+import {Column} from 'ng2-smart-table/lib/data-set/column';
+import {CustomActionModel} from '../../../../@theme/components/table/custom-action.model';
 
 @Component({
     selector: 'vacation-set',
@@ -24,13 +29,19 @@ export class VacationSetComponent implements OnInit {
     departments: DepartmentModel[] = [];
     selectedDepartment: DepartmentModel;
 
-    // source: LocalDataSource = new LocalDataSource();
-    loadingVacation: boolean = false;
+    actions: CustomActionModel[] = [];
+    columns: Column[] = [];
+    source: VacationSetDataSource;
+    loadingVacation: boolean = true;
 
 
     constructor(private accountService: AccountService,
                 private employeeService: EmployeeService,
-                private departmentService: DepartmentService) {
+                private departmentService: DepartmentService,
+                private vacationService: VacationService) {
+        this.source = new VacationSetDataSource(this.vacationService);
+        this.source.onLoading().subscribe(load => this.loadingVacation = load);
+        this.source.setYear(2018);
     }
 
     ngOnInit(): void {
@@ -50,6 +61,20 @@ export class VacationSetComponent implements OnInit {
                         });
                 }
             });
+
+        const dateFromColumn: Column = new Column('vacationFrom', {
+            title: 'Время создания',
+            type: 'date',
+            editable: false,
+            addable: false,
+            filter: false,
+            sort: false,
+            valuePrepareFunction(value: string) {
+                return Utils.getDateTimeFormatFromString(value);
+            }
+        }, undefined);
+
+        this.columns.push(dateFromColumn);
     }
 
 
@@ -77,5 +102,10 @@ export class VacationSetComponent implements OnInit {
             .subscribe(employeePage => {
                 this.employees = employeePage.data;
             });
+    }
+
+    selectEmployee(event: EmployeeModel) {
+        this.source.setEmployeeId(event.id);
+        this.selectedEmployee = event;
     }
 }

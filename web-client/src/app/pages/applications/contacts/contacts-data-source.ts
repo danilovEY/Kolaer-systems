@@ -3,7 +3,7 @@ import {ContactModel} from '../../../@core/models/contact.model';
 import {ContactTypeModel} from '../../../@core/models/contact-type.model';
 import {ContactsService} from '../../../@core/services/contacts.service';
 import {Page} from '../../../@core/models/page.model';
-import {Utils} from "../../../@core/utils/utils";
+import {Utils} from '../../../@core/utils/utils';
 
 export class ContactsDataSource extends CustomDataSource<ContactModel> {
     constructor(private contactsService: ContactsService,
