@@ -19,4 +19,6 @@ public @interface UrlDeclaration {
     boolean isOit() default true;
     boolean isUser() default true;
     boolean isOk() default false;
+    boolean isVacationAdmin() default false;
+    boolean isVacationDepEdit() default false;
 }

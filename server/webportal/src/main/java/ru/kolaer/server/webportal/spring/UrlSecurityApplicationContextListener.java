@@ -116,6 +116,9 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
                     urlPath.setAccessOit(urlDeclaration.isOit());
                     urlPath.setAccessUser(urlDeclaration.isUser());
                     urlPath.setAccessOk(urlDeclaration.isOk());
+                    urlPath.setAccessOk(urlDeclaration.isVacationAdmin());
+                    urlPath.setAccessVacationAdmin(urlDeclaration.isVacationAdmin());
+                    urlPath.setAccessVacationDepEdit(urlDeclaration.isVacationDepEdit());
                     urlPath.setAccessAll(urlDeclaration.isAccessAll());
                     urlPath.setUrl(url);
                     urlPath.setDescription(description);

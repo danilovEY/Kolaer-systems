@@ -7,6 +7,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.HolidayDao;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
 
 import java.time.DayOfWeek;
@@ -74,6 +75,29 @@ public class HolidayDaoImpl extends AbstractDefaultDao<HolidayEntity> implements
                 .setParameter("holidayDate", holidayDate)
                 .uniqueResultOptional()
                 .orElse(null);
+    }
+
+    @Override
+    public List<HolidayEntity> findAll(FindHolidayRequest findHolidayRequest) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() +
+                        " WHERE :fromDate >= holidayDate AND :toDate <= holidayDate", getEntityClass())
+                .setParameter("fromDate", findHolidayRequest.getFromDate())
+                .setParameter("toDate", findHolidayRequest.getToDate())
+                .setParameterList("types", findHolidayRequest.getTypeHolidays())
+                .list();
+    }
+
+    @Override
+    public Long findCountAll(FindHolidayRequest findHolidayRequest) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() +
+                        " WHERE :fromDate >= holidayDate AND :toDate <= holidayDate", Long.class)
+                .setParameter("fromDate", findHolidayRequest.getFromDate())
+                .setParameter("toDate", findHolidayRequest.getToDate())
+                .setParameterList("types", findHolidayRequest.getTypeHolidays())
+                .uniqueResultOptional()
+                .orElse(0L);
     }
 
     private Holiday getHolidayByDateTime(DateTimeJson dateTimeJson) {

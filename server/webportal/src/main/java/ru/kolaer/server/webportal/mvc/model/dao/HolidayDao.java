@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.dao;
 
 import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
 
 import java.time.LocalDate;
@@ -17,4 +18,8 @@ public interface HolidayDao extends DefaultDao<HolidayEntity> {
     void insertHolidays(List<Holiday> holidays);
 
     HolidayEntity findByDate(LocalDate holidayDate);
+
+    List<HolidayEntity> findAll(FindHolidayRequest findHolidayRequest);
+
+    Long findCountAll(FindHolidayRequest findHolidayRequest);
 }

@@ -14,6 +14,8 @@ public class RoleUtils {
     public static final String OK = "accessOk";
     public static final String USER = "accessUser";
     public static final String ALL = "ALL";
+    public static final String VACATION_ADMIN = "accessVacationAdmin";
+    public static final String VACATION_DEP_EDIT = "accessVacationDepEdit";
 
     public static List<String> roleToListString(AccountEntity accountEntity) {
         ArrayList<String> roles = new ArrayList<>();
@@ -25,6 +27,12 @@ public class RoleUtils {
         }
         if (accountEntity.isAccessOk()) {
             roles.add(OK);
+        }
+        if (accountEntity.isAccessVacationAdmin()) {
+            roles.add(VACATION_ADMIN);
+        }
+        if (accountEntity.isAccessVacationDepEdit()) {
+            roles.add(VACATION_DEP_EDIT);
         }
 
         return roles;
@@ -43,6 +51,12 @@ public class RoleUtils {
         }
         if (urlSecurityDto.isAccessOk()) {
             roles.add(OK);
+        }
+        if (urlSecurityDto.isAccessVacationAdmin()) {
+            roles.add(VACATION_ADMIN);
+        }
+        if (urlSecurityDto.isAccessVacationDepEdit()) {
+            roles.add(VACATION_DEP_EDIT);
         }
         return roles;
     }

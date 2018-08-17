@@ -34,4 +34,14 @@
             <column name="access_ok" type="BOOLEAN" defaultValueBoolean="false"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="13-2" author="Danilov">
+        <addColumn tableName="url_security">
+            <column name="access_vacation_admin" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+
+        <addColumn tableName="url_security">
+            <column name="access_vacation_dep_edit" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.mvc.model.dao;
 import lombok.NonNull;
 import org.hibernate.Session;
 import ru.kolaer.server.webportal.mvc.model.dto.FilterValue;
+import ru.kolaer.server.webportal.mvc.model.dto.PaginationRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.SortField;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
@@ -128,6 +129,10 @@ public interface DefaultDao<T extends BaseEntity> {
         session.clear();
 
         return entities;
+    }
+
+    default int getFirstResult(PaginationRequest request) {
+        return (request.getNumber() - 1) * request.getPageSize();
     }
 
     default String getEntityName() {

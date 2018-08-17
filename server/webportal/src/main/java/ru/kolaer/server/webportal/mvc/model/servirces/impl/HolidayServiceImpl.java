@@ -174,6 +174,8 @@ public class HolidayServiceImpl
             case "1" : return TypeDay.CELEBRATION;
             case "2" : return TypeDay.SHORT;
             case "3" : return TypeDay.WORK;
+            case "4" : return TypeDay.HOLIDAY_RELOCATION_FROM;
+            case "5" : return TypeDay.HOLIDAY_RELOCATION_TO;
             default: return TypeDay.HOLIDAY;
         }
     }

@@ -20,6 +20,7 @@ public class VacationBalanceEntity implements BaseEntity {
     private Long employeeId;
 
     @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", insertable = false, updatable = false)
     private EmployeeEntity employee;
 

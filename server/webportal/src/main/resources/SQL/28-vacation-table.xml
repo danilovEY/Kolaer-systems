@@ -16,11 +16,11 @@
 
             <column name="note" type="VARCHAR(255)"/>
 
-            <column name="vacation_from" type="TIMESTAMP">
+            <column name="vacation_from" type="DATE">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="vacation_to" type="TIMESTAMP">
+            <column name="vacation_to" type="DATE">
                 <constraints nullable="false"/>
             </column>
 
@@ -41,5 +41,4 @@
                                  referencedTableName="employee"
                                  referencedColumnNames="id"/>
     </changeSet>
-
 </databaseChangeLog>

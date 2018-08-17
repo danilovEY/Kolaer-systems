@@ -6,7 +6,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "vacation")
@@ -21,6 +21,7 @@ public class VacationEntity implements BaseEntity{
     private Long employeeId;
 
     @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", insertable = false, updatable = false)
     private EmployeeEntity employee;
 
@@ -28,13 +29,13 @@ public class VacationEntity implements BaseEntity{
     private String note;
 
     @Column(name = "vacation_from", nullable = false)
-    private LocalDateTime vacationFrom;
+    private LocalDate vacationFrom;
 
     @Column(name = "vacation_to", nullable = false)
-    private LocalDateTime vacationTo;
+    private LocalDate vacationTo;
 
-    @Column(name = "days", nullable = false)
-    private int days;
+    @Column(name = "vacation_days", nullable = false)
+    private int vacationDays;
 
     @Column(name = "vacation_type", nullable = false)
     private VacationType vacationType;
