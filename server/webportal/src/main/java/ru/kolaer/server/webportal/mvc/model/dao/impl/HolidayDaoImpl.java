@@ -81,7 +81,8 @@ public class HolidayDaoImpl extends AbstractDefaultDao<HolidayEntity> implements
     public List<HolidayEntity> findAll(FindHolidayRequest findHolidayRequest) {
         return getSession()
                 .createQuery("FROM " + getEntityName() +
-                        " WHERE :fromDate >= holidayDate AND :toDate <= holidayDate", getEntityClass())
+                        " WHERE holidayDate >= :fromDate AND holidayDate <= :toDate AND holidayType IN (:types)" +
+                        " ORDER BY holidayDate ASC", getEntityClass())
                 .setParameter("fromDate", findHolidayRequest.getFromDate())
                 .setParameter("toDate", findHolidayRequest.getToDate())
                 .setParameterList("types", findHolidayRequest.getTypeHolidays())
@@ -91,8 +92,8 @@ public class HolidayDaoImpl extends AbstractDefaultDao<HolidayEntity> implements
     @Override
     public Long findCountAll(FindHolidayRequest findHolidayRequest) {
         return getSession()
-                .createQuery("FROM " + getEntityName() +
-                        " WHERE :fromDate >= holidayDate AND :toDate <= holidayDate", Long.class)
+                .createQuery("SELECT COUNT(id) FROM " + getEntityName() +
+                        " WHERE holidayDate >= :fromDate AND holidayDate <= :toDate AND holidayType IN (:types)", Long.class)
                 .setParameter("fromDate", findHolidayRequest.getFromDate())
                 .setParameter("toDate", findHolidayRequest.getToDate())
                 .setParameterList("types", findHolidayRequest.getTypeHolidays())

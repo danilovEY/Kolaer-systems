@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class VacationCalculateRequest {
+public class VacationCalculateDaysRequest {
     private LocalDate from;
     private LocalDate to;
 }

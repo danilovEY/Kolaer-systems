@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {EmployeeModel} from '../../../../@core/models/employee.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {EmployeeService} from '../../../../@core/services/employee.service';
@@ -14,6 +14,14 @@ import {VacationService} from '../vacation.service';
 import {Utils} from '../../../../@core/utils/utils';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {CustomActionModel} from '../../../../@theme/components/table/custom-action.model';
+import {CustomTableComponent} from '../../../../@theme/components';
+import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
+import {VacationModel} from '../model/vacation.model';
+import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
+import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
+import {VacationDateFromEditComponent} from './vacation-date-from-edit.component';
+import {VacationDateToEditComponent} from './vacation-date-to-edit.component';
+import {VacationDaysEditComponent} from './vacation-days-edit.component';
 
 @Component({
     selector: 'vacation-set',
@@ -21,6 +29,10 @@ import {CustomActionModel} from '../../../../@theme/components/table/custom-acti
     styleUrls: ['./vacation-set.component.scss']
 })
 export class VacationSetComponent implements OnInit {
+
+    @ViewChild('customTable')
+    customTable: CustomTableComponent;
+
     currentAccount: SimpleAccountModel;
 
     employees: EmployeeModel[] = [];
@@ -63,35 +75,79 @@ export class VacationSetComponent implements OnInit {
             });
 
         const dateFromColumn: Column = new Column('vacationFrom', {
-            title: 'Время создания',
+            title: 'Начало отпуска',
             type: 'date',
-            editable: false,
-            addable: false,
+            editable: true,
+            addable: true,
             filter: false,
             sort: false,
+            editor: {
+                type: 'custom',
+                component: VacationDateFromEditComponent,
+            },
             valuePrepareFunction(value: string) {
-                return Utils.getDateTimeFormatFromString(value);
+                return Utils.getDateFormatFromString(value);
             }
         }, undefined);
 
-        this.columns.push(dateFromColumn);
+        const dateToColumn: Column = new Column('vacationTo', {
+            title: 'Конец отпуска',
+            type: 'date',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false,
+            editor: {
+                type: 'custom',
+                component: VacationDateToEditComponent,
+            },
+            valuePrepareFunction(value: string) {
+                return Utils.getDateFormatFromString(value);
+            }
+        }, undefined);
+
+        const daysColumn: Column = new Column('vacationDays', {
+            title: 'Дней',
+            type: 'number',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false,
+            editor: {
+                type: 'custom',
+                config: {},
+                component: VacationDaysEditComponent
+            }
+        }, undefined);
+
+        const noteColumn: Column = new Column('note', {
+            title: 'Примечание',
+            type: 'string',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false
+        }, undefined);
+
+        this.columns.push(dateFromColumn, dateToColumn, daysColumn, noteColumn);
     }
 
+    edit(event: TableEventEditModel<VacationModel>) {
+        console.log(event);
+        // this.queueService.updateQueueRequest(this.targetId, event.data.id, event.newData)
+        //     .subscribe(event.confirm.resolve);
+    }
 
-    // edit(event: TableEventEditModel<>) {
-    //     // this.queueService.updateQueueRequest(this.targetId, event.data.id, event.newData)
-    //     //     .subscribe(event.confirm.resolve);
-    // }
-    //
-    // delete(event: TableEventDeleteModel<>) {
-    //     // this.queueService.deleteQueueRequest(this.targetId, event.data.id)
-    //     //     .subscribe(response => event.confirm.resolve());
-    // }
-    //
-    // create(event: TableEventAddModel<>) {
-    //     // this.queueService.addQueueRequest(this.targetId, event.newData)
-    //     //     .subscribe(event.confirm.resolve);
-    // }
+    delete(event: TableEventDeleteModel<VacationModel>) {
+        // this.queueService.deleteQueueRequest(this.targetId, event.data.id)
+        //     .subscribe(response => event.confirm.resolve());
+    }
+
+    create(event: TableEventAddModel<VacationModel>) {
+        console.log(event);
+        // this.queueService.addQueueRequest(this.targetId, event.newData)
+        //     .subscribe(event.confirm.resolve);
+    }
 
     selectDepartment(event: DepartmentModel) {
         const findRequest = new FindEmployeeRequestModel();
@@ -105,7 +161,9 @@ export class VacationSetComponent implements OnInit {
     }
 
     selectEmployee(event: EmployeeModel) {
-        this.source.setEmployeeId(event.id);
         this.selectedEmployee = event;
+        this.source.setEmployeeId(event.id);
+        this.source.refreshFromServer();
+
     }
 }

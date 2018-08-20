@@ -5,6 +5,9 @@ import {VacationMainComponent} from './main/vacation-main.component';
 import {ThemeModule} from '../../../@theme/theme.module';
 import {VacationSetComponent} from './set/vacation-set.component';
 import {VacationService} from './vacation.service';
+import {VacationDateFromEditComponent} from './set/vacation-date-from-edit.component';
+import {VacationDateToEditComponent} from './set/vacation-date-to-edit.component';
+import {VacationDaysEditComponent} from './set/vacation-days-edit.component';
 
 @NgModule({
     imports: [
@@ -14,7 +17,15 @@ import {VacationService} from './vacation.service';
     declarations: [
         VacationComponent,
         VacationMainComponent,
-        VacationSetComponent
+        VacationSetComponent,
+        VacationDateFromEditComponent,
+        VacationDateToEditComponent,
+        VacationDaysEditComponent,
+    ],
+    entryComponents: [
+        VacationDateFromEditComponent,
+        VacationDateToEditComponent,
+        VacationDaysEditComponent,
     ],
     providers: [
         VacationService

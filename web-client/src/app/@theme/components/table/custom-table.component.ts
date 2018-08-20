@@ -23,7 +23,10 @@ import {Row} from 'ng2-smart-table/lib/data-set/row';
         </ng-container>
         
         <ng2-smart-table #table [settings]="settings" [source]="source" 
-                         (deleteConfirm)="deleteConfirm($event)" 
+                         (delete)="deleteConfirm($event)"
+                         (create)="createConfirm($event)"
+                         (edit)="editConfirm($event)"
+                         (deleteConfirm)="deleteConfirm($event)"
                          (createConfirm)="createConfirm($event)"
                          (editConfirm)="editConfirm($event)">
         </ng2-smart-table>
@@ -45,6 +48,7 @@ export class CustomTableComponent implements OnInit {
     @Input() actionAdd: boolean = true;
     @Input() actionDelete: boolean = true;
     @Input() actionEdit: boolean = true;
+    @Input() actionExternal: boolean = false;
 
     @Input() columns: Column[] = [];
     @Input() actions: CustomActionModel[] = [];
@@ -96,6 +100,10 @@ export class CustomTableComponent implements OnInit {
     };
 
     ngOnInit() {
+        if (this.actionExternal) {
+            this.settings.mode = 'external';
+        }
+
         this.editAction = new CustomActionModel();
         this.editAction.name = CustomTableComponent.EDIT_ACTION_NAME;
         this.editAction.content = '<i class="fa fa-edit"></i>';
@@ -118,9 +126,26 @@ export class CustomTableComponent implements OnInit {
         if (this.actions.length > 0) {
             this.defaultAction.subscribe(event => {
                 if (event.action.name === CustomTableComponent.EDIT_ACTION_NAME) {
-                    this.table.grid.edit(this.selectedRow);
+                    if (this.actionExternal) {
+                        const tableEvent = new TableEventEditModel();
+                        tableEvent.source = this.source;
+                        tableEvent.data = this.selectedRow.getData();
+                        tableEvent.newData = this.selectedRow.getData();
+
+                        this.editConfirm(tableEvent);
+                    } else {
+                        this.table.grid.edit(this.selectedRow);
+                    }
                 } if (event.action.name === CustomTableComponent.DELETE_ACTION_NAME) {
-                    this.table.grid.delete(this.selectedRow, this.table.deleteConfirm);
+                    if (this.actionExternal) {
+                        const tableEvent = new TableEventDeleteModel();
+                        tableEvent.source = this.source;
+                        tableEvent.data = this.selectedRow.getData();
+
+                        this.deleteConfirm(tableEvent);
+                    } else {
+                        this.table.grid.delete(this.selectedRow, this.table.deleteConfirm);
+                    }
                 }
 
                 if (this.action) {
@@ -169,7 +194,14 @@ export class CustomTableComponent implements OnInit {
     }
 
     addNewRow() {
-        this.table.grid.createFormShown = true;
+        if (this.actionExternal) {
+            const event = new TableEventAddModel();
+            event.source = this.source;
+
+            this.create.emit(event);
+        } else {
+            this.table.grid.createFormShown = true;
+        }
     }
 
     deleteConfirm(event: TableEventDeleteModel<any>) {

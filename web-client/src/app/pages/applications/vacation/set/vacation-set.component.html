@@ -49,7 +49,9 @@
             <nb-card-body>
                 <ngx-loading [show]="loadingVacation"></ngx-loading>
                 <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
-                              [actionAdd]="true" [actionDelete]="true" [actionEdit]="true">
+                              [actionExternal]="false"
+                              [actionAdd]="true" [actionDelete]="true" [actionEdit]="true"
+                              (delete)="delete($event)" (create)="create($event)" (edit)="edit($event)">
                 </custom-table>
             </nb-card-body>
         </nb-card>

@@ -5,9 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class VacationCalculateDto {
-    private int days;
+public class VacationCalculateDateRequest {
     private LocalDate from;
-    private LocalDate to;
-    private int holidayDays;
+    private int days;
 }

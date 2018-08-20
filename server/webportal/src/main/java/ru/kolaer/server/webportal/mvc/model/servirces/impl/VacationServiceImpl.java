@@ -9,16 +9,19 @@ import ru.kolaer.server.webportal.mvc.model.dao.HolidayDao;
 import ru.kolaer.server.webportal.mvc.model.dao.VacationDao;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.vacation.*;
+import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationBalanceEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationPeriodEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
 
-import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class VacationServiceImpl implements VacationService {
@@ -84,21 +87,54 @@ public class VacationServiceImpl implements VacationService {
 
     @Override
     @Transactional(readOnly = true)
-    public VacationCalculateDto vacationCalculate(VacationCalculateRequest request) {
+    public VacationCalculateDto vacationCalculate(VacationCalculateDaysRequest request) {
         FindHolidayRequest findHolidayRequest = new FindHolidayRequest();
         findHolidayRequest.setFromDate(request.getFrom());
         findHolidayRequest.setToDate(request.getTo());
-        findHolidayRequest.setTypeHolidays(Arrays.asList(TypeDay.HOLIDAY, TypeDay.HOLIDAY_RELOCATION_TO));
+        findHolidayRequest.setTypeHolidays(Arrays.asList(TypeDay.HOLIDAY, TypeDay.HOLIDAY_RELOCATION_FROM));
 
         Long countHolidays = holidayDao.findCountAll(findHolidayRequest);
 
-        long days = Duration.between(request.getTo(), request.getFrom()).toDays();
+        long days = DAYS.between(request.getFrom(), request.getTo()) + 1;
 
         VacationCalculateDto vacationCalculateDto = new VacationCalculateDto();
         vacationCalculateDto.setFrom(request.getFrom());
         vacationCalculateDto.setTo(request.getTo());
-        vacationCalculateDto.setHolidayDays(countHolidays);
+        vacationCalculateDto.setHolidayDays(countHolidays.intValue());
         vacationCalculateDto.setDays(Math.toIntExact(days - countHolidays));
+        return vacationCalculateDto;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public VacationCalculateDto vacationCalculate(VacationCalculateDateRequest request) {
+        LocalDate to = request.getFrom().plusDays(request.getDays());
+        FindHolidayRequest findHolidayRequest = new FindHolidayRequest();
+        findHolidayRequest.setFromDate(request.getFrom());
+        findHolidayRequest.setToDate(to.plusMonths(1));
+        findHolidayRequest.setTypeHolidays(Arrays.asList(TypeDay.HOLIDAY, TypeDay.HOLIDAY_RELOCATION_FROM));
+
+        int days = request.getDays();
+        int holidayDays = 0;
+
+        List<HolidayEntity> holidays = holidayDao.findAll(findHolidayRequest);
+
+        System.out.println(holidays.size());
+
+        for (HolidayEntity holiday : holidays) {
+            if(holiday.getHolidayDate().isBefore(to) || holiday.getHolidayDate().isEqual(to)) {
+                holidayDays += 1;
+                to = to.plusDays(1);
+            } else {
+              break;
+            }
+        }
+
+        VacationCalculateDto vacationCalculateDto = new VacationCalculateDto();
+        vacationCalculateDto.setFrom(request.getFrom());
+        vacationCalculateDto.setTo(to);
+        vacationCalculateDto.setHolidayDays(holidayDays);
+        vacationCalculateDto.setDays(days);
         return vacationCalculateDto;
     }
 }
