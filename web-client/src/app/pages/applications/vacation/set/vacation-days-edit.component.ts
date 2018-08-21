@@ -2,6 +2,8 @@ import {DefaultEditor} from 'ng2-smart-table';
 import {Component, OnInit} from '@angular/core';
 import {VacationService} from '../vacation.service';
 import {VacationCalculateModel} from '../model/vacation-calculate.model';
+import {Utils} from '../../../../@core/utils/utils';
+import {VacationCalculateDateRequestModel} from '../model/vacation-calculate-date-request.model';
 
 @Component({
     selector: 'vacation-days-edit',
@@ -12,7 +14,8 @@ import {VacationCalculateModel} from '../model/vacation-calculate.model';
         <div class="input-group">
             <input [ngClass]="inputClass"
                    class="form-control"
-                   [(ngModel)]="cell.newValue"
+                   [ngModel]="cell.newValue"
+                   (ngModelChange)="setValue($event)"
                    [name]="cell.getId()"
                    [placeholder]="cell.getTitle()"
                    [disabled]="!cell.isEditable()"
@@ -30,12 +33,31 @@ export class VacationDaysEditComponent extends DefaultEditor implements OnInit {
     }
 
     ngOnInit(): void {
-        this.cell.getColumn().getConfig().setCalculateValue = (value) => this.setValue(value);
+        this.cell.getColumn().getConfig().setCalculateValue = (value) => this.setCalculateValue(value);
     }
 
-    setValue(event: VacationCalculateModel) {
+    setCalculateValue(event: VacationCalculateModel) {
         this.vacationCalculate = event;
         this.cell.setValue(event.days);
+    }
+
+    setValue(event: number) {
+        this.cell.setValue(event);
+
+        const vacationFrom = this.cell.getRow().cells[0].newValue;
+
+        if (vacationFrom) {
+            const request = new VacationCalculateDateRequestModel();
+            request.from = Utils.getDateTimeToSend(vacationFrom);
+            request.days = event;
+
+            this.vacationService.calculateDate(request)
+                .subscribe(vacCalc => {
+                    console.log(vacCalc);
+                    this.vacationCalculate = vacCalc;
+                    this.cell.getRow().cells[1].getColumn().getConfig().setCalculateValue(vacCalc);
+                });
+        }
     }
 
 }

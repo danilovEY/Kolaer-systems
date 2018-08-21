@@ -99,6 +99,7 @@ export class VacationSetComponent implements OnInit {
             sort: false,
             editor: {
                 type: 'custom',
+                config: {},
                 component: VacationDateToEditComponent,
             },
             valuePrepareFunction(value: string) {

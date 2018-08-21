@@ -8,12 +8,14 @@ import {Page} from '../../../@core/models/page.model';
 import {environment} from '../../../../environments/environment';
 import {VacationCalculateModel} from './model/vacation-calculate.model';
 import {VacationCalculateDaysRequestModel} from './model/vacation-calculate-days-request.model';
+import {VacationCalculateDateRequestModel} from './model/vacation-calculate-date-request.model';
 
 @Injectable()
 export class VacationService extends BaseService {
     private readonly VACATION_URL = `${environment.publicServerUrl}/vacations`;
     private readonly FIND_VACATION_URL = `${this.VACATION_URL}`;
     private readonly CALCULATE_DAYS_VACATION_URL = `${this.VACATION_URL}/calculate/days`;
+    private readonly CALCULATE_DATE_VACATION_URL = `${this.VACATION_URL}/calculate/date`;
 
     constructor(private http: HttpClient) {
         super();
@@ -31,6 +33,10 @@ export class VacationService extends BaseService {
 
     public calculateDays(request: VacationCalculateDaysRequestModel): Observable<VacationCalculateModel> {
         return this.http.post<VacationCalculateModel>(this.CALCULATE_DAYS_VACATION_URL, request);
+    }
+
+    public calculateDate(request: VacationCalculateDateRequestModel): Observable<VacationCalculateModel> {
+        return this.http.post<VacationCalculateModel>(this.CALCULATE_DATE_VACATION_URL, request);
     }
 
 }

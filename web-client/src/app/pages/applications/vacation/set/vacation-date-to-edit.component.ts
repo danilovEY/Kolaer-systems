@@ -4,6 +4,7 @@ import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {VacationService} from '../vacation.service';
 import {VacationCalculateDaysRequestModel} from '../model/vacation-calculate-days-request.model';
 import {Utils} from '../../../../@core/utils/utils';
+import {VacationCalculateModel} from '../model/vacation-calculate.model';
 
 @Component({
     selector: 'vacation-edit-from-date',
@@ -52,6 +53,15 @@ export class VacationDateToEditComponent extends DefaultEditor implements OnInit
 
         this.currentDate = {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()};
         this.setValue(this.currentDate);
+
+        this.cell.getColumn().getConfig().setCalculateValue = (value) => this.setCalculateValue(value);
+    }
+
+    setCalculateValue(event: VacationCalculateModel) {
+        const date = new Date(event.to);
+        this.currentDate = {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()};
+        this.cell.setValue(this.currentDate);
+
     }
 
     setValue(event: any) {
