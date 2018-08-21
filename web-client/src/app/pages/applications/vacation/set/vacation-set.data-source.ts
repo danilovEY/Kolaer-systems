@@ -13,13 +13,17 @@ export class VacationSetDataSource extends CustomDataSource<VacationModel> {
     }
 
     loadElements(page: number, pageSize: number): Promise<VacationModel[]> {
-        const request = new FindVacationRequestModel();
-        request.employeeId = this.employeeId;
-        request.year = this.year;
+        if (this.employeeId && this.year) {
+            const request = new FindVacationRequestModel();
+            request.employeeId = this.employeeId;
+            request.year = this.year;
 
-        return this.vacationService.getVacations(request)
-            .toPromise()
-            .then((response: Page<VacationModel>) => this.setDataPage(response));
+            return this.vacationService.getVacations(request)
+                .toPromise()
+                .then((response: Page<VacationModel>) => this.setDataPage(response));
+        } else {
+            return this.getAll();
+        }
     }
 
     setEmployeeId(employeeId: number): void {

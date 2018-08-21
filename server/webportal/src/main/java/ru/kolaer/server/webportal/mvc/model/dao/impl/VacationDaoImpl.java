@@ -27,7 +27,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
         params.put("year", request.getYear());
 
         StringBuilder sqlQuery = new StringBuilder()
-                .append("SELECT (id) FROM ")
+                .append("SELECT COUNT(id) FROM ")
                 .append(getEntityName())
                 .append(" WHERE employeeId = :employeeId AND YEAR(vacationFrom) = :year");
 
@@ -113,8 +113,22 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
     }
 
     @Override
-    public VacationBalanceEntity persist(VacationBalanceEntity vacationBalanceEntity) {
-        getSession().persist(vacationBalanceEntity);
+    public VacationPeriodEntity findPeriodsByYear(long year) {
+        return getSession()
+                .createQuery("FROM " + getEntityName(VacationPeriodEntity.class) + " WHERE year = :year", VacationPeriodEntity.class)
+                .setParameter("year", year)
+                .uniqueResultOptional()
+                .orElse(null);
+    }
+
+    @Override
+    public VacationBalanceEntity save(VacationBalanceEntity vacationBalanceEntity) {
+        if (vacationBalanceEntity.getId() == null) {
+            getSession().persist(vacationBalanceEntity);
+        } else {
+            getSession().update(vacationBalanceEntity);
+        }
+
         return vacationBalanceEntity;
     }
 

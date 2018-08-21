@@ -13,4 +13,10 @@ public interface VacationService {
 
     VacationCalculateDto vacationCalculate(VacationCalculateDaysRequest request);
     VacationCalculateDto vacationCalculate(VacationCalculateDateRequest request);
+
+    VacationDto addVacation(VacationDto request);
+
+    VacationDto updateVacation(Long vacationId, VacationDto request);
+
+    void deleteVacation(Long vacationId);
 }

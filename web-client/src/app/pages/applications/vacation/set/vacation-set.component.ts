@@ -22,6 +22,9 @@ import {TableEventAddModel} from '../../../../@theme/components/table/table-even
 import {VacationDateFromEditComponent} from './vacation-date-from-edit.component';
 import {VacationDateToEditComponent} from './vacation-date-to-edit.component';
 import {VacationDaysEditComponent} from './vacation-days-edit.component';
+import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
+import {VacationPeriodModel} from '../model/vacation-period.model';
+import {VacationPeriodStatusEnum} from '../model/vacation-period-status.enum';
 
 @Component({
     selector: 'vacation-set',
@@ -41,22 +44,40 @@ export class VacationSetComponent implements OnInit {
     departments: DepartmentModel[] = [];
     selectedDepartment: DepartmentModel;
 
+    periods: VacationPeriodModel[] = [];
+    selectedPeriod: VacationPeriodModel;
+
     actions: CustomActionModel[] = [];
     columns: Column[] = [];
     source: VacationSetDataSource;
     loadingVacation: boolean = true;
 
+    config: ToasterConfig = new ToasterConfig({
+        positionClass: 'toast-top-right',
+        timeout: 5000,
+        newestOnTop: true,
+        tapToDismiss: true,
+        preventDuplicates: false,
+        animation: 'fade',
+        limit: 5,
+    });
+
 
     constructor(private accountService: AccountService,
                 private employeeService: EmployeeService,
                 private departmentService: DepartmentService,
-                private vacationService: VacationService) {
+                private vacationService: VacationService,
+                private toasterService: ToasterService) {
         this.source = new VacationSetDataSource(this.vacationService);
         this.source.onLoading().subscribe(load => this.loadingVacation = load);
-        this.source.setYear(2018);
     }
 
     ngOnInit(): void {
+        this.vacationService.getPeriods()
+            .subscribe(periods => {
+                this.periods = periods.data;
+            });
+
         this.accountService.getCurrentAccount()
             .subscribe(account => {
                 this.currentAccount = account;
@@ -134,20 +155,52 @@ export class VacationSetComponent implements OnInit {
     }
 
     edit(event: TableEventEditModel<VacationModel>) {
-        console.log(event);
-        // this.queueService.updateQueueRequest(this.targetId, event.data.id, event.newData)
-        //     .subscribe(event.confirm.resolve);
+        event.newData.employeeId = this.selectedEmployee.id;
+
+        this.vacationService.updateVacation(event.data.id, event.newData)
+            .subscribe(
+                event.confirm.resolve,
+                responseError => {
+                    const toast: Toast = {
+                        type: 'error',
+                        title: 'Ошибка в операции',
+                        body: responseError.error.message,
+                    };
+
+                    this.toasterService.popAsync(toast);
+                });
     }
 
     delete(event: TableEventDeleteModel<VacationModel>) {
-        // this.queueService.deleteQueueRequest(this.targetId, event.data.id)
-        //     .subscribe(response => event.confirm.resolve());
+        this.vacationService.deleteVacation(event.data.id)
+            .subscribe(
+                responce => event.confirm.resolve(),
+                responseError => {
+                    const toast: Toast = {
+                        type: 'error',
+                        title: 'Ошибка в операции',
+                        body: responseError.error.message,
+                    };
+
+                    this.toasterService.popAsync(toast);
+                });
     }
 
     create(event: TableEventAddModel<VacationModel>) {
-        console.log(event);
-        // this.queueService.addQueueRequest(this.targetId, event.newData)
-        //     .subscribe(event.confirm.resolve);
+        event.newData.employeeId = this.selectedEmployee.id;
+
+        this.vacationService.addVacation(event.newData)
+            .subscribe(
+                event.confirm.resolve,
+                responseError => {
+                    const toast: Toast = {
+                        type: 'error',
+                        title: 'Ошибка в операции',
+                        body: responseError.error.message,
+                    };
+
+                    this.toasterService.popAsync(toast);
+                });
     }
 
     selectDepartment(event: DepartmentModel) {
@@ -165,6 +218,15 @@ export class VacationSetComponent implements OnInit {
         this.selectedEmployee = event;
         this.source.setEmployeeId(event.id);
         this.source.refreshFromServer();
+    }
 
+    selectPeriod(event: VacationPeriodModel) {
+        this.selectedPeriod = event;
+        this.source.setYear(event.year);
+        this.source.refreshFromServer();
+    }
+
+    isClosed(selectedPeriod: VacationPeriodModel): boolean {
+        return selectedPeriod === null || selectedPeriod.status === VacationPeriodStatusEnum.CLOSE;
     }
 }

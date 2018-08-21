@@ -28,6 +28,28 @@ public class VacationController {
         return vacationService.getVacations(request);
     }
 
+    @ApiOperation(value = "Добавить отпуск")
+    @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public VacationDto addVacations(@RequestBody VacationDto request) {
+        return vacationService.addVacation(request);
+    }
+
+    @ApiOperation(value = "Редактировать отпуск")
+    @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public VacationDto updateVacations(@PathVariable("id") Long vacationId,
+                                       @RequestBody VacationDto request) {
+        return vacationService.updateVacation(vacationId, request);
+    }
+
+    @ApiOperation(value = "Удалить отпуск")
+    @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void updateVacations(@PathVariable("id") Long vacationId) {
+        vacationService.deleteVacation(vacationId);
+    }
+
     @ApiOperation(value = "Получить периоды")
     @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
     @RequestMapping(value = "/periods", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

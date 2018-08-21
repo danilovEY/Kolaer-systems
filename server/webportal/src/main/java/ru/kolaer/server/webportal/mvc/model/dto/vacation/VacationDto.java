@@ -9,10 +9,10 @@ import java.time.LocalDate;
 @Data
 public class VacationDto implements BaseDto {
     private Long id;
-    private Long employeeId;
+    private long employeeId;
     private String note;
     private LocalDate vacationFrom;
     private LocalDate vacationTo;
-    private Integer vacationDays;
-    private VacationType vacationType;
+    private int vacationDays;
+    private VacationType vacationType = VacationType.PAID_HOLIDAY;
 }

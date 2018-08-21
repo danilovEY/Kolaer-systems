@@ -60,8 +60,7 @@ export class VacationDateToEditComponent extends DefaultEditor implements OnInit
     setCalculateValue(event: VacationCalculateModel) {
         const date = new Date(event.to);
         this.currentDate = {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()};
-        this.cell.setValue(this.currentDate);
-
+        this.cell.setValue(date);
     }
 
     setValue(event: any) {

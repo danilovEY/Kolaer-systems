@@ -23,4 +23,8 @@
         <addPrimaryKey tableName="vacation_period" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="32-1" author="Danilov">
+        <addUniqueConstraint tableName="vacation_period" columnNames="year"/>
+    </changeSet>
+
 </databaseChangeLog>

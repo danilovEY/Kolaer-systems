@@ -53,7 +53,6 @@ export class VacationDaysEditComponent extends DefaultEditor implements OnInit {
 
             this.vacationService.calculateDate(request)
                 .subscribe(vacCalc => {
-                    console.log(vacCalc);
                     this.vacationCalculate = vacCalc;
                     this.cell.getRow().cells[1].getColumn().getConfig().setCalculateValue(vacCalc);
                 });
