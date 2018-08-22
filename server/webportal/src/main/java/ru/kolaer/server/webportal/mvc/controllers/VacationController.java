@@ -10,6 +10,8 @@ import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.vacation.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/vacations")
 @Api(tags = "Отпуска")
@@ -76,6 +78,13 @@ public class VacationController {
     @RequestMapping(value = "calculate/date", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public VacationCalculateDto getCalculateDaysBetweenDate(@RequestBody VacationCalculateDateRequest request) {
         return vacationService.vacationCalculate(request);
+    }
+
+    @ApiOperation(value = "Сгенерировать отчет для календаря")
+    @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
+    @RequestMapping(value = "/report/calendar", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<VacationReportCalendarEmployeeDto> generateVacationReportCalendar(@ModelAttribute GenerateReportCalendarRequest request) {
+        return vacationService.generateReportCalendar(request);
     }
 
 }

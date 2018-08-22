@@ -1,0 +1,95 @@
+<div class="row">
+    <div class="col-12" *ngIf="vacationReportCalendarData.length > 0">
+        <nb-card>
+            <nb-card-header>
+                <span>Календарь отпусков</span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <p-table [value]="vacationReportCalendarData" [scrollable]="true" scrollHeight="150px">
+                    <ng-template pTemplate="header">
+                        <!--<tr>-->
+                            <!--<th rowspan="3" style="width:100px">Сотрудник</th>-->
+
+                            <!--<ng-container *ngFor="let year of vacationReportCalendarData[0].years">-->
+                                <!--<ng-container *ngFor="let month of year.months">-->
+                                    <!--<ng-container *ngFor="let day of month.days">-->
+                                        <!--<th *ngFor="let year of columnYears" style="width:50px;text-align:center;">-->
+                                            <!--{{year.name}}-->
+                                        <!--</th>-->
+                                    <!--</ng-container>-->
+                                <!--</ng-container>-->
+                            <!--</ng-container>-->
+                        <!--</tr>-->
+
+                        <!--<tr>-->
+                            <!--<ng-container *ngFor="let year of vacationReportCalendarData[0].years">-->
+                                <!--<ng-container *ngFor="let month of year.months">-->
+                                    <!--<ng-container *ngFor="let day of month.days">-->
+                                        <!--<th style="width:50px;text-align:center;">-->
+                                            <!--{{month.month}}-->
+                                        <!--</th>-->
+                                    <!--</ng-container>-->
+                                <!--</ng-container>-->
+                            <!--</ng-container>-->
+                        <!--</tr>-->
+
+                        <!--<tr>-->
+                            <!--<ng-container *ngFor="let year of vacationReportCalendarData[0].years">-->
+                                <!--<ng-container *ngFor="let month of year.months">-->
+                                    <!--<ng-container *ngFor="let day of month.days">-->
+                                        <!--<th style="width:50px;text-align:center">-->
+                                            <!--{{day.day}}-->
+                                        <!--</th>-->
+                                    <!--</ng-container>-->
+                                <!--</ng-container>-->
+                            <!--</ng-container>-->
+                        <!--</tr>-->
+
+
+                        <tr>
+                            <th rowspan="3" style="width:100px">Сотрудник</th>
+
+                            <th *ngFor="let year of columnYears"
+                                [attr.colspan]="year.size"
+                                [style.width.px]="year.size * 20"
+                                style="text-align:center;">
+                                {{year.name}}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th *ngFor="let month of columnMonths"
+                                [attr.colspan]="month.size"
+                                [style.width.px]="month.size * 20"
+                                style="text-align:center;">
+                                {{month.name}}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th *ngFor="let day of columnDays" style="width:20px;text-align:center">
+                                {{day}}
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-sale>
+                        <tr>
+                            <ng-container *ngFor="let employee of vacationReportCalendarData">
+                                <td style="width:100px">{{employee.employee}}</td>
+                                <ng-container *ngFor="let year of employee.years">
+                                    <ng-container *ngFor="let month of year.months">
+                                        <ng-container *ngFor="let day of month.days">
+                                            <td *ngIf="day.vacation" style="width:20px;background-color:#00cc0f !important">{{day.day}}</td>
+                                            <td *ngIf="day.holiday && !day.vacation" style="width:20px;background-color:#ff706b !important">{{day.day}}</td>
+                                            <td *ngIf="day.dayOff && !day.holiday && !day.vacation" style="width:20px;background-color:#cdecff !important">{{day.day}}</td>
+                                            <td *ngIf="!day.dayOff && !day.holiday && !day.vacation" style="width:20px;">{{day.day}}</td>
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>

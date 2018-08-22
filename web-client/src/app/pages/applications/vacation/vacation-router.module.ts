@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {VacationComponent} from './vacation.component';
 import {VacationMainComponent} from './main/vacation-main.component';
 import {VacationSetComponent} from './set/vacation-set.component';
+import {VacationReportComponent} from './report/vacation-report.component';
 
 const routers: Routes = [
     {
@@ -17,6 +18,10 @@ const routers: Routes = [
     {
         path: 'set',
         component: VacationSetComponent
+    },
+    {
+        path: 'report',
+        component: VacationReportComponent
     }
 ];
 

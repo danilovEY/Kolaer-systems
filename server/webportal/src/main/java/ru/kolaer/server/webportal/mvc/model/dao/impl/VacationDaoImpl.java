@@ -132,6 +132,49 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
         return vacationBalanceEntity;
     }
 
+    @Override
+    public List<VacationEntity> findAll(GenerateReportCalendarRequest request) {
+        Map<String, Object> params = new HashMap<>();
+
+        StringBuilder sqlQuery = new StringBuilder()
+                .append("FROM ")
+                .append(getEntityName());
+
+        if (request.getDepartmentId() != null || request.getFrom() != null || request.getTo() != null) {
+            sqlQuery = sqlQuery.append(" WHERE ");
+        }
+
+        if (request.getDepartmentId() != null) {
+            sqlQuery = sqlQuery.append("employee.departmentId = :departmentId ");
+            params.put("departmentId", request.getDepartmentId());
+        }
+
+        if(request.getFrom() != null) {
+            if(request.getDepartmentId() != null) {
+                sqlQuery = sqlQuery.append("AND ");
+            }
+
+            sqlQuery = sqlQuery.append("vacationFrom >= :vacationFrom ");
+            params.put("vacationFrom", request.getFrom());
+        }
+
+        if(request.getFrom() != null) {
+            if(request.getDepartmentId() != null || request.getFrom() != null) {
+                sqlQuery = sqlQuery.append("AND ");
+            }
+
+            sqlQuery = sqlQuery.append("vacationTo <= :vacationTo ");
+            params.put("vacationTo", request.getTo());
+        }
+
+        sqlQuery = sqlQuery.append("ORDER BY vacationFrom ASC, vacationTo ASC");
+
+        return getSession()
+                .createQuery(sqlQuery.toString(), getEntityClass())
+                .setProperties(params)
+                .list();
+    }
+
     private String getOrder(VacationPeriodSortType type) {
         if (type == null) return " ORDER BY year DESC";
 

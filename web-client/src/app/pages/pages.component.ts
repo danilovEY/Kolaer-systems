@@ -77,7 +77,14 @@ export class PagesComponent implements OnInit {
             vacationSetMenuItem.title = 'Задать отпуск';
             vacationSetMenuItem.link = 'app/vacation/set';
 
-            vacationMenuItem.children.push(vacationMainMenuItem, vacationSetMenuItem);
+            const vacationReportMenuItem: NbMenuItem = new NbMenuItem();
+            vacationReportMenuItem.title = 'Отчет';
+            vacationReportMenuItem.link = 'app/vacation/report';
+
+            vacationMenuItem.children.push(vacationMainMenuItem,
+                vacationSetMenuItem,
+                vacationReportMenuItem);
+
             this.menu.push(vacationMenuItem);
 
 

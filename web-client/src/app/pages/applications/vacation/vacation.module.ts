@@ -8,6 +8,7 @@ import {VacationService} from './vacation.service';
 import {VacationDateFromEditComponent} from './set/vacation-date-from-edit.component';
 import {VacationDateToEditComponent} from './set/vacation-date-to-edit.component';
 import {VacationDaysEditComponent} from './set/vacation-days-edit.component';
+import {VacationReportComponent} from './report/vacation-report.component';
 
 @NgModule({
     imports: [
@@ -21,6 +22,7 @@ import {VacationDaysEditComponent} from './set/vacation-days-edit.component';
         VacationDateFromEditComponent,
         VacationDateToEditComponent,
         VacationDaysEditComponent,
+        VacationReportComponent
     ],
     entryComponents: [
         VacationDateFromEditComponent,
