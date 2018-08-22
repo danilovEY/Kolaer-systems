@@ -64,14 +64,19 @@
                 <ngx-loading [show]="loadingVacation"></ngx-loading>
 
                 <div *ngIf="isClosed(selectedPeriod)">
-                    <p-message [style]="{'width':'100%'}"
-                               severity="error"
-                               text="Период на {{selectedPeriod.year}}г. закрыт!">
-                    </p-message>
+                    <p-message severity="error" text="Период на {{selectedPeriod.year}}г. закрыт!"></p-message>
 
-                    <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
+                    <custom-table *ngIf="currentAccount && !currentAccount.accessVacationAdmin"
+                            #customTable [columns]="columns" [source]="source"
                                   [actionExternal]="false"
                                   [actionAdd]="false" [actionDelete]="false" [actionEdit]="false">
+                    </custom-table>
+
+                    <custom-table *ngIf="currentAccount && currentAccount.accessVacationAdmin"
+                            #customTable [columns]="columns" [source]="source" [actions]="actions"
+                                  [actionExternal]="false"
+                                  [actionAdd]="true" [actionDelete]="true" [actionEdit]="true"
+                                  (delete)="delete($event)" (create)="create($event)" (edit)="edit($event)">
                     </custom-table>
                 </div>
 
