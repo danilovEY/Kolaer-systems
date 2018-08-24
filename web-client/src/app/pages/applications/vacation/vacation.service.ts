@@ -10,12 +10,16 @@ import {VacationCalculateModel} from './model/vacation-calculate.model';
 import {VacationCalculateDaysRequestModel} from './model/vacation-calculate-days-request.model';
 import {VacationCalculateDateRequestModel} from './model/vacation-calculate-date-request.model';
 import {VacationPeriodModel} from './model/vacation-period.model';
+import {VacationReportCalendarEmployeeModel} from './model/vacation-report-calendar-employee.model';
+import {GenerateReportCalendarRequestModel} from './model/generate-report-calendar-request.model';
+import {Utils} from '../../../@core/utils/utils';
 
 @Injectable()
 export class VacationService extends BaseService {
     private readonly VACATION_URL = `${environment.publicServerUrl}/vacations`;
     private readonly FIND_VACATION_URL = `${this.VACATION_URL}`;
     private readonly FIND_PERIODS_URL = `${this.VACATION_URL}/periods`;
+    private readonly GENERATE_REPORT_CALENDAR_URL = `${this.VACATION_URL}/report/calendar`;
     private readonly CALCULATE_DAYS_VACATION_URL = `${this.VACATION_URL}/calculate/days`;
     private readonly CALCULATE_DATE_VACATION_URL = `${this.VACATION_URL}/calculate/date`;
 
@@ -33,16 +37,30 @@ export class VacationService extends BaseService {
         return this.http.get<Page<VacationModel>>(this.FIND_VACATION_URL, {params: params});
     }
 
+    public generateVacationReportCalendar(request: GenerateReportCalendarRequestModel): Observable<VacationReportCalendarEmployeeModel[]> {
+        const params: HttpParams = new HttpParams()
+            .append('departmentId', request.departmentId.toString())
+            .append('from', Utils.getDateToSend(request.from))
+            .append('to', Utils.getDateToSend(request.to));
+
+        return this.http.get<VacationReportCalendarEmployeeModel[]>(this.GENERATE_REPORT_CALENDAR_URL, {params: params});
+    }
+
     public getPeriods(): Observable<Page<VacationPeriodModel>> {
         return this.http.get<Page<VacationPeriodModel>>(this.FIND_PERIODS_URL);
     }
 
     public addVacation(request: VacationModel): Observable<VacationModel> {
+        request.vacationFrom = Utils.getDateToSend(request.vacationFrom);
+        request.vacationTo = Utils.getDateToSend(request.vacationTo);
         return this.http.post<VacationModel>(this.FIND_VACATION_URL, request);
     }
 
     public updateVacation(vacationId: number, request: VacationModel): Observable<VacationModel> {
         const url = `${this.VACATION_URL}/${vacationId}`;
+
+        request.vacationFrom = Utils.getDateToSend(request.vacationFrom);
+        request.vacationTo = Utils.getDateToSend(request.vacationTo);
 
         return this.http.put<VacationModel>(url, request);
     }

@@ -4,7 +4,8 @@ import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {VacationService} from '../vacation.service';
 import {VacationCalculateDaysRequestModel} from '../model/vacation-calculate-days-request.model';
 import {Utils} from '../../../../@core/utils/utils';
-import {ProductionCalendarService} from '../../../../@core/services/production-calendar.service';
+import {VacationPeriodService} from '../vacation-period.service';
+import {VacationPeriodModel} from '../model/vacation-period.model';
 
 @Component({
     selector: 'vacation-edit-from-date',
@@ -35,7 +36,7 @@ export class VacationDateFromEditComponent extends DefaultEditor implements OnIn
     currentDate: NgbDateStruct;
 
     constructor(private vacationService: VacationService,
-                private productionCalendarService: ProductionCalendarService) {
+                private vacationPeriodService: VacationPeriodService) {
         super();
     }
 
@@ -53,7 +54,16 @@ export class VacationDateFromEditComponent extends DefaultEditor implements OnIn
         }
 
         this.currentDate = {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()};
-        this.setValue(this.currentDate);
+        this.cell.setValue(new Date(this.currentDate.year, this.currentDate.month - 1, this.currentDate.day));
+
+        const period: VacationPeriodModel = this.vacationPeriodService.getSelectedPeriod();
+        if (period) {
+            this.setYear(period.year);
+        }
+
+        this.vacationPeriodService
+            .selectedPeriodEvent
+            .subscribe(p => this.setYear(p.year));
     }
 
     setValue(event: any) {
@@ -63,13 +73,21 @@ export class VacationDateFromEditComponent extends DefaultEditor implements OnIn
 
         if (vacationTo) {
             const request = new VacationCalculateDaysRequestModel();
-            request.from = Utils.getDateTimeToSend(this.cell.newValue);
-            request.to = Utils.getDateTimeToSend(vacationTo);
+            request.from = Utils.getDateToSend(this.cell.newValue);
+            request.to = Utils.getDateToSend(vacationTo);
 
             this.vacationService.calculateDays(request)
                 .subscribe(vacCalc => {
                     this.cell.getRow().cells[2].getColumn().getConfig().setCalculateValue(vacCalc);
                 });
+        }
+    }
+
+    private setYear(year: number) {
+        const date = this.cell.newValue;
+        if (date.getFullYear() !== year) {
+            this.currentDate = {year: year, month: 1, day: 1};
+            this.cell.setValue(new Date(this.currentDate.year, this.currentDate.month - 1, this.currentDate.day));
         }
     }
 }

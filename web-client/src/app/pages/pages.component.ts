@@ -78,8 +78,20 @@ export class PagesComponent implements OnInit {
             vacationSetMenuItem.link = 'app/vacation/set';
 
             const vacationReportMenuItem: NbMenuItem = new NbMenuItem();
-            vacationReportMenuItem.title = 'Отчет';
-            vacationReportMenuItem.link = 'app/vacation/report';
+            vacationReportMenuItem.title = 'Отчеты';
+            vacationReportMenuItem.icon = 'icon ion-md-analytics';
+            vacationReportMenuItem.children = [];
+
+            const vacationReportDistributedMenuItem: NbMenuItem = new NbMenuItem();
+            vacationReportDistributedMenuItem.title = 'График распределений';
+            vacationReportDistributedMenuItem.link = 'app/vacation/report/distributed';
+
+            const vacationReportCalendarMenuItem: NbMenuItem = new NbMenuItem();
+            vacationReportCalendarMenuItem.title = 'График пересечений';
+            vacationReportCalendarMenuItem.link = 'app/vacation/report/calendar';
+
+            vacationReportMenuItem.children.push(vacationReportDistributedMenuItem,
+                vacationReportCalendarMenuItem);
 
             vacationMenuItem.children.push(vacationMainMenuItem,
                 vacationSetMenuItem,

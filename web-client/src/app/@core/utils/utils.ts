@@ -80,6 +80,10 @@ export class Utils {
         return Utils.datePipe.transform(date, 'yyyy-MM-dd\'T\'HH:mm:ss')
     }
 
+    static getDateToSend(date: Date): any {
+        return Utils.datePipe.transform(date, 'yyyy-MM-dd')
+    }
+
     public static getDateTimeWithOutSecondFormat(date: Date, removeDateIfDateIsNow: boolean = false): string {
         if (removeDateIfDateIsNow && new Date().getDate() === new Date(date).getDate()) {
             return Utils.datePipe.transform(date, 'HH:mm');

@@ -25,6 +25,7 @@ import {VacationDaysEditComponent} from './vacation-days-edit.component';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 import {VacationPeriodModel} from '../model/vacation-period.model';
 import {VacationPeriodStatusEnum} from '../model/vacation-period-status.enum';
+import {VacationPeriodService} from '../vacation-period.service';
 
 @Component({
     selector: 'vacation-set',
@@ -62,12 +63,12 @@ export class VacationSetComponent implements OnInit {
         limit: 5,
     });
 
-
     constructor(private accountService: AccountService,
                 private employeeService: EmployeeService,
                 private departmentService: DepartmentService,
                 private vacationService: VacationService,
-                private toasterService: ToasterService) {
+                private toasterService: ToasterService,
+                private vacationPeriodService: VacationPeriodService) {
         this.source = new VacationSetDataSource(this.vacationService);
         this.source.onLoading().subscribe(load => this.loadingVacation = load);
     }
@@ -95,7 +96,7 @@ export class VacationSetComponent implements OnInit {
                 }
             });
 
-        const dateFromColumn: Column = new Column('vacationFrom', {
+        const dateFromColumn = new Column('vacationFrom', {
             title: 'Начало отпуска',
             type: 'date',
             editable: true,
@@ -104,6 +105,7 @@ export class VacationSetComponent implements OnInit {
             sort: false,
             editor: {
                 type: 'custom',
+                config: {},
                 component: VacationDateFromEditComponent,
             },
             valuePrepareFunction(value: string) {
@@ -111,7 +113,7 @@ export class VacationSetComponent implements OnInit {
             }
         }, undefined);
 
-        const dateToColumn: Column = new Column('vacationTo', {
+        const dateToColumn = new Column('vacationTo', {
             title: 'Конец отпуска',
             type: 'date',
             editable: true,
@@ -224,6 +226,10 @@ export class VacationSetComponent implements OnInit {
         this.selectedPeriod = event;
         this.source.setYear(event.year);
         this.source.refreshFromServer();
+
+        this.vacationPeriodService
+            .selectedPeriodEvent
+            .emit(this.selectedPeriod);
     }
 
     isClosed(selectedPeriod: VacationPeriodModel): boolean {

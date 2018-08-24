@@ -1,4 +1,54 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+
 <div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                <span>Фильтр</span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <div class="row">
+                    <div class="col-3">
+                        <div *ngIf="departments.length > 0">
+                            <label>Подразделение:</label>
+                            <p-dropdown [style]="{'width':'100%'}"
+                                        [options]="departments"
+                                        [ngModel]="selectedDepartment"
+                                        (ngModelChange)="selectDepartment($event)"
+                                        placeholder="Выберите подразделение..."
+                                        optionLabel="abbreviatedName"
+                                        [autoWidth]="false"
+                                        appendTo="body">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label>Период:</label>
+                        <ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t">
+                        </ngb-datepicker>
+
+                        <ng-template #t let-date="date" let-focused="focused">
+                          <span class="custom-day"
+                                [class.focused]="focused"
+                                [class.range]="isFrom(date) || isTo(date) || isInside(date) || isHovered(date)"
+                                [class.faded]="isHovered(date) || isInside(date)"
+                                (mouseenter)="hoveredDate = date"
+                                (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                          </span>
+                        </ng-template>
+                    </div>
+                </div>
+            </nb-card-body>
+            <nb-card-footer>
+                <button *ngIf="selectedDepartment && fromDate && toDate"
+                        class="btn btn-success" type="submit"
+                        (click)="generateReportCalendar()">Поиск</button>
+            </nb-card-footer>
+        </nb-card>
+    </div>
+
     <div class="col-12" *ngIf="vacationReportCalendarData.length > 0">
         <nb-card>
             <nb-card-header>
@@ -6,7 +56,7 @@
             </nb-card-header>
 
             <nb-card-body>
-                <p-table [value]="vacationReportCalendarData" [scrollable]="true" scrollHeight="150px">
+                <p-table [value]="vacationReportCalendarData" [scrollable]="true" scrollHeight="500px">
                     <ng-template pTemplate="header">
                         <!--<tr>-->
                             <!--<th rowspan="3" style="width:100px">Сотрудник</th>-->
@@ -48,11 +98,11 @@
 
 
                         <tr>
-                            <th rowspan="3" style="width:100px">Сотрудник</th>
+                            <th rowspan="3" style="width:300px">Сотрудник</th>
 
                             <th *ngFor="let year of columnYears"
                                 [attr.colspan]="year.size"
-                                [style.width.px]="year.size * 20"
+                                [style.width.px]="year.size * 50"
                                 style="text-align:center;">
                                 {{year.name}}
                             </th>
@@ -60,33 +110,31 @@
                         <tr>
                             <th *ngFor="let month of columnMonths"
                                 [attr.colspan]="month.size"
-                                [style.width.px]="month.size * 20"
+                                [style.width.px]="month.size * 50"
                                 style="text-align:center;">
                                 {{month.name}}
                             </th>
                         </tr>
                         <tr>
-                            <th *ngFor="let day of columnDays" style="width:20px;text-align:center">
+                            <th *ngFor="let day of columnDays" style="width:50px;text-align:center">
                                 {{day}}
                             </th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-sale>
-                        <tr>
-                            <ng-container *ngFor="let employee of vacationReportCalendarData">
-                                <td style="width:100px">{{employee.employee}}</td>
+                    <ng-template pTemplate="body" let-employee>
+                            <tr>
+                                <td style="width:300px">{{employee.employee}}</td>
                                 <ng-container *ngFor="let year of employee.years">
                                     <ng-container *ngFor="let month of year.months">
                                         <ng-container *ngFor="let day of month.days">
-                                            <td *ngIf="day.vacation" style="width:20px;background-color:#00cc0f !important">{{day.day}}</td>
-                                            <td *ngIf="day.holiday && !day.vacation" style="width:20px;background-color:#ff706b !important">{{day.day}}</td>
-                                            <td *ngIf="day.dayOff && !day.holiday && !day.vacation" style="width:20px;background-color:#cdecff !important">{{day.day}}</td>
-                                            <td *ngIf="!day.dayOff && !day.holiday && !day.vacation" style="width:20px;">{{day.day}}</td>
+                                            <td *ngIf="day.vacation" style="width:50px;background-color:#00cc0f !important"></td>
+                                            <td *ngIf="day.holiday && !day.vacation" style="width:50px;background-color:#ff706b !important"></td>
+                                            <td *ngIf="day.dayOff && !day.holiday && !day.vacation" style="width:50px;background-color:#cdecff !important"></td>
+                                            <td *ngIf="!day.dayOff && !day.holiday && !day.vacation" style="width:50px;"></td>
                                         </ng-container>
                                     </ng-container>
                                 </ng-container>
-                            </ng-container>
-                        </tr>
+                            </tr>
                     </ng-template>
                 </p-table>
             </nb-card-body>

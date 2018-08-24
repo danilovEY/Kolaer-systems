@@ -7,6 +7,7 @@ import {TokenRefreshInterceptor} from './token-refresh.interceptor';
 import {Router} from '@angular/router';
 import {AuthGuardService} from './auth-guard.service';
 import {AdminGuardService} from './admin-guard.service';
+import {VacationGuardService} from './vacation-guard.service';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import {AdminGuardService} from './admin-guard.service';
     providers: [
         AuthGuardService,
         AdminGuardService,
+        VacationGuardService,
         AuthenticationRestService,
         {
             provide: APP_INITIALIZER,
@@ -44,6 +46,7 @@ export class AuthModule {
                 AuthenticationRestService,
                 AuthGuardService,
                 AdminGuardService,
+                VacationGuardService
             ]
         };
     }

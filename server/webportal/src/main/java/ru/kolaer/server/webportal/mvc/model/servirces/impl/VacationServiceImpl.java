@@ -21,12 +21,9 @@ import ru.kolaer.server.webportal.mvc.model.entities.vacation.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
 
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.function.Function;
@@ -112,7 +109,7 @@ public class VacationServiceImpl implements VacationService {
     @Override
     @Transactional(readOnly = true)
     public VacationCalculateDto vacationCalculate(VacationCalculateDateRequest request) {
-        LocalDate to = request.getFrom().plusDays(request.getDays());
+        LocalDate to = request.getFrom().plusDays(request.getDays() - 1);
         FindHolidayRequest findHolidayRequest = new FindHolidayRequest();
         findHolidayRequest.setFromDate(request.getFrom());
         findHolidayRequest.setToDate(to.plusMonths(1));
@@ -165,6 +162,7 @@ public class VacationServiceImpl implements VacationService {
     }
 
     @Override
+    @Transactional
     public void deleteVacation(Long vacationId) {
         VacationEntity vacationEntity = vacationDao.findById(vacationId);
 
@@ -250,7 +248,7 @@ public class VacationServiceImpl implements VacationService {
                 vacationReportCalendarDayDto.setDayOff(isDayOff);
 
                 for (VacationEntity vacation : employeeVacation.getValue()) {
-                    if (vacation.getVacationFrom().isAfter(from) && vacation.getVacationTo().isBefore(from) ||
+                    if (vacation.getVacationFrom().isBefore(from) && vacation.getVacationTo().isAfter(from) ||
                             vacation.getVacationFrom().isEqual(from) || vacation.getVacationTo().isEqual(from)) {
                         vacationReportCalendarDayDto.setVacation(true);
                         break;

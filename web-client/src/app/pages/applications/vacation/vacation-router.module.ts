@@ -3,7 +3,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {VacationComponent} from './vacation.component';
 import {VacationMainComponent} from './main/vacation-main.component';
 import {VacationSetComponent} from './set/vacation-set.component';
-import {VacationReportComponent} from './report/vacation-report.component';
+import {VacationReportCalendarComponent} from './report/calendar/vacation-report-calendar.component';
+import {VacationGuardService} from '../../../@core/modules/auth/vacation-guard.service';
 
 const routers: Routes = [
     {
@@ -17,11 +18,13 @@ const routers: Routes = [
     },
     {
         path: 'set',
-        component: VacationSetComponent
+        component: VacationSetComponent,
+        canActivate: [VacationGuardService]
     },
     {
-        path: 'report',
-        component: VacationReportComponent
+        path: 'report/calendar',
+        component: VacationReportCalendarComponent,
+        canActivate: [VacationGuardService]
     }
 ];
 

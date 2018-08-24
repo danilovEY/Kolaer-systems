@@ -8,7 +8,9 @@ import {VacationService} from './vacation.service';
 import {VacationDateFromEditComponent} from './set/vacation-date-from-edit.component';
 import {VacationDateToEditComponent} from './set/vacation-date-to-edit.component';
 import {VacationDaysEditComponent} from './set/vacation-days-edit.component';
-import {VacationReportComponent} from './report/vacation-report.component';
+import {VacationPeriodService} from './vacation-period.service';
+import {VacationReportDistributeComponent} from './report/distribute/vacation-report-distribute.component';
+import {VacationReportCalendarComponent} from './report/calendar/vacation-report-calendar.component';
 
 @NgModule({
     imports: [
@@ -22,7 +24,8 @@ import {VacationReportComponent} from './report/vacation-report.component';
         VacationDateFromEditComponent,
         VacationDateToEditComponent,
         VacationDaysEditComponent,
-        VacationReportComponent
+        VacationReportCalendarComponent,
+        VacationReportDistributeComponent
     ],
     entryComponents: [
         VacationDateFromEditComponent,
@@ -30,7 +33,8 @@ import {VacationReportComponent} from './report/vacation-report.component';
         VacationDaysEditComponent,
     ],
     providers: [
-        VacationService
+        VacationService,
+        VacationPeriodService
     ]
 })
 export class VacationModule {
