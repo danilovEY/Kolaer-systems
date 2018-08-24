@@ -113,7 +113,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
     }
 
     @Override
-    public VacationPeriodEntity findPeriodsByYear(long year) {
+    public VacationPeriodEntity findPeriodsByYear(int year) {
         return getSession()
                 .createQuery("FROM " + getEntityName(VacationPeriodEntity.class) + " WHERE year = :year", VacationPeriodEntity.class)
                 .setParameter("year", year)
@@ -140,7 +140,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
                 .append("FROM ")
                 .append(getEntityName());
 
-        if (request.getDepartmentId() != null || request.getFrom() != null || request.getTo() != null) {
+        if (request.getDepartmentId() != null) {
             sqlQuery = sqlQuery.append(" WHERE ");
         }
 
@@ -149,23 +149,15 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
             params.put("departmentId", request.getDepartmentId());
         }
 
-        if(request.getFrom() != null) {
-            if(request.getDepartmentId() != null) {
-                sqlQuery = sqlQuery.append("AND ");
-            }
-
-            sqlQuery = sqlQuery.append("vacationFrom >= :vacationFrom ");
-            params.put("vacationFrom", request.getFrom());
+        if (request.getDepartmentId() != null) {
+            sqlQuery = sqlQuery.append("AND ");
         }
 
-        if(request.getFrom() != null) {
-            if(request.getDepartmentId() != null || request.getFrom() != null) {
-                sqlQuery = sqlQuery.append("AND ");
-            }
-
-            sqlQuery = sqlQuery.append("vacationTo <= :vacationTo ");
-            params.put("vacationTo", request.getTo());
-        }
+        sqlQuery = sqlQuery.append("((vacationFrom <= :vacationFrom AND vacationTo >= :vacationFrom OR " +
+                "vacationFrom <= :vacationTo AND vacationTo >= :vacationTo) OR " +
+                "(vacationFrom >= :vacationFrom AND vacationTo <= :vacationTo)) ");
+        params.put("vacationFrom", request.getFrom());
+        params.put("vacationTo", request.getTo());
 
         sqlQuery = sqlQuery.append("ORDER BY vacationFrom ASC, vacationTo ASC");
 

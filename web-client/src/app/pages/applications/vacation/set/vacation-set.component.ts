@@ -92,6 +92,7 @@ export class VacationSetComponent implements OnInit {
                     this.employeeService.getCurrentEmployee()
                         .subscribe(employee => {
                             this.selectedDepartment = employee.department;
+                            this.selectDepartment(this.selectedDepartment);
                         });
                 }
             });

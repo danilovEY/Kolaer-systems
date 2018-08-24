@@ -73,29 +73,7 @@ export class PagesComponent implements OnInit {
             vacationMainMenuItem.title = 'Главная';
             vacationMainMenuItem.link = 'app/vacation/main';
 
-            const vacationSetMenuItem: NbMenuItem = new NbMenuItem();
-            vacationSetMenuItem.title = 'Задать отпуск';
-            vacationSetMenuItem.link = 'app/vacation/set';
-
-            const vacationReportMenuItem: NbMenuItem = new NbMenuItem();
-            vacationReportMenuItem.title = 'Отчеты';
-            vacationReportMenuItem.icon = 'icon ion-md-analytics';
-            vacationReportMenuItem.children = [];
-
-            const vacationReportDistributedMenuItem: NbMenuItem = new NbMenuItem();
-            vacationReportDistributedMenuItem.title = 'График распределений';
-            vacationReportDistributedMenuItem.link = 'app/vacation/report/distributed';
-
-            const vacationReportCalendarMenuItem: NbMenuItem = new NbMenuItem();
-            vacationReportCalendarMenuItem.title = 'График пересечений';
-            vacationReportCalendarMenuItem.link = 'app/vacation/report/calendar';
-
-            vacationReportMenuItem.children.push(vacationReportDistributedMenuItem,
-                vacationReportCalendarMenuItem);
-
-            vacationMenuItem.children.push(vacationMainMenuItem,
-                vacationSetMenuItem,
-                vacationReportMenuItem);
+            vacationMenuItem.children.push(vacationMainMenuItem);
 
             this.menu.push(vacationMenuItem);
 
@@ -183,6 +161,30 @@ export class PagesComponent implements OnInit {
                        orgStructureSyncMenuItem.link = 'app/org-structures/sync';
 
                        orgStructureMenuItem.children.push(orgStructureSyncMenuItem);
+                   }
+
+                   if (account.accessVacationAdmin || account.accessVacationDepEdit) {
+                       const vacationSetMenuItem: NbMenuItem = new NbMenuItem();
+                       vacationSetMenuItem.title = 'Задать отпуск';
+                       vacationSetMenuItem.link = 'app/vacation/set';
+
+                       const vacationReportMenuItem: NbMenuItem = new NbMenuItem();
+                       vacationReportMenuItem.title = 'Отчеты';
+                       vacationReportMenuItem.icon = 'icon ion-md-analytics';
+                       vacationReportMenuItem.children = [];
+
+                       const vacationReportDistributedMenuItem: NbMenuItem = new NbMenuItem();
+                       vacationReportDistributedMenuItem.title = 'График распределений';
+                       vacationReportDistributedMenuItem.link = 'app/vacation/report/distribute';
+
+                       const vacationReportCalendarMenuItem: NbMenuItem = new NbMenuItem();
+                       vacationReportCalendarMenuItem.title = 'График пересечений';
+                       vacationReportCalendarMenuItem.link = 'app/vacation/report/calendar';
+
+                       vacationReportMenuItem.children.push(vacationReportDistributedMenuItem,
+                           vacationReportCalendarMenuItem);
+
+                       vacationMenuItem.children.push(vacationSetMenuItem, vacationReportMenuItem);
                    }
                 });
 

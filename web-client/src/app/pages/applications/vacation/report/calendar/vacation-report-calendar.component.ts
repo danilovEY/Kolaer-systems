@@ -16,12 +16,12 @@ import {ToasterConfig, ToasterService} from 'angular2-toaster';
 
 @Component({
     selector: 'vacation-report',
-    templateUrl: './vacation-report.component.html',
-    styleUrls: ['./vacation-report.component.scss']
+    templateUrl: './vacation-report-calendar.component.html',
+    styleUrls: ['./vacation-report-calendar.component.scss']
 })
 export class VacationReportCalendarComponent implements OnInit {
 
-    vacationReportCalendarData: VacationReportCalendarEmployeeModel[] = [];
+    vacationReportCalendarData: VacationReportCalendarEmployeeModel[];
 
     columnYears: any[] = [];
     columnMonths: any[] = [];
@@ -80,7 +80,7 @@ export class VacationReportCalendarComponent implements OnInit {
         this.columnMonths = [];
         this.columnDays = [];
 
-        if (this.vacationReportCalendarData.length > 0) {
+        if (this.vacationReportCalendarData && this.vacationReportCalendarData.length > 0) {
             for (const year of this.vacationReportCalendarData[0].years) {
                 let sizeDays: number = 0;
 

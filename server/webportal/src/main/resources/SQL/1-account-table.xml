@@ -79,4 +79,9 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1-9" author="Danilov">
+        <addNotNullConstraint tableName="account" columnName="access_vacation_admin" columnDataType="BOOLEAN"/>
+        <addNotNullConstraint tableName="account" columnName="access_vacation_dep_edit" columnDataType="BOOLEAN"/>
+    </changeSet>
+
 </databaseChangeLog>

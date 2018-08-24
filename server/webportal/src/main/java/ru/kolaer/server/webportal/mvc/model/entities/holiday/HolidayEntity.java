@@ -26,6 +26,5 @@ public class HolidayEntity implements BaseEntity {
     private LocalDate holidayDate;
 
     @Column(name = "holiday_type", nullable = false)
-    @Enumerated(EnumType.STRING)
     private TypeDay holidayType;
 }

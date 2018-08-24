@@ -23,7 +23,7 @@ public interface VacationDao extends DefaultDao<VacationEntity> {
     List<VacationPeriodEntity> findAllPeriods(FindVacationPeriodPageRequest request);
 
     VacationPeriodEntity findLastPeriods(FindVacationPeriodPageRequest request);
-    VacationPeriodEntity findPeriodsByYear(long year);
+    VacationPeriodEntity findPeriodsByYear(int year);
 
     VacationBalanceEntity save(VacationBalanceEntity vacationBalanceEntity);
 

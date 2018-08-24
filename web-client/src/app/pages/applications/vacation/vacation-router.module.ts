@@ -5,6 +5,7 @@ import {VacationMainComponent} from './main/vacation-main.component';
 import {VacationSetComponent} from './set/vacation-set.component';
 import {VacationReportCalendarComponent} from './report/calendar/vacation-report-calendar.component';
 import {VacationGuardService} from '../../../@core/modules/auth/vacation-guard.service';
+import {VacationReportDistributeComponent} from './report/distribute/vacation-report-distribute.component';
 
 const routers: Routes = [
     {
@@ -24,6 +25,11 @@ const routers: Routes = [
     {
         path: 'report/calendar',
         component: VacationReportCalendarComponent,
+        canActivate: [VacationGuardService]
+    },
+    {
+        path: 'report/distribute',
+        component: VacationReportDistributeComponent,
         canActivate: [VacationGuardService]
     }
 ];

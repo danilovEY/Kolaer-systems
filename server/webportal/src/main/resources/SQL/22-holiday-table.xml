@@ -22,4 +22,8 @@
 
         <addPrimaryKey tableName="holiday" columnNames="id"/>
     </changeSet>
+
+    <changeSet id="22-1" author="Danilov">
+        <modifyDataType tableName="holiday" columnName="holiday_type" newDataType="INT"/>
+    </changeSet>
 </databaseChangeLog>

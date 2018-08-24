@@ -24,7 +24,6 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <label>Период:</label>
                         <ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t">
                         </ngb-datepicker>
 
@@ -49,13 +48,17 @@
         </nb-card>
     </div>
 
-    <div class="col-12" *ngIf="vacationReportCalendarData.length > 0">
+    <div class="col-12" *ngIf="vacationReportCalendarData">
         <nb-card>
             <nb-card-header>
                 <span>Календарь отпусков</span>
             </nb-card-header>
 
-            <nb-card-body>
+            <nb-card-body *ngIf="vacationReportCalendarData.length === 0" >
+                <h1>Отпусков в этот период нет</h1>
+            </nb-card-body>
+
+            <nb-card-body *ngIf="vacationReportCalendarData.length > 0" >
                 <p-table [value]="vacationReportCalendarData" [scrollable]="true" scrollHeight="500px">
                     <ng-template pTemplate="header">
                         <!--<tr>-->
