@@ -2,6 +2,7 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
@@ -14,7 +15,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -79,13 +82,25 @@ public class HolidayDaoImpl extends AbstractDefaultDao<HolidayEntity> implements
 
     @Override
     public List<HolidayEntity> findAll(FindHolidayRequest findHolidayRequest) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("fromDate", findHolidayRequest.getFromDate());
+        params.put("toDate", findHolidayRequest.getToDate());
+
+        StringBuilder sqlQuery = new StringBuilder();
+        sqlQuery.append("FROM ")
+                .append(getEntityName())
+                .append(" WHERE holidayDate >= :fromDate AND holidayDate <= :toDate ");
+
+        if (!CollectionUtils.isEmpty(findHolidayRequest.getTypeHolidays())) {
+            sqlQuery = sqlQuery.append("AND holidayType IN (:types) ");
+            params.put("types", findHolidayRequest.getTypeHolidays());
+        }
+
+        sqlQuery = sqlQuery.append("ORDER BY holidayDate ASC");
+
         return getSession()
-                .createQuery("FROM " + getEntityName() +
-                        " WHERE holidayDate >= :fromDate AND holidayDate <= :toDate AND holidayType IN (:types)" +
-                        " ORDER BY holidayDate ASC", getEntityClass())
-                .setParameter("fromDate", findHolidayRequest.getFromDate())
-                .setParameter("toDate", findHolidayRequest.getToDate())
-                .setParameterList("types", findHolidayRequest.getTypeHolidays())
+                .createQuery(sqlQuery.toString(), getEntityClass())
+                .setProperties(params)
                 .list();
     }
 

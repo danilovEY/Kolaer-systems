@@ -15,6 +15,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.HolidayConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.HolidayDao;
+import ru.kolaer.server.webportal.mvc.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.HolidayDto;
 import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
@@ -80,6 +81,16 @@ public class HolidayServiceImpl
         holidayEntity.setHolidayDate(holidayDto.getHolidayDate());
 
         return defaultConverter.convertToDto(defaultEntityDao.update(holidayEntity));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<HolidayDto> getAllByYear(int year) {
+        FindHolidayRequest request = new FindHolidayRequest();
+        request.setFromDate(LocalDate.of(year, 1, 1));
+        request.setToDate(LocalDate.of(year, 12, 13));
+
+        return defaultConverter.convertToDto(defaultEntityDao.findAll(request));
     }
 
     @Override

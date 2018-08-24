@@ -15,4 +15,6 @@ public interface HolidayService extends DefaultService<HolidayDto> {
     List<Holiday> getHolidayByMonth(DateTimeJson dateTimeJson);
 
     HolidayDto update(Long id, HolidayDto holidayDto);
+
+    List<HolidayDto> getAllByYear(int year);
 }

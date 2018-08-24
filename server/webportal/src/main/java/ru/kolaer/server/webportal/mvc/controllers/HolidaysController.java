@@ -10,13 +10,11 @@ import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
 import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.FilterType;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.HolidayDto;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.HolidayFilter;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.HolidaySort;
 import ru.kolaer.server.webportal.mvc.model.servirces.HolidayService;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -87,12 +85,8 @@ public class HolidaysController {
     @ApiOperation(value = "Получить все праздники в году")
     @UrlDeclaration(description = "Получить все праздники в году", isAccessAll = true)
     @RequestMapping(value = "/non-security/holidays/get/{year}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<HolidayDto> getAllInMonth(@PathVariable("year") Long year) {
-        HolidayFilter holidayFilter = new HolidayFilter();
-        holidayFilter.setFilterHolidayDate(LocalDate.of(year.intValue(), 1, 1));
-        holidayFilter.setTypeFilterHolidayDate(FilterType.LESS);
-
-        return this.holidayService.getAll(new HolidaySort(), holidayFilter);
+    public List<HolidayDto> getAllInMonth(@PathVariable("year") int year) {
+        return this.holidayService.getAllByYear(year);
     }
 
 }

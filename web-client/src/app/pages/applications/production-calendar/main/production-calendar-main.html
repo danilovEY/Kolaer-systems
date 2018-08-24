@@ -3,6 +3,16 @@
         <nb-card>
             <nb-card-header>
                 <span>Производственный календарь</span>
+
+                <p-dropdown [style]="{'width':'100%'}"
+                            [options]="years"
+                            [ngModel]="selectedYear"
+                            (ngModelChange)="selectYear($event)"
+                            placeholder="Выберите год..."
+                            optionLabel="year"
+                            [autoWidth]="false"
+                            appendTo="body">
+                </p-dropdown>
             </nb-card-header>
 
 
