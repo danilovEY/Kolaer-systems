@@ -18,4 +18,5 @@ public class UrlSecurityDto implements BaseDto {
     private boolean accessOk;
     private boolean accessVacationAdmin;
     private boolean accessVacationDepEdit;
+    private boolean accessTypeWork;
 }

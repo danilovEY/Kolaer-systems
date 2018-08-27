@@ -21,4 +21,5 @@ public @interface UrlDeclaration {
     boolean isOk() default false;
     boolean isVacationAdmin() default false;
     boolean isVacationDepEdit() default false;
+    boolean isTypeWork() default false;
 }

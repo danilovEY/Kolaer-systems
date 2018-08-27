@@ -84,4 +84,14 @@
         <addNotNullConstraint tableName="account" columnName="access_vacation_dep_edit" columnDataType="BOOLEAN"/>
     </changeSet>
 
+    <changeSet id="1-10" author="Danilov">
+        <addColumn tableName="account">
+            <column name="access_type_work" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addNotNullConstraint tableName="account" columnName="access_ok" columnDataType="BOOLEAN"/>
+    </changeSet>
+
 </databaseChangeLog>

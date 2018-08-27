@@ -95,20 +95,20 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         }
 
         if(model.getPostId() != null) {
-            Optional.ofNullable(model.getPost())
-                    .map(postConverter::convertToDto)
+            Optional.ofNullable(model.getPostId())
+                    .map(postService::getById)
                     .ifPresent(employeeDto::setPost);
         }
 
         if(model.getDepartmentId() != null) {
-            Optional.ofNullable(model.getDepartment())
-                    .map(departmentConverter::convertToDto)
+            Optional.ofNullable(model.getDepartmentId())
+                    .map(departmentService::getById)
                     .ifPresent(employeeDto::setDepartment);
         }
 
         if(model.getTypeWorkId() != null) {
-            Optional.ofNullable(model.getTypeWork())
-                    .map(typeWorkConverter::convertToDto)
+            Optional.ofNullable(model.getTypeWorkId())
+                    .map(typeWorkService::getById)
                     .ifPresent(employeeDto::setTypeWork);
         }
 

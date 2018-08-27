@@ -60,4 +60,7 @@ public class AccountEntity implements BaseEntity {
     @Column(name = "access_vacation_dep_edit", nullable = false)
     private boolean accessVacationDepEdit;
 
+    @Column(name = "access_type_work", nullable = false)
+    private boolean accessTypeWork;
+
 }

@@ -54,7 +54,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     public List<T> findAll(SortField sortField, Map<String, FilterValue> filter, Integer number, Integer pageSize) {
         String queryOrderBy = Optional.ofNullable(sortField)
                 .map(SortField::toString)
-                .orElse("");
+                .orElse("ORDER BY id ASC");
 
         String queryFilter = filtersToString(filter);
 

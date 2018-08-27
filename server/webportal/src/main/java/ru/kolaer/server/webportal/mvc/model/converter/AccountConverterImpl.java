@@ -44,6 +44,8 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setAccessOk(dto.isAccessOk());
         accountEntity.setAccessVacationAdmin(dto.isAccessVacationAdmin());
         accountEntity.setAccessVacationDepEdit(dto.isAccessVacationDepEdit());
+        accountEntity.setAccessVacationDepEdit(dto.isAccessVacationDepEdit());
+        accountEntity.setAccessTypeWork(dto.isAccessTypeWork());
 
         accountEntity.setEmployeeId(Optional.ofNullable(dto.getEmployee())
                 .map(EmployeeDto::getId)
@@ -73,6 +75,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setAccessOk(model.isAccessOk());
         accountDto.setAccessVacationAdmin(model.isAccessVacationAdmin());
         accountDto.setAccessVacationDepEdit(model.isAccessVacationDepEdit());
+        accountDto.setAccessTypeWork(model.isAccessTypeWork());
 
         if(model.getEmployeeId() != null) {
             accountDto.setEmployee(employeeConverter.convertToDto(model.getEmployee()));
@@ -130,6 +133,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setAccessOk(model.isAccessOk());
         accountDto.setAccessVacationAdmin(model.isAccessVacationAdmin());
         accountDto.setAccessVacationDepEdit(model.isAccessVacationDepEdit());
+        accountDto.setAccessTypeWork(model.isAccessTypeWork());
 
         Optional.ofNullable(model.getEmployeeId())
                 .map(EmployeeDto::new)
@@ -182,6 +186,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountSimpleDto.setAccessOk(accountEntity.isAccessOk());
         accountSimpleDto.setAccessVacationAdmin(accountEntity.isAccessVacationAdmin());
         accountSimpleDto.setAccessVacationDepEdit(accountEntity.isAccessVacationDepEdit());
+        accountSimpleDto.setAccessTypeWork(accountEntity.isAccessTypeWork());
 
         return accountSimpleDto;
     }
@@ -199,6 +204,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountSimpleDto.setAccessOk(dto.isAccessOk());
         accountSimpleDto.setAccessVacationAdmin(dto.isAccessVacationAdmin());
         accountSimpleDto.setAccessVacationDepEdit(dto.isAccessVacationDepEdit());
+        accountSimpleDto.setAccessTypeWork(dto.isAccessTypeWork());
 
         Optional.ofNullable(dto.getEmployee()).map(EmployeeDto::getId).ifPresent(accountSimpleDto::setEmployeeId);
 

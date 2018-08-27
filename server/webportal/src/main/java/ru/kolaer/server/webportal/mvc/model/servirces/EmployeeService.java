@@ -4,6 +4,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeRequestDto;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.UpdateTypeWorkEmployeeRequestDto;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface EmployeeService extends BirthdayService<EmployeeDto>, DefaultSe
     long getCountEmployeesForContacts(String searchText);
 
     Page<EmployeeDto> getEmployees(FindEmployeePageRequest request);
+
+    EmployeeDto updateWorkType(Long employeeId, UpdateTypeWorkEmployeeRequestDto request);
 }

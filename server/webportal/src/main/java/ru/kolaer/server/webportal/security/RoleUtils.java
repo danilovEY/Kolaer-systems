@@ -16,6 +16,7 @@ public class RoleUtils {
     public static final String ALL = "ALL";
     public static final String VACATION_ADMIN = "accessVacationAdmin";
     public static final String VACATION_DEP_EDIT = "accessVacationDepEdit";
+    public static final String TYPE_WORK = "accessTypeWork;";
 
     public static List<String> roleToListString(AccountEntity accountEntity) {
         ArrayList<String> roles = new ArrayList<>();
@@ -33,6 +34,9 @@ public class RoleUtils {
         }
         if (accountEntity.isAccessVacationDepEdit()) {
             roles.add(VACATION_DEP_EDIT);
+        }
+        if (accountEntity.isAccessTypeWork()) {
+            roles.add(TYPE_WORK);
         }
 
         return roles;
@@ -57,6 +61,9 @@ public class RoleUtils {
         }
         if (urlSecurityDto.isAccessVacationDepEdit()) {
             roles.add(VACATION_DEP_EDIT);
+        }
+        if (urlSecurityDto.isAccessTypeWork()) {
+            roles.add(TYPE_WORK);
         }
         return roles;
     }

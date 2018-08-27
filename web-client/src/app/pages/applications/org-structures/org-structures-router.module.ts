@@ -5,6 +5,7 @@ import {EmployeesComponent} from './employees/employees.component';
 import {DepartmentsComponent} from './departments/departments.component';
 import {PostsComponent} from './posts/posts.component';
 import {OrgStructuresSyncComponent} from './synch/org-structures-sync.component';
+import {TypeWorkComponent} from './type-work/type-work.component';
 
 const routes: Routes = [
     {
@@ -27,6 +28,10 @@ const routes: Routes = [
     {
         path: 'sync',
         component: OrgStructuresSyncComponent
+    },
+    {
+        path: 'type-work',
+        component: TypeWorkComponent
     }
 ];
 

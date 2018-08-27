@@ -13,10 +13,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdate;
-import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeFilter;
-import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeRequestDto;
-import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeSort;
-import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.*;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.HistoryChangeDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdatableEmployeeService;
@@ -83,6 +80,14 @@ public class EmployeeController {
     public EmployeeDto updateEmployee(@PathVariable(value = "employeeId") Long employeeId,
                                       @RequestBody EmployeeRequestDto employeeRequestDto) {
         return this.employeeService.update(employeeId, employeeRequestDto);
+    }
+
+    @ApiOperation(value = "Изменить вид работы сотрудника")
+    @UrlDeclaration(isUser = false, isOk = true, isTypeWork = true, requestMethod = RequestMethod.PUT)
+    @RequestMapping(value = "/{employeeId}/type-work", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public EmployeeDto updateEmployee(@PathVariable(value = "employeeId") Long employeeId,
+                                      @RequestBody UpdateTypeWorkEmployeeRequestDto request) {
+        return this.employeeService.updateWorkType(employeeId, request);
     }
 
     @ApiOperation(value = "Удалить сотрудника")

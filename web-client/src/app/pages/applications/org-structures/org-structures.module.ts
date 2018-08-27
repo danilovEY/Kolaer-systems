@@ -6,6 +6,7 @@ import {ThemeModule} from '../../../@theme/theme.module';
 import {DepartmentsComponent} from './departments/departments.component';
 import {PostsComponent} from './posts/posts.component';
 import {OrgStructuresSyncComponent} from './synch/org-structures-sync.component';
+import {TypeWorkComponent} from './type-work/type-work.component';
 
 @NgModule({
     imports: [
@@ -18,6 +19,7 @@ import {OrgStructuresSyncComponent} from './synch/org-structures-sync.component'
         PostsComponent,
         EmployeesComponent,
         OrgStructuresSyncComponent,
+        TypeWorkComponent
     ]
 })
 export class OrgStructuresModule {

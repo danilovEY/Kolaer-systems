@@ -131,6 +131,12 @@ public abstract class AbstractDefaultService<T extends BaseDto,
 
     @Override
     @Transactional(readOnly = true)
+    public Page<T> getAll(PaginationRequest request) {
+        return this.getAll(null, null, request.getNumber(), request.getPageSize());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<T> getAll(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize) {
         Long count;
         List<T> results;

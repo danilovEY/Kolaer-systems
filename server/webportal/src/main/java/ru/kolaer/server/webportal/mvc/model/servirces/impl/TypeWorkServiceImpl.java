@@ -1,7 +1,10 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.typework.TypeWorkDto;
+import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.TypeWorkConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.TypeWorkDao;
 import ru.kolaer.server.webportal.mvc.model.entities.typework.TypeWorkEntity;
@@ -17,4 +20,22 @@ public class TypeWorkServiceImpl
         super(defaultEntityDao, converter);
     }
 
+    @Override
+    @Transactional
+    public TypeWorkDto updateTypeWork(long typeWorkId, TypeWorkDto request) {
+        if (!StringUtils.hasText(request.getName())) {
+            throw new UnexpectedRequestParams("Имя не должно быть пустым");
+        }
+
+        TypeWorkEntity typeWorkEntity = defaultEntityDao.findById(typeWorkId);
+        typeWorkEntity.setName(request.getName());
+
+        return defaultConverter.convertToDto(defaultEntityDao.save(typeWorkEntity));
+    }
+
+    @Override
+    @Transactional
+    public void deleteTypeWork(long typeWorkId) {
+        defaultEntityDao.delete(typeWorkId);
+    }
 }

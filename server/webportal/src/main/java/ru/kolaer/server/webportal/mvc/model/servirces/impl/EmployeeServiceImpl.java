@@ -4,16 +4,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeRequestDto;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.UpdateTypeWorkEmployeeRequestDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
+import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 
 import java.util.Date;
@@ -27,9 +31,14 @@ import java.util.List;
 public class EmployeeServiceImpl
         extends AbstractDefaultService<EmployeeDto, EmployeeEntity, EmployeeDao, EmployeeConverter>
         implements EmployeeService {
+
+    private final AuthenticationService authenticationService;
+
     protected EmployeeServiceImpl(EmployeeDao employeeDao,
-                                  EmployeeConverter converter) {
+                                  EmployeeConverter converter,
+                                  AuthenticationService authenticationService) {
         super(employeeDao, converter);
+        this.authenticationService = authenticationService;
     }
 
     @Override
@@ -180,6 +189,29 @@ public class EmployeeServiceImpl
         List<EmployeeDto> employees = defaultConverter.convertToDto(defaultEntityDao.findAllEmployee(request));
 
         return new Page<>(employees, request.getNumber(), count, request.getPageSize());
+    }
+
+    @Override
+    @Transactional
+    public EmployeeDto updateWorkType(Long employeeId, UpdateTypeWorkEmployeeRequestDto request) {
+        if (request.getTypeWorkId() != null && request.getTypeWorkId() <= 0) {
+            request.setTypeWorkId(null);
+        }
+
+        AccountSimpleDto currentAccount = authenticationService.getAccountSimpleByAuthentication();
+        EmployeeEntity updatableEmployee = defaultEntityDao.findById(employeeId);
+
+        if (!currentAccount.isAccessOit() || !currentAccount.isAccessOk()) {
+            EmployeeEntity currentEmployee = defaultEntityDao.findById(currentAccount.getEmployeeId());
+
+            if(!currentEmployee.getDepartmentId().equals(updatableEmployee.getDepartmentId())) {
+                throw new ForbiddenException("У вас нет доступа для изменения данных у данного сотрудника");
+            }
+        }
+
+        updatableEmployee.setTypeWorkId(request.getTypeWorkId());
+
+        return defaultConverter.convertToDto(defaultEntityDao.update(updatableEmployee));
     }
 
     @Override
