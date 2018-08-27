@@ -15,4 +15,5 @@ export class EmployeeRequestModel {
     personnelNumber: number;
     gender: Gender;
     postId: number;
+    typeWorkId: number;
 }

@@ -123,6 +123,7 @@ public class EmployeeServiceImpl
         employeeEntity.setInitials(employeeEntity.getSecondName() + " " +
                 employeeEntity.getFirstName() + " " + employeeEntity.getThirdName());
 
+        employeeEntity.setTypeWorkId(employeeRequestDto.getTypeWorkId());
         employeeEntity.setDepartmentId(employeeRequestDto.getDepartmentId());
         employeeEntity.setPostId(employeeRequestDto.getPostId());
         employeeEntity.setBirthday(employeeRequestDto.getBirthday());
@@ -159,6 +160,7 @@ public class EmployeeServiceImpl
         employeeEntity.setInitials(employeeEntity.getSecondName() + " " +
                 employeeEntity.getFirstName() + " " + employeeEntity.getThirdName());
 
+        employeeEntity.setTypeWorkId(employeeRequestDto.getTypeWorkId());
         employeeEntity.setDepartmentId(employeeRequestDto.getDepartmentId());
         employeeEntity.setPostId(employeeRequestDto.getPostId());
         employeeEntity.setBirthday(employeeRequestDto.getBirthday());

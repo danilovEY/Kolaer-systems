@@ -14,6 +14,8 @@ import {DepartmentEditComponent} from '../../../../@theme/components/table/depar
 import {EmployeeRequestModel} from '../../../../@core/models/employee-request.model';
 import {DateEditComponent} from '../../../../@theme/components/table/date-edit.component';
 import {Gender} from '../../../../@core/models/gender.enum';
+import {AccountService} from '../../../../@core/services/account.service';
+import {TypeWorkEditComponent} from '../../../../@theme/components/table/type-work-edit.component';
 
 @Component({
     selector: 'employees',
@@ -25,10 +27,12 @@ export class EmployeesComponent implements OnInit {
     employeeTable: CustomTableComponent;
 
     employeesColumns: Column[] = [];
+    employeesOnlyWithTypeWorkColumns: Column[] = [];
     employeesSource: EmployeesDataSource;
     employeesLoading: boolean = true;
 
-    constructor(private employeeService: EmployeeService) {
+    constructor(private employeeService: EmployeeService,
+                private accountService: AccountService) {
         this.employeesSource = new EmployeesDataSource(this.employeeService);
         this.employeesSource.onLoading().subscribe(load => this.employeesLoading = load);
     }
@@ -64,6 +68,18 @@ export class EmployeesComponent implements OnInit {
             },
             valuePrepareFunction(a: any, value: EmployeeModel, cell: Cell) {
                 return value.post.abbreviatedName;
+            }
+        }, null);
+
+        const typeWorkColumn: Column = new Column('typeWork', {
+            title: 'Вид работы',
+            type: 'string',
+            editor: {
+                type: 'custom',
+                component: TypeWorkEditComponent,
+            },
+            valuePrepareFunction(a: any, value: EmployeeModel, cell: Cell) {
+                return value.typeWork ? value.typeWork.name : '';
             }
         }, null);
 
@@ -136,12 +152,14 @@ export class EmployeesComponent implements OnInit {
         //     }
         // }, null);
 
+        this.employeesOnlyWithTypeWorkColumns.push(typeWorkColumn);
         this.employeesColumns.push(personnelNumberColumn,
             secondNameColumn,
             firstNameColumn,
             thirdNameColumn,
             postColumn,
             departmentColumn,
+            typeWorkColumn,
             genderColumn,
             birthdayColumn,
             // employmentDateColumn,
@@ -160,6 +178,7 @@ export class EmployeesComponent implements OnInit {
         employeeRequestModel.personnelNumber = event.newData.personnelNumber;
         employeeRequestModel.postId = event.newData.post ? event.newData.post.id : null;
         employeeRequestModel.departmentId = event.newData.department ? event.newData.department.id : null;
+        employeeRequestModel.typeWorkId = event.newData.typeWork ? event.newData.typeWork.id : null;
 
         this.employeeService.updateEmployee(event.data.id, employeeRequestModel)
             .subscribe((employee: EmployeeModel) => event.confirm.resolve(event.newData, employee),
@@ -178,6 +197,7 @@ export class EmployeesComponent implements OnInit {
         employeeRequestModel.personnelNumber = event.newData.personnelNumber;
         employeeRequestModel.postId = event.newData.post ? event.newData.post.id : null;
         employeeRequestModel.departmentId = event.newData.department ? event.newData.department.id : null;
+        employeeRequestModel.typeWorkId = event.newData.typeWork ? event.newData.typeWork.id : null;
 
         this.employeeService.createEmployee(employeeRequestModel)
             .subscribe((employee: EmployeeModel) => event.confirm.resolve(employee),

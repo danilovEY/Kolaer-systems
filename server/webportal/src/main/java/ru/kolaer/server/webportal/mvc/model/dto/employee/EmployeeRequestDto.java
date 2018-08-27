@@ -19,6 +19,7 @@ public class EmployeeRequestDto {
     private EnumGender gender;
     private Long departmentId;
     private Long postId;
+    private Long typeWorkId;
     private Date birthday;
     private String email;
     private EnumCategory category;

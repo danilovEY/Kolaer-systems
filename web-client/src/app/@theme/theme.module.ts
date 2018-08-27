@@ -49,6 +49,7 @@ import {DateTimeEditComponent} from './components/table/date-time-edit.component
 import {NgbDateRusParserFormatter} from './components/table/ngb-date-rus-parser.formatter';
 import {TableModule} from 'primeng/table';
 import {MessageModule} from 'primeng/message';
+import {TypeWorkEditComponent} from './components/table/type-work-edit.component';
 
 // import {NbSecurityModule} from '@nebular/security';
 
@@ -103,7 +104,7 @@ const COMPONENTS = [
     DateEditComponent,
     DateTimeEditComponent,
     PlacementEditComponent,
-
+    TypeWorkEditComponent,
 ];
 
 const PIPES = [
@@ -143,6 +144,7 @@ const NB_THEME_PROVIDERS = [
         DateEditComponent,
         DateTimeEditComponent,
         PlacementEditComponent,
+        TypeWorkEditComponent,
     ]
 })
 export class ThemeModule {

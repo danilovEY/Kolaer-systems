@@ -7,7 +7,8 @@
 
             <nb-card-body>
                 <ngx-loading [show]="employeesLoading"></ngx-loading>
-                <custom-table #employeeTable
+                <custom-table *ngIf=""
+                        #employeeTable
                               [columns]="employeesColumns"
                               [source]="employeesSource"
                               [actionAdd]="true"

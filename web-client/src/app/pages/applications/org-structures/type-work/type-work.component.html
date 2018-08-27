@@ -1,1 +1,23 @@
-<h1>Test</h1>
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                Вид работ
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="typeWorkLoading"></ngx-loading>
+                <custom-table #typeWorkTable
+                              [columns]="typeWorkColumns"
+                              [source]="typeWorkSource"
+                              [actionAdd]="true"
+                              [actionDelete]="true"
+                              [actionEdit]="true"
+                              (edit)="typeWorkEdit($event)"
+                              (delete)="typeWorkDelete($event)"
+                              (create)="typeWorkCreate($event)">
+                </custom-table>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>

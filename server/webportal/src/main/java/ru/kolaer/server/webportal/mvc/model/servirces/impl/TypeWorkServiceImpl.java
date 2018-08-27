@@ -3,13 +3,17 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.TypeWorkConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.TypeWorkDao;
+import ru.kolaer.server.webportal.mvc.model.dto.typework.FindTypeWorkRequest;
 import ru.kolaer.server.webportal.mvc.model.entities.typework.TypeWorkEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.TypeWorkService;
+
+import java.util.List;
 
 @Service
 public class TypeWorkServiceImpl
@@ -37,5 +41,15 @@ public class TypeWorkServiceImpl
     @Transactional
     public void deleteTypeWork(long typeWorkId) {
         defaultEntityDao.delete(typeWorkId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TypeWorkDto> getAll(FindTypeWorkRequest request) {
+        Long allCount = defaultEntityDao.findCountAll(request);
+        List<TypeWorkDto> all = defaultConverter.convertToDto(defaultEntityDao.findAll(request));
+
+        return new Page<>(all, request.getNumber(), allCount, request.getPageSize());
+
     }
 }

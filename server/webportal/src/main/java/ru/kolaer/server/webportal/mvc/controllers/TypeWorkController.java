@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.mvc.model.dto.PaginationRequest;
+import ru.kolaer.server.webportal.mvc.model.dto.typework.FindTypeWorkRequest;
 import ru.kolaer.server.webportal.mvc.model.servirces.TypeWorkService;
 
 @RestController
@@ -25,7 +25,7 @@ public class TypeWorkController {
     @ApiOperation(value = "Получить тип работы")
     @UrlDeclaration(isUser = false, isTypeWork = true, isOk = true)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<TypeWorkDto> getTypeWorks(@ModelAttribute PaginationRequest request) {
+    public Page<TypeWorkDto> getTypeWorks(@ModelAttribute FindTypeWorkRequest request) {
         return typeWorkService.getAll(request);
     }
 

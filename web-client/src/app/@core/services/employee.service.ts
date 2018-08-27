@@ -17,6 +17,7 @@ import {catchError, map, switchMap, tap} from 'rxjs/internal/operators';
 import {FindEmployeeRequestModel} from '../models/find-employee-request.model';
 import {HistoryChangeModel} from '../models/history-change.model';
 import {HistoryChangeEventEnum} from '../models/history-change-event.enum';
+import {UpdateTypeWorkEmployeeRequestModel} from '../models/update-type-work-employee-request.model';
 
 @Injectable()
 export class EmployeeService extends BaseService implements AuthenticationObserverService {
@@ -119,12 +120,19 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
         const url = `${this.getEmployeeUrl}/${employeeId}`;
 
         return this._httpClient.put<EmployeeModel>(url, employee)
-            .pipe(map((request: EmployeeModel) => this.convertModel(request)));
+            .pipe(map((response: EmployeeModel) => this.convertModel(response)));
+    }
+
+    updateTypeWorkEmployee(employeeId: number, request: UpdateTypeWorkEmployeeRequestModel): Observable<EmployeeModel> {
+        const url = `${this.getEmployeeUrl}/${employeeId}/type-work`;
+
+        return this._httpClient.put<EmployeeModel>(url, request)
+            .pipe(map((response: EmployeeModel) => this.convertModel(response)));
     }
 
     createEmployee(employee: EmployeeRequestModel): Observable<EmployeeModel> {
         return this._httpClient.post<EmployeeModel>(this.getEmployeeUrl, employee)
-            .pipe(map((request: EmployeeModel) => this.convertModel(request)));
+            .pipe(map((response: EmployeeModel) => this.convertModel(response)));
     }
 
     deleteEmployee(employeeId: number): Observable<any> {

@@ -3,6 +3,7 @@ import {DepartmentModel} from './department.model';
 import {Gender} from './gender.enum';
 import {PostModel} from './post.model';
 import {BaseModel} from './base.model';
+import {TypeWorkModel} from './type-work.model';
 
 export class EmployeeModel extends BaseModel {
     birthday: Date;
@@ -19,5 +20,5 @@ export class EmployeeModel extends BaseModel {
     gender: Gender;
     post: PostModel;
     harmfulness: boolean;
-    typeWork: any;
+    typeWork: TypeWorkModel;
 }
