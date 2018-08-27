@@ -8,7 +8,6 @@ import {EmployeeModel} from '../../../../@core/models/employee.model';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {Cell} from 'ng2-smart-table';
-import {Category} from '../../../../@core/models/category.enum';
 import {Utils} from '../../../../@core/utils/utils';
 import {PostEditComponent} from '../../../../@theme/components/table/post-edit.component';
 import {DepartmentEditComponent} from '../../../../@theme/components/table/department-edit.component';
@@ -121,35 +120,6 @@ export class EmployeesComponent implements OnInit {
             }
         }, null);
 
-        const categoryColumn: Column = new Column('category', {
-            title: 'Категория',
-            type: 'string',
-            filter: {
-                type: 'list',
-                config: {
-                    selectText: 'Категория...',
-                    list: [
-                        { value: Utils.keyFromValue(Category, Category.LEADER), title: Category.LEADER },
-                        { value: Utils.keyFromValue(Category, Category.SPECIALIST), title: Category.SPECIALIST },
-                        { value: Utils.keyFromValue(Category, Category.WORKER), title: Category.WORKER },
-                    ],
-                },
-            },
-            editor: {
-                type: 'list',
-                config: {
-                    list: [
-                        { value: Utils.keyFromValue(Category, Category.LEADER), title: Category.LEADER },
-                        { value: Utils.keyFromValue(Category, Category.SPECIALIST), title: Category.SPECIALIST },
-                        { value: Utils.keyFromValue(Category, Category.WORKER), title: Category.WORKER },
-                    ],
-                },
-            },
-            valuePrepareFunction(a: any, value: EmployeeModel, cell: Cell) {
-                return Category[value.category];
-            }
-        }, null);
-
         // const employmentDateColumn: Column = new Column('employmentDate', {
         //     title: 'Дата устройства',
         //     type: 'string',
@@ -174,7 +144,6 @@ export class EmployeesComponent implements OnInit {
             departmentColumn,
             genderColumn,
             birthdayColumn,
-            categoryColumn,
             // employmentDateColumn,
             // dismissalDateColumn
         );

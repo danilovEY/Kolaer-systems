@@ -10,6 +10,9 @@
                 <custom-table #employeeTable
                               [columns]="employeesColumns"
                               [source]="employeesSource"
+                              [actionAdd]="true"
+                              [actionDelete]="true"
+                              [actionEdit]="true"
                               (edit)="employeesEdit($event)"
                               (delete)="employeesDelete($event)"
                               (create)="employeesCreate($event)">

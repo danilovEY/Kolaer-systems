@@ -186,6 +186,8 @@ public class VacationServiceImpl implements VacationService {
                 year, yearBeforeUpdate, vacationDaysBeforeUpdate);
 
         vacationDao.save(balance);
+
+        vacationDao.delete(vacationEntity.getId());
     }
 
     @Override

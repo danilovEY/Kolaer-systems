@@ -48,7 +48,7 @@ public class VacationController {
     @ApiOperation(value = "Удалить отпуск")
     @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void updateVacations(@PathVariable("id") Long vacationId) {
+    public void deleteVacations(@PathVariable("id") Long vacationId) {
         vacationService.deleteVacation(vacationId);
     }
 
