@@ -11,6 +11,8 @@ import {Cell} from 'ng2-smart-table';
 import {TypePost} from '../../../../@core/models/type-post.emun';
 import {Utils} from '../../../../@core/utils/utils';
 import {PostRequestModel} from '../../../../@core/models/post-request.model';
+import {AccountService} from '../../../../@core/services/account.service';
+import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 
 @Component({
     selector: 'posts',
@@ -25,12 +27,18 @@ export class PostsComponent implements OnInit {
     postsSource: PostsDataSource;
     postsLoading: boolean = true;
 
-    constructor(private postService: PostService) {
+    currentAccount: SimpleAccountModel;
+
+    constructor(private postService: PostService,
+                private accountService: AccountService) {
         this.postsSource = new PostsDataSource(this.postService);
         this.postsSource.onLoading().subscribe(load => this.postsLoading = load);
     }
 
     ngOnInit() {
+        this.accountService.getCurrentAccount()
+            .subscribe(account => this.currentAccount = account);
+
         const abbreviatedNameColumn: Column = new Column('abbreviatedName', {
             title: 'Сокращение',
             type: 'string'

@@ -33,6 +33,7 @@ public class UrlSecurityConverterImpl implements UrlSecurityConverter {
         entity.setRequestMethod(dto.getRequestMethod());
         entity.setAccessVacationAdmin(dto.isAccessVacationAdmin());
         entity.setAccessVacationDepEdit(dto.isAccessVacationDepEdit());
+        entity.setAccessTypeWork(dto.isAccessTypeWork());
         return entity;
     }
 
@@ -53,6 +54,7 @@ public class UrlSecurityConverterImpl implements UrlSecurityConverter {
         dto.setAccessOk(model.isAccessOk());
         dto.setAccessVacationAdmin(model.isAccessVacationAdmin());
         dto.setAccessVacationDepEdit(model.isAccessVacationDepEdit());
+        dto.setAccessTypeWork(model.isAccessTypeWork());
         return dto;
     }
 
@@ -71,6 +73,7 @@ public class UrlSecurityConverterImpl implements UrlSecurityConverter {
         oldDto.setAccessOk(newModel.isAccessOk());
         oldDto.setAccessVacationAdmin(newModel.isAccessVacationAdmin());
         oldDto.setAccessVacationDepEdit(newModel.isAccessVacationDepEdit());
+        oldDto.setAccessTypeWork(newModel.isAccessTypeWork());
         return oldDto;
     }
 

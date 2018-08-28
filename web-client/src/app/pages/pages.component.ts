@@ -28,12 +28,10 @@ export class PagesComponent implements OnInit {
         dashboardMenuItem.link = '/pages/dashboard';
         dashboardMenuItem.home = true;
 
-
         const appMenuMenuItem: NbMenuItem = new NbMenuItem();
         appMenuMenuItem.title = 'Приложения';
         appMenuMenuItem.group = true;
 
-        this.menu.push(dashboardMenuItem, appMenuMenuItem);
 
         // ======= Контакты ======
         const contactsMenuItem: NbMenuItem = new NbMenuItem();
@@ -46,7 +44,8 @@ export class PagesComponent implements OnInit {
         contactsMainMenuItem.link = 'app/contacts';
 
         contactsMenuItem.children.push(contactsMainMenuItem);
-        this.menu.push(contactsMenuItem);
+
+
 
         // ======= Производственный календарь ======
         const productionCalendarMenuItem: NbMenuItem = new NbMenuItem();
@@ -58,140 +57,152 @@ export class PagesComponent implements OnInit {
         productionCalendarMainMenuItem.title = 'Главная';
         productionCalendarMainMenuItem.link = 'app/production-calendar/main';
 
+        const productionCalendarEditMenuItem: NbMenuItem = new NbMenuItem();
+        productionCalendarEditMenuItem.title = 'Редактировать';
+        productionCalendarEditMenuItem.link = 'app/production-calendar/edit';
+
         productionCalendarMenuItem.children.push(productionCalendarMainMenuItem);
+
+
+
+        // ======= Структура организации ======
+        const orgStructureMenuItem: NbMenuItem = new NbMenuItem();
+        orgStructureMenuItem.title = 'Структура организации';
+        orgStructureMenuItem.icon = 'icon ion-md-business';
+        orgStructureMenuItem.children = [];
+
+        const employeesMenuItem: NbMenuItem = new NbMenuItem();
+        employeesMenuItem.title = 'Сотрудники';
+        employeesMenuItem.link = 'app/org-structures/employees';
+
+        const postsMenuItem: NbMenuItem = new NbMenuItem();
+        postsMenuItem.title = 'Должности';
+        postsMenuItem.link = 'app/org-structures/posts';
+
+        const departmentsMenuItem: NbMenuItem = new NbMenuItem();
+        departmentsMenuItem.title = 'Подразделения';
+        departmentsMenuItem.link = 'app/org-structures/departments';
+
+        const typeWorkMenuItem: NbMenuItem = new NbMenuItem();
+        typeWorkMenuItem.title = 'Вид работ';
+        typeWorkMenuItem.link = 'app/org-structures/type-work';
+
+        const orgStructureSyncMenuItem: NbMenuItem = new NbMenuItem();
+        orgStructureSyncMenuItem.title = 'Синхронизация';
+        orgStructureSyncMenuItem.link = 'app/org-structures/sync';
+
+
+
+        // ======= График отпусков ======
+        const vacationMenuItem: NbMenuItem = new NbMenuItem();
+        vacationMenuItem.title = 'График отпусков';
+        vacationMenuItem.icon = 'icon ion-md-airplane';
+        vacationMenuItem.children = [];
+
+        const vacationMainMenuItem: NbMenuItem = new NbMenuItem();
+        vacationMainMenuItem.title = 'Главная';
+        vacationMainMenuItem.link = 'app/vacation/main';
+
+        const vacationSetMenuItem: NbMenuItem = new NbMenuItem();
+        vacationSetMenuItem.title = 'Задать отпуск';
+        vacationSetMenuItem.link = 'app/vacation/set';
+
+        const vacationReportMenuItem: NbMenuItem = new NbMenuItem();
+        vacationReportMenuItem.title = 'Графики';
+        vacationReportMenuItem.icon = 'icon ion-md-analytics';
+        vacationReportMenuItem.children = [];
+
+        const vacationReportDistributedMenuItem: NbMenuItem = new NbMenuItem();
+        vacationReportDistributedMenuItem.title = 'График распределений';
+        vacationReportDistributedMenuItem.link = 'app/vacation/report/distribute';
+
+        const vacationReportCalendarMenuItem: NbMenuItem = new NbMenuItem();
+        vacationReportCalendarMenuItem.title = 'График пересечений';
+        vacationReportCalendarMenuItem.link = 'app/vacation/report/calendar';
+
+        vacationReportMenuItem.children.push(vacationReportDistributedMenuItem,
+            vacationReportCalendarMenuItem);
+
+        vacationMenuItem.children.push(vacationMainMenuItem);
+
+
+        // ======= Парольница ======
+        const kolpassMenuItem: NbMenuItem = new NbMenuItem();
+        kolpassMenuItem.title = 'Парольница';
+        kolpassMenuItem.icon = 'icon ion-md-lock';
+        kolpassMenuItem.children = [];
+
+        const kolpassMainMenuItem: NbMenuItem = new NbMenuItem();
+        kolpassMainMenuItem.title = 'Главная';
+        kolpassMainMenuItem.link = 'app/kolpass';
+
+        kolpassMenuItem.children.push(kolpassMainMenuItem);
+
+
+        // ======= Очередь ======
+        const queueMenuItem: NbMenuItem = new NbMenuItem();
+        queueMenuItem.title = 'Бронирование кабинетов';
+        queueMenuItem.icon = 'icon ion-md-git-pull-request';
+        queueMenuItem.children = [];
+
+        const queueMainMenuItem: NbMenuItem = new NbMenuItem();
+        queueMainMenuItem.title = 'Главная';
+        queueMainMenuItem.link = 'app/queue';
+
+        const queueTargetMenuItem: NbMenuItem = new NbMenuItem();
+        queueTargetMenuItem.title = 'Бронирование';
+        queueTargetMenuItem.link = 'app/queue/target';
+
+        queueMenuItem.children.push(queueMainMenuItem, queueTargetMenuItem);
+
+
+        // ======= Талоны ЛПП ======
+        const ticketsMenuItem: NbMenuItem = new NbMenuItem();
+        ticketsMenuItem.title = 'Талоны ЛПП';
+        ticketsMenuItem.icon = 'fa fa-ticket';
+        ticketsMenuItem.children = [];
+
+        const ticketsMainMenuItem: NbMenuItem = new NbMenuItem();
+        ticketsMainMenuItem.title = 'Главная';
+        ticketsMainMenuItem.link = 'app/tickets';
+
+        const bankAccountMenuItem: NbMenuItem = new NbMenuItem();
+        bankAccountMenuItem.title = 'Счета';
+        bankAccountMenuItem.link = 'app/tickets/bank-accounts';
+
+        this.menu.push(dashboardMenuItem, appMenuMenuItem);
+        this.menu.push(contactsMenuItem);
         this.menu.push(productionCalendarMenuItem);
 
-
         if (this.authService.authentication) {
-            // ======= График отпусков ======
-            const vacationMenuItem: NbMenuItem = new NbMenuItem();
-            vacationMenuItem.title = 'График отпусков';
-            vacationMenuItem.icon = 'icon ion-md-airplane';
-            vacationMenuItem.children = [];
-
-            const vacationMainMenuItem: NbMenuItem = new NbMenuItem();
-            vacationMainMenuItem.title = 'Главная';
-            vacationMainMenuItem.link = 'app/vacation/main';
-
-            vacationMenuItem.children.push(vacationMainMenuItem);
+            ticketsMenuItem.children.push(ticketsMainMenuItem);
 
             this.menu.push(vacationMenuItem);
-
-
-            // ======= Парольница ======
-            const kolpassMenuItem: NbMenuItem = new NbMenuItem();
-            kolpassMenuItem.title = 'Парольница';
-            kolpassMenuItem.icon = 'icon ion-md-lock';
-            kolpassMenuItem.children = [];
-
-            const kolpassMainMenuItem: NbMenuItem = new NbMenuItem();
-            kolpassMainMenuItem.title = 'Главная';
-            kolpassMainMenuItem.link = 'app/kolpass';
-
-            kolpassMenuItem.children.push(kolpassMainMenuItem);
             this.menu.push(kolpassMenuItem);
-
-            // ======= Очередь ======
-            const queueMenuItem: NbMenuItem = new NbMenuItem();
-            queueMenuItem.title = 'Бронирование кабинетов';
-            queueMenuItem.icon = 'icon ion-md-git-pull-request';
-            queueMenuItem.children = [];
-
-            const queueMainMenuItem: NbMenuItem = new NbMenuItem();
-            queueMainMenuItem.title = 'Главная';
-            queueMainMenuItem.link = 'app/queue';
-
-            const queueTargetMenuItem: NbMenuItem = new NbMenuItem();
-            queueTargetMenuItem.title = 'Бронирование';
-            queueTargetMenuItem.link = 'app/queue/target';
-
-            queueMenuItem.children.push(queueMainMenuItem, queueTargetMenuItem);
             this.menu.push(queueMenuItem);
-
-            // ======= Талоны ЛПП ======
-            const ticketsMenuItem: NbMenuItem = new NbMenuItem();
-            ticketsMenuItem.title = 'Талоны ЛПП';
-            ticketsMenuItem.icon = 'fa fa-ticket';
-            ticketsMenuItem.children = [];
-
-            const ticketsMainMenuItem: NbMenuItem = new NbMenuItem();
-            ticketsMainMenuItem.title = 'Главная';
-            ticketsMainMenuItem.link = 'app/tickets';
-
-            // ======= Структура организации ======
-            const orgStructureMenuItem: NbMenuItem = new NbMenuItem();
-            orgStructureMenuItem.title = 'Структура организации';
-            orgStructureMenuItem.icon = 'icon ion-md-business';
-            orgStructureMenuItem.children = [];
-
-            const employeesMenuItem: NbMenuItem = new NbMenuItem();
-            employeesMenuItem.title = 'Сотрудники';
-            employeesMenuItem.link = 'app/org-structures/employees';
-
-            const postsMenuItem: NbMenuItem = new NbMenuItem();
-            postsMenuItem.title = 'Должности';
-            postsMenuItem.link = 'app/org-structures/posts';
-
-            const departmentsMenuItem: NbMenuItem = new NbMenuItem();
-            departmentsMenuItem.title = 'Подразделения';
-            departmentsMenuItem.link = 'app/org-structures/departments';
-
-            orgStructureMenuItem.children.push(employeesMenuItem,
-                postsMenuItem,
-                departmentsMenuItem);
-            this.menu.push(orgStructureMenuItem);
+            this.menu.push(ticketsMenuItem);
 
             this.accountService.getCurrentAccount()
                 .subscribe((account: SimpleAccountModel) => {
+                    if (account.accessOk || account.accessOit || account.accessTypeWork) {
+                        orgStructureMenuItem.children.push(employeesMenuItem,
+                            postsMenuItem,
+                            departmentsMenuItem,
+                            typeWorkMenuItem);
+                        this.menu.push(orgStructureMenuItem);
+                    }
+
                    if (account.accessOit) {
-                       const bankAccountMenuItem: NbMenuItem = new NbMenuItem();
-                       bankAccountMenuItem.title = 'Счета';
-                       bankAccountMenuItem.link = 'app/tickets/bank-accounts';
-
                        ticketsMenuItem.children.push(bankAccountMenuItem);
-
-                       const productionCalendarEditMenuItem: NbMenuItem = new NbMenuItem();
-                       productionCalendarEditMenuItem.title = 'Редактировать';
-                       productionCalendarEditMenuItem.link = 'app/production-calendar/edit';
-
                        productionCalendarMenuItem.children.push(productionCalendarEditMenuItem);
-
-                       const orgStructureSyncMenuItem: NbMenuItem = new NbMenuItem();
-                       orgStructureSyncMenuItem.title = 'Синхронизация';
-                       orgStructureSyncMenuItem.link = 'app/org-structures/sync';
-
                        orgStructureMenuItem.children.push(orgStructureSyncMenuItem);
                    }
 
                    if (account.accessVacationAdmin || account.accessVacationDepEdit) {
-                       const vacationSetMenuItem: NbMenuItem = new NbMenuItem();
-                       vacationSetMenuItem.title = 'Задать отпуск';
-                       vacationSetMenuItem.link = 'app/vacation/set';
-
-                       const vacationReportMenuItem: NbMenuItem = new NbMenuItem();
-                       vacationReportMenuItem.title = 'Графики';
-                       vacationReportMenuItem.icon = 'icon ion-md-analytics';
-                       vacationReportMenuItem.children = [];
-
-                       const vacationReportDistributedMenuItem: NbMenuItem = new NbMenuItem();
-                       vacationReportDistributedMenuItem.title = 'График распределений';
-                       vacationReportDistributedMenuItem.link = 'app/vacation/report/distribute';
-
-                       const vacationReportCalendarMenuItem: NbMenuItem = new NbMenuItem();
-                       vacationReportCalendarMenuItem.title = 'График пересечений';
-                       vacationReportCalendarMenuItem.link = 'app/vacation/report/calendar';
-
-                       vacationReportMenuItem.children.push(vacationReportDistributedMenuItem,
-                           vacationReportCalendarMenuItem);
-
                        vacationMenuItem.children.push(vacationSetMenuItem, vacationReportMenuItem);
                    }
                 });
-
-            ticketsMenuItem.children.push(ticketsMainMenuItem);
-            this.menu.push(ticketsMenuItem);
         }
-
     }
 
 }

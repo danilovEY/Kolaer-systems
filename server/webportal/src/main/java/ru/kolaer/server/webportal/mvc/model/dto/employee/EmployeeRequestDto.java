@@ -23,4 +23,5 @@ public class EmployeeRequestDto {
     private Date birthday;
     private String email;
     private EnumCategory category;
+    private boolean harmfulness;
 }

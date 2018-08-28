@@ -9,4 +9,5 @@ import lombok.Data;
 @Data
 public class UpdateTypeWorkEmployeeRequestDto {
     private Long typeWorkId;
+    private boolean harmfulness;
 }

@@ -8,6 +8,8 @@ import {DepartmentsDataSource} from './departments.data-source';
 import {DepartmentService} from '../../../../@core/services/department.service';
 import {DepartmentModel} from '../../../../@core/models/department.model';
 import {DepartmentRequestModel} from '../../../../@core/models/department-request.model';
+import {AccountService} from '../../../../@core/services/account.service';
+import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 
 @Component({
     selector: 'departments',
@@ -22,12 +24,18 @@ export class DepartmentsComponent implements OnInit {
     departmentsSource: DepartmentsDataSource;
     departmentsLoading: boolean = true;
 
-    constructor(private departmentService: DepartmentService) {
+    currentAccount: SimpleAccountModel;
+
+    constructor(private departmentService: DepartmentService,
+                private accountService: AccountService) {
         this.departmentsSource = new DepartmentsDataSource(this.departmentService);
         this.departmentsSource.onLoading().subscribe(load => this.departmentsLoading = load);
     }
 
     ngOnInit() {
+        this.accountService.getCurrentAccount()
+            .subscribe(account => this.currentAccount = account);
+
         const codeColumn: Column = new Column('code', {
             title: 'Номер',
             type: 'string'

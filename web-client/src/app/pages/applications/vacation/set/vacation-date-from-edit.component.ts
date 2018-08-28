@@ -23,6 +23,7 @@ import {VacationPeriodModel} from '../model/vacation-period.model';
                    (dateSelect)="setValue($event)"
                    [startDate]="currentDate"
                    [(ngModel)]="currentDate"
+                   placement="top"
                    ngbDatepicker #d="ngbDatepicker">
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">

@@ -17,7 +17,7 @@ export class TypeWorkService extends BaseService {
 
     getAll(request: FindTypeWorkRequest): Observable<Page<TypeWorkModel>> {
         const params: HttpParams = new HttpParams()
-            .append('searchName', request.searchName.toString())
+            .append('searchName', request.searchName ? request.searchName.toString() : '')
             .append('number', request.number.toString())
             .append('pagesize', request.pageSize.toString());
 

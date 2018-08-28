@@ -1,3 +1,5 @@
 export class UpdateTypeWorkEmployeeRequestModel {
-    typeWorkId: number;
+    public typeWorkId: number;
+    public harmfulness: boolean;
+
 }

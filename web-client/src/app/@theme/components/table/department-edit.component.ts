@@ -8,7 +8,7 @@ import {DepartmentModel} from '../../../@core/models/department.model';
 import {DepartmentSortModel} from '../../../@core/models/department-sort.model';
 import {DepartmentFilterModel} from '../../../@core/models/department-filter.model';
 import {DepartmentService} from '../../../@core/services/department.service';
-import {map} from "rxjs/internal/operators";
+import {map} from 'rxjs/internal/operators';
 
 @Component({
     selector: 'edit-department',

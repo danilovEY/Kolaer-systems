@@ -7,7 +7,7 @@
 
             <nb-card-body>
                 <ngx-loading [show]="employeesLoading"></ngx-loading>
-                <custom-table *ngIf=""
+                <custom-table *ngIf="currentAccount && (currentAccount.accessOk || currentAccount.accessOit)"
                         #employeeTable
                               [columns]="employeesColumns"
                               [source]="employeesSource"
@@ -17,6 +17,17 @@
                               (edit)="employeesEdit($event)"
                               (delete)="employeesDelete($event)"
                               (create)="employeesCreate($event)">
+
+                </custom-table>
+
+                <custom-table *ngIf="currentAccount && !currentAccount.accessOk && !currentAccount.accessOit"
+                              #employeeOnlyWithTypeWorkTable
+                              [columns]="employeesOnlyWithTypeWorkColumns"
+                              [source]="employeesSource"
+                              [actionAdd]="false"
+                              [actionDelete]="false"
+                              [actionEdit]="true"
+                              (edit)="employeesOnlyWithTypeWorkEdit($event)">
 
                 </custom-table>
             </nb-card-body>

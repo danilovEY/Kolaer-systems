@@ -10,9 +10,9 @@
                 <custom-table #postsTable
                               [columns]="postsColumns"
                               [source]="postsSource"
-                              [actionAdd]="true"
-                              [actionDelete]="true"
-                              [actionEdit]="true"
+                              [actionAdd]="!currentAccount || currentAccount && (currentAccount.accessOk || currentAccount.accessOit)"
+                              [actionDelete]="!currentAccount || currentAccount && (currentAccount.accessOk || currentAccount.accessOit)"
+                              [actionEdit]="!currentAccount || currentAccount && (currentAccount.accessOk || currentAccount.accessOit)"
                               (edit)="postsEdit($event)"
                               (delete)="postsDelete($event)"
                               (create)="postsCreate($event)">

@@ -97,7 +97,7 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
     findAllEmployees(findRequest: FindEmployeeRequestModel): Observable<Page<EmployeeModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', String(findRequest.number))
+        params = params.append('number', String(findRequest.number))
             .append('pagesize', String(findRequest.pageSize))
             .append('onOnePage', String(findRequest.onOnePage))
             .append('departmentId', String(findRequest.departmentId));

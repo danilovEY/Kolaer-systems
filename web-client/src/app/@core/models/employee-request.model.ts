@@ -16,4 +16,5 @@ export class EmployeeRequestModel {
     gender: Gender;
     postId: number;
     typeWorkId: number;
+    harmfulness: boolean;
 }

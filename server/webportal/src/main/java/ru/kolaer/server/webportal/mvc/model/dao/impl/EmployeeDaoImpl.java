@@ -197,8 +197,8 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
 
         if(!request.isOnOnePage()) {
             entityQuery = entityQuery
-                    .setFirstResult((request.getNumber() - 1) * request.getPageSize())
-                    .setMaxResults(request.getPageSize());
+                    .setMaxResults(request.getPageSize())
+                    .setFirstResult(getFirstResult(request));
         }
 
         return entityQuery

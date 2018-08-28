@@ -129,6 +129,7 @@ public class EmployeeServiceImpl
         employeeEntity.setBirthday(employeeRequestDto.getBirthday());
         employeeEntity.setGender(employeeRequestDto.getGender());
         employeeEntity.setCategory(employeeRequestDto.getCategory());
+        employeeEntity.setHarmfulness(employeeRequestDto.isHarmfulness());
 
         return defaultConverter.convertToDto(defaultEntityDao.save(employeeEntity));
     }
@@ -212,6 +213,7 @@ public class EmployeeServiceImpl
         }
 
         updatableEmployee.setTypeWorkId(request.getTypeWorkId());
+        updatableEmployee.setHarmfulness(request.isHarmfulness());
 
         return defaultConverter.convertToDto(defaultEntityDao.update(updatableEmployee));
     }

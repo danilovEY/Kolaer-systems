@@ -1,8 +1,8 @@
 import {CustomDataSource} from '../../../../@core/models/custom.data-source';
 import {TypeWorkModel} from '../../../../@core/models/type-work.model';
 import {TypeWorkService} from '../../../../@core/services/type-work.service';
-import {PageRequestModel} from '../../../../@core/models/page-request.model';
 import {Page} from '../../../../@core/models/page.model';
+import {FindTypeWorkRequest} from '../../../../@core/models/find-type-work-request';
 
 export class TypeWorkDataSource extends CustomDataSource<TypeWorkModel> {
 
@@ -11,7 +11,7 @@ export class TypeWorkDataSource extends CustomDataSource<TypeWorkModel> {
     }
 
     loadElements(page: number, pageSize: number): Promise<TypeWorkModel[]> {
-        const request: PageRequestModel = new PageRequestModel();
+        const request: FindTypeWorkRequest = new FindTypeWorkRequest();
         request.number = page;
         request.pageSize = pageSize;
 
