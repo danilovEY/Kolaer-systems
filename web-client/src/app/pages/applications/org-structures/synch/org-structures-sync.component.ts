@@ -45,7 +45,7 @@ export class OrgStructuresSyncComponent implements OnInit {
             return JSON.parse(value);
         }
 
-        return '';
+        return '{}';
     }
 
     uploadFile() {

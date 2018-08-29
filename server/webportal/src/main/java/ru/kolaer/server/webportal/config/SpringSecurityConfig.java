@@ -7,7 +7,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
@@ -58,7 +57,6 @@ import java.util.Hashtable;
 @ComponentScan("ru.kolaer.server.webportal.security")
 @PropertySource("classpath:ldap.properties")
 @EnableWebSecurity
-@EnableScheduling
 @Slf4j
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 

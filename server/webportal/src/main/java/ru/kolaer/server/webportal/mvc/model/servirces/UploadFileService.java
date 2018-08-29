@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface UploadFileService extends DefaultService<UploadFileDto> {
     UploadFileEntity store(String folder, MultipartFile file, boolean generateUniquiredFileName);
     UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName);
+    UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder);
 
     Resource loadFile(String filename);
 

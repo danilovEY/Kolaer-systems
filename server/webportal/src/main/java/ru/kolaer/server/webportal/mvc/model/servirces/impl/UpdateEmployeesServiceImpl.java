@@ -423,7 +423,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             } else {
                 PostEntity postEntity = updatableElement.getElement();
 
-                String valueOld = postEntityFromDb.toString();
+                String valueOld = historyChangeService.objectToJson(postEntityFromDb);
 
                 if(!Objects.equals(postEntityFromDb.getName(), postEntity.getName()) ||
                         !Objects.equals(postEntityFromDb.getCode(), postEntity.getCode()) ||
@@ -447,7 +447,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
 
                 if(updatableElement.isUpdate()) {
                     HistoryChangeDto historyChange = historyChangeService
-                            .createHistoryChange(valueOld, postEntityFromDb.toString(), HistoryChangeEvent.UPDATE_POST);
+                            .createHistoryChange(valueOld, historyChangeService.objectToJson(postEntityFromDb), HistoryChangeEvent.UPDATE_POST);
                     histories.add(historyChange);
                 }
             }
@@ -461,7 +461,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 .map(UpdatableElement::getElement)
                 .filter(post -> post.getId() == null)
                 .map(post -> historyChangeService
-                        .createHistoryChange(null, post.toString(), HistoryChangeEvent.ADD_POST))
+                        .createHistoryChange(null, post, HistoryChangeEvent.ADD_POST))
                 .collect(Collectors.toList());
 
         histories.addAll(historiesForAdd);

@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
@@ -37,6 +38,7 @@ import java.util.Optional;
 public class UploadFileServiceImpl
         extends AbstractDefaultService<UploadFileDto, UploadFileEntity, UploadFileDao, UploadFileConverter>
         implements UploadFileService {
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
     private final Path rootLocation = Paths.get("upload");
 
     public UploadFileServiceImpl(UploadFileDao uploadFileDao, UploadFileConverter uploadFileConverter) {
@@ -71,6 +73,11 @@ public class UploadFileServiceImpl
 
     @Transactional
     public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName) {
+        return createFile(folder, fileName, generateUniquiredFileName, false);
+    }
+
+    @Override
+    public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder) {
         try {
             File folderFile = rootLocation.resolve(folder).toFile();
             if(!folderFile.exists() && !folderFile.mkdirs()) {
@@ -78,6 +85,10 @@ public class UploadFileServiceImpl
             }
 
             String newFileName = folder + "/";
+            if(inDateFolder) {
+                newFileName += simpleDateFormat.format(new Date()) + "/";
+            }
+
             if(generateUniquiredFileName) {
                 newFileName += new Date().getTime() + "_";
             }

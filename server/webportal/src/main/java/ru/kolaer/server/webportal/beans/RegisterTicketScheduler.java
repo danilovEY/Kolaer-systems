@@ -88,7 +88,7 @@ public class RegisterTicketScheduler {
 
         while (uploadFileEntity == null) {
             uploadFileEntity = uploadFileService
-                    .createFile("tickets", String.format("Z001000.KOLAER_ENROLL001%04d.%03d", index++, now.getDayOfYear()), false);
+                    .createFile("tickets", String.format("Z001000.KOLAER_ENROLL001%04d.%03d", index++, now.getDayOfYear()), false, true);
         }
         String absolutePath = this.uploadFileService.getAbsolutePath(uploadFileEntity);
 
