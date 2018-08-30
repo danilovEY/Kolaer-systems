@@ -11,11 +11,13 @@ import {VacationDaysEditComponent} from './set/vacation-days-edit.component';
 import {VacationPeriodService} from './vacation-period.service';
 import {VacationReportDistributeComponent} from './report/distribute/vacation-report-distribute.component';
 import {VacationReportCalendarComponent} from './report/calendar/vacation-report-calendar.component';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
 
 @NgModule({
     imports: [
         VacationRouterModule,
-        ThemeModule
+        ThemeModule,
+        NgxChartsModule,
     ],
     declarations: [
         VacationComponent,

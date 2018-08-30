@@ -13,6 +13,8 @@ import {VacationPeriodModel} from './model/vacation-period.model';
 import {VacationReportCalendarEmployeeModel} from './model/vacation-report-calendar-employee.model';
 import {GenerateReportCalendarRequestModel} from './model/generate-report-calendar-request.model';
 import {Utils} from '../../../@core/utils/utils';
+import {VacationReportDistributeModel} from './model/vacation-report-distribute.model';
+import {GenerateReportDistributeRequestModel} from './model/generate-report-distribute-request.model';
 
 @Injectable()
 export class VacationService extends BaseService {
@@ -20,6 +22,7 @@ export class VacationService extends BaseService {
     private readonly FIND_VACATION_URL = `${this.VACATION_URL}`;
     private readonly FIND_PERIODS_URL = `${this.VACATION_URL}/periods`;
     private readonly GENERATE_REPORT_CALENDAR_URL = `${this.VACATION_URL}/report/calendar`;
+    private readonly GENERATE_REPORT_DISTRIBUTE_URL = `${this.VACATION_URL}/report/distribute`;
     private readonly CALCULATE_DAYS_VACATION_URL = `${this.VACATION_URL}/calculate/days`;
     private readonly CALCULATE_DATE_VACATION_URL = `${this.VACATION_URL}/calculate/date`;
 
@@ -44,6 +47,17 @@ export class VacationService extends BaseService {
             .append('to', Utils.getDateToSend(request.to));
 
         return this.http.get<VacationReportCalendarEmployeeModel[]>(this.GENERATE_REPORT_CALENDAR_URL, {params: params});
+    }
+
+    public generateVacationReportDistribute(request: GenerateReportDistributeRequestModel): Observable<VacationReportDistributeModel> {
+        const params: HttpParams = new HttpParams()
+            .append('addPipes', request.addPipes.toString())
+            .append('allDepartment', request.allDepartment.toString())
+            .append('departmentIds', request.departmentIds.toString())
+            .append('from', Utils.getDateToSend(request.from))
+            .append('to', Utils.getDateToSend(request.to));
+
+        return this.http.get<VacationReportDistributeModel>(this.GENERATE_REPORT_DISTRIBUTE_URL, {params: params});
     }
 
     public getPeriods(): Observable<Page<VacationPeriodModel>> {

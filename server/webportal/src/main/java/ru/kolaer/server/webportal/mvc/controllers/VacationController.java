@@ -87,4 +87,11 @@ public class VacationController {
         return vacationService.generateReportCalendar(request);
     }
 
+    @ApiOperation(value = "Сгенерировать отчет для распределения")
+    @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
+    @RequestMapping(value = "/report/distribute", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public VacationReportDistributeDto generateVacationReportDistribute(@ModelAttribute GenerateReportDistributeRequest request) {
+        return vacationService.generateReportDistribute(request);
+    }
+
 }

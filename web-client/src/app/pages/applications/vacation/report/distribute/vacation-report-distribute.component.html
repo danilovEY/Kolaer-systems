@@ -1,13 +1,100 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+
 <div class="row">
-    <div class="col-12">
+    <div class="col-12" #filterElement>
+        <nb-card >
+            <nb-card-header>
+                <span>Фильтр</span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <div class="row">
+                    <div class="col-3">
+                        <div *ngIf="departments.length > 0">
+                            <label>Подразделение:</label>
+                            <p-dropdown [style]="{'width':'100%'}"
+                                        [options]="departments"
+                                        [ngModel]="selectedDepartment"
+                                        (ngModelChange)="selectDepartment($event)"
+                                        placeholder="Выберите подразделение..."
+                                        optionLabel="abbreviatedName"
+                                        [autoWidth]="false"
+                                        appendTo="body">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t">
+                        </ngb-datepicker>
+
+                        <ng-template #t let-date="date" let-focused="focused">
+                          <span class="custom-day"
+                                [class.focused]="focused"
+                                [class.range]="isFrom(date) || isTo(date) || isInside(date) || isHovered(date)"
+                                [class.faded]="isHovered(date) || isInside(date)"
+                                (mouseenter)="hoveredDate = date"
+                                (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                          </span>
+                        </ng-template>
+                    </div>
+                </div>
+            </nb-card-body>
+            <nb-card-footer>
+                <button *ngIf="selectedDepartment && fromDate && toDate"
+                        class="btn btn-success" type="submit"
+                        (click)="generateReportDistribute()">Поиск</button>
+            </nb-card-footer>
+        </nb-card>
+    </div>
+
+    <div class="col-12" *ngIf="vacationReportDistribute && vacationReportDistribute.lineValues.length > 0">
         <nb-card>
             <nb-card-header>
                 <span>График расспределений</span>
             </nb-card-header>
 
             <nb-card-body>
-                <h1>Страница в разработке</h1>
+                <ngx-charts-line-chart
+                        [scheme]="colorScheme"
+                        [view]="lineView"
+                        [results]="vacationReportDistribute.lineValues"
+                        [xAxis]="true"
+                        [yAxis]="true"
+                        [gradient]="false"
+                        [animations]="false"
+                        [legend]="true"
+                        [timeline]="false"
+                        [autoScale]="true"
+                        [showXAxisLabel]="false"
+                        [showYAxisLabel]="true"
+                        legendTitle="Подразделения"
+                        xAxisLabel="Месяцы"
+                        yAxisLabel="Количество сотрудников">
+                </ngx-charts-line-chart>
             </nb-card-body>
         </nb-card>
+    </div>
+
+    <div *ngIf="vacationReportDistribute && vacationReportDistribute.pipeValues.length > 0">
+        <div class="col-12" *ngFor="let pipeModel of vacationReportDistribute.pipeValues">
+            <nb-card>
+                <nb-card-header>
+                    <span>Процентное соотношение: {{ pipeModel.name }}</span>
+                </nb-card-header>
+
+                <nb-card-body>
+                    <!--<div class="row">-->
+                        <!--<div class="col-2" *ngFor="let pipeValue of pipeModel.values">-->
+                            <ngx-charts-pie-grid [results]="pipeModel.values"
+                                                 [view]="pipeView"
+                                                 [animations]="false"
+                                                 [designatedTotal]="pipeModel.values[0].totalValue">
+                            </ngx-charts-pie-grid>
+                        <!--</div>-->
+                    <!--</div>-->
+                </nb-card-body>
+            </nb-card>
+        </div>
     </div>
 </div>

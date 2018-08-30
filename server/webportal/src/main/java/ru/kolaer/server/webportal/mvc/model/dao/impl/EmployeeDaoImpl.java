@@ -11,7 +11,9 @@ import ru.kolaer.api.mvp.model.error.ErrorCode;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.CountEmployeeInDepartmentDto;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeSortType;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeeByDepartment;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactType;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
@@ -151,6 +153,30 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .getSingleResult();
 
         return ((BigInteger) result).longValue();
+    }
+
+    @Override
+    public List<CountEmployeeInDepartmentDto> findEmployeeByDepartmentCount(FindEmployeeByDepartment request) {
+        Map<String, Object> params = new HashMap<>();
+
+        StringBuilder query = new StringBuilder()
+                .append("SELECT new ru.kolaer.server.webportal.mvc.model.dto.employee.CountEmployeeInDepartmentDto(" +
+                        "emp.departmentId, emp.department.abbreviatedName, COUNT(emp.id)) FROM ")
+                .append(getEntityName())
+                .append(" AS emp");
+
+        query = query.append(" WHERE emp.dismissalDate IS NULL");
+
+        if (!request.getDepartmentIds().isEmpty()) {
+            query = query.append(" AND emp.departmentId IN (:depIds)");
+            params.put("depIds", request.getDepartmentIds());
+        }
+
+        query = query.append(" GROUP BY emp.departmentId");
+
+        return getSession().createQuery(query.toString(), CountEmployeeInDepartmentDto.class)
+                .setProperties(params)
+                .list();
     }
 
     @Override

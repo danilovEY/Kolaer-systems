@@ -113,6 +113,7 @@ public class SpringContext extends WebMvcConfigurerAdapter {
     }
 
     @Bean
+    @Primary
     public TaskScheduler taskScheduler() {
         return new ConcurrentTaskScheduler();
     }

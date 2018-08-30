@@ -1,7 +1,9 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
+import javafx.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
@@ -10,9 +12,12 @@ import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.VacationConverter;
+import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.HolidayDao;
 import ru.kolaer.server.webportal.mvc.model.dao.VacationDao;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.CountEmployeeInDepartmentDto;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeeByDepartment;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.vacation.*;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
@@ -24,6 +29,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.function.Function;
@@ -34,20 +40,24 @@ import static java.util.stream.Collectors.toMap;
 
 @Service
 public class VacationServiceImpl implements VacationService {
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE;
     private final int DEFAULT_VACATION_DAYS = 52;
     private final VacationDao vacationDao;
     private final EmployeeDao employeeDao;
+    private final DepartmentDao departmentDao;
     private final VacationConverter vacationConverter;
     private final HolidayDao holidayDao;
     private final AuthenticationService authenticationService;
 
     public VacationServiceImpl(VacationDao vacationDao,
                                EmployeeDao employeeDao,
+                               DepartmentDao departmentDao,
                                VacationConverter vacationConverter,
                                HolidayDao holidayDao,
                                AuthenticationService authenticationService) {
         this.vacationDao = vacationDao;
         this.employeeDao = employeeDao;
+        this.departmentDao = departmentDao;
         this.vacationConverter = vacationConverter;
         this.holidayDao = holidayDao;
         this.authenticationService = authenticationService;
@@ -309,6 +319,159 @@ public class VacationServiceImpl implements VacationService {
         }
 
         return employeesVacations;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public VacationReportDistributeDto generateReportDistribute(GenerateReportDistributeRequest request) {
+        if (request.getFrom() == null || request.getTo() == null) {
+            throw new UnexpectedRequestParams("Не задан период");
+        }
+
+        if (request.getFrom().isAfter(request.getTo())) {
+            throw new UnexpectedRequestParams("Период не правильно задан");
+        }
+
+        if (CollectionUtils.isEmpty(request.getDepartmentIds()) && !request.isAllDepartment()) {
+            throw new UnexpectedRequestParams("Не задано подразделение");
+        }
+
+        VacationReportDistributeDto result = new VacationReportDistributeDto();
+        result.setLineValues(new ArrayList<>());
+        result.setPipeValues(new ArrayList<>());
+
+        FindVacationByDepartmentRequest findVacationByDepartmentRequest = new FindVacationByDepartmentRequest();
+        findVacationByDepartmentRequest.setFrom(request.getFrom());
+        findVacationByDepartmentRequest.setTo(request.getTo());
+
+        if (!request.isAllDepartment()) {
+            findVacationByDepartmentRequest.setDepartmentIds(request.getDepartmentIds());
+        }
+
+        long vacations = vacationDao.findCountVacation(findVacationByDepartmentRequest);
+        if (vacations == 0) {
+            return result;
+        }
+
+        if (request.isAllDepartment()) {
+            long allCount = employeeDao.findAllCount();
+
+            VacationReportDistributeLineDto vacationReport = new VacationReportDistributeLineDto();
+            vacationReport.setName("КолАЭР");
+            vacationReport.setSeries(new ArrayList<>());
+
+            VacationReportDistributePipeDto pipeDto = new VacationReportDistributePipeDto();
+            pipeDto.setName(vacationReport.getName());
+            pipeDto.setValues(new ArrayList<>());
+
+            for (Pair<LocalDate, LocalDate> fromToPair : calculateFromToDates(request.getFrom(), request.getTo(), request.getSplitType())) {
+                FindVacationByDepartmentRequest findVacation = new FindVacationByDepartmentRequest();
+
+                findVacation.setFrom(fromToPair.getKey());
+                findVacation.setTo(fromToPair.getValue());
+
+                long countVacation = vacationDao.findCountVacation(findVacation);
+
+                VacationReportDistributeLineValueDto lineValue = new VacationReportDistributeLineValueDto();
+                lineValue.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
+                lineValue.setValue(countVacation);
+
+                vacationReport.getSeries().add(lineValue);
+
+                if(request.isAddPipes()) {
+                    VacationReportDistributePipeValueDto pipeValueDto = new VacationReportDistributePipeValueDto();
+                    pipeValueDto.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
+                    pipeValueDto.setValue(countVacation);
+                    pipeValueDto.setTotalValue(allCount);
+
+                    pipeDto.getValues().add(pipeValueDto);
+                }
+            }
+
+            result.getLineValues().add(vacationReport);
+        } else {
+            FindEmployeeByDepartment findEmployeeByDepartment = new FindEmployeeByDepartment();
+            findEmployeeByDepartment.setDepartmentIds(request.getDepartmentIds());
+
+            for (CountEmployeeInDepartmentDto countEmployeeInDepartmentDto : employeeDao.findEmployeeByDepartmentCount(findEmployeeByDepartment)) {
+                VacationReportDistributeLineDto vacationReport = new VacationReportDistributeLineDto();
+                vacationReport.setName(countEmployeeInDepartmentDto.getDepartmentName());
+                vacationReport.setSeries(new ArrayList<>());
+
+                VacationReportDistributePipeDto pipeDto = new VacationReportDistributePipeDto();
+                pipeDto.setName(vacationReport.getName());
+                pipeDto.setValues(new ArrayList<>());
+
+                for (Pair<LocalDate, LocalDate> fromToPair : calculateFromToDates(request.getFrom(), request.getTo(), request.getSplitType())) {
+                    FindVacationByDepartmentRequest findVacation = new FindVacationByDepartmentRequest();
+                    findVacation.setDepartmentIds(Collections.singletonList(countEmployeeInDepartmentDto.getDepartmentId()));
+                    findVacation.setFrom(fromToPair.getKey());
+                    findVacation.setTo(fromToPair.getValue());
+
+                    long countVacation = vacationDao.findCountVacation(findVacation);
+
+                    VacationReportDistributeLineValueDto lineValue = new VacationReportDistributeLineValueDto();
+                    lineValue.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
+                    lineValue.setValue(countVacation);
+
+                    vacationReport.getSeries().add(lineValue);
+
+                    if(request.isAddPipes()) {
+                        VacationReportDistributePipeValueDto pipeValueDto = new VacationReportDistributePipeValueDto();
+                        pipeValueDto.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
+                        pipeValueDto.setValue(countVacation);
+                        pipeValueDto.setTotalValue(countEmployeeInDepartmentDto.getCountEmployee());
+
+                        pipeDto.getValues().add(pipeValueDto);
+                    }
+                }
+                result.getLineValues().add(vacationReport);
+                result.getPipeValues().add(pipeDto);
+            }
+        }
+
+        return result;
+    }
+
+    private String getPipeTitle(LocalDate from, GenerateReportDistributeSplitType splitType) {
+        if (splitType == GenerateReportDistributeSplitType.MONTHS) {
+            return from.getMonth().getDisplayName(TextStyle.FULL_STANDALONE , new Locale("ru", "RU")) ;
+        }
+
+        return dateTimeFormatter.format(from);
+    }
+
+    private List<Pair<LocalDate, LocalDate>> calculateFromToDates(LocalDate fromDate, LocalDate toDate, GenerateReportDistributeSplitType splitType) {
+        List<Pair<LocalDate, LocalDate>> dates = new ArrayList<>();
+
+        if (splitType == GenerateReportDistributeSplitType.MONTHS) {
+            int countMonth = toDate.getMonthValue() - fromDate.getMonthValue();
+
+            LocalDate from = fromDate;
+
+            for (int i = 0; i <= countMonth; i++) {
+                LocalDate to;
+                if (from.getDayOfMonth() != 1) {
+                    to = LocalDate.of(from.getYear(), from.getMonthValue(), from.getDayOfMonth());
+                } else {
+                    to = from.plusMonths(1).minusDays(1);
+                    if (to.isAfter(toDate)) {
+                        to = toDate;
+                    }
+                }
+
+                dates.add(new Pair<>(from, to));
+
+                from = from.plusMonths(1);
+
+                if (from.getDayOfMonth() != 1) {
+                    from = LocalDate.of(from.getYear(), from.getMonthValue(), 1);
+                }
+            }
+
+        }
+
+        return dates;
     }
 
     private VacationDto saveVacation(VacationBalanceEntity balance, VacationEntity vacationEntity, VacationDto request) {

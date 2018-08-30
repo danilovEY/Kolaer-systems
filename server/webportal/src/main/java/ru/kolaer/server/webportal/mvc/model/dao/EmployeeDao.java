@@ -1,6 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.dao;
 
 
+import ru.kolaer.server.webportal.mvc.model.dto.employee.CountEmployeeInDepartmentDto;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeeByDepartment;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactType;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
@@ -27,6 +29,8 @@ public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<Emp
 
     List<EmployeeEntity> findEmployeeByDepIdAndContactType(int page, int pageSize, long depId, ContactType type);
     Long findCountEmployeeByDepIdAndContactType(long depId, ContactType type);
+
+    List<CountEmployeeInDepartmentDto> findEmployeeByDepartmentCount(FindEmployeeByDepartment request);
 
     long findAllEmployeeCount(FindEmployeePageRequest request);
     List<EmployeeEntity> findAllEmployee(FindEmployeePageRequest request);

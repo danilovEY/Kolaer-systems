@@ -23,4 +23,6 @@ public interface VacationService {
     void deleteVacation(Long vacationId);
 
     List<VacationReportCalendarEmployeeDto> generateReportCalendar(GenerateReportCalendarRequest request);
+
+    VacationReportDistributeDto generateReportDistribute(GenerateReportDistributeRequest request);
 }

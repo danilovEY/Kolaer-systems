@@ -13,6 +13,7 @@ import ru.kolaer.server.webportal.mvc.model.dto.SortField;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.criteria.CriteriaQuery;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,7 +43,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
 
     @Override
     public long findAllCount() {
-        return findAllCount(null);
+        return findAllCount(Collections.emptyMap());
     }
 
     @Override
