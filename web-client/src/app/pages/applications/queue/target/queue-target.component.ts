@@ -13,6 +13,7 @@ import {TableEventDeleteModel} from '../../../../@theme/components/table/table-e
 import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
+import {SmartTableService} from '../../../../@core/services/smart-table.service';
 
 @Component({
     selector: 'queue-target',
@@ -90,8 +91,8 @@ export class QueueTargetComponent {
     }
 
     actionBeforeValueView(event: CustomActionEventModel<QueueTargetModel>) {
-        if (event.action.name === CustomTableComponent.EDIT_ACTION_NAME ||
-            event.action.name === CustomTableComponent.DELETE_ACTION_NAME) {
+        if (event.action.name === SmartTableService.EDIT_ACTION_NAME ||
+            event.action.name === SmartTableService.DELETE_ACTION_NAME) {
 
             return QueueTargetComponent.currentAccount ? QueueTargetComponent.currentAccount.accessOit : false;
         }

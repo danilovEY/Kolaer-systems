@@ -21,6 +21,7 @@ import {TableEventEditModel} from '../../../@theme/components/table/table-event-
 import {ContactRequestModel} from '../../../@core/models/contact-request.model';
 import {Utils} from '../../../@core/utils/utils';
 import {CustomActionEventModel} from '../../../@theme/components/table/custom-action-event.model';
+import {SmartTableService} from '../../../@core/services/smart-table.service';
 
 @Component({
     selector: 'contacts',
@@ -271,11 +272,11 @@ export class ContactsComponent implements OnInit, OnDestroy {
     }
 
     actionBeforeValueView(event: CustomActionEventModel<ContactModel>) {
-        if (event.action.name === CustomTableComponent.DELETE_ACTION_NAME) {
+        if (event.action.name === SmartTableService.DELETE_ACTION_NAME) {
             return false;
         }
 
-        if (event.action.name === CustomTableComponent.EDIT_ACTION_NAME) {
+        if (event.action.name === SmartTableService.EDIT_ACTION_NAME) {
             return ContactsComponent.currentAccount
                 ? ContactsComponent.currentAccount.accessOit || ContactsComponent.currentAccount.accessOk
                 : false;

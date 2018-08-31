@@ -16,6 +16,7 @@ import {CustomActionEventModel} from '../../../../@theme/components/table/custom
 import {QueueScheduleModel} from '../../../../@core/models/queue-schedule.model';
 import {Cell} from 'ng2-smart-table';
 import {Utils} from '../../../../@core/utils/utils';
+import {SmartTableService} from '../../../../@core/services/smart-table.service';
 
 @Component({
     selector: 'queue-main',
@@ -147,8 +148,8 @@ export class QueueMainComponent {
     }
 
     actionBeforeValueView(event: CustomActionEventModel<QueueScheduleModel>) {
-        if (event.action.name === CustomTableComponent.EDIT_ACTION_NAME ||
-            event.action.name === CustomTableComponent.DELETE_ACTION_NAME) {
+        if (event.action.name === SmartTableService.EDIT_ACTION_NAME ||
+            event.action.name === SmartTableService.DELETE_ACTION_NAME) {
 
             return QueueMainComponent.currentAccount ?
                 event.data.request.id === QueueMainComponent.currentAccount.id || QueueMainComponent.currentAccount.accessOit

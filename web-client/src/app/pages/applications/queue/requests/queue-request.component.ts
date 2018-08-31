@@ -17,6 +17,7 @@ import {Cell} from 'ng2-smart-table';
 import {DateTimeEditComponent} from '../../../../@theme/components/table/date-time-edit.component';
 import {CustomActionEventModel} from '../../../../@theme/components/table/custom-action-event.model';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
+import {SmartTableService} from '../../../../@core/services/smart-table.service';
 
 @Component({
     selector: 'queue-main',
@@ -162,8 +163,8 @@ export class QueueRequestComponent implements OnInit, OnDestroy {
     }
 
     actionBeforeValueView(event: CustomActionEventModel<QueueRequestModel>) {
-        if (event.action.name === CustomTableComponent.EDIT_ACTION_NAME ||
-            event.action.name === CustomTableComponent.DELETE_ACTION_NAME) {
+        if (event.action.name === SmartTableService.EDIT_ACTION_NAME ||
+            event.action.name === SmartTableService.DELETE_ACTION_NAME) {
 
             return QueueRequestComponent.currentAccount ?
                 event.data.account.id === QueueRequestComponent.currentAccount.id || QueueRequestComponent.currentAccount.accessOit
