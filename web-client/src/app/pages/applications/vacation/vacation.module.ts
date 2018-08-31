@@ -12,12 +12,15 @@ import {VacationPeriodService} from './vacation-period.service';
 import {VacationReportDistributeComponent} from './report/distribute/vacation-report-distribute.component';
 import {VacationReportCalendarComponent} from './report/calendar/vacation-report-calendar.component';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {ReportFilterComponent} from './component/report-filter/report-filter.component';
+import {MultiSelectModule} from 'primeng/primeng';
 
 @NgModule({
     imports: [
         VacationRouterModule,
         ThemeModule,
         NgxChartsModule,
+        MultiSelectModule
     ],
     declarations: [
         VacationComponent,
@@ -27,7 +30,8 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
         VacationDateToEditComponent,
         VacationDaysEditComponent,
         VacationReportCalendarComponent,
-        VacationReportDistributeComponent
+        VacationReportDistributeComponent,
+        ReportFilterComponent
     ],
     entryComponents: [
         VacationDateFromEditComponent,

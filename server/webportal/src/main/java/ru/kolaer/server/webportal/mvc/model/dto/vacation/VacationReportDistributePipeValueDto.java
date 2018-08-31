@@ -6,5 +6,4 @@ import lombok.Data;
 public class VacationReportDistributePipeValueDto {
     private String name;
     private long value;
-    private long totalValue;
 }

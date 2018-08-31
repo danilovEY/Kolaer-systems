@@ -2,5 +2,6 @@ import {VacationReportDistributePipeValueModel} from './vacation-report-distribu
 
 export class VacationReportDistributePipeModel {
     public name: String;
+    public totalValue: number;
     public values: VacationReportDistributePipeValueModel[];
 }

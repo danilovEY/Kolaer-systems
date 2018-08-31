@@ -9,4 +9,5 @@ import java.util.List;
 public class VacationReportDistributeDto {
     private List<VacationReportDistributeLineDto> lineValues = Collections.emptyList();
     private List<VacationReportDistributePipeDto> pipeValues = Collections.emptyList();
+    private long maxSize;
 }

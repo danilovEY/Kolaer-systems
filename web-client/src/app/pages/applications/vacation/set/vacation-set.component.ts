@@ -26,6 +26,7 @@ import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 import {VacationPeriodModel} from '../model/vacation-period.model';
 import {VacationPeriodStatusEnum} from '../model/vacation-period-status.enum';
 import {VacationPeriodService} from '../vacation-period.service';
+import {Title} from '@angular/platform-browser';
 
 @Component({
     selector: 'vacation-set',
@@ -68,7 +69,9 @@ export class VacationSetComponent implements OnInit {
                 private departmentService: DepartmentService,
                 private vacationService: VacationService,
                 private toasterService: ToasterService,
-                private vacationPeriodService: VacationPeriodService) {
+                private vacationPeriodService: VacationPeriodService,
+                private titleService: Title) {
+        this.titleService.setTitle('Задать отпуск');
         this.source = new VacationSetDataSource(this.vacationService);
         this.source.onLoading().subscribe(load => this.loadingVacation = load);
     }

@@ -1,51 +1,14 @@
-<toaster-container [toasterconfig]="config"></toaster-container>
+
 
 <div class="row">
     <div class="col-12">
-        <nb-card>
-            <nb-card-header>
-                <span>Фильтр</span>
-            </nb-card-header>
-
-            <nb-card-body>
-                <div class="row">
-                    <div class="col-3">
-                        <div *ngIf="departments.length > 0">
-                            <label>Подразделение:</label>
-                            <p-dropdown [style]="{'width':'100%'}"
-                                        [options]="departments"
-                                        [ngModel]="selectedDepartment"
-                                        (ngModelChange)="selectDepartment($event)"
-                                        placeholder="Выберите подразделение..."
-                                        optionLabel="abbreviatedName"
-                                        [autoWidth]="false"
-                                        appendTo="body">
-                            </p-dropdown>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t">
-                        </ngb-datepicker>
-
-                        <ng-template #t let-date="date" let-focused="focused">
-                          <span class="custom-day"
-                                [class.focused]="focused"
-                                [class.range]="isFrom(date) || isTo(date) || isInside(date) || isHovered(date)"
-                                [class.faded]="isHovered(date) || isInside(date)"
-                                (mouseenter)="hoveredDate = date"
-                                (mouseleave)="hoveredDate = null">
-                            {{ date.day }}
-                          </span>
-                        </ng-template>
-                    </div>
-                </div>
-            </nb-card-body>
-            <nb-card-footer>
-                <button *ngIf="selectedDepartment && fromDate && toDate"
-                        class="btn btn-success" type="submit"
-                        (click)="generateReportCalendar()">Поиск</button>
-            </nb-card-footer>
-        </nb-card>
+        <report-filter [active]="filterModel &&
+                       (filterModel.selectedDepartments.length > 0 || filterModel.selectedAllDepartments) &&
+                       filterModel.from &&
+                       filterModel.to"
+                       (onChangeFilter)="changeFilter($event)"
+                       (onAcceptFilter)="generateReportCalendar($event)">
+        </report-filter>
     </div>
 
     <div class="col-12" *ngIf="vacationReportCalendarData">

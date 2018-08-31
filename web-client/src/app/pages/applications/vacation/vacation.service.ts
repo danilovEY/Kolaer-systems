@@ -42,7 +42,8 @@ export class VacationService extends BaseService {
 
     public generateVacationReportCalendar(request: GenerateReportCalendarRequestModel): Observable<VacationReportCalendarEmployeeModel[]> {
         const params: HttpParams = new HttpParams()
-            .append('departmentId', request.departmentId.toString())
+            .append('allDepartment', request.allDepartment.toString())
+            .append('departmentIds', request.departmentIds.toString())
             .append('from', Utils.getDateToSend(request.from))
             .append('to', Utils.getDateToSend(request.to));
 

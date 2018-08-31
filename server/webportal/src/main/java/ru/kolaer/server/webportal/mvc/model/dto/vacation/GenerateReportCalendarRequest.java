@@ -4,10 +4,13 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 
 @Data
 public class GenerateReportCalendarRequest {
-    private Long departmentId;
+    private List<Long> departmentIds = Collections.emptyList();
+    private boolean allDepartment;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate from;

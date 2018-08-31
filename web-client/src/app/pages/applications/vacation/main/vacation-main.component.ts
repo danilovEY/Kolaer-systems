@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Title} from '@angular/platform-browser';
 
 @Component({
     selector: 'vacation-main',
@@ -6,15 +7,13 @@ import {Component, OnInit} from '@angular/core';
     styleUrls: ['./vacation-main.component.scss']
 })
 export class VacationMainComponent implements OnInit {
-    cols: any[];
+
+    constructor(private titleService: Title) {
+        this.titleService.setTitle('График отпусков');
+    }
 
     ngOnInit(): void {
-        this.cols = [
-            { field: 'vin', header: 'Vin' },
-            {field: 'year', header: 'Year' },
-            { field: 'brand', header: 'Brand' },
-            { field: 'color', header: 'Color' }
-        ];
+
     }
 
 }

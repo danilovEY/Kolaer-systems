@@ -340,98 +340,85 @@ public class VacationServiceImpl implements VacationService {
         result.setLineValues(new ArrayList<>());
         result.setPipeValues(new ArrayList<>());
 
-        FindVacationByDepartmentRequest findVacationByDepartmentRequest = new FindVacationByDepartmentRequest();
-        findVacationByDepartmentRequest.setFrom(request.getFrom());
-        findVacationByDepartmentRequest.setTo(request.getTo());
-
-        if (!request.isAllDepartment()) {
-            findVacationByDepartmentRequest.setDepartmentIds(request.getDepartmentIds());
-        }
-
-        long vacations = vacationDao.findCountVacation(findVacationByDepartmentRequest);
-        if (vacations == 0) {
-            return result;
-        }
-
         if (request.isAllDepartment()) {
-            long allCount = employeeDao.findAllCount();
-
-            VacationReportDistributeLineDto vacationReport = new VacationReportDistributeLineDto();
-            vacationReport.setName("КолАЭР");
-            vacationReport.setSeries(new ArrayList<>());
-
-            VacationReportDistributePipeDto pipeDto = new VacationReportDistributePipeDto();
-            pipeDto.setName(vacationReport.getName());
-            pipeDto.setValues(new ArrayList<>());
-
-            for (Pair<LocalDate, LocalDate> fromToPair : calculateFromToDates(request.getFrom(), request.getTo(), request.getSplitType())) {
-                FindVacationByDepartmentRequest findVacation = new FindVacationByDepartmentRequest();
-
-                findVacation.setFrom(fromToPair.getKey());
-                findVacation.setTo(fromToPair.getValue());
-
-                long countVacation = vacationDao.findCountVacation(findVacation);
-
-                VacationReportDistributeLineValueDto lineValue = new VacationReportDistributeLineValueDto();
-                lineValue.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
-                lineValue.setValue(countVacation);
-
-                vacationReport.getSeries().add(lineValue);
-
-                if(request.isAddPipes()) {
-                    VacationReportDistributePipeValueDto pipeValueDto = new VacationReportDistributePipeValueDto();
-                    pipeValueDto.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
-                    pipeValueDto.setValue(countVacation);
-                    pipeValueDto.setTotalValue(allCount);
-
-                    pipeDto.getValues().add(pipeValueDto);
-                }
-            }
-
-            result.getLineValues().add(vacationReport);
+            return createReportDistributeLineValues(result,
+                    null, "КолАЭР", employeeDao.findAllCount(), request);
         } else {
             FindEmployeeByDepartment findEmployeeByDepartment = new FindEmployeeByDepartment();
             findEmployeeByDepartment.setDepartmentIds(request.getDepartmentIds());
 
             for (CountEmployeeInDepartmentDto countEmployeeInDepartmentDto : employeeDao.findEmployeeByDepartmentCount(findEmployeeByDepartment)) {
-                VacationReportDistributeLineDto vacationReport = new VacationReportDistributeLineDto();
-                vacationReport.setName(countEmployeeInDepartmentDto.getDepartmentName());
-                vacationReport.setSeries(new ArrayList<>());
-
-                VacationReportDistributePipeDto pipeDto = new VacationReportDistributePipeDto();
-                pipeDto.setName(vacationReport.getName());
-                pipeDto.setValues(new ArrayList<>());
-
-                for (Pair<LocalDate, LocalDate> fromToPair : calculateFromToDates(request.getFrom(), request.getTo(), request.getSplitType())) {
-                    FindVacationByDepartmentRequest findVacation = new FindVacationByDepartmentRequest();
-                    findVacation.setDepartmentIds(Collections.singletonList(countEmployeeInDepartmentDto.getDepartmentId()));
-                    findVacation.setFrom(fromToPair.getKey());
-                    findVacation.setTo(fromToPair.getValue());
-
-                    long countVacation = vacationDao.findCountVacation(findVacation);
-
-                    VacationReportDistributeLineValueDto lineValue = new VacationReportDistributeLineValueDto();
-                    lineValue.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
-                    lineValue.setValue(countVacation);
-
-                    vacationReport.getSeries().add(lineValue);
-
-                    if(request.isAddPipes()) {
-                        VacationReportDistributePipeValueDto pipeValueDto = new VacationReportDistributePipeValueDto();
-                        pipeValueDto.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
-                        pipeValueDto.setValue(countVacation);
-                        pipeValueDto.setTotalValue(countEmployeeInDepartmentDto.getCountEmployee());
-
-                        pipeDto.getValues().add(pipeValueDto);
-                    }
-                }
-                result.getLineValues().add(vacationReport);
-                result.getPipeValues().add(pipeDto);
+                result = createReportDistributeLineValues(result,
+                        countEmployeeInDepartmentDto.getDepartmentId(),
+                        countEmployeeInDepartmentDto.getDepartmentName(),
+                        countEmployeeInDepartmentDto.getCountEmployee(),
+                        request);
             }
         }
 
         return result;
     }
+
+    private VacationReportDistributeDto createReportDistributeLineValues(VacationReportDistributeDto vacationReportDistributeDto,
+                                                                         Long depId,
+                                                                         String name,
+                                                                         long totalValue,
+                                                                         GenerateReportDistributeRequest request) {
+        if (vacationReportDistributeDto.getMaxSize() < totalValue) {
+            vacationReportDistributeDto.setMaxSize(totalValue);
+        }
+
+        VacationReportDistributeLineDto vacationReport = new VacationReportDistributeLineDto();
+        vacationReport.setName(name);
+        vacationReport.setSeries(createReportDistributeLineValues(depId, request));
+
+        vacationReportDistributeDto.getLineValues().add(vacationReport);
+
+        if(request.isAddPipes()) {
+            VacationReportDistributePipeDto pipeDto = new VacationReportDistributePipeDto();
+            pipeDto.setName(vacationReport.getName());
+            pipeDto.setTotalValue(totalValue);
+            pipeDto.setValues(new ArrayList<>());
+
+            for (VacationReportDistributeLineValueDto valueDto : vacationReport.getSeries()) {
+                VacationReportDistributePipeValueDto pipeValueDto = new VacationReportDistributePipeValueDto();
+                pipeValueDto.setName(valueDto.getName());
+                pipeValueDto.setValue(valueDto.getValue());
+
+                pipeDto.getValues().add(pipeValueDto);
+            }
+
+            vacationReportDistributeDto.getPipeValues().add(pipeDto);
+        }
+
+        return vacationReportDistributeDto;
+    }
+
+    private List<VacationReportDistributeLineValueDto> createReportDistributeLineValues(Long depId, GenerateReportDistributeRequest request) {
+        List<VacationReportDistributeLineValueDto> result = new ArrayList<>();
+
+        for (Pair<LocalDate, LocalDate> fromToPair : calculateFromToDates(request.getFrom(), request.getTo(), request.getSplitType())) {
+            FindVacationByDepartmentRequest findVacation = new FindVacationByDepartmentRequest();
+            findVacation.setDepartmentIds(depId != null ? Collections.singletonList(depId) : Collections.emptyList());
+            findVacation.setFrom(fromToPair.getKey());
+            findVacation.setTo(fromToPair.getValue());
+
+            long countVacation = vacationDao.findCountVacation(findVacation);
+
+            VacationReportDistributeLineValueDto lineValue = new VacationReportDistributeLineValueDto();
+            lineValue.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
+            lineValue.setValue(countVacation);
+
+            result.add(lineValue);
+        }
+
+        return result;
+    }
+
+    private List<VacationReportDistributeLineValueDto> createReportDistributeLineValues(GenerateReportDistributeRequest request) {
+        return createReportDistributeLineValues(null, request);
+    }
+
 
     private String getPipeTitle(LocalDate from, GenerateReportDistributeSplitType splitType) {
         if (splitType == GenerateReportDistributeSplitType.MONTHS) {

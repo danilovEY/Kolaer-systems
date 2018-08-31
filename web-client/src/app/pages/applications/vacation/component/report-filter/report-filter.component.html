@@ -1,0 +1,63 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+
+<nb-card>
+    <nb-card-header>
+        <span>Фильтр</span>
+    </nb-card-header>
+
+    <nb-card-body>
+        <div class="row">
+            <div class="col-6">
+                <ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t">
+                </ngb-datepicker>
+
+                <ng-template #t let-date="date" let-focused="focused">
+                          <span class="custom-day"
+                                [class.focused]="focused"
+                                [class.range]="isFrom(date) || isTo(date) || isInside(date) || isHovered(date)"
+                                [class.faded]="isHovered(date) || isInside(date)"
+                                (mouseenter)="hoveredDate = date"
+                                (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                          </span>
+                </ng-template>
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-12">
+                        <div *ngIf="departments.length > 0">
+                            <label>Подразделение:</label>
+                            <p-multiSelect [options]="departments"
+                                           [style]="{'width':'100%'}"
+                                           [disabled]="filterModel.selectedAllDepartments"
+                                           [ngModel]="filterModel.selectedDepartments"
+                                           defaultLabel="Выберите подразделение..."
+                                           (onChange)="selectDepartment($event)"
+                                           appendTo="body"
+                                           optionLabel="abbreviatedName">
+                            </p-multiSelect>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <nb-checkbox [(value)]="filterModel.selectedAllDepartments"
+                                     (change)="onSelectedAllDepartment($event)">Все подразделения
+                        </nb-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-12" *ngIf="pipeCharts">
+                        <nb-checkbox [(value)]="filterModel.pipeCharts"
+                                     (change)="onPipeCharts($event)">Процентное соотношение
+                        </nb-checkbox>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button [disabled]="!active" class="btn btn-success" type="submit"
+                (click)="generateReport()">Поиск</button>
+    </nb-card-footer>
+</nb-card>
