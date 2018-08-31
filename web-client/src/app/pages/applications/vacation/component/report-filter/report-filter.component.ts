@@ -1,15 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DepartmentModel} from '../../../../../@core/models/department.model';
-import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date';
 import {ToasterConfig, ToasterService} from 'angular2-toaster';
 import {NgbCalendar, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {DepartmentSortModel} from '../../../../../@core/models/department-sort.model';
-import {SortTypeEnum} from '../../../../../@core/models/sort-type.enum';
-import {DepartmentFilterModel} from '../../../../../@core/models/department-filter.model';
-import {DepartmentService} from '../../../../../@core/services/department.service';
-import {EmployeeService} from '../../../../../@core/services/employee.service';
-import {AccountService} from '../../../../../@core/services/account.service';
 import {ReportFilterModel} from '../../model/report-filter.model';
 
 @Component({
@@ -18,7 +11,9 @@ import {ReportFilterModel} from '../../model/report-filter.model';
     styleUrls: ['./report-filter.component.scss']
 })
 export class ReportFilterComponent implements OnInit {
-    readonly filterModel: ReportFilterModel = new ReportFilterModel();
+    @Input()
+    @Output()
+    filterModel: ReportFilterModel = new ReportFilterModel();
 
     @Output()
     onChangeFilter = new EventEmitter<ReportFilterModel>();
@@ -30,13 +25,12 @@ export class ReportFilterComponent implements OnInit {
     maxMonth: number = 0;
 
     @Input()
-    active: boolean = true;
-
-    @Input()
     pipeCharts: boolean = false;
 
-    currentAccount: SimpleAccountModel;
+    @Input()
+    selectAllDepartments: boolean = false;
 
+    @Input()
     departments: DepartmentModel[] = [];
 
     hoveredDate: NgbDate;
@@ -56,30 +50,13 @@ export class ReportFilterComponent implements OnInit {
     });
 
     constructor(private toasterService: ToasterService,
-                private calendar: NgbCalendar,
-                private departmentService: DepartmentService,
-                private accountService: AccountService,
-                private employeeService: EmployeeService) {
+                private calendar: NgbCalendar) {
         this.fromDate = calendar.getToday();
         this.toDate = calendar.getNext(calendar.getToday(), 'd', 3);
     }
 
     ngOnInit() {
-        this.accountService.getCurrentAccount()
-            .subscribe(account => {
-                this.currentAccount = account;
 
-                if (account.accessVacationAdmin) {
-                    const sort = new DepartmentSortModel();
-                    sort.sortAbbreviatedName = SortTypeEnum.ASC;
-
-                    this.departmentService.getAllDepartments(sort, new DepartmentFilterModel(), 1, 1000)
-                        .subscribe(depPage => this.departments = depPage.data);
-                } else {
-                    this.employeeService.getCurrentEmployee()
-                        .subscribe(employee => this.selectDepartment([employee.department]));
-                }
-            });
     }
 
     selectDepartment(multiSelect: any) {

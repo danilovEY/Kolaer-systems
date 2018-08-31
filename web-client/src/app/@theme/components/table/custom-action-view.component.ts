@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
 import {ViewCell} from 'ng2-smart-table';
 import {CustomActionModel} from './custom-action.model';
-import {CustomActionEventModel} from "./custom-action-event.model";
+import {CustomActionEventModel} from './custom-action-event.model';
+import {SmartTableService} from '../../../@core/services/smart-table.service';
 
 @Component({
     selector: 'custom-action-view',
@@ -18,7 +19,7 @@ import {CustomActionEventModel} from "./custom-action-event.model";
         </div>
   `,
 })
-export class CustomActionViewComponent implements ViewCell, OnInit {
+export class CustomActionViewComponent implements ViewCell, OnInit, OnDestroy {
 
     @Input() value: string | number;
     @Input() actions: CustomActionModel[] = [];
@@ -26,8 +27,19 @@ export class CustomActionViewComponent implements ViewCell, OnInit {
 
     custom = new EventEmitter<any>();
     actionBeforeValueView: Function;
+    tableName: string;
+
+    constructor(private smartTableService: SmartTableService) {
+
+    }
 
     ngOnInit() {
+        if (this.tableName) {
+            this.actions = this.smartTableService.getActions(this.tableName);
+        }
+    }
+
+    ngOnDestroy() {
     }
 
     onCustom(action: any, event: any) {

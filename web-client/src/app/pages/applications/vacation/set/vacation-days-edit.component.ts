@@ -33,7 +33,7 @@ export class VacationDaysEditComponent extends DefaultEditor implements OnInit {
     }
 
     ngOnInit(): void {
-        this.cell.setValue(1);
+        this.cell.setValue(this.cell.newValue);
         this.cell.getColumn().getConfig().setCalculateValue = (value) => this.setCalculateValue(value);
     }
 

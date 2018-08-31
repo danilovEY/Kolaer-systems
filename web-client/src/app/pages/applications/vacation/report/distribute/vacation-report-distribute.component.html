@@ -1,10 +1,9 @@
 <div class="row">
     <div class="col-12" #filterElement>
-        <report-filter [active]="filterModel &&
-                       (filterModel.selectedDepartments.length > 0 || filterModel.selectedAllDepartments) &&
-                       filterModel.from &&
-                       filterModel.to"
-                       [pipeCharts]="true"
+        <report-filter [pipeCharts]="true"
+                       [(filterModel)]="filterModel"
+                       [selectAllDepartments]="true"
+                       [departments]="departments"
                        (onChangeFilter)="changeFilter($event)"
                        (onAcceptFilter)="generateReportDistribute($event)">
         </report-filter>

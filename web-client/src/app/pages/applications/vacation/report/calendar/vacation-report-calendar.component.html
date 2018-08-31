@@ -2,10 +2,9 @@
 
 <div class="row">
     <div class="col-12">
-        <report-filter [active]="filterModel &&
-                       (filterModel.selectedDepartments.length > 0 || filterModel.selectedAllDepartments) &&
-                       filterModel.from &&
-                       filterModel.to"
+        <report-filter [departments]="departments"
+                       [(filterModel)]="filterModel"
+                       [selectAllDepartments]="currentAccount.accessOit || currentAccount.accessVacationAdmin"
                        (onChangeFilter)="changeFilter($event)"
                        (onAcceptFilter)="generateReportCalendar($event)">
         </report-filter>

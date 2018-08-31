@@ -15,12 +15,15 @@ import {GenerateReportCalendarRequestModel} from './model/generate-report-calend
 import {Utils} from '../../../@core/utils/utils';
 import {VacationReportDistributeModel} from './model/vacation-report-distribute.model';
 import {GenerateReportDistributeRequestModel} from './model/generate-report-distribute-request.model';
+import {VacationBalanceModel} from './model/vacation-balance.model';
+import {FindVacationBalanceRequestModel} from './model/find-vacation-balance-request.model';
 
 @Injectable()
 export class VacationService extends BaseService {
     private readonly VACATION_URL = `${environment.publicServerUrl}/vacations`;
     private readonly FIND_VACATION_URL = `${this.VACATION_URL}`;
     private readonly FIND_PERIODS_URL = `${this.VACATION_URL}/periods`;
+    private readonly FIND_VACATION_BALANCE_URL = `${this.VACATION_URL}/balance`;
     private readonly GENERATE_REPORT_CALENDAR_URL = `${this.VACATION_URL}/report/calendar`;
     private readonly GENERATE_REPORT_DISTRIBUTE_URL = `${this.VACATION_URL}/report/distribute`;
     private readonly CALCULATE_DAYS_VACATION_URL = `${this.VACATION_URL}/calculate/days`;
@@ -38,6 +41,13 @@ export class VacationService extends BaseService {
             .append('pagesize', request.pageSize.toString());
         
         return this.http.get<Page<VacationModel>>(this.FIND_VACATION_URL, {params: params});
+    }
+
+    public getVacationBalance(request: FindVacationBalanceRequestModel): Observable<VacationBalanceModel> {
+        const params: HttpParams = new HttpParams()
+            .append('employeeId', request.employeeId.toString());
+
+        return this.http.get<VacationBalanceModel>(this.FIND_VACATION_BALANCE_URL, {params: params});
     }
 
     public generateVacationReportCalendar(request: GenerateReportCalendarRequestModel): Observable<VacationReportCalendarEmployeeModel[]> {

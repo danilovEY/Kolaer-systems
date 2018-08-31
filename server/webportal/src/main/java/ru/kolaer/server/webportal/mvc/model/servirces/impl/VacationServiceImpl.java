@@ -93,6 +93,13 @@ public class VacationServiceImpl implements VacationService {
     @Override
     @Transactional
     public VacationBalanceDto getBalance(FindBalanceRequest request) {
+        AccountSimpleDto account = authenticationService.getAccountSimpleByAuthentication();
+
+        if(!account.isAccessVacationAdmin() && !account.isAccessOk() && !account.isAccessOit() &&
+                (account.getEmployeeId() != null && request.getEmployeeId() != account.getEmployeeId())) {
+            checkVacationDepartment(request.getEmployeeId(), account.getEmployeeId());
+        }
+
         return vacationConverter.convertToDto(getBalanceEntity(request.getEmployeeId()));
     }
 

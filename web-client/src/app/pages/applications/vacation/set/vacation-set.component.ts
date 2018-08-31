@@ -27,6 +27,10 @@ import {VacationPeriodModel} from '../model/vacation-period.model';
 import {VacationPeriodStatusEnum} from '../model/vacation-period-status.enum';
 import {VacationPeriodService} from '../vacation-period.service';
 import {Title} from '@angular/platform-browser';
+import {FindVacationBalanceRequestModel} from '../model/find-vacation-balance-request.model';
+import {VacationBalanceModel} from '../model/vacation-balance.model';
+import {tap} from 'rxjs/internal/operators';
+import {SmartTableService} from '../../../../@core/services/smart-table.service';
 
 @Component({
     selector: 'vacation-set',
@@ -64,19 +68,33 @@ export class VacationSetComponent implements OnInit {
         limit: 5,
     });
 
+    currentBalance: VacationBalanceModel;
+
     constructor(private accountService: AccountService,
                 private employeeService: EmployeeService,
                 private departmentService: DepartmentService,
                 private vacationService: VacationService,
                 private toasterService: ToasterService,
                 private vacationPeriodService: VacationPeriodService,
+                private smartTableService: SmartTableService,
                 private titleService: Title) {
         this.titleService.setTitle('Задать отпуск');
+
         this.source = new VacationSetDataSource(this.vacationService);
         this.source.onLoading().subscribe(load => this.loadingVacation = load);
     }
 
     ngOnInit(): void {
+        this.vacationPeriodService.selectedPeriodEvent.subscribe(period => {
+            if (this.currentAccount.accessVacationAdmin || this.currentAccount.accessOit || !this.isClosed(this.selectedPeriod)) {
+                this.smartTableService.addEditAction();
+                this.smartTableService.addDeleteAction();
+            } else {
+                this.smartTableService.removeEditAction();
+                this.smartTableService.removeDeleteAction();
+            }
+        });
+
         this.vacationService.getPeriods()
             .subscribe(periods => {
                 this.periods = periods.data;
@@ -85,6 +103,7 @@ export class VacationSetComponent implements OnInit {
         this.accountService.getCurrentAccount()
             .subscribe(account => {
                 this.currentAccount = account;
+
                 if (account.accessVacationAdmin) {
                     const sort = new DepartmentSortModel();
                     sort.sortAbbreviatedName = SortTypeEnum.ASC;
@@ -164,8 +183,9 @@ export class VacationSetComponent implements OnInit {
         event.newData.employeeId = this.selectedEmployee.id;
 
         this.vacationService.updateVacation(event.data.id, event.newData)
+            .pipe(tap(vacation => this.updateBalance()))
             .subscribe(
-                event.confirm.resolve,
+                vacation => event.confirm.resolve(event.newData, vacation),
                 responseError => {
                     const toast: Toast = {
                         type: 'error',
@@ -179,6 +199,7 @@ export class VacationSetComponent implements OnInit {
 
     delete(event: TableEventDeleteModel<VacationModel>) {
         this.vacationService.deleteVacation(event.data.id)
+            .pipe(tap(vacation => this.updateBalance()))
             .subscribe(
                 responce => event.confirm.resolve(),
                 responseError => {
@@ -196,6 +217,7 @@ export class VacationSetComponent implements OnInit {
         event.newData.employeeId = this.selectedEmployee.id;
 
         this.vacationService.addVacation(event.newData)
+            .pipe(tap(vacation => this.updateBalance()))
             .subscribe(
                 event.confirm.resolve,
                 responseError => {
@@ -222,8 +244,30 @@ export class VacationSetComponent implements OnInit {
 
     selectEmployee(event: EmployeeModel) {
         this.selectedEmployee = event;
+
+        this.updateBalance();
+
         this.source.setEmployeeId(event.id);
         this.source.refreshFromServer();
+    }
+
+    private updateBalance(): void {
+        if (this.selectedEmployee) {
+            const request = new FindVacationBalanceRequestModel();
+            request.employeeId = this.selectedEmployee.id;
+
+            this.vacationService.getVacationBalance(request)
+                .subscribe(balance => this.currentBalance = balance,
+                    responseError => {
+                        const toast: Toast = {
+                            type: 'error',
+                            title: 'Ошибка в операции',
+                            body: responseError.error.message,
+                        };
+
+                        this.toasterService.popAsync(toast);
+                    });
+        }
     }
 
     selectPeriod(event: VacationPeriodModel) {
@@ -237,6 +281,8 @@ export class VacationSetComponent implements OnInit {
     }
 
     isClosed(selectedPeriod: VacationPeriodModel): boolean {
-        return selectedPeriod === null || selectedPeriod.status === VacationPeriodStatusEnum.CLOSE;
+        return selectedPeriod
+            ? selectedPeriod.status === VacationPeriodStatusEnum.CLOSE
+            : false
     }
 }

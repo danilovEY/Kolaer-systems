@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {DataSource} from 'ng2-smart-table/lib/data-source/data-source';
 import {CustomActionEditComponent} from './custom-action-edit.component';
 import {CustomActionViewComponent} from './custom-action-view.component';
@@ -9,6 +9,7 @@ import {TableEventDeleteModel} from './table-event-delete.model';
 import {TableEventEditModel} from './table-event-edit.model';
 import {TableEventAddModel} from './table-event-add.model';
 import {Row} from 'ng2-smart-table/lib/data-set/row';
+import {SmartTableService} from '../../../@core/services/smart-table.service';
 
 @Component({
     selector: 'custom-table',
@@ -32,19 +33,14 @@ import {Row} from 'ng2-smart-table/lib/data-set/row';
         </ng2-smart-table>
     `
 })
-export class CustomTableComponent implements OnInit {
-    public static readonly DELETE_ACTION_NAME: string = 'delete';
-    public static readonly EDIT_ACTION_NAME: string = 'edit';
-
+export class CustomTableComponent implements OnInit, OnDestroy {
     public selectedRow: Row;
     public columnActions: Column;
 
     private readonly defaultAction = new EventEmitter<any>();
 
-    private editAction: CustomActionModel;
-    private deleteAction: CustomActionModel;
-
     @Input() source: DataSource;
+    @Input() tableName: string = SmartTableService.DEFAULT_TABLE_NAME;
     @Input() actionAdd: boolean = true;
     @Input() actionDelete: boolean = true;
     @Input() actionEdit: boolean = true;
@@ -99,33 +95,30 @@ export class CustomTableComponent implements OnInit {
         }
     };
 
+    constructor(private smartTableService: SmartTableService) {
+
+    }
+
+    ngOnDestroy() {
+        this.smartTableService.clearActions(this.tableName);
+    }
+
     ngOnInit() {
         if (this.actionExternal) {
             this.settings.mode = 'external';
         }
 
-        this.editAction = new CustomActionModel();
-        this.editAction.name = CustomTableComponent.EDIT_ACTION_NAME;
-        this.editAction.content = '<i class="fa fa-edit"></i>';
-        this.editAction.description = 'Редактировать';
-
-        this.deleteAction = new CustomActionModel();
-        this.deleteAction.name = CustomTableComponent.DELETE_ACTION_NAME;
-        this.deleteAction.content = '<i class="fa fa-trash"></i>';
-        this.deleteAction.description = 'Удалить';
+        if (this.actionDelete) {
+            this.smartTableService.addDeleteAction();
+        }
 
         if (this.actionEdit) {
-            this.actions.push(this.editAction);
+            this.smartTableService.addEditAction();
         }
 
-        if (this.actionDelete) {
-            this.actions.push(this.deleteAction);
-        }
-
-
-        if (this.actions.length > 0) {
+        if (this.actions.length > 0 || this.smartTableService.getActions(this.tableName).length > 0) {
             this.defaultAction.subscribe(event => {
-                if (event.action.name === CustomTableComponent.EDIT_ACTION_NAME) {
+                if (event.action.name === SmartTableService.EDIT_ACTION_NAME) {
                     if (this.actionExternal) {
                         const tableEvent = new TableEventEditModel();
                         tableEvent.source = this.source;
@@ -136,7 +129,7 @@ export class CustomTableComponent implements OnInit {
                     } else {
                         this.table.grid.edit(this.selectedRow);
                     }
-                } if (event.action.name === CustomTableComponent.DELETE_ACTION_NAME) {
+                } if (event.action.name === SmartTableService.DELETE_ACTION_NAME) {
                     if (this.actionExternal) {
                         const tableEvent = new TableEventDeleteModel();
                         tableEvent.source = this.source;
@@ -153,7 +146,9 @@ export class CustomTableComponent implements OnInit {
                 }
             });
 
-            const tempActions = this.actions;
+            this.smartTableService.addActions(this.tableName, this.actions);
+
+            const tempTableName = this.tableName;
             const tempAction = this.defaultAction;
             const tempActionBeforeValueView = this.actionBeforeValueView;
 
@@ -173,7 +168,7 @@ export class CustomTableComponent implements OnInit {
                 },
                 renderComponent: CustomActionViewComponent,
                 onComponentInitFunction(instance: CustomActionViewComponent) {
-                    instance.actions = tempActions;
+                    instance.tableName = tempTableName;
                     instance.custom = tempAction;
                     instance.actionBeforeValueView = tempActionBeforeValueView;
                 }

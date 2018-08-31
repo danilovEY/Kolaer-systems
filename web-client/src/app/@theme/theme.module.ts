@@ -5,6 +5,7 @@ import {NgbDateParserFormatter, NgbDatepickerI18n, NgbModule} from '@ng-bootstra
 
 import {
     NbActionsModule,
+    NbAlertModule,
     NbCardModule,
     NbCheckboxModule,
     NbContextMenuModule,
@@ -16,7 +17,7 @@ import {
     NbSidebarModule,
     NbTabsetModule,
     NbThemeModule,
-    NbUserModule,
+    NbUserModule
 } from '@nebular/theme';
 import {
     CustomActionEditComponent,
@@ -72,6 +73,7 @@ const NB_MODULES = [
     NbCheckboxModule,
     NbPopoverModule,
     NbContextMenuModule,
+    NbAlertModule,
     NgbModule,
     // NbSecurityModule, // *nbIsGranted directive
 

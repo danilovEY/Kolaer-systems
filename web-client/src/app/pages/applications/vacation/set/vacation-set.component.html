@@ -55,40 +55,104 @@
     </div>
 
     <div class="col-12" *ngIf="selectedEmployee && selectedPeriod">
-        <nb-card>
-            <nb-card-header>
-                <span>Задать отпуск</span>
-            </nb-card-header>
+        <div class="row">
+            <div class="col-3" *ngIf="currentBalance">
+                <nb-card>
+                    <nb-card-header>
+                        <span>Карточка сотрудника</span>
+                    </nb-card-header>
 
-            <nb-card-body>
-                <ngx-loading [show]="loadingVacation"></ngx-loading>
+                    <nb-card-body>
 
-                <div *ngIf="isClosed(selectedPeriod)">
-                    <p-message severity="error" text="Период на {{selectedPeriod.year}}г. закрыт!"></p-message>
+                        <div class="row">
+                            <div class="col-12 col-md-12 picture">
+                                <img class="avatar" src="{{ selectedEmployee.photo }}" alt="аватар">
+                            </div>
+                        </div>
 
-                    <custom-table *ngIf="currentAccount && !currentAccount.accessVacationAdmin"
-                            #customTable [columns]="columns" [source]="source"
-                                  [actionExternal]="false"
-                                  [actionAdd]="false" [actionDelete]="false" [actionEdit]="false">
-                    </custom-table>
+                        <br/>
+                        <br/>
 
-                    <custom-table *ngIf="currentAccount && currentAccount.accessVacationAdmin"
-                            #customTable [columns]="columns" [source]="source" [actions]="actions"
-                                  [actionExternal]="false"
-                                  [actionAdd]="true" [actionDelete]="true" [actionEdit]="true"
-                                  (delete)="delete($event)" (create)="create($event)" (edit)="edit($event)">
-                    </custom-table>
-                </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="currentYearBalance">Остаток на текущий год</label>
+                                    <div class="input-group">
+                                        <input type="text" id="currentYearBalance"
+                                               disabled
+                                               class="form-control" value="{{ currentBalance.currentYearBalance }}">
+                                    </div>
+                                </div>
+                            </div>
 
-                <div *ngIf="!isClosed(selectedPeriod)">
-                    <custom-table #customTable [columns]="columns" [source]="source" [actions]="actions"
-                                  [actionExternal]="false"
-                                  [actionAdd]="true" [actionDelete]="true" [actionEdit]="true"
-                                  (delete)="delete($event)" (create)="create($event)" (edit)="edit($event)">
-                    </custom-table>
-                </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="nextYearBalance">Остаток на будущий год</label>
+                                    <div class="input-group">
+                                        <input type="text" id="nextYearBalance"
+                                               disabled
+                                               class="form-control" value="{{ currentBalance.nextYearBalance }}">
+                                    </div>
+                                </div>
+                            </div>
 
-            </nb-card-body>
-        </nb-card>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="post">Должность</label>
+                                    <div class="input-group">
+                                        <input type="text" id="post"
+                                               disabled
+                                               class="form-control" value="{{ selectedEmployee.post.name }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="type-work">Вид работы</label>
+                                    <div class="input-group">
+                                        <input type="text" id="type-work"
+                                               disabled
+                                               class="form-control" value="{{ selectedEmployee.typeWork?.name }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <nb-checkbox disabled [value]="selectedEmployee.harmfulness">
+                                        Вредность работы
+                                    </nb-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+
+            <div class="col-9">
+                <nb-card>
+                    <nb-card-header>
+                        <span>Задать отпуск</span>
+                    </nb-card-header>
+
+                    <nb-card-body>
+                        <ngx-loading [show]="loadingVacation"></ngx-loading>
+
+                        <nb-alert *ngIf="isClosed(selectedPeriod)" status="danger">
+                            Период на {{selectedPeriod.year}}г. закрыт!
+                        </nb-alert>
+
+                        <nb-alert *ngIf="!isClosed(selectedPeriod) && selectedEmployee.harmfulness" status="warning" [closable]="true">
+                            Сотрудник имеет вредность, поэтому остаток дней может быть не точным
+                        </nb-alert>
+
+                        <custom-table #customTable [columns]="columns" [source]="source"
+                                      (delete)="delete($event)" (create)="create($event)" (edit)="edit($event)">
+                        </custom-table>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
     </div>
 </div>

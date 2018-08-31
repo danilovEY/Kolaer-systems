@@ -38,7 +38,7 @@
                             </p-multiSelect>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12" *ngIf="selectAllDepartments">
                         <nb-checkbox [(value)]="filterModel.selectedAllDepartments"
                                      (change)="onSelectedAllDepartment($event)">Все подразделения
                         </nb-checkbox>
@@ -57,7 +57,11 @@
         </div>
     </nb-card-body>
     <nb-card-footer>
-        <button [disabled]="!active" class="btn btn-success" type="submit"
+        <button [disabled]="!(filterModel &&
+                       ((filterModel.selectedDepartments && filterModel.selectedDepartments.length) > 0
+                       || filterModel.selectedAllDepartments) &&
+                       filterModel.from &&
+                       filterModel.to)" class="btn btn-success" type="submit"
                 (click)="generateReport()">Поиск</button>
     </nb-card-footer>
 </nb-card>
