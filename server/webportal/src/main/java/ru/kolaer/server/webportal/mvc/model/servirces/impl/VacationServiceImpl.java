@@ -507,7 +507,6 @@ public class VacationServiceImpl implements VacationService {
         if (balance == null) {
             balance = new VacationBalanceEntity();
             balance.setEmployeeId(request.getEmployeeId());
-            balance.setCurrentYearBalance(DEFAULT_VACATION_DAYS);
             balance.setNextYearBalance(DEFAULT_VACATION_DAYS);
 
             balance = vacationDao.save(balance);
