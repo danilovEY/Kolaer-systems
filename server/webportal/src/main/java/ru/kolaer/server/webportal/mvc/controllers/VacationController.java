@@ -4,12 +4,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.vacation.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -92,6 +94,14 @@ public class VacationController {
     @RequestMapping(value = "/report/distribute", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public VacationReportDistributeDto generateVacationReportDistribute(@ModelAttribute GenerateReportDistributeRequest request) {
         return vacationService.generateReportDistribute(request);
+    }
+
+    @ApiOperation(value = "Сгенерировать отчет в эксель")
+    @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
+    @RequestMapping(value = "/report/export", method = RequestMethod.GET)
+    public ResponseEntity generateVacationReportExport(@ModelAttribute GenerateReportExportRequest request,
+                                                       HttpServletResponse response) {
+        return vacationService.generateReportExport(request, response);
     }
 
 }

@@ -1,10 +1,8 @@
 package ru.kolaer.server.webportal.mvc.controllers.jsp;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,9 +17,6 @@ import java.io.IOException;
 /**
  * Created by danilovey on 03.11.2016.
  */
-@Controller
-@RequestMapping(value = "/upload")
-@Api(value = "Обновление данных", tags = "JSP")
 public class UploadController {
 
     private final UpdateEmployeesService employeeOtherOrganizationService;

@@ -18,6 +18,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 
 import javax.annotation.PostConstruct;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -164,7 +165,8 @@ public class UploadFileServiceImpl
                         .orElse("application/octet-stream");
 
                 response.setContentType(mimeType);
-                response.setHeader("Content-Disposition", "inline; filename=\"" + uploadFileDto.getFileName() +"\"");
+                response.setHeader("Content-Disposition", "inline; filename=\"" +
+                        MimeUtility.encodeWord(uploadFileDto.getFileName(), "UTF-8", "Q") +"\"");
                 response.setContentLength(Long.valueOf(resource.contentLength()).intValue());
 
                 FileCopyUtils.copy(resource.getInputStream(), response.getOutputStream());
@@ -181,8 +183,12 @@ public class UploadFileServiceImpl
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity loadFile(Long id, String filename, HttpServletResponse response) {
-            UploadFileDto uploadFileDto = getById(id);
+        UploadFileDto uploadFileDto = getById(id);
+        if (uploadFileDto.getFileName().equals(filename)) {
             return loadFile(uploadFileDto, response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override

@@ -13,10 +13,7 @@ import ru.kolaer.server.webportal.mvc.model.dto.SortField;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.criteria.CriteriaQuery;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -144,7 +141,7 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     }
 
     @Override
-    public List<T> findById(List<Long> ids) {
+    public List<T> findById(Collection<Long> ids) {
         if(ids == null || ids.isEmpty()) {
             return null;
         }

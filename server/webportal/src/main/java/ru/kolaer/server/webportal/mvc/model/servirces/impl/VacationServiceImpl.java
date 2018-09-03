@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import javafx.util.Pair;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -12,10 +13,7 @@ import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.VacationConverter;
-import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
-import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
-import ru.kolaer.server.webportal.mvc.model.dao.HolidayDao;
-import ru.kolaer.server.webportal.mvc.model.dao.VacationDao;
+import ru.kolaer.server.webportal.mvc.model.dao.*;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.CountEmployeeInDepartmentDto;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeeByDepartment;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.FindHolidayRequest;
@@ -26,6 +24,8 @@ import ru.kolaer.server.webportal.mvc.model.entities.vacation.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
@@ -45,6 +45,8 @@ public class VacationServiceImpl implements VacationService {
     private final VacationDao vacationDao;
     private final EmployeeDao employeeDao;
     private final DepartmentDao departmentDao;
+    private final PostDao postDao;
+    private final GenerateReportForVacationService generateReportForVacationService;
     private final VacationConverter vacationConverter;
     private final HolidayDao holidayDao;
     private final AuthenticationService authenticationService;
@@ -52,12 +54,16 @@ public class VacationServiceImpl implements VacationService {
     public VacationServiceImpl(VacationDao vacationDao,
                                EmployeeDao employeeDao,
                                DepartmentDao departmentDao,
+                               PostDao postDao,
+                               GenerateReportForVacationService generateReportForVacationService,
                                VacationConverter vacationConverter,
                                HolidayDao holidayDao,
                                AuthenticationService authenticationService) {
         this.vacationDao = vacationDao;
         this.employeeDao = employeeDao;
         this.departmentDao = departmentDao;
+        this.postDao = postDao;
+        this.generateReportForVacationService = generateReportForVacationService;
         this.vacationConverter = vacationConverter;
         this.holidayDao = holidayDao;
         this.authenticationService = authenticationService;
@@ -364,6 +370,28 @@ public class VacationServiceImpl implements VacationService {
         }
 
         return result;
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity generateReportExport(GenerateReportExportRequest request, HttpServletResponse response) {
+        if (request.getFrom() == null || request.getTo() == null) {
+            throw new UnexpectedRequestParams("Не задан период");
+        }
+
+        if (request.getFrom().isAfter(request.getTo())) {
+            throw new UnexpectedRequestParams("Период не правильно задан");
+        }
+
+        if (request.getDepartmentId() <= 0) {
+            throw new UnexpectedRequestParams("Не задано подразделение");
+        }
+
+        try {
+            return generateReportForVacationService.generateReportExtort(request, response);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private VacationReportDistributeDto createReportDistributeLineValues(VacationReportDistributeDto vacationReportDistributeDto,

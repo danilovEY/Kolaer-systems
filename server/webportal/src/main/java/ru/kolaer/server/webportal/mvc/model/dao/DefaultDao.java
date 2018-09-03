@@ -7,6 +7,7 @@ import ru.kolaer.server.webportal.mvc.model.dto.PaginationRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.SortField;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ public interface DefaultDao<T extends BaseEntity> {
 
     /**Получить объект по ID.*/
     T findById(@NonNull Long id);
+    List<T> findById(Collection<Long> ids);
 
     /**Добавить объект в БД.*/
     T persist(@NonNull T obj);
@@ -144,6 +146,4 @@ public interface DefaultDao<T extends BaseEntity> {
     }
 
     Class<T> getEntityClass();
-
-    List<T> findById(List<Long> ids);
 }

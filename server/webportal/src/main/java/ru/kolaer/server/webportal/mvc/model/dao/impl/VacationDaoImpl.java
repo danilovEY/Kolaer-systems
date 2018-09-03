@@ -171,7 +171,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
 
         if (!request.getDepartmentIds().isEmpty()) {
             sqlQuery = sqlQuery.append(" WHERE employee.departmentId IN (:departmentIds) AND ");
-            params.put("departmentId", request.getDepartmentIds());
+            params.put("departmentIds", request.getDepartmentIds());
         } else {
             sqlQuery = sqlQuery.append( "WHERE ");
         }
@@ -216,6 +216,31 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
                 .setProperties(params)
                 .uniqueResultOptional()
                 .orElse(0L);
+    }
+
+    @Override
+    public List<VacationEntity> findAll(GenerateReportExportRequest request) {
+        Map<String, Object> params = new HashMap<>();
+
+        StringBuilder sqlQuery = new StringBuilder()
+                .append("FROM ")
+                .append(getEntityName());
+
+        sqlQuery = sqlQuery.append(" WHERE employee.departmentId = :departmentId AND ");
+        params.put("departmentId", request.getDepartmentId());
+
+        sqlQuery = sqlQuery.append("((vacationFrom <= :vacationFrom AND vacationTo >= :vacationFrom OR " +
+                "vacationFrom <= :vacationTo AND vacationTo >= :vacationTo) OR " +
+                "(vacationFrom >= :vacationFrom AND vacationTo <= :vacationTo)) ");
+        params.put("vacationFrom", request.getFrom());
+        params.put("vacationTo", request.getTo());
+
+        sqlQuery = sqlQuery.append("ORDER BY vacationFrom ASC, vacationTo ASC");
+
+        return getSession()
+                .createQuery(sqlQuery.toString(), getEntityClass())
+                .setProperties(params)
+                .list();
     }
 
     private String getOrder(VacationPeriodSortType type) {

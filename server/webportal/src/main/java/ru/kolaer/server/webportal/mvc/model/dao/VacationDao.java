@@ -29,4 +29,6 @@ public interface VacationDao extends DefaultDao<VacationEntity> {
     List<VacationEntity> findAll(GenerateReportDistributeRequest request);
 
     long findCountVacation(FindVacationByDepartmentRequest findVacation);
+
+    List<VacationEntity> findAll(GenerateReportExportRequest request);
 }
