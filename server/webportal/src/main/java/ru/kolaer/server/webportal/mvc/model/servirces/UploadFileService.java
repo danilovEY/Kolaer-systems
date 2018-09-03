@@ -12,6 +12,7 @@ public interface UploadFileService extends DefaultService<UploadFileDto> {
     UploadFileEntity store(String folder, MultipartFile file, boolean generateUniquiredFileName);
     UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName);
     UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder);
+    UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder, boolean replaceFile);
 
     Resource loadFile(String filename);
 

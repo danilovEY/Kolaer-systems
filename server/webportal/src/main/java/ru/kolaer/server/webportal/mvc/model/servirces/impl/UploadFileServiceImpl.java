@@ -78,6 +78,11 @@ public class UploadFileServiceImpl
 
     @Override
     public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder) {
+       return createFile(folder, fileName, generateUniquiredFileName, inDateFolder, true);
+    }
+
+    @Override
+    public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder, boolean replaceFile) {
         try {
             if(inDateFolder) {
                 folder += "/" + simpleDateFormat.format(new Date());
@@ -97,9 +102,13 @@ public class UploadFileServiceImpl
 
             File file = this.rootLocation.resolve(newFileName).toFile();
 
-            if(file.exists() && !file.delete()) {
-                newFileName = new Date().getTime() + "_" + newFileName;
-                file = this.rootLocation.resolve(newFileName).toFile();
+            if(file.exists()) {
+                if (replaceFile && !file.delete()) {
+                    newFileName = new Date().getTime() + "_" + newFileName;
+                    file = this.rootLocation.resolve(newFileName).toFile();
+                } else {
+                    return null;
+                }
             }
 
             UploadFileEntity uploadFileEntity = Optional
