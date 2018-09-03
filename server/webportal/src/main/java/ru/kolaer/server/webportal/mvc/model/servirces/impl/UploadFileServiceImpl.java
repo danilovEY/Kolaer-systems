@@ -79,15 +79,16 @@ public class UploadFileServiceImpl
     @Override
     public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder) {
         try {
+            if(inDateFolder) {
+                folder += "/" + simpleDateFormat.format(new Date());
+            }
+
             File folderFile = rootLocation.resolve(folder).toFile();
             if(!folderFile.exists() && !folderFile.mkdirs()) {
                 throw new RuntimeException("Не удалось создать папку: " + folder);
             }
 
             String newFileName = folder + "/";
-            if(inDateFolder) {
-                newFileName += simpleDateFormat.format(new Date()) + "/";
-            }
 
             if(generateUniquiredFileName) {
                 newFileName += new Date().getTime() + "_";
