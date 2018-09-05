@@ -1,0 +1,15 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+
+<div class="row">
+    <div class="col-12" #filterElement>
+        <report-filter [pipeCharts]="false"
+                       [(filterModel)]="filterModel"
+                       [selectAllDepartments]="false"
+                       [departments]="departments"
+                       actionTitle="Скачать"
+                       [multiSelectDepartment]="false"
+                       (onChangeFilter)="changeFilter($event)"
+                       (onAcceptFilter)="generateReportExport($event)">
+        </report-filter>
+    </div>
+</div>

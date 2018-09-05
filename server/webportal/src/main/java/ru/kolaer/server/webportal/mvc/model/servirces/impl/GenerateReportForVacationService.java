@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
+import ru.kolaer.server.webportal.mvc.model.converter.DateTimeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PostDao;
@@ -26,10 +28,6 @@ import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -95,7 +93,7 @@ public class GenerateReportForVacationService {
 //        }
 //    }
 
-    ResponseEntity generateReportExtort(GenerateReportExportRequest request, HttpServletResponse response) throws IOException {
+    ResponseEntity generateReportExtort(GenerateReportExportRequest request, HttpServletResponse response) {
         Map<Long, List<VacationEntity>> vacationMap = vacationDao.findAll(request)
                 .stream()
                 .collect(Collectors.groupingBy(VacationEntity::getEmployeeId));
@@ -109,7 +107,6 @@ public class GenerateReportForVacationService {
         List<EmployeeEntity> employees = employeeDao.findById(vacationMap.keySet());
         employees.sort(Comparator.comparing(EmployeeEntity::getInitials));
 
-
         Set<Long> postIds = employees
                 .stream()
                 .map(EmployeeEntity::getPostId)
@@ -120,36 +117,84 @@ public class GenerateReportForVacationService {
                 .collect(Collectors.toMap(PostEntity::getId, Function.identity()));
 
 
+        try (XSSFWorkbook workbook = new XSSFWorkbook(getClass().getResourceAsStream("/template/vacation_template.xlsx"))) {
+            XSSFSheet sheet = setDepartmentName(workbook.getSheetAt(0), departmentEntity);
+            sheet = setVacations(sheet, vacationMap, employees, postMap, departmentEntity);
 
-        InputStream resource = GenerateReportForVacationService.class.getResourceAsStream("/template/vacation_template.xlsx");
+            UploadFileEntity uploadFileEntity = saveWorkBook(workbook, departmentEntity.getAbbreviatedName());
+            return uploadFileService.loadFile(uploadFileEntity.getId(), uploadFileEntity.getFileName(), response);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        String fileName = departmentEntity.getAbbreviatedName() + " (Отчет).xlsx";
+    private UploadFileEntity saveWorkBook(XSSFWorkbook workbook, String departmentName) throws IOException {
+        String fileName = departmentName + " (Отчет).xlsx";
 
         UploadFileEntity tempFile = uploadFileService.createFile("temp", fileName, true);
 
-        String path = "upload/" + tempFile.getPath();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(uploadFileService.getAbsolutePath(tempFile))){
+            workbook.write(fileOutputStream);
+            fileOutputStream.flush();
 
-        Files.copy(resource, Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
+        } finally {
+            workbook.close();
+        }
 
-        resource.close();
+        return tempFile;
+    }
 
-        XSSFWorkbook workbook = new XSSFWorkbook(GenerateReportForVacationService.class.getResourceAsStream("/template/vacation_template.xlsx"));
+    private XSSFSheet setVacations(XSSFSheet sheet,
+                                   Map<Long, List<VacationEntity>> vacationMap,
+                                   List<EmployeeEntity> employees,
+                                   Map<Long, PostEntity> postMap,
+                                   DepartmentEntity departmentEntity) {
+        int indexRow = 17;
 
-        XSSFSheet sheet = workbook.getSheetAt(0);
+        XSSFRow currentRow = sheet.getRow(indexRow);
 
+        for (EmployeeEntity employee : employees) {
+            for (VacationEntity vacation : vacationMap.get(employee.getId())) {
+                sheet.shiftRows(indexRow + 1, sheet.getLastRowNum(), 1);
+
+                XSSFRow nextRow = sheet.createRow(indexRow + 1);
+                nextRow.copyRowFrom(currentRow, new CellCopyPolicy());
+
+                XSSFCell departmentCell = currentRow.getCell(0);
+                departmentCell.setCellValue(departmentEntity.getAbbreviatedName());
+
+                XSSFCell postCell = currentRow.getCell(1);
+                postCell.setCellValue(postMap.get(employee.getPostId()).getAbbreviatedName());
+
+                XSSFCell initialsCell = currentRow.getCell(2);
+                initialsCell.setCellValue(employee.getInitials());
+
+                XSSFCell personnelNumberCell = currentRow.getCell(3);
+                personnelNumberCell.setCellValue(employee.getPersonnelNumber());
+
+                XSSFCell vacationDaysCell = currentRow.getCell(4);
+                vacationDaysCell.setCellValue(vacation.getVacationDays());
+
+                XSSFCell vacationDateCell = currentRow.getCell(5);
+                vacationDateCell.setCellValue(DateTimeConverter.dateToString(vacation.getVacationFrom()));
+
+                indexRow = indexRow + 1;
+                currentRow = nextRow;
+            }
+        }
+
+        sheet.removeRow(currentRow);
+
+        return sheet;
+    }
+
+    private XSSFSheet setDepartmentName(XSSFSheet sheet, DepartmentEntity departmentEntity) {
         XSSFRow depNameRow = sheet.getRow(1);
         XSSFCell depNameCell = depNameRow.getCell(0);
+
         depNameCell.setCellValue(departmentEntity.getAbbreviatedName());
 
-
-        FileOutputStream fileOutputStream = new FileOutputStream(path);
-
-        workbook.write(fileOutputStream);
-        fileOutputStream.flush();
-        fileOutputStream.close();
-        workbook.close();
-
-        return uploadFileService.loadFile(tempFile.getId(), tempFile.getFileName(), response);
+        return sheet;
     }
 
     private String createCells(XSSFRow row, EmployeeDto employee) {

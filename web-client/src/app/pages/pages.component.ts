@@ -107,6 +107,10 @@ export class PagesComponent implements OnInit {
         vacationSetMenuItem.title = 'Задать отпуск';
         vacationSetMenuItem.link = 'app/vacation/set';
 
+        const reportExportMenuItem: NbMenuItem = new NbMenuItem();
+        reportExportMenuItem.title = 'Отчет';
+        reportExportMenuItem.link = 'app/vacation/report/export';
+
         const vacationReportMenuItem: NbMenuItem = new NbMenuItem();
         vacationReportMenuItem.title = 'Графики';
         vacationReportMenuItem.icon = 'icon ion-md-analytics';
@@ -119,6 +123,7 @@ export class PagesComponent implements OnInit {
         const vacationReportCalendarMenuItem: NbMenuItem = new NbMenuItem();
         vacationReportCalendarMenuItem.title = 'График пересечений';
         vacationReportCalendarMenuItem.link = 'app/vacation/report/calendar';
+
 
         vacationReportMenuItem.children.push(vacationReportDistributedMenuItem,
             vacationReportCalendarMenuItem);
@@ -199,7 +204,9 @@ export class PagesComponent implements OnInit {
                    }
 
                    if (account.accessVacationAdmin || account.accessVacationDepEdit) {
-                       vacationMenuItem.children.push(vacationSetMenuItem, vacationReportMenuItem);
+                       vacationMenuItem.children.push(vacationSetMenuItem,
+                           reportExportMenuItem,
+                           vacationReportMenuItem);
                    }
                 });
         }

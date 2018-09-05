@@ -25,10 +25,16 @@ export class ReportFilterComponent implements OnInit {
     maxMonth: number = 0;
 
     @Input()
+    actionTitle: string = 'Поиск';
+
+    @Input()
     pipeCharts: boolean = false;
 
     @Input()
     selectAllDepartments: boolean = false;
+
+    @Input()
+    multiSelectDepartment: boolean = true;
 
     @Input()
     departments: DepartmentModel[] = [];
@@ -59,8 +65,16 @@ export class ReportFilterComponent implements OnInit {
 
     }
 
-    selectDepartment(multiSelect: any) {
+    selectDepartments(multiSelect: any) {
         this.filterModel.selectedDepartments = multiSelect.value;
+        if (this.onChangeFilter) {
+            this.onChangeFilter.emit(this.filterModel);
+        }
+    }
+
+    selectDepartment(selected: any) {
+        this.filterModel.selectedDepartments = [];
+        this.filterModel.selectedDepartment = selected.value;
         if (this.onChangeFilter) {
             this.onChangeFilter.emit(this.filterModel);
         }

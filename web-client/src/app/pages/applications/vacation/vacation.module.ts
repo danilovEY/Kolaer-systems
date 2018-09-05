@@ -14,6 +14,7 @@ import {VacationReportCalendarComponent} from './report/calendar/vacation-report
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {ReportFilterComponent} from './component/report-filter/report-filter.component';
 import {MultiSelectModule} from 'primeng/primeng';
+import {VacationExportComponent} from './report/export/vacation-export.component';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import {MultiSelectModule} from 'primeng/primeng';
         VacationDaysEditComponent,
         VacationReportCalendarComponent,
         VacationReportDistributeComponent,
-        ReportFilterComponent
+        ReportFilterComponent,
+        VacationExportComponent
     ],
     entryComponents: [
         VacationDateFromEditComponent,

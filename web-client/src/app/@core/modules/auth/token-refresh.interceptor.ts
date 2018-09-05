@@ -69,7 +69,7 @@ export class TokenRefreshInterceptor implements HttpInterceptor, AuthInterceptor
         if (this._authService.getToken()) {
             this._requestMap.forEach((value: HttpRequest<any>, key: Subscriber<any>) => {
                 const requestWithToken = value.clone({
-                    headers: value.headers.set('x-token', this._authService.getToken().token)
+                    headers: value.headers.append('x-token', this._authService.getToken().token)
                 });
 
                 this.repeatRequest(requestWithToken, key);

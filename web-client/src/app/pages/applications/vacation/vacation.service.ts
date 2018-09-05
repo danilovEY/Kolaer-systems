@@ -17,6 +17,7 @@ import {VacationReportDistributeModel} from './model/vacation-report-distribute.
 import {GenerateReportDistributeRequestModel} from './model/generate-report-distribute-request.model';
 import {VacationBalanceModel} from './model/vacation-balance.model';
 import {FindVacationBalanceRequestModel} from './model/find-vacation-balance-request.model';
+import {GenerateReportExportRequestModel} from './model/generate-report-export-request.model';
 
 @Injectable()
 export class VacationService extends BaseService {
@@ -26,6 +27,7 @@ export class VacationService extends BaseService {
     private readonly FIND_VACATION_BALANCE_URL = `${this.VACATION_URL}/balance`;
     private readonly GENERATE_REPORT_CALENDAR_URL = `${this.VACATION_URL}/report/calendar`;
     private readonly GENERATE_REPORT_DISTRIBUTE_URL = `${this.VACATION_URL}/report/distribute`;
+    private readonly GENERATE_REPORT_EXPORT_URL = `${this.VACATION_URL}/report/export`;
     private readonly CALCULATE_DAYS_VACATION_URL = `${this.VACATION_URL}/calculate/days`;
     private readonly CALCULATE_DATE_VACATION_URL = `${this.VACATION_URL}/calculate/date`;
 
@@ -69,6 +71,18 @@ export class VacationService extends BaseService {
             .append('to', Utils.getDateToSend(request.to));
 
         return this.http.get<VacationReportDistributeModel>(this.GENERATE_REPORT_DISTRIBUTE_URL, {params: params});
+    }
+
+    public generateUrlForVacationReportExport(request: GenerateReportExportRequestModel): Observable<any> {
+        const params: HttpParams = new HttpParams()
+            .append('departmentId', request.departmentId.toString())
+            .append('from', Utils.getDateToSend(request.from))
+            .append('to', Utils.getDateToSend(request.to));
+
+        return this.http.get(this.GENERATE_REPORT_EXPORT_URL, {
+            responseType: 'blob',
+            params: params
+        });
     }
 
     public getPeriods(): Observable<Page<VacationPeriodModel>> {

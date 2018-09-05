@@ -22,7 +22,7 @@ export class TokenApplyInterceptor implements HttpInterceptor, AuthInterceptor {
         }
 
         const authReq = req.clone({
-            headers: req.headers.set('x-token', this._authService.getToken().token)
+            headers: req.headers.append('x-token', this._authService.getToken().token)
         });
 
         return next.handle(authReq);

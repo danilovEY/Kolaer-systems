@@ -25,7 +25,6 @@ import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
@@ -387,11 +386,7 @@ public class VacationServiceImpl implements VacationService {
             throw new UnexpectedRequestParams("Не задано подразделение");
         }
 
-        try {
-            return generateReportForVacationService.generateReportExtort(request, response);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return generateReportForVacationService.generateReportExtort(request, response);
     }
 
     private VacationReportDistributeDto createReportDistributeLineValues(VacationReportDistributeDto vacationReportDistributeDto,
