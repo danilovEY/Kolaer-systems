@@ -55,7 +55,7 @@ export class VacationExportComponent implements OnInit {
                         .subscribe(depPage => this.departments = depPage.data);
                 } else {
                     this.employeeService.getCurrentEmployee()
-                        .subscribe(employee => this.filterModel.selectedDepartments = [employee.department]);
+                        .subscribe(employee => this.filterModel.selectedDepartment = employee.department);
                 }
             });
     }
