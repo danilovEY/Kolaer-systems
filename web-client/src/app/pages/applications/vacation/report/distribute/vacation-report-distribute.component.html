@@ -3,6 +3,7 @@
         <report-filter [pipeCharts]="true"
                        [(filterModel)]="filterModel"
                        [selectAllDepartments]="true"
+                       [calculateIntersections]="true"
                        [departments]="departments"
                        (onChangeFilter)="changeFilter($event)"
                        (onAcceptFilter)="generateReportDistribute($event)">
@@ -33,6 +34,8 @@
                         xAxisLabel="Месяцы"
                         yAxisLabel="Количество сотрудников">
                 </ngx-charts-line-chart>
+
+                <button (click)="svgSaver.asPng()">PNG</button>
             </nb-card-body>
         </nb-card>
     </div>

@@ -9,6 +9,8 @@ import java.util.List;
 
 @Data
 public class FindVacationByDepartmentRequest {
+    private List<Long> typeWorkIds = Collections.emptyList();
+    private List<Long> postIds = Collections.emptyList();
     private List<Long> departmentIds = Collections.emptyList();
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

@@ -4,6 +4,7 @@ import {NgbDate} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date';
 import {ToasterConfig, ToasterService} from 'angular2-toaster';
 import {NgbCalendar, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {ReportFilterModel} from '../../model/report-filter.model';
+import {SelectItem} from 'primeng/api';
 
 @Component({
     selector: 'report-filter',
@@ -11,6 +12,8 @@ import {ReportFilterModel} from '../../model/report-filter.model';
     styleUrls: ['./report-filter.component.scss']
 })
 export class ReportFilterComponent implements OnInit {
+    protected readonly TYPE_SELECTED_PERIOD_CUSTOM = 'custom';
+    protected readonly TYPE_SELECTED_PERIOD_YEAR = 'year';
     @Input()
     @Output()
     filterModel: ReportFilterModel = new ReportFilterModel();
@@ -31,6 +34,9 @@ export class ReportFilterComponent implements OnInit {
     pipeCharts: boolean = false;
 
     @Input()
+    calculateIntersections: boolean = false;
+
+    @Input()
     selectAllDepartments: boolean = false;
 
     @Input()
@@ -43,6 +49,11 @@ export class ReportFilterComponent implements OnInit {
 
     fromDate: NgbDate;
     toDate: NgbDate;
+
+    periodRadioModel = 'year';
+
+    years: SelectItem[] = [];
+    selectedYear: number;
 
 
     config: ToasterConfig = new ToasterConfig({
@@ -59,10 +70,42 @@ export class ReportFilterComponent implements OnInit {
                 private calendar: NgbCalendar) {
         this.fromDate = calendar.getToday();
         this.toDate = calendar.getNext(calendar.getToday(), 'd', 3);
+
+        const currentYear = new Date().getFullYear();
+
+        this.years.push(
+            { label: String(currentYear + 1), value: String(currentYear + 1)},
+            { label: String(currentYear), value: String(currentYear)},
+            { label: String(currentYear - 1), value: String(currentYear - 1)}
+        );
     }
 
     ngOnInit() {
+        this.selectYear(this.years[1]);
+    }
 
+    setPeriodRadioModel(value: any) {
+        this.periodRadioModel = value.srcElement.value;
+
+        if (this.periodRadioModel === this.TYPE_SELECTED_PERIOD_CUSTOM) {
+
+        } else if (this.periodRadioModel === this.TYPE_SELECTED_PERIOD_YEAR) {
+
+        }
+    }
+
+    selectYear(selected: any) {
+        this.selectedYear = selected.value;
+
+        this.fromDate = NgbDate.from({year: this.selectedYear, month: 2, day: 1});
+        this.toDate = NgbDate.from({year: this.selectedYear, month: 12, day: 31});
+
+        this.filterModel.from = this.convertToDate(this.fromDate);
+        this.filterModel.to = this.convertToDate(this.toDate);
+
+        if (this.onChangeFilter) {
+            this.onChangeFilter.emit(this.filterModel);
+        }
     }
 
     selectDepartments(multiSelect: any) {
@@ -109,6 +152,13 @@ export class ReportFilterComponent implements OnInit {
 
     onPipeCharts(selected: Event) {
         this.filterModel.pipeCharts = selected.returnValue;
+        if (this.onChangeFilter) {
+            this.onChangeFilter.emit(this.filterModel);
+        }
+    }
+
+    onCalculateIntersections(selected: Event) {
+        this.filterModel.calculateIntersections = selected.returnValue;
         if (this.onChangeFilter) {
             this.onChangeFilter.emit(this.filterModel);
         }

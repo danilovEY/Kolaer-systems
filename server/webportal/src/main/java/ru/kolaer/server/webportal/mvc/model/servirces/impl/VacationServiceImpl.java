@@ -359,7 +359,8 @@ public class VacationServiceImpl implements VacationService {
             FindEmployeeByDepartment findEmployeeByDepartment = new FindEmployeeByDepartment();
             findEmployeeByDepartment.setDepartmentIds(request.getDepartmentIds());
 
-            for (CountEmployeeInDepartmentDto countEmployeeInDepartmentDto : employeeDao.findEmployeeByDepartmentCount(findEmployeeByDepartment)) {
+            for (CountEmployeeInDepartmentDto countEmployeeInDepartmentDto : employeeDao
+                    .findEmployeeByDepartmentCount(findEmployeeByDepartment)) {
                 result = createReportDistributeLineValues(result,
                         countEmployeeInDepartmentDto.getDepartmentId(),
                         countEmployeeInDepartmentDto.getDepartmentName(),
@@ -404,7 +405,7 @@ public class VacationServiceImpl implements VacationService {
 
         vacationReportDistributeDto.getLineValues().add(vacationReport);
 
-        if(request.isAddPipes()) {
+        if (request.isAddPipesForVacation()) {
             VacationReportDistributePipeDto pipeDto = new VacationReportDistributePipeDto();
             pipeDto.setName(vacationReport.getName());
             pipeDto.setTotalValue(totalValue);
@@ -428,21 +429,74 @@ public class VacationServiceImpl implements VacationService {
         List<VacationReportDistributeLineValueDto> result = new ArrayList<>();
 
         for (Pair<LocalDate, LocalDate> fromToPair : calculateFromToDates(request.getFrom(), request.getTo(), request.getSplitType())) {
-            FindVacationByDepartmentRequest findVacation = new FindVacationByDepartmentRequest();
-            findVacation.setDepartmentIds(depId != null ? Collections.singletonList(depId) : Collections.emptyList());
-            findVacation.setFrom(fromToPair.getKey());
-            findVacation.setTo(fromToPair.getValue());
+            long count = 0;
 
-            long countVacation = vacationDao.findCountVacation(findVacation);
+            if (request.isCalculateIntersections()) {
+                GenerateReportDistributeRequest findVacations = new GenerateReportDistributeRequest();
+                findVacations.setDepartmentIds(depId != null ? Collections.singletonList(depId) : Collections.emptyList());
+                findVacations.setPostIds(request.getPostIds());
+                findVacations.setTypeWorkIds(request.getTypeWorkIds());
+                findVacations.setFrom(fromToPair.getKey());
+                findVacations.setTo(fromToPair.getValue());
+
+                count = calculateVacation(request.getSplitType(),
+                        fromToPair.getKey(),
+                        fromToPair.getValue(),
+                        vacationDao.findAll(findVacations));
+            } else {
+                FindVacationByDepartmentRequest findVacation = new FindVacationByDepartmentRequest();
+                findVacation.setDepartmentIds(depId != null ? Collections.singletonList(depId) : Collections.emptyList());
+                findVacation.setPostIds(request.getPostIds());
+                findVacation.setTypeWorkIds(request.getTypeWorkIds());
+                findVacation.setFrom(fromToPair.getKey());
+                findVacation.setTo(fromToPair.getValue());
+
+                count = vacationDao.findCountVacation(findVacation);
+            }
 
             VacationReportDistributeLineValueDto lineValue = new VacationReportDistributeLineValueDto();
             lineValue.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
-            lineValue.setValue(countVacation);
+            lineValue.setValue(count);
 
             result.add(lineValue);
         }
 
         return result;
+    }
+
+    private long calculateVacation(GenerateReportDistributeSplitType splitType,
+                                   LocalDate from, LocalDate to,
+                                   List<VacationEntity> vacations) {
+        switch (splitType) {
+            case MONTHS:
+            default: return calculateVacationByMonth(vacations, from, to);
+        }
+    }
+
+    private long calculateVacationByMonth(List<VacationEntity> vacations, LocalDate from, LocalDate to) {
+        int maxCount = 0;
+
+        int maxIndex = to.getDayOfYear() - from.getDayOfYear();
+        LocalDate day = from;
+
+        for (int i = 0; i < maxIndex; i++) {
+            day = day.plusDays(i);
+
+            int dayCount = 0;
+
+            for (VacationEntity vacation : vacations) {
+                if (day.equals(vacation.getVacationFrom()) || day.equals(vacation.getVacationTo()) ||
+                        (day.isAfter(vacation.getVacationFrom()) && day.isBefore(vacation.getVacationTo()))) {
+                    dayCount += 1;
+                }
+            }
+
+            if (maxCount < dayCount) {
+                maxCount = dayCount;
+            }
+        }
+
+        return maxCount;
     }
 
     private List<VacationReportDistributeLineValueDto> createReportDistributeLineValues(GenerateReportDistributeRequest request) {

@@ -11,10 +11,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PostService;
 import ru.kolaer.server.webportal.mvc.model.servirces.TypeWorkService;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -37,17 +34,20 @@ public class EmployeeConverterImpl implements EmployeeConverter {
             return Collections.emptyList();
         }
 
-        List<Long> depIds = model.stream()
+        Set<Long> depIds = model.stream()
                 .map(EmployeeEntity::getDepartmentId)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
-        List<Long> postIds = model.stream()
+        Set<Long> postIds = model.stream()
                 .map(EmployeeEntity::getPostId)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
-        List<Long> typeWordIds = model.stream()
+        Set<Long> typeWordIds = model.stream()
                 .map(EmployeeEntity::getTypeWorkId)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
         Map<Long, PostDto> postMap = postService.getById(postIds)
                 .stream()

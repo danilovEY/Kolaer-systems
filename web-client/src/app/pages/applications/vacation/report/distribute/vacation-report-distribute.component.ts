@@ -13,6 +13,7 @@ import {EmployeeService} from '../../../../../@core/services/employee.service';
 import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {DepartmentModel} from '../../../../../@core/models/department.model';
+import SvgSaver from 'svgsaver';
 
 @Component({
     selector: 'vacation-report-distribute',
@@ -22,6 +23,8 @@ import {DepartmentModel} from '../../../../../@core/models/department.model';
 export class VacationReportDistributeComponent implements OnInit, OnDestroy {
     @ViewChild('filterElement')
     filterElement: ElementRef;
+
+    svgSaver = new SvgSaver();
 
     currentAccount: SimpleAccountModel;
 
@@ -77,7 +80,8 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
         if ((this.filterModel.selectedDepartments.length > 0 || this.filterModel.selectedAllDepartments)
             && this.filterModel.from && this.filterModel.to) {
             const request = new GenerateReportDistributeRequestModel();
-            request.addPipes = this.filterModel.pipeCharts;
+            request.calculateIntersections = this.filterModel.calculateIntersections;
+            request.addPipesForVacation = this.filterModel.pipeCharts;
             request.departmentIds = this.filterModel.selectedDepartments.map(dep => dep.id);
             request.allDepartment = this.filterModel.selectedAllDepartments;
             request.from = this.filterModel.from;

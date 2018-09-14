@@ -64,7 +64,8 @@ export class VacationService extends BaseService {
 
     public generateVacationReportDistribute(request: GenerateReportDistributeRequestModel): Observable<VacationReportDistributeModel> {
         const params: HttpParams = new HttpParams()
-            .append('addPipes', request.addPipes.toString())
+            .append('addPipesForVacation', request.addPipesForVacation.toString())
+            .append('calculateIntersections', request.calculateIntersections.toString())
             .append('allDepartment', request.allDepartment.toString())
             .append('departmentIds', request.departmentIds.toString())
             .append('from', Utils.getDateToSend(request.from))

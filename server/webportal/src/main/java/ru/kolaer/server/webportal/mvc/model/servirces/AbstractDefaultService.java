@@ -53,7 +53,7 @@ public abstract class AbstractDefaultService<T extends BaseDto,
 
     @Override
     @Transactional(readOnly = true)
-    public List<T> getById(List<Long> ids) {
+    public List<T> getById(Collection<Long> ids) {
         return defaultConverter.convertToDto(defaultEntityDao.findById(ids));
     }
 

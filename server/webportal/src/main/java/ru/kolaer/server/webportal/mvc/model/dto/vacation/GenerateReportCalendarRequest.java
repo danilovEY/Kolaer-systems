@@ -9,8 +9,11 @@ import java.util.List;
 
 @Data
 public class GenerateReportCalendarRequest {
+    private List<Long> typeWorkIds = Collections.emptyList();
+    private List<Long> postIds = Collections.emptyList();
     private List<Long> departmentIds = Collections.emptyList();
     private boolean allDepartment;
+
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate from;

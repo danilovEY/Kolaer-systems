@@ -6,6 +6,7 @@ import ru.kolaer.server.webportal.mvc.model.dto.FilterParam;
 import ru.kolaer.server.webportal.mvc.model.dto.PaginationRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.SortParam;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public interface DefaultService<T extends BaseDto> {
     List<T> getAll(SortParam sortParam, FilterParam filterParam);
 
     T getById(Long id);
-    List<T> getById(List<Long> ids);
+    List<T> getById(Collection<Long> ids);
 
     T save(T dto);
     List<T> save(List<T> dtos);

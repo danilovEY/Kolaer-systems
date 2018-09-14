@@ -9,9 +9,12 @@ import java.util.List;
 
 @Data
 public class GenerateReportDistributeRequest {
+    private List<Long> typeWorkIds = Collections.emptyList();
+    private List<Long> postIds = Collections.emptyList();
     private List<Long> departmentIds = Collections.emptyList();
     private boolean allDepartment;
-    private boolean addPipes;
+    private boolean addPipesForVacation;
+    private boolean calculateIntersections;
     private GenerateReportDistributeSplitType splitType = GenerateReportDistributeSplitType.MONTHS;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
