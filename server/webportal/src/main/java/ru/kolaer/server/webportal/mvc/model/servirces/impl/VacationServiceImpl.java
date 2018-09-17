@@ -353,9 +353,11 @@ public class VacationServiceImpl implements VacationService {
         result.setPipeValues(new ArrayList<>());
 
         if (request.isAllDepartment()) {
-            return createReportDistributeLineValues(result,
+            result = createReportDistributeLineValues(result,
                     null, "КолАЭР", employeeDao.findAllCount(), request);
-        } else {
+        }
+
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
             FindEmployeeByDepartment findEmployeeByDepartment = new FindEmployeeByDepartment();
             findEmployeeByDepartment.setDepartmentIds(request.getDepartmentIds());
 

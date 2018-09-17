@@ -13,7 +13,7 @@ import {EmployeeService} from '../../../../../@core/services/employee.service';
 import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {DepartmentModel} from '../../../../../@core/models/department.model';
-import SvgSaver from 'svgsaver';
+import html2canvas from 'html2canvas';
 
 @Component({
     selector: 'vacation-report-distribute',
@@ -24,7 +24,8 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
     @ViewChild('filterElement')
     filterElement: ElementRef;
 
-    svgSaver = new SvgSaver();
+    @ViewChild('chart')
+    chart: ElementRef;
 
     currentAccount: SimpleAccountModel;
 
@@ -98,5 +99,26 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.themeSubscription.unsubscribe();
+    }
+
+    downloadChart() {
+        const data = document.getElementById('chart');
+
+        html2canvas(data, {
+            logging: false
+        }).then(canvas => {
+            const imgWidth = 300;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            const contentDataURL = canvas.toDataURL('image/png');
+
+            const a = document.createElement('a');
+            document.body.appendChild(a);
+            a.setAttribute('style', 'display: none');
+            a.href = contentDataURL;
+            a.download = 'График распределений.png';
+            a.click();
+            window.URL.revokeObjectURL(contentDataURL);
+            a.remove();
+        });
     }
 }

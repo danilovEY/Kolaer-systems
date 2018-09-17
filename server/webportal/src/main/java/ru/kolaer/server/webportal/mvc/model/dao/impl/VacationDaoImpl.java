@@ -288,7 +288,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
             sqlQuery = sqlQuery.append(" WHERE employee.departmentId IN (:departmentIds) AND ");
             params.put("departmentIds", request.getDepartmentIds());
         } else {
-            sqlQuery = sqlQuery.append( "WHERE ");
+            sqlQuery = sqlQuery.append(" WHERE ");
         }
 
         if (!CollectionUtils.isEmpty(request.getPostIds())) {

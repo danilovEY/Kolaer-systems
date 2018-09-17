@@ -12,8 +12,9 @@ import {SelectItem} from 'primeng/api';
     styleUrls: ['./report-filter.component.scss']
 })
 export class ReportFilterComponent implements OnInit {
-    protected readonly TYPE_SELECTED_PERIOD_CUSTOM = 'custom';
-    protected readonly TYPE_SELECTED_PERIOD_YEAR = 'year';
+    public readonly TYPE_SELECTED_PERIOD_CUSTOM = 'custom';
+    public readonly TYPE_SELECTED_PERIOD_YEAR = 'year';
+
     @Input()
     @Output()
     filterModel: ReportFilterModel = new ReportFilterModel();
@@ -97,7 +98,7 @@ export class ReportFilterComponent implements OnInit {
     selectYear(selected: any) {
         this.selectedYear = selected.value;
 
-        this.fromDate = NgbDate.from({year: this.selectedYear, month: 2, day: 1});
+        this.fromDate = NgbDate.from({year: this.selectedYear, month: 1, day: 1});
         this.toDate = NgbDate.from({year: this.selectedYear, month: 12, day: 31});
 
         this.filterModel.from = this.convertToDate(this.fromDate);

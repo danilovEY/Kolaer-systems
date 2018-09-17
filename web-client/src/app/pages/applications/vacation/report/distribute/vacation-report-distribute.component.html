@@ -13,10 +13,10 @@
     <div class="col-12" *ngIf="vacationReportDistribute && vacationReportDistribute.lineValues.length > 0">
         <nb-card>
             <nb-card-header>
-                <span>График расспределений</span>
+                <span>График распределений</span>
             </nb-card-header>
 
-            <nb-card-body>
+            <nb-card-body id="chart">
                 <ngx-charts-line-chart
                         [scheme]="colorScheme"
                         [view]="lineView"
@@ -28,15 +28,18 @@
                         [legend]="true"
                         [timeline]="false"
                         [autoScale]="true"
+                        [showGridLines]="true"
                         [showXAxisLabel]="false"
                         [showYAxisLabel]="true"
                         legendTitle="Подразделения"
                         xAxisLabel="Месяцы"
                         yAxisLabel="Количество сотрудников">
                 </ngx-charts-line-chart>
-
-                <button (click)="svgSaver.asPng()">PNG</button>
             </nb-card-body>
+
+            <nb-card-footer>
+                <button class="btn btn-success" (click)="downloadChart()">Скачать график</button>
+            </nb-card-footer>
         </nb-card>
     </div>
 
