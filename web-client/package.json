@@ -1,6 +1,6 @@
 {
   "name": "kolaer-web-client",
-  "version": "0.8.8",
+  "version": "0.8.10",
   "scripts": {
     "ng": "ng",
     "conventional-changelog": "conventional-changelog",
