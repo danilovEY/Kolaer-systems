@@ -84,7 +84,7 @@ public class GenerateReportForOldDbService implements UpdatableEmployeeService {
             createCells(row, allActualEmployees.get(rowIndex));
         }
 
-        UploadFileEntity uploadFileEntity = this.uploadFileService.createFile("oldDbReport", "users_1c.xls", false);
+        UploadFileEntity uploadFileEntity = this.uploadFileService.createFile("oldDbReport", "users_1c.xls", true, true, true);
         String absolutePath = this.uploadFileService.getAbsolutePath(uploadFileEntity);
 
         File file = new File(absolutePath);
