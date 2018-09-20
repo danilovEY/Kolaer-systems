@@ -18,6 +18,8 @@ import {GenerateReportDistributeRequestModel} from './model/generate-report-dist
 import {VacationBalanceModel} from './model/vacation-balance.model';
 import {FindVacationBalanceRequestModel} from './model/find-vacation-balance-request.model';
 import {GenerateReportExportRequestModel} from './model/generate-report-export-request.model';
+import {GenerateReportTotalCountRequestModel} from './model/generate-report-total-count-request.model';
+import {VacationReportPipeModel} from './model/vacation-report-pipe.model';
 
 @Injectable()
 export class VacationService extends BaseService {
@@ -27,6 +29,7 @@ export class VacationService extends BaseService {
     private readonly FIND_VACATION_BALANCE_URL = `${this.VACATION_URL}/balance`;
     private readonly GENERATE_REPORT_CALENDAR_URL = `${this.VACATION_URL}/report/calendar`;
     private readonly GENERATE_REPORT_DISTRIBUTE_URL = `${this.VACATION_URL}/report/distribute`;
+    private readonly GENERATE_REPORT_TOTAL_COUNT_URL = `${this.VACATION_URL}/report/total-count`;
     private readonly GENERATE_REPORT_EXPORT_URL = `${this.VACATION_URL}/report/export`;
     private readonly CALCULATE_DAYS_VACATION_URL = `${this.VACATION_URL}/calculate/days`;
     private readonly CALCULATE_DATE_VACATION_URL = `${this.VACATION_URL}/calculate/date`;
@@ -72,6 +75,17 @@ export class VacationService extends BaseService {
             .append('to', Utils.getDateToSend(request.to));
 
         return this.http.get<VacationReportDistributeModel>(this.GENERATE_REPORT_DISTRIBUTE_URL, {params: params});
+    }
+
+    public generateVacationReportTotalCount(request: GenerateReportTotalCountRequestModel):
+    Observable<VacationReportPipeModel[]> {
+        const params: HttpParams = new HttpParams()
+            .append('allDepartment', request.allDepartment.toString())
+            .append('departmentIds', request.departmentIds.toString())
+            .append('from', Utils.getDateToSend(request.from))
+            .append('to', Utils.getDateToSend(request.to));
+
+        return this.http.get<VacationReportPipeModel[]>(this.GENERATE_REPORT_TOTAL_COUNT_URL, {params: params});
     }
 
     public generateUrlForVacationReportExport(request: GenerateReportExportRequestModel): Observable<any> {

@@ -96,6 +96,13 @@ public class VacationController {
         return vacationService.generateReportDistribute(request);
     }
 
+    @ApiOperation(value = "Сгенерировать отчет для соотношений")
+    @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
+    @RequestMapping(value = "/report/total-count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<VacationReportPipeDto> generateVacationReportTotalCount(@ModelAttribute GenerateReportTotalCountRequest request) {
+        return vacationService.generateReportTotalCount(request);
+    }
+
     @ApiOperation(value = "Сгенерировать отчет в эксель")
     @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
     @RequestMapping(value = "/report/export", method = RequestMethod.GET)

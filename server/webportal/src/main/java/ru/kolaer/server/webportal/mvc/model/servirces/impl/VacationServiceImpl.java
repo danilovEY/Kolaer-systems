@@ -18,6 +18,7 @@ import ru.kolaer.server.webportal.mvc.model.dto.employee.CountEmployeeInDepartme
 import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeeByDepartment;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.vacation.*;
+import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.vacation.*;
@@ -375,6 +376,72 @@ public class VacationServiceImpl implements VacationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<VacationReportPipeDto> generateReportTotalCount(GenerateReportTotalCountRequest request) {
+        if (request.getFrom() == null || request.getTo() == null) {
+            throw new UnexpectedRequestParams("Не задан период");
+        }
+
+        if (request.getFrom().isAfter(request.getTo())) {
+            throw new UnexpectedRequestParams("Период не правильно задан");
+        }
+
+        if (CollectionUtils.isEmpty(request.getDepartmentIds()) && !request.isAllDepartment()) {
+            throw new UnexpectedRequestParams("Не задано подразделение");
+        }
+
+        List<VacationReportPipeDto> result = new ArrayList<>();
+
+        if (request.isAllDepartment()) {
+            VacationTotalCountEntity allVacationTotalCount = vacationDao.findAllVacationTotalCount(request);
+
+            VacationReportPipeDto reportPipeValueDto = new VacationReportPipeDto();
+            reportPipeValueDto.setName("КолАЭР");
+            reportPipeValueDto.setTotalValue(allVacationTotalCount.getTotalCountEmployeeOnDepartment());
+
+            VacationReportPipeValueDto reportPipeValueWithVacation = new VacationReportPipeValueDto();
+            reportPipeValueWithVacation.setName("Заданы отпуска");
+            reportPipeValueWithVacation.setValue(allVacationTotalCount.getTotalCountEmployeeWithBalance());
+
+            VacationReportPipeValueDto reportPipeValueWithOutVacation = new VacationReportPipeValueDto();
+            reportPipeValueWithOutVacation.setName("Не заданы отпуска");
+            reportPipeValueWithOutVacation.setValue(reportPipeValueDto.getTotalValue() - reportPipeValueWithVacation.getValue());
+
+            reportPipeValueDto.getSeries().add(reportPipeValueWithVacation);
+            reportPipeValueDto.getSeries().add(reportPipeValueWithOutVacation);
+
+            result.add(reportPipeValueDto);
+        }
+
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
+            Map<Long, DepartmentEntity> departmentMap = departmentDao.findById(request.getDepartmentIds())
+                    .stream()
+                    .collect(Collectors.toMap(DepartmentEntity::getId, Function.identity()));
+
+            for (VacationTotalCountDepartmentEntity vacationTotalCount : vacationDao.findVacationTotalCountDepartment(request)) {
+                VacationReportPipeDto reportPipeValueDto = new VacationReportPipeDto();
+                reportPipeValueDto.setName(departmentMap.get(vacationTotalCount.getDepartmentId()).getAbbreviatedName());
+                reportPipeValueDto.setTotalValue(vacationTotalCount.getTotalCountEmployeeOnDepartment());
+
+                VacationReportPipeValueDto reportPipeValueWithVacation = new VacationReportPipeValueDto();
+                reportPipeValueWithVacation.setName("Заданы отпуска");
+                reportPipeValueWithVacation.setValue(vacationTotalCount.getTotalCountEmployeeWithBalance());
+
+                VacationReportPipeValueDto reportPipeValueWithOutVacation = new VacationReportPipeValueDto();
+                reportPipeValueWithOutVacation.setName("Не заданы отпуска");
+                reportPipeValueWithOutVacation.setValue(reportPipeValueDto.getTotalValue() - reportPipeValueWithVacation.getValue());
+
+                reportPipeValueDto.getSeries().add(reportPipeValueWithVacation);
+                reportPipeValueDto.getSeries().add(reportPipeValueWithOutVacation);
+
+                result.add(reportPipeValueDto);
+            }
+        }
+
+        return result;
+    }
+
+    @Override
     @Transactional
     public ResponseEntity generateReportExport(GenerateReportExportRequest request, HttpServletResponse response) {
         if (request.getFrom() == null || request.getTo() == null) {
@@ -408,17 +475,16 @@ public class VacationServiceImpl implements VacationService {
         vacationReportDistributeDto.getLineValues().add(vacationReport);
 
         if (request.isAddPipesForVacation()) {
-            VacationReportDistributePipeDto pipeDto = new VacationReportDistributePipeDto();
+            VacationReportPipeDto pipeDto = new VacationReportPipeDto();
             pipeDto.setName(vacationReport.getName());
             pipeDto.setTotalValue(totalValue);
-            pipeDto.setValues(new ArrayList<>());
 
             for (VacationReportDistributeLineValueDto valueDto : vacationReport.getSeries()) {
-                VacationReportDistributePipeValueDto pipeValueDto = new VacationReportDistributePipeValueDto();
+                VacationReportPipeValueDto pipeValueDto = new VacationReportPipeValueDto();
                 pipeValueDto.setName(valueDto.getName());
                 pipeValueDto.setValue(valueDto.getValue());
 
-                pipeDto.getValues().add(pipeValueDto);
+                pipeDto.getSeries().add(pipeValueDto);
             }
 
             vacationReportDistributeDto.getPipeValues().add(pipeDto);

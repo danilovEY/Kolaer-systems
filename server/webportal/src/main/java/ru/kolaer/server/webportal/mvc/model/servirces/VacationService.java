@@ -28,5 +28,7 @@ public interface VacationService {
 
     VacationReportDistributeDto generateReportDistribute(GenerateReportDistributeRequest request);
 
+    List<VacationReportPipeDto> generateReportTotalCount(GenerateReportTotalCountRequest request);
+
     ResponseEntity generateReportExport(GenerateReportExportRequest request, HttpServletResponse response);
 }

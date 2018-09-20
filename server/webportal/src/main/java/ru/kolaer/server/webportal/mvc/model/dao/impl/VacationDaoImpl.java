@@ -172,12 +172,12 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
     }
 
     @Override
-    public VacationTotalCountEntity findAllVacationTotalCount(GenerateReportDistributeRequest request) {
+    public VacationTotalCountEntity findAllVacationTotalCount(GenerateReportTotalCountRequest request) {
         Map<String, Object> params = new HashMap<>();
 
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT new ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationTotalCountEntity(" +
-                        "COUNT(DISTINCT v.employee.id), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee)) ")
+                        "COUNT(DISTINCT v.employeeId), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee)) ")
                 .append("FROM ")
                 .append(getEntityName())
                 .append(" AS v LEFT JOIN VacationBalanceEntity AS vb ON v.employeeId = vb.employeeId");
@@ -191,23 +191,6 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
             sqlQuery = sqlQuery.append(" WHERE vb.currentYearBalance <= 0 AND");
         } else {
             sqlQuery = sqlQuery.append(" WHERE vb.prevYearBalance <= 0 AND");
-        }
-
-        if (!request.getDepartmentIds().isEmpty()) {
-            sqlQuery = sqlQuery.append(" WHERE v.employee.departmentId IN (:departmentIds) AND ");
-            params.put("departmentIds", request.getDepartmentIds());
-        } else {
-            sqlQuery = sqlQuery.append( "WHERE ");
-        }
-
-        if (!CollectionUtils.isEmpty(request.getPostIds())) {
-            sqlQuery = sqlQuery.append(" v.employee.postId IN (:postIds) AND ");
-            params.put("postIds", request.getPostIds());
-        }
-
-        if (!CollectionUtils.isEmpty(request.getTypeWorkIds())) {
-            sqlQuery = sqlQuery.append(" v.employee.typeWorkId IN (:typeWorkIds) AND ");
-            params.put("typeWorkIds", request.getTypeWorkIds());
         }
 
         sqlQuery = sqlQuery.append("((v.vacationFrom <= :vacationFrom AND v.vacationTo >= :vacationFrom OR " +
@@ -224,12 +207,12 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
     }
 
     @Override
-    public List<VacationTotalCountDepartmentEntity> findVacationTotalCountDepartment(GenerateReportDistributeRequest request) {
+    public List<VacationTotalCountDepartmentEntity> findVacationTotalCountDepartment(GenerateReportTotalCountRequest request) {
         Map<String, Object> params = new HashMap<>();
 
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT new ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationTotalCountDepartmentEntity(" +
-                        "v.employee.departmentId, COUNT(DISTINCT v.employee.id), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee WHERE ee.departmentId = v.employee.departmentId)) ")
+                        "v.employee.departmentId, COUNT(DISTINCT v.employeeId), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee WHERE ee.departmentId = v.employee.departmentId)) ")
                 .append("FROM ")
                 .append(getEntityName())
                 .append(" AS v LEFT JOIN VacationBalanceEntity AS vb ON v.employeeId = vb.employeeId");
@@ -246,10 +229,8 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
         }
 
         if (!request.getDepartmentIds().isEmpty()) {
-            sqlQuery = sqlQuery.append(" WHERE v.employee.departmentId IN (:departmentIds) AND ");
+            sqlQuery = sqlQuery.append(" v.employee.departmentId IN (:departmentIds) AND ");
             params.put("departmentIds", request.getDepartmentIds());
-        } else {
-            sqlQuery = sqlQuery.append( "WHERE ");
         }
 
         if (!CollectionUtils.isEmpty(request.getPostIds())) {

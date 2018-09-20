@@ -124,9 +124,14 @@ export class PagesComponent implements OnInit {
         vacationReportCalendarMenuItem.title = 'График пересечений';
         vacationReportCalendarMenuItem.link = 'app/vacation/report/calendar';
 
+        const vacationReportTotalCountMenuItem: NbMenuItem = new NbMenuItem();
+        vacationReportTotalCountMenuItem.title = 'График соотношений';
+        vacationReportTotalCountMenuItem.link = 'app/vacation/report/total-count';
+
 
         vacationReportMenuItem.children.push(vacationReportDistributedMenuItem,
-            vacationReportCalendarMenuItem);
+            vacationReportCalendarMenuItem,
+            vacationReportTotalCountMenuItem);
 
         vacationMenuItem.children.push(vacationMainMenuItem);
 

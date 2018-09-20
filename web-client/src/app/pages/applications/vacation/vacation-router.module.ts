@@ -7,6 +7,7 @@ import {VacationReportCalendarComponent} from './report/calendar/vacation-report
 import {VacationGuardService} from '../../../@core/modules/auth/vacation-guard.service';
 import {VacationReportDistributeComponent} from './report/distribute/vacation-report-distribute.component';
 import {VacationExportComponent} from './report/export/vacation-export.component';
+import {VacationReportTotalCountComponent} from './report/total-count/vacation-report-total-count.component';
 
 const routers: Routes = [
     {
@@ -31,6 +32,11 @@ const routers: Routes = [
     {
         path: 'report/distribute',
         component: VacationReportDistributeComponent,
+        canActivate: [VacationGuardService]
+    },
+    {
+        path: 'report/total-count',
+        component: VacationReportTotalCountComponent,
         canActivate: [VacationGuardService]
     },
     {

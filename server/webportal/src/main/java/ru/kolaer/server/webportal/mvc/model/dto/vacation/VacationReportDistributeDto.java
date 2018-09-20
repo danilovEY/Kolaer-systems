@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 public class VacationReportDistributeDto {
     private List<VacationReportDistributeLineDto> lineValues = Collections.emptyList();
-    private List<VacationReportDistributePipeDto> pipeValues = Collections.emptyList();
+    private List<VacationReportPipeDto> pipeValues = Collections.emptyList();
     private long maxSize;
 }

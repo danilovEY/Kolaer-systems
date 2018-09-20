@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-12" #filterElement>
+        <report-filter [pipeCharts]="false"
+                       [(filterModel)]="filterModel"
+                       [selectAllDepartments]="true"
+                       [calculateIntersections]="false"
+                       [departments]="departments"
+                       (onChangeFilter)="changeFilter($event)"
+                       (onAcceptFilter)="generateReportDistribute($event)">
+        </report-filter>
+    </div>
+
+    <div class="col-12" *ngIf="vacationReportPipes && vacationReportPipes.length > 0">
+        <nb-card>
+            <nb-card-header>
+                <span>График соотношений</span>
+            </nb-card-header>
+
+            <nb-card-body id="chart">
+                <ngx-charts-bar-vertical-normalized
+                        [scheme]="colorScheme"
+                        [view]="pipeView"
+                        [results]="vacationReportPipes"
+                        [xAxis]="true"
+                        [yAxis]="true"
+                        [gradient]="false"
+                        [animations]="false"
+                        [legend]="true"
+                        [showGridLines]="true"
+                        [showXAxisLabel]="false"
+                        [showYAxisLabel]="false"
+                        legendTitle="Значения"
+                        xAxisLabel="Подразделения">
+                </ngx-charts-bar-vertical-normalized>
+            </nb-card-body>
+
+            <nb-card-footer>
+                <!--<button class="btn btn-success" (click)="downloadChart()">Скачать график</button>-->
+            </nb-card-footer>
+        </nb-card>
+    </div>
+</div>
