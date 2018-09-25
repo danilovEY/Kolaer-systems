@@ -12,6 +12,7 @@ import {EmployeeService} from '../../../../../@core/services/employee.service';
 import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {DepartmentModel} from '../../../../../@core/models/department.model';
+import * as html2canvas from 'html2canvas';
 
 @Component({
     selector: 'vacation-report',
@@ -112,5 +113,32 @@ export class VacationReportCalendarComponent implements OnInit {
                     this.updateReportCalendarColumns();
                 });
         }
+    }
+
+    downloadCalendarChart() {
+        this.downloadElement(document.getElementById('calendarChart'), 'calendar_sootnoshenij.png');
+    }
+
+    private downloadElement(data: HTMLElement, name: string): void {
+        // const h = data;
+        // data[0].nativeElement.defaultView.innerWidth = data.offsetWidth;
+
+        html2canvas(data, {
+            allowTaint: true,
+            logging: false
+        }).then(canvas => {
+            const contentDataURL = canvas.toDataURL('image/png');
+
+            // data[0].nativeElement.defaultView.innerWidth = h;
+
+            const a = document.createElement('a');
+            document.body.appendChild(a);
+            a.setAttribute('style', 'display: none');
+            a.href = contentDataURL;
+            a.download = name;
+            a.click();
+            window.URL.revokeObjectURL(contentDataURL);
+            a.remove();
+        });
     }
 }

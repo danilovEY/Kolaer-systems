@@ -20,8 +20,8 @@
                 <h1>Отпусков в этот период нет</h1>
             </nb-card-body>
 
-            <nb-card-body *ngIf="vacationReportCalendarData.length > 0" >
-                <p-table [value]="vacationReportCalendarData" [scrollable]="true" scrollHeight="500px">
+            <nb-card-body *ngIf="vacationReportCalendarData.length > 0">
+                <p-table [value]="vacationReportCalendarData" [scrollable]="true" scrollHeight="500px" id="calendarChart">
                     <ng-template pTemplate="header">
                         <!--<tr>-->
                             <!--<th rowspan="3" style="width:100px">Сотрудник</th>-->
@@ -103,6 +103,9 @@
                     </ng-template>
                 </p-table>
             </nb-card-body>
+            <nb-card-footer>
+                <!--<button class="btn btn-success" (click)="downloadCalendarChart()">Скачать график</button>-->
+            </nb-card-footer>
         </nb-card>
     </div>
 </div>

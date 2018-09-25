@@ -16,7 +16,7 @@
                 <span>График соотношений</span>
             </nb-card-header>
 
-            <nb-card-body id="chart">
+            <nb-card-body id="barChart">
                 <ngx-charts-bar-vertical-normalized
                         [scheme]="colorScheme"
                         [view]="pipeView"
@@ -35,7 +35,7 @@
             </nb-card-body>
 
             <nb-card-footer>
-                <!--<button class="btn btn-success" (click)="downloadChart()">Скачать график</button>-->
+                <button class="btn btn-success" (click)="downloadBarChart()">Скачать график</button>
             </nb-card-footer>
         </nb-card>
     </div>

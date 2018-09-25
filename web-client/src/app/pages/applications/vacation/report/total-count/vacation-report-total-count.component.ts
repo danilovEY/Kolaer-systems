@@ -13,6 +13,7 @@ import {DepartmentFilterModel} from '../../../../../@core/models/department-filt
 import {DepartmentSortModel} from '../../../../../@core/models/department-sort.model';
 import {SortTypeEnum} from '../../../../../@core/models/sort-type.enum';
 import {GenerateReportTotalCountRequestModel} from '../../model/generate-report-total-count-request.model';
+import * as html2canvas from 'html2canvas';
 
 @Component({
     selector: 'vacation-report-total-count',
@@ -88,6 +89,30 @@ export class VacationReportTotalCountComponent implements OnInit, OnDestroy {
                     this.pipeView[0] = this.filterElement.nativeElement.offsetWidth - 70;
                 });
         }
+    }
+
+    downloadBarChart() {
+        this.downloadElement(document.getElementById('barChart'), 'grafik_sootnoshenij.png');
+    }
+
+    private downloadElement(data: HTMLElement, name: string): void {
+        html2canvas(data, {
+            allowTaint: true,
+            logging: false
+        }).then(canvas => {
+            const imgWidth = 300;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            const contentDataURL = canvas.toDataURL('image/png');
+
+            const a = document.createElement('a');
+            document.body.appendChild(a);
+            a.setAttribute('style', 'display: none');
+            a.href = contentDataURL;
+            a.download = name;
+            a.click();
+            window.URL.revokeObjectURL(contentDataURL);
+            a.remove();
+        });
     }
 
     ngOnDestroy(): void {
