@@ -13,7 +13,7 @@ import {EmployeeService} from '../../../../../@core/services/employee.service';
 import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {DepartmentModel} from '../../../../../@core/models/department.model';
-import html2canvas from 'html2canvas';
+import SvgSaver from 'svgsaver';
 
 @Component({
     selector: 'vacation-report-distribute',
@@ -26,6 +26,8 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
 
     @ViewChild('chart')
     chart: ElementRef;
+
+    private svgSaver = new SvgSaver();
 
     currentAccount: SimpleAccountModel;
 
@@ -101,24 +103,32 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
         this.themeSubscription.unsubscribe();
     }
 
-    downloadChart() {
-        const data = document.getElementById('chart');
+    downloadLineChart() {
+        this.downloadElement(document.getElementById('lineChart'), 'grafik_raspredelenij.png');
+    }
 
-        html2canvas(data, {
-            logging: false
-        }).then(canvas => {
-            const imgWidth = 300;
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            const contentDataURL = canvas.toDataURL('image/png');
+    downloadPipeChart() {
+        this.downloadElement(document.getElementById('pipeChart'), 'procentnoe_sootnoshenie.png');
+    }
 
-            const a = document.createElement('a');
-            document.body.appendChild(a);
-            a.setAttribute('style', 'display: none');
-            a.href = contentDataURL;
-            a.download = 'График распределений.png';
-            a.click();
-            window.URL.revokeObjectURL(contentDataURL);
-            a.remove();
-        });
+    private downloadElement(data: HTMLElement, name: string): void {
+        this.svgSaver.asPng(data, name);
+        // html2canvas(data, {
+        //     allowTaint: true,
+        //     logging: false
+        // }).then(canvas => {
+        //     const imgWidth = 300;
+        //     const imgHeight = canvas.height * imgWidth / canvas.width;
+        //     const contentDataURL = canvas.toDataURL('image/png');
+        //
+        //     const a = document.createElement('a');
+        //     document.body.appendChild(a);
+        //     a.setAttribute('style', 'display: none');
+        //     a.href = contentDataURL;
+        //     a.download = name;
+        //     a.click();
+        //     window.URL.revokeObjectURL(contentDataURL);
+        //     a.remove();
+        // });
     }
 }

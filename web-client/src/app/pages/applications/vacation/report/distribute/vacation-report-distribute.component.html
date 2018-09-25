@@ -16,7 +16,7 @@
                 <span>График распределений</span>
             </nb-card-header>
 
-            <nb-card-body id="chart">
+            <nb-card-body id="lineChart">
                 <ngx-charts-line-chart
                         [scheme]="colorScheme"
                         [view]="lineView"
@@ -38,7 +38,7 @@
             </nb-card-body>
 
             <nb-card-footer>
-                <button class="btn btn-success" (click)="downloadChart()">Скачать график</button>
+                <button class="btn btn-success" (click)="downloadLineChart()">Скачать график</button>
             </nb-card-footer>
         </nb-card>
     </div>
@@ -50,7 +50,7 @@
                     <span>Процентное соотношение для {{ pipeModel.name }}</span>
                 </nb-card-header>
 
-                <nb-card-body>
+                <nb-card-body id="pipeChart">
                     <ngx-charts-pie-grid [results]="pipeModel.series"
                                          [view]="pipeView"
                                          label="Сотрудников"
@@ -58,6 +58,10 @@
                                          [designatedTotal]="pipeModel.totalValue">
                     </ngx-charts-pie-grid>
                 </nb-card-body>
+
+                <nb-card-footer>
+                    <button class="btn btn-success" (click)="downloadPipeChart()">Скачать график</button>
+                </nb-card-footer>
             </nb-card>
         </div>
     </div>
