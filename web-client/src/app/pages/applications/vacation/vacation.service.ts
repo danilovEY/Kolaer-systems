@@ -10,7 +10,6 @@ import {VacationCalculateModel} from './model/vacation-calculate.model';
 import {VacationCalculateDaysRequestModel} from './model/vacation-calculate-days-request.model';
 import {VacationCalculateDateRequestModel} from './model/vacation-calculate-date-request.model';
 import {VacationPeriodModel} from './model/vacation-period.model';
-import {VacationReportCalendarEmployeeModel} from './model/vacation-report-calendar-employee.model';
 import {GenerateReportCalendarRequestModel} from './model/generate-report-calendar-request.model';
 import {Utils} from '../../../@core/utils/utils';
 import {VacationReportDistributeModel} from './model/vacation-report-distribute.model';
@@ -55,14 +54,17 @@ export class VacationService extends BaseService {
         return this.http.get<VacationBalanceModel>(this.FIND_VACATION_BALANCE_URL, {params: params});
     }
 
-    public generateVacationReportCalendar(request: GenerateReportCalendarRequestModel): Observable<VacationReportCalendarEmployeeModel[]> {
+    public generateVacationReportCalendar(request: GenerateReportCalendarRequestModel): Observable<any> {
         const params: HttpParams = new HttpParams()
             .append('allDepartment', request.allDepartment.toString())
             .append('departmentIds', request.departmentIds.toString())
             .append('from', Utils.getDateToSend(request.from))
             .append('to', Utils.getDateToSend(request.to));
 
-        return this.http.get<VacationReportCalendarEmployeeModel[]>(this.GENERATE_REPORT_CALENDAR_URL, {params: params});
+        return this.http.get(this.GENERATE_REPORT_CALENDAR_URL, {
+            responseType: 'blob',
+            params: params
+        });
     }
 
     public generateVacationReportDistribute(request: GenerateReportDistributeRequestModel): Observable<VacationReportDistributeModel> {

@@ -10,6 +10,7 @@ import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.vacation.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
+import ru.kolaer.server.webportal.mvc.model.servirces.impl.GenerateCalendarReportForVacationService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -20,9 +21,12 @@ import java.util.List;
 @Slf4j
 public class VacationController {
     private final VacationService vacationService;
+    private final GenerateCalendarReportForVacationService generateCalendarReportForVacationService;
 
-    public VacationController(VacationService vacationService) {
+    public VacationController(VacationService vacationService,
+                              GenerateCalendarReportForVacationService generateCalendarReportForVacationService) {
         this.vacationService = vacationService;
+        this.generateCalendarReportForVacationService = generateCalendarReportForVacationService;
     }
 
     @ApiOperation(value = "Получить отпуска")
@@ -85,8 +89,8 @@ public class VacationController {
     @ApiOperation(value = "Сгенерировать отчет для календаря")
     @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
     @RequestMapping(value = "/report/calendar", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<VacationReportCalendarEmployeeDto> generateVacationReportCalendar(@ModelAttribute GenerateReportCalendarRequest request) {
-        return vacationService.generateReportCalendar(request);
+    public ResponseEntity generateVacationReportCalendar(@ModelAttribute GenerateReportCalendarRequest request, HttpServletResponse response) {
+        return generateCalendarReportForVacationService.generateCalendarReportExtort(request, response);
     }
 
     @ApiOperation(value = "Сгенерировать отчет для распределения")

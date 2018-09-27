@@ -55,7 +55,8 @@
                     <div class="col-12">
                         <div *ngIf="departments.length > 0">
                             <label>Подразделение:</label>
-                            <p-multiSelect *ngIf="multiSelectDepartment" [options]="departments"
+                            <p-multiSelect *ngIf="multiSelectDepartment"
+                                           [options]="departments"
                                            [style]="{'width':'100%'}"
                                            [ngModel]="filterModel.selectedDepartments"
                                            defaultLabel="Выберите подразделение..."
@@ -64,13 +65,15 @@
                                            optionLabel="abbreviatedName">
                             </p-multiSelect>
 
-                            <p-dropdown *ngIf="!multiSelectDepartment" [options]="departments"
-                                           [style]="{'width':'100%'}"
-                                           [ngModel]="filterModel.selectedDepartment"
-                                           placeholder="Выберите подразделение..."
-                                           (onChange)="selectDepartment($event)"
-                                           appendTo="body"
-                                           optionLabel="abbreviatedName">
+                            <p-dropdown *ngIf="!multiSelectDepartment"
+                                        [options]="departments"
+                                        [style]="{'width':'100%'}"
+                                        [ngModel]="filterModel.selectedDepartment"
+                                        placeholder="Выберите подразделение..."
+                                        (onChange)="selectDepartment($event)"
+                                        appendTo="body"
+                                        filter="true"
+                                        optionLabel="abbreviatedName">
                             </p-dropdown>
                         </div>
                     </div>

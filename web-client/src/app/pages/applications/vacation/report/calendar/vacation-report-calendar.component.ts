@@ -13,6 +13,9 @@ import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {DepartmentModel} from '../../../../../@core/models/department.model';
 import * as html2canvas from 'html2canvas';
+import {VacationReportCalendarDayModel} from '../../model/vacation-report-calendar-day.model';
+import {Observable} from 'rxjs/Rx';
+import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 
 @Component({
     selector: 'vacation-report',
@@ -23,6 +26,9 @@ export class VacationReportCalendarComponent implements OnInit {
 
     vacationReportCalendarData: VacationReportCalendarEmployeeModel[];
 
+    widthColumn: number = 5;
+    scrollTable = true;
+
     columnYears: any[] = [];
     columnMonths: any[] = [];
     columnDays: string[] = [];
@@ -32,10 +38,21 @@ export class VacationReportCalendarComponent implements OnInit {
     currentAccount: SimpleAccountModel;
     departments: DepartmentModel[] = [];
 
+    config: ToasterConfig = new ToasterConfig({
+        positionClass: 'toast-top-right',
+        timeout: 5000,
+        newestOnTop: true,
+        tapToDismiss: true,
+        preventDuplicates: false,
+        animation: 'fade',
+        limit: 5,
+    });
+
     constructor(private vacationService: VacationService,
                 private departmentService: DepartmentService,
                 private accountService: AccountService,
                 private employeeService: EmployeeService,
+                private toasterService: ToasterService,
                 private titleService: Title) {
         this.titleService.setTitle('График пересечений');
     }
@@ -99,37 +116,62 @@ export class VacationReportCalendarComponent implements OnInit {
     }
 
     generateReportCalendar(filterModel: ReportFilterModel) {
-        if ((this.filterModel.selectedDepartments.length > 0 || this.filterModel.selectedAllDepartments)
+        if (this.filterModel.selectedDepartment != null
             && this.filterModel.from && this.filterModel.to) {
             const request = new GenerateReportCalendarRequestModel();
-            request.departmentIds = this.filterModel.selectedDepartments.map(dep => dep.id);
+            request.departmentIds = [this.filterModel.selectedDepartment.id];
             request.allDepartment = this.filterModel.selectedAllDepartments;
             request.from = this.filterModel.from;
             request.to = this.filterModel.to;
 
             this.vacationService.generateVacationReportCalendar(request)
-                .subscribe(vacationReport => {
-                    this.vacationReportCalendarData = vacationReport;
-                    this.updateReportCalendarColumns();
+                .subscribe(res => {
+                    const url = window.URL.createObjectURL(res);
+                    const a = document.createElement('a');
+                    document.body.appendChild(a);
+                    a.setAttribute('style', 'display: none');
+                    a.href = url;
+                    a.download = this.filterModel.selectedDepartment.abbreviatedName + ' (График пересечений).xlsx';
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                }, responseError => {
+                    if (responseError.status === 404) {
+                        const toast: Toast = {
+                            type: 'warning',
+                            title: 'Ошибка в операции',
+                            body: 'Отпуска не найдены'
+                        };
+
+                        this.toasterService.popAsync(toast);
+                    } else {
+                        const toast: Toast = {
+                            type: 'error',
+                            title: 'Ошибка в операции',
+                        };
+
+                        this.toasterService.popAsync(toast);
+                    }
                 });
         }
     }
 
     downloadCalendarChart() {
-        this.downloadElement(document.getElementById('calendarChart'), 'calendar_sootnoshenij.png');
+        this.scrollTable = false;
+
+        Observable.interval(500)
+            .takeWhile(() => !this.scrollTable)
+            .subscribe(i => {
+                this.downloadElement(document.getElementById('calendarChart'), 'calendar_sootnoshenij.png');
+            });
     }
 
     private downloadElement(data: HTMLElement, name: string): void {
-        // const h = data;
-        // data[0].nativeElement.defaultView.innerWidth = data.offsetWidth;
-
         html2canvas(data, {
             allowTaint: true,
             logging: false
         }).then(canvas => {
             const contentDataURL = canvas.toDataURL('image/png');
-
-            // data[0].nativeElement.defaultView.innerWidth = h;
 
             const a = document.createElement('a');
             document.body.appendChild(a);
@@ -140,5 +182,19 @@ export class VacationReportCalendarComponent implements OnInit {
             window.URL.revokeObjectURL(contentDataURL);
             a.remove();
         });
+
+        this.scrollTable = true;
+    }
+
+    getColumnColor(day: VacationReportCalendarDayModel): string {
+        if (day.vacation) {
+            return '#00cc0f';
+        } else if (day.holiday) {
+            return '#ff706b';
+        } else if (day.dayOff) {
+            return '#cdecff';
+        }
+
+        return '';
     }
 }
