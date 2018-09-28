@@ -12,6 +12,7 @@ import {
     NbLayoutModule,
     NbMenuModule,
     NbPopoverModule,
+    NbProgressBarModule,
     NbRouteTabsetModule,
     NbSearchModule,
     NbSidebarModule,
@@ -73,6 +74,7 @@ const NB_MODULES = [
     NbCheckboxModule,
     NbPopoverModule,
     NbContextMenuModule,
+    NbProgressBarModule,
     NbAlertModule,
     NgbModule,
     // NbSecurityModule, // *nbIsGranted directive

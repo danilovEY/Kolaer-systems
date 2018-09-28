@@ -14,6 +14,7 @@ import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {DepartmentModel} from '../../../../../@core/models/department.model';
 import SvgSaver from 'svgsaver';
+import * as html2canvas from 'html2canvas';
 
 @Component({
     selector: 'vacation-report-distribute',
@@ -111,24 +112,24 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
         this.downloadElement(document.getElementById('pipeChart'), 'procentnoe_sootnoshenie.png');
     }
 
-    private downloadElement(data: HTMLElement, name: string): void {
-        this.svgSaver.asPng(data, name);
-        // html2canvas(data, {
-        //     allowTaint: true,
-        //     logging: false
-        // }).then(canvas => {
-        //     const imgWidth = 300;
-        //     const imgHeight = canvas.height * imgWidth / canvas.width;
-        //     const contentDataURL = canvas.toDataURL('image/png');
-        //
-        //     const a = document.createElement('a');
-        //     document.body.appendChild(a);
-        //     a.setAttribute('style', 'display: none');
-        //     a.href = contentDataURL;
-        //     a.download = name;
-        //     a.click();
-        //     window.URL.revokeObjectURL(contentDataURL);
-        //     a.remove();
-        // });
+    private downloadElement(data: any, name: string): void { // HTMLElement
+        // this.svgSaver.asPng(data, name);
+
+        html2canvas(data, {
+            allowTaint: true,
+            useCORS: true,
+            logging: false
+        }).then(canvas => {
+            const contentDataURL = canvas.toDataURL('image/png');
+
+            const a = document.createElement('a');
+            document.body.appendChild(a);
+            a.setAttribute('style', 'display: none');
+            a.href = contentDataURL;
+            a.download = name;
+            a.click();
+            window.URL.revokeObjectURL(contentDataURL);
+            a.remove();
+        });
     }
 }

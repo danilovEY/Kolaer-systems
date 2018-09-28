@@ -11,58 +11,93 @@
     </div>
 
     <div class="col-12" *ngIf="vacationReportDistribute && vacationReportDistribute.lineValues.length > 0">
-        <nb-card>
-            <nb-card-header>
-                <span>График распределений</span>
-            </nb-card-header>
+        <nb-card id="lineChart">
 
-            <nb-card-body id="lineChart">
-                <ngx-charts-line-chart
-                        [scheme]="colorScheme"
-                        [view]="lineView"
-                        [results]="vacationReportDistribute.lineValues"
-                        [xAxis]="true"
-                        [yAxis]="true"
-                        [gradient]="false"
-                        [animations]="false"
-                        [legend]="true"
-                        [timeline]="false"
-                        [autoScale]="true"
-                        [showGridLines]="true"
-                        [showXAxisLabel]="false"
-                        [showYAxisLabel]="true"
-                        legendTitle="Подразделения"
-                        xAxisLabel="Месяцы"
-                        yAxisLabel="Количество сотрудников">
-                </ngx-charts-line-chart>
-            </nb-card-body>
-
-            <nb-card-footer>
-                <button class="btn btn-success" (click)="downloadLineChart()">Скачать график</button>
-            </nb-card-footer>
-        </nb-card>
-    </div>
-
-    <div *ngIf="vacationReportDistribute && vacationReportDistribute.pipeValues.length > 0">
-        <div class="col-12" *ngFor="let pipeModel of vacationReportDistribute.pipeValues">
-            <nb-card>
                 <nb-card-header>
-                    <span>Процентное соотношение для {{ pipeModel.name }}</span>
+                    <span>График распределений</span>
                 </nb-card-header>
 
-                <nb-card-body id="pipeChart">
-                    <ngx-charts-pie-grid [results]="pipeModel.series"
-                                         [view]="pipeView"
-                                         label="Сотрудников"
-                                         [animations]="false"
-                                         [designatedTotal]="pipeModel.totalValue">
-                    </ngx-charts-pie-grid>
+                <nb-card-body>
+                    <ngx-charts-line-chart
+                            [scheme]="colorScheme"
+                            [view]="lineView"
+                            [results]="vacationReportDistribute.lineValues"
+                            [xAxis]="true"
+                            [yAxis]="true"
+                            [gradient]="false"
+                            [animations]="false"
+                            [legend]="true"
+                            [timeline]="false"
+                            [autoScale]="true"
+                            [showGridLines]="true"
+                            [showXAxisLabel]="false"
+                            [showYAxisLabel]="true"
+                            legendTitle="Подразделения"
+                            xAxisLabel="Месяцы"
+                            yAxisLabel="Количество сотрудников">
+                    </ngx-charts-line-chart>
                 </nb-card-body>
 
-                <nb-card-footer>
-                    <button class="btn btn-success" (click)="downloadPipeChart()">Скачать график</button>
-                </nb-card-footer>
-            </nb-card>
-        </div>
+                <nb-card-body *ngFor="let pipeModel of vacationReportDistribute.pipeValues">
+                    <label>Процентное соотношение для {{ pipeModel.name }}</label>
+                    <div class="row">
+                        <div class="col-2" *ngFor="let series of pipeModel.series">
+                            <div class="progress-info">
+                                <div class="title">{{ series.name }}</div>
+                                <div class="value">{{ (series.value * 100 / pipeModel.totalValue) | number: '1.2-2' }}%</div>
+                                <nb-progress-bar [value]="series.value * 100 / pipeModel.totalValue"></nb-progress-bar>
+                                <div class="description">
+                                    <bdi>{{ series.value }} / {{ pipeModel.totalValue }}</bdi>
+                                </div>
+                            </div>
+
+                            <!--<ngx-charts-linear-gauge-->
+                                    <!--[scheme]="colorScheme"-->
+                                    <!--[units]="series.name"-->
+                                    <!--[animations]="true"-->
+                                    <!--[value]="series.value"-->
+                                    <!--[max]="pipeModel.totalValue">-->
+                            <!--</ngx-charts-linear-gauge>-->
+                        </div>
+                    </div>
+
+                    <!--<ngx-charts-pie-grid [results]="pipeModel.series"-->
+                                         <!--[scheme]="colorScheme"-->
+                                         <!--[view]="pipeView"-->
+                                         <!--label="Сотрудников"-->
+                                         <!--[animations]="false"-->
+                                         <!--[designatedTotal]="pipeModel.totalValue">-->
+                    <!--</ngx-charts-pie-grid>-->
+
+                </nb-card-body>
+
+            <nb-card-footer>
+
+            </nb-card-footer>
+        </nb-card>
+        <button class="btn btn-success" (click)="downloadLineChart()">Скачать график</button>
     </div>
+
+    <!--<div *ngIf="vacationReportDistribute && vacationReportDistribute.pipeValues.length > 0">-->
+        <!--<div class="col-12" *ngFor="let pipeModel of vacationReportDistribute.pipeValues">-->
+            <!--<nb-card>-->
+                <!--<nb-card-header>-->
+                    <!--<span>Процентное соотношение для {{ pipeModel.name }}</span>-->
+                <!--</nb-card-header>-->
+
+                <!--<nb-card-body id="pipeChart">-->
+                    <!--<ngx-charts-pie-grid [results]="pipeModel.series"-->
+                                         <!--[view]="pipeView"-->
+                                         <!--label="Сотрудников"-->
+                                         <!--[animations]="false"-->
+                                         <!--[designatedTotal]="pipeModel.totalValue">-->
+                    <!--</ngx-charts-pie-grid>-->
+                <!--</nb-card-body>-->
+
+                <!--<nb-card-footer>-->
+                    <!--<button class="btn btn-success" (click)="downloadPipeChart()">Скачать график</button>-->
+                <!--</nb-card-footer>-->
+            <!--</nb-card>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>

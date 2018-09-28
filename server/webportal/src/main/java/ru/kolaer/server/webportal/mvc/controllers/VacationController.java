@@ -88,9 +88,16 @@ public class VacationController {
 
     @ApiOperation(value = "Сгенерировать отчет для календаря")
     @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
-    @RequestMapping(value = "/report/calendar", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/report/calendar/export", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity generateVacationReportCalendar(@ModelAttribute GenerateReportCalendarRequest request, HttpServletResponse response) {
         return generateCalendarReportForVacationService.generateCalendarReportExtort(request, response);
+    }
+
+    @ApiOperation(value = "Сгенерировать отчет и скачать для календаря")
+    @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
+    @RequestMapping(value = "/report/calendar", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<VacationReportCalendarEmployeeDto> generateVacationReportCalendar(@ModelAttribute GenerateReportCalendarRequest request) {
+        return vacationService.generateReportCalendar(request);
     }
 
     @ApiOperation(value = "Сгенерировать отчет для распределения")

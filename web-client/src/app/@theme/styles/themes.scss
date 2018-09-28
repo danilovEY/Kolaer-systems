@@ -13,6 +13,7 @@ $nb-themes: nb-register-theme((
         layout-content-width: 1400px,
         font-main: Roboto,
         font-secondary: Roboto,
+        progress-bar-background: linear-gradient(90deg, #3edd81 0%, #3bddaf 100%),
 ), default, default);
 
 $nb-themes: nb-register-theme((

@@ -12,9 +12,7 @@ import {EmployeeService} from '../../../../../@core/services/employee.service';
 import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {DepartmentModel} from '../../../../../@core/models/department.model';
-import * as html2canvas from 'html2canvas';
 import {VacationReportCalendarDayModel} from '../../model/vacation-report-calendar-day.model';
-import {Observable} from 'rxjs/Rx';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 
 @Component({
@@ -70,7 +68,7 @@ export class VacationReportCalendarComponent implements OnInit {
                         .subscribe(depPage => this.departments = depPage.data);
                 } else {
                     this.employeeService.getCurrentEmployee()
-                        .subscribe(employee => this.filterModel.selectedDepartments = [employee.department]);
+                        .subscribe(employee => this.filterModel.selectedDepartment = employee.department);
                 }
             });
     }
@@ -125,6 +123,23 @@ export class VacationReportCalendarComponent implements OnInit {
             request.to = this.filterModel.to;
 
             this.vacationService.generateVacationReportCalendar(request)
+                .subscribe(vacationReport => {
+                    this.vacationReportCalendarData = vacationReport;
+                    this.updateReportCalendarColumns();
+                });
+        }
+    }
+
+    downloadCalendarChart() {
+        if (this.filterModel.selectedDepartment != null
+            && this.filterModel.from && this.filterModel.to) {
+            const request = new GenerateReportCalendarRequestModel();
+            request.departmentIds = [this.filterModel.selectedDepartment.id];
+            request.allDepartment = this.filterModel.selectedAllDepartments;
+            request.from = this.filterModel.from;
+            request.to = this.filterModel.to;
+
+            this.vacationService.generateVacationReportCalendarAndDownload(request)
                 .subscribe(res => {
                     const url = window.URL.createObjectURL(res);
                     const a = document.createElement('a');
@@ -154,37 +169,34 @@ export class VacationReportCalendarComponent implements OnInit {
                     }
                 });
         }
+        // this.scrollTable = false;
+        //
+        // Observable.interval(500)
+        //     .takeWhile(() => !this.scrollTable)
+        //     .subscribe(i => {
+        //         this.downloadElement(document.getElementById('calendarChart'), 'calendar_sootnoshenij.png');
+        //     });
     }
 
-    downloadCalendarChart() {
-        this.scrollTable = false;
-
-        Observable.interval(500)
-            .takeWhile(() => !this.scrollTable)
-            .subscribe(i => {
-                this.downloadElement(document.getElementById('calendarChart'), 'calendar_sootnoshenij.png');
-            });
-    }
-
-    private downloadElement(data: HTMLElement, name: string): void {
-        html2canvas(data, {
-            allowTaint: true,
-            logging: false
-        }).then(canvas => {
-            const contentDataURL = canvas.toDataURL('image/png');
-
-            const a = document.createElement('a');
-            document.body.appendChild(a);
-            a.setAttribute('style', 'display: none');
-            a.href = contentDataURL;
-            a.download = name;
-            a.click();
-            window.URL.revokeObjectURL(contentDataURL);
-            a.remove();
-        });
-
-        this.scrollTable = true;
-    }
+    // private downloadElement(data: HTMLElement, name: string): void {
+    //     html2canvas(data, {
+    //         allowTaint: true,
+    //         logging: false
+    //     }).then(canvas => {
+    //         const contentDataURL = canvas.toDataURL('image/png');
+    //
+    //         const a = document.createElement('a');
+    //         document.body.appendChild(a);
+    //         a.setAttribute('style', 'display: none');
+    //         a.href = contentDataURL;
+    //         a.download = name;
+    //         a.click();
+    //         window.URL.revokeObjectURL(contentDataURL);
+    //         a.remove();
+    //     });
+    //
+    //     this.scrollTable = true;
+    // }
 
     getColumnColor(day: VacationReportCalendarDayModel): string {
         if (day.vacation) {

@@ -68,7 +68,9 @@ public class TicketRegisterDaoImpl extends AbstractDefaultDao<TicketRegisterEnti
     public List<TicketRegisterEntity> findIncludeAllOnLastMonth() {
         return getSession()
                 .createQuery("FROM " + getEntityName() +
-                        " tr WHERE tr.includeAll = TRUE AND MONTH(tr.createRegister) = MONTH(CURRENT_TIMESTAMP)", getEntityClass())
+                        " tr WHERE tr.includeAll = TRUE AND " +
+                        "MONTH(tr.createRegister) = MONTH(CURRENT_TIMESTAMP) AND " +
+                        "DAY(create_register) >= 26 ", getEntityClass())
                 .list();
     }
 }

@@ -143,7 +143,7 @@ public class GenerateCalendarReportForVacationService {
         RegionUtil.setBorderRight(BorderStyle.THIN, mergedRegion, sheet);
         RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegion, sheet);
 
-        mergedRegion = new CellRangeAddress(0, 3, 0, 0);
+        mergedRegion = new CellRangeAddress(0, 2, 0, 0);
         sheet.addMergedRegion(mergedRegion);
 
         RegionUtil.setBorderTop(BorderStyle.THIN, mergedRegion, sheet);
