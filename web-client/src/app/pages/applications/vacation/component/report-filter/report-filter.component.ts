@@ -5,6 +5,17 @@ import {ToasterConfig, ToasterService} from 'angular2-toaster';
 import {NgbCalendar, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {ReportFilterModel} from '../../model/report-filter.model';
 import {SelectItem} from 'primeng/api';
+import {EmployeeModel} from '../../../../../@core/models/employee.model';
+import {PostModel} from '../../../../../@core/models/post.model';
+import {TypeWorkModel} from '../../../../../@core/models/type-work.model';
+import {DepartmentService} from '../../../../../@core/services/department.service';
+import {EmployeeService} from '../../../../../@core/services/employee.service';
+import {PostService} from '../../../../../@core/services/post.service';
+import {TypeWorkService} from '../../../../../@core/services/type-work.service';
+import {FindDepartmentPageRequest} from '../../../../../@core/models/department/find-department-page-request';
+import {FindEmployeeRequestModel} from '../../../../../@core/models/find-employee-request.model';
+import {FindPostRequestModel} from '../../../../../@core/models/post/find-post-request.model';
+import {FindTypeWorkRequest} from '../../../../../@core/models/find-type-work-request';
 
 @Component({
     selector: 'report-filter',
@@ -44,7 +55,25 @@ export class ReportFilterComponent implements OnInit {
     multiSelectDepartment: boolean = true;
 
     @Input()
-    departments: DepartmentModel[] = [];
+    requireDepartments: boolean = false;
+
+    @Input()
+    selectDepartments: boolean = false;
+
+    @Input()
+    selectEmployees: boolean = true;
+
+    @Input()
+    selectPosts: boolean = true;
+
+    @Input()
+    selectTypeWork: boolean = true;
+
+    departmentsResult: DepartmentModel[] = [];
+    employeesResult: EmployeeModel[] = [];
+    postsResult: PostModel[] = [];
+    typeWorksResult: TypeWorkModel[] = [];
+
 
     hoveredDate: NgbDate;
 
@@ -68,6 +97,10 @@ export class ReportFilterComponent implements OnInit {
     });
 
     constructor(private toasterService: ToasterService,
+                private departmentService: DepartmentService,
+                private employeeService: EmployeeService,
+                private postService: PostService,
+                private typeWorkService: TypeWorkService,
                 private calendar: NgbCalendar) {
         this.fromDate = calendar.getToday();
         this.toDate = calendar.getNext(calendar.getToday(), 'd', 3);
@@ -83,6 +116,36 @@ export class ReportFilterComponent implements OnInit {
 
     ngOnInit() {
         this.selectYear(this.years[1]);
+    }
+
+    searchDepartment(event) {
+        this.departmentService.find(new FindDepartmentPageRequest(event.query))
+            .subscribe(departmentPage => this.departmentsResult = departmentPage.data);
+    }
+
+    searchEmployee(event) {
+        this.employeeService.findAllEmployees(new FindEmployeeRequestModel(event.query, this.getIdsDepartments()))
+            .subscribe(employeePage => this.employeesResult = employeePage.data);
+    }
+
+    searchPost(event) {
+        this.postService.find(new FindPostRequestModel(event.query, this.getIdsDepartments()))
+            .subscribe(postPage => this.postsResult = postPage.data);
+    }
+
+    searchTypeWork(event) {
+        this.typeWorkService.getAll(new FindTypeWorkRequest(event.query, this.getIdsDepartments()))
+            .subscribe(typeWorkPage => this.typeWorksResult = typeWorkPage.data);
+    }
+
+    private getIdsDepartments(): number[] {
+        if (this.multiSelectDepartment) {
+            return this.filterModel.selectedDepartments.map(d => d.id);
+        } else {
+            return this.filterModel.selectedDepartment
+                ? [this.filterModel.selectedDepartment.id]
+                : [];
+        }
     }
 
     setPeriodRadioModel(value: any) {
@@ -109,16 +172,105 @@ export class ReportFilterComponent implements OnInit {
         }
     }
 
-    selectDepartments(multiSelect: any) {
-        this.filterModel.selectedDepartments = multiSelect.value;
+    // onSelectDepartments(multiSelect: any) {
+    //     this.filterModel.selectedDepartments = multiSelect.value;
+    //     if (this.onChangeFilter) {
+    //         this.onChangeFilter.emit(this.filterModel);
+    //     }
+    // }
+    //
+    // onSelectDepartment(selected: any) {
+    //     this.filterModel.selectedDepartments = [];
+    //     this.filterModel.selectedDepartment = selected.value;
+    //     if (this.onChangeFilter) {
+    //         this.onChangeFilter.emit(this.filterModel);
+    //     }
+    // }
+
+    onSelectTypeWork(selected: TypeWorkModel) {
+        this.filterModel.selectedTypeWorks.push(selected);
+
         if (this.onChangeFilter) {
             this.onChangeFilter.emit(this.filterModel);
         }
     }
 
-    selectDepartment(selected: any) {
-        this.filterModel.selectedDepartments = [];
-        this.filterModel.selectedDepartment = selected.value;
+    onUnSelectTypeWork(selected: TypeWorkModel) {
+        const index = this.filterModel.selectedTypeWorks.indexOf(selected);
+        if (index !== -1) {
+            this.filterModel.selectedTypeWorks.splice(index, 1);
+        }
+
+        if (this.onChangeFilter) {
+            this.onChangeFilter.emit(this.filterModel);
+        }
+    }
+
+    onSelectPost(selected: PostModel) {
+        this.filterModel.selectedPosts.push(selected);
+
+        if (this.onChangeFilter) {
+            this.onChangeFilter.emit(this.filterModel);
+        }
+    }
+
+    onUnSelectPost(selected: PostModel) {
+        const index = this.filterModel.selectedPosts.indexOf(selected);
+        if (index !== -1) {
+            this.filterModel.selectedPosts.splice(index, 1);
+        }
+
+        if (this.onChangeFilter) {
+            this.onChangeFilter.emit(this.filterModel);
+        }
+    }
+
+    onSelectEmployee(selected: EmployeeModel) {
+        this.filterModel.selectedEmployees.push(selected);
+
+        if (this.onChangeFilter) {
+            this.onChangeFilter.emit(this.filterModel);
+        }
+    }
+
+    onUnSelectEmployee(selected: EmployeeModel) {
+        const index = this.filterModel.selectedEmployees.indexOf(selected);
+        if (index !== -1) {
+            this.filterModel.selectedEmployees.splice(index, 1);
+        }
+
+        if (this.onChangeFilter) {
+            this.onChangeFilter.emit(this.filterModel);
+        }
+    }
+
+    onSelectDepartment(selected: DepartmentModel) {
+        if (this.multiSelectDepartment) {
+            this.filterModel.selectedDepartments.push(selected);
+            this.filterModel.selectedDepartment = undefined;
+        } else {
+            this.filterModel.selectedDepartments = [];
+            this.filterModel.selectedDepartment = selected;
+        }
+
+        if (this.onChangeFilter) {
+            this.onChangeFilter.emit(this.filterModel);
+        }
+    }
+
+    onUnSelectDepartment(selected: DepartmentModel) {
+        if (this.multiSelectDepartment) {
+            const index = this.filterModel.selectedDepartments.indexOf(selected);
+            if (index !== -1) {
+                this.filterModel.selectedDepartments.splice(index, 1);
+            }
+
+            this.filterModel.selectedDepartment = undefined;
+        } else {
+            this.filterModel.selectedDepartments = [];
+            this.filterModel.selectedDepartment = undefined;
+        }
+
         if (this.onChangeFilter) {
             this.onChangeFilter.emit(this.filterModel);
         }

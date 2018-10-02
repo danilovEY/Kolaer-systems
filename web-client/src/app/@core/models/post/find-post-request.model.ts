@@ -1,11 +1,13 @@
-import {PageRequestModel} from './page-request.model';
+import {PageRequestModel} from '../page-request.model';
 
-export class FindEmployeeRequestModel extends PageRequestModel {
+
+export class FindPostRequestModel extends PageRequestModel {
 
     constructor(public query: string = '',
                 public departmentIds: number[] = [],
                 public onOnePage: boolean = false) {
         super();
     }
+
 
 }

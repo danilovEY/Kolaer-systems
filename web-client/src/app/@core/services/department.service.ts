@@ -9,10 +9,12 @@ import {DepartmentModel} from '../models/department.model';
 import {DepartmentSortModel} from '../models/department-sort.model';
 import {DepartmentFilterModel} from '../models/department-filter.model';
 import {DepartmentRequestModel} from '../models/department-request.model';
+import {FindDepartmentPageRequest} from '../models/department/find-department-page-request';
 
 @Injectable()
 export class DepartmentService extends BaseService {
     private readonly getDepartmentUrl: string = environment.publicServerUrl + '/departments';
+    private readonly FIND_DEPARTMENTS_URL: string = this.getDepartmentUrl + '/find';
 
     constructor(private _httpClient: HttpClient) {
         super();
@@ -40,5 +42,16 @@ export class DepartmentService extends BaseService {
     deleteDepartment(depId: number): Observable<any> {
         const url = `${this.getDepartmentUrl}/${depId}`;
         return this._httpClient.delete(url);
+    }
+
+    find(request: FindDepartmentPageRequest): Observable<Page<DepartmentModel>> {
+        let params = new HttpParams();
+
+        params = params.append('number', String(request.number))
+            .append('pagesize', String(request.pageSize))
+            .append('onOnePage', String(request.onOnePage))
+            .append('query', request.query);
+
+        return this._httpClient.get<Page<DepartmentModel>>(this.FIND_DEPARTMENTS_URL, {params: params});
     }
 }

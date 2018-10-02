@@ -21,11 +21,7 @@
                         </div>
                     </div>
 
-                    <br/>
-                    <br/>
-                    <br/>
-
-                    <div class="col-12">
+                    <div class="col-12" style="margin-top: 15px;">
                         <p-dropdown *ngIf="periodRadioModel === TYPE_SELECTED_PERIOD_YEAR" [options]="years"
                                     [style]="{'width':'100%'}"
                                     [ngModel]="selectedYear"
@@ -52,35 +48,92 @@
             </div>
             <div class="col-3">
                 <div class="row">
-                    <div class="col-12">
-                        <div *ngIf="departments.length > 0">
+                    <div class="col-12" *ngIf="selectDepartments">
+                        <div class="form-group">
                             <label>Подразделение:</label>
-                            <p-multiSelect *ngIf="multiSelectDepartment"
-                                           [options]="departments"
-                                           [style]="{'width':'100%'}"
-                                           [ngModel]="filterModel.selectedDepartments"
-                                           defaultLabel="Выберите подразделение..."
-                                           (onChange)="selectDepartments($event)"
-                                           appendTo="body"
-                                           optionLabel="abbreviatedName">
-                            </p-multiSelect>
-
-                            <p-dropdown *ngIf="!multiSelectDepartment"
-                                        [options]="departments"
-                                        [style]="{'width':'100%'}"
-                                        [ngModel]="filterModel.selectedDepartment"
-                                        placeholder="Выберите подразделение..."
-                                        (onChange)="selectDepartment($event)"
-                                        appendTo="body"
-                                        filter="true"
-                                        optionLabel="abbreviatedName">
-                            </p-dropdown>
+                            <div class="input-group">
+                                <p-autoComplete [multiple]="multiSelectDepartment"
+                                                [ngModel]="multiSelectDepartment
+                                                ? filterModel.selectedDepartments
+                                                : filterModel.selectedDepartment"
+                                                [suggestions]="departmentsResult"
+                                                (onSelect)="onSelectDepartment($event)"
+                                                (onUnselect)="onUnSelectDepartment($event)"
+                                                [inputStyle]="{'width': '100%'}"
+                                                [style]="{'width': '100%'}"
+                                                [delay]="1000"
+                                                emptyMessage="Не найдено"
+                                                placeholder="Введите текст для поиска"
+                                                appendTo="body"
+                                                field="abbreviatedName"
+                                                (completeMethod)="searchDepartment($event)">
+                                </p-autoComplete>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-12" *ngIf="selectAllDepartments">
-                        <nb-checkbox [(value)]="filterModel.selectedAllDepartments"
-                                     (change)="onSelectedAllDepartment($event)">Все подразделения
-                        </nb-checkbox>
+
+                    <div class="col-12" *ngIf="selectEmployees">
+                        <div class="form-group">
+                            <label>Сотрудники:</label>
+                            <div class="input-group">
+                                <p-autoComplete [multiple]="true"
+                                                [ngModel]="filterModel.selectedEmployees"
+                                                [suggestions]="employeesResult"
+                                                (onSelect)="onSelectEmployee($event)"
+                                                (onUnselect)="onUnSelectEmployee($event)"
+                                                [delay]="1000"
+                                                [inputStyle]="{'width': '100%'}"
+                                                [style]="{'width': '100%'}"
+                                                emptyMessage="Не найдено"
+                                                placeholder="Введите текст для поиска"
+                                                appendTo="body"
+                                                field="initials"
+                                                (completeMethod)="searchEmployee($event)">
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12" *ngIf="selectPosts">
+                        <div class="form-group">
+                            <label>Должности:</label>
+                            <div class="input-group">
+                                <p-autoComplete [multiple]="true"
+                                                [ngModel]="filterModel.selectedPosts"
+                                                [suggestions]="postsResult"
+                                                (onSelect)="onSelectPost($event)"
+                                                (onUnselect)="onUnSelectPost($event)"
+                                                [delay]="1000"
+                                                [inputStyle]="{'width': '100%'}"
+                                                [style]="{'width': '100%'}"
+                                                emptyMessage="Не найдено"
+                                                placeholder="Введите текст для поиска"
+                                                appendTo="body"
+                                                field="abbreviatedName"
+                                                (completeMethod)="searchPost($event)">
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12" *ngIf="selectTypeWork">
+                        <div class="form-group">
+                            <label>Вид работ: </label>
+                            <p-autoComplete [multiple]="true"
+                                            [ngModel]="filterModel.selectedTypeWorks"
+                                            [suggestions]="typeWorksResult"
+                                            (onSelect)="onSelectTypeWork($event)"
+                                            (onUnselect)="onUnSelectTypeWork($event)"
+                                            [delay]="1000"
+                                            [inputStyle]="{'width': '100%'}"
+                                            [style]="{'width': '100%'}"
+                                            emptyMessage="Не найдено"
+                                            placeholder="Введите текст для поиска"
+                                            appendTo="body"
+                                            field="name"
+                                            (completeMethod)="searchTypeWork($event)">
+                            </p-autoComplete>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,16 +147,21 @@
 
                     <div class="col-12" *ngIf="pipeCharts">
                         <nb-checkbox [(value)]="filterModel.pipeCharts"
-                                     (change)="onPipeCharts($event)">Процентное соотношение
+                        (change)="onPipeCharts($event)">Процентное соотношение
                         </nb-checkbox>
                     </div>
 
+                    <div class="col-12" *ngIf="selectAllDepartments">
+                        <nb-checkbox [(value)]="filterModel.selectedAllDepartments"
+                                     (change)="onSelectedAllDepartment($event)">Все подразделения
+                        </nb-checkbox>
+                    </div>
                 </div>
             </div>
         </div>
     </nb-card-body>
     <nb-card-footer>
-        <button [disabled]="!(filterModel &&
+        <button [disabled]="requireDepartments && !(filterModel &&
                         (filterModel.selectedDepartment ||
                         ((filterModel.selectedDepartments && filterModel.selectedDepartments.length) > 0 || filterModel.selectedAllDepartments)) &&
                         filterModel.from && filterModel.to)"

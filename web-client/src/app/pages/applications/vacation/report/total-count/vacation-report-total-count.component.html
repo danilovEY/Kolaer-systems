@@ -1,10 +1,12 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+
 <div class="row">
     <div class="col-12" #filterElement>
         <report-filter [pipeCharts]="false"
                        [(filterModel)]="filterModel"
                        [selectAllDepartments]="true"
                        [calculateIntersections]="false"
-                       [departments]="departments"
+                       [selectDepartments]="currentAccount && currentAccount.accessVacationAdmin"
                        (onChangeFilter)="changeFilter($event)"
                        (onAcceptFilter)="generateReportDistribute($event)">
         </report-filter>
@@ -25,12 +27,11 @@
                         [yAxis]="true"
                         [gradient]="false"
                         [animations]="false"
-                        [legend]="true"
+                        [legend]="false"
                         [showGridLines]="true"
                         [showXAxisLabel]="false"
                         [showYAxisLabel]="false"
-                        legendTitle="Значения"
-                        xAxisLabel="Подразделения">
+                        legendTitle="Значения">
                 </ngx-charts-bar-vertical-normalized>
             </nb-card-body>
 

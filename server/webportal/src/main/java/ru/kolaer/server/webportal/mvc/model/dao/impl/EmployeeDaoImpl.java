@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.error.ErrorCode;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
@@ -167,9 +168,24 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
 
         query = query.append(" WHERE emp.dismissalDate IS NULL");
 
-        if (!request.getDepartmentIds().isEmpty()) {
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
             query = query.append(" AND emp.departmentId IN (:depIds)");
             params.put("depIds", request.getDepartmentIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getEmployeeIds())) {
+            query = query.append(" AND emp.id IN (:employeeIds)");
+            params.put("employeeIds", request.getEmployeeIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getPostIds())) {
+            query = query.append(" AND emp.postId IN (:postIds)");
+            params.put("postIds", request.getPostIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getTypeWorkIds())) {
+            query = query.append(" AND emp.typeWorkId IN (:typeWorkIds)");
+            params.put("typeWorkIds", request.getTypeWorkIds());
         }
 
         query = query.append(" GROUP BY emp.departmentId");
@@ -191,9 +207,29 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
 
         query = query.append(" WHERE emp.dismissalDate IS NULL");
 
-        if (request.getDepartmentId() != null) {
-            query = query.append(" AND emp.departmentId = :depId");
-            params.put("depId", request.getDepartmentId());
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
+            query = query.append(" AND emp.departmentId IN (:depIds)");
+            params.put("depIds", request.getDepartmentIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getEmployeeIds())) {
+            query = query.append(" AND emp.id IN (:employeeIds)");
+            params.put("employeeIds", request.getEmployeeIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getPostIds())) {
+            query = query.append(" AND emp.postId IN (:postIds)");
+            params.put("postIds", request.getPostIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getTypeWorkIds())) {
+            query = query.append(" AND emp.typeWorkId IN (:typeWorkIds)");
+            params.put("typeWorkIds", request.getTypeWorkIds());
+        }
+
+        if (StringUtils.hasText(request.getQuery())) {
+            query = query.append(" AND (LOWER(emp.initials) LIKE :query OR emp.personnelNumber LIKE :query)");
+            params.put("query", "%" + request.getQuery().trim().toLowerCase() + "%");
         }
 
         return getSession().createQuery(query.toString(), Long.class)
@@ -213,9 +249,29 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
 
         query = query.append(" WHERE emp.dismissalDate IS NULL");
 
-        if (request.getDepartmentId() != null) {
-            query = query.append(" AND emp.departmentId = :depId");
-            params.put("depId", request.getDepartmentId());
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
+            query = query.append(" AND emp.departmentId IN (:depIds)");
+            params.put("depIds", request.getDepartmentIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getEmployeeIds())) {
+            query = query.append(" AND emp.id IN (:employeeIds)");
+            params.put("employeeIds", request.getEmployeeIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getPostIds())) {
+            query = query.append(" AND emp.postId IN (:postIds)");
+            params.put("postIds", request.getPostIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getTypeWorkIds())) {
+            query = query.append(" AND emp.typeWorkId IN (:typeWorkIds)");
+            params.put("typeWorkIds", request.getTypeWorkIds());
+        }
+
+        if (StringUtils.hasText(request.getQuery())) {
+            query = query.append(" AND (LOWER(emp.initials) LIKE :query OR emp.personnelNumber LIKE :query)");
+            params.put("query", "%" + request.getQuery().trim().toLowerCase() + "%");
         }
 
         Query<EmployeeEntity> entityQuery = getSession()

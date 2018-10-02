@@ -1,6 +1,8 @@
 package ru.kolaer.server.webportal.mvc.model.servirces;
 
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
+import ru.kolaer.server.webportal.mvc.model.dto.post.FindPostPageRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.post.PostRequestDto;
 
 /**
@@ -11,4 +13,5 @@ public interface PostService extends DefaultService<PostDto> {
 
     PostDto update(Long postId, PostRequestDto postRequestDto);
 
+    Page<PostDto> find(FindPostPageRequest request);
 }

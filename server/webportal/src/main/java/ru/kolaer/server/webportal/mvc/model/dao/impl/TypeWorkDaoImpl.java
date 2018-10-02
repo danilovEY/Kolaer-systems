@@ -2,11 +2,13 @@ package ru.kolaer.server.webportal.mvc.model.dao.impl;
 
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.TypeWorkDao;
 import ru.kolaer.server.webportal.mvc.model.dto.typework.FindTypeWorkRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.typework.TypeWorkSortType;
+import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.typework.TypeWorkEntity;
 
 import java.util.HashMap;
@@ -50,6 +52,19 @@ public class TypeWorkDaoImpl extends AbstractDefaultDao<TypeWorkEntity> implemen
         if (StringUtils.hasText(request.getSearchName())) {
             sqlQuery = sqlQuery.append(" WHERE name LIKE :name");
             params.put("name", "%" + request.getSearchName() + "%");
+        }
+
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
+            if (StringUtils.hasText(request.getSearchName())) {
+                sqlQuery = sqlQuery.append(" AND");
+            } else {
+                sqlQuery = sqlQuery.append(" WHERE");
+            }
+
+            sqlQuery = sqlQuery.append(" id IN (SELECT e.typeWorkId FROM ")
+                    .append(getEntityName(EmployeeEntity.class))
+                    .append(" AS e WHERE e.dismissalDate IS NULL AND e.departmentId IN (:depIds))");
+            params.put("depIds", request.getDepartmentIds());
         }
 
         sqlQuery = sqlQuery.append(getOrder(request.getSort()));

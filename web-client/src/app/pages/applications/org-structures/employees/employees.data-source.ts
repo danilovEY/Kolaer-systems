@@ -15,7 +15,7 @@ export class EmployeesDataSource extends CustomDataSource<EmployeeModel> {
     loadElements(page: number, pageSize: number): Promise<EmployeeModel[]> {
         if (this.departmentId && this.departmentId > 0) {
             const request = new FindEmployeeRequestModel();
-            request.departmentId = this.departmentId;
+            request.departmentIds = [this.departmentId];
             request.number = page;
             request.pageSize = pageSize;
 

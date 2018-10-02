@@ -9,10 +9,12 @@ import {PostSortModel} from '../models/post-sort.model';
 import {PostFilterModel} from '../models/post-filter.model';
 import {PostModel} from '../models/post.model';
 import {PostRequestModel} from '../models/post-request.model';
+import {FindPostRequestModel} from '../models/post/find-post-request.model';
 
 @Injectable()
 export class PostService extends BaseService {
     private readonly getPostUrl: string = environment.publicServerUrl + '/posts';
+    private readonly FIND_POST_URL: string = this.getPostUrl + '/find';
 
     constructor(private _httpClient: HttpClient) {
         super();
@@ -26,6 +28,18 @@ export class PostService extends BaseService {
         params = this.getSortAndFilterParam(params, sort, filter);
 
         return this._httpClient.get<Page<PostModel>>(this.getPostUrl, {params: params});
+    }
+
+    find(request: FindPostRequestModel): Observable<Page<PostModel>> {
+        let params = new HttpParams();
+
+        params = params.append('number', String(request.number))
+            .append('query', request.query)
+            .append('pagesize', String(request.pageSize))
+            .append('onOnePage', String(request.onOnePage))
+            .append('departmentIds', request.departmentIds.toString());
+
+        return this._httpClient.get<Page<PostModel>>(this.FIND_POST_URL, {params: params})
     }
 
     createPost(post: PostRequestModel): Observable<PostModel> {

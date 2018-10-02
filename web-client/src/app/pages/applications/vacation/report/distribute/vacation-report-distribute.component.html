@@ -4,7 +4,7 @@
                        [(filterModel)]="filterModel"
                        [selectAllDepartments]="true"
                        [calculateIntersections]="true"
-                       [departments]="departments"
+                       [selectDepartments]="currentAccount && currentAccount.accessVacationAdmin"
                        (onChangeFilter)="changeFilter($event)"
                        (onAcceptFilter)="generateReportDistribute($event)">
         </report-filter>

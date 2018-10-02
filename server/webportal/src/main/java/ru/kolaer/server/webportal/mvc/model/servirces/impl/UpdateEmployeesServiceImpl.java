@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.error.ErrorCode;
-import ru.kolaer.api.mvp.model.kolaerweb.TypePostEnum;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
@@ -474,13 +473,15 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             return null;
         }
 
-        return StringUtils.hasText(entity.getExternalId())
-                ? entity.getExternalId()
-                : entity.getName() + entity.getCode() +
-                Optional.ofNullable(entity.getRang())
-                        .map(Object::toString).orElse("") +
-                Optional.ofNullable(entity.getType())
-                        .map(TypePostEnum::getName).orElse("");
+//        return StringUtils.hasText(entity.getExternalId())
+//                ? entity.getExternalId()
+//                : entity.getName() + entity.getCode() +
+//                Optional.ofNullable(entity.getRang())
+//                        .map(Object::toString).orElse("") +
+//                Optional.ofNullable(entity.getType())
+//                        .map(TypePostEnum::getName).orElse("");
+
+        return entity.getAbbreviatedName();
     }
 
     private String generateKey(EmployeeEntity entity) {

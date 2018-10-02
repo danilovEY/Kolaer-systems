@@ -11,6 +11,7 @@ import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.mvc.model.dto.department.DepartmentFilter;
 import ru.kolaer.server.webportal.mvc.model.dto.department.DepartmentRequestDto;
 import ru.kolaer.server.webportal.mvc.model.dto.department.DepartmentSort;
+import ru.kolaer.server.webportal.mvc.model.dto.department.FindDepartmentPageRequest;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 
 /**
@@ -36,6 +37,13 @@ public class DepartmentController {
                                                 DepartmentSort sortParam,
                                                 DepartmentFilter filter) {
         return departmentService.getAll(sortParam, filter, number, pageSize);
+    }
+
+    @ApiOperation(value = "Найти подразделения")
+    @UrlDeclaration
+    @RequestMapping(value = "/find", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<DepartmentDto> getAllDepartment(@ModelAttribute FindDepartmentPageRequest request) {
+        return departmentService.find(request);
     }
 
     @ApiOperation(value = "Добавить подразделение")

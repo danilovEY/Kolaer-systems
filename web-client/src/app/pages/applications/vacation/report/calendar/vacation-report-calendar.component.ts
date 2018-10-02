@@ -4,14 +4,10 @@ import {VacationReportCalendarEmployeeModel} from '../../model/vacation-report-c
 import {GenerateReportCalendarRequestModel} from '../../model/generate-report-calendar-request.model';
 import {ReportFilterModel} from '../../model/report-filter.model';
 import {Title} from '@angular/platform-browser';
-import {DepartmentSortModel} from '../../../../../@core/models/department-sort.model';
-import {SortTypeEnum} from '../../../../../@core/models/sort-type.enum';
-import {DepartmentFilterModel} from '../../../../../@core/models/department-filter.model';
 import {DepartmentService} from '../../../../../@core/services/department.service';
 import {EmployeeService} from '../../../../../@core/services/employee.service';
 import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
-import {DepartmentModel} from '../../../../../@core/models/department.model';
 import {VacationReportCalendarDayModel} from '../../model/vacation-report-calendar-day.model';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 
@@ -34,7 +30,6 @@ export class VacationReportCalendarComponent implements OnInit {
     filterModel: ReportFilterModel = new ReportFilterModel();
 
     currentAccount: SimpleAccountModel;
-    departments: DepartmentModel[] = [];
 
     config: ToasterConfig = new ToasterConfig({
         positionClass: 'toast-top-right',
@@ -60,13 +55,7 @@ export class VacationReportCalendarComponent implements OnInit {
             .subscribe(account => {
                 this.currentAccount = account;
 
-                if (account.accessVacationAdmin) {
-                    const sort = new DepartmentSortModel();
-                    sort.sortAbbreviatedName = SortTypeEnum.ASC;
-
-                    this.departmentService.getAllDepartments(sort, new DepartmentFilterModel(), 1, 1000)
-                        .subscribe(depPage => this.departments = depPage.data);
-                } else {
+                if (!account.accessVacationAdmin) {
                     this.employeeService.getCurrentEmployee()
                         .subscribe(employee => this.filterModel.selectedDepartment = employee.department);
                 }
@@ -114,61 +103,62 @@ export class VacationReportCalendarComponent implements OnInit {
     }
 
     generateReportCalendar(filterModel: ReportFilterModel) {
-        if (this.filterModel.selectedDepartment != null
-            && this.filterModel.from && this.filterModel.to) {
-            const request = new GenerateReportCalendarRequestModel();
-            request.departmentIds = [this.filterModel.selectedDepartment.id];
-            request.allDepartment = this.filterModel.selectedAllDepartments;
-            request.from = this.filterModel.from;
-            request.to = this.filterModel.to;
+        const request = new GenerateReportCalendarRequestModel();
+        request.departmentIds = this.filterModel.selectedDepartment ? [this.filterModel.selectedDepartment.id] : [];
+        request.employeeIds = this.filterModel.selectedEmployees.map(emp => emp.id);
+        request.postIds = this.filterModel.selectedPosts.map(post => post.id);
+        request.typeWorkIds = this.filterModel.selectedTypeWorks.map(typeWork => typeWork.id);
+        request.allDepartment = this.filterModel.selectedAllDepartments;
+        request.from = this.filterModel.from;
+        request.to = this.filterModel.to;
 
-            this.vacationService.generateVacationReportCalendar(request)
-                .subscribe(vacationReport => {
-                    this.vacationReportCalendarData = vacationReport;
-                    this.updateReportCalendarColumns();
-                });
-        }
+        this.vacationService.generateVacationReportCalendar(request)
+            .subscribe(vacationReport => {
+                this.vacationReportCalendarData = vacationReport;
+                this.updateReportCalendarColumns();
+            });
     }
 
     downloadCalendarChart() {
-        if (this.filterModel.selectedDepartment != null
-            && this.filterModel.from && this.filterModel.to) {
-            const request = new GenerateReportCalendarRequestModel();
-            request.departmentIds = [this.filterModel.selectedDepartment.id];
-            request.allDepartment = this.filterModel.selectedAllDepartments;
-            request.from = this.filterModel.from;
-            request.to = this.filterModel.to;
+        const request = new GenerateReportCalendarRequestModel();
+        request.departmentIds = this.filterModel.selectedDepartment ? [this.filterModel.selectedDepartment.id] : [];
+        request.employeeIds = this.filterModel.selectedEmployees.map(emp => emp.id);
+        request.postIds = this.filterModel.selectedPosts.map(post => post.id);
+        request.typeWorkIds = this.filterModel.selectedTypeWorks.map(typeWork => typeWork.id);
+        request.allDepartment = this.filterModel.selectedAllDepartments;
+        request.from = this.filterModel.from;
+        request.to = this.filterModel.to;
 
-            this.vacationService.generateVacationReportCalendarAndDownload(request)
-                .subscribe(res => {
-                    const url = window.URL.createObjectURL(res);
-                    const a = document.createElement('a');
-                    document.body.appendChild(a);
-                    a.setAttribute('style', 'display: none');
-                    a.href = url;
-                    a.download = this.filterModel.selectedDepartment.abbreviatedName + ' (График пересечений).xlsx';
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    a.remove();
-                }, responseError => {
-                    if (responseError.status === 404) {
-                        const toast: Toast = {
-                            type: 'warning',
-                            title: 'Ошибка в операции',
-                            body: 'Отпуска не найдены'
-                        };
+        this.vacationService.generateVacationReportCalendarAndDownload(request)
+            .subscribe(res => {
+                const url = window.URL.createObjectURL(res);
+                const a = document.createElement('a');
+                document.body.appendChild(a);
+                a.setAttribute('style', 'display: none');
+                a.href = url;
+                a.download = 'График пересечений.xlsx';
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            }, responseError => {
+                if (responseError.status === 404) {
+                    const toast: Toast = {
+                        type: 'warning',
+                        title: 'Ошибка в операции',
+                        body: 'Отпуска не найдены'
+                    };
 
-                        this.toasterService.popAsync(toast);
-                    } else {
-                        const toast: Toast = {
-                            type: 'error',
-                            title: 'Ошибка в операции',
-                        };
+                    this.toasterService.popAsync(toast);
+                } else {
+                    const toast: Toast = {
+                        type: 'error',
+                        title: 'Ошибка в операции',
+                    };
 
-                        this.toasterService.popAsync(toast);
-                    }
-                });
-        }
+                    this.toasterService.popAsync(toast);
+                }
+            });
+
         // this.scrollTable = false;
         //
         // Observable.interval(500)

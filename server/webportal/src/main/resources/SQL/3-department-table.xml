@@ -45,4 +45,8 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="3-5" author="Danilov">
+        <addUniqueConstraint tableName="department" columnNames="external_id"/>
+    </changeSet>
+
 </databaseChangeLog>

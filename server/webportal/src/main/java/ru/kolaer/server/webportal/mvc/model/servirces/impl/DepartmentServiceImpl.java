@@ -4,15 +4,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.DepartmentDto;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.DepartmentConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
 import ru.kolaer.server.webportal.mvc.model.dto.department.DepartmentRequestDto;
+import ru.kolaer.server.webportal.mvc.model.dto.department.FindDepartmentPageRequest;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,6 +31,7 @@ public class DepartmentServiceImpl
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DepartmentDto getGeneralDepartmentEntityByName(String name) {
         if(name == null || name.trim().isEmpty()) {
             return null;
@@ -72,5 +76,14 @@ public class DepartmentServiceImpl
         departmentEntity.setCode(Optional.ofNullable(departmentRequestDto.getCode()).orElse(0));
 
         return defaultConverter.convertToDto(defaultEntityDao.save(departmentEntity));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<DepartmentDto> find(FindDepartmentPageRequest request) {
+        long count = defaultEntityDao.findCount(request);
+        List<DepartmentDto> departments = defaultConverter.convertToDto(defaultEntityDao.find(request));
+
+        return new Page<>(departments, request.getNumber(), count, request.getPageSize());
     }
 }

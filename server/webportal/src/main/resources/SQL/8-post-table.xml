@@ -31,4 +31,8 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="8-3" author="Danilov">
+        <addUniqueConstraint tableName="post" columnNames="external_id"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -78,11 +78,13 @@ public class UploadFileServiceImpl
     }
 
     @Override
+    @Transactional
     public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder) {
        return createFile(folder, fileName, generateUniquiredFileName, inDateFolder, true);
     }
 
     @Override
+    @Transactional
     public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder, boolean replaceFile) {
         try {
             if(inDateFolder) {

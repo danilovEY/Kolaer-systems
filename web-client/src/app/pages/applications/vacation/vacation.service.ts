@@ -27,6 +27,7 @@ export class VacationService extends BaseService {
     private readonly FIND_VACATION_URL = `${this.VACATION_URL}`;
     private readonly FIND_PERIODS_URL = `${this.VACATION_URL}/periods`;
     private readonly FIND_VACATION_BALANCE_URL = `${this.VACATION_URL}/balance`;
+    private readonly GENERATE_REPORT_CALENDAR_EXPORT_URL = `${this.VACATION_URL}/report/calendar/export`;
     private readonly GENERATE_REPORT_CALENDAR_URL = `${this.VACATION_URL}/report/calendar`;
     private readonly GENERATE_REPORT_DISTRIBUTE_URL = `${this.VACATION_URL}/report/distribute`;
     private readonly GENERATE_REPORT_TOTAL_COUNT_URL = `${this.VACATION_URL}/report/total-count`;
@@ -59,10 +60,13 @@ export class VacationService extends BaseService {
         const params: HttpParams = new HttpParams()
             .append('allDepartment', request.allDepartment.toString())
             .append('departmentIds', request.departmentIds.toString())
+            .append('employeeIds', request.employeeIds.toString())
+            .append('postIds', request.postIds.toString())
+            .append('typeWorkIds', request.typeWorkIds.toString())
             .append('from', Utils.getDateToSend(request.from))
             .append('to', Utils.getDateToSend(request.to));
 
-        return this.http.get(this.GENERATE_REPORT_CALENDAR_URL, {
+        return this.http.get(this.GENERATE_REPORT_CALENDAR_EXPORT_URL, {
             responseType: 'blob',
             params: params
         });
@@ -72,6 +76,9 @@ export class VacationService extends BaseService {
         const params: HttpParams = new HttpParams()
             .append('allDepartment', request.allDepartment.toString())
             .append('departmentIds', request.departmentIds.toString())
+            .append('employeeIds', request.employeeIds.toString())
+            .append('postIds', request.postIds.toString())
+            .append('typeWorkIds', request.typeWorkIds.toString())
             .append('from', Utils.getDateToSend(request.from))
             .append('to', Utils.getDateToSend(request.to));
 
@@ -84,6 +91,9 @@ export class VacationService extends BaseService {
             .append('calculateIntersections', request.calculateIntersections.toString())
             .append('allDepartment', request.allDepartment.toString())
             .append('departmentIds', request.departmentIds.toString())
+            .append('employeeIds', request.employeeIds.toString())
+            .append('postIds', request.postIds.toString())
+            .append('typeWorkIds', request.typeWorkIds.toString())
             .append('from', Utils.getDateToSend(request.from))
             .append('to', Utils.getDateToSend(request.to));
 
@@ -95,6 +105,9 @@ export class VacationService extends BaseService {
         const params: HttpParams = new HttpParams()
             .append('allDepartment', request.allDepartment.toString())
             .append('departmentIds', request.departmentIds.toString())
+            .append('employeeIds', request.employeeIds.toString())
+            .append('postIds', request.postIds.toString())
+            .append('typeWorkIds', request.typeWorkIds.toString())
             .append('from', Utils.getDateToSend(request.from))
             .append('to', Utils.getDateToSend(request.to));
 
@@ -104,6 +117,9 @@ export class VacationService extends BaseService {
     public generateUrlForVacationReportExport(request: GenerateReportExportRequestModel): Observable<any> {
         const params: HttpParams = new HttpParams()
             .append('departmentId', request.departmentId.toString())
+            .append('employeeIds', request.employeeIds.toString())
+            .append('postIds', request.postIds.toString())
+            .append('typeWorkIds', request.typeWorkIds.toString())
             .append('from', Utils.getDateToSend(request.from))
             .append('to', Utils.getDateToSend(request.to));
 

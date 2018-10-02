@@ -11,6 +11,7 @@ import java.util.List;
 public class GenerateReportExportRequest {
     private List<Long> typeWorkIds = Collections.emptyList();
     private List<Long> postIds = Collections.emptyList();
+    private List<Long> employeeIds = Collections.emptyList();
     private long departmentId;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

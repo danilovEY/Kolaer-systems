@@ -8,12 +8,9 @@ import {VacationService} from '../../vacation.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {ReportFilterModel} from '../../model/report-filter.model';
 import {VacationReportPipeModel} from '../../model/vacation-report-pipe.model';
-import {DepartmentModel} from '../../../../../@core/models/department.model';
-import {DepartmentFilterModel} from '../../../../../@core/models/department-filter.model';
-import {DepartmentSortModel} from '../../../../../@core/models/department-sort.model';
-import {SortTypeEnum} from '../../../../../@core/models/sort-type.enum';
 import {GenerateReportTotalCountRequestModel} from '../../model/generate-report-total-count-request.model';
 import * as html2canvas from 'html2canvas';
+import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 
 @Component({
     selector: 'vacation-report-total-count',
@@ -32,22 +29,31 @@ export class VacationReportTotalCountComponent implements OnInit, OnDestroy {
 
     pipeView: number[] = [800, 400];
 
-    departments: DepartmentModel[] = [];
-
     themeSubscription: any;
     colorScheme: any;
+
+    config: ToasterConfig = new ToasterConfig({
+        positionClass: 'toast-top-right',
+        timeout: 5000,
+        newestOnTop: true,
+        tapToDismiss: true,
+        preventDuplicates: false,
+        animation: 'fade',
+        limit: 5,
+    });
 
     constructor(private theme: NbThemeService,
                 private departmentService: DepartmentService,
                 private accountService: AccountService,
                 private employeeService: EmployeeService,
                 private vacationService: VacationService,
+                private toasterService: ToasterService,
                 private titleService: Title) {
         this.titleService.setTitle('График соотношений');
         this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
             const colors: any = config.variables;
             this.colorScheme = {
-                domain: [colors.primaryLight, colors.infoLight, colors.successLight, colors.warningLight, colors.dangerLight],
+                domain: [colors.primaryLight, '#FFFFFF', colors.successLight, colors.warningLight, colors.dangerLight],
             };
         });
     }
@@ -57,13 +63,7 @@ export class VacationReportTotalCountComponent implements OnInit, OnDestroy {
             .subscribe(account => {
                 this.currentAccount = account;
 
-                if (account.accessVacationAdmin) {
-                    const sort = new DepartmentSortModel();
-                    sort.sortAbbreviatedName = SortTypeEnum.ASC;
-
-                    this.departmentService.getAllDepartments(sort, new DepartmentFilterModel(), 1, 1000)
-                        .subscribe(depPage => this.departments = depPage.data);
-                } else {
+                if (!account.accessVacationAdmin) {
                     this.employeeService.getCurrentEmployee()
                         .subscribe(employee => this.filterModel.selectedDepartments = [employee.department]);
                 }
@@ -75,20 +75,27 @@ export class VacationReportTotalCountComponent implements OnInit, OnDestroy {
     }
 
     generateReportDistribute(filterModel: ReportFilterModel) {
-        if ((this.filterModel.selectedDepartments.length > 0 || this.filterModel.selectedAllDepartments)
-            && this.filterModel.from && this.filterModel.to) {
-            const request = new GenerateReportTotalCountRequestModel();
-            request.departmentIds = this.filterModel.selectedDepartments.map(dep => dep.id);
-            request.allDepartment = this.filterModel.selectedAllDepartments;
-            request.from = this.filterModel.from;
-            request.to = this.filterModel.to;
+        const request = new GenerateReportTotalCountRequestModel();
+        request.departmentIds = this.filterModel.selectedDepartments.map(dep => dep.id);
+        request.employeeIds = this.filterModel.selectedEmployees.map(emp => emp.id);
+        request.postIds = this.filterModel.selectedPosts.map(post => post.id);
+        request.typeWorkIds = this.filterModel.selectedTypeWorks.map(typeWork => typeWork.id);
+        request.allDepartment = this.filterModel.selectedAllDepartments;
+        request.from = this.filterModel.from;
+        request.to = this.filterModel.to;
 
-            this.vacationService.generateVacationReportTotalCount(request)
-                .subscribe(vacationReport => {
-                    this.vacationReportPipes = vacationReport;
-                    this.pipeView[0] = this.filterElement.nativeElement.offsetWidth - 70;
-                });
-        }
+        this.vacationService.generateVacationReportTotalCount(request)
+            .subscribe(vacationReport => {
+                this.vacationReportPipes = vacationReport;
+                this.pipeView[0] = this.filterElement.nativeElement.offsetWidth - 70;
+            }, responseError => {
+                const toast: Toast = {
+                    type: 'error',
+                    title: 'Ошибка в операции',
+                };
+
+                this.toasterService.popAsync(toast);
+            });
     }
 
     downloadBarChart() {
@@ -98,10 +105,9 @@ export class VacationReportTotalCountComponent implements OnInit, OnDestroy {
     private downloadElement(data: HTMLElement, name: string): void {
         html2canvas(data, {
             allowTaint: true,
+            useCORS: true,
             logging: false
         }).then(canvas => {
-            const imgWidth = 300;
-            const imgHeight = canvas.height * imgWidth / canvas.width;
             const contentDataURL = canvas.toDataURL('image/png');
 
             const a = document.createElement('a');

@@ -12,6 +12,7 @@ public class GenerateReportCalendarRequest {
     private List<Long> typeWorkIds = Collections.emptyList();
     private List<Long> postIds = Collections.emptyList();
     private List<Long> departmentIds = Collections.emptyList();
+    private List<Long> employeeIds = Collections.emptyList();
     private boolean allDepartment;
 
 

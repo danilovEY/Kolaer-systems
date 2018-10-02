@@ -4,7 +4,6 @@ import javafx.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
@@ -14,11 +13,9 @@ import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.VacationConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.*;
-import ru.kolaer.server.webportal.mvc.model.dto.employee.CountEmployeeInDepartmentDto;
-import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeeByDepartment;
+import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.vacation.*;
-import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.vacation.*;
@@ -345,34 +342,40 @@ public class VacationServiceImpl implements VacationService {
             throw new UnexpectedRequestParams("Период не правильно задан");
         }
 
-        if (CollectionUtils.isEmpty(request.getDepartmentIds()) && !request.isAllDepartment()) {
-            throw new UnexpectedRequestParams("Не задано подразделение");
-        }
-
         VacationReportDistributeDto result = new VacationReportDistributeDto();
         result.setLineValues(new ArrayList<>());
         result.setPipeValues(new ArrayList<>());
 
         if (request.isAllDepartment()) {
             result = createReportDistributeLineValues(result,
-                    null, "КолАЭР", employeeDao.findAllCount(), request);
+                    "КолАЭР", employeeDao.findAllCount(), request);
         }
 
-        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
-            FindEmployeeByDepartment findEmployeeByDepartment = new FindEmployeeByDepartment();
-            findEmployeeByDepartment.setDepartmentIds(request.getDepartmentIds());
+//        if (CollectionUtils.)
+//        FindEmployeeByDepartment findEmployeeByDepartment = new FindEmployeeByDepartment();
+//        findEmployeeByDepartment.setDepartmentIds(request.getDepartmentIds());
+//        findEmployeeByDepartment.setEmployeeIds(request.getEmployeeIds());
+//        findEmployeeByDepartment.setPostIds(request.getPostIds());
+//        findEmployeeByDepartment.setTypeWorkIds(request.getTypeWorkIds());
+//
+//        for (CountEmployeeInDepartmentDto countEmployeeInDepartmentDto : employeeDao
+//                .findEmployeeByDepartmentCount(findEmployeeByDepartment)) {
+//            result = createReportDistributeLineValues(result,
+//                    countEmployeeInDepartmentDto.getDepartmentId(),
+//                    countEmployeeInDepartmentDto.getDepartmentName(),
+//                    countEmployeeInDepartmentDto.getCountEmployee(),
+//                    request);
+//        }
 
-            for (CountEmployeeInDepartmentDto countEmployeeInDepartmentDto : employeeDao
-                    .findEmployeeByDepartmentCount(findEmployeeByDepartment)) {
-                result = createReportDistributeLineValues(result,
-                        countEmployeeInDepartmentDto.getDepartmentId(),
-                        countEmployeeInDepartmentDto.getDepartmentName(),
-                        countEmployeeInDepartmentDto.getCountEmployee(),
-                        request);
-            }
-        }
+        FindEmployeePageRequest findEmployeePageRequest = new FindEmployeePageRequest();
+        findEmployeePageRequest.setDepartmentIds(request.getDepartmentIds());
+        findEmployeePageRequest.setEmployeeIds(request.getEmployeeIds());
+        findEmployeePageRequest.setPostIds(request.getPostIds());
+        findEmployeePageRequest.setTypeWorkIds(request.getTypeWorkIds());
 
-        return result;
+        long totalCount = employeeDao.findAllEmployeeCount(findEmployeePageRequest);
+
+        return createReportDistributeLineValues(result, "Пересечения", totalCount, request);
     }
 
     @Override
@@ -384,10 +387,6 @@ public class VacationServiceImpl implements VacationService {
 
         if (request.getFrom().isAfter(request.getTo())) {
             throw new UnexpectedRequestParams("Период не правильно задан");
-        }
-
-        if (CollectionUtils.isEmpty(request.getDepartmentIds()) && !request.isAllDepartment()) {
-            throw new UnexpectedRequestParams("Не задано подразделение");
         }
 
         List<VacationReportPipeDto> result = new ArrayList<>();
@@ -413,30 +412,39 @@ public class VacationServiceImpl implements VacationService {
             result.add(reportPipeValueDto);
         }
 
-        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
-            Map<Long, DepartmentEntity> departmentMap = departmentDao.findById(request.getDepartmentIds())
-                    .stream()
-                    .collect(Collectors.toMap(DepartmentEntity::getId, Function.identity()));
+//        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
+//            Map<Long, DepartmentEntity> departmentMap = departmentDao.findById(request.getDepartmentIds())
+//                    .stream()
+//                    .collect(Collectors.toMap(DepartmentEntity::getId, Function.identity()));
 
-            for (VacationTotalCountDepartmentEntity vacationTotalCount : vacationDao.findVacationTotalCountDepartment(request)) {
-                VacationReportPipeDto reportPipeValueDto = new VacationReportPipeDto();
-                reportPipeValueDto.setName(departmentMap.get(vacationTotalCount.getDepartmentId()).getAbbreviatedName());
-                reportPipeValueDto.setTotalValue(vacationTotalCount.getTotalCountEmployeeOnDepartment());
+//            for (VacationTotalCountDepartmentEntity vacationTotalCount : vacationDao.findVacationTotalCountDepartment(request)) {
 
-                VacationReportPipeValueDto reportPipeValueWithVacation = new VacationReportPipeValueDto();
-                reportPipeValueWithVacation.setName("Заданы отпуска");
-                reportPipeValueWithVacation.setValue(vacationTotalCount.getTotalCountEmployeeWithBalance());
+        FindEmployeePageRequest findEmployeePageRequest = new FindEmployeePageRequest();
+        findEmployeePageRequest.setDepartmentIds(request.getDepartmentIds());
+        findEmployeePageRequest.setEmployeeIds(request.getEmployeeIds());
+        findEmployeePageRequest.setPostIds(request.getPostIds());
+        findEmployeePageRequest.setTypeWorkIds(request.getTypeWorkIds());
 
-                VacationReportPipeValueDto reportPipeValueWithOutVacation = new VacationReportPipeValueDto();
-                reportPipeValueWithOutVacation.setName("Не заданы отпуска");
-                reportPipeValueWithOutVacation.setValue(reportPipeValueDto.getTotalValue() - reportPipeValueWithVacation.getValue());
+        long totalCount = employeeDao.findAllEmployeeCount(findEmployeePageRequest);
 
-                reportPipeValueDto.getSeries().add(reportPipeValueWithVacation);
-                reportPipeValueDto.getSeries().add(reportPipeValueWithOutVacation);
+        VacationReportPipeDto reportPipeValueDto = new VacationReportPipeDto();
+        reportPipeValueDto.setName("Соотношения");
+        reportPipeValueDto.setTotalValue(totalCount);
 
-                result.add(reportPipeValueDto);
-            }
-        }
+        VacationReportPipeValueDto reportPipeValueWithVacation = new VacationReportPipeValueDto();
+        reportPipeValueWithVacation.setName("Заданы отпуска");
+        reportPipeValueWithVacation.setValue(vacationDao.findVacationTotalCount(request));
+
+        VacationReportPipeValueDto reportPipeValueWithOutVacation = new VacationReportPipeValueDto();
+        reportPipeValueWithOutVacation.setName("Не заданы отпуска");
+        reportPipeValueWithOutVacation.setValue(reportPipeValueDto.getTotalValue() - reportPipeValueWithVacation.getValue());
+
+        reportPipeValueDto.getSeries().add(reportPipeValueWithVacation);
+        reportPipeValueDto.getSeries().add(reportPipeValueWithOutVacation);
+
+        result.add(reportPipeValueDto);
+//            }
+//        }
 
         return result;
     }
@@ -460,7 +468,6 @@ public class VacationServiceImpl implements VacationService {
     }
 
     private VacationReportDistributeDto createReportDistributeLineValues(VacationReportDistributeDto vacationReportDistributeDto,
-                                                                         Long depId,
                                                                          String name,
                                                                          long totalValue,
                                                                          GenerateReportDistributeRequest request) {
@@ -470,7 +477,7 @@ public class VacationServiceImpl implements VacationService {
 
         VacationReportDistributeLineDto vacationReport = new VacationReportDistributeLineDto();
         vacationReport.setName(name);
-        vacationReport.setSeries(createReportDistributeLineValues(depId, request));
+        vacationReport.setSeries(createReportDistributeLineValues(request));
 
         vacationReportDistributeDto.getLineValues().add(vacationReport);
 
@@ -493,7 +500,7 @@ public class VacationServiceImpl implements VacationService {
         return vacationReportDistributeDto;
     }
 
-    private List<VacationReportDistributeLineValueDto> createReportDistributeLineValues(Long depId, GenerateReportDistributeRequest request) {
+    private List<VacationReportDistributeLineValueDto> createReportDistributeLineValues(GenerateReportDistributeRequest request) {
         List<VacationReportDistributeLineValueDto> result = new ArrayList<>();
 
         for (Pair<LocalDate, LocalDate> fromToPair : calculateFromToDates(request.getFrom(), request.getTo(), request.getSplitType())) {
@@ -501,7 +508,8 @@ public class VacationServiceImpl implements VacationService {
 
             if (request.isCalculateIntersections()) {
                 GenerateReportDistributeRequest findVacations = new GenerateReportDistributeRequest();
-                findVacations.setDepartmentIds(depId != null ? Collections.singletonList(depId) : Collections.emptyList());
+                findVacations.setDepartmentIds(request.getDepartmentIds());
+                findVacations.setEmployeeIds(request.getEmployeeIds());
                 findVacations.setPostIds(request.getPostIds());
                 findVacations.setTypeWorkIds(request.getTypeWorkIds());
                 findVacations.setFrom(fromToPair.getKey());
@@ -513,7 +521,8 @@ public class VacationServiceImpl implements VacationService {
                         vacationDao.findAll(findVacations));
             } else {
                 FindVacationByDepartmentRequest findVacation = new FindVacationByDepartmentRequest();
-                findVacation.setDepartmentIds(depId != null ? Collections.singletonList(depId) : Collections.emptyList());
+                findVacation.setDepartmentIds(request.getDepartmentIds());
+                findVacation.setEmployeeIds(request.getEmployeeIds());
                 findVacation.setPostIds(request.getPostIds());
                 findVacation.setTypeWorkIds(request.getTypeWorkIds());
                 findVacation.setFrom(fromToPair.getKey());
@@ -566,11 +575,6 @@ public class VacationServiceImpl implements VacationService {
 
         return maxCount;
     }
-
-    private List<VacationReportDistributeLineValueDto> createReportDistributeLineValues(GenerateReportDistributeRequest request) {
-        return createReportDistributeLineValues(null, request);
-    }
-
 
     private String getPipeTitle(LocalDate from, GenerateReportDistributeSplitType splitType) {
         if (splitType == GenerateReportDistributeSplitType.MONTHS) {

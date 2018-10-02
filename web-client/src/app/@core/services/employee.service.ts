@@ -98,9 +98,10 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
         let params = new HttpParams();
 
         params = params.append('number', String(findRequest.number))
+            .append('query', findRequest.query)
             .append('pagesize', String(findRequest.pageSize))
             .append('onOnePage', String(findRequest.onOnePage))
-            .append('departmentId', String(findRequest.departmentId));
+            .append('departmentIds', findRequest.departmentIds.toString());
 
         return this._httpClient.get<Page<EmployeeModel>>(this.getEmployeeUrl, {params: params})
             .pipe(tap((request: Page<EmployeeModel>) => request.data.forEach(this.convertModel)));

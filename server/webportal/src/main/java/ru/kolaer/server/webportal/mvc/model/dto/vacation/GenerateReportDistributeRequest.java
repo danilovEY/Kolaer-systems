@@ -5,13 +5,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 @Data
 public class GenerateReportDistributeRequest {
-    private List<Long> typeWorkIds = Collections.emptyList();
-    private List<Long> postIds = Collections.emptyList();
-    private List<Long> departmentIds = Collections.emptyList();
+    private Set<Long> typeWorkIds = Collections.emptySet();
+    private Set<Long> postIds = Collections.emptySet();
+    private Set<Long> departmentIds = Collections.emptySet();
+    private Set<Long> employeeIds = Collections.emptySet();
     private boolean allDepartment;
     private boolean addPipesForVacation;
     private boolean calculateIntersections;

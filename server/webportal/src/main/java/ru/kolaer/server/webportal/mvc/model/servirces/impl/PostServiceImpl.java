@@ -3,15 +3,19 @@ package ru.kolaer.server.webportal.mvc.model.servirces.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.PostConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.PostDao;
+import ru.kolaer.server.webportal.mvc.model.dto.post.FindPostPageRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.post.PostRequestDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PostService;
+
+import java.util.List;
 
 /**
  * Created by danilovey on 12.10.2017.
@@ -65,5 +69,14 @@ public class PostServiceImpl
         postEntity.setType(postRequestDto.getType());
 
         return defaultConverter.convertToDto(defaultEntityDao.save(postEntity));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PostDto> find(FindPostPageRequest request) {
+        long count = defaultEntityDao.findCount(request);
+        List<PostDto> posts = defaultConverter.convertToDto(defaultEntityDao.find(request));
+
+        return new Page<>(posts, request.getNumber(), count, request.getPageSize());
     }
 }

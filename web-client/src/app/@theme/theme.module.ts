@@ -46,7 +46,7 @@ import {DepartmentEditComponent} from './components/table/department-edit.compon
 import {DateEditComponent} from './components/table/date-edit.component';
 import {CustomDatePickerLangService} from '../@core/services/custom-date-picker-lang.service';
 import {PlacementEditComponent} from './components/table/placement-edit.component';
-import {CalendarModule, DropdownModule, MessagesModule} from 'primeng/primeng';
+import {AutoCompleteModule, CalendarModule, DropdownModule, MessagesModule} from 'primeng/primeng';
 import {DateTimeEditComponent} from './components/table/date-time-edit.component';
 import {NgbDateRusParserFormatter} from './components/table/ngb-date-rus-parser.formatter';
 import {TableModule} from 'primeng/table';
@@ -87,7 +87,8 @@ const NB_MODULES = [
     TableModule,
     DropdownModule,
     MessagesModule,
-    MessageModule
+    MessageModule,
+    AutoCompleteModule
 ];
 
 const COMPONENTS = [

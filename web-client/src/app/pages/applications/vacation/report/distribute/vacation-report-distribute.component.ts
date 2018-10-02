@@ -5,14 +5,10 @@ import {VacationReportDistributeModel} from '../../model/vacation-report-distrib
 import {GenerateReportDistributeRequestModel} from '../../model/generate-report-distribute-request.model';
 import {ReportFilterModel} from '../../model/report-filter.model';
 import {Title} from '@angular/platform-browser';
-import {DepartmentSortModel} from '../../../../../@core/models/department-sort.model';
-import {SortTypeEnum} from '../../../../../@core/models/sort-type.enum';
-import {DepartmentFilterModel} from '../../../../../@core/models/department-filter.model';
 import {DepartmentService} from '../../../../../@core/services/department.service';
 import {EmployeeService} from '../../../../../@core/services/employee.service';
 import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
-import {DepartmentModel} from '../../../../../@core/models/department.model';
 import SvgSaver from 'svgsaver';
 import * as html2canvas from 'html2canvas';
 
@@ -41,8 +37,6 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
     pipeView: number[] = [800, 400];
     lineView: number[] = [800, 300];
 
-    departments: DepartmentModel[] = [];
-
     constructor(private theme: NbThemeService,
                 private departmentService: DepartmentService,
                 private accountService: AccountService,
@@ -63,13 +57,7 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
             .subscribe(account => {
                 this.currentAccount = account;
 
-                if (account.accessVacationAdmin) {
-                    const sort = new DepartmentSortModel();
-                    sort.sortAbbreviatedName = SortTypeEnum.ASC;
-
-                    this.departmentService.getAllDepartments(sort, new DepartmentFilterModel(), 1, 1000)
-                        .subscribe(depPage => this.departments = depPage.data);
-                } else {
+                if (!account.accessVacationAdmin) {
                     this.employeeService.getCurrentEmployee()
                         .subscribe(employee => this.filterModel.selectedDepartments = [employee.department]);
                 }
@@ -81,23 +69,23 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
     }
 
     generateReportDistribute(filterModel: ReportFilterModel) {
-        if ((this.filterModel.selectedDepartments.length > 0 || this.filterModel.selectedAllDepartments)
-            && this.filterModel.from && this.filterModel.to) {
-            const request = new GenerateReportDistributeRequestModel();
-            request.calculateIntersections = this.filterModel.calculateIntersections;
-            request.addPipesForVacation = this.filterModel.pipeCharts;
-            request.departmentIds = this.filterModel.selectedDepartments.map(dep => dep.id);
-            request.allDepartment = this.filterModel.selectedAllDepartments;
-            request.from = this.filterModel.from;
-            request.to = this.filterModel.to;
+        const request = new GenerateReportDistributeRequestModel();
+        request.calculateIntersections = this.filterModel.calculateIntersections;
+        request.addPipesForVacation = this.filterModel.pipeCharts;
+        request.departmentIds = this.filterModel.selectedDepartments.map(dep => dep.id);
+        request.employeeIds = this.filterModel.selectedEmployees.map(emp => emp.id);
+        request.postIds = this.filterModel.selectedPosts.map(post => post.id);
+        request.typeWorkIds = this.filterModel.selectedTypeWorks.map(typeWork => typeWork.id);
+        request.allDepartment = this.filterModel.selectedAllDepartments;
+        request.from = this.filterModel.from;
+        request.to = this.filterModel.to;
 
-            this.vacationService.generateVacationReportDistribute(request)
-                .subscribe(vacationReport => {
-                    this.vacationReportDistribute = vacationReport;
-                    this.pipeView[0] = this.filterElement.nativeElement.offsetWidth - 70;
-                    this.lineView[0] = this.filterElement.nativeElement.offsetWidth - 70;
-                });
-        }
+        this.vacationService.generateVacationReportDistribute(request)
+            .subscribe(vacationReport => {
+                this.vacationReportDistribute = vacationReport;
+                this.pipeView[0] = this.filterElement.nativeElement.offsetWidth - 70;
+                this.lineView[0] = this.filterElement.nativeElement.offsetWidth - 70;
+            });
     }
 
     ngOnDestroy(): void {

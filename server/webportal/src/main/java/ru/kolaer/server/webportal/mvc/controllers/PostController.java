@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.mvc.model.dto.post.FindPostPageRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.post.PostFilter;
 import ru.kolaer.server.webportal.mvc.model.dto.post.PostRequestDto;
 import ru.kolaer.server.webportal.mvc.model.dto.post.PostSort;
@@ -35,6 +36,13 @@ public class PostController {
                                           PostSort sortParam,
                                           PostFilter filter) {
         return this.postService.getAll(sortParam, filter, number, pageSize);
+    }
+
+    @ApiOperation(value = "Найти должности")
+    @UrlDeclaration
+    @RequestMapping(value = "/find", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<PostDto> getAllDepartment(FindPostPageRequest request) {
+        return this.postService.find(request);
     }
 
     @ApiOperation(value = "Добавить должность")

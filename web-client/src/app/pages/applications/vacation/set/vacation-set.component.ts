@@ -233,7 +233,7 @@ export class VacationSetComponent implements OnInit {
 
     selectDepartment(event: DepartmentModel) {
         const findRequest = new FindEmployeeRequestModel();
-        findRequest.departmentId = event.id;
+        findRequest.departmentIds = [event.id];
         findRequest.onOnePage = true;
 
         this.employeeService.findAllEmployees(findRequest)
