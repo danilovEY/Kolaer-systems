@@ -13,12 +13,12 @@
     </div>
 
     <div class="col-12" *ngIf="vacationReportPipes && vacationReportPipes.length > 0">
-        <nb-card>
+        <nb-card id="barChart">
             <nb-card-header>
                 <span>График соотношений</span>
             </nb-card-header>
 
-            <nb-card-body id="barChart">
+            <nb-card-body>
                 <ngx-charts-bar-vertical-normalized
                         [scheme]="colorScheme"
                         [view]="pipeView"
@@ -36,8 +36,10 @@
             </nb-card-body>
 
             <nb-card-footer>
-                <button class="btn btn-success" (click)="downloadBarChart()">Скачать график</button>
+                <report-filter-description [filterModel]="filterModel"></report-filter-description>
             </nb-card-footer>
         </nb-card>
+
+        <button class="btn btn-success" (click)="downloadBarChart()">Скачать график</button>
     </div>
 </div>

@@ -57,7 +57,7 @@ export class VacationReportCalendarComponent implements OnInit {
 
                 if (!account.accessVacationAdmin) {
                     this.employeeService.getCurrentEmployee()
-                        .subscribe(employee => this.filterModel.selectedDepartment = employee.department);
+                        .subscribe(employee => this.filterModel.selectedDepartments = [employee.department]);
                 }
             });
     }
@@ -104,11 +104,10 @@ export class VacationReportCalendarComponent implements OnInit {
 
     generateReportCalendar(filterModel: ReportFilterModel) {
         const request = new GenerateReportCalendarRequestModel();
-        request.departmentIds = this.filterModel.selectedDepartment ? [this.filterModel.selectedDepartment.id] : [];
+        request.departmentIds = this.filterModel.selectedAllDepartments ? [] : this.filterModel.selectedDepartments.map(dep => dep.id);
         request.employeeIds = this.filterModel.selectedEmployees.map(emp => emp.id);
         request.postIds = this.filterModel.selectedPosts.map(post => post.id);
         request.typeWorkIds = this.filterModel.selectedTypeWorks.map(typeWork => typeWork.id);
-        request.allDepartment = this.filterModel.selectedAllDepartments;
         request.from = this.filterModel.from;
         request.to = this.filterModel.to;
 
@@ -121,11 +120,10 @@ export class VacationReportCalendarComponent implements OnInit {
 
     downloadCalendarChart() {
         const request = new GenerateReportCalendarRequestModel();
-        request.departmentIds = this.filterModel.selectedDepartment ? [this.filterModel.selectedDepartment.id] : [];
+        request.departmentIds = this.filterModel.selectedAllDepartments ? [] : this.filterModel.selectedDepartments.map(dep => dep.id);
         request.employeeIds = this.filterModel.selectedEmployees.map(emp => emp.id);
         request.postIds = this.filterModel.selectedPosts.map(post => post.id);
         request.typeWorkIds = this.filterModel.selectedTypeWorks.map(typeWork => typeWork.id);
-        request.allDepartment = this.filterModel.selectedAllDepartments;
         request.from = this.filterModel.from;
         request.to = this.filterModel.to;
 

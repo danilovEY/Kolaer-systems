@@ -11,6 +11,7 @@ import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import SvgSaver from 'svgsaver';
 import * as html2canvas from 'html2canvas';
+import {Utils} from '../../../../../@core/utils/utils';
 
 @Component({
     selector: 'vacation-report-distribute',
@@ -72,11 +73,10 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
         const request = new GenerateReportDistributeRequestModel();
         request.calculateIntersections = this.filterModel.calculateIntersections;
         request.addPipesForVacation = this.filterModel.pipeCharts;
-        request.departmentIds = this.filterModel.selectedDepartments.map(dep => dep.id);
+        request.departmentIds = this.filterModel.selectedAllDepartments ? [] : this.filterModel.selectedDepartments.map(dep => dep.id);
         request.employeeIds = this.filterModel.selectedEmployees.map(emp => emp.id);
         request.postIds = this.filterModel.selectedPosts.map(post => post.id);
         request.typeWorkIds = this.filterModel.selectedTypeWorks.map(typeWork => typeWork.id);
-        request.allDepartment = this.filterModel.selectedAllDepartments;
         request.from = this.filterModel.from;
         request.to = this.filterModel.to;
 
@@ -119,5 +119,23 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
             window.URL.revokeObjectURL(contentDataURL);
             a.remove();
         });
+    }
+
+    getFilterDescription(): string {
+        if (!this.filterModel) {
+            return '';
+        }
+
+        console.log(this.filterModel);
+
+        return `${Utils.getDateFormat(this.filterModel.from)} - ${Utils.getDateFormat(this.filterModel.to)}` +
+            this.convertToString(this.filterModel.selectedDepartments, d => d.abbreviatedName) +
+            this.convertToString(this.filterModel.selectedEmployees, d => d.initials) +
+            this.convertToString(this.filterModel.selectedPosts, d => d.abbreviatedName) +
+            this.convertToString(this.filterModel.selectedTypeWorks, d => d.name);
+    }
+
+    private convertToString(objects: any[], map: Function) {
+        return objects.length > 0 ? ' | ' + objects.map(obj => map(obj)).join(', ') : '';
     }
 }

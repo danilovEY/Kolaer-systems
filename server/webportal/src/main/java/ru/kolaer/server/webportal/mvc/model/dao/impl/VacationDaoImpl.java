@@ -149,7 +149,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
         params.put("vacationFrom", request.getFrom());
         params.put("vacationTo", request.getTo());
 
-        if (!request.isAllDepartment() && !request.getDepartmentIds().isEmpty()) {
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
             sqlQuery = sqlQuery.append(" AND employee.departmentId IN (:departmentIds)");
             params.put("departmentIds", request.getDepartmentIds());
         }
@@ -247,7 +247,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
         params.put("vacationFrom", request.getFrom());
         params.put("vacationTo", request.getTo());
 
-        if (!request.isAllDepartment() && !request.getDepartmentIds().isEmpty()) {
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
             sqlQuery = sqlQuery.append(" AND v.employee.departmentId IN (:departmentIds)");
             params.put("departmentIds", request.getDepartmentIds());
         }
@@ -290,7 +290,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
         params.put("vacationFrom", request.getFrom());
         params.put("vacationTo", request.getTo());
 
-        if (!request.isAllDepartment() && !request.getDepartmentIds().isEmpty()) {
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
             sqlQuery = sqlQuery.append(" AND employee.departmentId IN (:departmentIds)");
             params.put("departmentIds", request.getDepartmentIds());
         }

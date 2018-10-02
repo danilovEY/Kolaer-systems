@@ -346,10 +346,9 @@ public class VacationServiceImpl implements VacationService {
         result.setLineValues(new ArrayList<>());
         result.setPipeValues(new ArrayList<>());
 
-        if (request.isAllDepartment()) {
-            result = createReportDistributeLineValues(result,
-                    "КолАЭР", employeeDao.findAllCount(), request);
-        }
+//        if (request.isAllDepartment()) {
+//            result = createReportDistributeLineValues(result, "КолАЭР", employeeDao.findAllCount(), request);
+//        }
 
 //        if (CollectionUtils.)
 //        FindEmployeeByDepartment findEmployeeByDepartment = new FindEmployeeByDepartment();
@@ -391,33 +390,26 @@ public class VacationServiceImpl implements VacationService {
 
         List<VacationReportPipeDto> result = new ArrayList<>();
 
-        if (request.isAllDepartment()) {
-            VacationTotalCountEntity allVacationTotalCount = vacationDao.findAllVacationTotalCount(request);
-
-            VacationReportPipeDto reportPipeValueDto = new VacationReportPipeDto();
-            reportPipeValueDto.setName("КолАЭР");
-            reportPipeValueDto.setTotalValue(allVacationTotalCount.getTotalCountEmployeeOnDepartment());
-
-            VacationReportPipeValueDto reportPipeValueWithVacation = new VacationReportPipeValueDto();
-            reportPipeValueWithVacation.setName("Заданы отпуска");
-            reportPipeValueWithVacation.setValue(allVacationTotalCount.getTotalCountEmployeeWithBalance());
-
-            VacationReportPipeValueDto reportPipeValueWithOutVacation = new VacationReportPipeValueDto();
-            reportPipeValueWithOutVacation.setName("Не заданы отпуска");
-            reportPipeValueWithOutVacation.setValue(reportPipeValueDto.getTotalValue() - reportPipeValueWithVacation.getValue());
-
-            reportPipeValueDto.getSeries().add(reportPipeValueWithVacation);
-            reportPipeValueDto.getSeries().add(reportPipeValueWithOutVacation);
-
-            result.add(reportPipeValueDto);
-        }
-
-//        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
-//            Map<Long, DepartmentEntity> departmentMap = departmentDao.findById(request.getDepartmentIds())
-//                    .stream()
-//                    .collect(Collectors.toMap(DepartmentEntity::getId, Function.identity()));
-
-//            for (VacationTotalCountDepartmentEntity vacationTotalCount : vacationDao.findVacationTotalCountDepartment(request)) {
+//        if (request.isAllDepartment()) {
+//            VacationTotalCountEntity allVacationTotalCount = vacationDao.findAllVacationTotalCount(request);
+//
+//            VacationReportPipeDto reportPipeValueDto = new VacationReportPipeDto();
+//            reportPipeValueDto.setName("КолАЭР");
+//            reportPipeValueDto.setTotalValue(allVacationTotalCount.getTotalCountEmployeeOnDepartment());
+//
+//            VacationReportPipeValueDto reportPipeValueWithVacation = new VacationReportPipeValueDto();
+//            reportPipeValueWithVacation.setName("Заданы отпуска");
+//            reportPipeValueWithVacation.setValue(allVacationTotalCount.getTotalCountEmployeeWithBalance());
+//
+//            VacationReportPipeValueDto reportPipeValueWithOutVacation = new VacationReportPipeValueDto();
+//            reportPipeValueWithOutVacation.setName("Не заданы отпуска");
+//            reportPipeValueWithOutVacation.setValue(reportPipeValueDto.getTotalValue() - reportPipeValueWithVacation.getValue());
+//
+//            reportPipeValueDto.getSeries().add(reportPipeValueWithVacation);
+//            reportPipeValueDto.getSeries().add(reportPipeValueWithOutVacation);
+//
+//            result.add(reportPipeValueDto);
+//        }
 
         FindEmployeePageRequest findEmployeePageRequest = new FindEmployeePageRequest();
         findEmployeePageRequest.setDepartmentIds(request.getDepartmentIds());

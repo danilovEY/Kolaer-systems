@@ -139,13 +139,7 @@ export class ReportFilterComponent implements OnInit {
     }
 
     private getIdsDepartments(): number[] {
-        if (this.multiSelectDepartment) {
-            return this.filterModel.selectedDepartments.map(d => d.id);
-        } else {
-            return this.filterModel.selectedDepartment
-                ? [this.filterModel.selectedDepartment.id]
-                : [];
-        }
+        return this.filterModel.selectedDepartments.map(d => d.id);
     }
 
     setPeriodRadioModel(value: any) {
@@ -245,13 +239,7 @@ export class ReportFilterComponent implements OnInit {
     }
 
     onSelectDepartment(selected: DepartmentModel) {
-        if (this.multiSelectDepartment) {
-            this.filterModel.selectedDepartments.push(selected);
-            this.filterModel.selectedDepartment = undefined;
-        } else {
-            this.filterModel.selectedDepartments = [];
-            this.filterModel.selectedDepartment = selected;
-        }
+        this.filterModel.selectedDepartments.push(selected);
 
         if (this.onChangeFilter) {
             this.onChangeFilter.emit(this.filterModel);
@@ -259,16 +247,9 @@ export class ReportFilterComponent implements OnInit {
     }
 
     onUnSelectDepartment(selected: DepartmentModel) {
-        if (this.multiSelectDepartment) {
-            const index = this.filterModel.selectedDepartments.indexOf(selected);
-            if (index !== -1) {
-                this.filterModel.selectedDepartments.splice(index, 1);
-            }
-
-            this.filterModel.selectedDepartment = undefined;
-        } else {
-            this.filterModel.selectedDepartments = [];
-            this.filterModel.selectedDepartment = undefined;
+        const index = this.filterModel.selectedDepartments.indexOf(selected);
+        if (index !== -1) {
+            this.filterModel.selectedDepartments.splice(index, 1);
         }
 
         if (this.onChangeFilter) {

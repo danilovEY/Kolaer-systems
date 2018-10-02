@@ -76,11 +76,10 @@ export class VacationReportTotalCountComponent implements OnInit, OnDestroy {
 
     generateReportDistribute(filterModel: ReportFilterModel) {
         const request = new GenerateReportTotalCountRequestModel();
-        request.departmentIds = this.filterModel.selectedDepartments.map(dep => dep.id);
+        request.departmentIds = this.filterModel.selectedAllDepartments ? [] : this.filterModel.selectedDepartments.map(dep => dep.id);
         request.employeeIds = this.filterModel.selectedEmployees.map(emp => emp.id);
         request.postIds = this.filterModel.selectedPosts.map(post => post.id);
         request.typeWorkIds = this.filterModel.selectedTypeWorks.map(typeWork => typeWork.id);
-        request.allDepartment = this.filterModel.selectedAllDepartments;
         request.from = this.filterModel.from;
         request.to = this.filterModel.to;
 

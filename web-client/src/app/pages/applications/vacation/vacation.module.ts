@@ -16,6 +16,7 @@ import {ReportFilterComponent} from './component/report-filter/report-filter.com
 import {MultiSelectModule} from 'primeng/primeng';
 import {VacationExportComponent} from './report/export/vacation-export.component';
 import {VacationReportTotalCountComponent} from './report/total-count/vacation-report-total-count.component';
+import {ReportFilterDescriptionComponent} from './component/report-filter-description/report-filter-description.component';
 
 @NgModule({
     imports: [
@@ -35,7 +36,8 @@ import {VacationReportTotalCountComponent} from './report/total-count/vacation-r
         VacationReportDistributeComponent,
         ReportFilterComponent,
         VacationExportComponent,
-        VacationReportTotalCountComponent
+        VacationReportTotalCountComponent,
+        ReportFilterDescriptionComponent
     ],
     entryComponents: [
         VacationDateFromEditComponent,

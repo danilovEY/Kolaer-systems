@@ -44,7 +44,7 @@ export class VacationExportComponent implements OnInit {
 
                 if (!account.accessVacationAdmin) {
                     this.employeeService.getCurrentEmployee()
-                        .subscribe(employee => this.filterModel.selectedDepartment = employee.department);
+                        .subscribe(employee => this.filterModel.selectedDepartments = [employee.department]);
                 }
             });
     }
@@ -55,7 +55,7 @@ export class VacationExportComponent implements OnInit {
 
     generateReportExport(filterModel: ReportFilterModel) {
         const request = new GenerateReportExportRequestModel();
-        request.departmentId = this.filterModel.selectedDepartment.id;
+        request.departmentId = this.filterModel.selectedDepartments[0].id;
         request.employeeIds = this.filterModel.selectedEmployees.map(emp => emp.id);
         request.postIds = this.filterModel.selectedPosts.map(post => post.id);
         request.typeWorkIds = this.filterModel.selectedTypeWorks.map(typeWork => typeWork.id);
@@ -69,7 +69,7 @@ export class VacationExportComponent implements OnInit {
                 document.body.appendChild(a);
                 a.setAttribute('style', 'display: none');
                 a.href = url;
-                a.download = this.filterModel.selectedDepartment.abbreviatedName + ' (Отчет).xlsx';
+                a.download = this.filterModel.selectedDepartments[0].abbreviatedName + ' (Отчет).xlsx';
                 a.click();
                 window.URL.revokeObjectURL(url);
                 a.remove();

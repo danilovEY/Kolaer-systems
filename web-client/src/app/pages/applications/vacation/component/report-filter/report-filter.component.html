@@ -53,9 +53,8 @@
                             <label>Подразделение:</label>
                             <div class="input-group">
                                 <p-autoComplete [multiple]="multiSelectDepartment"
-                                                [ngModel]="multiSelectDepartment
-                                                ? filterModel.selectedDepartments
-                                                : filterModel.selectedDepartment"
+                                                [disabled]="filterModel.selectedAllDepartments"
+                                                [ngModel]="filterModel.selectedDepartments"
                                                 [suggestions]="departmentsResult"
                                                 (onSelect)="onSelectDepartment($event)"
                                                 (onUnselect)="onUnSelectDepartment($event)"

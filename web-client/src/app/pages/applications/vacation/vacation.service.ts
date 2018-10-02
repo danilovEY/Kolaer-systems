@@ -58,7 +58,6 @@ export class VacationService extends BaseService {
 
     public generateVacationReportCalendarAndDownload(request: GenerateReportCalendarRequestModel): Observable<any> {
         const params: HttpParams = new HttpParams()
-            .append('allDepartment', request.allDepartment.toString())
             .append('departmentIds', request.departmentIds.toString())
             .append('employeeIds', request.employeeIds.toString())
             .append('postIds', request.postIds.toString())
@@ -74,7 +73,6 @@ export class VacationService extends BaseService {
 
     public generateVacationReportCalendar(request: GenerateReportCalendarRequestModel): Observable<VacationReportCalendarEmployeeModel[]> {
         const params: HttpParams = new HttpParams()
-            .append('allDepartment', request.allDepartment.toString())
             .append('departmentIds', request.departmentIds.toString())
             .append('employeeIds', request.employeeIds.toString())
             .append('postIds', request.postIds.toString())
@@ -89,7 +87,6 @@ export class VacationService extends BaseService {
         const params: HttpParams = new HttpParams()
             .append('addPipesForVacation', request.addPipesForVacation.toString())
             .append('calculateIntersections', request.calculateIntersections.toString())
-            .append('allDepartment', request.allDepartment.toString())
             .append('departmentIds', request.departmentIds.toString())
             .append('employeeIds', request.employeeIds.toString())
             .append('postIds', request.postIds.toString())
@@ -103,7 +100,6 @@ export class VacationService extends BaseService {
     public generateVacationReportTotalCount(request: GenerateReportTotalCountRequestModel):
     Observable<VacationReportPipeModel[]> {
         const params: HttpParams = new HttpParams()
-            .append('allDepartment', request.allDepartment.toString())
             .append('departmentIds', request.departmentIds.toString())
             .append('employeeIds', request.employeeIds.toString())
             .append('postIds', request.postIds.toString())

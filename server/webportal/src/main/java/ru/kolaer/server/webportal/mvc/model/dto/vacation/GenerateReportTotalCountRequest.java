@@ -13,7 +13,6 @@ public class GenerateReportTotalCountRequest {
     private Set<Long> postIds = Collections.emptySet();
     private Set<Long> departmentIds = Collections.emptySet();
     private Set<Long> employeeIds = Collections.emptySet();
-    private boolean allDepartment;
     private GenerateReportDistributeSplitType splitType = GenerateReportDistributeSplitType.MONTHS;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

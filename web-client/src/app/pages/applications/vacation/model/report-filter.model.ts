@@ -8,7 +8,7 @@ export class ReportFilterModel {
     public selectedPosts: PostModel[] = [];
     public selectedEmployees: EmployeeModel[] = [];
     public selectedDepartments: DepartmentModel[] = [];
-    public selectedDepartment: DepartmentModel;
+    // public selectedDepartment: DepartmentModel;
     public selectedAllDepartments: boolean = false;
     public pipeCharts: boolean = false;
     public calculateIntersections: boolean = true;

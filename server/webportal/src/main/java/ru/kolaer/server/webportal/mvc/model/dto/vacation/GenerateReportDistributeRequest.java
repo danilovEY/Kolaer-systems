@@ -13,7 +13,6 @@ public class GenerateReportDistributeRequest {
     private Set<Long> postIds = Collections.emptySet();
     private Set<Long> departmentIds = Collections.emptySet();
     private Set<Long> employeeIds = Collections.emptySet();
-    private boolean allDepartment;
     private boolean addPipesForVacation;
     private boolean calculateIntersections;
     private GenerateReportDistributeSplitType splitType = GenerateReportDistributeSplitType.MONTHS;

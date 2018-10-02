@@ -3,7 +3,6 @@ export class GenerateReportDistributeRequestModel {
     public employeeIds: number[];
     public postIds: number[];
     public typeWorkIds: number[];
-    public allDepartment: boolean = false;
     public addPipesForVacation: boolean = false;
     public calculateIntersections: boolean = false;
     public from: Date;

@@ -104,6 +104,8 @@
             </nb-card-body>
 
             <nb-card-footer>
+                <report-filter-description [filterModel]="filterModel"></report-filter-description>
+
                 <button class="btn btn-success" (click)="downloadCalendarChart()">Скачать график</button>
             </nb-card-footer>
         </nb-card>
