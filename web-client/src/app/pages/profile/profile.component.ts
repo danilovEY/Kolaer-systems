@@ -22,8 +22,9 @@ import {PlacementService} from '../../@core/services/placement.service';
 import {PlacementFilterModel} from '../../@core/models/placement-filter.model';
 import {PlacementModel} from '../../@core/models/placement.model';
 import {PlacementSortModel} from '../../@core/models/placement-sort.model';
-import {ContactTypeModel} from "../../@core/models/contact-type.model";
-import {Toast, ToasterConfig, ToasterService} from "angular2-toaster";
+import {ContactTypeModel} from '../../@core/models/contact-type.model';
+import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
+import {UserService} from '../../@core/services/user.service';
 
 @Component({
     selector: 'profile',
@@ -70,6 +71,7 @@ export class ProfileComponent implements OnInit {
     constructor(private accountService: AccountService,
                 private employeeService: EmployeeService,
                 private contactsService: ContactsService,
+                private userService: UserService,
                 private placementService: PlacementService,
                 private toasterService: ToasterService,
                 private authService: AuthenticationRestService,
@@ -118,9 +120,7 @@ export class ProfileComponent implements OnInit {
             (employee: EmployeeModel) => this.currentEmployee = employee, error2 => console.log(error2));
 
         this.contactsService.getMyContacts()
-            .subscribe((contact: ContactModel) => {
-                this.updateContactsField(contact);
-            })
+            .subscribe((contact: ContactModel) => this.updateContactsField(contact));
     }
 
     private updateCurrentAccount(cache: boolean = true) {
@@ -135,6 +135,7 @@ export class ProfileComponent implements OnInit {
 
                 if (!account.accessOit) {
                     this.formContact.get('email').disable();
+                    this.formContact.get('type').disable();
                 }
             });
     }
@@ -220,7 +221,7 @@ export class ProfileComponent implements OnInit {
             contactRequestModel.placementId = this.formContact.value.placement.id;
         }
 
-        this.contactsService.updateContact(this.currentEmployee.id, contactRequestModel)
+        this.userService.updateMyContacts(contactRequestModel)
             .subscribe((contact: ContactModel) => {
                 this.updateContactsField(contact);
 
@@ -244,6 +245,7 @@ export class ProfileComponent implements OnInit {
             );
     }
 
+
     private updateContactsField(contact: ContactModel) {
         this.currentContacts = contact;
 
@@ -251,7 +253,7 @@ export class ProfileComponent implements OnInit {
         this.formContact.controls['mobilePhoneNumber'].setValue(contact.mobilePhoneNumber);
         this.formContact.controls['pager'].setValue(contact.pager);
         this.formContact.controls['placement'].setValue(contact.placement);
-        this.formContact.controls['type'].setValue(contact.type);
+        this.formContact.controls['type'].setValue(ContactTypeModel[contact.type]);
         this.formContact.controls['email'].setValue(contact.email);
     }
 }

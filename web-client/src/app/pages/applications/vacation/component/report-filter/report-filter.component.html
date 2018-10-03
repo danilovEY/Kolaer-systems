@@ -161,8 +161,7 @@
     </nb-card-body>
     <nb-card-footer>
         <button [disabled]="requireDepartments && !(filterModel &&
-                        (filterModel.selectedDepartment ||
-                        ((filterModel.selectedDepartments && filterModel.selectedDepartments.length) > 0 || filterModel.selectedAllDepartments)) &&
+                        ((filterModel.selectedDepartments && filterModel.selectedDepartments.length) > 0 || filterModel.selectedAllDepartments) &&
                         filterModel.from && filterModel.to)"
                 class="btn btn-success" type="submit"
                 (click)="generateReport()">{{ actionTitle }}</button>

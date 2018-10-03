@@ -64,19 +64,31 @@
 
                         <h5 class="inner-title">Доступы</h5>
 
-                        <div class="row">
+                        <div class="row" *ngIf="currentAccount">
                             <div class="col-md-12">
-                                <nb-checkbox disabled [value]="currentAccount?.accessUser">Доступ в систему
+                                <nb-checkbox disabled [value]="currentAccount.accessUser">Доступ в систему
                                 </nb-checkbox>
                             </div>
 
                             <div class="col-md-12">
-                                <nb-checkbox disabled [value]="currentAccount?.accessOit">Администратор системы
+                                <nb-checkbox disabled [value]="currentAccount.accessOit">Администратор системы
                                 </nb-checkbox>
                             </div>
 
                             <div class="col-md-12">
-                                <nb-checkbox disabled [value]="currentAccount?.accessOk">Кадры</nb-checkbox>
+                                <nb-checkbox disabled [value]="currentAccount.accessOk">Кадры</nb-checkbox>
+                            </div>
+
+                            <div class="col-md-12">
+                                <nb-checkbox disabled [value]="currentAccount.accessVacationAdmin">Администатор "График отпусков"</nb-checkbox>
+                            </div>
+
+                            <div class="col-md-12">
+                                <nb-checkbox disabled [value]="currentAccount.accessVacationAdmin">Редактор отпусков в подразделении</nb-checkbox>
+                            </div>
+
+                            <div class="col-md-12">
+                                <nb-checkbox disabled [value]="currentAccount.accessTypeWork">Редактор вида работ в подразделении</nb-checkbox>
                             </div>
                         </div>
 
@@ -240,8 +252,7 @@
                                     <label for="contactType">Тип контактов</label>
                                     <div class="input-group">
                                         <select id="contactType" class="form-control" formControlName="type">
-                                            <option *ngFor="let contactType of contactTypes"
-                                                    [selected]="currentContacts.type === contactType">
+                                            <option *ngFor="let contactType of contactTypes" [ngValue]="contactType">
                                                 {{contactType}}
                                             </option>
                                         </select>
