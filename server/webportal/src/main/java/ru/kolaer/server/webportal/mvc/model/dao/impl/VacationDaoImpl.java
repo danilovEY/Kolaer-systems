@@ -6,10 +6,7 @@ import org.springframework.util.CollectionUtils;
 import ru.kolaer.server.webportal.mvc.model.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.mvc.model.dao.VacationDao;
 import ru.kolaer.server.webportal.mvc.model.dto.vacation.*;
-import ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationBalanceEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationPeriodEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationTotalCountEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.vacation.*;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -274,6 +271,57 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
                 .setProperties(params)
                 .uniqueResultOptional()
                 .orElse(0L);
+    }
+
+    @Override
+    public List<VacationTotalCountDepartmentEntity> findVacationTotalCountDepartment(GenerateReportTotalCountRequest request) {
+        Map<String, Object> params = new HashMap<>();
+
+        StringBuilder sqlQuery = new StringBuilder()
+                .append("SELECT new ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationTotalCountDepartmentEntity(" +
+                        "v.employee.departmentId, COUNT(DISTINCT v.employeeId), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee WHERE ee.departmentId = v.employee.departmentId)) ")
+                .append("FROM ")
+                .append(getEntityName())
+                .append(" AS v LEFT JOIN VacationBalanceEntity AS vb ON v.employeeId = vb.employeeId");
+
+        int currentYear = LocalDate.now().getYear();
+        int yearFrom = request.getFrom().getYear();
+
+        if (currentYear < yearFrom) {
+            sqlQuery = sqlQuery.append(" WHERE vb.nextYearBalance <= 0 AND");
+        } else if (currentYear == yearFrom) {
+            sqlQuery = sqlQuery.append(" WHERE vb.currentYearBalance <= 0 AND");
+        } else {
+            sqlQuery = sqlQuery.append(" WHERE vb.prevYearBalance <= 0 AND");
+        }
+
+        if (!request.getDepartmentIds().isEmpty()) {
+            sqlQuery = sqlQuery.append(" v.employee.departmentId IN (:departmentIds) AND ");
+            params.put("departmentIds", request.getDepartmentIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getPostIds())) {
+            sqlQuery = sqlQuery.append(" v.employee.postId IN (:postIds) AND ");
+            params.put("postIds", request.getPostIds());
+        }
+
+        if (!CollectionUtils.isEmpty(request.getTypeWorkIds())) {
+            sqlQuery = sqlQuery.append(" v.employee.typeWorkId IN (:typeWorkIds) AND ");
+            params.put("typeWorkIds", request.getTypeWorkIds());
+        }
+
+        sqlQuery = sqlQuery.append("((v.vacationFrom <= :vacationFrom AND v.vacationTo >= :vacationFrom OR " +
+                "v.vacationFrom <= :vacationTo AND v.vacationTo >= :vacationTo) OR " +
+                "(v.vacationFrom >= :vacationFrom AND v.vacationTo <= :vacationTo)) ");
+        params.put("vacationFrom", request.getFrom());
+        params.put("vacationTo", request.getTo());
+
+        sqlQuery = sqlQuery.append("GROUP BY v.employee.departmentId");
+
+        return getSession()
+                .createQuery(sqlQuery.toString(), VacationTotalCountDepartmentEntity.class)
+                .setProperties(params)
+                .list();
     }
 
     @Override

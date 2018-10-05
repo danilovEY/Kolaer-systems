@@ -74,6 +74,7 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
         request.calculateIntersections = this.filterModel.calculateIntersections;
         request.addPipesForVacation = this.filterModel.pipeCharts;
         request.departmentIds = this.filterModel.selectedAllDepartments ? [] : this.filterModel.selectedDepartments.map(dep => dep.id);
+        request.groupByDepartments = this.filterModel.groupByDepartments;
         request.employeeIds = this.filterModel.selectedEmployees.map(emp => emp.id);
         request.postIds = this.filterModel.selectedPosts.map(post => post.id);
         request.typeWorkIds = this.filterModel.selectedTypeWorks.map(typeWork => typeWork.id);

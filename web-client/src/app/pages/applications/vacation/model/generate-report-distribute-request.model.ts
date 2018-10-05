@@ -4,6 +4,7 @@ export class GenerateReportDistributeRequestModel {
     public postIds: number[];
     public typeWorkIds: number[];
     public addPipesForVacation: boolean = false;
+    public groupByDepartments: boolean = false;
     public calculateIntersections: boolean = false;
     public from: Date;
     public to: Date;

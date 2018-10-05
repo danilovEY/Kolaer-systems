@@ -155,6 +155,12 @@
                                      (change)="onSelectedAllDepartment($event)">Все подразделения
                         </nb-checkbox>
                     </div>
+
+                    <div class="col-12" *ngIf="groupByDepartments">
+                        <nb-checkbox [(value)]="filterModel.groupByDepartments"
+                                     (change)="onGroupByDepartments($event)">Группировать по подразделениям
+                        </nb-checkbox>
+                    </div>
                 </div>
             </div>
         </div>

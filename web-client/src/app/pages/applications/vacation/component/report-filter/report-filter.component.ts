@@ -52,6 +52,9 @@ export class ReportFilterComponent implements OnInit {
     selectAllDepartments: boolean = false;
 
     @Input()
+    groupByDepartments: boolean = false;
+
+    @Input()
     multiSelectDepartment: boolean = true;
 
     @Input()
@@ -279,6 +282,13 @@ export class ReportFilterComponent implements OnInit {
 
     onSelectedAllDepartment(selected: Event) {
         this.filterModel.selectedAllDepartments = selected.returnValue;
+        if (this.onChangeFilter) {
+            this.onChangeFilter.emit(this.filterModel);
+        }
+    }
+
+    onGroupByDepartments(selected: Event) {
+        this.filterModel.groupByDepartments = selected.returnValue;
         if (this.onChangeFilter) {
             this.onChangeFilter.emit(this.filterModel);
         }

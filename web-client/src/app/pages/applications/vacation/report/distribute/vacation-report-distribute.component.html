@@ -4,6 +4,7 @@
                        [(filterModel)]="filterModel"
                        [selectAllDepartments]="true"
                        [calculateIntersections]="true"
+                       [groupByDepartments]="true"
                        [selectDepartments]="currentAccount && currentAccount.accessVacationAdmin"
                        (onChangeFilter)="changeFilter($event)"
                        (onAcceptFilter)="generateReportDistribute($event)">
@@ -26,7 +27,7 @@
                         [yAxis]="true"
                         [gradient]="false"
                         [animations]="false"
-                        [legend]="false"
+                        [legend]="true"
                         [timeline]="false"
                         [autoScale]="true"
                         [showGridLines]="true"
@@ -38,7 +39,7 @@
             </nb-card-body>
 
             <nb-card-body *ngFor="let pipeModel of vacationReportDistribute.pipeValues">
-                <h3>Процентное соотношение</h3>
+                <h3>Процентное соотношение для {{ pipeModel.name }}</h3>
                 <div class="row">
                     <div class="col-2" *ngFor="let series of pipeModel.series">
                         <div class="progress-info">

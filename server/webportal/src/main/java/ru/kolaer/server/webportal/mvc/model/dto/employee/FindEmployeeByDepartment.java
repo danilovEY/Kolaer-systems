@@ -3,12 +3,12 @@ package ru.kolaer.server.webportal.mvc.model.dto.employee;
 import lombok.Data;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 @Data
 public class FindEmployeeByDepartment {
-    private List<Long> departmentIds = Collections.emptyList();
-    private List<Long> postIds = Collections.emptyList();
-    private List<Long> employeeIds = Collections.emptyList();
-    private List<Long> typeWorkIds = Collections.emptyList();
+    private Set<Long> departmentIds = Collections.emptySet();
+    private Set<Long> postIds = Collections.emptySet();
+    private Set<Long> employeeIds = Collections.emptySet();
+    private Set<Long> typeWorkIds = Collections.emptySet();
 }

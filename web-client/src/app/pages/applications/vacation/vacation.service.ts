@@ -91,6 +91,7 @@ export class VacationService extends BaseService {
             .append('employeeIds', request.employeeIds.toString())
             .append('postIds', request.postIds.toString())
             .append('typeWorkIds', request.typeWorkIds.toString())
+            .append('groupByDepartments', request.groupByDepartments.toString())
             .append('from', Utils.getDateToSend(request.from))
             .append('to', Utils.getDateToSend(request.to));
 
@@ -104,6 +105,7 @@ export class VacationService extends BaseService {
             .append('employeeIds', request.employeeIds.toString())
             .append('postIds', request.postIds.toString())
             .append('typeWorkIds', request.typeWorkIds.toString())
+            .append('groupByDepartments', request.groupByDepartments.toString())
             .append('from', Utils.getDateToSend(request.from))
             .append('to', Utils.getDateToSend(request.to));
 
