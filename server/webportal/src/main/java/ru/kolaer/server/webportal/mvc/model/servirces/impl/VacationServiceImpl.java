@@ -4,15 +4,18 @@ import javafx.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
+import ru.kolaer.api.tools.Tools;
 import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.converter.VacationConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.*;
+import ru.kolaer.server.webportal.mvc.model.dto.counter.FindCounterRequest;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.CountEmployeeInDepartmentDto;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeeByDepartment;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.FindEmployeePageRequest;
@@ -21,6 +24,7 @@ import ru.kolaer.server.webportal.mvc.model.dto.vacation.*;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.holiday.HolidayEntity;
+import ru.kolaer.server.webportal.mvc.model.entities.other.CounterEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.vacation.*;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
@@ -46,6 +50,7 @@ public class VacationServiceImpl implements VacationService {
     private final EmployeeDao employeeDao;
     private final DepartmentDao departmentDao;
     private final PostDao postDao;
+    private final CounterDao counterDao;
     private final GenerateReportForVacationService generateReportForVacationService;
     private final VacationConverter vacationConverter;
     private final HolidayDao holidayDao;
@@ -55,6 +60,7 @@ public class VacationServiceImpl implements VacationService {
                                EmployeeDao employeeDao,
                                DepartmentDao departmentDao,
                                PostDao postDao,
+                               CounterDao counterDao,
                                GenerateReportForVacationService generateReportForVacationService,
                                VacationConverter vacationConverter,
                                HolidayDao holidayDao,
@@ -63,6 +69,7 @@ public class VacationServiceImpl implements VacationService {
         this.employeeDao = employeeDao;
         this.departmentDao = departmentDao;
         this.postDao = postDao;
+        this.counterDao = counterDao;
         this.generateReportForVacationService = generateReportForVacationService;
         this.vacationConverter = vacationConverter;
         this.holidayDao = holidayDao;
@@ -242,96 +249,165 @@ public class VacationServiceImpl implements VacationService {
                 .collect(Collectors.groupingBy(h -> h.getHolidayDate().getYear(),
                         Collectors.toMap(h -> h.getHolidayDate().getDayOfYear(), Function.identity())));
 
+        FindCounterRequest findCounterRequest = new FindCounterRequest();
+        findCounterRequest.setFrom(request.getFrom().atTime(0, 0));
+        findCounterRequest.setTo(request.getTo().atTime(23, 59));
+        findCounterRequest.setDisplayOnVacation(true);
+
+        List<CounterEntity> counters = counterDao.find(findCounterRequest);
+
         Map<Long, Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>>> mapEntityOfYearOfMonth = new HashMap<>();
 
         LocalDate from = request.getFrom();
 
+        Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>> holidaysCalendarRow = new HashMap<>();
+        Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>> counterCalendarRow = new HashMap<>();
+
         while (from.isBefore(request.getTo()) || from.isEqual(request.getTo())) {
-            int year = from.getYear();
-            int month = from.getMonthValue();
-            int day = from.getDayOfMonth();
-            boolean isHoliday = false;
-            boolean isDayOff = false;
+            final LocalDate currentFrom = from;
 
-            DayOfWeek dayOfWeek = from.getDayOfWeek();
+            DayOfWeek dayOfWeek = currentFrom.getDayOfWeek();
 
-            if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
-                isDayOff = true;
-            }
+            int year = currentFrom.getYear();
+            int month = currentFrom.getMonthValue();
+            int day = currentFrom.getDayOfMonth();
 
-            Map<Integer, HolidayEntity> integerHolidayEntityMap = holidayMap.get(year);
-            if (integerHolidayEntityMap != null) {
-                if (integerHolidayEntityMap.containsKey(from.getDayOfYear())) {
-                    isHoliday = true;
-                }
-            }
+            boolean isHoliday = holidayMap.getOrDefault(year, Collections.emptyMap())
+                    .containsKey(currentFrom.getDayOfYear());
 
-            for (Map.Entry<Long, List<VacationEntity>> employeeVacation : employeeVacations.entrySet()) {
+            boolean isDayOff = dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
+
+            if (isHoliday || isDayOff) {
                 VacationReportCalendarDayDto vacationReportCalendarDayDto = new VacationReportCalendarDayDto();
                 vacationReportCalendarDayDto.setDay(String.valueOf(day));
                 vacationReportCalendarDayDto.setHoliday(isHoliday);
                 vacationReportCalendarDayDto.setDayOff(isDayOff);
 
-                for (VacationEntity vacation : employeeVacation.getValue()) {
-                    if (vacation.getVacationFrom().isBefore(from) && vacation.getVacationTo().isAfter(from) ||
-                            vacation.getVacationFrom().isEqual(from) || vacation.getVacationTo().isEqual(from)) {
-                        vacationReportCalendarDayDto.setVacation(true);
-                        break;
-                    }
-                }
+                putDay(holidaysCalendarRow, year, month, day, vacationReportCalendarDayDto);
+            } else {
+                putDay(holidaysCalendarRow, year, month, day);
+            }
+
+            CounterEntity counter = counters
+                    .stream()
+                    .filter(c -> {
+                        LocalDate counterFrom = c.getStart().toLocalDate();
+                        LocalDate counterTo = c.getEnd().toLocalDate();
+
+                        return counterFrom.isBefore(currentFrom) && counterTo.isAfter(currentFrom) ||
+                                counterFrom.isEqual(currentFrom) || counterTo.isEqual(currentFrom);
+                    }).findFirst()
+                    .orElse(null);
+
+            if (counter != null) {
+                String title = Optional.ofNullable(counter.getTitle()).map(str -> str + " | ").orElse("") +
+                        Tools.dateToString(counter.getStart().toLocalDate()) +
+                        " - " +
+                        Tools.dateToString(counter.getEnd().toLocalDate());
+
+                VacationReportCalendarDayDto vacationReportCalendarDayDto = new VacationReportCalendarDayDto();
+                vacationReportCalendarDayDto.setDay(String.valueOf(day));
+                vacationReportCalendarDayDto.setTitle(title);
+                vacationReportCalendarDayDto.setCounter(true);
+
+                putDay(counterCalendarRow, year, month, day, vacationReportCalendarDayDto);
+            } else {
+                putDay(counterCalendarRow, year, month, day);
+            }
+
+            for (Map.Entry<Long, List<VacationEntity>> employeeVacation : employeeVacations.entrySet()) {
+                boolean isVacation = employeeVacation.getValue()
+                        .stream()
+                        .anyMatch(v -> v.getVacationFrom().isBefore(currentFrom) &&
+                                v.getVacationTo().isAfter(currentFrom) ||
+                                v.getVacationFrom().isEqual(currentFrom) || v.getVacationTo().isEqual(currentFrom));
+
+                VacationReportCalendarDayDto calendarDay = new VacationReportCalendarDayDto();
+                calendarDay.setDay(String.valueOf(day));
+                calendarDay.setVacation(isVacation);
 
                 Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>> yearOfMonth =
                         mapEntityOfYearOfMonth.getOrDefault(employeeVacation.getKey(), new HashMap<>());
 
-                Map<Integer, List<VacationReportCalendarDayDto>> monthMap = yearOfMonth.getOrDefault(year, new HashMap<>());
-
-                List<VacationReportCalendarDayDto> days = monthMap.getOrDefault(month, new ArrayList<>());
-
-                days.add(vacationReportCalendarDayDto);
+                putDay(yearOfMonth, year, month, day, calendarDay);
 
                 mapEntityOfYearOfMonth.putIfAbsent(employeeVacation.getKey(), yearOfMonth);
-                yearOfMonth.putIfAbsent(year, monthMap);
-                monthMap.putIfAbsent(month, days);
             }
 
-            from = from.plusDays(1);
+            from = currentFrom.plusDays(1);
         }
 
-        List<VacationReportCalendarEmployeeDto> employeesVacations = new ArrayList<>();
+        List<VacationReportCalendarEmployeeDto> calendars = new ArrayList<>();
+
+        VacationReportCalendarEmployeeDto holidaysCalendar = new VacationReportCalendarEmployeeDto();
+        holidaysCalendar.setEmployee("Праздники");
+        holidaysCalendar.setYears(convertToYear(holidaysCalendarRow));
+
+        VacationReportCalendarEmployeeDto counterCalendar = new VacationReportCalendarEmployeeDto();
+        counterCalendar.setEmployee("Прочее");
+        counterCalendar.setYears(convertToYear(counterCalendarRow));
+
+        calendars.add(holidaysCalendar);
+        calendars.add(counterCalendar);
 
         for (EmployeeEntity employeeEntity : employeeDao.findById(new ArrayList<>(employeeVacations.keySet()))) {
-            List<VacationReportCalendarYearDto> years = new ArrayList<>();
-
-            Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>> yearOfMonth = mapEntityOfYearOfMonth.get(employeeEntity.getId());
-
-            for (Integer year : yearOfMonth.keySet()) {
-                List<VacationReportCalendarMonthDto> months = new ArrayList<>();
-
-                Map<Integer, List<VacationReportCalendarDayDto>> monthOfDays = yearOfMonth.get(year);
-                for (Integer month : monthOfDays.keySet()) {
-                    VacationReportCalendarMonthDto vacationReportCalendarMonthDto = new VacationReportCalendarMonthDto();
-                    vacationReportCalendarMonthDto.setMonth(Month.of(month).getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru")));
-                    vacationReportCalendarMonthDto.setDays(monthOfDays.get(month));
-
-                    months.add(vacationReportCalendarMonthDto);
-                }
-
-                VacationReportCalendarYearDto vacationReportCalendarYearDto = new VacationReportCalendarYearDto();
-                vacationReportCalendarYearDto.setYear(year.toString());
-                vacationReportCalendarYearDto.setMonths(months);
-
-                years.add(vacationReportCalendarYearDto);
-            }
-
-
             VacationReportCalendarEmployeeDto vacationReportCalendarEmployeeDto = new VacationReportCalendarEmployeeDto();
             vacationReportCalendarEmployeeDto.setEmployee(employeeEntity.getInitials());
-            vacationReportCalendarEmployeeDto.setYears(years);
+            vacationReportCalendarEmployeeDto.setYears(convertToYear(mapEntityOfYearOfMonth.get(employeeEntity.getId())));
 
-            employeesVacations.add(vacationReportCalendarEmployeeDto);
+            calendars.add(vacationReportCalendarEmployeeDto);
         }
 
-        return employeesVacations;
+        return calendars;
+    }
+
+    private void putDay(Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>> calendarRow, int year, int month, int day) {
+        VacationReportCalendarDayDto calendarDay = new VacationReportCalendarDayDto();
+        calendarDay.setDay(String.valueOf(day));
+
+        putDay(calendarRow, year, month, day, calendarDay);
+    }
+
+    private List<VacationReportCalendarYearDto> convertToYear(Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>> yearOfMonth) {
+        if (CollectionUtils.isEmpty(yearOfMonth)) {
+            return Collections.emptyList();
+        }
+
+        List<VacationReportCalendarYearDto> years = new ArrayList<>();
+
+        for (Integer year : yearOfMonth.keySet()) {
+            List<VacationReportCalendarMonthDto> months = new ArrayList<>();
+
+            Map<Integer, List<VacationReportCalendarDayDto>> monthOfDays = yearOfMonth.get(year);
+            for (Integer month : monthOfDays.keySet()) {
+                VacationReportCalendarMonthDto vacationReportCalendarMonthDto = new VacationReportCalendarMonthDto();
+                vacationReportCalendarMonthDto.setMonth(Month.of(month).getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru")));
+                vacationReportCalendarMonthDto.setDays(monthOfDays.get(month));
+
+                months.add(vacationReportCalendarMonthDto);
+            }
+
+            VacationReportCalendarYearDto vacationReportCalendarYearDto = new VacationReportCalendarYearDto();
+            vacationReportCalendarYearDto.setYear(year.toString());
+            vacationReportCalendarYearDto.setMonths(months);
+
+            years.add(vacationReportCalendarYearDto);
+        }
+
+        return years;
+    }
+
+    private void putDay(Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>> calendarRow,
+                        int year, int month, int day,
+                        VacationReportCalendarDayDto calendarDay) {
+        Map<Integer, List<VacationReportCalendarDayDto>> monthMap = calendarRow.getOrDefault(year, new HashMap<>());
+
+        List<VacationReportCalendarDayDto> days = monthMap.getOrDefault(month, new ArrayList<>());
+
+        days.add(calendarDay);
+
+        calendarRow.putIfAbsent(year, monthMap);
+        monthMap.putIfAbsent(month, days);
     }
 
     @Override

@@ -17,6 +17,7 @@ public class CounterConverterImpl implements CounterConverter {
         counterEntity.setEnd(dto.getEnd());
         counterEntity.setStart(dto.getStart());
         counterEntity.setTitle(dto.getTitle());
+        counterEntity.setDisplayOnVacation(dto.isDisplayOnVacation());
         return counterEntity;
     }
 
@@ -28,6 +29,7 @@ public class CounterConverterImpl implements CounterConverter {
         counterDto.setEnd(model.getEnd());
         counterDto.setStart(model.getStart());
         counterDto.setTitle(model.getTitle());
+        counterDto.setDisplayOnVacation(model.isDisplayOnVacation());
         return counterDto;
     }
 
@@ -38,6 +40,7 @@ public class CounterConverterImpl implements CounterConverter {
         oldDto.setEnd(newModel.getEnd());
         oldDto.setStart(newModel.getStart());
         oldDto.setTitle(newModel.getTitle());
+        oldDto.setDisplayOnVacation(newModel.isDisplayOnVacation());
         return oldDto;
     }
 }

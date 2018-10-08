@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
@@ -63,49 +64,18 @@ public class GenerateCalendarReportForVacationService {
         titleStyle.setBorderRight(BorderStyle.THIN);
         titleStyle.setAlignment(HorizontalAlignment.CENTER);
 
-        XSSFCellStyle workStyle = sheet.getWorkbook().createCellStyle();
-        workStyle.setFillPattern(FillPatternType.FINE_DOTS);
-        workStyle.setFillBackgroundColor(new XSSFColor(Color.WHITE));
-        workStyle.setFillForegroundColor(new XSSFColor(Color.WHITE));
-        workStyle.setBorderBottom(BorderStyle.THIN);
-        workStyle.setBorderTop(BorderStyle.THIN);
-        workStyle.setBorderLeft(BorderStyle.THIN);
-        workStyle.setBorderRight(BorderStyle.THIN);
-        workStyle.setAlignment(HorizontalAlignment.CENTER);
-
-        XSSFCellStyle vacationStyle = sheet.getWorkbook().createCellStyle();
-        vacationStyle.setFillPattern(FillPatternType.FINE_DOTS);
-        vacationStyle.setFillBackgroundColor(new XSSFColor(Color.GREEN));
-        vacationStyle.setFillForegroundColor(new XSSFColor(Color.GREEN));
-        vacationStyle.setBorderBottom(BorderStyle.THIN);
-        vacationStyle.setBorderTop(BorderStyle.THIN);
-        vacationStyle.setBorderLeft(BorderStyle.THIN);
-        vacationStyle.setBorderRight(BorderStyle.THIN);
-
-        XSSFCellStyle holidayStyle = sheet.getWorkbook().createCellStyle();
-        holidayStyle.setFillPattern(FillPatternType.FINE_DOTS);
-        holidayStyle.setFillBackgroundColor(new XSSFColor(Color.RED));
-        holidayStyle.setFillForegroundColor(new XSSFColor(Color.RED));
-        holidayStyle.setBorderBottom(BorderStyle.THIN);
-        holidayStyle.setBorderTop(BorderStyle.THIN);
-        holidayStyle.setBorderLeft(BorderStyle.THIN);
-        holidayStyle.setBorderRight(BorderStyle.THIN);
-
-        XSSFCellStyle dayOffStyle = sheet.getWorkbook().createCellStyle();
-        dayOffStyle.setFillPattern(FillPatternType.FINE_DOTS);
-        dayOffStyle.setFillBackgroundColor(new XSSFColor(Color.BLUE));
-        dayOffStyle.setFillForegroundColor(new XSSFColor(Color.BLUE));
-        dayOffStyle.setBorderBottom(BorderStyle.THIN);
-        dayOffStyle.setBorderTop(BorderStyle.THIN);
-        dayOffStyle.setBorderLeft(BorderStyle.THIN);
-        dayOffStyle.setBorderRight(BorderStyle.THIN);
+        XSSFCellStyle counterStyle = getCellStyle(sheet.getWorkbook(), Color.ORANGE);
+        XSSFCellStyle workStyle = getCellStyle(sheet.getWorkbook(), Color.WHITE);
+        XSSFCellStyle vacationStyle = getCellStyle(sheet.getWorkbook(), Color.GREEN);
+        XSSFCellStyle holidayStyle = getCellStyle(sheet.getWorkbook(), Color.PINK);
+        XSSFCellStyle dayOffStyle = getCellStyle(sheet.getWorkbook(), Color.BLUE);
 
         XSSFRow yearRow = sheet.createRow(rowNumber++);
         XSSFRow monthRow = sheet.createRow(rowNumber++);
         XSSFRow dayRow = sheet.createRow(rowNumber++);
 
         XSSFCell title = yearRow.createCell(0);
-        title.setCellValue("Сотрудники");
+        title.setCellValue("Объекты");
         title.setCellStyle(titleStyle);
 
         int colNumber = 1;
@@ -157,13 +127,34 @@ public class GenerateCalendarReportForVacationService {
             colNumber = 0;
 
             XSSFCell initialsCell = row.createCell(colNumber++);
-            initialsCell.setCellStyle(workStyle);
+            initialsCell.setCellStyle(titleStyle);
             initialsCell.setCellValue(employee.getEmployee());
+
+            int counterStartCell = 0;
 
             for (VacationReportCalendarYearDto year : employee.getYears()) {
                 for (VacationReportCalendarMonthDto month : year.getMonths()) {
                     for (VacationReportCalendarDayDto day : month.getDays()) {
                         XSSFCell dayCell = row.createCell(colNumber++);
+
+                        if (day.isCounter()) {
+                            if (counterStartCell == 0) {
+                                counterStartCell = colNumber - 1;
+                                dayCell.setCellValue(day.getTitle());
+                            }
+                        } else {
+                            if (counterStartCell != 0) {
+                                mergedRegion = new CellRangeAddress(rowNumber - 1, rowNumber - 1, counterStartCell, colNumber - 1);
+                                sheet.addMergedRegion(mergedRegion);
+
+                                RegionUtil.setBorderTop(BorderStyle.THIN, mergedRegion, sheet);
+                                RegionUtil.setBorderLeft(BorderStyle.THIN, mergedRegion, sheet);
+                                RegionUtil.setBorderRight(BorderStyle.THIN, mergedRegion, sheet);
+                                RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegion, sheet);
+
+                                counterStartCell = 0;
+                            }
+                        }
 
                         if (day.isVacation()) {
                             dayCell.setCellStyle(vacationStyle);
@@ -171,11 +162,13 @@ public class GenerateCalendarReportForVacationService {
                             dayCell.setCellStyle(holidayStyle);
                         } else if (day.isDayOff()) {
                             dayCell.setCellStyle(dayOffStyle);
+                        } else if (day.isCounter()) {
+                            dayCell.setCellStyle(counterStyle);
                         } else {
                             dayCell.setCellStyle(workStyle);
                         }
 
-                        sheet.setColumnWidth(colNumber - 1, 300);
+                        sheet.setColumnWidth(colNumber - 1, 150);
                     }
                 }
             }
@@ -184,6 +177,32 @@ public class GenerateCalendarReportForVacationService {
         sheet.setColumnWidth(0, 10000);
 
         return sheet;
+    }
+
+    private XSSFCellStyle getCellStyle(XSSFWorkbook workbook, Color backgroundColor) {
+        XSSFColor borderColor = new XSSFColor(Color.LIGHT_GRAY);
+        XSSFColor backColor = new XSSFColor(backgroundColor);
+
+        XSSFFont xssfFont = workbook.createFont();
+        xssfFont.setFontHeight(8);
+        xssfFont.setBold(true);
+
+        XSSFCellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setFillPattern(FillPatternType.FINE_DOTS);
+        cellStyle.setFillBackgroundColor(backColor);
+        cellStyle.setFillForegroundColor(backColor);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setBorderColor(XSSFCellBorder.BorderSide.BOTTOM, borderColor);
+        cellStyle.setBorderColor(XSSFCellBorder.BorderSide.TOP, borderColor);
+        cellStyle.setBorderColor(XSSFCellBorder.BorderSide.LEFT, borderColor);
+        cellStyle.setBorderColor(XSSFCellBorder.BorderSide.RIGHT, borderColor);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setFont(xssfFont);
+
+        return cellStyle;
     }
 
     private UploadFileEntity saveWorkBook(XSSFWorkbook workbook, String departmentName) throws IOException {

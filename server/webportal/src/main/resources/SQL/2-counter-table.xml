@@ -23,4 +23,12 @@
         <addPrimaryKey tableName="counter" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="2-1" author="Danilov">
+        <addColumn tableName="counter">
+            <column name="display_on_vacation" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>

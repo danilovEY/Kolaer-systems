@@ -4,7 +4,7 @@ import lombok.Data;
 import ru.kolaer.server.webportal.mvc.model.entities.BaseEntity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Created by danilovey on 25.08.2016.
@@ -20,16 +20,17 @@ public class CounterEntity implements BaseEntity {
     private Long id;
 
     @Column(name = "counter_start", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date start;
+    private LocalDateTime start;
 
     @Column(name = "counter_end", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date end;
+    private LocalDateTime end;
 
     @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "display_on_vacation")
+    private boolean displayOnVacation;
 }
