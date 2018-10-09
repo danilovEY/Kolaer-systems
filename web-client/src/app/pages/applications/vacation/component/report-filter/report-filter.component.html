@@ -161,6 +161,12 @@
                                      (change)="onGroupByDepartments($event)">Группировать по подразделениям
                         </nb-checkbox>
                     </div>
+
+                    <div class="col-12" *ngIf="addOtherData">
+                        <nb-checkbox [(value)]="filterModel.addOtherData"
+                                     (change)="onAddOtherData($event)">Добавить прочие данные
+                        </nb-checkbox>
+                    </div>
                 </div>
             </div>
         </div>

@@ -9,7 +9,7 @@ import {DepartmentService} from '../../../../../@core/services/department.servic
 import {EmployeeService} from '../../../../../@core/services/employee.service';
 import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
-import SvgSaver from 'svgsaver';
+import * as shape from 'd3-shape';
 import * as html2canvas from 'html2canvas';
 import {Utils} from '../../../../../@core/utils/utils';
 
@@ -25,7 +25,9 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
     @ViewChild('chart')
     chart: ElementRef;
 
-    private svgSaver = new SvgSaver();
+    curve: any = shape.curveStep;
+
+    // private svgSaver = new SvgSaver();
 
     currentAccount: SimpleAccountModel;
 
@@ -72,6 +74,7 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
     generateReportDistribute(filterModel: ReportFilterModel) {
         const request = new GenerateReportDistributeRequestModel();
         request.calculateIntersections = this.filterModel.calculateIntersections;
+        request.addOtherData = this.filterModel.addOtherData;
         request.addPipesForVacation = this.filterModel.pipeCharts;
         request.departmentIds = this.filterModel.selectedAllDepartments ? [] : this.filterModel.selectedDepartments.map(dep => dep.id);
         request.groupByDepartments = this.filterModel.groupByDepartments;
@@ -126,8 +129,6 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
         if (!this.filterModel) {
             return '';
         }
-
-        console.log(this.filterModel);
 
         return `${Utils.getDateFormat(this.filterModel.from)} - ${Utils.getDateFormat(this.filterModel.to)}` +
             this.convertToString(this.filterModel.selectedDepartments, d => d.abbreviatedName) +

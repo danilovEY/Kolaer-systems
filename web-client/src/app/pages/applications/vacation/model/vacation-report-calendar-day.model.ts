@@ -3,4 +3,5 @@ export class VacationReportCalendarDayModel {
     public vacation: boolean;
     public dayOff: boolean;
     public holiday: boolean;
+    public counter: boolean;
 }

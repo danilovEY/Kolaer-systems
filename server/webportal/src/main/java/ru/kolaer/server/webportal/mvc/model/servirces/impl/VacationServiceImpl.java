@@ -9,7 +9,6 @@ import org.springframework.util.StringUtils;
 import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.api.mvp.model.kolaerweb.Page;
 import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
@@ -32,6 +31,7 @@ import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
 import javax.servlet.http.HttpServletResponse;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -261,7 +261,7 @@ public class VacationServiceImpl implements VacationService {
         LocalDate from = request.getFrom();
 
         Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>> holidaysCalendarRow = new HashMap<>();
-        Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>> counterCalendarRow = new HashMap<>();
+        Map<String, Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>>> counterCalendarRow = new HashMap<>();
 
         while (from.isBefore(request.getTo()) || from.isEqual(request.getTo())) {
             final LocalDate currentFrom = from;
@@ -288,7 +288,7 @@ public class VacationServiceImpl implements VacationService {
                 putDay(holidaysCalendarRow, year, month, day);
             }
 
-            CounterEntity counter = counters
+            List<String> counterTitles = counters
                     .stream()
                     .filter(c -> {
                         LocalDate counterFrom = c.getStart().toLocalDate();
@@ -296,23 +296,24 @@ public class VacationServiceImpl implements VacationService {
 
                         return counterFrom.isBefore(currentFrom) && counterTo.isAfter(currentFrom) ||
                                 counterFrom.isEqual(currentFrom) || counterTo.isEqual(currentFrom);
-                    }).findFirst()
-                    .orElse(null);
+                    }).map(CounterEntity::getTitle)
+                    .collect(Collectors.toList());
 
-            if (counter != null) {
-                String title = Optional.ofNullable(counter.getTitle()).map(str -> str + " | ").orElse("") +
-                        Tools.dateToString(counter.getStart().toLocalDate()) +
-                        " - " +
-                        Tools.dateToString(counter.getEnd().toLocalDate());
+            for (CounterEntity counter : counters) {
+                Map<Integer, Map<Integer, List<VacationReportCalendarDayDto>>> countersOfYear
+                        = counterCalendarRow.getOrDefault(counter.getTitle(), new HashMap<>());
 
-                VacationReportCalendarDayDto vacationReportCalendarDayDto = new VacationReportCalendarDayDto();
-                vacationReportCalendarDayDto.setDay(String.valueOf(day));
-                vacationReportCalendarDayDto.setTitle(title);
-                vacationReportCalendarDayDto.setCounter(true);
+                if (counterTitles.contains(counter.getTitle())) {
+                    VacationReportCalendarDayDto vacationReportCalendarDayDto = new VacationReportCalendarDayDto();
+                    vacationReportCalendarDayDto.setDay(String.valueOf(day));
+                    vacationReportCalendarDayDto.setCounter(true);
 
-                putDay(counterCalendarRow, year, month, day, vacationReportCalendarDayDto);
-            } else {
-                putDay(counterCalendarRow, year, month, day);
+                    putDay(countersOfYear, year, month, day, vacationReportCalendarDayDto);
+                } else {
+                    putDay(countersOfYear, year, month, day);
+                }
+
+                counterCalendarRow.putIfAbsent(counter.getTitle(), countersOfYear);
             }
 
             for (Map.Entry<Long, List<VacationEntity>> employeeVacation : employeeVacations.entrySet()) {
@@ -343,12 +344,18 @@ public class VacationServiceImpl implements VacationService {
         holidaysCalendar.setEmployee("Праздники");
         holidaysCalendar.setYears(convertToYear(holidaysCalendarRow));
 
-        VacationReportCalendarEmployeeDto counterCalendar = new VacationReportCalendarEmployeeDto();
-        counterCalendar.setEmployee("Прочее");
-        counterCalendar.setYears(convertToYear(counterCalendarRow));
-
         calendars.add(holidaysCalendar);
-        calendars.add(counterCalendar);
+
+        counterCalendarRow.keySet()
+                .stream()
+                .sorted(String::compareTo)
+                .map(counterTitle -> {
+                    VacationReportCalendarEmployeeDto counterCalendar = new VacationReportCalendarEmployeeDto();
+                    counterCalendar.setEmployee(counterTitle);
+                    counterCalendar.setYears(convertToYear(counterCalendarRow.get(counterTitle)));
+
+                    return counterCalendar;
+                }).forEach(calendars::add);
 
         for (EmployeeEntity employeeEntity : employeeDao.findById(new ArrayList<>(employeeVacations.keySet()))) {
             VacationReportCalendarEmployeeDto vacationReportCalendarEmployeeDto = new VacationReportCalendarEmployeeDto();
@@ -449,10 +456,65 @@ public class VacationServiceImpl implements VacationService {
 
             long totalCount = employeeDao.findAllEmployeeCount(findEmployeePageRequest);
 
-            return createReportDistributeLineValues(result, "КолАЭР", totalCount, request);
+            result = createReportDistributeLineValues(result, "КолАЭР", totalCount, request);
         }
 
+        if (request.isAddOtherData()) {
+            Long maxSize = result.getLineValues()
+                    .stream()
+                    .flatMap(v -> v.getSeries().stream())
+                    .map(VacationReportDistributeLineValueDto::getValue)
+                    .max(Long::compareTo)
+                    .orElse(0L);
 
+            FindCounterRequest findCounterRequest = new FindCounterRequest();
+            findCounterRequest.setFrom(request.getFrom().atTime(0, 0));
+            findCounterRequest.setTo(request.getTo().atTime(23, 59));
+            findCounterRequest.setDisplayOnVacation(true);
+
+            Map<String, Long> valueForCounter = new HashMap<>();
+
+            List<CounterEntity> counters = counterDao.find(findCounterRequest);
+            counters.sort(Comparator.comparing(CounterEntity::getTitle, String::compareTo).reversed());
+
+            for (int i = 0; i < counters.size(); i++) {
+                valueForCounter.put(counters.get(i).getTitle(), maxSize + i);
+            }
+
+            Map<String, VacationReportDistributeLineDto> counterReports = new HashMap<>();
+
+            for (Pair<LocalDate, LocalDate> fromToPair : calculateFromToDates(request.getFrom(), request.getTo(), request.getSplitType())) {
+                LocalDateTime from = fromToPair.getKey().atTime(0, 0);
+                LocalDateTime to = fromToPair.getValue().atTime(23, 59);
+
+                for (CounterEntity counter : counters) {
+                    if (counter.getStart().isBefore(from) && counter.getEnd().isAfter(from) ||
+                            counter.getStart().isBefore(to) && counter.getEnd().isAfter(to) ||
+                            counter.getStart().isEqual(from) || counter.getStart().isEqual(to) ||
+                            counter.getEnd().isEqual(from) || counter.getEnd().isEqual(to) ||
+                            counter.getStart().isAfter(from) && counter.getEnd().isBefore(to) ||
+                            counter.getStart().isBefore(from) && counter.getEnd().isAfter(to)) {
+                        VacationReportDistributeLineDto reportDistribute = counterReports
+                                .getOrDefault(counter.getTitle(), new VacationReportDistributeLineDto());
+                        reportDistribute.setName(counter.getTitle());
+
+                        VacationReportDistributeLineValueDto lineValue = new VacationReportDistributeLineValueDto();
+                        lineValue.setName(getPipeTitle(fromToPair.getKey(), request.getSplitType()));
+                        lineValue.setValue( valueForCounter.get(counter.getTitle()));
+
+                        reportDistribute.getSeries().add(lineValue);
+
+                        counterReports.putIfAbsent(counter.getTitle(), reportDistribute);
+                    }
+                }
+            }
+
+            counterReports.keySet()
+                    .stream()
+                    .sorted(String::compareTo)
+                    .map(counterReports::get)
+                    .forEach(result.getLineValues()::add);
+        }
 
         return result;
     }
@@ -519,12 +581,6 @@ public class VacationServiceImpl implements VacationService {
 
              result.add(reportPipeValueDto);
          }
-
-
-
-
-//            }
-//        }
 
         return result;
     }

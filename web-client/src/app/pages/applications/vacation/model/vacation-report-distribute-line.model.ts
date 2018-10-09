@@ -2,5 +2,5 @@ import {VacationReportDistributeLineValueModel} from './vacation-report-distribu
 
 export class VacationReportDistributeLineModel {
     public name: string;
-    public values: VacationReportDistributeLineValueModel[];
+    public series: VacationReportDistributeLineValueModel[];
 }

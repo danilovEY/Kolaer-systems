@@ -9,6 +9,7 @@ export class ReportFilterModel {
     public selectedEmployees: EmployeeModel[] = [];
     public selectedDepartments: DepartmentModel[] = [];
     // public selectedDepartment: DepartmentModel;
+    public addOtherData: boolean = false;
     public groupByDepartments: boolean = false;
     public selectedAllDepartments: boolean = false;
     public pipeCharts: boolean = false;

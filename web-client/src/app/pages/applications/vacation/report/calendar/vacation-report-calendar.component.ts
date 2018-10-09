@@ -189,6 +189,8 @@ export class VacationReportCalendarComponent implements OnInit {
     getColumnColor(day: VacationReportCalendarDayModel): string {
         if (day.vacation) {
             return '#00cc0f';
+        } else if (day.counter) {
+            return '#ffb90a';
         } else if (day.holiday) {
             return '#ff706b';
         } else if (day.dayOff) {

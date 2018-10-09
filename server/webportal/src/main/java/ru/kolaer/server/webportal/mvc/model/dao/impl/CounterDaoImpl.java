@@ -42,7 +42,7 @@ public class CounterDaoImpl extends AbstractDefaultDao<CounterEntity> implements
             sqlQuery = sqlQuery.append(" AND displayOnVacation = TRUE");
         }
 
-        return getSession().createQuery(sqlQuery.toString(), getEntityClass())
+        return getSession().createQuery(sqlQuery.append(" ORDER BY c.start").toString(), getEntityClass())
                 .setProperties(params)
                 .list();
     }
