@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -73,19 +74,26 @@ public class UploadFileServiceImpl
     }
 
     @Transactional
+    @Override
+    public UploadFileEntity createTempFile(String fileName) {
+        return createFile("temp", fileName, true, false, false, false);
+    }
+
+    @Transactional
+    @Override
     public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName) {
-        return createFile(folder, fileName, generateUniquiredFileName, false);
+        return createFile(folder, fileName, generateUniquiredFileName, true);
     }
 
     @Override
     @Transactional
     public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder) {
-       return createFile(folder, fileName, generateUniquiredFileName, inDateFolder, true);
+       return createFile(folder, fileName, generateUniquiredFileName, inDateFolder, true, true);
     }
 
     @Override
     @Transactional
-    public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder, boolean replaceFile) {
+    public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder, boolean replaceFile, boolean saveFileInDb) {
         try {
             if(inDateFolder) {
                 folder += "/" + simpleDateFormat.format(new Date());
@@ -114,16 +122,19 @@ public class UploadFileServiceImpl
                 }
             }
 
-            UploadFileEntity uploadFileEntity = Optional
-                    .ofNullable(this.defaultEntityDao.findByPath(newFileName))
-                    .orElse(new UploadFileEntity());
+            UploadFileEntity uploadFileEntity = saveFileInDb
+                    ? Optional.ofNullable(this.defaultEntityDao.findByPath(newFileName))
+                    .orElse(new UploadFileEntity())
+                    :  new UploadFileEntity();
 
             if (!file.exists() && file.createNewFile()) {
                 uploadFileEntity.setFileCreate(LocalDateTime.now());
                 uploadFileEntity.setFileName(fileName);
                 uploadFileEntity.setPath(newFileName);
 
-                uploadFileEntity = this.defaultEntityDao.save(uploadFileEntity);
+                if (saveFileInDb) {
+                    uploadFileEntity = this.defaultEntityDao.save(uploadFileEntity);
+                }
             }
 
             return uploadFileEntity;
@@ -132,10 +143,11 @@ public class UploadFileServiceImpl
         }
     }
 
-    public Resource loadFile(String filename) {
+    public Resource loadFile(String filename, boolean absolutePath) {
         try {
-            Path file = rootLocation.resolve(filename);
-            Resource resource = new UrlResource(file.toUri());
+            URI uri = absolutePath ? new File(filename).toURI() : rootLocation.resolve(filename).toUri();
+
+            Resource resource = new UrlResource(uri);
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
@@ -153,7 +165,9 @@ public class UploadFileServiceImpl
 
     @Override
     public String getAbsolutePath(UploadFileEntity uploadFileEntity) {
-        return this.getAbsolutePath(uploadFileEntity.getPath());
+        return uploadFileEntity.isAbsolutePath()
+                ? uploadFileEntity.getPath()
+                : this.getAbsolutePath(uploadFileEntity.getPath());
     }
 
     @Override
@@ -161,7 +175,7 @@ public class UploadFileServiceImpl
     public ResponseEntity loadFile(UploadFileDto uploadFileDto, HttpServletResponse response) {
         try {
             if(uploadFileDto != null) {
-                Resource resource = loadFile(uploadFileDto.getPath());
+                Resource resource = loadFile(uploadFileDto.getPath(), uploadFileDto.isAbsolutePath());
 
                 String mimeType = Optional.ofNullable(URLConnection.guessContentTypeFromName(uploadFileDto.getPath()))
                         .orElse("application/octet-stream");

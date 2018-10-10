@@ -131,7 +131,7 @@ public class GenerateReportForVacationService {
     private UploadFileEntity saveWorkBook(XSSFWorkbook workbook, String departmentName) throws IOException {
         String fileName = departmentName + " (Отчет).xlsx";
 
-        UploadFileEntity tempFile = uploadFileService.createFile("temp", fileName, true);
+        UploadFileEntity tempFile = uploadFileService.createTempFile(fileName);
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(uploadFileService.getAbsolutePath(tempFile))){
             workbook.write(fileOutputStream);

@@ -31,6 +31,7 @@ import {FindVacationBalanceRequestModel} from '../model/find-vacation-balance-re
 import {VacationBalanceModel} from '../model/vacation-balance.model';
 import {tap} from 'rxjs/internal/operators';
 import {SmartTableService} from '../../../../@core/services/smart-table.service';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
     selector: 'vacation-set',
@@ -68,6 +69,8 @@ export class VacationSetComponent implements OnInit {
         limit: 5,
     });
 
+    formBalance: FormGroup;
+
     currentBalance: VacationBalanceModel;
 
     constructor(private accountService: AccountService,
@@ -85,6 +88,12 @@ export class VacationSetComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.formBalance = new FormGroup({
+            prevYearBalance: new FormControl({value: '', disabled: true}),
+            currentYearBalance: new FormControl({value: '', disabled: true}),
+            nextYearBalance: new FormControl({value: '', disabled: true})
+        });
+
         this.vacationPeriodService.selectedPeriodEvent.subscribe(period => {
             if (this.currentAccount.accessVacationAdmin || this.currentAccount.accessOit || !this.isClosed(this.selectedPeriod)) {
                 this.smartTableService.addEditAction();
@@ -105,6 +114,10 @@ export class VacationSetComponent implements OnInit {
                 this.currentAccount = account;
 
                 if (account.accessVacationAdmin) {
+                    this.formBalance.controls['prevYearBalance'].enable();
+                    this.formBalance.controls['currentYearBalance'].enable();
+                    this.formBalance.controls['nextYearBalance'].enable();
+
                     const sort = new DepartmentSortModel();
                     sort.sortAbbreviatedName = SortTypeEnum.ASC;
 
@@ -257,7 +270,11 @@ export class VacationSetComponent implements OnInit {
             request.employeeId = this.selectedEmployee.id;
 
             this.vacationService.getVacationBalance(request)
-                .subscribe(balance => this.currentBalance = balance,
+                .pipe(tap(balance => {
+                    this.formBalance.controls['prevYearBalance'].setValue(balance.prevYearBalance);
+                    this.formBalance.controls['currentYearBalance'].setValue(balance.currentYearBalance);
+                    this.formBalance.controls['nextYearBalance'].setValue(balance.nextYearBalance);
+                })).subscribe(balance => this.currentBalance = balance,
                     responseError => {
                         const toast: Toast = {
                             type: 'error',
@@ -284,5 +301,31 @@ export class VacationSetComponent implements OnInit {
         return selectedPeriod
             ? selectedPeriod.status === VacationPeriodStatusEnum.CLOSE
             : false
+    }
+
+    submitBalanceForm() {
+        this.currentBalance.prevYearBalance = this.formBalance.value.prevYearBalance;
+        this.currentBalance.currentYearBalance = this.formBalance.value.currentYearBalance;
+        this.currentBalance.nextYearBalance = this.formBalance.value.nextYearBalance;
+
+        this.vacationService.updateVacationBalance(this.currentBalance)
+            .subscribe(balance => {
+                this.currentBalance = balance;
+
+                const toast: Toast = {
+                    type: 'success',
+                    title: 'Успех',
+                    body: 'Остатки обновились',
+                };
+
+                this.toasterService.popAsync(toast);
+            }, responseError => {
+                const toast: Toast = {
+                    type: 'error',
+                    title: 'Ошибка в операции',
+                    body: responseError.error.message,
+                };
+                this.toasterService.popAsync(toast);
+            });
     }
 }

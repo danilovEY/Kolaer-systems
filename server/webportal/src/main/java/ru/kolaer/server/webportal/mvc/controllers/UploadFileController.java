@@ -56,7 +56,7 @@ public class UploadFileController {
 //    }
 
     @RequestMapping(value = "/file/{id}/{filename:.+}", method = RequestMethod.GET)
-    @UrlDeclaration(description = "Скачать файл с сервера")
+    @UrlDeclaration(description = "Скачать файл с сервера", isAccessAll = true)
     @ApiOperation("Скачать файл с сервера")
     public ResponseEntity getFile(@PathVariable("id") Long id,
                                   @PathVariable("filename") String filename,

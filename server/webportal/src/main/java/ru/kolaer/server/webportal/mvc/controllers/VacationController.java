@@ -72,6 +72,13 @@ public class VacationController {
         return vacationService.getBalance(request);
     }
 
+    @ApiOperation(value = "Изменить баланс")
+    @UrlDeclaration(isUser = false, isVacationAdmin = true, isVacationDepEdit = true)
+    @RequestMapping(value = "/balance", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public VacationBalanceDto getBalance(@RequestBody VacationBalanceDto balance) {
+        return vacationService.updateVacationBalance(balance);
+    }
+
     @ApiOperation(value = "Расчитать дней отпуска между датами")
     @UrlDeclaration
     @RequestMapping(value = "/calculate/days", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

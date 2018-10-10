@@ -19,6 +19,7 @@ public class UploadFileConverterImpl implements UploadFileConverter {
         uploadFileEntity.setPath(dto.getPath());
         uploadFileEntity.setFileName(dto.getFileName());
         uploadFileEntity.setFileCreate(dto.getFileCreate());
+        uploadFileEntity.setAbsolutePath(dto.isAbsolutePath());
 
         return uploadFileEntity;
     }
@@ -40,6 +41,7 @@ public class UploadFileConverterImpl implements UploadFileConverter {
         uploadFileDto.setPath(newModel.getPath());
         uploadFileDto.setFileName(newModel.getFileName());
         uploadFileDto.setFileCreate(newModel.getFileCreate());
+        uploadFileDto.setAbsolutePath(newModel.isAbsolutePath());
 
         return uploadFileDto;
     }

@@ -27,6 +27,7 @@ export class VacationService extends BaseService {
     private readonly FIND_VACATION_URL = `${this.VACATION_URL}`;
     private readonly FIND_PERIODS_URL = `${this.VACATION_URL}/periods`;
     private readonly FIND_VACATION_BALANCE_URL = `${this.VACATION_URL}/balance`;
+    private readonly UPDATE_VACATION_BALANCE_URL = `${this.VACATION_URL}/balance`;
     private readonly GENERATE_REPORT_CALENDAR_EXPORT_URL = `${this.VACATION_URL}/report/calendar/export`;
     private readonly GENERATE_REPORT_CALENDAR_URL = `${this.VACATION_URL}/report/calendar`;
     private readonly GENERATE_REPORT_DISTRIBUTE_URL = `${this.VACATION_URL}/report/distribute`;
@@ -54,6 +55,10 @@ export class VacationService extends BaseService {
             .append('employeeId', request.employeeId.toString());
 
         return this.http.get<VacationBalanceModel>(this.FIND_VACATION_BALANCE_URL, {params: params});
+    }
+
+    public updateVacationBalance(vacationBalance: VacationBalanceModel): Observable<VacationBalanceModel> {
+        return this.http.put<VacationBalanceModel>(this.UPDATE_VACATION_BALANCE_URL, vacationBalance);
     }
 
     public generateVacationReportCalendarAndDownload(request: GenerateReportCalendarRequestModel): Observable<any> {

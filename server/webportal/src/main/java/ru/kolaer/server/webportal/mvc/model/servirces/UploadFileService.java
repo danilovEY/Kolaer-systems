@@ -10,11 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface UploadFileService extends DefaultService<UploadFileDto> {
     UploadFileEntity store(String folder, MultipartFile file, boolean generateUniquiredFileName);
+
+    UploadFileEntity createTempFile(String fileName);
     UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName);
     UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder);
-    UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder, boolean replaceFile);
+    UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder, boolean replaceFile, boolean saveFileInDb);
 
-    Resource loadFile(String filename);
+    Resource loadFile(String filename, boolean absolutePath);
 
     String getAbsolutePath(String path);
     String getAbsolutePath(UploadFileEntity uploadFileEntity);

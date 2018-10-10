@@ -44,4 +44,12 @@
         <renameColumn tableName="upload_file" oldColumnName="create" newColumnName="file_create" columnDataType="TIMESTAMP"/>
     </changeSet>
 
+    <changeSet id="20-4" author="Danilov">
+        <addColumn tableName="upload_file">
+            <column name="absolute_path" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -84,7 +84,7 @@ public class GenerateReportForOldDbService implements UpdatableEmployeeService {
             createCells(row, allActualEmployees.get(rowIndex));
         }
 
-        UploadFileEntity uploadFileEntity = this.uploadFileService.createFile("oldDbReport", "users_1c.xls", true, true, true);
+        UploadFileEntity uploadFileEntity = this.uploadFileService.createFile("oldDbReport", "users_1c.xls", true, true, true, true);
         String absolutePath = this.uploadFileService.getAbsolutePath(uploadFileEntity);
 
         File file = new File(absolutePath);
@@ -107,7 +107,7 @@ public class GenerateReportForOldDbService implements UpdatableEmployeeService {
     private boolean sendMail(UploadFileEntity uploadFileEntity) {
         if (uploadFileEntity != null && emailToSend != null) {
             this.mailSender.send(mimeMessage -> {
-                Resource resource = uploadFileService.loadFile(uploadFileEntity.getPath());
+                Resource resource = uploadFileService.loadFile(uploadFileEntity.getPath(), uploadFileEntity.isAbsolutePath());
 
                 MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
                 messageHelper.setFrom(mailMessage.getFrom());

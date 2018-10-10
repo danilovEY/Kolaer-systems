@@ -208,7 +208,7 @@ public class GenerateCalendarReportForVacationService {
     private UploadFileEntity saveWorkBook(XSSFWorkbook workbook, String departmentName) throws IOException {
         String fileName = departmentName + ".xlsx";
 
-        UploadFileEntity tempFile = uploadFileService.createFile("temp", fileName, true);
+        UploadFileEntity tempFile = uploadFileService.createTempFile(fileName);
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(uploadFileService.getAbsolutePath(tempFile))){
             workbook.write(fileOutputStream);

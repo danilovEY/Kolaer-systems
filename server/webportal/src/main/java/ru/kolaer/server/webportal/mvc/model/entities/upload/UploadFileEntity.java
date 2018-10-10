@@ -27,4 +27,7 @@ public class UploadFileEntity implements BaseEntity {
     @Column(name = "account_id")
     private Long accountId;
 
+    @Column(name = "absolute_path")
+    private boolean absolutePath;
+
 }

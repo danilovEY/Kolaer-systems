@@ -16,6 +16,7 @@ public class UploadFileDto implements BaseDto {
     private String fileName;
     private LocalDateTime fileCreate;
     private Long accountId;
+    private boolean absolutePath;
 
     public UploadFileDto(Long id) {
         this.id = id;

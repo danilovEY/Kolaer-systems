@@ -31,4 +31,6 @@ public interface VacationService {
     List<VacationReportPipeDto> generateReportTotalCount(GenerateReportTotalCountRequest request);
 
     ResponseEntity generateReportExport(GenerateReportExportRequest request, HttpServletResponse response);
+
+    VacationBalanceDto updateVacationBalance(VacationBalanceDto balance);
 }

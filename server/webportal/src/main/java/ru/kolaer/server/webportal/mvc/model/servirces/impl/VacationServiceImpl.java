@@ -538,8 +538,15 @@ public class VacationServiceImpl implements VacationService {
                      .collect(Collectors.toMap(DepartmentEntity::getId, Function.identity()));
 
              for (VacationTotalCountDepartmentEntity vacationTotalCount : vacationDao.findVacationTotalCountDepartment(request)) {
+                 String title = departmentMap.get(vacationTotalCount.getDepartmentId()).getAbbreviatedName() +
+                         " (" +
+                         vacationTotalCount.getTotalCountEmployeeWithBalance() +
+                         "/" +
+                         vacationTotalCount.getTotalCountEmployeeOnDepartment() +
+                         ")";
+
                  VacationReportPipeDto reportPipeValueDto = new VacationReportPipeDto();
-                 reportPipeValueDto.setName(departmentMap.get(vacationTotalCount.getDepartmentId()).getAbbreviatedName());
+                 reportPipeValueDto.setName(title);
                  reportPipeValueDto.setTotalValue(vacationTotalCount.getTotalCountEmployeeOnDepartment());
 
                  VacationReportPipeValueDto reportPipeValueWithVacation = new VacationReportPipeValueDto();
@@ -555,32 +562,36 @@ public class VacationServiceImpl implements VacationService {
 
                  result.add(reportPipeValueDto);
              }
-         } else {
-             FindEmployeePageRequest findEmployeePageRequest = new FindEmployeePageRequest();
-             findEmployeePageRequest.setDepartmentIds(request.getDepartmentIds());
-             findEmployeePageRequest.setEmployeeIds(request.getEmployeeIds());
-             findEmployeePageRequest.setPostIds(request.getPostIds());
-             findEmployeePageRequest.setTypeWorkIds(request.getTypeWorkIds());
+        } else {
+            FindEmployeePageRequest findEmployeePageRequest = new FindEmployeePageRequest();
+            findEmployeePageRequest.setDepartmentIds(request.getDepartmentIds());
+            findEmployeePageRequest.setEmployeeIds(request.getEmployeeIds());
+            findEmployeePageRequest.setPostIds(request.getPostIds());
+            findEmployeePageRequest.setTypeWorkIds(request.getTypeWorkIds());
 
-             long totalCount = employeeDao.findAllEmployeeCount(findEmployeePageRequest);
+            long totalCount = employeeDao.findAllEmployeeCount(findEmployeePageRequest);
 
-             VacationReportPipeDto reportPipeValueDto = new VacationReportPipeDto();
-             reportPipeValueDto.setName("КолАЭР");
-             reportPipeValueDto.setTotalValue(totalCount);
+            long vacationTotalCount = vacationDao.findVacationTotalCount(request);
 
-             VacationReportPipeValueDto reportPipeValueWithVacation = new VacationReportPipeValueDto();
-             reportPipeValueWithVacation.setName("Заданы отпуска");
-             reportPipeValueWithVacation.setValue(vacationDao.findVacationTotalCount(request));
+            String title = "КолАЭР (" + vacationTotalCount + "/" + totalCount + ")";
 
-             VacationReportPipeValueDto reportPipeValueWithOutVacation = new VacationReportPipeValueDto();
-             reportPipeValueWithOutVacation.setName("Не заданы отпуска");
-             reportPipeValueWithOutVacation.setValue(reportPipeValueDto.getTotalValue() - reportPipeValueWithVacation.getValue());
+            VacationReportPipeDto reportPipeValueDto = new VacationReportPipeDto();
+            reportPipeValueDto.setName(title);
+            reportPipeValueDto.setTotalValue(totalCount);
 
-             reportPipeValueDto.getSeries().add(reportPipeValueWithVacation);
-             reportPipeValueDto.getSeries().add(reportPipeValueWithOutVacation);
+            VacationReportPipeValueDto reportPipeValueWithVacation = new VacationReportPipeValueDto();
+            reportPipeValueWithVacation.setName("Заданы отпуска");
+            reportPipeValueWithVacation.setValue(vacationTotalCount);
 
-             result.add(reportPipeValueDto);
-         }
+            VacationReportPipeValueDto reportPipeValueWithOutVacation = new VacationReportPipeValueDto();
+            reportPipeValueWithOutVacation.setName("Не заданы отпуска");
+            reportPipeValueWithOutVacation.setValue(reportPipeValueDto.getTotalValue() - reportPipeValueWithVacation.getValue());
+
+            reportPipeValueDto.getSeries().add(reportPipeValueWithVacation);
+            reportPipeValueDto.getSeries().add(reportPipeValueWithOutVacation);
+
+            result.add(reportPipeValueDto);
+        }
 
         return result;
     }
@@ -601,6 +612,17 @@ public class VacationServiceImpl implements VacationService {
         }
 
         return generateReportForVacationService.generateReportExtort(request, response);
+    }
+
+    @Transactional
+    @Override
+    public VacationBalanceDto updateVacationBalance(VacationBalanceDto balance) {
+        VacationBalanceEntity balanceEntity = getBalanceEntity(balance.getEmployeeId());
+        balanceEntity.setNextYearBalance(balance.getNextYearBalance());
+        balanceEntity.setPrevYearBalance(balance.getPrevYearBalance());
+        balanceEntity.setCurrentYearBalance(balance.getCurrentYearBalance());
+
+        return vacationConverter.convertToDto(balanceEntity);
     }
 
     private VacationReportDistributeDto createReportDistributeLineValues(VacationReportDistributeDto vacationReportDistributeDto,

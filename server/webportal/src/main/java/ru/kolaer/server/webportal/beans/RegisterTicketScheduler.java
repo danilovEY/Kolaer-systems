@@ -62,7 +62,7 @@ public class RegisterTicketScheduler {
     public boolean sendMail(UploadFileEntity uploadFileEntity, String text) {
         if (uploadFileEntity != null) {
             this.mailSender.send(mimeMessage -> {
-                Resource resource = uploadFileService.loadFile(uploadFileEntity.getPath());
+                Resource resource = uploadFileService.loadFile(uploadFileEntity.getPath(), uploadFileEntity.isAbsolutePath());
 
                 MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
                 messageHelper.setFrom(mailMessage.getFrom());
@@ -88,7 +88,7 @@ public class RegisterTicketScheduler {
 
         while (uploadFileEntity == null) {
             uploadFileEntity = uploadFileService
-                    .createFile("tickets", String.format("Z001000.KOLAER_ENROLL001%04d.%03d", index++, now.getDayOfYear()), false, true, false);
+                    .createFile("tickets", String.format("Z001000.KOLAER_ENROLL001%04d.%03d", index++, now.getDayOfYear()), false, true, false, true);
         }
         String absolutePath = this.uploadFileService.getAbsolutePath(uploadFileEntity);
 

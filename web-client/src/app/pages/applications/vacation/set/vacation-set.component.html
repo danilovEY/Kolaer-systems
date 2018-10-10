@@ -59,6 +59,7 @@
     <div class="col-12" *ngIf="selectedEmployee && selectedPeriod">
         <div class="row">
             <div class="col-3" *ngIf="currentBalance">
+                <form (ngSubmit)="submitBalanceForm()" [formGroup]="formBalance">
                 <nb-card>
                     <nb-card-header>
                         <span>Карточка сотрудника</span>
@@ -75,13 +76,25 @@
                         <br/>
                         <br/>
 
+
                         <div class="row">
+                            <div class="col-12" *ngIf="currentAccount.accessVacationAdmin">
+                                <div class="form-group">
+                                    <label for="prevYearBalance">Остаток на предыдущий год</label>
+                                    <div class="input-group">
+                                        <input type="text" id="prevYearBalance"
+                                               formControlName="prevYearBalance"
+                                               class="form-control" value="{{ currentBalance.prevYearBalance }}">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="currentYearBalance">Остаток на текущий год</label>
                                     <div class="input-group">
                                         <input type="text" id="currentYearBalance"
-                                               disabled
+                                               formControlName="currentYearBalance"
                                                class="form-control" value="{{ currentBalance.currentYearBalance }}">
                                     </div>
                                 </div>
@@ -92,7 +105,7 @@
                                     <label for="nextYearBalance">Остаток на будущий год</label>
                                     <div class="input-group">
                                         <input type="text" id="nextYearBalance"
-                                               disabled
+                                               formControlName="nextYearBalance"
                                                class="form-control" value="{{ currentBalance.nextYearBalance }}">
                                     </div>
                                 </div>
@@ -129,7 +142,14 @@
                             </div>
                         </div>
                     </nb-card-body>
+
+                    <nb-card-footer *ngIf="currentAccount.accessVacationAdmin">
+                        <button type="submit" class="btn btn-primary" [disabled]="formBalance.invalid">
+                            Сохранить
+                        </button>
+                    </nb-card-footer>
                 </nb-card>
+                </form>
             </div>
 
             <div class="col-9">
