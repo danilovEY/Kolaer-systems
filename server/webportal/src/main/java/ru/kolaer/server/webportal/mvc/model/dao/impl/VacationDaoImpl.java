@@ -140,7 +140,9 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
                 .append("FROM ")
                 .append(getEntityName());
 
-        sqlQuery = sqlQuery.append(" WHERE ((vacationFrom <= :vacationFrom AND vacationTo >= :vacationFrom OR " +
+        sqlQuery = sqlQuery.append(" WHERE employee.dismissalDate IS NULL AND");
+
+        sqlQuery = sqlQuery.append(" ((vacationFrom <= :vacationFrom AND vacationTo >= :vacationFrom OR " +
                 "vacationFrom <= :vacationTo AND vacationTo >= :vacationTo) OR " +
                 "(vacationFrom >= :vacationFrom AND vacationTo <= :vacationTo)) ");
         params.put("vacationFrom", request.getFrom());
@@ -180,7 +182,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
 
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT new ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationTotalCountEntity(" +
-                        "COUNT(DISTINCT v.employeeId), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee)) ")
+                        "COUNT(DISTINCT v.employeeId), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee WHERE ee.dismissalDate IS NULL)) ")
                 .append("FROM ")
                 .append(getEntityName())
                 .append(" AS v LEFT JOIN VacationBalanceEntity AS vb ON v.employeeId = vb.employeeId");
@@ -188,12 +190,14 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
         int currentYear = LocalDate.now().getYear();
         int yearFrom = request.getFrom().getYear();
 
+        sqlQuery = sqlQuery.append(" WHERE v.employee.dismissalDate IS NULL AND");
+
         if (currentYear < yearFrom) {
-            sqlQuery = sqlQuery.append(" WHERE vb.nextYearBalance <= 0 AND");
+            sqlQuery = sqlQuery.append(" vb.nextYearBalance <= 0 AND");
         } else if (currentYear == yearFrom) {
-            sqlQuery = sqlQuery.append(" WHERE vb.currentYearBalance <= 0 AND");
+            sqlQuery = sqlQuery.append(" vb.currentYearBalance <= 0 AND");
         } else {
-            sqlQuery = sqlQuery.append(" WHERE vb.prevYearBalance <= 0 AND");
+            sqlQuery = sqlQuery.append(" vb.prevYearBalance <= 0 AND");
         }
 
         sqlQuery = sqlQuery.append("((v.vacationFrom <= :vacationFrom AND v.vacationTo >= :vacationFrom OR " +
@@ -230,12 +234,14 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
         int currentYear = LocalDate.now().getYear();
         int yearFrom = request.getFrom().getYear();
 
+        sqlQuery = sqlQuery.append(" WHERE v.employee.dismissalDate IS NULL AND");
+
         if (currentYear < yearFrom) {
-            sqlQuery = sqlQuery.append(" WHERE vb.nextYearBalance <= 0 AND");
+            sqlQuery = sqlQuery.append(" vb.nextYearBalance <= 0 AND");
         } else if (currentYear == yearFrom) {
-            sqlQuery = sqlQuery.append(" WHERE vb.currentYearBalance <= 0 AND");
+            sqlQuery = sqlQuery.append(" vb.currentYearBalance <= 0 AND");
         } else {
-            sqlQuery = sqlQuery.append(" WHERE vb.prevYearBalance <= 0 AND");
+            sqlQuery = sqlQuery.append(" vb.prevYearBalance <= 0 AND");
         }
 
         sqlQuery = sqlQuery.append("((v.vacationFrom <= :vacationFrom AND v.vacationTo >= :vacationFrom OR " +
@@ -279,7 +285,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
 
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT new ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationTotalCountDepartmentEntity(" +
-                        "v.employee.departmentId, COUNT(DISTINCT v.employeeId), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee WHERE ee.departmentId = v.employee.departmentId)) ")
+                        "v.employee.departmentId, COUNT(DISTINCT v.employeeId), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee WHERE ee.departmentId = v.employee.departmentId AND v.employee.dismissalDate IS NULL)) ")
                 .append("FROM ")
                 .append(getEntityName())
                 .append(" AS v LEFT JOIN VacationBalanceEntity AS vb ON v.employeeId = vb.employeeId");
@@ -287,12 +293,14 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
         int currentYear = LocalDate.now().getYear();
         int yearFrom = request.getFrom().getYear();
 
+        sqlQuery = sqlQuery.append(" WHERE v.employee.dismissalDate IS NULL AND");
+
         if (currentYear < yearFrom) {
-            sqlQuery = sqlQuery.append(" WHERE vb.nextYearBalance <= 0 AND");
+            sqlQuery = sqlQuery.append(" vb.nextYearBalance <= 0 AND");
         } else if (currentYear == yearFrom) {
-            sqlQuery = sqlQuery.append(" WHERE vb.currentYearBalance <= 0 AND");
+            sqlQuery = sqlQuery.append(" vb.currentYearBalance <= 0 AND");
         } else {
-            sqlQuery = sqlQuery.append(" WHERE vb.prevYearBalance <= 0 AND");
+            sqlQuery = sqlQuery.append(" vb.prevYearBalance <= 0 AND");
         }
 
         if (!request.getDepartmentIds().isEmpty()) {
@@ -332,7 +340,9 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
                 .append("FROM ")
                 .append(getEntityName());
 
-        sqlQuery = sqlQuery.append(" WHERE ((vacationFrom <= :vacationFrom AND vacationTo >= :vacationFrom OR " +
+        sqlQuery = sqlQuery.append(" WHERE employee.dismissalDate IS NULL AND");
+
+        sqlQuery = sqlQuery.append(" ((vacationFrom <= :vacationFrom AND vacationTo >= :vacationFrom OR " +
                 "vacationFrom <= :vacationTo AND vacationTo >= :vacationTo) OR " +
                 "(vacationFrom >= :vacationFrom AND vacationTo <= :vacationTo)) ");
         params.put("vacationFrom", request.getFrom());
@@ -374,7 +384,9 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
                 .append("SELECT COUNT(id) FROM ")
                 .append(getEntityName());
 
-        sqlQuery = sqlQuery.append(" WHERE ((vacationFrom <= :vacationFrom AND vacationTo >= :vacationFrom OR " +
+        sqlQuery = sqlQuery.append(" WHERE employee.dismissalDate IS NULL AND");
+
+        sqlQuery = sqlQuery.append(" ((vacationFrom <= :vacationFrom AND vacationTo >= :vacationFrom OR " +
                 "vacationFrom <= :vacationTo AND vacationTo >= :vacationTo) OR " +
                 "(vacationFrom >= :vacationFrom AND vacationTo <= :vacationTo)) ");
         params.put("vacationFrom", request.getFrom());
@@ -415,8 +427,9 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
                 .append("FROM ")
                 .append(getEntityName());
 
+        sqlQuery = sqlQuery.append(" WHERE employee.dismissalDate IS NULL AND");
 
-        sqlQuery = sqlQuery.append(" WHERE ((vacationFrom <= :vacationFrom AND vacationTo >= :vacationFrom OR " +
+        sqlQuery = sqlQuery.append(" ((vacationFrom <= :vacationFrom AND vacationTo >= :vacationFrom OR " +
                 "vacationFrom <= :vacationTo AND vacationTo >= :vacationTo) OR " +
                 "(vacationFrom >= :vacationFrom AND vacationTo <= :vacationTo))");
         params.put("vacationFrom", request.getFrom());
