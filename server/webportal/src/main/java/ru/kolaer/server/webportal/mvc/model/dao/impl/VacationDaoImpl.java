@@ -285,7 +285,7 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
 
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT new ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationTotalCountDepartmentEntity(" +
-                        "v.employee.departmentId, COUNT(DISTINCT v.employeeId), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee WHERE ee.departmentId = v.employee.departmentId AND v.employee.dismissalDate IS NULL)) ")
+                        "v.employee.departmentId, COUNT(DISTINCT v.employeeId), (SELECT COUNT(ee.id) FROM EmployeeEntity AS ee WHERE ee.departmentId = v.employee.departmentId AND ee.dismissalDate IS NULL)) ")
                 .append("FROM ")
                 .append(getEntityName())
                 .append(" AS v LEFT JOIN VacationBalanceEntity AS vb ON v.employeeId = vb.employeeId");
