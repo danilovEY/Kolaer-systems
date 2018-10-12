@@ -1,6 +1,8 @@
 package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -241,7 +243,10 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
     private UniformSystemEditorKit initUniformSystemEditorKit() {
         Thread.currentThread().setName("Инициализация UniformSystemEditorKit");
 
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
         MenuBarUSImpl menuBarUS = new MenuBarUSImpl();
 
         NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);

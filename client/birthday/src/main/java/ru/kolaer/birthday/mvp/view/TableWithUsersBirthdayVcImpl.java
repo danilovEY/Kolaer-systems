@@ -84,6 +84,7 @@ public class TableWithUsersBirthdayVcImpl implements TableWithUsersBirthdayVc {
 					if(item == null || item.equals("")){
 						imageView.setImage(new Image(getClass().getResource("/nonePicture.jpg").toString(), false));
 					} else {
+						System.out.println(item);
 						imageView.setImage(new Image(item, false));
 					}
 					this.setGraphic(imageView);
