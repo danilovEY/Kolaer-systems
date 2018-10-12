@@ -15,6 +15,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactType;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PostService;
+import ru.kolaer.server.webportal.mvc.model.servirces.impl.UtilService;
 
 import java.util.*;
 import java.util.function.Function;
@@ -28,6 +29,7 @@ public class ContactConverter {
     private final ContactDao contactDao;
     private final DepartmentService departmentService;
     private final PostService postService;
+    private final UtilService utilService;
 
     public List<ContactDto> employeeToContact(List<EmployeeEntity> employees) {
         if (CollectionUtils.isEmpty(employees)) {
@@ -85,7 +87,7 @@ public class ContactConverter {
             ContactDto contactDto = new ContactDto();
             contactDto.setEmployeeId(employee.getId());
             contactDto.setInitials(employee.getInitials());
-            contactDto.setPhoto(employee.getPhoto());
+            contactDto.setPhoto(Optional.ofNullable(employee.getPhoto()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
 
             contactDto.setDepartment(depMap.get(employee.getDepartmentId()));
             contactDto.setPost(postMap.get(employee.getPostId()));
@@ -112,7 +114,7 @@ public class ContactConverter {
         ContactDto contactDto = new ContactDto();
         contactDto.setEmployeeId(employee.getId());
         contactDto.setInitials(employee.getInitials());
-        contactDto.setPhoto(employee.getPhoto());
+        contactDto.setPhoto(Optional.ofNullable(employee.getPhoto()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
 
         contactDto.setDepartment(departmentService.getById(employee.getDepartmentId()));
         contactDto.setPost(postService.getById(employee.getPostId()));

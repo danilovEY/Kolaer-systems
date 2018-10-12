@@ -10,6 +10,7 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.DepartmentService;
 import ru.kolaer.server.webportal.mvc.model.servirces.PostService;
 import ru.kolaer.server.webportal.mvc.model.servirces.TypeWorkService;
+import ru.kolaer.server.webportal.mvc.model.servirces.impl.UtilService;
 
 import java.util.*;
 import java.util.function.Function;
@@ -27,6 +28,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
     private final DepartmentConverter departmentConverter;
     private final TypeWorkService typeWorkService;
     private final TypeWorkConverter typeWorkConverter;
+    private final UtilService utilService;
 
     @Override
     public List<EmployeeDto> convertToDto(List<EmployeeEntity> model) {
@@ -194,7 +196,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         entity.setDismissalDate(dto.getDismissalDate());
         entity.setEmploymentDate(dto.getEmploymentDate());
         entity.setGender(dto.getGender());
-        entity.setPhoto(dto.getPhoto());
+        entity.setPhoto(Optional.ofNullable(dto.getPhoto()).map(photo -> photo.substring(utilService.getCurrentHostUrl().length())).orElse(null));
         entity.setCategory(dto.getCategory());
         entity.setHarmfulness(dto.isHarmfulness());
 
@@ -217,7 +219,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         dto.setGender(entity.getGender());
         dto.setInitials(entity.getInitials());
         dto.setCategory(entity.getCategory());
-        dto.setPhoto(entity.getPhoto());
+        dto.setPhoto(Optional.ofNullable(entity.getPhoto()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
         dto.setHarmfulness(entity.isHarmfulness());
 
         return dto;

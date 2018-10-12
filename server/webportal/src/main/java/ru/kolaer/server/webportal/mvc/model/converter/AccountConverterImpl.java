@@ -11,6 +11,7 @@ import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.entities.contact.ContactEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
+import ru.kolaer.server.webportal.mvc.model.servirces.impl.UtilService;
 
 import java.util.*;
 import java.util.function.Function;
@@ -26,6 +27,7 @@ public class AccountConverterImpl implements AccountConverter {
     private final EmployeeConverter employeeConverter;
     private final EmployeeDao employeeDao;
     private final PasswordEncoder passwordEncoder;
+    private final UtilService utilService;
 
     @Override
     public AccountEntity convertToModel(AccountDto dto) {
@@ -38,7 +40,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setEmail(dto.getEmail());
         accountEntity.setUsername(dto.getUsername());
         accountEntity.setChatName(dto.getChatName());
-        accountEntity.setAvatarUrl(dto.getAvatarUrl());
+        accountEntity.setAvatarUrl(Optional.ofNullable(dto.getAvatarUrl()).map(photo -> photo.substring(utilService.getCurrentHostUrl().length())).orElse(null));
         accountEntity.setAccessUser(dto.isAccessUser());
         accountEntity.setAccessOit(dto.isAccessOit());
         accountEntity.setAccessOk(dto.isAccessOk());
@@ -69,7 +71,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setEmail(model.getEmail());
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
-        accountDto.setAvatarUrl(model.getAvatarUrl());
+        accountDto.setAvatarUrl(Optional.ofNullable(model.getAvatarUrl()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
         accountDto.setAccessUser(model.isAccessUser());
         accountDto.setAccessOit(model.isAccessOit());
         accountDto.setAccessOk(model.isAccessOk());
@@ -128,7 +130,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
         accountDto.setAccessUser(model.isAccessUser());
-        accountDto.setAvatarUrl(model.getAvatarUrl());
+        accountDto.setAvatarUrl(Optional.ofNullable(model.getAvatarUrl()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
         accountDto.setAccessOit(model.isAccessOit());
         accountDto.setAccessOk(model.isAccessOk());
         accountDto.setAccessVacationAdmin(model.isAccessVacationAdmin());
@@ -180,7 +182,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountSimpleDto.setEmail(accountEntity.getEmail());
         accountSimpleDto.setUsername(accountEntity.getUsername());
         accountSimpleDto.setChatName(accountEntity.getChatName());
-        accountSimpleDto.setAvatarUrl(accountEntity.getAvatarUrl());
+        accountSimpleDto.setAvatarUrl(Optional.ofNullable(accountEntity.getAvatarUrl()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
         accountSimpleDto.setAccessOit(accountEntity.isAccessOit());
         accountSimpleDto.setAccessUser(accountEntity.isAccessUser());
         accountSimpleDto.setAccessOk(accountEntity.isAccessOk());

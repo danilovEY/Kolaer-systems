@@ -19,7 +19,6 @@ import {PostEditComponent} from '../../../@theme/components/table/post-edit.comp
 import {PlacementEditComponent} from '../../../@theme/components/table/placement-edit.component';
 import {TableEventEditModel} from '../../../@theme/components/table/table-event-edit.model';
 import {ContactRequestModel} from '../../../@core/models/contact-request.model';
-import {Utils} from '../../../@core/utils/utils';
 import {CustomActionEventModel} from '../../../@theme/components/table/custom-action-event.model';
 import {SmartTableService} from '../../../@core/services/smart-table.service';
 
@@ -146,7 +145,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
             filter: false,
             valuePrepareFunction(a: any, value: ContactModel, cell: Cell) {
                 return value.photo
-                    ? `<img src="${value.photo}" height="${ 250 / 2 }" width="${290 / 2}" alt="${value.initials}">`
+                    ? `<img src="${value.photo}" height="${ 250 / 2 }" width="${200 / 2}" alt="${value.initials}">`
                     : `<img src="/assets/images/no_photo.jpg" height="${ 250 / 2 }" width="${290 / 2}" alt="${value.initials}">`;
             }
         }, undefined);
@@ -235,26 +234,6 @@ export class ContactsComponent implements OnInit, OnDestroy {
             }
         }, undefined);
 
-        const typeColumn: Column = new Column('type', {
-            title: 'Тип',
-            type: 'string',
-            addable: false,
-            sort: false,
-            filter: false,
-            editor: {
-                type: 'list',
-                config: {
-                    list: [
-                        {value: Utils.keyFromValue(ContactTypeModel, ContactTypeModel.MAIN), title: ContactTypeModel.MAIN},
-                        {value: Utils.keyFromValue(ContactTypeModel, ContactTypeModel.OTHER), title: ContactTypeModel.OTHER},
-                    ],
-                },
-            },
-            valuePrepareFunction(a: any, value: ContactModel, cell: Cell) {
-                return ContactTypeModel[value.type];
-            }
-        }, null);
-
         this.contactsColumn.push(
             photoColumn,
             initialsColumn,
@@ -264,8 +243,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
             mobilePhoneNumberColumn,
             pagerColumn,
             emailColumn,
-            placementColumn,
-            typeColumn
+            placementColumn
         );
 
         this.contactsTable.actionBeforeValueView = this.actionBeforeValueView;

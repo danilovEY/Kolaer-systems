@@ -9,8 +9,6 @@ import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.ExcelReader;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -96,14 +94,6 @@ public class ExcelReaderEmployee implements ExcelReader<EmployeeEntity> {
         value = getStringValue(nameColumns, CATEGORY, row);
         if(value != null) {
             newEmployeeEntity.setCategory(getCategory(value));
-        }
-
-        try {
-            newEmployeeEntity.setPhoto("http://asupkolaer.local/app_ie8/assets/images/vCard/o_"
-                    + URLEncoder.encode(newEmployeeEntity.getInitials(), "UTF-8")
-                    .replace("+", "%20") + ".jpg");
-        } catch (UnsupportedEncodingException ignore) {
-            log.warn("User initials can't encode to UTF-8", newEmployeeEntity.getInitials());
         }
 
         log.debug("Parse employee: {}", newEmployeeEntity);

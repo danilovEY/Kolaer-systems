@@ -12,7 +12,7 @@
                     <ngx-loading [show]="loadingEmployeesBirthdayToday"></ngx-loading>
 
                     <div class="contact" *ngFor="let employee of employeesBirthdayToday">
-                        <nb-user [picture]="employee.photo" [name]="employee.initials"
+                        <nb-user [picture]="encodeUrl(employee)" [name]="employee.initials"
                                  [title]="(employee.post.abbreviatedName || employee.post.name)" size="large"></nb-user>
                         <small class="time" *ngIf="(today.getFullYear() - employee.birthday.getFullYear()) % 5 === 0">Юбилей</small>
                     </div>

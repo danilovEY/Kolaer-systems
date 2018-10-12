@@ -16,6 +16,7 @@ import ru.kolaer.server.webportal.mvc.model.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PostDao;
+import ru.kolaer.server.webportal.mvc.model.dao.UploadFileDao;
 import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdate;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.ResultUpdateEmployeeDto;
 import ru.kolaer.server.webportal.mvc.model.dto.holiday.HistoryChangeDto;
@@ -25,14 +26,17 @@ import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.historychange.HistoryChangeEvent;
+import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.HistoryChangeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdatableEmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
 
+import javax.persistence.EntityExistsException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -47,6 +51,8 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
     private final EmployeeConverter employeeConverter;
     private final PostDao postDao;
     private final DepartmentDao departmentDao;
+    private final UploadFileDao uploadFileDao;
+    private final UtilService utilService;
 
     private final HistoryChangeService historyChangeService;
 
@@ -62,6 +68,8 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             EmployeeConverter employeeConverter,
             PostDao postDao,
             DepartmentDao departmentDao,
+            UploadFileDao uploadFileDao,
+            UtilService utilService,
             HistoryChangeService historyChangeService,
             ExcelReaderEmployee excelReaderEmployee,
             ExcelReaderDepartment excelReaderDepartment,
@@ -70,6 +78,8 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
         this.employeeConverter = employeeConverter;
         this.postDao = postDao;
         this.departmentDao = departmentDao;
+        this.uploadFileDao = uploadFileDao;
+        this.utilService = utilService;
 
         this.historyChangeService = historyChangeService;
 
@@ -181,9 +191,29 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                         updatable.isDelete())
                 .map(UpdatableElement::getElement)
                 .map(UpdatableEmployee::getEmployee)
+                .map(this::updatePhoto)
                 .collect(Collectors.toList());
 
         employeeDao.save(employeeEntities);
+    }
+
+    private EmployeeEntity updatePhoto(EmployeeEntity employee) {
+        try {
+            if (employee.getPhoto() == null) {
+                UploadFileEntity photoFile = new UploadFileEntity(); //TODO: replace to batch insert
+                photoFile.setAbsolutePath(true);
+                photoFile.setFileCreate(LocalDateTime.now());
+                photoFile.setFileName(employee.getInitials() + ".jpg");
+                photoFile.setPath(utilService.getExternalPhotoPath() + photoFile.getFileName());
+                photoFile = uploadFileDao.save(photoFile);
+
+                employee.setPhoto("upload/file/" + photoFile.getId() + "/" + photoFile.getFileName()); //TODO: replace to batch insert
+            }
+        } catch (EntityExistsException e) {
+            log.error("Фото для '{}' уже есть.", employee.getInitials());
+        }
+
+        return employee;
     }
 
     private Map<String, UpdatableElement<PostEntity>> savePost(Map<String, UpdatableElement<PostEntity>> postEntityMap) {

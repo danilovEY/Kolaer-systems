@@ -65,4 +65,8 @@ export class DashboardComponent implements OnInit {
     getShortNameOrganization(organization: string): string {
         return EmployeeService.getShortNameOrganization(organization);
     }
+
+    encodeUrl(employee: EmployeeModel): string {
+        return employee.photo ? encodeURI(employee.photo) : '/assets/images/no_photo.jpg';
+    }
 }
