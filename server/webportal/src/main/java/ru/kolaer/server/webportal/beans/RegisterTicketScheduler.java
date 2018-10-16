@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import ru.kolaer.server.webportal.mvc.model.dto.ticket.SendTicketDto;
-import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
+import ru.kolaer.server.webportal.mvc.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 
 import javax.annotation.PostConstruct;
@@ -49,17 +49,17 @@ public class RegisterTicketScheduler {
         this.emails.add(environment.getProperty("tickets.email"));
     }
 
-    public UploadFileEntity generateReportTickets(List<SendTicketDto> tickets, LocalDateTime inTime) {
+    public UploadFileDto generateReportTickets(List<SendTicketDto> tickets, LocalDateTime inTime) {
         String dateToUpdate = DateTimeFormatter.ofPattern("yyyyMMdd hhmmss").format(inTime);
 
         return this.generateTextFile(tickets, String.format("IN-TIME  %s", dateToUpdate));
     }
 
-    public UploadFileEntity generateReportTickets(List<SendTicketDto> tickets) {
+    public UploadFileDto generateReportTickets(List<SendTicketDto> tickets) {
         return this.generateTextFile(tickets, "IMMEDIATE");
     }
 
-    public boolean sendMail(UploadFileEntity uploadFileEntity, String text) {
+    public boolean sendMail(UploadFileDto uploadFileEntity, String text) {
         if (uploadFileEntity != null) {
             this.mailSender.send(mimeMessage -> {
                 Resource resource = uploadFileService.loadFile(uploadFileEntity.getPath(), uploadFileEntity.isAbsolutePath());
@@ -77,14 +77,14 @@ public class RegisterTicketScheduler {
         return false;
     }
 
-    private UploadFileEntity generateTextFile(List<SendTicketDto> tickets, String header) {
+    private UploadFileDto generateTextFile(List<SendTicketDto> tickets, String header) {
         LocalDateTime now = LocalDateTime.now();
 
         String[] dateTime = dateTimeFormatter.format(now).split("-");
 
         int index = 1;
 
-        UploadFileEntity uploadFileEntity = null;
+        UploadFileDto uploadFileEntity = null;
 
         while (uploadFileEntity == null) {
             uploadFileEntity = uploadFileService

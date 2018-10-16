@@ -47,7 +47,7 @@ public class UploadFileServiceImpl
         super(uploadFileDao, uploadFileConverter);
     }
 
-    public UploadFileEntity store(String folder, MultipartFile file, boolean generateUniquiredFileName) {
+    public UploadFileDto store(String folder, MultipartFile file, boolean generateUniquiredFileName) {
         try {
             File folderFile = rootLocation.resolve(folder).toFile();
             if(!folderFile.exists() && !folderFile.mkdirs()) {
@@ -67,7 +67,7 @@ public class UploadFileServiceImpl
             uploadFileEntity.setFileName(file.getOriginalFilename());
             uploadFileEntity.setPath(newFileName);
 
-            return this.defaultEntityDao.persist(uploadFileEntity);
+            return defaultConverter.convertToDto(defaultEntityDao.persist(uploadFileEntity));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -75,25 +75,25 @@ public class UploadFileServiceImpl
 
     @Transactional
     @Override
-    public UploadFileEntity createTempFile(String fileName) {
+    public UploadFileDto createTempFile(String fileName) {
         return createFile("temp", fileName, true, false, false, false);
     }
 
     @Transactional
     @Override
-    public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName) {
+    public UploadFileDto createFile(String folder, String fileName, boolean generateUniquiredFileName) {
         return createFile(folder, fileName, generateUniquiredFileName, true);
     }
 
     @Override
     @Transactional
-    public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder) {
+    public UploadFileDto createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder) {
        return createFile(folder, fileName, generateUniquiredFileName, inDateFolder, true, true);
     }
 
     @Override
     @Transactional
-    public UploadFileEntity createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder, boolean replaceFile, boolean saveFileInDb) {
+    public UploadFileDto createFile(String folder, String fileName, boolean generateUniquiredFileName, boolean inDateFolder, boolean replaceFile, boolean saveFileInDb) {
         try {
             if(inDateFolder) {
                 folder += "/" + simpleDateFormat.format(new Date());
@@ -137,7 +137,7 @@ public class UploadFileServiceImpl
                 }
             }
 
-            return uploadFileEntity;
+            return defaultConverter.convertToDto(uploadFileEntity);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -164,7 +164,7 @@ public class UploadFileServiceImpl
     }
 
     @Override
-    public String getAbsolutePath(UploadFileEntity uploadFileEntity) {
+    public String getAbsolutePath(UploadFileDto uploadFileEntity) {
         return uploadFileEntity.isAbsolutePath()
                 ? uploadFileEntity.getPath()
                 : this.getAbsolutePath(uploadFileEntity.getPath());

@@ -20,7 +20,7 @@ import ru.kolaer.server.webportal.mvc.model.dto.ResultUpdate;
 import ru.kolaer.server.webportal.mvc.model.dto.SortType;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeFilter;
 import ru.kolaer.server.webportal.mvc.model.dto.employee.EmployeeSort;
-import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
+import ru.kolaer.server.webportal.mvc.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.webportal.mvc.model.servirces.EmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UpdatableEmployeeService;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
@@ -84,7 +84,7 @@ public class GenerateReportForOldDbService implements UpdatableEmployeeService {
             createCells(row, allActualEmployees.get(rowIndex));
         }
 
-        UploadFileEntity uploadFileEntity = this.uploadFileService.createFile("oldDbReport", "users_1c.xls", true, true, true, true);
+        UploadFileDto uploadFileEntity = this.uploadFileService.createFile("oldDbReport", "users_1c.xls", true, true, true, true);
         String absolutePath = this.uploadFileService.getAbsolutePath(uploadFileEntity);
 
         File file = new File(absolutePath);
@@ -104,7 +104,7 @@ public class GenerateReportForOldDbService implements UpdatableEmployeeService {
         }
     }
 
-    private boolean sendMail(UploadFileEntity uploadFileEntity) {
+    private boolean sendMail(UploadFileDto uploadFileEntity) {
         if (uploadFileEntity != null && emailToSend != null) {
             this.mailSender.send(mimeMessage -> {
                 Resource resource = uploadFileService.loadFile(uploadFileEntity.getPath(), uploadFileEntity.isAbsolutePath());

@@ -17,11 +17,11 @@ import ru.kolaer.server.webportal.mvc.model.dao.DepartmentDao;
 import ru.kolaer.server.webportal.mvc.model.dao.EmployeeDao;
 import ru.kolaer.server.webportal.mvc.model.dao.PostDao;
 import ru.kolaer.server.webportal.mvc.model.dao.VacationDao;
+import ru.kolaer.server.webportal.mvc.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.webportal.mvc.model.dto.vacation.GenerateReportExportRequest;
 import ru.kolaer.server.webportal.mvc.model.entities.general.DepartmentEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.PostEntity;
-import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.vacation.VacationEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 
@@ -121,17 +121,17 @@ public class GenerateReportForVacationService {
             XSSFSheet sheet = setDepartmentName(workbook.getSheetAt(0), departmentEntity);
             sheet = setVacations(sheet, vacationMap, employees, postMap, departmentEntity);
 
-            UploadFileEntity uploadFileEntity = saveWorkBook(workbook, departmentEntity.getAbbreviatedName());
-            return uploadFileService.loadFile(uploadFileEntity.getId(), uploadFileEntity.getFileName(), response);
+            UploadFileDto uploadFileDto = saveWorkBook(workbook, departmentEntity.getAbbreviatedName());
+            return uploadFileService.loadFile(uploadFileDto, response);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private UploadFileEntity saveWorkBook(XSSFWorkbook workbook, String departmentName) throws IOException {
+    private UploadFileDto saveWorkBook(XSSFWorkbook workbook, String departmentName) throws IOException {
         String fileName = departmentName + " (Отчет).xlsx";
 
-        UploadFileEntity tempFile = uploadFileService.createTempFile(fileName);
+        UploadFileDto tempFile = uploadFileService.createTempFile(fileName);
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(uploadFileService.getAbsolutePath(tempFile))){
             workbook.write(fileOutputStream);

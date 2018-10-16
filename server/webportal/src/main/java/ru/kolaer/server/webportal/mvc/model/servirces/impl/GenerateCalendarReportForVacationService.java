@@ -11,8 +11,8 @@ import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
+import ru.kolaer.server.webportal.mvc.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.webportal.mvc.model.dto.vacation.*;
-import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.UploadFileService;
 import ru.kolaer.server.webportal.mvc.model.servirces.VacationService;
 
@@ -47,8 +47,8 @@ public class GenerateCalendarReportForVacationService {
 
             sheet = setVacations(sheet, vacations);
 
-            UploadFileEntity uploadFileEntity = saveWorkBook(workbook, "График пересечений");
-            return uploadFileService.loadFile(uploadFileEntity.getId(), uploadFileEntity.getFileName(), response);
+            UploadFileDto uploadFileEntity = saveWorkBook(workbook, "График пересечений");
+            return uploadFileService.loadFile(uploadFileEntity, response);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -205,10 +205,10 @@ public class GenerateCalendarReportForVacationService {
         return cellStyle;
     }
 
-    private UploadFileEntity saveWorkBook(XSSFWorkbook workbook, String departmentName) throws IOException {
+    private UploadFileDto saveWorkBook(XSSFWorkbook workbook, String departmentName) throws IOException {
         String fileName = departmentName + ".xlsx";
 
-        UploadFileEntity tempFile = uploadFileService.createTempFile(fileName);
+        UploadFileDto tempFile = uploadFileService.createTempFile(fileName);
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(uploadFileService.getAbsolutePath(tempFile))){
             workbook.write(fileOutputStream);

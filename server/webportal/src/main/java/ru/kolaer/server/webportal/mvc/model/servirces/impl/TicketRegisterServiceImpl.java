@@ -21,12 +21,12 @@ import ru.kolaer.server.webportal.mvc.model.dto.SortField;
 import ru.kolaer.server.webportal.mvc.model.dto.SortParam;
 import ru.kolaer.server.webportal.mvc.model.dto.bank.BankAccountFilter;
 import ru.kolaer.server.webportal.mvc.model.dto.ticket.*;
+import ru.kolaer.server.webportal.mvc.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.webportal.mvc.model.entities.general.BankAccountEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.general.EmployeeEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TicketRegisterEntity;
 import ru.kolaer.server.webportal.mvc.model.entities.tickets.TypeOperation;
-import ru.kolaer.server.webportal.mvc.model.entities.upload.UploadFileEntity;
 import ru.kolaer.server.webportal.mvc.model.servirces.AbstractDefaultService;
 import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.mvc.model.servirces.TicketRegisterService;
@@ -156,7 +156,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
         return defaultEntityDao.save(ticketRegisterEntity);
     }
 
-    private UploadFileEntity generateReportByRegister(Long registerId, ReportTicketsConfig config) {
+    private UploadFileDto generateReportByRegister(Long registerId, ReportTicketsConfig config) {
         if(registerId == null) {
             throw new UnexpectedRequestParams("ID должен быть не пустым");
         }
@@ -223,7 +223,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
     @Transactional
     public TicketRegisterDto generateReportByRegisterAndSend(Long registerId, ReportTicketsConfig config) {
         TicketRegisterEntity registerEntity = defaultEntityDao.findById(registerId);
-        UploadFileEntity uploadFileEntity = this.generateReportByRegister(registerId, config);
+        UploadFileDto uploadFileEntity = this.generateReportByRegister(registerId, config);
         if(uploadFileEntity != null) {
             registerEntity.setAttachmentId(uploadFileEntity.getId());
             registerEntity.setClose(true);
@@ -248,7 +248,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
     public TicketRegisterDto generateReportByRegisterAndDownload(Long registerId, ReportTicketsConfig config, HttpServletResponse response) {
         TicketRegisterEntity registerEntity = defaultEntityDao.findById(registerId);
 
-        UploadFileEntity uploadFileEntity = this.generateReportByRegister(registerId, config);
+        UploadFileDto uploadFileEntity = this.generateReportByRegister(registerId, config);
 
         if(uploadFileEntity != null) {
             registerEntity.setAttachmentId(uploadFileEntity.getId());
