@@ -11,7 +11,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import ru.kolaer.common.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.server.webportal.common.exception.*;
-import ru.kolaer.server.webportal.exception.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;

@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import ru.kolaer.server.webportal.common.servirces.impl.TokenService;
-import ru.kolaer.server.webportal.security.ServerAuthType;
 
 import java.security.Principal;
 import java.util.List;
@@ -30,15 +29,12 @@ import java.util.Stack;
 public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
     private static final ThreadLocal<Stack<SecurityContext>> ORIGINAL_CONTEXT = new ThreadLocal<>();
     private final UserDetailsService userDetailsService;
-    private final ServerAuthType serverAuthType;
     private final TokenService tokenService;
 
     @Autowired
     public PresenceChannelInterceptor(UserDetailsService userDetailsService,
-                                      @Value("${server.auth.type}") String serverAuthType,
                                       TokenService tokenService) {
         this.userDetailsService = userDetailsService;
-        this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.tokenService = tokenService;
     }
 
@@ -75,7 +71,7 @@ public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
             if (userName != null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
                 if(userDetails != null){
-                    if (tokenIsValidate(authToken, userDetails)) {
+                    if (tokenService.validateToken(authToken, userDetails)) {
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
@@ -110,13 +106,6 @@ public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
         } else {
             SecurityContextHolder.clearContext();
             ORIGINAL_CONTEXT.remove();
-        }
-    }
-
-    private boolean tokenIsValidate(String authToken, UserDetails userDetails) {
-        switch (serverAuthType) {
-            case LDAP: return tokenService.validateTokenLDAP(authToken, userDetails);
-            default: return tokenService.validateToken(authToken, userDetails);
         }
     }
 }

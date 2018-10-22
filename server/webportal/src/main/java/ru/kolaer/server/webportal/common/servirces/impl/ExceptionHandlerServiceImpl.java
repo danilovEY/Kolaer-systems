@@ -10,7 +10,6 @@ import ru.kolaer.common.mvp.model.error.ErrorCode;
 import ru.kolaer.common.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.server.webportal.common.exception.*;
 import ru.kolaer.server.webportal.common.servirces.ExceptionHandlerService;
-import ru.kolaer.server.webportal.exception.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

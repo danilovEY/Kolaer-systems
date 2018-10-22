@@ -34,7 +34,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-import ru.kolaer.server.webportal.beans.TypeServer;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -61,13 +60,11 @@ import java.util.concurrent.Executor;
 @EnableScheduling
 @EnableCaching
 @EnableAsync
-@ComponentScan({"ru.kolaer.server.webportal.spring",
-        "ru.kolaer.server.webportal.beans",
-        "ru.kolaer.server.webportal.mvc.model.converter",
-        "ru.kolaer.server.webportal.mvc.model.dao.impl",
-        "ru.kolaer.server.webportal.mvc.model.ldap.impl",
-        "ru.kolaer.server.webportal.mvc.model.servirces.impl",
-        "ru.kolaer.server.webportal.mvc.controllers"})
+@ComponentScan({
+        "ru.kolaer.server.webportal.spring",
+        "ru.kolaer.server.webportal.microservice",
+        "ru.kolaer.server.webportal.common"
+})
 @PropertySources({
         @PropertySource("classpath:database.properties"),
         @PropertySource("classpath:mail.properties"),
@@ -136,13 +133,6 @@ public class SpringContext extends WebMvcConfigurerAdapter {
                 .modelRef(new ModelRef("string"))
                 .parameterType("header")
                 .build()));
-    }
-
-    @Bean
-    public TypeServer typeServer() {
-        TypeServer typeServer = new TypeServer();
-        typeServer.setTest(env.getRequiredProperty("test").equals("true"));
-        return typeServer;
     }
 
     @Bean

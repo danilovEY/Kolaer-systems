@@ -11,7 +11,6 @@ import ru.kolaer.server.webportal.common.servirces.AuthenticationService;
 import ru.kolaer.server.webportal.common.servirces.TicketRegisterService;
 import ru.kolaer.server.webportal.common.servirces.UploadFileService;
 import ru.kolaer.server.webportal.microservice.ticket.RegisterTicketScheduler;
-import ru.kolaer.server.webportal.beans.TypeServer;
 import ru.kolaer.server.webportal.common.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.common.exception.ServerException;
 import ru.kolaer.server.webportal.common.exception.UnexpectedRequestParams;
@@ -44,7 +43,6 @@ import java.util.stream.Collectors;
 @Service
 public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegisterDto, TicketRegisterEntity,
         TicketRegisterRepository, TicketRegisterConverter> implements TicketRegisterService {
-    private final TypeServer typeServer;
     private final TicketRepository ticketDao;
     private final RegisterTicketScheduler registerTicketScheduler;
     private final BankAccountRepository bankAccountDao;
@@ -54,7 +52,6 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
 
     public TicketRegisterServiceImpl(TicketRegisterConverter defaultConverter,
                                      TicketRegisterRepository ticketRegisterDao,
-                                     TypeServer typeServer,
                                      TicketRepository ticketDao,
                                      RegisterTicketScheduler registerTicketScheduler,
                                      BankAccountRepository bankAccountDao,
@@ -62,7 +59,6 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
                                      UploadFileService uploadFileService,
                                      AuthenticationService authenticationService) {
         super(ticketRegisterDao, defaultConverter);
-        this.typeServer = typeServer;
         this.ticketDao = ticketDao;
         this.registerTicketScheduler = registerTicketScheduler;
         this.bankAccountDao = bankAccountDao;
@@ -75,19 +71,17 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
     @Scheduled(cron = "0 0 8 26-31 * ?", zone = "Europe/Moscow")
     @Transactional
     public void generateZeroTicketsLastDayOfMonthScheduled() {
-        if(!typeServer.isTest()) {
-            LocalDate now = LocalDate.now();
-            LocalDate end = now.withDayOfMonth(now.lengthOfMonth());
-            int lastDay = end.getDayOfWeek().getValue() == 7
-                    || end.getDayOfWeek().getValue() == 6 ? 6 :  end.getDayOfMonth();
+        LocalDate now = LocalDate.now();
+        LocalDate end = now.withDayOfMonth(now.lengthOfMonth());
+        int lastDay = end.getDayOfWeek().getValue() == 7
+                || end.getDayOfWeek().getValue() == 6 ? 6 :  end.getDayOfMonth();
 
-            if (now.getDayOfMonth() == lastDay && this.defaultEntityDao.findIncludeAllOnLastMonth().isEmpty()) {
-                TicketRegisterDto ticketRegisterDto = createRegisterForAllAccounts(new GenerateTicketRegister(TypeOperation.DR, 25));
+        if (now.getDayOfMonth() == lastDay && this.defaultEntityDao.findIncludeAllOnLastMonth().isEmpty()) {
+            TicketRegisterDto ticketRegisterDto = createRegisterForAllAccounts(new GenerateTicketRegister(TypeOperation.DR, 25));
 
-                LocalDateTime localDateTimeToExecute = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 10).plusMonths(1);
+            LocalDateTime localDateTimeToExecute = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 2, 10).plusMonths(1);
 
-                generateReportByRegisterAndSend(ticketRegisterDto.getId(), new ReportTicketsConfig(false, localDateTimeToExecute));
-            }
+            generateReportByRegisterAndSend(ticketRegisterDto.getId(), new ReportTicketsConfig(false, localDateTimeToExecute));
         }
     }
 

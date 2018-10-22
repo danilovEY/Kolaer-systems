@@ -7,7 +7,6 @@ import ru.kolaer.common.mvp.model.kolaerweb.BaseDto;
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.common.dao.DefaultRepository;
 import ru.kolaer.server.webportal.common.dto.*;
-import ru.kolaer.server.webportal.mvc.model.dto.*;
 import ru.kolaer.server.webportal.common.entities.BaseEntity;
 
 import java.lang.reflect.Field;

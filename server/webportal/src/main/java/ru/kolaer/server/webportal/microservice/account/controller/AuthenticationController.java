@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +21,6 @@ import ru.kolaer.common.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.common.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.common.servirces.impl.TokenService;
-import ru.kolaer.server.webportal.security.ServerAuthType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,21 +35,18 @@ import java.util.Optional;
 @Api(description = "Работа с авторизацией", tags = "Аутентификация")
 @Slf4j
 public class AuthenticationController {
-    private final ServerAuthType serverAuthType;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthenticationController(@Value("${server.auth.type}") String serverAuthType,
-                                    AuthenticationManager authenticationManager,
+    public AuthenticationController(AuthenticationManager authenticationManager,
                                     UserDetailsService userDetailsService,
                                     TokenService tokenService,
                                     PasswordEncoder passwordEncoder) {
         this.tokenService = tokenService;
         this.passwordEncoder = passwordEncoder;
-        this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
     }
@@ -126,7 +121,7 @@ public class AuthenticationController {
             throw new UsernameNotFoundException("Пользователь " + username + " не найден!");
         }
 
-        return new TokenJson(getToken(userDetails));
+        return new TokenJson(tokenService.createToken(userDetails));
     }
 
     @ApiOperation(
@@ -142,14 +137,7 @@ public class AuthenticationController {
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(authentication.getName());
-        return new TokenJson(getToken(userDetails));
-    }
-
-    private String getToken(UserDetails userDetails) {
-        switch (serverAuthType) {
-            case LDAP: return  tokenService.createTokenLDAP(userDetails);
-            default: return  tokenService.createToken(userDetails);
-        }
+        return new TokenJson(tokenService.createToken(userDetails));
     }
 
 }
