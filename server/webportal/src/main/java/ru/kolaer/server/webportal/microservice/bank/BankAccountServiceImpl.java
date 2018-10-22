@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.common.servirces.impl;
+package ru.kolaer.server.webportal.microservice.bank;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,7 +8,7 @@ import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.common.dto.*;
 import ru.kolaer.server.webportal.common.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.BankAccountService;
+import ru.kolaer.server.webportal.microservice.bank.BankAccountService;
 import ru.kolaer.server.webportal.microservice.bank.BankAccountConverter;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeConverter;
 import ru.kolaer.server.webportal.microservice.bank.BankAccountRepository;

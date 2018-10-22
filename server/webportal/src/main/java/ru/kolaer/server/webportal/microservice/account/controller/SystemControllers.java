@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.common.servirces.AuthenticationService;
+import ru.kolaer.server.webportal.microservice.account.service.AuthenticationService;
 
 /**
  * Created by danilovey on 25.08.2016.

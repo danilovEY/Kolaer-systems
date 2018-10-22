@@ -5,7 +5,7 @@ import ru.kolaer.common.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.common.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.server.webportal.microservice.account.AccountEntity;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeEntity;
-import ru.kolaer.server.webportal.common.servirces.BaseConverter;
+import ru.kolaer.server.webportal.common.converter.BaseConverter;
 
 /**
  * Created by danilovey on 09.10.2017.

@@ -9,9 +9,9 @@ import ru.kolaer.common.mvp.model.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.server.webportal.microservice.department.DepartmentConverter;
 import ru.kolaer.server.webportal.microservice.post.PostConverter;
 import ru.kolaer.server.webportal.microservice.typework.TypeWorkConverter;
-import ru.kolaer.server.webportal.common.servirces.DepartmentService;
-import ru.kolaer.server.webportal.common.servirces.PostService;
-import ru.kolaer.server.webportal.common.servirces.TypeWorkService;
+import ru.kolaer.server.webportal.microservice.department.DepartmentService;
+import ru.kolaer.server.webportal.microservice.post.PostService;
+import ru.kolaer.server.webportal.microservice.typework.TypeWorkService;
 import ru.kolaer.server.webportal.common.servirces.impl.UtilService;
 
 import java.util.*;

@@ -7,7 +7,7 @@ import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.common.mvp.model.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.server.webportal.common.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.TypeWorkService;
+import ru.kolaer.server.webportal.microservice.typework.TypeWorkService;
 import ru.kolaer.server.webportal.microservice.typework.TypeWorkConverter;
 import ru.kolaer.server.webportal.microservice.typework.TypeWorkRepository;
 import ru.kolaer.server.webportal.microservice.typework.FindTypeWorkRequest;

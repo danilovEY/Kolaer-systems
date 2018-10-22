@@ -1,9 +1,10 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.bank;
 
 import ru.kolaer.common.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.common.dto.FilterParam;
 import ru.kolaer.server.webportal.common.dto.SortParam;
+import ru.kolaer.server.webportal.common.servirces.DefaultService;
 import ru.kolaer.server.webportal.microservice.bank.BankAccountDto;
 import ru.kolaer.server.webportal.microservice.bank.BankAccountRequest;
 

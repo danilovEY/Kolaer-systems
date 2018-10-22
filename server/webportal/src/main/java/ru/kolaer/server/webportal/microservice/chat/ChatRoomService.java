@@ -1,8 +1,9 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.chat;
 
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatInfoMessageActionDto;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatInfoRoomActionDto;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatRoomDto;
+import ru.kolaer.server.webportal.common.servirces.DefaultService;
 
 /**
  * Created by danilovey on 08.11.2017.

@@ -16,8 +16,6 @@ import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.common.servirces.ChatMessageService;
-import ru.kolaer.server.webportal.common.servirces.ChatRoomService;
 
 import java.util.Collection;
 import java.util.Date;

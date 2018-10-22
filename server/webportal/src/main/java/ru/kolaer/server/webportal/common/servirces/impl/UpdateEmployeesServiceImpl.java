@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.mvp.model.error.ErrorCode;
 import ru.kolaer.server.webportal.common.exception.UnexpectedRequestParams;
-import ru.kolaer.server.webportal.common.servirces.HistoryChangeService;
+import ru.kolaer.server.webportal.microservice.event.HistoryChangeService;
 import ru.kolaer.server.webportal.common.servirces.UpdatableEmployeeService;
 import ru.kolaer.server.webportal.common.servirces.UpdateEmployeesService;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeConverter;

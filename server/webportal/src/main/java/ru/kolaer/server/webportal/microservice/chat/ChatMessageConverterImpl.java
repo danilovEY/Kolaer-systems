@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatUserDto;
-import ru.kolaer.server.webportal.common.servirces.ChatService;
 
 import java.util.List;
 import java.util.Map;

@@ -11,8 +11,8 @@ import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.kolaer.server.webportal.common.exception.NotFoundDataException;
-import ru.kolaer.server.webportal.common.servirces.UploadFileService;
-import ru.kolaer.server.webportal.common.servirces.VacationService;
+import ru.kolaer.server.webportal.microservice.storage.UploadFileService;
+import ru.kolaer.server.webportal.microservice.vacation.VacationService;
 import ru.kolaer.server.webportal.microservice.storage.UploadFileDto;
 import ru.kolaer.server.webportal.microservice.vacation.*;
 

@@ -15,7 +15,7 @@ import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.microservice.account.pojo.request.AccountFilter;
 import ru.kolaer.server.webportal.microservice.account.pojo.request.AccountSort;
 import ru.kolaer.server.webportal.microservice.account.service.AccountService;
-import ru.kolaer.server.webportal.common.servirces.AuthenticationService;
+import ru.kolaer.server.webportal.microservice.account.service.AuthenticationService;
 
 /**
  * Created by danilovey on 31.08.2016.

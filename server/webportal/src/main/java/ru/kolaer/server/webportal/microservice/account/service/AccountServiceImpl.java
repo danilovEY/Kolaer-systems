@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.common.servirces.impl;
+package ru.kolaer.server.webportal.microservice.account.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,8 @@ import ru.kolaer.server.webportal.common.exception.ForbiddenException;
 import ru.kolaer.server.webportal.common.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.common.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.AuthenticationService;
-import ru.kolaer.server.webportal.common.servirces.ContactService;
+import ru.kolaer.server.webportal.microservice.account.service.AuthenticationService;
+import ru.kolaer.server.webportal.microservice.contact.ContactService;
 import ru.kolaer.server.webportal.microservice.account.converter.AccountConverter;
 import ru.kolaer.server.webportal.microservice.account.repository.AccountRepository;
 import ru.kolaer.server.webportal.microservice.contact.ContactRepository;

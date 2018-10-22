@@ -1,7 +1,8 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.chat;
 
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.server.webportal.common.servirces.DefaultService;
 
 import java.util.List;
 

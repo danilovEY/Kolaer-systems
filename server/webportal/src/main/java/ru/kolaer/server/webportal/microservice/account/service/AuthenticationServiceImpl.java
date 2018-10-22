@@ -1,8 +1,7 @@
-package ru.kolaer.server.webportal.common.servirces.impl;
+package ru.kolaer.server.webportal.microservice.account.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -10,14 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.common.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.server.webportal.common.exception.ForbiddenException;
-import ru.kolaer.server.webportal.common.servirces.AuthenticationService;
+import ru.kolaer.server.webportal.microservice.account.service.AuthenticationService;
 import ru.kolaer.server.webportal.microservice.account.converter.AccountConverter;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeConverter;
 import ru.kolaer.server.webportal.microservice.account.repository.AccountRepository;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeRepository;
 
 import javax.annotation.PreDestroy;
-import java.util.List;
 import java.util.Optional;
 
 /**

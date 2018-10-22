@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.common.servirces.impl;
 
 import org.springframework.stereotype.Service;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.PlacementService;
+import ru.kolaer.server.webportal.microservice.placement.PlacementService;
 import ru.kolaer.server.webportal.microservice.placement.PlacementConverter;
 import ru.kolaer.server.webportal.microservice.placement.PlacementRepository;
 import ru.kolaer.server.webportal.microservice.placement.PlacementDto;

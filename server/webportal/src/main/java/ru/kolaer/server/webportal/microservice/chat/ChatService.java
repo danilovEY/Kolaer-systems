@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.chat;
 
 import ru.kolaer.common.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.common.mvp.model.kolaerweb.IdDto;
@@ -7,6 +7,7 @@ import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.server.webportal.common.servirces.DefaultService;
 
 import java.util.Collection;
 import java.util.List;

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.mvp.model.kolaerweb.DepartmentDto;
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.common.servirces.ContactService;
 
 import java.util.List;
 

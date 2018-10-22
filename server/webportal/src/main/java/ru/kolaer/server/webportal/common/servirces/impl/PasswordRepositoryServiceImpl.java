@@ -13,7 +13,7 @@ import ru.kolaer.server.webportal.common.exception.ForbiddenException;
 import ru.kolaer.server.webportal.common.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.common.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.AuthenticationService;
+import ru.kolaer.server.webportal.microservice.account.service.AuthenticationService;
 import ru.kolaer.server.webportal.common.servirces.PasswordRepositoryService;
 import ru.kolaer.server.webportal.microservice.kolpass.PasswordHistoryConverter;
 import ru.kolaer.server.webportal.microservice.kolpass.PasswordRepositoryConverter;

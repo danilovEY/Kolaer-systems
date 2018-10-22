@@ -8,7 +8,7 @@ import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.common.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.common.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.DepartmentService;
+import ru.kolaer.server.webportal.microservice.department.DepartmentService;
 import ru.kolaer.server.webportal.microservice.department.DepartmentConverter;
 import ru.kolaer.server.webportal.microservice.department.DepartmentRepository;
 import ru.kolaer.server.webportal.microservice.department.DepartmentRequestDto;

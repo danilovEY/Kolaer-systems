@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.contact;
 
 import ru.kolaer.common.mvp.model.kolaerweb.DepartmentDto;
 import ru.kolaer.common.mvp.model.kolaerweb.Page;

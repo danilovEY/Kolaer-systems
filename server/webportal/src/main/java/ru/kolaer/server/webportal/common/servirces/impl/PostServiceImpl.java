@@ -8,7 +8,7 @@ import ru.kolaer.common.mvp.model.kolaerweb.PostDto;
 import ru.kolaer.server.webportal.common.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.common.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.PostService;
+import ru.kolaer.server.webportal.microservice.post.PostService;
 import ru.kolaer.server.webportal.microservice.post.PostConverter;
 import ru.kolaer.server.webportal.microservice.post.PostRepository;
 import ru.kolaer.server.webportal.microservice.post.FindPostPageRequest;

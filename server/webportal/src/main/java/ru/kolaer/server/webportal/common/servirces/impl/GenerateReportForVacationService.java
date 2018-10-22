@@ -13,7 +13,7 @@ import ru.kolaer.common.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.common.mvp.model.kolaerweb.PostDto;
 import ru.kolaer.server.webportal.common.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.common.converter.DateTimeConverter;
-import ru.kolaer.server.webportal.common.servirces.UploadFileService;
+import ru.kolaer.server.webportal.microservice.storage.UploadFileService;
 import ru.kolaer.server.webportal.microservice.department.DepartmentRepository;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeRepository;
 import ru.kolaer.server.webportal.microservice.post.PostRepository;

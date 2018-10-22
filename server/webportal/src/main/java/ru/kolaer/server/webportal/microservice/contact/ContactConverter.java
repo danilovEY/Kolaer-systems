@@ -9,8 +9,8 @@ import ru.kolaer.server.webportal.microservice.placement.PlacementConverter;
 import ru.kolaer.server.webportal.microservice.placement.PlacementRepository;
 import ru.kolaer.server.webportal.microservice.placement.PlacementDto;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeEntity;
-import ru.kolaer.server.webportal.common.servirces.DepartmentService;
-import ru.kolaer.server.webportal.common.servirces.PostService;
+import ru.kolaer.server.webportal.microservice.department.DepartmentService;
+import ru.kolaer.server.webportal.microservice.post.PostService;
 import ru.kolaer.server.webportal.common.servirces.impl.UtilService;
 
 import java.util.*;

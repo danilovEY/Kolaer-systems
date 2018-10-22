@@ -11,7 +11,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.UploadFileService;
+import ru.kolaer.server.webportal.microservice.storage.UploadFileService;
 import ru.kolaer.server.webportal.microservice.storage.UploadFileConverter;
 import ru.kolaer.server.webportal.microservice.storage.UploadFileRepository;
 import ru.kolaer.server.webportal.microservice.storage.UploadFileDto;

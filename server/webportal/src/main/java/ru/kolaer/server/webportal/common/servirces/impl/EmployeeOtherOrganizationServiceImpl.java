@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.EmployeeOtherOrganizationService;
+import ru.kolaer.server.webportal.microservice.employee.EmployeeOtherOrganizationService;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeOtherOrganizationConverter;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeOtherOrganizationRepository;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeOtherOrganizationEntity;

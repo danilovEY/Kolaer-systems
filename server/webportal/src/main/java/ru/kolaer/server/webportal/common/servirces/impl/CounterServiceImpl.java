@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.common.servirces.impl;
 import org.springframework.stereotype.Service;
 import ru.kolaer.common.mvp.model.kolaerweb.CounterDto;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.CounterService;
+import ru.kolaer.server.webportal.microservice.counter.CounterService;
 import ru.kolaer.server.webportal.microservice.contact.CounterConverter;
 import ru.kolaer.server.webportal.microservice.counter.CounterRepository;
 import ru.kolaer.server.webportal.microservice.counter.CounterEntity;

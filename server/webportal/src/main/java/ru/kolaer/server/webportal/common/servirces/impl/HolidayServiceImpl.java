@@ -14,7 +14,7 @@ import ru.kolaer.common.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.common.mvp.model.kolaerweb.TypeDay;
 import ru.kolaer.server.webportal.common.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.common.servirces.AbstractDefaultService;
-import ru.kolaer.server.webportal.common.servirces.HolidayService;
+import ru.kolaer.server.webportal.microservice.holiday.HolidayService;
 import ru.kolaer.server.webportal.microservice.holiday.HolidayConverter;
 import ru.kolaer.server.webportal.microservice.holiday.HolidayRepository;
 import ru.kolaer.server.webportal.microservice.holiday.FindHolidayRequest;

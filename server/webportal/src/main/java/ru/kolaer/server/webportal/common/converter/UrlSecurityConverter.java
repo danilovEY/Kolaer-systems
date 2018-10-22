@@ -2,7 +2,6 @@ package ru.kolaer.server.webportal.common.converter;
 
 import ru.kolaer.common.mvp.model.kolaerweb.UrlSecurityDto;
 import ru.kolaer.server.webportal.common.entities.general.UrlSecurityEntity;
-import ru.kolaer.server.webportal.common.servirces.BaseConverter;
 
 import java.util.List;
 

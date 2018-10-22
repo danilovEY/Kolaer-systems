@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.common.converter;
 
 import ru.kolaer.common.mvp.model.kolaerweb.BaseDto;
 import ru.kolaer.server.webportal.common.entities.BaseEntity;
