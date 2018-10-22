@@ -1,7 +1,9 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.employee;
 
 import ru.kolaer.common.mvp.model.kolaerweb.EmployeeDto;
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.common.servirces.DefaultService;
+import ru.kolaer.server.webportal.microservice.employee.BirthdayService;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeRequestDto;
 import ru.kolaer.server.webportal.microservice.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.microservice.employee.UpdateTypeWorkEmployeeRequestDto;

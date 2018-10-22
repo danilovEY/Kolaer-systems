@@ -8,8 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.common.servirces.AuthenticationService;
-import ru.kolaer.server.webportal.common.servirces.QueueService;
+import ru.kolaer.server.webportal.microservice.account.service.AuthenticationService;
 
 @RestController
 @RequestMapping(value = "/queue")

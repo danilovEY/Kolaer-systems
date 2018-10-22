@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.microservice.typework;
 
 import ru.kolaer.common.mvp.model.kolaerweb.typework.TypeWorkDto;
-import ru.kolaer.server.webportal.common.servirces.BaseConverter;
+import ru.kolaer.server.webportal.common.converter.BaseConverter;
 
 public interface TypeWorkConverter extends BaseConverter<TypeWorkDto, TypeWorkEntity> {
 }

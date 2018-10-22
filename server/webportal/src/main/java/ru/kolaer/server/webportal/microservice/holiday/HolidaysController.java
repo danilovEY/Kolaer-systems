@@ -10,7 +10,6 @@ import ru.kolaer.common.mvp.model.kolaerweb.DateTimeJson;
 import ru.kolaer.common.mvp.model.kolaerweb.Holiday;
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.common.servirces.HolidayService;
 
 import java.util.List;
 

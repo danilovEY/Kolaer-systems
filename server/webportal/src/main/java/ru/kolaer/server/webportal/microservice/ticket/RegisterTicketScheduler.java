@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import ru.kolaer.server.webportal.microservice.storage.UploadFileDto;
-import ru.kolaer.server.webportal.common.servirces.UploadFileService;
+import ru.kolaer.server.webportal.microservice.storage.UploadFileService;
 
 import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;

@@ -1,7 +1,8 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.ticket;
 
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.common.dto.SortParam;
+import ru.kolaer.server.webportal.common.servirces.DefaultService;
 import ru.kolaer.server.webportal.microservice.ticket.*;
 
 import javax.servlet.http.HttpServletResponse;

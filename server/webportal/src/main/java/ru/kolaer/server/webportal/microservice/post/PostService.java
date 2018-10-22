@@ -1,7 +1,8 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.post;
 
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.common.mvp.model.kolaerweb.PostDto;
+import ru.kolaer.server.webportal.common.servirces.DefaultService;
 import ru.kolaer.server.webportal.microservice.post.FindPostPageRequest;
 import ru.kolaer.server.webportal.microservice.post.PostRequestDto;
 

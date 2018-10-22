@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.microservice.ticket;
 
 import lombok.NonNull;
-import ru.kolaer.server.webportal.common.servirces.BaseConverter;
+import ru.kolaer.server.webportal.common.converter.BaseConverter;
 
 import java.util.List;
 

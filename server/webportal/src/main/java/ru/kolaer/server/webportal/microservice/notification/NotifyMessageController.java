@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.mvp.model.kolaerweb.NotifyMessageDto;
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.common.servirces.NotifyMessageService;
 
 /**
  * Created by danilovey on 18.08.2016.

@@ -1,6 +1,7 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.queue;
 
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
+import ru.kolaer.server.webportal.common.servirces.DefaultService;
 import ru.kolaer.server.webportal.microservice.queue.PageQueueRequest;
 import ru.kolaer.server.webportal.microservice.queue.QueueRequestDto;
 import ru.kolaer.server.webportal.microservice.queue.QueueScheduleDto;

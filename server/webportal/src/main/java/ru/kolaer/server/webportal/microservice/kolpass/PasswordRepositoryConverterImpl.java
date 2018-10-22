@@ -7,7 +7,7 @@ import ru.kolaer.common.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.common.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.server.webportal.microservice.account.converter.AccountConverter;
 import ru.kolaer.server.webportal.microservice.account.repository.AccountRepository;
-import ru.kolaer.server.webportal.common.servirces.AuthenticationService;
+import ru.kolaer.server.webportal.microservice.account.service.AuthenticationService;
 
 import java.util.*;
 import java.util.function.Function;

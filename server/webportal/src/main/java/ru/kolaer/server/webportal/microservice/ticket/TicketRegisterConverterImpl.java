@@ -10,7 +10,7 @@ import ru.kolaer.server.webportal.microservice.bank.BankAccountRepository;
 import ru.kolaer.server.webportal.microservice.employee.EmployeeRepository;
 import ru.kolaer.server.webportal.microservice.storage.UploadFileDto;
 import ru.kolaer.server.webportal.microservice.bank.BankAccountEntity;
-import ru.kolaer.server.webportal.common.servirces.UploadFileService;
+import ru.kolaer.server.webportal.microservice.storage.UploadFileService;
 
 import java.util.*;
 import java.util.function.Function;

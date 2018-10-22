@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.event;
 
 import ru.kolaer.server.webportal.microservice.event.HistoryChangeDto;
 import ru.kolaer.server.webportal.common.entities.BaseEntity;

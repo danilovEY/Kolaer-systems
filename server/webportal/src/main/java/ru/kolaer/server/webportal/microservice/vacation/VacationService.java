@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.common.servirces;
+package ru.kolaer.server.webportal.microservice.vacation;
 
 import org.springframework.http.ResponseEntity;
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
