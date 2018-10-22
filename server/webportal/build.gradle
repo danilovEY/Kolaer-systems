@@ -18,7 +18,7 @@ buildscript {
 }
 
 dependencies {
-    compile project(":api")
+    compile project(":common")
 
     compile "org.springframework.security:spring-security-ldap:4.2.3.RELEASE"
     compile "org.springframework.security:spring-security-core:4.2.3.RELEASE"

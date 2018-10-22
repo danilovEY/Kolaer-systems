@@ -1,5 +1,6 @@
 rootProject.name = 'ru.kolaer'
-include 'api'
+
+include ':common'
 
 include ':server:webportal'
 
