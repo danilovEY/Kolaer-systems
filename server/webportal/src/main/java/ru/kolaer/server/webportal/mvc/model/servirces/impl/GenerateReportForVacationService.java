@@ -118,8 +118,7 @@ public class GenerateReportForVacationService {
 
 
         try (XSSFWorkbook workbook = new XSSFWorkbook(getClass().getResourceAsStream("/template/vacation_template.xlsx"))) {
-            XSSFSheet sheet = setDepartmentName(workbook.getSheetAt(0), departmentEntity);
-            sheet = setVacations(sheet, vacationMap, employees, postMap, departmentEntity);
+            setVacations(workbook.getSheetAt(0), vacationMap, employees, postMap, departmentEntity);
 
             UploadFileDto uploadFileDto = saveWorkBook(workbook, departmentEntity.getAbbreviatedName());
             return uploadFileService.loadFile(uploadFileDto, response);
@@ -161,7 +160,7 @@ public class GenerateReportForVacationService {
                 nextRow.copyRowFrom(currentRow, new CellCopyPolicy());
 
                 XSSFCell departmentCell = currentRow.getCell(0);
-                departmentCell.setCellValue(departmentEntity.getAbbreviatedName());
+                departmentCell.setCellValue(departmentEntity.getName());
 
                 XSSFCell postCell = currentRow.getCell(1);
                 postCell.setCellValue(postMap.get(employee.getPostId()).getAbbreviatedName());
