@@ -8,9 +8,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
-import ru.kolaer.server.webportal.exception.UserIsBlockException;
-import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
+import ru.kolaer.common.mvp.model.error.ServerExceptionMessage;
+import ru.kolaer.server.webportal.common.exception.UserIsBlockException;
+import ru.kolaer.server.webportal.common.servirces.ExceptionHandlerService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

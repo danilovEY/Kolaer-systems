@@ -1,7 +1,7 @@
 package ru.kolaer.client.chat.service;
 
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 
 /**
  * Created by danilovey on 02.11.2017.

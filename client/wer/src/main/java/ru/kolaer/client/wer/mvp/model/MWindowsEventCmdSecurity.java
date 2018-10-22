@@ -3,7 +3,7 @@ package ru.kolaer.client.wer.mvp.model;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.common.system.UniformSystemEditorKit;
 
 import java.io.BufferedReader;
 import java.io.IOException;

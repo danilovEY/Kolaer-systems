@@ -1,6 +1,6 @@
 package ru.kolaer.client.usa.plugins.info;
 
-import ru.kolaer.api.plugins.UniformSystemPlugin;
+import ru.kolaer.common.plugins.UniformSystemPlugin;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 
 /**

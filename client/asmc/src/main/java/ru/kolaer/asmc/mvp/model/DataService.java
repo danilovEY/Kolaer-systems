@@ -1,6 +1,6 @@
 package ru.kolaer.asmc.mvp.model;
 
-import ru.kolaer.api.mvp.model.BaseModel;
+import ru.kolaer.common.mvp.model.BaseModel;
 
 import java.util.List;
 

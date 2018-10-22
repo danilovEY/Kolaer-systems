@@ -1,7 +1,7 @@
 package ru.kolaer.client.chat.service;
 
 import org.springframework.messaging.simp.stomp.StompHeaders;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoRoomActionDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatInfoRoomActionDto;
 
 import java.lang.reflect.Type;
 

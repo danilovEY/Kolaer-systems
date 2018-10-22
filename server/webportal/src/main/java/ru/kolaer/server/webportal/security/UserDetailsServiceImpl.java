@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.server.webportal.exception.UserIsBlockException;
-import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
-import ru.kolaer.server.webportal.mvc.model.entities.general.AccountEntity;
+import ru.kolaer.server.webportal.common.exception.UserIsBlockException;
+import ru.kolaer.server.webportal.microservice.account.repository.AccountRepository;
+import ru.kolaer.server.webportal.microservice.account.AccountEntity;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final AccountDao accountDao;
+    private final AccountRepository accountDao;
 
-    public UserDetailsServiceImpl(AccountDao accountDao) {
+    public UserDetailsServiceImpl(AccountRepository accountDao) {
         this.accountDao = accountDao;
     }
 

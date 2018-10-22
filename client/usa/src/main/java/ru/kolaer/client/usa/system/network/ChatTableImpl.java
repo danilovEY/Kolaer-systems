@@ -2,14 +2,14 @@ package ru.kolaer.client.usa.system.network;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.IdDto;
-import ru.kolaer.api.mvp.model.kolaerweb.IdsDto;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
-import ru.kolaer.api.system.network.ChatTable;
+import ru.kolaer.common.mvp.model.kolaerweb.IdDto;
+import ru.kolaer.common.mvp.model.kolaerweb.IdsDto;
+import ru.kolaer.common.mvp.model.kolaerweb.Page;
+import ru.kolaer.common.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatRoomDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.common.system.network.ChatTable;
 
 import java.util.List;
 import java.util.Optional;

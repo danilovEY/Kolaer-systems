@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
-import ru.kolaer.server.webportal.mvc.model.servirces.AuthenticationService;
-import ru.kolaer.server.webportal.mvc.model.servirces.ChatService;
+import ru.kolaer.server.webportal.common.servirces.AuthenticationService;
+import ru.kolaer.server.webportal.common.servirces.ChatService;
 
 /**
  * Created by danilovey on 20.11.2017.

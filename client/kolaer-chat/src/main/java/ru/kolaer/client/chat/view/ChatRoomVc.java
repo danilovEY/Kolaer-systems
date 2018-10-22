@@ -1,6 +1,6 @@
 package ru.kolaer.client.chat.view;
 
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.client.chat.service.ChatHandler;
 import ru.kolaer.client.chat.service.ChatMessageHandler;
 import ru.kolaer.client.chat.service.ChatObserver;

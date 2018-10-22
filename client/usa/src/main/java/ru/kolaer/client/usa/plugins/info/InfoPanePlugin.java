@@ -1,9 +1,9 @@
 package ru.kolaer.client.usa.plugins.info;
 
 import javafx.scene.Node;
-import ru.kolaer.api.mvp.view.BaseView;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.mvp.view.BaseView;
+import ru.kolaer.common.plugins.UniformSystemPlugin;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.system.ui.UISystemUSImpl;
 
 import java.util.function.Consumer;

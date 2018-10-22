@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.error.ErrorCode;
-import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.common.mvp.model.error.ErrorCode;
+import ru.kolaer.common.mvp.model.error.ServerExceptionMessage;
+import ru.kolaer.common.mvp.model.kolaerweb.Page;
+import ru.kolaer.common.mvp.model.kolaerweb.ServerResponse;
 import ru.kolaer.client.usa.system.network.kolaerweb.TokenToHeader;
 
 import java.io.IOException;

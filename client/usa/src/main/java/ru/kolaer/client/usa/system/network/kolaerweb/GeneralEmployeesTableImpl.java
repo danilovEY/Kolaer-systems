@@ -3,10 +3,10 @@ package ru.kolaer.client.usa.system.network.kolaerweb;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.SimpleStringProperty;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.system.network.kolaerweb.GeneralEmployeesTable;
+import ru.kolaer.common.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.common.mvp.model.kolaerweb.Page;
+import ru.kolaer.common.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.common.system.network.kolaerweb.GeneralEmployeesTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
 
 import java.text.DateFormat;

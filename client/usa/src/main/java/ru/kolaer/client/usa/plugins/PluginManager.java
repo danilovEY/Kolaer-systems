@@ -8,8 +8,8 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.launch.Framework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.plugins.UniformSystemPlugin;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.tools.Resources;
 
 import java.io.File;

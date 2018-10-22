@@ -2,11 +2,11 @@ package ru.kolaer.client.usa.system.network.kolaerweb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.system.network.kolaerweb.NotifyMessageTable;
+import ru.kolaer.common.mvp.model.kolaerweb.NotifyMessageDto;
+import ru.kolaer.common.mvp.model.kolaerweb.Page;
+import ru.kolaer.common.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.system.network.kolaerweb.NotifyMessageTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
 
 import java.util.HashMap;

@@ -8,10 +8,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import ru.kolaer.api.mvp.view.BaseView;
-import ru.kolaer.api.system.ui.StaticUS;
-import ru.kolaer.api.system.ui.StaticView;
-import ru.kolaer.api.tools.Tools;
+import ru.kolaer.common.mvp.view.BaseView;
+import ru.kolaer.common.system.ui.StaticUS;
+import ru.kolaer.common.system.ui.StaticView;
+import ru.kolaer.common.tools.Tools;
 
 import java.util.function.Consumer;
 

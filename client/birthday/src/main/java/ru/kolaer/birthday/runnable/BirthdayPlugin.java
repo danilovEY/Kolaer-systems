@@ -1,9 +1,9 @@
 package ru.kolaer.birthday.runnable;
 
 import javafx.scene.Parent;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.common.plugins.UniformSystemPlugin;
+import ru.kolaer.common.plugins.services.Service;
+import ru.kolaer.common.system.UniformSystemEditorKit;
 import ru.kolaer.birthday.mvp.view.MainContentVc;
 import ru.kolaer.birthday.mvp.view.MainContentVcImpl;
 import ru.kolaer.birthday.service.BirthdayOnHoliday;

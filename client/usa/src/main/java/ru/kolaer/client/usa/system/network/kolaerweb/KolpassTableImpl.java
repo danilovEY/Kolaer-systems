@@ -7,10 +7,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
-import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
+import ru.kolaer.common.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.common.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
+import ru.kolaer.common.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
 
 import java.util.List;

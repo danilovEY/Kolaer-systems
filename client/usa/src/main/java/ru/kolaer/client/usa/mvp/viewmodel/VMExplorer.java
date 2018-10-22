@@ -1,7 +1,7 @@
 package ru.kolaer.client.usa.mvp.viewmodel;
 
 import javafx.scene.Parent;
-import ru.kolaer.api.mvp.view.BaseView;
+import ru.kolaer.common.mvp.view.BaseView;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 
 import java.util.Collection;

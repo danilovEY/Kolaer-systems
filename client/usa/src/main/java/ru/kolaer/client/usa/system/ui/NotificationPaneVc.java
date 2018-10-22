@@ -12,11 +12,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
-import ru.kolaer.api.mvp.view.BaseView;
-import ru.kolaer.api.system.ui.NotificationUS;
-import ru.kolaer.api.system.ui.NotifyAction;
-import ru.kolaer.api.tools.Tools;
+import ru.kolaer.common.mvp.model.error.ServerExceptionMessage;
+import ru.kolaer.common.mvp.view.BaseView;
+import ru.kolaer.common.system.ui.NotificationUS;
+import ru.kolaer.common.system.ui.NotifyAction;
+import ru.kolaer.common.tools.Tools;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;

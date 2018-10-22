@@ -8,7 +8,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import ru.kolaer.api.tools.Tools;
+import ru.kolaer.common.tools.Tools;
 import ru.kolaer.client.usa.mvp.view.VTab;
 
 import java.util.function.Consumer;

@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import ru.kolaer.server.webportal.config.SpringContext;
 import ru.kolaer.server.webportal.config.SpringSecurityConfig;
-import ru.kolaer.server.webportal.mvc.model.servirces.UpdateEmployeesService;
+import ru.kolaer.server.webportal.common.servirces.UpdateEmployeesService;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;

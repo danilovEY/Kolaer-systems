@@ -3,7 +3,7 @@ package ru.kolaer.client.usa.mvp.viewmodel.impl;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.tools.Tools;
+import ru.kolaer.common.tools.Tools;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

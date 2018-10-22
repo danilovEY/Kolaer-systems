@@ -10,10 +10,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import lombok.extern.slf4j.Slf4j;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserStatus;
-import ru.kolaer.api.tools.Tools;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatRoomDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatUserStatus;
+import ru.kolaer.common.tools.Tools;
 import ru.kolaer.client.chat.service.ChatClient;
 
 import java.util.Optional;

@@ -1,16 +1,16 @@
 package ru.kolaer.birthday.service;
 
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
-import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
-import ru.kolaer.api.mvp.view.BaseView;
-import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.system.network.NetworkUS;
-import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
-import ru.kolaer.api.tools.Tools;
+import ru.kolaer.common.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.common.mvp.model.kolaerweb.Holiday;
+import ru.kolaer.common.mvp.model.kolaerweb.ServerResponse;
+import ru.kolaer.common.mvp.model.kolaerweb.TypeDay;
+import ru.kolaer.common.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.common.mvp.view.BaseView;
+import ru.kolaer.common.plugins.services.Service;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.system.network.NetworkUS;
+import ru.kolaer.common.system.network.kolaerweb.ApplicationDataBase;
+import ru.kolaer.common.tools.Tools;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.BirthdayInfoPane;

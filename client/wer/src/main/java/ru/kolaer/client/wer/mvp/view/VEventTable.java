@@ -1,7 +1,7 @@
 package ru.kolaer.client.wer.mvp.view;
 
 import javafx.scene.layout.BorderPane;
-import ru.kolaer.api.mvp.view.BaseView;
+import ru.kolaer.common.mvp.view.BaseView;
 import ru.kolaer.client.wer.mvp.model.Event;
 
 import java.util.Comparator;

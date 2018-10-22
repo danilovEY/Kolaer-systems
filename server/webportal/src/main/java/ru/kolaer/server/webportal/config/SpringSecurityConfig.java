@@ -29,10 +29,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import ru.kolaer.server.webportal.beans.ToolsLDAP;
-import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
-import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
-import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
-import ru.kolaer.server.webportal.mvc.model.servirces.impl.TokenService;
+import ru.kolaer.server.webportal.microservice.account.repository.AccountRepository;
+import ru.kolaer.server.webportal.common.servirces.ExceptionHandlerService;
+import ru.kolaer.server.webportal.common.servirces.UrlSecurityService;
+import ru.kolaer.server.webportal.common.servirces.impl.TokenService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
 import ru.kolaer.server.webportal.spring.ExceptionHandlerFilter;
@@ -64,7 +64,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private final String secretKey;
     private final ServerAuthType serverAuthType;
     private final TokenService tokenService;
-    private final AccountDao accountDao;
+    private final AccountRepository accountDao;
     private final UrlSecurityService urlSecurityService;
     private final ExceptionHandlerService exceptionHandlerService;
 
@@ -75,7 +75,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public SpringSecurityConfig(@Value("${secret_key}") String secretKey,
                                 @Value("${server.auth.type}") String serverAuthType,
                                 TokenService tokenService,
-                                AccountDao accountDao,
+                                AccountRepository accountDao,
                                 UrlSecurityService urlSecurityService,
                                 ExceptionHandlerService exceptionHandlerService) {
         this.secretKey = secretKey;
@@ -190,7 +190,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Autowired
-    public UserDetailsService userDetailsService(AccountDao accountDao,
+    public UserDetailsService userDetailsService(AccountRepository accountDao,
                                                  InitialLdapContext context) {
         switch (serverAuthType) {
             case LDAP: return userDetailsServiceLDAP(context);
@@ -225,7 +225,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return userDetailsServiceLDAP;
     }
 
-    private UserDetailsService userDetailsServiceSQL(AccountDao context) {
+    private UserDetailsService userDetailsServiceSQL(AccountRepository context) {
         return new UserDetailsServiceImpl(context);
     }
 

@@ -1,8 +1,8 @@
 package ru.kolaer.client.usa.mvp.presenter.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.tools.Tools;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.tools.Tools;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.view.VTab;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.VTabImpl;

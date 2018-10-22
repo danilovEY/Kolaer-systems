@@ -1,9 +1,9 @@
 package ru.kolaer.client.chat.service;
 
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoMessageActionDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoRoomActionDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatInfoMessageActionDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatInfoRoomActionDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
+import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatMessageDto;
 
 /**
  * Created by danilovey on 06.02.2018.

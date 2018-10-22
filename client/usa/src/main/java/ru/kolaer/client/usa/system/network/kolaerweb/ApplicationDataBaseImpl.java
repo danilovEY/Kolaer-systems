@@ -2,8 +2,8 @@ package ru.kolaer.client.usa.system.network.kolaerweb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.system.network.ChatTable;
-import ru.kolaer.api.system.network.kolaerweb.*;
+import ru.kolaer.common.system.network.ChatTable;
+import ru.kolaer.common.system.network.kolaerweb.*;
 import ru.kolaer.client.usa.system.network.ChatTableImpl;
 
 /**

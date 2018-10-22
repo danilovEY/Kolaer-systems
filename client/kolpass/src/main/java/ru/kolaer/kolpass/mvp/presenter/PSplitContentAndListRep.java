@@ -1,8 +1,8 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import ru.kolaer.api.mvp.model.BaseModel;
-import ru.kolaer.api.mvp.presenter.BasePresenter;
-import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
+import ru.kolaer.common.mvp.model.BaseModel;
+import ru.kolaer.common.mvp.presenter.BasePresenter;
+import ru.kolaer.common.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.kolpass.mvp.view.VSplitContentAndListRep;
 
 /**
