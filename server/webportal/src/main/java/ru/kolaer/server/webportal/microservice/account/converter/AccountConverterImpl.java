@@ -7,11 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.common.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.common.mvp.model.kolaerweb.EmployeeDto;
-import ru.kolaer.server.webportal.microservice.employee.EmployeeConverter;
-import ru.kolaer.server.webportal.microservice.employee.EmployeeRepository;
-import ru.kolaer.server.webportal.microservice.contact.ContactEntity;
-import ru.kolaer.server.webportal.microservice.account.AccountEntity;
-import ru.kolaer.server.webportal.microservice.employee.EmployeeEntity;
+import ru.kolaer.server.webportal.microservice.employee.converter.EmployeeConverter;
+import ru.kolaer.server.webportal.microservice.employee.repository.EmployeeRepository;
+import ru.kolaer.server.webportal.microservice.contact.entity.ContactEntity;
+import ru.kolaer.server.webportal.microservice.account.entity.AccountEntity;
+import ru.kolaer.server.webportal.microservice.employee.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.common.servirces.impl.UtilService;
 
 import java.util.*;

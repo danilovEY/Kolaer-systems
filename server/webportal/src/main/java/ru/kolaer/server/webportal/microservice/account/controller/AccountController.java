@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.common.mvp.model.kolaerweb.Page;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.microservice.account.pojo.request.AccountFilter;
-import ru.kolaer.server.webportal.microservice.account.pojo.request.AccountSort;
+import ru.kolaer.server.webportal.microservice.account.dto.AccountFilter;
+import ru.kolaer.server.webportal.microservice.account.dto.AccountSort;
 import ru.kolaer.server.webportal.microservice.account.service.AccountService;
 import ru.kolaer.server.webportal.microservice.account.service.AuthenticationService;
 

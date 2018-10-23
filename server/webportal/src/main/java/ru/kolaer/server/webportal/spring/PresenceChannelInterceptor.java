@@ -2,7 +2,6 @@ package ru.kolaer.server.webportal.spring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -15,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import ru.kolaer.server.webportal.common.servirces.impl.TokenService;
+import ru.kolaer.server.webportal.microservice.account.service.TokenService;
 
 import java.security.Principal;
 import java.util.List;

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.mvp.model.kolaerweb.TokenJson;
 import ru.kolaer.common.mvp.model.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.common.servirces.impl.TokenService;
+import ru.kolaer.server.webportal.microservice.account.service.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

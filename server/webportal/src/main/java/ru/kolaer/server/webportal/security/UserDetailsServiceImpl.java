@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.webportal.common.exception.UserIsBlockException;
 import ru.kolaer.server.webportal.microservice.account.repository.AccountRepository;
-import ru.kolaer.server.webportal.microservice.account.AccountEntity;
+import ru.kolaer.server.webportal.microservice.account.entity.AccountEntity;
 
 import java.util.Optional;
 import java.util.stream.Collectors;

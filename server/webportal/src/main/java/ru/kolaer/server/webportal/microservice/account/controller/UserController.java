@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.common.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
-import ru.kolaer.server.webportal.microservice.account.pojo.dto.ChangePasswordDto;
-import ru.kolaer.server.webportal.microservice.contact.ContactDto;
-import ru.kolaer.server.webportal.microservice.contact.ContactRequestDto;
+import ru.kolaer.server.webportal.microservice.account.dto.ChangePasswordDto;
+import ru.kolaer.server.webportal.microservice.contact.dto.ContactDto;
+import ru.kolaer.server.webportal.microservice.contact.dto.ContactRequestDto;
 import ru.kolaer.server.webportal.microservice.account.service.AccountService;
 import ru.kolaer.server.webportal.microservice.account.service.AuthenticationService;
 

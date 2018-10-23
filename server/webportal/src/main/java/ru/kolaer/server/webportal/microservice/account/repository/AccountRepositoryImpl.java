@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.webportal.common.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.common.dao.AbstractDefaultRepository;
-import ru.kolaer.server.webportal.microservice.account.AccountEntity;
+import ru.kolaer.server.webportal.microservice.account.entity.AccountEntity;
 
 import java.util.List;
 

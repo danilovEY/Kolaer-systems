@@ -7,7 +7,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import ru.kolaer.common.mvp.model.kolaerweb.UrlSecurityDto;
 import ru.kolaer.server.webportal.config.PathMapping;
-import ru.kolaer.server.webportal.common.servirces.UrlSecurityService;
+import ru.kolaer.server.webportal.microservice.account.service.UrlSecurityService;
 
 import java.util.Collection;
 import java.util.Collections;

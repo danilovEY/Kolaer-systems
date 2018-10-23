@@ -9,11 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.mvp.model.kolaerweb.AccountDto;
 import ru.kolaer.common.mvp.model.kolaerweb.AccountSimpleDto;
 import ru.kolaer.server.webportal.common.exception.ForbiddenException;
-import ru.kolaer.server.webportal.microservice.account.service.AuthenticationService;
 import ru.kolaer.server.webportal.microservice.account.converter.AccountConverter;
-import ru.kolaer.server.webportal.microservice.employee.EmployeeConverter;
+import ru.kolaer.server.webportal.microservice.employee.converter.EmployeeConverter;
 import ru.kolaer.server.webportal.microservice.account.repository.AccountRepository;
-import ru.kolaer.server.webportal.microservice.employee.EmployeeRepository;
+import ru.kolaer.server.webportal.microservice.employee.repository.EmployeeRepository;
 
 import javax.annotation.PreDestroy;
 import java.util.Optional;

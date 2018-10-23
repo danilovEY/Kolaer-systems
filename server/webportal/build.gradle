@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '2.0.0'
+version '3.0.0'
 
 def name = "kolaer-web"
 def testName = "kolaer-web-test.war"
@@ -20,7 +20,6 @@ buildscript {
 dependencies {
     compile project(":common")
 
-    compile "org.springframework.security:spring-security-ldap:4.2.3.RELEASE"
     compile "org.springframework.security:spring-security-core:4.2.3.RELEASE"
     compile "org.springframework.security:spring-security-web:4.2.3.RELEASE"
     compile "org.springframework.security:spring-security-config:4.2.3.RELEASE"

@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.microservice.account.repository;
 
 
 import ru.kolaer.server.webportal.common.dao.DefaultRepository;
-import ru.kolaer.server.webportal.microservice.account.AccountEntity;
+import ru.kolaer.server.webportal.microservice.account.entity.AccountEntity;
 
 import java.util.List;
 

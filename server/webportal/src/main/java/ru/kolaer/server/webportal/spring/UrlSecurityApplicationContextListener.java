@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.mvp.model.kolaerweb.UrlSecurityDto;
 import ru.kolaer.server.webportal.annotations.UrlDeclaration;
 import ru.kolaer.server.webportal.config.PathMapping;
-import ru.kolaer.server.webportal.common.servirces.UrlSecurityService;
+import ru.kolaer.server.webportal.microservice.account.service.UrlSecurityService;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
