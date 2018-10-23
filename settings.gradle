@@ -1,8 +1,29 @@
-rootProject.name = 'ru.kolaer'
+rootProject.name = 'kolaer'
 
-include ':common'
+include 'common'
 
-include ':server:webportal'
+include ':server:core-service'
+include ':client:client-core'
+
+include ':server:account-service'
+include ':server:chat-service'
+include ':server:contact-service'
+include ':server:counter-service'
+include ':server:department-service'
+include ':server:employee-service'
+include ':server:event-service'
+include ':server:holiday-service'
+include ':server:kolpass-service'
+include ':server:notification-service'
+include ':server:other-employee-service'
+include ':server:placement-service'
+include ':server:post-service'
+include ':server:queue-service'
+include ':server:storage-service'
+include ':server:sync-service'
+include ':server:ticket-service'
+include ':server:vacation-service'
+include ':server:type-work-service'
 
 include ':client:usa'
 include ':client:birthday'
@@ -13,7 +34,7 @@ include ':client:wer'
 include ':client:kolaer-chat'
 include ':client:messages'
 include ':client:counter'
-include 'client:weather'
-include 'server:server-core'
-findProject(':server:server-core')?.name = 'server-core'
+include ':client:weather'
+
+
 

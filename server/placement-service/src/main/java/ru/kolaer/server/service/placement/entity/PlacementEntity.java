@@ -1,0 +1,19 @@
+package ru.kolaer.server.service.placement.entity;
+
+import lombok.Data;
+import ru.kolaer.server.webportal.common.entities.BaseEntity;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "ru/kolaer/server/service/placement")
+@Data
+public class PlacementEntity implements BaseEntity {
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+}

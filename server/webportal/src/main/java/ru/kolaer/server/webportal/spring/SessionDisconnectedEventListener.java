@@ -9,7 +9,7 @@ import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.common.mvp.model.kolaerweb.kolchat.ChatUserStatus;
-import ru.kolaer.server.webportal.microservice.chat.service.ChatRoomService;
+import chat.service.ChatRoomService;
 
 import java.util.Date;
 

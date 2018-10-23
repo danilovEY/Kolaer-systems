@@ -1,0 +1,10 @@
+group 'ru.kolaer'
+version '0.0.1'
+
+dependencies {
+    compile project(":common")
+
+    compile "org.apache.felix:org.apache.felix.framework:5.4.0"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.6"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.6"
+}

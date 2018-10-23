@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.security;
 
 import ru.kolaer.common.mvp.model.kolaerweb.UrlSecurityDto;
-import ru.kolaer.server.webportal.microservice.account.entity.AccountEntity;
+import ru.kolaer.server.account.entity.AccountEntity;
 
 import java.util.ArrayList;
 import java.util.List;
