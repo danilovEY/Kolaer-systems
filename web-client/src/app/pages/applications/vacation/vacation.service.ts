@@ -120,7 +120,7 @@ export class VacationService extends BaseService {
 
     public generateUrlForVacationReportExport(request: GenerateReportExportRequestModel): Observable<any> {
         const params: HttpParams = new HttpParams()
-            .append('departmentId', request.departmentId.toString())
+            .append('departmentIds', request.departmentIds.toString())
             .append('employeeIds', request.employeeIds.toString())
             .append('postIds', request.postIds.toString())
             .append('typeWorkIds', request.typeWorkIds.toString())

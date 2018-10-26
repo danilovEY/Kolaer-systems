@@ -1,5 +1,5 @@
 export class GenerateReportExportRequestModel {
-    public departmentId: number;
+    public departmentIds: number[];
     public employeeIds: number[];
     public postIds: number[];
     public typeWorkIds: number[];

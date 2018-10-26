@@ -435,8 +435,10 @@ public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implemen
         params.put("vacationFrom", request.getFrom());
         params.put("vacationTo", request.getTo());
 
-        sqlQuery = sqlQuery.append(" AND employee.departmentId = :departmentId");
-        params.put("departmentId", request.getDepartmentId());
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
+            sqlQuery = sqlQuery.append(" AND employee.departmentId IN (:departmentIds)");
+            params.put("departmentIds", request.getDepartmentIds());
+        }
 
         if (!CollectionUtils.isEmpty(request.getEmployeeIds())) {
             sqlQuery = sqlQuery.append(" AND employee.id IN (:employeeIds)");

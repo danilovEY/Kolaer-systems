@@ -5,10 +5,9 @@
         <report-filter [pipeCharts]="false"
                        [(filterModel)]="filterModel"
                        [selectAllDepartments]="false"
-                       [requireDepartments]="true"
                        [selectDepartments]="currentAccount && currentAccount.accessVacationAdmin"
                        actionTitle="Скачать"
-                       [multiSelectDepartment]="false"
+                       [multiSelectDepartment]="true"
                        (onChangeFilter)="changeFilter($event)"
                        (onAcceptFilter)="generateReportExport($event)">
         </report-filter>

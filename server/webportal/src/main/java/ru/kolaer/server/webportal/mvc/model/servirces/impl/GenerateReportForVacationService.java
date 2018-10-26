@@ -102,10 +102,17 @@ public class GenerateReportForVacationService {
             throw new NotFoundDataException("Не найдены отпуска");
         }
 
-        DepartmentEntity departmentEntity = departmentDao.findById(request.getDepartmentId());
-
         List<EmployeeEntity> employees = employeeDao.findById(vacationMap.keySet());
         employees.sort(Comparator.comparing(EmployeeEntity::getInitials));
+
+        Set<Long> departmentIds = employees
+                .stream()
+                .map(EmployeeEntity::getDepartmentId)
+                .collect(Collectors.toSet());
+
+        Map<Long, DepartmentEntity> departmentMap = departmentDao.findById(departmentIds)
+                .stream()
+                .collect(Collectors.toMap(DepartmentEntity::getId, Function.identity()));
 
         Set<Long> postIds = employees
                 .stream()
@@ -118,17 +125,17 @@ public class GenerateReportForVacationService {
 
 
         try (XSSFWorkbook workbook = new XSSFWorkbook(getClass().getResourceAsStream("/template/vacation_template.xlsx"))) {
-            setVacations(workbook.getSheetAt(0), vacationMap, employees, postMap, departmentEntity);
+            setVacations(workbook.getSheetAt(0), vacationMap, employees, postMap, departmentMap);
 
-            UploadFileDto uploadFileDto = saveWorkBook(workbook, departmentEntity.getAbbreviatedName());
+            UploadFileDto uploadFileDto = saveWorkBook(workbook);
             return uploadFileService.loadFile(uploadFileDto, response);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private UploadFileDto saveWorkBook(XSSFWorkbook workbook, String departmentName) throws IOException {
-        String fileName = departmentName + " (Отчет).xlsx";
+    private UploadFileDto saveWorkBook(XSSFWorkbook workbook) throws IOException {
+        String fileName = "Отчет.xlsx";
 
         UploadFileDto tempFile = uploadFileService.createTempFile(fileName);
 
@@ -147,10 +154,11 @@ public class GenerateReportForVacationService {
                                    Map<Long, List<VacationEntity>> vacationMap,
                                    List<EmployeeEntity> employees,
                                    Map<Long, PostEntity> postMap,
-                                   DepartmentEntity departmentEntity) {
+                                   Map<Long, DepartmentEntity> departmentMap) {
         int indexRow = 17;
 
         XSSFRow currentRow = sheet.getRow(indexRow);
+        currentRow.setHeightInPoints(25);
 
         for (EmployeeEntity employee : employees) {
             for (VacationEntity vacation : vacationMap.get(employee.getId())) {
@@ -159,8 +167,9 @@ public class GenerateReportForVacationService {
                 XSSFRow nextRow = sheet.createRow(indexRow + 1);
                 nextRow.copyRowFrom(currentRow, new CellCopyPolicy());
 
+
                 XSSFCell departmentCell = currentRow.getCell(0);
-                departmentCell.setCellValue(departmentEntity.getName());
+                departmentCell.setCellValue(departmentMap.get(employee.getDepartmentId()).getName());
 
                 XSSFCell postCell = currentRow.getCell(1);
                 postCell.setCellValue(postMap.get(employee.getPostId()).getAbbreviatedName());

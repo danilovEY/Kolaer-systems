@@ -607,10 +607,6 @@ public class VacationServiceImpl implements VacationService {
             throw new UnexpectedRequestParams("Период не правильно задан");
         }
 
-        if (request.getDepartmentId() <= 0) {
-            throw new UnexpectedRequestParams("Не задано подразделение");
-        }
-
         return generateReportForVacationService.generateReportExtort(request, response);
     }
 
