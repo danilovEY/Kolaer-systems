@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import ru.kolaer.server.webportal.beans.ToolsLDAP;
+import ru.kolaer.server.webportal.bean.ToolsLDAP;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;

@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.api.mvp.model.kolaerweb.UrlSecurityDto;
-import ru.kolaer.server.webportal.annotations.UrlDeclaration;
+import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 import ru.kolaer.server.webportal.config.PathMapping;
-import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
+import ru.kolaer.server.webportal.model.servirce.UrlSecurityService;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

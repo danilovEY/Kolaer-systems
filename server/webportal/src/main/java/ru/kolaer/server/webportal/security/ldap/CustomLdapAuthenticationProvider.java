@@ -2,7 +2,6 @@ package ru.kolaer.server.webportal.security.ldap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.authentication.AbstractLdapAuthenticationProvider;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import ru.kolaer.server.webportal.beans.ToolsLDAP;
+import ru.kolaer.server.webportal.bean.ToolsLDAP;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;

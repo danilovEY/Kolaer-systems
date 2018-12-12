@@ -28,11 +28,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import ru.kolaer.server.webportal.beans.ToolsLDAP;
-import ru.kolaer.server.webportal.mvc.model.dao.AccountDao;
-import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
-import ru.kolaer.server.webportal.mvc.model.servirces.UrlSecurityService;
-import ru.kolaer.server.webportal.mvc.model.servirces.impl.TokenService;
+import ru.kolaer.server.webportal.bean.ToolsLDAP;
+import ru.kolaer.server.webportal.model.dao.AccountDao;
+import ru.kolaer.server.webportal.model.servirce.ExceptionHandlerService;
+import ru.kolaer.server.webportal.model.servirce.UrlSecurityService;
+import ru.kolaer.server.webportal.model.servirce.impl.TokenService;
 import ru.kolaer.server.webportal.security.*;
 import ru.kolaer.server.webportal.security.ldap.CustomLdapAuthenticationProvider;
 import ru.kolaer.server.webportal.spring.ExceptionHandlerFilter;

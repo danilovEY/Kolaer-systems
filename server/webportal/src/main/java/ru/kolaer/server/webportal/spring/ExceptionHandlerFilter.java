@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
 import ru.kolaer.server.webportal.exception.UserIsBlockException;
-import ru.kolaer.server.webportal.mvc.model.servirces.ExceptionHandlerService;
+import ru.kolaer.server.webportal.model.servirce.ExceptionHandlerService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
