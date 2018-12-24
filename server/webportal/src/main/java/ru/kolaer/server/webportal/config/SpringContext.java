@@ -61,13 +61,7 @@ import java.util.concurrent.Executor;
 @EnableScheduling
 @EnableCaching
 @EnableAsync
-@ComponentScan({"ru.kolaer.server.webportal.spring",
-        "ru.kolaer.server.webportal.bean",
-        "ru.kolaer.server.webportal.mvc.model.converter",
-        "ru.kolaer.server.webportal.mvc.model.dao.impl",
-        "ru.kolaer.server.webportal.mvc.model.ldap.impl",
-        "ru.kolaer.server.webportal.mvc.model.servirces.impl",
-        "ru.kolaer.server.webportal.mvc.controllers"})
+@ComponentScan("ru.kolaer.server")
 @PropertySources({
         @PropertySource("classpath:database.properties"),
         @PropertySource("classpath:mail.properties"),
@@ -193,7 +187,7 @@ public class SpringContext extends WebMvcConfigurerAdapter {
     @Bean(name = "sessionFactory")
     public SessionFactory sessionFactoryBean(final DataSource dataSource) {
         final LocalSessionFactoryBuilder sessionFactoryBean = new LocalSessionFactoryBuilder(dataSource);
-        sessionFactoryBean.scanPackages("ru.kolaer.server.webportal.mvc.model");
+        sessionFactoryBean.scanPackages("ru.kolaer.server.webportal.model.entity");
         sessionFactoryBean.setProperty("db.hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         sessionFactoryBean.setProperty("hibernate.cache.use_second_level_cache", "true");
         sessionFactoryBean.setProperty("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));

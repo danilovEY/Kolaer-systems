@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="38" author="Danilov">
+        <createTable tableName="personal_data">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="employee_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="marital_status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="phone_number" type="VARCHAR(255)"/>
+
+            <column name="address_registration" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="address_residential" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="place_of_birth" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="disability_group" type="VARCHAR(50)"/>
+            <column name="disability_date" type="DATE"/>
+
+        </createTable>
+
+        <addPrimaryKey tableName="personal_data" columnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

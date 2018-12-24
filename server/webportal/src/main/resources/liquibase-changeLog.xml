@@ -48,6 +48,16 @@
     <include file="classpath:SQL/30-vacation-balance-table.xml"/>
     <include file="classpath:SQL/32-vacation-period-table.xml"/>
 
+    <include file="classpath:SQL/33-education-table.xml"/>
+    <include file="classpath:SQL/34-achievement-table.xml"/>
+    <include file="classpath:SQL/35-punishment-table.xml"/>
+    <include file="classpath:SQL/36-employment-history-table.xml"/>
+    <include file="classpath:SQL/37-staff-movement-table.xml"/>
+    <include file="classpath:SQL/38-personal-data-table.xml"/>
+    <include file="classpath:SQL/39-relative-table.xml"/>
+    <include file="classpath:SQL/40-personal-document-table.xml"/>
+    <include file="classpath:SQL/41-military-registration-table.xml"/>
+
 
 
 
