@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.kolaerweb.TokenJson;
 import ru.kolaer.common.dto.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.security.ServerAuthType;
 import ru.kolaer.server.webportal.service.impl.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,21 +35,18 @@ import java.util.Optional;
 @Api(description = "Работа с авторизацией", tags = "Аутентификация")
 @Slf4j
 public class AuthenticationController {
-    private final ServerAuthType serverAuthType;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthenticationController(@Value("${server.auth.type}") String serverAuthType,
-                                    AuthenticationManager authenticationManager,
+    public AuthenticationController(AuthenticationManager authenticationManager,
                                     UserDetailsService userDetailsService,
                                     TokenService tokenService,
                                     PasswordEncoder passwordEncoder) {
         this.tokenService = tokenService;
         this.passwordEncoder = passwordEncoder;
-        this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
     }
@@ -146,10 +141,7 @@ public class AuthenticationController {
     }
 
     private String getToken(UserDetails userDetails) {
-        switch (serverAuthType) {
-            case LDAP: return  tokenService.createTokenLDAP(userDetails);
-            default: return  tokenService.createToken(userDetails);
-        }
+         return  tokenService.createToken(userDetails);
     }
 
 }

@@ -1,18 +1,18 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.UrlSecurityDao;
 import ru.kolaer.server.webportal.model.entity.general.UrlSecurityEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Repository
 public class UrlSecurityDaoImpl extends AbstractDefaultDao<UrlSecurityEntity> implements UrlSecurityDao {
 
-    protected UrlSecurityDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, UrlSecurityEntity.class);
+    protected UrlSecurityDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, UrlSecurityEntity.class);
     }
 
     @Override

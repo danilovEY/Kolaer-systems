@@ -136,7 +136,10 @@ public class UrlSecurityApplicationContextListener implements ApplicationListene
             }
         }
 
-        urlSecurityService.delete(new ArrayList<>(allUrlMap.values()));
+        allUrlMap.values().stream()
+                .map(UrlSecurityDto::getId)
+                .forEach(urlSecurityService::delete);
+
         urlSecurityService.save(urlToAdd);
 
         this.isInit = true;

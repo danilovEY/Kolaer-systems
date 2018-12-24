@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
@@ -8,6 +7,7 @@ import ru.kolaer.server.webportal.model.dao.BankAccountDao;
 import ru.kolaer.server.webportal.model.dto.FilterValue;
 import ru.kolaer.server.webportal.model.entity.general.BankAccountEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,8 +18,8 @@ import java.util.Optional;
 @Repository
 public class BankAccountDaoImpl extends AbstractDefaultDao<BankAccountEntity> implements BankAccountDao {
 
-    protected BankAccountDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, BankAccountEntity.class);
+    protected BankAccountDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, BankAccountEntity.class);
     }
 
     @Override

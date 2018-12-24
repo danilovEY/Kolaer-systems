@@ -1,6 +1,5 @@
 package ru.kolaer.server.employee.dao;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -10,6 +9,7 @@ import ru.kolaer.server.webportal.model.dto.typework.TypeWorkSortType;
 import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 import ru.kolaer.server.webportal.model.entity.typework.TypeWorkEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +17,8 @@ import java.util.Map;
 @Repository
 public class TypeWorkDaoImpl extends AbstractDefaultDao<TypeWorkEntity> implements TypeWorkDao {
 
-    public TypeWorkDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, TypeWorkEntity.class);
+    public TypeWorkDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, TypeWorkEntity.class);
     }
 
     @Override

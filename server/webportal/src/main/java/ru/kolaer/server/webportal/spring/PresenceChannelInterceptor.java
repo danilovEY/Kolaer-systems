@@ -2,7 +2,6 @@ package ru.kolaer.server.webportal.spring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -15,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import ru.kolaer.server.webportal.security.ServerAuthType;
 import ru.kolaer.server.webportal.service.impl.TokenService;
 
 import java.security.Principal;
@@ -30,15 +28,12 @@ import java.util.Stack;
 public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
     private static final ThreadLocal<Stack<SecurityContext>> ORIGINAL_CONTEXT = new ThreadLocal<>();
     private final UserDetailsService userDetailsService;
-    private final ServerAuthType serverAuthType;
     private final TokenService tokenService;
 
     @Autowired
     public PresenceChannelInterceptor(UserDetailsService userDetailsService,
-                                      @Value("${server.auth.type}") String serverAuthType,
                                       TokenService tokenService) {
         this.userDetailsService = userDetailsService;
-        this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.tokenService = tokenService;
     }
 
@@ -114,9 +109,6 @@ public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
     }
 
     private boolean tokenIsValidate(String authToken, UserDetails userDetails) {
-        switch (serverAuthType) {
-            case LDAP: return tokenService.validateTokenLDAP(authToken, userDetails);
-            default: return tokenService.validateToken(authToken, userDetails);
-        }
+         return tokenService.validateToken(authToken, userDetails);
     }
 }

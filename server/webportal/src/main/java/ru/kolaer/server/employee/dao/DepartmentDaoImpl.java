@@ -1,6 +1,5 @@
 package ru.kolaer.server.employee.dao;
 
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -10,6 +9,7 @@ import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.model.dto.department.FindDepartmentPageRequest;
 import ru.kolaer.server.webportal.model.entity.general.DepartmentEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +20,8 @@ import java.util.Map;
 @Repository
 public class DepartmentDaoImpl extends AbstractDefaultDao<DepartmentEntity> implements DepartmentDao {
 
-    protected DepartmentDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, DepartmentEntity.class);
+    protected DepartmentDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, DepartmentEntity.class);
     }
 
     @Override

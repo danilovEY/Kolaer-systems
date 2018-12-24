@@ -1,11 +1,11 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.ChatMessageDao;
 import ru.kolaer.server.webportal.model.entity.chat.ChatMessageEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class ChatMessageDaoImpl extends AbstractDefaultDao<ChatMessageEntity> implements ChatMessageDao {
-    protected ChatMessageDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, ChatMessageEntity.class);
+    protected ChatMessageDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, ChatMessageEntity.class);
     }
 
     @Override

@@ -3,7 +3,6 @@ package ru.kolaer.server.webportal.service.impl;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -54,7 +53,6 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     private final AuthenticationService authenticationService;
     private final AccountDao accountDao;
     private final ChatMessageDao chatMessageDao;
-    private final SessionFactory sessionFactory;
 
     public ChatRoomServiceImpl(@Value("${secret_key:secret_key}") String key,
                                SimpMessagingTemplate simpMessagingTemplate,
@@ -62,15 +60,13 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
                                AccountDao accountDao,
                                ChatMessageDao chatMessageDao,
                                ChatRoomDao defaultEntityDao,
-                               ChatRoomConverter converter,
-                               SessionFactory sessionFactory) {
+                               ChatRoomConverter converter) {
         super(defaultEntityDao, converter);
         this.key = key;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.authenticationService = authenticationService;
         this.accountDao = accountDao;
         this.chatMessageDao = chatMessageDao;
-        this.sessionFactory = sessionFactory;
     }
 
     @Override
@@ -354,7 +350,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     }
 
     @Transactional(readOnly = true)
-    private ChatRoomDto getByRoomKey(String roomKey) {
+    ChatRoomDto getByRoomKey(String roomKey) {
         return defaultConverter.convertToDto(defaultEntityDao.findByRoomKey(roomKey));
     }
 

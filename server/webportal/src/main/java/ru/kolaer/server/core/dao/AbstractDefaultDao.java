@@ -12,6 +12,7 @@ import ru.kolaer.server.webportal.model.dto.FilterValue;
 import ru.kolaer.server.webportal.model.dto.SortField;
 import ru.kolaer.server.webportal.model.entity.BaseEntity;
 
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,8 +26,12 @@ public abstract class AbstractDefaultDao<T extends BaseEntity> implements Defaul
     protected final Class<T> entityClass;
     protected int batchSize = Integer.valueOf(Dialect.DEFAULT_BATCH_SIZE);
 
-    protected AbstractDefaultDao(SessionFactory sessionFactory, Class<T> entityClass) {
-        this.sessionFactory = sessionFactory;
+    protected AbstractDefaultDao(EntityManagerFactory entityManagerFactory, Class<T> entityClass) {
+        if (entityManagerFactory.unwrap(SessionFactory.class) == null) {
+            throw new NullPointerException("Factory is not a hibernate factory");
+        }
+
+        this.sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
         this.entityClass = entityClass;
     }
 

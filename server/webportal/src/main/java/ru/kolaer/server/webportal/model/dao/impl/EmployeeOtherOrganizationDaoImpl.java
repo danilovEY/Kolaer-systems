@@ -1,11 +1,11 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.EmployeeOtherOrganizationDao;
 import ru.kolaer.server.webportal.model.entity.birthday.EmployeeOtherOrganizationEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -13,8 +13,8 @@ import java.util.List;
 @Repository(value = "employeeOtherOrganizationDao")
 public class EmployeeOtherOrganizationDaoImpl extends AbstractDefaultDao<EmployeeOtherOrganizationEntity> implements EmployeeOtherOrganizationDao {
 	
-	protected EmployeeOtherOrganizationDaoImpl(SessionFactory sessionFactory) {
-		super(sessionFactory, EmployeeOtherOrganizationEntity.class);
+	protected EmployeeOtherOrganizationDaoImpl(EntityManagerFactory entityManagerFactory) {
+		super(entityManagerFactory, EmployeeOtherOrganizationEntity.class);
 	}
 
 	@Override

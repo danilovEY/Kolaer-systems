@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
@@ -8,6 +7,7 @@ import ru.kolaer.server.webportal.model.dao.VacationDao;
 import ru.kolaer.server.webportal.model.dto.vacation.*;
 import ru.kolaer.server.webportal.model.entity.vacation.*;
 
+import javax.persistence.EntityManagerFactory;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +16,8 @@ import java.util.Map;
 @Repository
 public class VacationDaoImpl extends AbstractDefaultDao<VacationEntity> implements VacationDao {
 
-    public VacationDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, VacationEntity.class);
+    public VacationDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, VacationEntity.class);
     }
 
     @Override

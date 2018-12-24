@@ -1,19 +1,19 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.ContactDao;
 import ru.kolaer.server.webportal.model.entity.contact.ContactEntity;
 import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Repository
 public class ContactDaoImpl extends AbstractDefaultDao<ContactEntity> implements ContactDao {
 
-    protected ContactDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, ContactEntity.class);
+    protected ContactDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, ContactEntity.class);
     }
 
     @Override

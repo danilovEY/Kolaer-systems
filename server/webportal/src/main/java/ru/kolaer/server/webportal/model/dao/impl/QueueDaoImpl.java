@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -12,6 +11,7 @@ import ru.kolaer.server.webportal.model.dto.queue.QueueSortType;
 import ru.kolaer.server.webportal.model.entity.queue.QueueRequestEntity;
 import ru.kolaer.server.webportal.model.entity.queue.QueueTargetEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +22,8 @@ import java.util.Map;
 public class QueueDaoImpl extends AbstractDefaultDao<QueueTargetEntity> implements QueueDao {
 
     @Autowired
-    public QueueDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, QueueTargetEntity.class);
+    public QueueDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, QueueTargetEntity.class);
     }
 
     @Override

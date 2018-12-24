@@ -1,11 +1,11 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.TicketDao;
 import ru.kolaer.server.webportal.model.entity.ticket.TicketEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 /**
@@ -14,8 +14,8 @@ import java.util.List;
 @Repository
 public class TicketDaoImpl extends AbstractDefaultDao<TicketEntity> implements TicketDao {
 
-    protected TicketDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, TicketEntity.class);
+    protected TicketDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, TicketEntity.class);
     }
 
     @Override

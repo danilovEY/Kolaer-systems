@@ -19,11 +19,13 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -41,6 +43,7 @@ import java.util.concurrent.Executor;
  * Так же есть импорт внешней конфигурации на груви.
  */
 @Configuration
+@EnableTransactionManagement
 @EnableScheduling
 @EnableCaching
 @EnableAsync
@@ -98,14 +101,6 @@ public class WebportalContext extends WebMvcConfigurationSupport  {
         return new JdbcTemplate(dataSource);
     }
 
-    @Bean
-    public SessionFactory sessionFactory(EntityManagerFactory entityManagerFactory) {
-        if (entityManagerFactory.unwrap(SessionFactory.class) == null) {
-            throw new NullPointerException("Factory is not a hibernate factory");
-        }
-        return entityManagerFactory.unwrap(SessionFactory.class);
-    }
-
 //    @Autowired
 //    @Qualifier(value = "dataSource")
 //    @Bean(name = "sessionFactory")
@@ -124,13 +119,13 @@ public class WebportalContext extends WebMvcConfigurationSupport  {
 //        return sessionFactoryBean.buildSessionFactory();
 //    }
 
-//    @Autowired
-//    @Bean
-//    public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
-//        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-//        transactionManager.setSessionFactory(sessionFactory);
-//        return transactionManager;
-//    }
+    @Autowired
+    @Bean
+    public HibernateTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(entityManagerFactory.unwrap(SessionFactory.class));
+        return transactionManager;
+    }
 
 //    @Bean
 //    @Autowired

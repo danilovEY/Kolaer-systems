@@ -1,12 +1,12 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.PasswordHistoryDao;
 import ru.kolaer.server.webportal.model.entity.kolpass.PasswordHistoryEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 /**
@@ -16,8 +16,8 @@ import java.util.List;
 @Slf4j
 public class PasswordHistoryDaoImpl extends AbstractDefaultDao<PasswordHistoryEntity> implements PasswordHistoryDao {
 
-    protected PasswordHistoryDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, PasswordHistoryEntity.class);
+    protected PasswordHistoryDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, PasswordHistoryEntity.class);
     }
 
     @Override

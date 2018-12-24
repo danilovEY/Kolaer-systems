@@ -23,14 +23,11 @@ import java.io.IOException;
  */
 @Slf4j
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
-    private final ServerAuthType serverAuthType;
     private final UserDetailsService userDetailsService;
     private final TokenService tokenService;
 
-    public AuthenticationTokenProcessingFilter(ServerAuthType serverAuthType,
-                                               UserDetailsService userDetailsService,
+    public AuthenticationTokenProcessingFilter(UserDetailsService userDetailsService,
                                                TokenService tokenService) {
-        this.serverAuthType = serverAuthType;
         this.userDetailsService = userDetailsService;
         this.tokenService = tokenService;
     }
@@ -57,10 +54,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     }
 
     private boolean tokenIsValidate(String authToken, UserDetails userDetails) {
-        switch (serverAuthType) {
-            case LDAP: return tokenService.validateTokenLDAP(authToken, userDetails);
-            default: return tokenService.validateToken(authToken, userDetails);
-        }
+        return tokenService.validateToken(authToken, userDetails);
     }
 
     private HttpServletRequest getAsHttpRequest(ServletRequest request) {

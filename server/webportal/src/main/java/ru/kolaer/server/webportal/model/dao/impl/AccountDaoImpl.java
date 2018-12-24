@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
@@ -9,6 +8,7 @@ import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.model.dao.AccountDao;
 import ru.kolaer.server.webportal.model.entity.general.AccountEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 /**
@@ -19,8 +19,8 @@ import java.util.List;
 public class AccountDaoImpl extends AbstractDefaultDao<AccountEntity> implements AccountDao {
 
     @Autowired
-    public AccountDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, AccountEntity.class);
+    public AccountDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, AccountEntity.class);
     }
 
     @Override

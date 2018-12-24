@@ -18,7 +18,7 @@ dependencies {
         exclude module: 'spring-aop'
         exclude module: 'spring-context'
     }
-
+    compile "org.apache.felix:org.apache.felix.framework:5.4.0"
     compile "org.controlsfx:controlsfx:8.40.11"
     compileOnly "org.projectlombok:lombok:1.16.18"
     testCompile "junit:junit:4.11"

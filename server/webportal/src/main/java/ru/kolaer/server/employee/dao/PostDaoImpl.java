@@ -1,6 +1,5 @@
 package ru.kolaer.server.employee.dao;
 
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -12,6 +11,7 @@ import ru.kolaer.server.webportal.model.dto.post.FindPostPageRequest;
 import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 import ru.kolaer.server.webportal.model.entity.general.PostEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +21,8 @@ import java.util.Map;
  */
 @Repository
 public class PostDaoImpl extends AbstractDefaultDao<PostEntity> implements PostDao {
-    protected PostDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, PostEntity.class);
+    protected PostDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, PostEntity.class);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import ru.kolaer.common.dto.kolaerweb.DateTimeJson;
@@ -11,6 +10,7 @@ import ru.kolaer.server.webportal.model.dao.HolidayDao;
 import ru.kolaer.server.webportal.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.webportal.model.entity.holiday.HolidayEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 public class HolidayDaoImpl extends AbstractDefaultDao<HolidayEntity> implements HolidayDao {
     private final List<Holiday> holidays = new ArrayList<>();
 
-    protected HolidayDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, HolidayEntity.class);
+    protected HolidayDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, HolidayEntity.class);
     }
 
     @Override

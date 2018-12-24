@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.vote.AffirmativeBased;
@@ -33,7 +32,6 @@ import org.springframework.web.filter.CorsFilter;
 import ru.kolaer.server.webportal.model.dao.AccountDao;
 import ru.kolaer.server.webportal.security.AuthenticationTokenProcessingFilter;
 import ru.kolaer.server.webportal.security.SecurityMetadataSourceFilter;
-import ru.kolaer.server.webportal.security.ServerAuthType;
 import ru.kolaer.server.webportal.security.UserDetailsServiceImpl;
 import ru.kolaer.server.webportal.service.ExceptionHandlerService;
 import ru.kolaer.server.webportal.service.UrlSecurityService;
@@ -54,14 +52,12 @@ import java.util.Arrays;
  */
 @Configuration
 @ComponentScan("ru.kolaer.server.webportal.security")
-@PropertySource("classpath:ldap.properties")
 @EnableWebSecurity
 @Slf4j
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**Секретный ключ для шифрования пароля.*/
     private final String secretKey;
-    private final ServerAuthType serverAuthType;
     private final TokenService tokenService;
     private final AccountDao accountDao;
     private final UrlSecurityService urlSecurityService;
@@ -72,13 +68,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public SpringSecurityConfig(@Value("${secret_key}") String secretKey,
-                                @Value("${server.auth.type}") String serverAuthType,
                                 TokenService tokenService,
                                 AccountDao accountDao,
                                 UrlSecurityService urlSecurityService,
                                 ExceptionHandlerService exceptionHandlerService) {
         this.secretKey = secretKey;
-        this.serverAuthType = ServerAuthType.valueOf(serverAuthType);
         this.tokenService = tokenService;
         this.accountDao = accountDao;
         this.urlSecurityService = urlSecurityService;
@@ -170,7 +164,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private AuthenticationTokenProcessingFilter authenticationTokenProcessingFilter(UserDetailsService userDetailsService) {
-        return new AuthenticationTokenProcessingFilter(serverAuthType, userDetailsService, tokenService);
+        return new AuthenticationTokenProcessingFilter(userDetailsService, tokenService);
     }
 
     private UserDetailsService userDetailsServiceSQL(AccountDao context) {

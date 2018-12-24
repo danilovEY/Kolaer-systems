@@ -1,7 +1,6 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.error.UnexpectedParamsDescription;
@@ -11,6 +10,7 @@ import ru.kolaer.server.webportal.model.dao.PasswordRepositoryDao;
 import ru.kolaer.server.webportal.model.entity.kolpass.PasswordRepositoryEntity;
 import ru.kolaer.server.webportal.model.entity.kolpass.PasswordRepositoryShareEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 /**
@@ -20,8 +20,8 @@ import java.util.List;
 @Slf4j
 public class PasswordRepositoryDaoImpl extends AbstractDefaultDao<PasswordRepositoryEntity> implements PasswordRepositoryDao {
 
-    protected PasswordRepositoryDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, PasswordRepositoryEntity.class);
+    protected PasswordRepositoryDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, PasswordRepositoryEntity.class);
     }
 
     @Override

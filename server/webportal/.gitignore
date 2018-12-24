@@ -10,6 +10,7 @@
 /src/main/resources/common.properties
 /src/main/resources/origin_common.properties
 /src/main/resources/calendar.xml
+/src/main/resources/application-dev.yaml
 !build.gradle
 !settings.gradle
 !/pom.xml

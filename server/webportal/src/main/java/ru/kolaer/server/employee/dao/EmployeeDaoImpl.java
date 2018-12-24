@@ -2,7 +2,6 @@ package ru.kolaer.server.employee.dao;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,6 +18,7 @@ import ru.kolaer.server.webportal.model.dto.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.model.entity.contact.ContactType;
 import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,8 +34,8 @@ import java.util.Map;
 public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implements EmployeeDao {
 
     @Autowired
-    public EmployeeDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, EmployeeEntity.class);
+    public EmployeeDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, EmployeeEntity.class);
     }
 
     @Override

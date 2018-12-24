@@ -1,12 +1,12 @@
 package ru.kolaer.server.webportal.model.dao.impl;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.CounterDao;
 import ru.kolaer.server.webportal.model.dto.counter.FindCounterRequest;
 import ru.kolaer.server.webportal.model.entity.other.CounterEntity;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +17,8 @@ import java.util.Map;
 @Repository("counterDao")
 public class CounterDaoImpl extends AbstractDefaultDao<CounterEntity> implements CounterDao {
 
-    protected CounterDaoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory, CounterEntity.class);
+    protected CounterDaoImpl(EntityManagerFactory entityManagerFactory) {
+        super(entityManagerFactory, CounterEntity.class);
     }
 
     @Override
