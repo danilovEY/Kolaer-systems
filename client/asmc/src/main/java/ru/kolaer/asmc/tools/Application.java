@@ -2,9 +2,9 @@ package ru.kolaer.asmc.tools;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.system.PluginsUS;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.plugins.UniformSystemPlugin;
+import ru.kolaer.common.system.PluginsUS;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
 
 import java.io.File;
 import java.io.IOException;

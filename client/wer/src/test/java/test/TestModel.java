@@ -4,11 +4,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.system.impl.DefaultUniformSystemEditorKit;
 import ru.kolaer.client.wer.mvp.model.CmdArguments;
 import ru.kolaer.client.wer.mvp.model.Event;
 import ru.kolaer.client.wer.mvp.model.MWindowsEventCmd;
 import ru.kolaer.client.wer.mvp.model.MWindowsEventCmdSecurity;
+import ru.kolaer.common.system.impl.DefaultUniformSystemEditorKit;
 
 import java.util.List;
 import java.util.Optional;

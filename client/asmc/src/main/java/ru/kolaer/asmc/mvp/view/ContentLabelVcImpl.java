@@ -8,11 +8,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import ru.kolaer.api.mvp.view.BaseView;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.asmc.mvp.model.DataService;
 import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.mvp.model.MLabel;
+import ru.kolaer.common.mvp.view.BaseView;
+import ru.kolaer.common.tools.Tools;
 
 import java.util.*;
 import java.util.function.Consumer;

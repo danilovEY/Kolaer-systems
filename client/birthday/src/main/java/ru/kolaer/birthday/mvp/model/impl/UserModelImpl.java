@@ -3,12 +3,12 @@ package ru.kolaer.birthday.mvp.model.impl;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
-import ru.kolaer.api.mvp.model.kolaerweb.PostDto;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
-import ru.kolaer.api.mvp.model.other.DbDataAll;
 import ru.kolaer.birthday.mvp.model.UserModel;
+import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.kolaerweb.EnumGender;
+import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.common.dto.other.DbDataAll;
+import ru.kolaer.common.dto.post.PostDto;
 
 import java.util.Date;
 

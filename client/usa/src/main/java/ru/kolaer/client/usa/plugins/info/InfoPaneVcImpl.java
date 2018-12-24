@@ -14,10 +14,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.tools.Borders;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.system.ui.StaticView;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.ImageViewPane;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.system.ui.StaticView;
+import ru.kolaer.common.tools.Tools;
 
 import java.util.ArrayList;
 import java.util.List;

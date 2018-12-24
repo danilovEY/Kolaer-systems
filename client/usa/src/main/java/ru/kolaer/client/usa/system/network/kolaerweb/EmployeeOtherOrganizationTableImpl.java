@@ -5,11 +5,11 @@ import javafx.beans.property.SimpleStringProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
-import ru.kolaer.api.system.network.kolaerweb.EmployeeOtherOrganizationTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
+import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.kolaerweb.ServerResponse;
+import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.common.system.network.kolaerweb.EmployeeOtherOrganizationTable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

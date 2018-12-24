@@ -5,13 +5,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.presenter.ObserverSearch;
+import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.kolaerweb.ServerResponse;
+import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
 
 import java.util.ArrayList;
 import java.util.List;

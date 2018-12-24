@@ -1,17 +1,17 @@
 package ru.kolaer.birthday.service;
 
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
-import ru.kolaer.api.mvp.view.BaseView;
-import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.system.network.kolaerweb.ApplicationDataBase;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.BirthdayInfoPane;
 import ru.kolaer.birthday.mvp.view.BirthdayInfoPaneImpl;
+import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.kolaerweb.ServerResponse;
+import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.common.mvp.view.BaseView;
+import ru.kolaer.common.plugins.services.Service;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.system.network.kolaerweb.ApplicationDataBase;
+import ru.kolaer.common.tools.Tools;
 
 import java.time.LocalDate;
 import java.util.List;

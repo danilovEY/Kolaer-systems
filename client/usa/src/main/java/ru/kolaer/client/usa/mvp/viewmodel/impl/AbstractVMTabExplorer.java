@@ -3,8 +3,6 @@ package ru.kolaer.client.usa.mvp.viewmodel.impl;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.system.PluginsUS;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.viewmodel.ExplorerObservable;
 import ru.kolaer.client.usa.mvp.viewmodel.ExplorerObserver;
@@ -12,6 +10,8 @@ import ru.kolaer.client.usa.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.usa.mvp.viewmodel.VTabExplorer;
 import ru.kolaer.client.usa.plugins.PluginBundle;
 import ru.kolaer.client.usa.services.RemoteActivationDeactivationPlugin;
+import ru.kolaer.common.plugins.UniformSystemPlugin;
+import ru.kolaer.common.system.PluginsUS;
 
 import java.util.*;
 import java.util.function.Consumer;

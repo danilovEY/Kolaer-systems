@@ -1,7 +1,7 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import ru.kolaer.api.system.UniformSystemEditorKit;
-import ru.kolaer.api.system.network.kolaerweb.KolpassTable;
+import ru.kolaer.common.system.UniformSystemEditorKit;
+import ru.kolaer.common.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.kolpass.mvp.view.VSplitContentAndListRep;
 import ru.kolaer.kolpass.mvp.view.VSplitContentAndListRepImpl;
 

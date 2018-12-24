@@ -1,10 +1,10 @@
 package ru.kolaer.client.counter.service;
 
-import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.plugins.services.Service;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.tools.Tools;
+import ru.kolaer.common.dto.counter.CounterDto;
+import ru.kolaer.common.dto.kolaerweb.ServerResponse;
+import ru.kolaer.common.plugins.services.Service;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.tools.Tools;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

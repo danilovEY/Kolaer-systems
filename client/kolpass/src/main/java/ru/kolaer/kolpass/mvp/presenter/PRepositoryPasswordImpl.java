@@ -2,9 +2,9 @@ package ru.kolaer.kolpass.mvp.presenter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
-import ru.kolaer.api.system.UniformSystemEditorKit;
+import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordHistoryDto;
+import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
+import ru.kolaer.common.system.UniformSystemEditorKit;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPassword;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPasswordImpl;

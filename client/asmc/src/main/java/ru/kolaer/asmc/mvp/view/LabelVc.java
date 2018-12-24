@@ -1,9 +1,9 @@
 package ru.kolaer.asmc.mvp.view;
 
 import javafx.scene.layout.BorderPane;
-import ru.kolaer.api.mvp.view.BaseView;
 import ru.kolaer.asmc.mvp.model.MLabel;
 import ru.kolaer.asmc.mvp.presenter.Access;
+import ru.kolaer.common.mvp.view.BaseView;
 
 import java.util.function.Consumer;
 

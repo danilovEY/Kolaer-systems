@@ -1,7 +1,7 @@
 package ru.kolaer.client.wer.mvp.presenter;
 
-import ru.kolaer.api.mvp.presenter.BasePresenter;
 import ru.kolaer.client.wer.mvp.view.VSplitTableDetailedEvent;
+import ru.kolaer.common.mvp.presenter.BasePresenter;
 
 /**
  * Created by danilovey on 16.03.2017.

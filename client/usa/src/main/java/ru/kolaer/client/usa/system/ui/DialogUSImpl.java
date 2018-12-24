@@ -10,15 +10,15 @@ import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.dialog.LoginDialog;
 import org.controlsfx.dialog.ProgressDialog;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
-import ru.kolaer.api.system.Authentication;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.system.network.ServerStatus;
-import ru.kolaer.api.system.ui.DialogUS;
-import ru.kolaer.api.system.ui.UISystemUS;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.tools.Resources;
+import ru.kolaer.common.dto.kolaerweb.ServerResponse;
+import ru.kolaer.common.dto.kolaerweb.UserAndPassJson;
+import ru.kolaer.common.system.Authentication;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.system.network.ServerStatus;
+import ru.kolaer.common.system.ui.DialogUS;
+import ru.kolaer.common.system.ui.UISystemUS;
+import ru.kolaer.common.tools.Tools;
 
 import java.util.concurrent.CompletableFuture;
 

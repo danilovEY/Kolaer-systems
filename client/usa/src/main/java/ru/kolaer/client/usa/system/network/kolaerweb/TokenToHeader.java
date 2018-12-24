@@ -4,9 +4,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
-import ru.kolaer.api.system.Authentication;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.system.Authentication;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
 
 /**
  * Created by danilovey on 13.02.2017.

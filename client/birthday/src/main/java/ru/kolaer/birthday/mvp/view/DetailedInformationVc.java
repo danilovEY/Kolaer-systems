@@ -6,9 +6,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.tools.BirthdayTools;
+import ru.kolaer.common.dto.kolaerweb.EnumGender;
 
 import java.net.URL;
 

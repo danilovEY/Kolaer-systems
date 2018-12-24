@@ -8,7 +8,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
+import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

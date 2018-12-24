@@ -1,6 +1,6 @@
 package ru.kolaer.client.counter.service;
 
-import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
+import ru.kolaer.common.dto.counter.CounterDto;
 
 /**
  * Created by danilovey on 25.08.2016.

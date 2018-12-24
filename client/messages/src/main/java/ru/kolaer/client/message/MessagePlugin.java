@@ -1,9 +1,9 @@
 package ru.kolaer.client.message;
 
 import javafx.scene.Node;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.plugins.services.Service;
 import ru.kolaer.client.message.service.AutoCheckingNotifyMessage;
+import ru.kolaer.common.plugins.UniformSystemPlugin;
+import ru.kolaer.common.plugins.services.Service;
 
 import java.util.Collection;
 import java.util.Collections;

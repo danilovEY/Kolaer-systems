@@ -2,11 +2,11 @@ package ru.kolaer.client.usa.system.network;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.system.network.HolidaysTable;
-import ru.kolaer.api.system.network.KaesTable;
-import ru.kolaer.api.system.network.OtherPublicAPI;
 import ru.kolaer.client.usa.system.network.kolaerweb.HolidaysTableImpl;
 import ru.kolaer.client.usa.tools.Resources;
+import ru.kolaer.common.system.network.HolidaysTable;
+import ru.kolaer.common.system.network.KaesTable;
+import ru.kolaer.common.system.network.OtherPublicAPI;
 
 public class OtherPublicAPIImpl implements OtherPublicAPI {
 	private HolidaysTable holidaysTable;

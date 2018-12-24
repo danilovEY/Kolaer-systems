@@ -2,9 +2,9 @@ package ru.kolaer.client.usa.system.network;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.mvp.model.other.WeatherKaesDto;
-import ru.kolaer.api.system.network.KaesTable;
+import ru.kolaer.common.dto.kolaerweb.ServerResponse;
+import ru.kolaer.common.dto.other.WeatherKaesDto;
+import ru.kolaer.common.system.network.KaesTable;
 
 /**
  * Created by danilovey on 15.02.2018.

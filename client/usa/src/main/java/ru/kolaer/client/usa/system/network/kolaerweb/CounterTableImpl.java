@@ -2,10 +2,10 @@ package ru.kolaer.client.usa.system.network.kolaerweb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.system.network.kolaerweb.CounterTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
+import ru.kolaer.common.dto.counter.CounterDto;
+import ru.kolaer.common.dto.kolaerweb.ServerResponse;
+import ru.kolaer.common.system.network.kolaerweb.CounterTable;
 
 import java.util.List;
 

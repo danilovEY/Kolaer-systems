@@ -1,8 +1,8 @@
 package ru.kolaer.client.usa.mvp.presenter.impl;
 
-import ru.kolaer.api.mvp.presenter.PDialog;
-import ru.kolaer.api.mvp.view.VDialog;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.VSimpleDialog;
+import ru.kolaer.common.mvp.presenter.PDialog;
+import ru.kolaer.common.mvp.view.VDialog;
 
 public class PDialogImpl implements PDialog {
 	private VDialog view;

@@ -1,8 +1,8 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import ru.kolaer.api.mvp.model.BaseModel;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
-import ru.kolaer.api.mvp.presenter.BasePresenter;
+import ru.kolaer.common.dto.BaseModel;
+import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordHistoryDto;
+import ru.kolaer.common.mvp.presenter.BasePresenter;
 import ru.kolaer.kolpass.mvp.view.VPasswordHistory;
 
 /**

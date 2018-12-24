@@ -2,11 +2,11 @@ package ru.kolaer.client.wer.mvp.presenter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.system.UniformSystemEditorKit;
 import ru.kolaer.client.wer.mvp.model.Event;
 import ru.kolaer.client.wer.mvp.model.MWindowsEvent;
 import ru.kolaer.client.wer.mvp.view.VEventTable;
 import ru.kolaer.client.wer.mvp.view.VEventTableImpl;
+import ru.kolaer.common.system.UniformSystemEditorKit;
 
 import java.text.SimpleDateFormat;
 import java.util.Comparator;

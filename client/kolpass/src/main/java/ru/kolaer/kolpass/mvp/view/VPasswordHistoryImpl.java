@@ -9,7 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordHistoryDto;
+import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordHistoryDto;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;

@@ -1,12 +1,12 @@
 package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.kolaer.api.plugins.UniformSystemPlugin;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.presenter.PTab;
 import ru.kolaer.client.usa.mvp.presenter.impl.PTabImpl;
 import ru.kolaer.client.usa.mvp.viewmodel.VMExplorer;
 import ru.kolaer.client.usa.plugins.PluginBundle;
+import ru.kolaer.common.plugins.UniformSystemPlugin;
+import ru.kolaer.common.tools.Tools;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;

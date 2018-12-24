@@ -10,9 +10,9 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.asmc.mvp.model.MLabel;
 import ru.kolaer.asmc.tools.Resources;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
 
 import java.io.File;
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package ru.kolaer.client.usa.system.ui;
 
-import ru.kolaer.api.system.ui.ProgressBarObservable;
-import ru.kolaer.api.system.ui.StatusBarUS;
+import ru.kolaer.common.system.ui.ProgressBarObservable;
+import ru.kolaer.common.system.ui.StatusBarUS;
 
 /**
  * 

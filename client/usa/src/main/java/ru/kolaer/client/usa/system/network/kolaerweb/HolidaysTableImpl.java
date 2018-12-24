@@ -2,10 +2,10 @@ package ru.kolaer.client.usa.system.network.kolaerweb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
-import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
-import ru.kolaer.api.mvp.model.kolaerweb.ServerResponse;
-import ru.kolaer.api.system.network.HolidaysTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
+import ru.kolaer.common.dto.kolaerweb.Holiday;
+import ru.kolaer.common.dto.kolaerweb.ServerResponse;
+import ru.kolaer.common.system.network.HolidaysTable;
 
 import java.time.LocalDate;
 import java.util.List;

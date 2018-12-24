@@ -3,7 +3,7 @@ package ru.kolaer.client.chat.service;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoDto;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatInfoDto;
 
 /**
  * Created by danilovey on 02.11.2017.

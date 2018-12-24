@@ -2,7 +2,7 @@ package ru.kolaer.client.usa.mvp.viewmodel.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.api.plugins.services.Service;
+import ru.kolaer.common.plugins.services.Service;
 
 import java.util.HashMap;
 import java.util.Map;

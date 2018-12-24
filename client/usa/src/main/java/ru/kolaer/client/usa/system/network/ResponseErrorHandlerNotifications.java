@@ -5,9 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
-import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.api.system.ui.NotificationUS;
+import ru.kolaer.common.dto.error.ServerExceptionMessage;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.system.ui.NotificationUS;
 
 import java.io.IOException;
 

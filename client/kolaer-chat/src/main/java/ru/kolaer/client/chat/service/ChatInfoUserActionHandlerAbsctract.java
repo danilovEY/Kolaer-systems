@@ -3,7 +3,7 @@ package ru.kolaer.client.chat.service;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
-import ru.kolaer.api.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
 
 /**
  * Created by danilovey on 05.02.2018.

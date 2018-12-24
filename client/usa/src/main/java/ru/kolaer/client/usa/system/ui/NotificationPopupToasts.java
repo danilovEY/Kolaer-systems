@@ -2,14 +2,14 @@ package ru.kolaer.client.usa.system.ui;
 
 import javafx.geometry.Pos;
 import javafx.util.Duration;
-import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
-import ru.kolaer.api.mvp.view.BaseView;
-import ru.kolaer.api.system.ui.NotificationType;
-import ru.kolaer.api.system.ui.NotificationUS;
-import ru.kolaer.api.system.ui.NotificationView;
-import ru.kolaer.api.system.ui.NotifyAction;
-import ru.kolaer.api.tools.Tools;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.Toasts;
+import ru.kolaer.common.dto.error.ServerExceptionMessage;
+import ru.kolaer.common.mvp.view.BaseView;
+import ru.kolaer.common.system.ui.NotificationType;
+import ru.kolaer.common.system.ui.NotificationUS;
+import ru.kolaer.common.system.ui.NotificationView;
+import ru.kolaer.common.system.ui.NotifyAction;
+import ru.kolaer.common.tools.Tools;
 
 import java.util.Collections;
 import java.util.List;
