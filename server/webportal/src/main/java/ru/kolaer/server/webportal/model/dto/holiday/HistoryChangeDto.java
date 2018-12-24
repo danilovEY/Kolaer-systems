@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.dto.holiday;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
+import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.server.webportal.model.entity.historychange.HistoryChangeEvent;
 
 import java.time.LocalDateTime;

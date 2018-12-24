@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.dto.vacation;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
+import ru.kolaer.common.dto.BaseDto;
 
 @Data
 public class VacationBalanceDto implements BaseDto {

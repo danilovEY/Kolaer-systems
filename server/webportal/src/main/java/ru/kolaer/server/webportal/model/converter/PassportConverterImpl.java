@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.model.converter;
 
 import org.springframework.stereotype.Service;
+import ru.kolaer.server.employee.service.EmployeeConverter;
 import ru.kolaer.server.webportal.model.dto.passport.PassportDto;
 import ru.kolaer.server.webportal.model.entity.general.PassportEntity;
 

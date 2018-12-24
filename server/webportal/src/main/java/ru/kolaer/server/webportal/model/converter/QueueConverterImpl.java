@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.model.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.server.webportal.model.dao.AccountDao;
 import ru.kolaer.server.webportal.model.dto.queue.QueueRequestDto;
 import ru.kolaer.server.webportal.model.dto.queue.QueueTargetDto;

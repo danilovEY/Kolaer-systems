@@ -12,9 +12,9 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
+import ru.kolaer.common.dto.error.ServerExceptionMessage;
 import ru.kolaer.server.webportal.exception.*;
-import ru.kolaer.server.webportal.model.servirce.ExceptionHandlerService;
+import ru.kolaer.server.webportal.service.ExceptionHandlerService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,8 +36,9 @@ public class ErrorsController /*extends ResponseEntityExceptionHandler*/ {
     /**Перехват всех ошибко на сервере.*/
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public @ResponseBody ServerExceptionMessage defaultExceptionHandler(HttpServletRequest hRequest,
-                                                                        Exception exception) {
+    public @ResponseBody
+    ServerExceptionMessage defaultExceptionHandler(HttpServletRequest hRequest,
+                                                   Exception exception) {
         return exceptionHandlerService.defaultExceptionHandler(hRequest, exception);
     }
 

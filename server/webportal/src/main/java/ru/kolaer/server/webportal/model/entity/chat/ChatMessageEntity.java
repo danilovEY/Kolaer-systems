@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.entity.chat;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageType;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.server.webportal.model.entity.BaseEntity;
 import ru.kolaer.server.webportal.model.entity.general.AccountEntity;
 

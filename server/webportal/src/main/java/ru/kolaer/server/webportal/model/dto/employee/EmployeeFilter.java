@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.model.dto.employee;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
+import ru.kolaer.common.dto.kolaerweb.EnumCategory;
+import ru.kolaer.common.dto.kolaerweb.EnumGender;
 import ru.kolaer.server.webportal.model.dto.EntityFieldName;
 import ru.kolaer.server.webportal.model.dto.FilterParam;
 import ru.kolaer.server.webportal.model.dto.FilterType;

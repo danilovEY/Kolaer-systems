@@ -15,8 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import ru.kolaer.server.webportal.model.servirce.impl.TokenService;
 import ru.kolaer.server.webportal.security.ServerAuthType;
+import ru.kolaer.server.webportal.service.impl.TokenService;
 
 import java.security.Principal;
 import java.util.List;

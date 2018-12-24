@@ -5,7 +5,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-import ru.kolaer.server.webportal.model.dao.AbstractDefaultDao;
+import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.QueueDao;
 import ru.kolaer.server.webportal.model.dto.queue.PageQueueRequest;
 import ru.kolaer.server.webportal.model.dto.queue.QueueSortType;

@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.entity.general;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.TypePostEnum;
+import ru.kolaer.common.dto.kolaerweb.TypePostEnum;
 import ru.kolaer.server.webportal.model.entity.BaseEntity;
 
 import javax.persistence.*;

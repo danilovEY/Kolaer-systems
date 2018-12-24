@@ -6,14 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.common.dto.Page;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 import ru.kolaer.server.webportal.model.dto.queue.PageQueueRequest;
 import ru.kolaer.server.webportal.model.dto.queue.QueueRequestDto;
 import ru.kolaer.server.webportal.model.dto.queue.QueueScheduleDto;
 import ru.kolaer.server.webportal.model.dto.queue.QueueTargetDto;
-import ru.kolaer.server.webportal.model.servirce.AuthenticationService;
-import ru.kolaer.server.webportal.model.servirce.QueueService;
+import ru.kolaer.server.webportal.service.AuthenticationService;
+import ru.kolaer.server.webportal.service.QueueService;
 
 @RestController
 @RequestMapping(value = "/queue")

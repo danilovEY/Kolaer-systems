@@ -6,14 +6,14 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
-import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.kolaerweb.DateTimeJson;
+import ru.kolaer.common.dto.kolaerweb.Holiday;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 import ru.kolaer.server.webportal.model.dto.holiday.HolidayDto;
 import ru.kolaer.server.webportal.model.dto.holiday.HolidayFilter;
 import ru.kolaer.server.webportal.model.dto.holiday.HolidaySort;
-import ru.kolaer.server.webportal.model.servirce.HolidayService;
+import ru.kolaer.server.webportal.service.HolidayService;
 
 import java.util.List;
 

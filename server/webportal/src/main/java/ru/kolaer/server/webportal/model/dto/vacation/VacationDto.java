@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.dto.vacation;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
+import ru.kolaer.common.dto.BaseDto;
 import ru.kolaer.server.webportal.model.entity.vacation.VacationType;
 
 import java.time.LocalDate;

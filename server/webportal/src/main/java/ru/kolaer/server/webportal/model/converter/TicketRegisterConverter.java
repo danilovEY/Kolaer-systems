@@ -1,11 +1,11 @@
 package ru.kolaer.server.webportal.model.converter;
 
 import lombok.NonNull;
+import ru.kolaer.server.core.converter.BaseConverter;
 import ru.kolaer.server.webportal.model.dto.ticket.TicketDto;
 import ru.kolaer.server.webportal.model.dto.ticket.TicketRegisterDto;
 import ru.kolaer.server.webportal.model.entity.ticket.TicketEntity;
 import ru.kolaer.server.webportal.model.entity.ticket.TicketRegisterEntity;
-import ru.kolaer.server.webportal.model.servirce.BaseConverter;
 
 import java.util.List;
 

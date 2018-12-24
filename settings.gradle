@@ -1,9 +1,7 @@
 rootProject.name = 'ru.kolaer'
-include 'api'
+include 'common'
 
-include ':server:restful'
 include ':server:webportal'
-include ':server:web-forwarding'
 
 include ':client:usa'
 include ':client:birthday'
@@ -15,5 +13,4 @@ include ':client:kolaer-chat'
 include ':client:messages'
 include ':client:counter'
 include 'client:weather'
-findProject(':client:weather')?.name = 'weather'
 

@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.converter;
 
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.UrlSecurityDto;
+import ru.kolaer.common.dto.kolaerweb.UrlSecurityDto;
 import ru.kolaer.server.webportal.model.entity.general.UrlSecurityEntity;
 import ru.kolaer.server.webportal.security.RoleUtils;
 

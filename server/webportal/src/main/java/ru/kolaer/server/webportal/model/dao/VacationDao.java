@@ -1,6 +1,7 @@
 package ru.kolaer.server.webportal.model.dao;
 
 
+import ru.kolaer.server.core.dao.DefaultDao;
 import ru.kolaer.server.webportal.model.dto.vacation.*;
 import ru.kolaer.server.webportal.model.entity.vacation.*;
 

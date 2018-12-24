@@ -5,9 +5,9 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import ru.kolaer.api.mvp.model.kolaerweb.UrlSecurityDto;
+import ru.kolaer.common.dto.kolaerweb.UrlSecurityDto;
 import ru.kolaer.server.webportal.config.PathMapping;
-import ru.kolaer.server.webportal.model.servirce.UrlSecurityService;
+import ru.kolaer.server.webportal.service.UrlSecurityService;
 
 import java.util.Collection;
 import java.util.Collections;

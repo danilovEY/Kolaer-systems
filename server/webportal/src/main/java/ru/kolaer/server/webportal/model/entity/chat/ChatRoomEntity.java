@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.entity.chat;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatGroupType;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.server.webportal.model.entity.BaseEntity;
 
 import javax.persistence.*;

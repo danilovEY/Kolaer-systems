@@ -1,5 +1,6 @@
 package ru.kolaer.server.webportal.model.dao;
 
+import ru.kolaer.server.core.dao.DefaultDao;
 import ru.kolaer.server.webportal.model.entity.chat.ChatMessageEntity;
 
 import java.util.List;

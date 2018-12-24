@@ -1,6 +1,6 @@
 package ru.kolaer.server.webportal.model.dto.employee;
 
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 
 import java.util.Collections;
 import java.util.List;

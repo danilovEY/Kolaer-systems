@@ -11,7 +11,6 @@ import ru.kolaer.client.usa.tools.Resources;
 import ru.kolaer.common.system.network.NetworkUS;
 import ru.kolaer.common.system.network.OtherPublicAPI;
 import ru.kolaer.common.system.network.kolaerweb.KolaerWebServer;
-import ru.kolaer.common.system.network.restful.RestfulServer;
 
 import java.nio.charset.Charset;
 

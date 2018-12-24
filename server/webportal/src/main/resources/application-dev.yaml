@@ -1,0 +1,39 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.format_sql: false
+      hibernate.use_sql_comments: false
+      hibernate.batch.size: 15
+      hibernate.dialect: org.hibernate.dialect.MySQLDialect
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+    show-sql: true
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    data-password: root
+    data-username: root
+    url: jdbc:mysql://localhost:3306/application_db_test?zeroDateTimeBehavior=convertToNull&useSSL=false
+    hikari:
+      password: ${spring.datasource.data-username}
+      username: ${spring.datasource.data-username}
+  liquibase:
+    change-log: classpath:/liquibase-changeLog.xml
+    user: ${spring.datasource.data-username}
+    password: ${spring.datasource.data-username}
+  application:
+    name: kolaer-web-test
+  mail:
+    host: mailkolaer
+    username: inform@kolaer.ru
+    password: MVKsPAbN
+    port: 25
+    properties:
+      mail.smtps.auth: false
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework: DEBUG

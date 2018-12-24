@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
+import ru.kolaer.common.dto.auth.AccountDto;
+import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 import ru.kolaer.server.webportal.model.dto.account.ChangePasswordDto;
 import ru.kolaer.server.webportal.model.dto.concact.ContactDto;
 import ru.kolaer.server.webportal.model.dto.concact.ContactRequestDto;
-import ru.kolaer.server.webportal.model.servirce.AccountService;
-import ru.kolaer.server.webportal.model.servirce.AuthenticationService;
+import ru.kolaer.server.webportal.service.AccountService;
+import ru.kolaer.server.webportal.service.AuthenticationService;
 
 /**
  * Created by danilovey on 31.08.2016.

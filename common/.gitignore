@@ -1,0 +1,8 @@
+/*
+!gradlew*
+!build.gradle
+!settings.gradle
+!/pom.xml
+!/src
+!*.md
+!.gitignore

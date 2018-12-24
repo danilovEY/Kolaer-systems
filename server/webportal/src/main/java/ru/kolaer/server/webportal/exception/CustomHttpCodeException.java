@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.exception;
 
 import org.springframework.http.HttpStatus;
-import ru.kolaer.api.mvp.model.error.ErrorCode;
+import ru.kolaer.common.dto.error.ErrorCode;
 
 /**
  * Ошибка при получении неправильных данных от клиента.

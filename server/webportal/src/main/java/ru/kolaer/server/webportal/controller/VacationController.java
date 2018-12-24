@@ -6,11 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.common.dto.Page;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 import ru.kolaer.server.webportal.model.dto.vacation.*;
-import ru.kolaer.server.webportal.model.servirce.VacationService;
-import ru.kolaer.server.webportal.model.servirce.impl.GenerateCalendarReportForVacationService;
+import ru.kolaer.server.webportal.service.VacationService;
+import ru.kolaer.server.webportal.service.impl.GenerateCalendarReportForVacationService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

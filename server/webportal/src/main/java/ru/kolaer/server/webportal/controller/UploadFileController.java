@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.servirce.UploadFileService;
+import ru.kolaer.server.webportal.service.UploadFileService;
 
 import javax.servlet.http.HttpServletResponse;
 

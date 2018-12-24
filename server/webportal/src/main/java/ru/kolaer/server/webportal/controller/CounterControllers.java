@@ -7,9 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
+import ru.kolaer.common.dto.counter.CounterDto;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.servirce.CounterService;
+import ru.kolaer.server.webportal.service.CounterService;
 
 import java.util.List;
 

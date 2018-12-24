@@ -18,11 +18,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.TokenJson;
-import ru.kolaer.api.mvp.model.kolaerweb.UserAndPassJson;
+import ru.kolaer.common.dto.kolaerweb.TokenJson;
+import ru.kolaer.common.dto.kolaerweb.UserAndPassJson;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.servirce.impl.TokenService;
 import ru.kolaer.server.webportal.security.ServerAuthType;
+import ru.kolaer.server.webportal.service.impl.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.dto.post;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.TypePostEnum;
+import ru.kolaer.common.dto.kolaerweb.TypePostEnum;
 
 /**
  * Created by danilovey on 24.01.2017.

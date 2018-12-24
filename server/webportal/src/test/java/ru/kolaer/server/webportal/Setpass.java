@@ -1,11 +1,10 @@
 package ru.kolaer.server.webportal;
 
-import java.util.Hashtable;
-import javax.naming.*;
-import javax.naming.ldap.*;
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.naming.directory.*;
-
-import java.io.*;
+import java.util.Hashtable;
 
 public class Setpass {
     public static void main(String[] args) {

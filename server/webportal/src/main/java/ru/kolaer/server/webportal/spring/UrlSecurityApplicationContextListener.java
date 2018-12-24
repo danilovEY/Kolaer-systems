@@ -13,10 +13,10 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.UrlSecurityDto;
+import ru.kolaer.common.dto.kolaerweb.UrlSecurityDto;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 import ru.kolaer.server.webportal.config.PathMapping;
-import ru.kolaer.server.webportal.model.servirce.UrlSecurityService;
+import ru.kolaer.server.webportal.service.UrlSecurityService;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

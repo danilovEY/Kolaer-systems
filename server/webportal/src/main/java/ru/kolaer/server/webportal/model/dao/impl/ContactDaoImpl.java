@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.model.dao.impl;
 
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-import ru.kolaer.server.webportal.model.dao.AbstractDefaultDao;
+import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.ContactDao;
 import ru.kolaer.server.webportal.model.entity.contact.ContactEntity;
 import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;

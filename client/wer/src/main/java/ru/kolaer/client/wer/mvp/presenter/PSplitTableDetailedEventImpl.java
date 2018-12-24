@@ -1,6 +1,5 @@
 package ru.kolaer.client.wer.mvp.presenter;
 
-import javafx.scene.layout.BorderPane;
 import ru.kolaer.client.wer.mvp.view.VSplitTableDetailedEvent;
 import ru.kolaer.client.wer.mvp.view.VSplitTableDetailedEventImpl;
 

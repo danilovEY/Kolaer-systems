@@ -1,10 +1,10 @@
 package ru.kolaer.server.webportal.model.converter;
 
+import ru.kolaer.server.core.converter.BaseConverter;
 import ru.kolaer.server.webportal.model.dto.queue.QueueRequestDto;
 import ru.kolaer.server.webportal.model.dto.queue.QueueTargetDto;
 import ru.kolaer.server.webportal.model.entity.queue.QueueRequestEntity;
 import ru.kolaer.server.webportal.model.entity.queue.QueueTargetEntity;
-import ru.kolaer.server.webportal.model.servirce.BaseConverter;
 
 import java.util.List;
 

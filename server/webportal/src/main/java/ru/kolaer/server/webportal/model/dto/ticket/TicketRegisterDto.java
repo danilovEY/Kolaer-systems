@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.dto.ticket;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
+import ru.kolaer.common.dto.BaseDto;
 import ru.kolaer.server.webportal.model.dto.upload.UploadFileDto;
 
 import java.time.LocalDateTime;

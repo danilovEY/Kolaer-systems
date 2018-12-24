@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.dto.queue;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
+import ru.kolaer.common.dto.BaseDto;
 
 @Data
 public class QueueTargetDto implements BaseDto {

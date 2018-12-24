@@ -6,8 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import ru.kolaer.api.mvp.model.error.ServerExceptionMessage;
-import ru.kolaer.server.webportal.model.servirce.ExceptionHandlerService;
+import ru.kolaer.common.dto.error.ServerExceptionMessage;
+import ru.kolaer.server.webportal.service.ExceptionHandlerService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

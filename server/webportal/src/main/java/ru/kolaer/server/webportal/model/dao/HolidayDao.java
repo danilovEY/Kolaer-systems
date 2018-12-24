@@ -1,7 +1,8 @@
 package ru.kolaer.server.webportal.model.dao;
 
-import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
-import ru.kolaer.api.mvp.model.kolaerweb.Holiday;
+import ru.kolaer.common.dto.kolaerweb.DateTimeJson;
+import ru.kolaer.common.dto.kolaerweb.Holiday;
+import ru.kolaer.server.core.dao.DefaultDao;
 import ru.kolaer.server.webportal.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.webportal.model.entity.holiday.HolidayEntity;
 

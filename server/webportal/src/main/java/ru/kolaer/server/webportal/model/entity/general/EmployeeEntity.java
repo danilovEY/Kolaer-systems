@@ -2,8 +2,8 @@ package ru.kolaer.server.webportal.model.entity.general;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumCategory;
-import ru.kolaer.api.mvp.model.kolaerweb.EnumGender;
+import ru.kolaer.common.dto.kolaerweb.EnumCategory;
+import ru.kolaer.common.dto.kolaerweb.EnumGender;
 import ru.kolaer.server.webportal.model.entity.BaseEntity;
 import ru.kolaer.server.webportal.model.entity.contact.ContactEntity;
 import ru.kolaer.server.webportal.model.entity.typework.TypeWorkEntity;

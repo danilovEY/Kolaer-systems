@@ -2,10 +2,10 @@ package ru.kolaer.server.webportal.model.converter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatMessageDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.model.entity.chat.ChatMessageEntity;
-import ru.kolaer.server.webportal.model.servirce.ChatService;
+import ru.kolaer.server.webportal.service.ChatService;
 
 import java.util.List;
 import java.util.Map;

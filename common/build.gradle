@@ -1,0 +1,10 @@
+group 'ru.kolaer'
+version '2.6'
+
+dependencies {
+    
+    compile "ch.qos.logback:logback-classic:1.1.7"
+    compileOnly "org.projectlombok:lombok:1.18.2"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.7"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.7"
+}

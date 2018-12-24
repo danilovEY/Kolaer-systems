@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.model.dto.passport;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.BaseDto;
+import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 
 /**
  * Created by danilovey on 24.01.2017.

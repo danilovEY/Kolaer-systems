@@ -1,19 +1,19 @@
 package ru.kolaer.server.webportal.model.entity.education;
 
-import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import lombok.Getter;
+import lombok.Setter;
+import ru.kolaer.server.core.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "education")
-@Data
-public class EducationEntity implements BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
+@Getter
+@Setter
+public class EducationEntity extends BaseEntity {
 
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;

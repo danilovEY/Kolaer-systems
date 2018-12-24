@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.converter;
 
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.server.webportal.model.entity.birthday.EmployeeOtherOrganizationEntity;
 
 /**

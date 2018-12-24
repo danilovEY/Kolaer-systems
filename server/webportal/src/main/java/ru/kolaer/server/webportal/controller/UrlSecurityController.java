@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.UrlSecurityDto;
+import ru.kolaer.common.dto.kolaerweb.UrlSecurityDto;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.servirce.UrlSecurityService;
+import ru.kolaer.server.webportal.service.UrlSecurityService;
 
 import java.util.List;
 

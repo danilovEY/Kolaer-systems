@@ -1,7 +1,6 @@
 package ru.kolaer.client.wer.mvp.model;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**

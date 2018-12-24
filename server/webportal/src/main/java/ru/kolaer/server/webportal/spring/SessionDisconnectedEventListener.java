@@ -5,11 +5,11 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoCommand;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatInfoUserActionDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserStatus;
-import ru.kolaer.server.webportal.model.servirce.ChatRoomService;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatInfoCommand;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatInfoUserActionDto;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatUserStatus;
+import ru.kolaer.server.webportal.service.ChatRoomService;
 
 import java.util.Date;
 

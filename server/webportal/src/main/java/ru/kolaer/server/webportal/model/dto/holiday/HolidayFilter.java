@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.dto.holiday;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
+import ru.kolaer.common.dto.kolaerweb.TypeDay;
 import ru.kolaer.server.webportal.model.dto.EntityFieldName;
 import ru.kolaer.server.webportal.model.dto.FilterParam;
 import ru.kolaer.server.webportal.model.dto.FilterType;

@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.api.mvp.model.kolaerweb.DateTimeJson;
+import ru.kolaer.common.dto.kolaerweb.DateTimeJson;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 
 import java.time.LocalDate;

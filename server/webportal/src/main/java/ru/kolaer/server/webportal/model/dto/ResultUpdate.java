@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.auth.AccountSimpleDto;
+import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 
 import java.io.Serializable;
 import java.util.Collections;

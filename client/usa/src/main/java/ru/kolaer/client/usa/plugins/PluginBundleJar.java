@@ -1,6 +1,5 @@
 package ru.kolaer.client.usa.plugins;
 
-import org.osgi.framework.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

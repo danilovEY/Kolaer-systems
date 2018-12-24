@@ -1,6 +1,6 @@
 package ru.kolaer.server.webportal.exception;
 
-import ru.kolaer.api.mvp.model.error.ErrorCode;
+import ru.kolaer.common.dto.error.ErrorCode;
 
 /**
  * Created by danilovey on 11.10.2017.

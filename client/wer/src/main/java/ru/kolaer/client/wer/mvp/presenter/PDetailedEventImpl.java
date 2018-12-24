@@ -1,12 +1,8 @@
 package ru.kolaer.client.wer.mvp.presenter;
 
-import javafx.scene.layout.BorderPane;
 import ru.kolaer.client.wer.mvp.model.Event;
-import ru.kolaer.client.wer.mvp.model.EventData;
 import ru.kolaer.client.wer.mvp.view.VDetailedEvent;
 import ru.kolaer.client.wer.mvp.view.VDetailedEventImpl;
-
-import java.util.List;
 
 /**
  * Created by danilovey on 16.03.2017.

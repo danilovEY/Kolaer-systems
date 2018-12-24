@@ -1,7 +1,5 @@
 package ru.kolaer.client.usa.plugins;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.common.plugins.UniformSystemPlugin;

@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
+import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.servirce.AuthenticationService;
+import ru.kolaer.server.webportal.service.AuthenticationService;
 
 /**
  * Created by danilovey on 25.08.2016.

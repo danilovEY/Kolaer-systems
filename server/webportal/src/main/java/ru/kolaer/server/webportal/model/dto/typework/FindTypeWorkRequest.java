@@ -2,7 +2,7 @@ package ru.kolaer.server.webportal.model.dto.typework;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.kolaer.server.webportal.model.dto.PaginationRequest;
+import ru.kolaer.server.core.dto.PaginationRequest;
 
 import java.util.Set;
 

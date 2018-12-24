@@ -2,12 +2,12 @@ package ru.kolaer.server.webportal.model.converter;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountSimpleDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolpass.PasswordRepositoryDto;
+import ru.kolaer.common.dto.auth.AccountDto;
+import ru.kolaer.common.dto.auth.AccountSimpleDto;
+import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.server.webportal.model.dao.AccountDao;
 import ru.kolaer.server.webportal.model.entity.kolpass.PasswordRepositoryEntity;
-import ru.kolaer.server.webportal.model.servirce.AuthenticationService;
+import ru.kolaer.server.webportal.service.AuthenticationService;
 
 import java.util.*;
 import java.util.function.Function;

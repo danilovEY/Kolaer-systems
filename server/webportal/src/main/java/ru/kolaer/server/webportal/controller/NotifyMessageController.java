@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
-import ru.kolaer.api.mvp.model.kolaerweb.Page;
+import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.kolaerweb.NotifyMessageDto;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.servirce.NotifyMessageService;
+import ru.kolaer.server.webportal.service.NotifyMessageService;
 
 /**
  * Created by danilovey on 18.08.2016.

@@ -1,8 +1,9 @@
 package ru.kolaer.server.webportal.model.converter;
 
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.EmployeeDto;
-import ru.kolaer.server.webportal.model.dao.EmployeeDao;
+import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.server.employee.dao.EmployeeDao;
+import ru.kolaer.server.employee.service.EmployeeConverter;
 import ru.kolaer.server.webportal.model.dto.bank.BankAccountDto;
 import ru.kolaer.server.webportal.model.entity.general.BankAccountEntity;
 

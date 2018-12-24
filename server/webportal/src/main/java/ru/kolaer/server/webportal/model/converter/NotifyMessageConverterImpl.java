@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.converter;
 
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.NotifyMessageDto;
+import ru.kolaer.common.dto.kolaerweb.NotifyMessageDto;
 import ru.kolaer.server.webportal.model.entity.other.NotifyMessageEntity;
 
 /**

@@ -2,8 +2,8 @@ package ru.kolaer.server.webportal.model.converter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatRoomDto;
-import ru.kolaer.api.mvp.model.kolaerweb.kolchat.ChatUserDto;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatRoomDto;
+import ru.kolaer.common.dto.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.webportal.model.entity.chat.ChatRoomEntity;
 
 import java.util.Optional;

@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.model.dto.holiday;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
-import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
+import ru.kolaer.common.dto.BaseDto;
+import ru.kolaer.common.dto.kolaerweb.TypeDay;
 
 import java.time.LocalDate;
 

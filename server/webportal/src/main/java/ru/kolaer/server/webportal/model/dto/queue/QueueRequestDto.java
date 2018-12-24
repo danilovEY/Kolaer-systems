@@ -1,8 +1,8 @@
 package ru.kolaer.server.webportal.model.dto.queue;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.AccountDto;
-import ru.kolaer.api.mvp.model.kolaerweb.BaseDto;
+import ru.kolaer.common.dto.BaseDto;
+import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.server.webportal.model.entity.queue.QueueType;
 
 import java.time.LocalDateTime;

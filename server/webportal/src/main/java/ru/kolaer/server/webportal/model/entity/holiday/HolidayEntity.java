@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.entity.holiday;
 
 import lombok.Data;
-import ru.kolaer.api.mvp.model.kolaerweb.TypeDay;
+import ru.kolaer.common.dto.kolaerweb.TypeDay;
 import ru.kolaer.server.webportal.model.entity.BaseEntity;
 
 import javax.persistence.*;

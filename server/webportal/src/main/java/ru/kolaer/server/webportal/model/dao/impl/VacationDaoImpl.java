@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.model.dao.impl;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
-import ru.kolaer.server.webportal.model.dao.AbstractDefaultDao;
+import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.VacationDao;
 import ru.kolaer.server.webportal.model.dto.vacation.*;
 import ru.kolaer.server.webportal.model.entity.vacation.*;

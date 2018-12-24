@@ -10,9 +10,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import ru.kolaer.server.webportal.config.SpringContext;
 import ru.kolaer.server.webportal.config.SpringSecurityConfig;
-import ru.kolaer.server.webportal.model.servirce.UpdateEmployeesService;
+import ru.kolaer.server.webportal.config.WebportalContext;
+import ru.kolaer.server.webportal.service.UpdateEmployeesService;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
  * Created by danilovey on 10.11.2016.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {SpringContext.class, SpringSecurityConfig.class})
+@ContextConfiguration(classes = {WebportalContext.class, SpringSecurityConfig.class})
 @WebAppConfiguration
 public class TestSpring {
 

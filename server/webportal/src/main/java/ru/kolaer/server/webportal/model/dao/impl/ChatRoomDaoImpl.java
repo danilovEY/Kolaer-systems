@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.model.dao.impl;
 import javafx.util.Pair;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-import ru.kolaer.server.webportal.model.dao.AbstractDefaultDao;
+import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.webportal.model.dao.ChatRoomDao;
 import ru.kolaer.server.webportal.model.entity.chat.ChatRoomEntity;
 

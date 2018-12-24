@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.converter;
 
 import org.springframework.stereotype.Service;
-import ru.kolaer.api.mvp.model.kolaerweb.CounterDto;
+import ru.kolaer.common.dto.counter.CounterDto;
 import ru.kolaer.server.webportal.model.entity.other.CounterEntity;
 
 /**
