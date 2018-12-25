@@ -29,11 +29,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.concurrent.Executor;
 
-/**
- * Created by danilovey on 14.07.2016.
- * Спринговый контекст на java. Имеет в наличие бинов для работы с БД и скан для контроллеров.
- * Так же есть импорт внешней конфигурации на груви.
- */
+
 @Configuration
 @EnableTransactionManagement
 @EnableScheduling
