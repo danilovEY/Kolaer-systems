@@ -26,6 +26,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by danilovey on 31.10.2016.
@@ -40,6 +43,13 @@ public class HolidayServiceImpl
         super(defaultEntityDao, converter);
     }
 
+    @PostConstruct
+    public void initHoliday() {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        CompletableFuture.runAsync(this::updateHoliday, executorService)
+                .thenRun(executorService::shutdown);
+    }
 
     @Override
     @Transactional
@@ -111,11 +121,6 @@ public class HolidayServiceImpl
         if(dateTimeJson == null)
             return Collections.emptyList();
         return this.defaultEntityDao.getHolidayByMonth(dateTimeJson);
-    }
-
-    @PostConstruct
-    public void initHoliday() {
-        this.updateHoliday();
     }
 
     public void updateHoliday() {

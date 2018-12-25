@@ -5,7 +5,7 @@ package ru.kolaer.server.webportal.config;
  */
 public interface PathMapping {
     /**Путь до диспатчера сервлета.*/
-    String DISPATCHER_SERVLET = "/rest";
+    String DISPATCHER_SERVLET = "";
 
     String PATH_TO_RSS = "/rss";
     String PATH_TO_GET_RSS = "/get";

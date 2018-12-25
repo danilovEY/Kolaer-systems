@@ -86,13 +86,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**", "/rest/non-security/**",
-                "/rest/v2/api-docs",
-                "/rest/configuration/ui/**",
-                "/rest/swagger-resources/**",
-                "/rest/configuration/security/**",
-                "/rest/swagger-ui.html",
-                "/rest/webjars/**");
+        web.ignoring().antMatchers("/resources/**",
+                "/non-security/**",
+                "/v2/api-docs",
+                "/configuration/ui/**",
+                "/swagger-resources/**",
+                "/configuration/security/**",
+                "/swagger-ui.html",
+                "/webjars/**");
 
     }
     @Override

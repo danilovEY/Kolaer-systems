@@ -17,7 +17,7 @@ export class TokenApplyInterceptor implements HttpInterceptor, AuthInterceptor {
     }
     
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (!req.url.includes('rest/') || !this._authService.getToken()) {
+        if (!this._authService.getToken()) {
             return next.handle(req);
         }
 
