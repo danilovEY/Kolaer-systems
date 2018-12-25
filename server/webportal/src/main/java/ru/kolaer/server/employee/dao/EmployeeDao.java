@@ -2,12 +2,12 @@ package ru.kolaer.server.employee.dao;
 
 
 import ru.kolaer.server.core.dao.DefaultDao;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.model.dao.BirthdayDao;
 import ru.kolaer.server.webportal.model.dto.employee.CountEmployeeInDepartmentDto;
 import ru.kolaer.server.webportal.model.dto.employee.FindEmployeeByDepartment;
 import ru.kolaer.server.webportal.model.dto.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.model.entity.contact.ContactType;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 
 import java.util.List;
 

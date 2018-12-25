@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.dto.employee;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 
 import java.util.ArrayList;
 import java.util.List;

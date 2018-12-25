@@ -10,13 +10,13 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.error.ErrorCode;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.model.dto.employee.CountEmployeeInDepartmentDto;
 import ru.kolaer.server.webportal.model.dto.employee.EmployeeSortType;
 import ru.kolaer.server.webportal.model.dto.employee.FindEmployeeByDepartment;
 import ru.kolaer.server.webportal.model.dto.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.model.entity.contact.ContactType;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 
 import javax.persistence.EntityManagerFactory;
 import java.math.BigInteger;

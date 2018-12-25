@@ -1,4 +1,4 @@
-package ru.kolaer.server.webportal.model.entity.general;
+package ru.kolaer.server.employee.entity;
 
 import lombok.Data;
 import ru.kolaer.server.webportal.model.entity.BaseEntity;

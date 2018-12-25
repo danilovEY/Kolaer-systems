@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.server.employee.dao.EmployeeDao;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.employee.service.DepartmentService;
 import ru.kolaer.server.webportal.model.converter.ContactConverter;
 import ru.kolaer.server.webportal.model.dao.ContactDao;
@@ -18,7 +19,6 @@ import ru.kolaer.server.webportal.model.dto.department.DepartmentFilter;
 import ru.kolaer.server.webportal.model.dto.department.DepartmentSort;
 import ru.kolaer.server.webportal.model.entity.contact.ContactEntity;
 import ru.kolaer.server.webportal.model.entity.contact.ContactType;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 import ru.kolaer.server.webportal.service.ContactService;
 
 import java.util.List;

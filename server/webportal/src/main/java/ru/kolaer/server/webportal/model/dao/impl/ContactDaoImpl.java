@@ -2,9 +2,9 @@ package ru.kolaer.server.webportal.model.dao.impl;
 
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.model.dao.ContactDao;
 import ru.kolaer.server.webportal.model.entity.contact.ContactEntity;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;

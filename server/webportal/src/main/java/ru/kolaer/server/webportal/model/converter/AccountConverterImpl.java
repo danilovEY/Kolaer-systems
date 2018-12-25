@@ -8,10 +8,10 @@ import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.server.employee.dao.EmployeeDao;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.employee.service.EmployeeConverter;
 import ru.kolaer.server.webportal.model.entity.contact.ContactEntity;
 import ru.kolaer.server.webportal.model.entity.general.AccountEntity;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 import ru.kolaer.server.webportal.service.impl.UtilService;
 
 import java.util.*;

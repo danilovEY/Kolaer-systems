@@ -9,13 +9,13 @@ import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.employee.dao.EmployeeDao;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.exception.ForbiddenException;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.model.dto.employee.EmployeeRequestDto;
 import ru.kolaer.server.webportal.model.dto.employee.FindEmployeePageRequest;
 import ru.kolaer.server.webportal.model.dto.employee.UpdateTypeWorkEmployeeRequestDto;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 import ru.kolaer.server.webportal.service.AuthenticationService;
 
 import java.util.Date;

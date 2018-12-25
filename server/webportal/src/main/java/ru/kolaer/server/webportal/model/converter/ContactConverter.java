@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.common.dto.post.PostDto;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.employee.service.DepartmentService;
 import ru.kolaer.server.employee.service.PostService;
 import ru.kolaer.server.webportal.model.dao.ContactDao;
@@ -14,7 +15,6 @@ import ru.kolaer.server.webportal.model.dto.concact.ContactRequestDto;
 import ru.kolaer.server.webportal.model.dto.placement.PlacementDto;
 import ru.kolaer.server.webportal.model.entity.contact.ContactEntity;
 import ru.kolaer.server.webportal.model.entity.contact.ContactType;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 import ru.kolaer.server.webportal.service.impl.UtilService;
 
 import java.util.*;

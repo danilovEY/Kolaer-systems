@@ -2,8 +2,8 @@ package ru.kolaer.server.webportal.model.entity.vacation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.model.entity.BaseEntity;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 
 import javax.persistence.*;
 

@@ -4,8 +4,8 @@ import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.server.core.converter.BaseConverter;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.model.entity.general.AccountEntity;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 
 /**
  * Created by danilovey on 09.10.2017.

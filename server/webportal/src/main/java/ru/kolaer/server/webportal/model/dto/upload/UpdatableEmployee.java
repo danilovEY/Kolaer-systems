@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.dto.upload;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 
 @Data
 public class UpdatableEmployee {

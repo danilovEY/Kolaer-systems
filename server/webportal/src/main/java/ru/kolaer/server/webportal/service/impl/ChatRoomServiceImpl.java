@@ -19,6 +19,7 @@ import ru.kolaer.common.dto.kolaerweb.IdDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
 import ru.kolaer.common.dto.kolaerweb.kolchat.*;
 import ru.kolaer.server.core.service.AbstractDefaultService;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.exception.CustomHttpCodeException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.model.converter.ChatRoomConverter;
@@ -28,7 +29,6 @@ import ru.kolaer.server.webportal.model.dao.ChatRoomDao;
 import ru.kolaer.server.webportal.model.entity.chat.ChatMessageEntity;
 import ru.kolaer.server.webportal.model.entity.chat.ChatRoomEntity;
 import ru.kolaer.server.webportal.model.entity.general.AccountEntity;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 import ru.kolaer.server.webportal.service.AuthenticationService;
 import ru.kolaer.server.webportal.service.ChatRoomService;
 

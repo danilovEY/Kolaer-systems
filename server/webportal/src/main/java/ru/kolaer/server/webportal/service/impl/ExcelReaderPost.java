@@ -4,8 +4,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.kolaerweb.TypePostEnum;
+import ru.kolaer.server.employee.entity.PostEntity;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
-import ru.kolaer.server.webportal.model.entity.general.PostEntity;
 import ru.kolaer.server.webportal.service.ExcelReader;
 
 import java.util.List;

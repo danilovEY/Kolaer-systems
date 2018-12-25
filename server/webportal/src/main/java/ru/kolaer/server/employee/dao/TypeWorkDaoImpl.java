@@ -4,9 +4,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.model.dto.typework.FindTypeWorkRequest;
 import ru.kolaer.server.webportal.model.dto.typework.TypeWorkSortType;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
 import ru.kolaer.server.webportal.model.entity.typework.TypeWorkEntity;
 
 import javax.persistence.EntityManagerFactory;

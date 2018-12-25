@@ -7,11 +7,11 @@ import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.employee.dao.DepartmentDao;
+import ru.kolaer.server.employee.entity.DepartmentEntity;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
 import ru.kolaer.server.webportal.model.dto.department.DepartmentRequestDto;
 import ru.kolaer.server.webportal.model.dto.department.FindDepartmentPageRequest;
-import ru.kolaer.server.webportal.model.entity.general.DepartmentEntity;
 
 import java.util.List;
 import java.util.Optional;

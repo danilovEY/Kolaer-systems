@@ -3,6 +3,7 @@ package ru.kolaer.server.webportal.model.entity.general;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.model.entity.BaseEntity;
 
 import javax.persistence.*;

@@ -15,13 +15,13 @@ import ru.kolaer.server.core.converter.DateTimeConverter;
 import ru.kolaer.server.employee.dao.DepartmentDao;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.dao.PostDao;
+import ru.kolaer.server.employee.entity.DepartmentEntity;
+import ru.kolaer.server.employee.entity.EmployeeEntity;
+import ru.kolaer.server.employee.entity.PostEntity;
 import ru.kolaer.server.webportal.exception.NotFoundDataException;
 import ru.kolaer.server.webportal.model.dao.VacationDao;
 import ru.kolaer.server.webportal.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.webportal.model.dto.vacation.GenerateReportExportRequest;
-import ru.kolaer.server.webportal.model.entity.general.DepartmentEntity;
-import ru.kolaer.server.webportal.model.entity.general.EmployeeEntity;
-import ru.kolaer.server.webportal.model.entity.general.PostEntity;
 import ru.kolaer.server.webportal.model.entity.vacation.VacationEntity;
 import ru.kolaer.server.webportal.service.UploadFileService;
 

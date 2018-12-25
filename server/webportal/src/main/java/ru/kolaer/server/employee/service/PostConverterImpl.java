@@ -2,7 +2,7 @@ package ru.kolaer.server.employee.service;
 
 import org.springframework.stereotype.Service;
 import ru.kolaer.common.dto.post.PostDto;
-import ru.kolaer.server.webportal.model.entity.general.PostEntity;
+import ru.kolaer.server.employee.entity.PostEntity;
 
 /**
  * Created by danilovey on 09.10.2017.
