@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
+import ru.kolaer.server.account.dao.AccountDao;
+import ru.kolaer.server.account.service.AccountConverter;
+import ru.kolaer.server.core.exception.ForbiddenException;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.service.EmployeeConverter;
-import ru.kolaer.server.webportal.exception.ForbiddenException;
-import ru.kolaer.server.webportal.model.converter.AccountConverter;
-import ru.kolaer.server.webportal.model.dao.AccountDao;
 import ru.kolaer.server.webportal.service.AuthenticationService;
 
 import javax.annotation.PreDestroy;

@@ -3,7 +3,7 @@ package ru.kolaer.server.webportal.model.dto.queue;
 import lombok.Data;
 import ru.kolaer.common.dto.BaseDto;
 import ru.kolaer.common.dto.auth.AccountDto;
-import ru.kolaer.server.webportal.model.entity.queue.QueueType;
+import ru.kolaer.server.queue.model.entity.QueueType;
 
 import java.time.LocalDateTime;
 

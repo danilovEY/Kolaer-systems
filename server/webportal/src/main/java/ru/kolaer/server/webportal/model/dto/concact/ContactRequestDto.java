@@ -1,7 +1,7 @@
 package ru.kolaer.server.webportal.model.dto.concact;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.contact.ContactType;
+import ru.kolaer.server.contact.model.entity.ContactType;
 
 @Data
 public class ContactRequestDto {

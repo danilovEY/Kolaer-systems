@@ -2,8 +2,8 @@ package ru.kolaer.server.employee.dao;
 
 
 import ru.kolaer.server.core.dao.DefaultDao;
-import ru.kolaer.server.employee.entity.DepartmentEntity;
-import ru.kolaer.server.webportal.model.dto.department.FindDepartmentPageRequest;
+import ru.kolaer.server.employee.model.entity.DepartmentEntity;
+import ru.kolaer.server.employee.model.request.FindDepartmentPageRequest;
 
 import java.util.List;
 

@@ -15,15 +15,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.common.dto.post.PostDto;
+import ru.kolaer.server.employee.model.request.EmployeeFilter;
+import ru.kolaer.server.employee.model.request.EmployeeSort;
 import ru.kolaer.server.employee.service.EmployeeService;
+import ru.kolaer.server.upload.service.UploadFileService;
 import ru.kolaer.server.webportal.model.dto.FilterType;
 import ru.kolaer.server.webportal.model.dto.ResultUpdate;
 import ru.kolaer.server.webportal.model.dto.SortType;
-import ru.kolaer.server.webportal.model.dto.employee.EmployeeFilter;
-import ru.kolaer.server.webportal.model.dto.employee.EmployeeSort;
 import ru.kolaer.server.webportal.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.webportal.service.UpdatableEmployeeService;
-import ru.kolaer.server.webportal.service.UploadFileService;
 
 import javax.annotation.PostConstruct;
 import java.io.File;

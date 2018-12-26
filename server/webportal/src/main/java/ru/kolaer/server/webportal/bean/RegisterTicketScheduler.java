@@ -7,9 +7,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import ru.kolaer.server.webportal.model.dto.ticket.SendTicketDto;
+import ru.kolaer.server.ticket.model.dto.SendTicketDto;
+import ru.kolaer.server.upload.service.UploadFileService;
 import ru.kolaer.server.webportal.model.dto.upload.UploadFileDto;
-import ru.kolaer.server.webportal.service.UploadFileService;
 
 import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;

@@ -1,8 +1,8 @@
 package ru.kolaer.server.employee.dao;
 
 import ru.kolaer.server.core.dao.DefaultDao;
-import ru.kolaer.server.employee.entity.PostEntity;
-import ru.kolaer.server.webportal.model.dto.post.FindPostPageRequest;
+import ru.kolaer.server.employee.model.entity.PostEntity;
+import ru.kolaer.server.employee.model.request.FindPostPageRequest;
 
 import java.util.List;
 

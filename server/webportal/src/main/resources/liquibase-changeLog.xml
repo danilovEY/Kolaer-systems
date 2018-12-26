@@ -18,8 +18,6 @@
 
     <include file="classpath:SQL/20-upload-file-table.xml"/>
 
-    <include file="classpath:SQL/7-passport-table.xml"/>
-
     <include file="classpath:SQL/10-password-history-table.xml"/>
     <include file="classpath:SQL/9-password-repository-table.xml"/>
     <include file="classpath:SQL/21-password-repository-share-table.xml"/>

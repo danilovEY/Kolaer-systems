@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.server.webportal.exception.UserIsBlockException;
-import ru.kolaer.server.webportal.model.dao.AccountDao;
-import ru.kolaer.server.webportal.model.entity.general.AccountEntity;
+import ru.kolaer.server.account.dao.AccountDao;
+import ru.kolaer.server.account.model.entity.AccountEntity;
+import ru.kolaer.server.core.exception.UserIsBlockException;
 
 import java.util.Optional;
 import java.util.stream.Collectors;

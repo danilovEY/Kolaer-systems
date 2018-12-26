@@ -3,8 +3,8 @@ package ru.kolaer.server.webportal.service.impl;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import ru.kolaer.server.employee.entity.DepartmentEntity;
-import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.core.exception.UnexpectedRequestParams;
+import ru.kolaer.server.employee.model.entity.DepartmentEntity;
 import ru.kolaer.server.webportal.service.ExcelReader;
 
 import java.util.List;

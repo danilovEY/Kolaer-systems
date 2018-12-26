@@ -3,7 +3,7 @@ package ru.kolaer.server.employee.service;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.server.core.service.DefaultService;
-import ru.kolaer.server.webportal.model.dto.typework.FindTypeWorkRequest;
+import ru.kolaer.server.employee.model.request.FindTypeWorkRequest;
 
 public interface TypeWorkService extends DefaultService<TypeWorkDto> {
 

@@ -3,8 +3,8 @@ package ru.kolaer.server.employee.service;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.server.core.service.DefaultService;
-import ru.kolaer.server.webportal.model.dto.department.DepartmentRequestDto;
-import ru.kolaer.server.webportal.model.dto.department.FindDepartmentPageRequest;
+import ru.kolaer.server.employee.model.dto.DepartmentRequestDto;
+import ru.kolaer.server.employee.model.request.FindDepartmentPageRequest;
 
 /**
  * Created by danilovey on 12.09.2016.

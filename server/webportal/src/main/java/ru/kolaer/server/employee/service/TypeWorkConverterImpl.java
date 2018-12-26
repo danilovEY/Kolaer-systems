@@ -2,7 +2,7 @@ package ru.kolaer.server.employee.service;
 
 import org.springframework.stereotype.Service;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
-import ru.kolaer.server.webportal.model.entity.typework.TypeWorkEntity;
+import ru.kolaer.server.employee.model.entity.TypeWorkEntity;
 
 @Service
 public class TypeWorkConverterImpl implements TypeWorkConverter {

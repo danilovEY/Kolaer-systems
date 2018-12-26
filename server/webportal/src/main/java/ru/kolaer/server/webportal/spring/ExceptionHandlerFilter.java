@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.kolaer.common.dto.error.ServerExceptionMessage;
-import ru.kolaer.server.webportal.exception.UserIsBlockException;
+import ru.kolaer.server.core.exception.UserIsBlockException;
 import ru.kolaer.server.webportal.service.ExceptionHandlerService;
 
 import javax.servlet.FilterChain;

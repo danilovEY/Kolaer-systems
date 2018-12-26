@@ -18,6 +18,7 @@ dependencies {
         exclude module: 'spring-aop'
         exclude module: 'spring-context'
     }
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.7"
     compile "org.apache.felix:org.apache.felix.framework:5.4.0"
     compile "org.controlsfx:controlsfx:8.40.11"
     compileOnly "org.projectlombok:lombok:1.16.18"

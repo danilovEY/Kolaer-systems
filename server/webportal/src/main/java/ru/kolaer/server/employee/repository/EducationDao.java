@@ -1,7 +1,7 @@
 package ru.kolaer.server.employee.repository;
 
 import ru.kolaer.server.core.repository.BaseRepository;
-import ru.kolaer.server.webportal.model.entity.education.EducationEntity;
+import ru.kolaer.server.employee.model.entity.EducationEntity;
 
 import java.util.List;
 

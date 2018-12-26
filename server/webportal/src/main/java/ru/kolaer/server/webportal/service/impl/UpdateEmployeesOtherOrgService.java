@@ -11,10 +11,10 @@ import org.w3c.dom.NodeList;
 import ru.kolaer.common.dto.error.ErrorCode;
 import ru.kolaer.common.dto.kolaerweb.EnumCategory;
 import ru.kolaer.common.dto.kolaerweb.EnumGender;
-import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
-import ru.kolaer.server.webportal.model.dao.EmployeeOtherOrganizationDao;
+import ru.kolaer.server.core.exception.UnexpectedRequestParams;
+import ru.kolaer.server.otheremployee.dao.EmployeeOtherOrganizationDao;
+import ru.kolaer.server.otheremployee.model.entity.EmployeeOtherOrganizationEntity;
 import ru.kolaer.server.webportal.model.dto.holiday.HistoryChangeDto;
-import ru.kolaer.server.webportal.model.entity.birthday.EmployeeOtherOrganizationEntity;
 import ru.kolaer.server.webportal.service.UpdateEmployeesService;
 
 import javax.xml.parsers.DocumentBuilder;

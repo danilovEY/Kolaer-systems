@@ -7,12 +7,12 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
+import ru.kolaer.server.employee.model.dto.DepartmentRequestDto;
+import ru.kolaer.server.employee.model.request.DepartmentFilter;
+import ru.kolaer.server.employee.model.request.DepartmentSort;
+import ru.kolaer.server.employee.model.request.FindDepartmentPageRequest;
 import ru.kolaer.server.employee.service.DepartmentService;
 import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.dto.department.DepartmentFilter;
-import ru.kolaer.server.webportal.model.dto.department.DepartmentRequestDto;
-import ru.kolaer.server.webportal.model.dto.department.DepartmentSort;
-import ru.kolaer.server.webportal.model.dto.department.FindDepartmentPageRequest;
 
 /**
  * Created by danilovey on 30.11.2016.

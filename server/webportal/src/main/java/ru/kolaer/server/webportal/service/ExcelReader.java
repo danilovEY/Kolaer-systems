@@ -4,7 +4,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 
 import java.util.Date;
 import java.util.List;

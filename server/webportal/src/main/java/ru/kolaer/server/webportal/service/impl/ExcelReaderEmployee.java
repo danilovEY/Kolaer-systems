@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.kolaerweb.EnumCategory;
 import ru.kolaer.common.dto.kolaerweb.EnumGender;
-import ru.kolaer.server.employee.entity.EmployeeEntity;
-import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
+import ru.kolaer.server.core.exception.UnexpectedRequestParams;
+import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.service.ExcelReader;
 
 import java.util.Date;

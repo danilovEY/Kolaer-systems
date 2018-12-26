@@ -1,8 +1,8 @@
 package ru.kolaer.server.employee.dao;
 
 import ru.kolaer.server.core.dao.DefaultDao;
-import ru.kolaer.server.webportal.model.dto.typework.FindTypeWorkRequest;
-import ru.kolaer.server.webportal.model.entity.typework.TypeWorkEntity;
+import ru.kolaer.server.employee.model.entity.TypeWorkEntity;
+import ru.kolaer.server.employee.model.request.FindTypeWorkRequest;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package ru.kolaer.server.employee.repository;
 
 import ru.kolaer.server.core.repository.BaseRepository;
-import ru.kolaer.server.employee.entity.PunishmentEntity;
+import ru.kolaer.server.employee.model.entity.PunishmentEntity;
 
 import java.util.List;
 

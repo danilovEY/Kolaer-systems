@@ -6,7 +6,7 @@ import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.common.dto.post.PostDto;
-import ru.kolaer.server.employee.entity.EmployeeEntity;
+import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.webportal.service.impl.UtilService;
 
 import java.util.*;

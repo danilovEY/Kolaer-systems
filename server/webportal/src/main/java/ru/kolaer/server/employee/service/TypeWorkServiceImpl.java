@@ -5,11 +5,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
+import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.employee.dao.TypeWorkDao;
-import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
-import ru.kolaer.server.webportal.model.dto.typework.FindTypeWorkRequest;
-import ru.kolaer.server.webportal.model.entity.typework.TypeWorkEntity;
+import ru.kolaer.server.employee.model.entity.TypeWorkEntity;
+import ru.kolaer.server.employee.model.request.FindTypeWorkRequest;
 
 import java.util.List;
 

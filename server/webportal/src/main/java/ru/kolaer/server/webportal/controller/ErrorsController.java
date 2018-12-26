@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import ru.kolaer.common.dto.error.ServerExceptionMessage;
-import ru.kolaer.server.webportal.exception.*;
+import ru.kolaer.server.core.exception.*;
 import ru.kolaer.server.webportal.service.ExceptionHandlerService;
 
 import javax.servlet.http.HttpServletRequest;

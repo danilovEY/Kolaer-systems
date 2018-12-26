@@ -29,7 +29,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import ru.kolaer.server.webportal.model.dao.AccountDao;
+import ru.kolaer.server.account.dao.AccountDao;
 import ru.kolaer.server.webportal.security.AuthenticationTokenProcessingFilter;
 import ru.kolaer.server.webportal.security.SecurityMetadataSourceFilter;
 import ru.kolaer.server.webportal.security.UserDetailsServiceImpl;

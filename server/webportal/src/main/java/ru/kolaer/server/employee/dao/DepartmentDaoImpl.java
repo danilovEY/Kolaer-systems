@@ -5,9 +5,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.error.ErrorCode;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
-import ru.kolaer.server.employee.entity.DepartmentEntity;
-import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
-import ru.kolaer.server.webportal.model.dto.department.FindDepartmentPageRequest;
+import ru.kolaer.server.core.exception.UnexpectedRequestParams;
+import ru.kolaer.server.employee.model.entity.DepartmentEntity;
+import ru.kolaer.server.employee.model.request.FindDepartmentPageRequest;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.HashMap;

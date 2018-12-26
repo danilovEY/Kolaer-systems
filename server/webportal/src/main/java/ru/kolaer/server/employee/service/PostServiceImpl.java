@@ -5,13 +5,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.post.PostDto;
+import ru.kolaer.server.core.exception.NotFoundDataException;
+import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.employee.dao.PostDao;
-import ru.kolaer.server.employee.entity.PostEntity;
-import ru.kolaer.server.webportal.exception.NotFoundDataException;
-import ru.kolaer.server.webportal.exception.UnexpectedRequestParams;
-import ru.kolaer.server.webportal.model.dto.post.FindPostPageRequest;
-import ru.kolaer.server.webportal.model.dto.post.PostRequestDto;
+import ru.kolaer.server.employee.model.dto.PostRequestDto;
+import ru.kolaer.server.employee.model.entity.PostEntity;
+import ru.kolaer.server.employee.model.request.FindPostPageRequest;
 
 import java.util.List;
 
