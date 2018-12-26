@@ -1,11 +1,13 @@
 package ru.kolaer.server.contact.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 import ru.kolaer.server.placement.model.entity.PlacementEntity;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "contact")
 @Data

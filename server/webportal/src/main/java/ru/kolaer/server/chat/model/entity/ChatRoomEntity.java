@@ -1,6 +1,7 @@
 package ru.kolaer.server.chat.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * Created by danilovey on 01.02.2018.
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "chat_room")

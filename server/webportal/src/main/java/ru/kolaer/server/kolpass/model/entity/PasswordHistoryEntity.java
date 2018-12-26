@@ -1,6 +1,7 @@
 package ru.kolaer.server.kolpass.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 /**
  * Created by danilovey on 20.01.2017.
  */
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "password_history")
 @Data

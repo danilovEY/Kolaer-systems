@@ -1,6 +1,7 @@
 package ru.kolaer.server.ticket.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 import ru.kolaer.server.ticket.model.TypeOperation;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 /**
  * Created by danilovey on 30.11.2016.
  */
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "ticket")
 @Data

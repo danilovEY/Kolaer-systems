@@ -1,6 +1,7 @@
 package ru.kolaer.server.ticket.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 /**
  * Created by danilovey on 30.11.2016.
  */
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table(name = "ticket_register")

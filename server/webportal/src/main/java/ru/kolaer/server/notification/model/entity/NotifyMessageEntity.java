@@ -1,6 +1,7 @@
 package ru.kolaer.server.notification.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.Date;
 /**
  * Created by danilovey on 18.08.2016.
  */
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "notification")
 @Data

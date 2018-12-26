@@ -2,6 +2,7 @@ package ru.kolaer.server.ticket.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 /**
  * Created by danilovey on 13.12.2016.
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

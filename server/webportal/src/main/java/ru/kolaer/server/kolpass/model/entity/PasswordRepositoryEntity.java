@@ -1,6 +1,7 @@
 package ru.kolaer.server.kolpass.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.server.account.model.entity.AccountEntity;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 /**
  * Created by danilovey on 20.01.2017.
  */
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "password_repository")
 @Data

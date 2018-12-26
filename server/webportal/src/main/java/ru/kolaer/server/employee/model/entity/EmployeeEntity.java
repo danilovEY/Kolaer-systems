@@ -2,6 +2,7 @@ package ru.kolaer.server.employee.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.common.dto.kolaerweb.EnumCategory;
 import ru.kolaer.common.dto.kolaerweb.EnumGender;
 import ru.kolaer.server.contact.model.entity.ContactEntity;
@@ -14,6 +15,7 @@ import java.util.Date;
  * Created by Danilov on 24.07.2016.
  * Структура сотрудника в БД.
  */
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "employee")
 @Data

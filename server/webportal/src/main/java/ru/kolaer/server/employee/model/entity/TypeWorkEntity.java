@@ -1,6 +1,7 @@
 package ru.kolaer.server.employee.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.Table;
 /**
  * Created by danilovey on 12.09.2016.
  */
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "type_work")
 @Data

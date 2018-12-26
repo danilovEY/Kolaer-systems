@@ -1,6 +1,7 @@
 package ru.kolaer.server.employee.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.common.dto.kolaerweb.TypePostEnum;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 /**
  * Created by danilovey on 24.01.2017.
  */
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "post")
 @Data

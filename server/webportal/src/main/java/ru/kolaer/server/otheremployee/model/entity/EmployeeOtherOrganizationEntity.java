@@ -1,6 +1,7 @@
 package ru.kolaer.server.otheremployee.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.common.dto.kolaerweb.EnumCategory;
 import ru.kolaer.common.dto.kolaerweb.EnumGender;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name="employee_other_organization")
 @Data

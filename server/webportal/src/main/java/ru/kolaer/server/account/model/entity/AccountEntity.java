@@ -1,6 +1,7 @@
 package ru.kolaer.server.account.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
  * Структура аккаунта в БД.
  */
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "account")
 @Data

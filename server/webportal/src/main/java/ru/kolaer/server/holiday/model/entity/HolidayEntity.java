@@ -1,6 +1,7 @@
 package ru.kolaer.server.holiday.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.common.dto.kolaerweb.TypeDay;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 /**
  * Created by danilovey on 31.10.2016.
  */
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "holiday")
 @Data

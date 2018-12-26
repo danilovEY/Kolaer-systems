@@ -1,6 +1,7 @@
 package ru.kolaer.server.core.model.entity.general;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.Table;
  * Created by danilovey on 28.07.2016.
  * Структура URl из БД.
  */
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "url_security")
 @Data

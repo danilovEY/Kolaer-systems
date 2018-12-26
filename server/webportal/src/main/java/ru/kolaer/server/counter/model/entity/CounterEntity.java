@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 /**
  * Created by danilovey on 25.08.2016.
  */
+@SuppressWarnings("ALL")
 @Entity
 @Table(name = "counter")
 @Data
