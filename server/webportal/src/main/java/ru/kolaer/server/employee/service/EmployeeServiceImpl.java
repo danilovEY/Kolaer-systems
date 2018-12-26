@@ -12,6 +12,7 @@ import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.core.service.AuthenticationService;
+import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.model.dto.EmployeeRequestDto;
 import ru.kolaer.server.employee.model.dto.UpdateTypeWorkEmployeeRequestDto;

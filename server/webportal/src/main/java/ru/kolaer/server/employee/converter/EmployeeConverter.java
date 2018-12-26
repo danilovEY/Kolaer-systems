@@ -1,4 +1,4 @@
-package ru.kolaer.server.employee.service;
+package ru.kolaer.server.employee.converter;
 
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.server.core.converter.BaseConverter;

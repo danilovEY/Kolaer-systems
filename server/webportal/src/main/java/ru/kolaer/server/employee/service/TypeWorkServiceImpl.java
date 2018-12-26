@@ -7,6 +7,7 @@ import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.service.AbstractDefaultService;
+import ru.kolaer.server.employee.converter.TypeWorkConverter;
 import ru.kolaer.server.employee.dao.TypeWorkDao;
 import ru.kolaer.server.employee.model.entity.TypeWorkEntity;
 import ru.kolaer.server.employee.model.request.FindTypeWorkRequest;

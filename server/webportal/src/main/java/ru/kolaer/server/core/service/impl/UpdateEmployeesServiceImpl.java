@@ -20,6 +20,7 @@ import ru.kolaer.server.core.model.entity.historychange.HistoryChangeEvent;
 import ru.kolaer.server.core.service.HistoryChangeService;
 import ru.kolaer.server.core.service.UpdatableEmployeeService;
 import ru.kolaer.server.core.service.UpdateEmployeesService;
+import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.DepartmentDao;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.dao.PostDao;
@@ -27,7 +28,6 @@ import ru.kolaer.server.employee.model.dto.ResultUpdateEmployeeDto;
 import ru.kolaer.server.employee.model.entity.DepartmentEntity;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.model.entity.PostEntity;
-import ru.kolaer.server.employee.service.EmployeeConverter;
 import ru.kolaer.server.upload.dao.UploadFileDao;
 import ru.kolaer.server.upload.model.entity.UploadFileEntity;
 

@@ -8,16 +8,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import ru.kolaer.common.dto.error.ErrorCode;
 import ru.kolaer.common.dto.error.ServerExceptionMessage;
 import ru.kolaer.server.core.exception.*;
 import ru.kolaer.server.core.service.ExceptionHandlerService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 /**
  * Created by danilovey on 10.11.2016.
@@ -49,6 +55,43 @@ public class ErrorsController /*extends ResponseEntityExceptionHandler*/ {
                                                                        ServerException exception) {
         return exceptionHandlerService.serverExceptionHandler(hRequest, exception);
     }
+
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    public @ResponseBody
+//    ServerExceptionMessage constraintViolationExceptionHandler(HttpServletRequest hRequest,
+//            ConstraintViolationException exception) {
+//        return exceptionHandlerService.defaultExceptionHandler(hRequest, exception);
+//    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public @ResponseBody ServerExceptionMessage handleValidationError(MethodArgumentNotValidException exception) {
+        BindingResult bindingResult = exception.getBindingResult();
+        List<FieldError> fieldErrors = new ArrayList<>(bindingResult.getFieldErrors());
+        if (bindingResult.hasGlobalErrors()) {
+            for (ObjectError error : bindingResult.getGlobalErrors()) {
+                fieldErrors.add(new FieldError(error.getObjectName(), error.getObjectName(), error.getDefaultMessage()));
+            }
+        }
+
+        Map<String, List<String>> map = this.fieldErrorsToMap(fieldErrors);
+
+        return new ServerExceptionMessage(ExceptionHandlerService.BAD_REQUEST_CODE, ErrorCode.INCORRECT_REQUEST_VALUE, "/root",
+                exception.getMessage(), null,
+                map,
+                new Date());
+    }
+
+    protected Map<String, List<String>> fieldErrorsToMap(List<FieldError> errors) {
+        Map<String, List<String>> fieldsErrors = new HashMap<>();
+        for (FieldError error : errors) {
+            List<String> fieldErrors = fieldsErrors.computeIfAbsent(error.getField(), s -> new ArrayList<>());
+            fieldErrors.add(error.getDefaultMessage());
+        }
+        return fieldsErrors;
+    }
+
+
 
     /**Перехват {@link DataIntegrityViolationException} на сервере.*/
     /*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

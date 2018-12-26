@@ -1,4 +1,4 @@
-package ru.kolaer.server.employee.service;
+package ru.kolaer.server.employee.converter;
 
 import org.springframework.stereotype.Service;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;

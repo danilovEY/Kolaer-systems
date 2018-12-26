@@ -1,4 +1,4 @@
-package ru.kolaer.server.employee.service;
+package ru.kolaer.server.employee.converter;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,6 +8,9 @@ import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.core.service.impl.UtilService;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
+import ru.kolaer.server.employee.service.DepartmentService;
+import ru.kolaer.server.employee.service.PostService;
+import ru.kolaer.server.employee.service.TypeWorkService;
 
 import java.util.*;
 import java.util.function.Function;

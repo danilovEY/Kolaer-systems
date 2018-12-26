@@ -13,8 +13,8 @@ import ru.kolaer.server.account.dao.AccountDao;
 import ru.kolaer.server.account.service.AccountConverter;
 import ru.kolaer.server.core.exception.ForbiddenException;
 import ru.kolaer.server.core.service.AuthenticationService;
+import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;
-import ru.kolaer.server.employee.service.EmployeeConverter;
 
 import javax.annotation.PreDestroy;
 import java.util.Optional;

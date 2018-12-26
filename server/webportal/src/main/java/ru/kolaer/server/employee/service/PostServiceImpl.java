@@ -8,6 +8,7 @@ import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.service.AbstractDefaultService;
+import ru.kolaer.server.employee.converter.PostConverter;
 import ru.kolaer.server.employee.dao.PostDao;
 import ru.kolaer.server.employee.model.dto.PostRequestDto;
 import ru.kolaer.server.employee.model.entity.PostEntity;

@@ -8,6 +8,7 @@ import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.service.AbstractDefaultService;
+import ru.kolaer.server.employee.converter.DepartmentConverter;
 import ru.kolaer.server.employee.dao.DepartmentDao;
 import ru.kolaer.server.employee.model.dto.DepartmentRequestDto;
 import ru.kolaer.server.employee.model.entity.DepartmentEntity;

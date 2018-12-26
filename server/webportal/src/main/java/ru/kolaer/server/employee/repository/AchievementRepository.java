@@ -7,6 +7,6 @@ import ru.kolaer.server.employee.model.entity.AchievementEntity;
 import java.util.List;
 
 @Repository
-public interface AchievementDao extends BaseRepository<AchievementEntity> {
+public interface AchievementRepository extends BaseRepository<AchievementEntity> {
     List<AchievementEntity> findByEmployeeId(long employeeId);
 }

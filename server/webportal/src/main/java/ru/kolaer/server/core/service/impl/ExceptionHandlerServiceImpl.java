@@ -25,7 +25,7 @@ public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
     @Override
     public ServerExceptionMessage defaultExceptionHandler(HttpServletRequest hRequest,
                                                           Exception exception) {
-        final String urlPath = this.logException(hRequest, exception);
+        String urlPath = this.logException(hRequest, exception);
 
         return new ServerExceptionMessage(SERVER_EXCEPTION_CODE, urlPath,
                 exception.getMessage(), ErrorCode.SERVER_ERROR);

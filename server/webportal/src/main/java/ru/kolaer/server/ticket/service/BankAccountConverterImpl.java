@@ -2,8 +2,8 @@ package ru.kolaer.server.ticket.service;
 
 import org.springframework.stereotype.Service;
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;
-import ru.kolaer.server.employee.service.EmployeeConverter;
 import ru.kolaer.server.ticket.model.dto.BankAccountDto;
 import ru.kolaer.server.ticket.model.entity.BankAccountEntity;
 

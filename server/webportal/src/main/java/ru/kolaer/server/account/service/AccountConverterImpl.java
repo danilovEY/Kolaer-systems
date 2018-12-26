@@ -10,9 +10,9 @@ import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.server.account.model.entity.AccountEntity;
 import ru.kolaer.server.contact.model.entity.ContactEntity;
 import ru.kolaer.server.core.service.impl.UtilService;
+import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
-import ru.kolaer.server.employee.service.EmployeeConverter;
 
 import java.util.*;
 import java.util.function.Function;
