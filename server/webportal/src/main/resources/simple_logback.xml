@@ -1,0 +1,40 @@
+<configuration>
+    <!--<include resource="org/springframework/boot/logging/logback/base.xml"/>-->
+    <!--<include resource="org/springframework/boot/logging/logback/file-appender.xml" />-->
+    <!--<logger name="org.springframework.web" level="TRACE"/>-->
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-25(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{36}.%method: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- <file>${jetty.home}/logs/webportal.log</file> -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>logs/%d{yyyy-MM-dd}_debug_webportal.log</fileNamePattern>
+
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%-25(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{36}.%method: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--<logger name="org.springframework" level="WARN" />-->
+    <!--<logger name="org.springframework.transaction" level="WARN" />-->
+
+    <!-- in order to debug some marshalling issues, this needs to be TRACE  <appender-ref ref="STDOUT" />-->
+    <!--<logger name="org.springframework.web.servlet.mvc" level="WARN" />-->
+    <!--<logger name="org.springframework.security.ldap" level="TRACE" />-->
+
+    <logger name="org.springframework.boot.autoconfigure" level="ERROR"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+
+</configuration>
