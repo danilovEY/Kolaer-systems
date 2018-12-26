@@ -1,6 +1,7 @@
 package ru.kolaer.server.counter.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.Column;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 /**
  * Created by danilovey on 25.08.2016.
  */
-@SuppressWarnings("ALL")
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "counter")
 @Data
