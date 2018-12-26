@@ -1,9 +1,9 @@
 package ru.kolaer.server.ticket.model.request;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.dto.EntityFieldName;
-import ru.kolaer.server.webportal.model.dto.SortParam;
-import ru.kolaer.server.webportal.model.dto.SortType;
+import ru.kolaer.server.core.model.dto.EntityFieldName;
+import ru.kolaer.server.core.model.dto.SortParam;
+import ru.kolaer.server.core.model.dto.SortType;
 
 @Data
 public class TicketSort implements SortParam {

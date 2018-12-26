@@ -27,8 +27,8 @@ import ru.kolaer.server.chat.model.entity.ChatRoomEntity;
 import ru.kolaer.server.core.exception.CustomHttpCodeException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.service.AbstractDefaultService;
+import ru.kolaer.server.core.service.AuthenticationService;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
-import ru.kolaer.server.webportal.service.AuthenticationService;
 
 import java.nio.charset.Charset;
 import java.security.MessageDigest;

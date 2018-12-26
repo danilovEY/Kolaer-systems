@@ -2,9 +2,9 @@ package ru.kolaer.server.core.service;
 
 import ru.kolaer.common.dto.BaseDto;
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.server.core.dto.PaginationRequest;
-import ru.kolaer.server.webportal.model.dto.FilterParam;
-import ru.kolaer.server.webportal.model.dto.SortParam;
+import ru.kolaer.server.core.model.dto.FilterParam;
+import ru.kolaer.server.core.model.dto.PaginationRequest;
+import ru.kolaer.server.core.model.dto.SortParam;
 
 import java.util.Collection;
 import java.util.List;

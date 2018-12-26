@@ -1,18 +1,16 @@
 package ru.kolaer.server.queue.model.entity;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "queue_target")
 @Data
-public class QueueTargetEntity implements BaseEntity {
-    @Id
-    @Column(name = "id", unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class QueueTargetEntity extends DefaultEntity {
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;

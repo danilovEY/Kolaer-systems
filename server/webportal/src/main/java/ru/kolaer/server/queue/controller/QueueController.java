@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
+import ru.kolaer.server.core.model.dto.queue.PageQueueRequest;
+import ru.kolaer.server.core.model.dto.queue.QueueRequestDto;
+import ru.kolaer.server.core.model.dto.queue.QueueScheduleDto;
+import ru.kolaer.server.core.model.dto.queue.QueueTargetDto;
+import ru.kolaer.server.core.service.AuthenticationService;
 import ru.kolaer.server.queue.service.QueueService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.dto.queue.PageQueueRequest;
-import ru.kolaer.server.webportal.model.dto.queue.QueueRequestDto;
-import ru.kolaer.server.webportal.model.dto.queue.QueueScheduleDto;
-import ru.kolaer.server.webportal.model.dto.queue.QueueTargetDto;
-import ru.kolaer.server.webportal.service.AuthenticationService;
 
 @RestController
 @RequestMapping(value = "/queue")

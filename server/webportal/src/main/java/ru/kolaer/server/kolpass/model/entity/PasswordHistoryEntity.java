@@ -1,9 +1,11 @@
 package ru.kolaer.server.kolpass.model.entity;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -12,12 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "password_history")
 @Data
-public class PasswordHistoryEntity implements BaseEntity {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PasswordHistoryEntity extends DefaultEntity {
 
     @Column(name = "login")
     private String login;

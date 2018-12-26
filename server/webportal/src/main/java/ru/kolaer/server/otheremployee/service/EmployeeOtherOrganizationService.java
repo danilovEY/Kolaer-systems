@@ -1,8 +1,8 @@
 package ru.kolaer.server.otheremployee.service;
 
 import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.server.core.service.BirthdayService;
 import ru.kolaer.server.core.service.DefaultService;
-import ru.kolaer.server.webportal.service.BirthdayService;
 
 import java.util.Date;
 import java.util.List;

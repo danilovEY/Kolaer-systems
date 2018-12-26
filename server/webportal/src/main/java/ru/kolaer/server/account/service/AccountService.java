@@ -2,11 +2,11 @@ package ru.kolaer.server.account.service;
 
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
+import ru.kolaer.server.core.model.dto.account.ChangePasswordDto;
+import ru.kolaer.server.core.model.dto.concact.ContactDto;
+import ru.kolaer.server.core.model.dto.concact.ContactRequestDto;
 import ru.kolaer.server.core.service.DefaultService;
-import ru.kolaer.server.webportal.model.dto.account.ChangePasswordDto;
-import ru.kolaer.server.webportal.model.dto.concact.ContactDto;
-import ru.kolaer.server.webportal.model.dto.concact.ContactRequestDto;
-import ru.kolaer.server.webportal.service.UpdatableEmployeeService;
+import ru.kolaer.server.core.service.UpdatableEmployeeService;
 
 /**
  * Created by danilovey on 09.08.2016.

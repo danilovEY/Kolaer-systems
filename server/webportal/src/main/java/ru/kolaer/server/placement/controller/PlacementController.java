@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.dto.Page;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
+import ru.kolaer.server.core.model.dto.placement.PlacementDto;
+import ru.kolaer.server.core.model.dto.placement.PlacementFilter;
+import ru.kolaer.server.core.model.dto.placement.PlacementSort;
 import ru.kolaer.server.placement.service.PlacementService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.dto.placement.PlacementDto;
-import ru.kolaer.server.webportal.model.dto.placement.PlacementFilter;
-import ru.kolaer.server.webportal.model.dto.placement.PlacementSort;
 
 
 @Api(tags = "Помещения")

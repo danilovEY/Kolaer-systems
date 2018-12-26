@@ -3,9 +3,11 @@ package ru.kolaer.server.kolpass.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Created by danilovey on 20.01.2017.
@@ -15,12 +17,7 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PasswordRepositoryShareEntity implements BaseEntity {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PasswordRepositoryShareEntity extends DefaultEntity {
 
     @Column(name = "account_id", nullable = false)
     private Long accountId;

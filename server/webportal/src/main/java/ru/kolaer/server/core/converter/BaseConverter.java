@@ -1,7 +1,7 @@
 package ru.kolaer.server.core.converter;
 
 import ru.kolaer.common.dto.BaseDto;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * Created by danilovey on 09.10.2017.
  */
-public interface BaseConverter<T extends BaseDto, K extends BaseEntity> {
+public interface BaseConverter<T extends BaseDto, K extends DefaultEntity> {
     K convertToModel(T dto);
     T convertToDto(K model);
 

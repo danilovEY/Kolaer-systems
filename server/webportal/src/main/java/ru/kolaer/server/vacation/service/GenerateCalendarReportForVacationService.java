@@ -11,13 +11,13 @@ import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.kolaer.server.core.exception.NotFoundDataException;
+import ru.kolaer.server.core.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.upload.service.UploadFileService;
 import ru.kolaer.server.vacation.model.dto.VacationReportCalendarDayDto;
 import ru.kolaer.server.vacation.model.dto.VacationReportCalendarEmployeeDto;
 import ru.kolaer.server.vacation.model.dto.VacationReportCalendarMonthDto;
 import ru.kolaer.server.vacation.model.dto.VacationReportCalendarYearDto;
 import ru.kolaer.server.vacation.model.request.GenerateReportCalendarRequest;
-import ru.kolaer.server.webportal.model.dto.upload.UploadFileDto;
 
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;

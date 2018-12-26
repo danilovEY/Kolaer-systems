@@ -3,8 +3,8 @@ package ru.kolaer.server.ticket.dao;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
+import ru.kolaer.server.core.model.dto.FilterValue;
 import ru.kolaer.server.ticket.model.entity.BankAccountEntity;
-import ru.kolaer.server.webportal.model.dto.FilterValue;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;

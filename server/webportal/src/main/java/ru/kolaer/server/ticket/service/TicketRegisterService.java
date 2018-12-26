@@ -1,6 +1,7 @@
 package ru.kolaer.server.ticket.service;
 
 import ru.kolaer.common.dto.Page;
+import ru.kolaer.server.core.model.dto.SortParam;
 import ru.kolaer.server.core.service.DefaultService;
 import ru.kolaer.server.ticket.model.dto.RequestTicketDto;
 import ru.kolaer.server.ticket.model.dto.TicketDto;
@@ -8,7 +9,6 @@ import ru.kolaer.server.ticket.model.dto.TicketRegisterDto;
 import ru.kolaer.server.ticket.model.request.GenerateTicketRegister;
 import ru.kolaer.server.ticket.model.request.ReportTicketsConfig;
 import ru.kolaer.server.ticket.model.request.TicketFilter;
-import ru.kolaer.server.webportal.model.dto.SortParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

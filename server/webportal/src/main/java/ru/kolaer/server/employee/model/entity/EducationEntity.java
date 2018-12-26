@@ -2,7 +2,7 @@ package ru.kolaer.server.employee.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.kolaer.server.core.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Table(name = "education")
 @Getter
 @Setter
-public class EducationEntity extends BaseEntity {
+public class EducationEntity extends DefaultEntity {
 
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;

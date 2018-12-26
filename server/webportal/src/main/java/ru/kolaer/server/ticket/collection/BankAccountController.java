@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.employee.model.request.EmployeeFilter;
 import ru.kolaer.server.employee.model.request.EmployeeSort;
 import ru.kolaer.server.ticket.model.dto.BankAccountDto;
@@ -15,7 +16,6 @@ import ru.kolaer.server.ticket.model.request.BankAccountFilter;
 import ru.kolaer.server.ticket.model.request.BankAccountRequest;
 import ru.kolaer.server.ticket.model.request.BankAccountSort;
 import ru.kolaer.server.ticket.service.BankAccountService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 
 /**
  * Created by danilovey on 03.10.2017.

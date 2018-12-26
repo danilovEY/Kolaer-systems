@@ -2,7 +2,7 @@ package ru.kolaer.server.kolpass.model.entity;
 
 import lombok.Data;
 import ru.kolaer.server.account.model.entity.AccountEntity;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.*;
 
@@ -12,12 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "password_repository")
 @Data
-public class PasswordRepositoryEntity implements BaseEntity {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PasswordRepositoryEntity extends DefaultEntity {
 
     @Column(name = "name", nullable = false)
     private String name;

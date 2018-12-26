@@ -10,9 +10,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import ru.kolaer.server.webportal.config.SpringSecurityConfig;
-import ru.kolaer.server.webportal.config.WebportalContext;
-import ru.kolaer.server.webportal.service.UpdateEmployeesService;
+import ru.kolaer.server.core.config.SpringSecurityConfig;
+import ru.kolaer.server.core.config.WebportalContext;
+import ru.kolaer.server.core.service.UpdateEmployeesService;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;

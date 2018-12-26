@@ -2,7 +2,7 @@ package ru.kolaer.server.employee.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.kolaer.server.core.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "military_registration")
 @Getter
 @Setter
-public class MilitaryRegistrationEntity extends BaseEntity {
+public class MilitaryRegistrationEntity extends DefaultEntity {
 
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;

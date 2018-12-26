@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
+import ru.kolaer.server.core.model.dto.*;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.service.EmployeeConverter;
@@ -13,7 +14,6 @@ import ru.kolaer.server.ticket.dao.BankAccountDao;
 import ru.kolaer.server.ticket.model.dto.BankAccountDto;
 import ru.kolaer.server.ticket.model.entity.BankAccountEntity;
 import ru.kolaer.server.ticket.model.request.BankAccountRequest;
-import ru.kolaer.server.webportal.model.dto.*;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,8 +1,8 @@
 package ru.kolaer.server.upload.service;
 
 import org.springframework.stereotype.Service;
+import ru.kolaer.server.core.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.upload.model.entity.UploadFileEntity;
-import ru.kolaer.server.webportal.model.dto.upload.UploadFileDto;
 
 @Service
 public class UploadFileConverterImpl implements UploadFileConverter {

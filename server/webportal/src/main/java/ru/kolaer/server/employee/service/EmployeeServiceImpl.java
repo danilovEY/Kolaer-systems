@@ -11,12 +11,12 @@ import ru.kolaer.server.core.exception.ForbiddenException;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.service.AbstractDefaultService;
+import ru.kolaer.server.core.service.AuthenticationService;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.model.dto.EmployeeRequestDto;
 import ru.kolaer.server.employee.model.dto.UpdateTypeWorkEmployeeRequestDto;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
-import ru.kolaer.server.webportal.service.AuthenticationService;
 
 import java.util.Date;
 import java.util.List;

@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.server.account.service.AccountService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.dto.account.AccountFilter;
-import ru.kolaer.server.webportal.model.dto.account.AccountSort;
-import ru.kolaer.server.webportal.service.AuthenticationService;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
+import ru.kolaer.server.core.model.dto.account.AccountFilter;
+import ru.kolaer.server.core.model.dto.account.AccountSort;
+import ru.kolaer.server.core.service.AuthenticationService;
 
 /**
  * Created by danilovey on 31.08.2016.

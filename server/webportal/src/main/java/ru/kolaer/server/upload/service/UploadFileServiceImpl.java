@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
+import ru.kolaer.server.core.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.upload.dao.UploadFileDao;
 import ru.kolaer.server.upload.model.entity.UploadFileEntity;
-import ru.kolaer.server.webportal.model.dto.upload.UploadFileDto;
 
 import javax.annotation.PostConstruct;
 import javax.mail.internet.MimeUtility;

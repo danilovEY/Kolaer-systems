@@ -1,9 +1,9 @@
 package ru.kolaer.server.queue.dao;
 
 import ru.kolaer.server.core.dao.DefaultDao;
+import ru.kolaer.server.core.model.dto.queue.PageQueueRequest;
 import ru.kolaer.server.queue.model.entity.QueueRequestEntity;
 import ru.kolaer.server.queue.model.entity.QueueTargetEntity;
-import ru.kolaer.server.webportal.model.dto.queue.PageQueueRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;

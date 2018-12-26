@@ -10,10 +10,10 @@ import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.kolpass.model.request.RepositoryPasswordFilter;
 import ru.kolaer.server.kolpass.model.request.RepositoryPasswordSort;
 import ru.kolaer.server.kolpass.service.PasswordRepositoryService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 
 import java.util.List;
 

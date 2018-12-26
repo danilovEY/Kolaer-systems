@@ -7,8 +7,8 @@ import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.server.account.dao.AccountDao;
 import ru.kolaer.server.account.service.AccountConverter;
+import ru.kolaer.server.core.service.AuthenticationService;
 import ru.kolaer.server.kolpass.model.entity.PasswordRepositoryEntity;
-import ru.kolaer.server.webportal.service.AuthenticationService;
 
 import java.util.*;
 import java.util.function.Function;

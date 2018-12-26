@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.upload.service.UploadFileService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 
 import javax.servlet.http.HttpServletResponse;
 

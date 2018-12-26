@@ -2,8 +2,8 @@ package ru.kolaer.server.vacation.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,11 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "vacation")
 @Data
-public class VacationEntity implements BaseEntity{
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class VacationEntity extends DefaultEntity {
 
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;

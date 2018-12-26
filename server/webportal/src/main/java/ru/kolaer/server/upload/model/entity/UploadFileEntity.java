@@ -1,19 +1,17 @@
 package ru.kolaer.server.upload.model.entity;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Data
 @Table(name = "upload_file")
 @Entity
-public class UploadFileEntity implements BaseEntity {
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class UploadFileEntity extends DefaultEntity {
 
     @Column(name = "path", unique = true, nullable = false)
     private String path;

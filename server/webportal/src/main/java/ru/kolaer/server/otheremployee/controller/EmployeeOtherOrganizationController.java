@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.otheremployee.service.EmployeeOtherOrganizationService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

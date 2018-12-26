@@ -3,7 +3,7 @@ package ru.kolaer.server.otheremployee.model.entity;
 import lombok.Data;
 import ru.kolaer.common.dto.kolaerweb.EnumCategory;
 import ru.kolaer.common.dto.kolaerweb.EnumGender;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,11 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name="employee_other_organization")
 @Data
-public class EmployeeOtherOrganizationEntity implements BaseEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long id;
+public class EmployeeOtherOrganizationEntity extends DefaultEntity {
 
 	@Column(name = "birthday")
 	@Temporal(TemporalType.DATE)

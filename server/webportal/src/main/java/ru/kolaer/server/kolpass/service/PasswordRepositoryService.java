@@ -5,9 +5,9 @@ import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.server.core.service.DefaultService;
+import ru.kolaer.server.core.service.UpdatableEmployeeService;
 import ru.kolaer.server.kolpass.model.request.RepositoryPasswordFilter;
 import ru.kolaer.server.kolpass.model.request.RepositoryPasswordSort;
-import ru.kolaer.server.webportal.service.UpdatableEmployeeService;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package ru.kolaer.server.account.model.entity;
 
 import lombok.Data;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
 
 import javax.persistence.*;
 
@@ -14,12 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "account")
 @Data
-public class AccountEntity implements BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class AccountEntity extends DefaultEntity {
 
     @Column(name = "employee_id")
     private Long employeeId;

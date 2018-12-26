@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.server.core.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.service.EmployeeConverter;
 import ru.kolaer.server.ticket.dao.BankAccountDao;
@@ -14,7 +15,6 @@ import ru.kolaer.server.ticket.model.entity.BankAccountEntity;
 import ru.kolaer.server.ticket.model.entity.TicketEntity;
 import ru.kolaer.server.ticket.model.entity.TicketRegisterEntity;
 import ru.kolaer.server.upload.service.UploadFileService;
-import ru.kolaer.server.webportal.model.dto.upload.UploadFileDto;
 
 import java.util.*;
 import java.util.function.Function;

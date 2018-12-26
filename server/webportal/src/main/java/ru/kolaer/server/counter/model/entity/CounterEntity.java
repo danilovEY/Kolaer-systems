@@ -1,9 +1,11 @@
 package ru.kolaer.server.counter.model.entity;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -12,12 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "counter")
 @Data
-public class CounterEntity implements BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class CounterEntity extends DefaultEntity {
 
     @Column(name = "counter_start", nullable = false)
     private LocalDateTime start;

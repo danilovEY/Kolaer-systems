@@ -7,13 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
+import ru.kolaer.server.core.bean.RegisterTicketScheduler;
 import ru.kolaer.server.ticket.model.dto.RequestTicketDto;
 import ru.kolaer.server.ticket.model.dto.TicketDto;
 import ru.kolaer.server.ticket.model.dto.TicketRegisterDto;
 import ru.kolaer.server.ticket.model.request.*;
 import ru.kolaer.server.ticket.service.TicketRegisterService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.bean.RegisterTicketScheduler;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

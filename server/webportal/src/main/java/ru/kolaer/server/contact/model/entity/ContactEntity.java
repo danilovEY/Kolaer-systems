@@ -1,19 +1,15 @@
 package ru.kolaer.server.contact.model.entity;
 
 import lombok.Data;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 import ru.kolaer.server.placement.model.entity.PlacementEntity;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "contact")
 @Data
-public class ContactEntity implements BaseEntity {
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ContactEntity extends DefaultEntity {
 
     @Column(name = "email")
     private String email;

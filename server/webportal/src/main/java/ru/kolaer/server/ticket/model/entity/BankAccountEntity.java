@@ -3,8 +3,8 @@ package ru.kolaer.server.ticket.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
 
 import javax.persistence.*;
 
@@ -16,11 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "bank_account")
-public class BankAccountEntity implements BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class BankAccountEntity extends DefaultEntity {
 
     @Column(name = "employee_id")
     private Long employeeId;

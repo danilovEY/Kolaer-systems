@@ -9,9 +9,9 @@ import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.server.contact.model.entity.ContactType;
 import ru.kolaer.server.contact.service.ContactService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
-import ru.kolaer.server.webportal.model.dto.concact.ContactDto;
-import ru.kolaer.server.webportal.model.dto.concact.ContactRequestDto;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
+import ru.kolaer.server.core.model.dto.concact.ContactDto;
+import ru.kolaer.server.core.model.dto.concact.ContactRequestDto;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package ru.kolaer.server.queue.model.entity;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,11 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "queue_request")
 @Data
-public class QueueRequestEntity implements BaseEntity {
-    @Id
-    @Column(name = "id", unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class QueueRequestEntity extends DefaultEntity {
 
     @Column(name = "queue_target_id", nullable = false)
     private Long queueTargetId;

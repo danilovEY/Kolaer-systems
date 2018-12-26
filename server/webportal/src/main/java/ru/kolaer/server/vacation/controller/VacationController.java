@@ -7,11 +7,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.vacation.model.dto.*;
 import ru.kolaer.server.vacation.model.request.*;
 import ru.kolaer.server.vacation.service.GenerateCalendarReportForVacationService;
 import ru.kolaer.server.vacation.service.VacationService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

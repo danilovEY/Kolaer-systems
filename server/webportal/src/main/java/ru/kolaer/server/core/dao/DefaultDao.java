@@ -2,10 +2,10 @@ package ru.kolaer.server.core.dao;
 
 import lombok.NonNull;
 import org.hibernate.Session;
-import ru.kolaer.server.core.dto.PaginationRequest;
-import ru.kolaer.server.webportal.model.dto.FilterValue;
-import ru.kolaer.server.webportal.model.dto.SortField;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.dto.FilterValue;
+import ru.kolaer.server.core.model.dto.PaginationRequest;
+import ru.kolaer.server.core.model.dto.SortField;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * Created by Danilov on 24.07.2016.
  * Дао с методами входящие в большенство других дао.
  */
-public interface DefaultDao<T extends BaseEntity> {
+public interface DefaultDao<T extends DefaultEntity> {
     /**Получить все объекты.*/
     List<T> findAll();
     List<T> findAll(Integer number, Integer pageSize);

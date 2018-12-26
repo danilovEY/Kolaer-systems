@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.server.account.dao.AccountDao;
 import ru.kolaer.server.account.service.AccountConverter;
+import ru.kolaer.server.core.model.dto.queue.QueueRequestDto;
+import ru.kolaer.server.core.model.dto.queue.QueueTargetDto;
 import ru.kolaer.server.queue.model.entity.QueueRequestEntity;
 import ru.kolaer.server.queue.model.entity.QueueTargetEntity;
 import ru.kolaer.server.queue.model.entity.QueueType;
-import ru.kolaer.server.webportal.model.dto.queue.QueueRequestDto;
-import ru.kolaer.server.webportal.model.dto.queue.QueueTargetDto;
 
 import java.util.*;
 import java.util.function.Function;

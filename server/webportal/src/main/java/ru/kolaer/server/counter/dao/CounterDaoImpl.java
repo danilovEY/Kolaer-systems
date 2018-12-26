@@ -2,8 +2,8 @@ package ru.kolaer.server.counter.dao;
 
 import org.springframework.stereotype.Repository;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
+import ru.kolaer.server.core.model.dto.counter.FindCounterRequest;
 import ru.kolaer.server.counter.model.entity.CounterEntity;
-import ru.kolaer.server.webportal.model.dto.counter.FindCounterRequest;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.HashMap;

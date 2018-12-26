@@ -7,10 +7,10 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
-import ru.kolaer.server.webportal.model.dto.FilterType;
-import ru.kolaer.server.webportal.model.dto.FilterValue;
-import ru.kolaer.server.webportal.model.dto.SortField;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.dto.FilterType;
+import ru.kolaer.server.core.model.dto.FilterValue;
+import ru.kolaer.server.core.model.dto.SortField;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaQuery;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * Created by danilovey on 05.10.2017.
  */
-public abstract class AbstractDefaultDao<T extends BaseEntity> implements DefaultDao<T> {
+public abstract class AbstractDefaultDao<T extends DefaultEntity> implements DefaultDao<T> {
     protected final String ENTITY_NAME = "entity";
     protected final SessionFactory sessionFactory;
     protected final Class<T> entityClass;

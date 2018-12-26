@@ -1,9 +1,11 @@
 package ru.kolaer.server.employee.model.entity;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Created by danilovey on 12.09.2016.
@@ -11,11 +13,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "type_work")
 @Data
-public class TypeWorkEntity implements BaseEntity {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class TypeWorkEntity extends DefaultEntity {
 
     @Column(name = "name")
     private String name;

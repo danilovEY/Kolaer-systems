@@ -2,7 +2,7 @@ package ru.kolaer.server.employee.model.entity;
 
 import lombok.Data;
 import ru.kolaer.common.dto.kolaerweb.TypePostEnum;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.*;
 
@@ -12,12 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "post")
 @Data
-public class PostEntity implements BaseEntity {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PostEntity extends DefaultEntity {
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;

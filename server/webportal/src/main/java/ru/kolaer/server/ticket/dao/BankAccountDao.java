@@ -1,8 +1,8 @@
 package ru.kolaer.server.ticket.dao;
 
 import ru.kolaer.server.core.dao.DefaultDao;
+import ru.kolaer.server.core.model.dto.FilterValue;
 import ru.kolaer.server.ticket.model.entity.BankAccountEntity;
-import ru.kolaer.server.webportal.model.dto.FilterValue;
 
 import java.util.List;
 import java.util.Map;

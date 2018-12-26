@@ -7,9 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.employee.model.request.FindTypeWorkRequest;
 import ru.kolaer.server.employee.service.TypeWorkService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 
 @RestController
 @RequestMapping(value = "/type-work")

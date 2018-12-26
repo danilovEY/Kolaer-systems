@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.dto.counter.CounterDto;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.counter.service.CounterService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 
 import java.util.List;
 

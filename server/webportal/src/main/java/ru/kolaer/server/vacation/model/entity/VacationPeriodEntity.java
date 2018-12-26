@@ -1,18 +1,16 @@
 package ru.kolaer.server.vacation.model.entity;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "vacation_period")
 @Data
-public class VacationPeriodEntity implements BaseEntity {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class VacationPeriodEntity extends DefaultEntity {
 
     @Column(name = "year", nullable = false)
     private int year;

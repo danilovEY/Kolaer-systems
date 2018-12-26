@@ -1,8 +1,8 @@
 package ru.kolaer.server.holiday.service;
 
 import org.springframework.stereotype.Component;
+import ru.kolaer.server.core.model.dto.holiday.HolidayDto;
 import ru.kolaer.server.holiday.model.entity.HolidayEntity;
-import ru.kolaer.server.webportal.model.dto.holiday.HolidayDto;
 
 @Component
 public class HolidayConverterImpl implements HolidayConverter {

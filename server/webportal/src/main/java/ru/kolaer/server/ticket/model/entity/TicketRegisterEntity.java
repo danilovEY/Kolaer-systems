@@ -1,10 +1,11 @@
 package ru.kolaer.server.ticket.model.entity;
 
 import lombok.Data;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -13,12 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Table(name = "ticket_register")
-public class TicketRegisterEntity implements Serializable, BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
+public class TicketRegisterEntity extends DefaultEntity {
 
     @Column(name = "close", nullable = false)
     private boolean close;

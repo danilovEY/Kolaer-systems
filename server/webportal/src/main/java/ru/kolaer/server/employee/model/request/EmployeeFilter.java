@@ -3,9 +3,9 @@ package ru.kolaer.server.employee.model.request;
 import lombok.Data;
 import ru.kolaer.common.dto.kolaerweb.EnumCategory;
 import ru.kolaer.common.dto.kolaerweb.EnumGender;
-import ru.kolaer.server.webportal.model.dto.EntityFieldName;
-import ru.kolaer.server.webportal.model.dto.FilterParam;
-import ru.kolaer.server.webportal.model.dto.FilterType;
+import ru.kolaer.server.core.model.dto.EntityFieldName;
+import ru.kolaer.server.core.model.dto.FilterParam;
+import ru.kolaer.server.core.model.dto.FilterType;
 
 import java.time.LocalDate;
 

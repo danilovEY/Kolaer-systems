@@ -3,8 +3,8 @@ package ru.kolaer.server.holiday.dao;
 import ru.kolaer.common.dto.kolaerweb.DateTimeJson;
 import ru.kolaer.common.dto.kolaerweb.Holiday;
 import ru.kolaer.server.core.dao.DefaultDao;
+import ru.kolaer.server.core.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.holiday.model.entity.HolidayEntity;
-import ru.kolaer.server.webportal.model.dto.holiday.FindHolidayRequest;
 
 import java.time.LocalDate;
 import java.util.List;

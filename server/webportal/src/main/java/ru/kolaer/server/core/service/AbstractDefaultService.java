@@ -7,9 +7,8 @@ import ru.kolaer.common.dto.BaseDto;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.server.core.converter.BaseConverter;
 import ru.kolaer.server.core.dao.DefaultDao;
-import ru.kolaer.server.core.dto.PaginationRequest;
-import ru.kolaer.server.webportal.model.dto.*;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.dto.*;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -19,7 +18,7 @@ import java.util.*;
  */
 @Slf4j
 public abstract class AbstractDefaultService<T extends BaseDto,
-        K extends BaseEntity,
+        K extends DefaultEntity,
         D extends DefaultDao<K>,
         C extends BaseConverter<T, K>> implements DefaultService<T> {
 

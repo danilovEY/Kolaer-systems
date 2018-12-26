@@ -2,9 +2,11 @@ package ru.kolaer.server.holiday.model.entity;
 
 import lombok.Data;
 import ru.kolaer.common.dto.kolaerweb.TypeDay;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 /**
@@ -13,11 +15,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "holiday")
 @Data
-public class HolidayEntity implements BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true)
-    private Long id;
+public class HolidayEntity extends DefaultEntity {
 
     @Column(name = "name", nullable = false)
     private String name;

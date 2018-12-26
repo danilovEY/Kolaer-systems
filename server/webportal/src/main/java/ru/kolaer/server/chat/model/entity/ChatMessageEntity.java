@@ -3,7 +3,7 @@ package ru.kolaer.server.chat.model.entity;
 import lombok.Data;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageType;
 import ru.kolaer.server.account.model.entity.AccountEntity;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,11 +15,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "chat_message")
-public class ChatMessageEntity implements BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class ChatMessageEntity extends DefaultEntity {
 
     @Column(name = "message", nullable = false, length = 4096)
     private String message;

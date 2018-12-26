@@ -5,7 +5,7 @@ import lombok.Data;
 import ru.kolaer.common.dto.kolaerweb.EnumCategory;
 import ru.kolaer.common.dto.kolaerweb.EnumGender;
 import ru.kolaer.server.contact.model.entity.ContactEntity;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,12 +17,7 @@ import java.util.Date;
 @Entity
 @Table(name = "employee")
 @Data
-public class EmployeeEntity implements BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class EmployeeEntity extends DefaultEntity {
 
     @Column(name = "personnel_number", length = 100, nullable = false, unique = true)
     private Long personnelNumber;

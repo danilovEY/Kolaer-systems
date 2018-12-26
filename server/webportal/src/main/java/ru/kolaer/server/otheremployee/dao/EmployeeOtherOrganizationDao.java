@@ -1,9 +1,9 @@
 package ru.kolaer.server.otheremployee.dao;
 
 
+import ru.kolaer.server.core.dao.BirthdayDao;
 import ru.kolaer.server.core.dao.DefaultDao;
 import ru.kolaer.server.otheremployee.model.entity.EmployeeOtherOrganizationEntity;
-import ru.kolaer.server.webportal.model.dao.BirthdayDao;
 
 import java.util.Date;
 import java.util.List;

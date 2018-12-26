@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.NotifyMessageDto;
+import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.notification.service.NotifyMessageService;
-import ru.kolaer.server.webportal.annotation.UrlDeclaration;
 
 /**
  * Created by danilovey on 18.08.2016.

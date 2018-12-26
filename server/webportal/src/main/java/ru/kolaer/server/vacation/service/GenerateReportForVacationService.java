@@ -13,6 +13,7 @@ import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.core.converter.DateTimeConverter;
 import ru.kolaer.server.core.exception.NotFoundDataException;
+import ru.kolaer.server.core.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.employee.dao.DepartmentDao;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.dao.PostDao;
@@ -23,7 +24,6 @@ import ru.kolaer.server.upload.service.UploadFileService;
 import ru.kolaer.server.vacation.dao.VacationDao;
 import ru.kolaer.server.vacation.model.entity.VacationEntity;
 import ru.kolaer.server.vacation.model.request.GenerateReportExportRequest;
-import ru.kolaer.server.webportal.model.dto.upload.UploadFileDto;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileOutputStream;

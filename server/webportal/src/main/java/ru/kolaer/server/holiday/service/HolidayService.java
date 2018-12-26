@@ -2,8 +2,8 @@ package ru.kolaer.server.holiday.service;
 
 import ru.kolaer.common.dto.kolaerweb.DateTimeJson;
 import ru.kolaer.common.dto.kolaerweb.Holiday;
+import ru.kolaer.server.core.model.dto.holiday.HolidayDto;
 import ru.kolaer.server.core.service.DefaultService;
-import ru.kolaer.server.webportal.model.dto.holiday.HolidayDto;
 
 import java.util.List;
 

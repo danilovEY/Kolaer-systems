@@ -2,11 +2,11 @@ package ru.kolaer.server.employee.service;
 
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.server.core.service.BirthdayService;
 import ru.kolaer.server.core.service.DefaultService;
 import ru.kolaer.server.employee.model.dto.EmployeeRequestDto;
 import ru.kolaer.server.employee.model.dto.UpdateTypeWorkEmployeeRequestDto;
 import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
-import ru.kolaer.server.webportal.service.BirthdayService;
 
 import java.util.List;
 

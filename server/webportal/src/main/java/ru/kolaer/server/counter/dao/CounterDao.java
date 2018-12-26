@@ -1,8 +1,8 @@
 package ru.kolaer.server.counter.dao;
 
 import ru.kolaer.server.core.dao.DefaultDao;
+import ru.kolaer.server.core.model.dto.counter.FindCounterRequest;
 import ru.kolaer.server.counter.model.entity.CounterEntity;
-import ru.kolaer.server.webportal.model.dto.counter.FindCounterRequest;
 
 import java.util.List;
 

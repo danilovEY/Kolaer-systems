@@ -2,7 +2,7 @@ package ru.kolaer.server.chat.model.entity;
 
 import lombok.Data;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatGroupType;
-import ru.kolaer.server.webportal.model.entity.BaseEntity;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,11 +13,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "chat_room")
-public class ChatRoomEntity implements BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class ChatRoomEntity extends DefaultEntity {
 
     @Column(name = "name")
     private String name;
