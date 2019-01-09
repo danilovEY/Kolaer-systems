@@ -7,6 +7,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import ru.kolaer.common.dto.error.ServerExceptionMessage;
@@ -102,4 +103,6 @@ public interface ExceptionHandlerService {
     default String getOriginForwardUrlPath(WebRequest request) {
         return (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI,0);
     }
+
+    ServerExceptionMessage handleValidationError(HttpServletRequest hRequest, MethodArgumentNotValidException exception);
 }

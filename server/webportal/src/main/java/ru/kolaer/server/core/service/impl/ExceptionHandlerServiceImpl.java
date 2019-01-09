@@ -3,7 +3,11 @@ package ru.kolaer.server.core.service.impl;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import ru.kolaer.common.dto.error.ErrorCode;
@@ -13,8 +17,7 @@ import ru.kolaer.server.core.service.ExceptionHandlerService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by danilovey on 11.10.2017.
@@ -169,4 +172,30 @@ public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
                 new Date());
     }
 
+    @Override
+    public ServerExceptionMessage handleValidationError(HttpServletRequest hRequest, MethodArgumentNotValidException exception) {
+        String urlPath = this.logException(hRequest, exception);
+
+        BindingResult bindingResult = exception.getBindingResult();
+        List<FieldError> fieldErrors = new ArrayList<>(bindingResult.getFieldErrors());
+        if (bindingResult.hasGlobalErrors()) {
+            for (ObjectError error : bindingResult.getGlobalErrors()) {
+                fieldErrors.add(new FieldError(error.getObjectName(), error.getObjectName(), error.getDefaultMessage()));
+            }
+        }
+
+        Map<String, List<String>> map = this.fieldErrorsToMap(fieldErrors);
+
+        return new ServerExceptionMessage(ExceptionHandlerService.BAD_REQUEST_CODE, ErrorCode.INCORRECT_REQUEST_VALUE,
+                urlPath, exception.getMessage(), null, map, new Date());
+    }
+
+    private Map<String, List<String>> fieldErrorsToMap(List<FieldError> errors) {
+        Map<String, List<String>> fieldsErrors = new HashMap<>();
+        for (FieldError error : errors) {
+            List<String> fieldErrors = fieldsErrors.computeIfAbsent(error.getField(), s -> new ArrayList<>());
+            fieldErrors.add(error.getDefaultMessage());
+        }
+        return fieldsErrors;
+    }
 }

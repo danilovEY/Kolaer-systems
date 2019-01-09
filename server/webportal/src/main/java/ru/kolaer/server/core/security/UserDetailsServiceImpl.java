@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.server.account.dao.AccountDao;
 import ru.kolaer.server.account.model.entity.AccountEntity;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
  * Сервис позволяющий проверить пользолвателя на наличии в БД.
  */
 @Slf4j
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final AccountDao accountDao;
 

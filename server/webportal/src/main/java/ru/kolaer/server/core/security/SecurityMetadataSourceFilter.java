@@ -30,7 +30,7 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
 
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         FilterInvocation fi=(FilterInvocation)object;
-        String url = PathMapping.DISPATCHER_SERVLET + fi.getRequest().getPathInfo();
+        String url = PathMapping.DISPATCHER_SERVLET + fi.getRequestUrl();
         String method = fi.getHttpRequest().getMethod();
 
         return Optional.ofNullable(getUrlSecurity(url, method))
@@ -77,6 +77,7 @@ public class SecurityMetadataSourceFilter implements FilterInvocationSecurityMet
 
     private Collection<ConfigAttribute> getRoles(UrlSecurityDto urlPath) {
         List<String> accesses = urlSecurityService.getAccesses(urlPath);
+
         return accesses.contains("ALL")
                 ? Collections.emptyList()
                 : accesses.stream()

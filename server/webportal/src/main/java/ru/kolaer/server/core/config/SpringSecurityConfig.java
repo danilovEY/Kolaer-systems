@@ -2,6 +2,7 @@ package ru.kolaer.server.core.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,7 +23,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -33,11 +33,8 @@ import ru.kolaer.server.account.dao.AccountDao;
 import ru.kolaer.server.core.security.AuthenticationTokenProcessingFilter;
 import ru.kolaer.server.core.security.SecurityMetadataSourceFilter;
 import ru.kolaer.server.core.security.UserDetailsServiceImpl;
-import ru.kolaer.server.core.service.ExceptionHandlerService;
 import ru.kolaer.server.core.service.UrlSecurityService;
 import ru.kolaer.server.core.service.impl.TokenService;
-import ru.kolaer.server.core.spring.ExceptionHandlerFilter;
-import ru.kolaer.server.core.spring.UnauthorizedEntryPoint;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -59,29 +56,30 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     /**Секретный ключ для шифрования пароля.*/
     private final String secretKey;
     private final TokenService tokenService;
-    private final AccountDao accountDao;
+    private final UserDetailsService userDetailsService;
     private final UrlSecurityService urlSecurityService;
-    private final ExceptionHandlerService exceptionHandlerService;
 
     @Resource
     private Environment env;
 
     @Autowired
     public SpringSecurityConfig(@Value("${secret_key}") String secretKey,
-                                TokenService tokenService,
-                                AccountDao accountDao,
-                                UrlSecurityService urlSecurityService,
-                                ExceptionHandlerService exceptionHandlerService) {
+            TokenService tokenService,
+            AccountDao accountDao,
+            @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+            UrlSecurityService urlSecurityService) {
         this.secretKey = secretKey;
         this.tokenService = tokenService;
-        this.accountDao = accountDao;
+        this.userDetailsService = userDetailsService;
         this.urlSecurityService = urlSecurityService;
-        this.exceptionHandlerService = exceptionHandlerService;
     }
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider(userDetailsService(accountDao)));
+        auth.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder())
+                .and()
+                .authenticationProvider(authenticationProvider());
     }
 
     @Override
@@ -98,17 +96,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //Отключаем csrf хак
         http.csrf().disable()
                 .httpBasic()
-//                .authenticationEntryPoint(new SimpleCorsFilter())
-                .and()
-                .exceptionHandling().authenticationEntryPoint(new UnauthorizedEntryPoint(exceptionHandlerService))
                 .and()
                 .addFilterBefore(corsFilter(), ChannelProcessingFilter.class)
                 //Фильтер для проверки http request'а на наличие правильного токена
-                .addFilterBefore(authenticationTokenProcessingFilter(userDetailsService(accountDao)), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new ExceptionHandlerFilter(exceptionHandlerService), ExceptionTranslationFilter.class)
+                .addFilterBefore(authenticationTokenProcessingFilter(userDetailsService), UsernamePasswordAuthenticationFilter.class)
                 //Фильтер для проверки URL'ов.
                 .addFilter(filter(urlSecurityService));
     }
@@ -149,14 +142,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Autowired
-    public UserDetailsService userDetailsService(AccountDao accountDao) {
-        return userDetailsServiceSQL(accountDao);
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
-        return authProviderSQL(userDetailsService);
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
     @Bean
@@ -170,13 +160,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsServiceSQL(AccountDao context) {
         return new UserDetailsServiceImpl(context);
-    }
-
-    /**Создание provider для проверки пользователей из БД с шифрованием пароля.*/
-    private DaoAuthenticationProvider authProviderSQL(UserDetailsService userDetailsService) {
-        final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
     }
 }
