@@ -6,28 +6,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
-import ru.kolaer.server.employee.model.dto.AchievementDto;
-import ru.kolaer.server.employee.service.AchievementService;
+import ru.kolaer.server.employee.model.dto.EducationDto;
+import ru.kolaer.server.employee.service.EducationService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
-public class AchievementController {
+public class EducationController {
 
-    private final AchievementService achievementService;
+    private final EducationService educationService;
 
     @Autowired
-    public AchievementController(AchievementService achievementService) {
-        this.achievementService = achievementService;
+    public EducationController(EducationService educationService) {
+        this.educationService = educationService;
     }
 
-    @GetMapping(RouterConstants.EMPLOYEE_ID_ACHIEVEMENT)
-    public List<AchievementDto> findAchievementByEmployeeId(
+    @GetMapping(RouterConstants.EMPLOYEE_ID_EDUCATION)
+    public List<EducationDto> getEducations(
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Valid @Min(1) long employeeId
     ) {
-        return achievementService.findAchievementsByEmployeeId(employeeId);
+        return educationService.findEducations(employeeId);
     }
-
 }

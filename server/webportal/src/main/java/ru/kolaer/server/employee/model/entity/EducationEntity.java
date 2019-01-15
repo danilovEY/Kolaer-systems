@@ -34,8 +34,8 @@ public class EducationEntity extends DefaultEntity {
     private String document;
 
     @Column(name = "document_number", length = 20, nullable = false)
-    private String document_number;
+    private String documentNumber;
 
     @Column(name = "expiration_date", nullable = false)
-    private LocalDate expiration_date;
+    private LocalDate expirationDate;
 }

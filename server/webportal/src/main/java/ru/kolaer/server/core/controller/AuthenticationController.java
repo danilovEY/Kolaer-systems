@@ -5,8 +5,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,9 +18,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.dto.kolaerweb.TokenJson;
 import ru.kolaer.common.dto.kolaerweb.UserAndPassJson;
-import ru.kolaer.server.core.annotation.UrlDeclaration;
+import ru.kolaer.server.account.AccountRoleConstant;
 import ru.kolaer.server.core.service.impl.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +44,7 @@ public class AuthenticationController {
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager,
-                                    UserDetailsService userDetailsService,
+                                    @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
                                     TokenService tokenService,
                                     PasswordEncoder passwordEncoder) {
         this.tokenService = tokenService;
@@ -51,11 +53,9 @@ public class AuthenticationController {
         this.userDetailsService = userDetailsService;
     }
 
-    @ApiOperation(
-            value = "Выйти"
-    )
-    @UrlDeclaration(description = "Выйти", requestMethod = RequestMethod.POST, isAccessAll = true)
-    @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('" + AccountRoleConstant.USER_WITH_PREFIX + "')")
+    @ApiOperation(value = "Выйти")
+    @PostMapping(RouterConstants.AUTHENTICATION_LOGUOT)
     public String logout(HttpServletResponse response, HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){
@@ -65,43 +65,32 @@ public class AuthenticationController {
         return "redirect:/";
     }
 
-    @ApiOperation(
-            value = "Выйти"
-    )
-    @UrlDeclaration(description = "Выйти", requestMethod = RequestMethod.GET, isAccessAll = true)
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('" + AccountRoleConstant.USER_WITH_PREFIX + "')")
+    @ApiOperation(value = "Выйти")
+    @GetMapping(RouterConstants.AUTHENTICATION_LOGUOT)
     public String logoutGet(HttpServletResponse response, HttpServletRequest request) {
         return this.logout(response, request);
     }
 
-    @ApiOperation(
-            value = "Генерация пароля по строке",
-            hidden = true
-    )
-    @UrlDeclaration(description = "Генерация пароля по строке")
-    @RequestMapping(value = "/genpass", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('" + AccountRoleConstant.SUPER_ADMIN_WITH_PREFIX + "')")
+    @ApiOperation(value = "Генерация пароля по строке")
+    @GetMapping(RouterConstants.AUTHENTICATION_GENERATE_PASS)
     public String getPass(@ApiParam(value = "Пароль", required = true) @RequestParam("pass") String pass) {
         return passwordEncoder.encode(pass);
     }
 
-    @ApiOperation(
-            value = "Авторизация",
-            notes = "Генерация токена по имени и паролю пользователя."
-    )
-    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", requestMethod = RequestMethod.POST, isAccessAll = true)
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "Авторизация", notes = "Генерация токена по имени и паролю пользователя.")
+    @PostMapping(RouterConstants.AUTHENTICATION_LOGIN)
     public TokenJson getTokenPost(@ApiParam(value = "Логин и пароль", required = true) @RequestBody UserAndPassJson userAndPassJson){
         return this.getToken(userAndPassJson.getUsername(), Optional.ofNullable(userAndPassJson.getPassword()).orElse(""));
     }
 
-    @ApiOperation(
-            value = "Авторизация",
-            notes = "Генерация токена по имени и паролю пользователя"
-    )
-    @UrlDeclaration(description = "Авторизация. (Генерация токена по имени и паролю пользователя)", isAccessAll = true)
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public TokenJson getToken(@ApiParam(value = "Логин", required = true) @RequestParam(value = "username", defaultValue = "anonymous") String username,
-                              @ApiParam(value = "Пароль") @RequestParam(value = "password", defaultValue = "") String password){
+    @ApiOperation(value = "Авторизация", notes = "Генерация токена по имени и паролю пользователя")
+    @GetMapping(RouterConstants.AUTHENTICATION_LOGIN)
+    public TokenJson getToken(
+            @ApiParam(value = "Логин", required = true) @RequestParam(value = "username", defaultValue = "anonymous") String username,
+            @ApiParam(value = "Пароль") @RequestParam(value = "password", defaultValue = "") String password
+    ){
         if(password == null)
             password = "";
 
@@ -124,12 +113,9 @@ public class AuthenticationController {
         return new TokenJson(getToken(userDetails));
     }
 
-    @ApiOperation(
-            value = "Обновление токена",
-            notes = "Обновление токена."
-    )
-    @UrlDeclaration(description = "Обновление токена", requestMethod = RequestMethod.GET)
-    @RequestMapping(value = "/refresh", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('" + AccountRoleConstant.USER_WITH_PREFIX + "')")
+    @ApiOperation(value = "Обновление токена", notes = "Обновление токена.")
+    @GetMapping(RouterConstants.AUTHENTICATION_REFRESH_TOKEN)
     public TokenJson refreshToken(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null) {

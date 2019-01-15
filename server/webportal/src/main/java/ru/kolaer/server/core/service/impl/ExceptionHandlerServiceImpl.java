@@ -1,6 +1,7 @@
 package ru.kolaer.server.core.service.impl;
 
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -37,7 +38,7 @@ public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
     @Override
     public ServerExceptionMessage serverExceptionHandler(HttpServletRequest hRequest,
                                                          ServerException exception) {
-        final String urlPath = this.logServerException(hRequest, exception);
+        String urlPath = this.logServerException(hRequest, exception);
 
         return new ServerExceptionMessage(SERVER_EXCEPTION_CODE, exception.getCode(), urlPath,
                 exception.getMessage(), exception.getDevelopMessage(),
@@ -83,11 +84,20 @@ public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
     public ServerExceptionMessage forbiddenExceptionHandler(
             HttpServletRequest hRequest, HttpServletResponse hResponse, ForbiddenException exception) {
 
-        final String urlPath = this.logException(hRequest, exception);
+        String urlPath = this.logException(hRequest, exception);
 
         return new ServerExceptionMessage(FORBIDDEN_CODE, exception.getCode(), urlPath,
                 exception.getMessage(), exception.getDevelopMessage(),
                 exception.getDevelopObject(),
+                new Date());
+    }
+
+    @Override
+    public ServerExceptionMessage forbiddenExceptionHandler(HttpServletRequest hRequest, HttpServletResponse hResponse, AccessDeniedException exception) {
+        String urlPath = this.logException(hRequest, exception);
+
+        return new ServerExceptionMessage(FORBIDDEN_CODE, ErrorCode.FORBIDDEN, urlPath,
+                exception.getMessage(), null, null,
                 new Date());
     }
 

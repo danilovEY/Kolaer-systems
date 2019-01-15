@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -56,6 +57,9 @@ public interface ExceptionHandlerService {
     /**Перехват {@link AuthenticationException}*/
     ServerExceptionMessage forbiddenExceptionHandler(
             HttpServletRequest hRequest, HttpServletResponse hResponse, ForbiddenException exception);
+
+    ServerExceptionMessage forbiddenExceptionHandler(
+            HttpServletRequest hRequest, HttpServletResponse hResponse, AccessDeniedException exception);
 
     /**Перехват {@link CustomHttpCodeException}*/
     ServerExceptionMessage customExceptionHandler(

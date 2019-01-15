@@ -1,11 +1,10 @@
 package ru.kolaer.server.core.controller;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -24,13 +23,10 @@ import javax.servlet.http.HttpServletResponse;
  * Created by danilovey on 10.11.2016.
  */
 @ControllerAdvice
-@RequestMapping(value = "/non-security/errors")
-@Api(tags = "Ошибки", description = "Контроллер с ошибками")
-@Slf4j
-public class ErrorsController {
+public class ErrorsControllerAdvice {
     private ExceptionHandlerService exceptionHandlerService;
 
-    public ErrorsController(ExceptionHandlerService exceptionHandlerService) {
+    public ErrorsControllerAdvice(ExceptionHandlerService exceptionHandlerService) {
         this.exceptionHandlerService = exceptionHandlerService;
     }
 
@@ -107,6 +103,13 @@ public class ErrorsController {
     @ExceptionHandler(value = ForbiddenException.class)
     public @ResponseBody ServerExceptionMessage authExceptionHandler(
             HttpServletRequest hRequest, HttpServletResponse hResponse, ForbiddenException exception) {
+        return exceptionHandlerService.forbiddenExceptionHandler(hRequest, hResponse, exception);
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public @ResponseBody ServerExceptionMessage authExceptionHandler(
+            HttpServletRequest hRequest, HttpServletResponse hResponse, AccessDeniedException exception) {
         return exceptionHandlerService.forbiddenExceptionHandler(hRequest, hResponse, exception);
     }
 

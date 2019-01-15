@@ -21,8 +21,8 @@ import java.io.IOException;
 /**
  * Created by danilovey on 11.10.2017.
  */
-@Slf4j
 @Component
+@Slf4j
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
     private final ExceptionHandlerService exceptionHandlerService;
     private final ObjectMapper objectMapper;
@@ -53,6 +53,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
             objectMapper.writeValue(response.getWriter(), serverExceptionMessage);
         } catch(AccessDeniedException ex) {
+
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.setStatus(HttpStatus.FORBIDDEN.value());
 
