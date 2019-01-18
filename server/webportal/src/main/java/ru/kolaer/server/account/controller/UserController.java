@@ -4,12 +4,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.server.account.AccountRoleConstant;
@@ -23,7 +23,6 @@ import ru.kolaer.server.core.service.AuthenticationService;
  * Created by danilovey on 31.08.2016.
  */
 @RestController
-@RequestMapping(value = "/user")
 @Api(tags = "Мой аккаунт")
 @Slf4j
 public class UserController {
@@ -37,40 +36,45 @@ public class UserController {
         this.accountService = accountService;
     }
 
-    @PreAuthorize("hasAnyRole('" + AccountRoleConstant.USER_WITH_PREFIX + "')")
-    @ApiOperation(value = "Получить авторизированный аккаунт")
-    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @ApiOperation("Получить авторизированный аккаунт")
+    @GetMapping(RouterConstants.USER_WITH_EMPLOYEE)
     public AccountDto getUser() {
         return this.authenticationService.getAccountByAuthentication();
     }
 
-    @ApiOperation(value = "Получить авторизированный аккаунт")
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @ApiOperation("Получить авторизированный аккаунт")
+    @GetMapping(RouterConstants.USER)
     public AccountSimpleDto getSimpleUser() {
         return this.authenticationService.getAccountSimpleByAuthentication();
     }
 
-    /**Добавить аккаунт.*/
-    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @ApiOperation("Обновить авторизированный аккаунт")
+    @PutMapping(RouterConstants.USER)
     public void updateUser(@RequestBody AccountSimpleDto accountEntity) {
         this.accountService.update(accountEntity);
     }
 
-    /**Изменить пароль.*/
-    @RequestMapping(value = "/update/password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @ApiOperation("Изменить пароль")
+    @PutMapping(RouterConstants.USER_PASSWORD)
     public void updatePassword(@RequestBody ChangePasswordDto changePasswordDto) {
         accountService.updatePassword(changePasswordDto);
     }
 
-    @ApiOperation(value = "Обновить контакты")
-    @RequestMapping(value = "/contact", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ContactDto updateContact(@RequestBody ContactRequestDto contactRequestDto) {
-        return accountService.updateContact(contactRequestDto);
-    }
-
+    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
     @ApiOperation(value = "Получить контакты")
-    @RequestMapping(value = "/contact", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(RouterConstants.USER_CONTACT)
     public ContactDto getContact() {
         return accountService.getContact();
+    }
+
+    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @ApiOperation(value = "Обновить контакты")
+    @PutMapping(RouterConstants.USER_CONTACT)
+    public ContactDto updateContact(@RequestBody ContactRequestDto contactRequestDto) {
+        return accountService.updateContact(contactRequestDto);
     }
 }

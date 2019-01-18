@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
-import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.employee.model.dto.DepartmentRequestDto;
 import ru.kolaer.server.employee.model.request.DepartmentFilter;
 import ru.kolaer.server.employee.model.request.DepartmentSort;
@@ -30,7 +29,6 @@ public class DepartmentController {
     }
 
     @ApiOperation(value = "Получить все подразделения")
-    @UrlDeclaration(description = "Получить все подразделения")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<DepartmentDto> getAllDepartment(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                                 @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
@@ -40,21 +38,18 @@ public class DepartmentController {
     }
 
     @ApiOperation(value = "Найти подразделения")
-    @UrlDeclaration
     @RequestMapping(value = "/find", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<DepartmentDto> getAllDepartment(@ModelAttribute FindDepartmentPageRequest request) {
         return departmentService.find(request);
     }
 
     @ApiOperation(value = "Добавить подразделение")
-    @UrlDeclaration(description = "Добавить подразделение", isUser = false, requestMethod = RequestMethod.POST, isOk = true)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public DepartmentDto addDepartment(@RequestBody DepartmentRequestDto departmentRequestDto) {
         return departmentService.add(departmentRequestDto);
     }
 
     @ApiOperation(value = "Обновит подразделение")
-    @UrlDeclaration(description = "Обновит подразделение", isUser = false, requestMethod = RequestMethod.PUT, isOk = true)
     @RequestMapping(value = "/{depId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public DepartmentDto updateDepartment(@PathVariable("depId") Long depId,
                                   @RequestBody DepartmentRequestDto departmentRequestDto) {
@@ -62,7 +57,6 @@ public class DepartmentController {
     }
 
     @ApiOperation(value = "Удалить подразделение")
-    @UrlDeclaration(description = "Удалить подразделение", isUser = false, requestMethod = RequestMethod.DELETE, isOk = true)
     @RequestMapping(value = "/{depId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteDepartment(@PathVariable("depId") Long depId) {
         departmentService.delete(depId, true);

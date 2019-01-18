@@ -33,7 +33,6 @@ import java.util.Optional;
  * Рест контроллер для генерации токена, и пароля по строке.
  */
 @RestController
-@RequestMapping(value = "/authentication")
 @Api(description = "Работа с авторизацией", tags = "Аутентификация")
 @Slf4j
 public class AuthenticationController {
@@ -53,9 +52,9 @@ public class AuthenticationController {
         this.userDetailsService = userDetailsService;
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.USER_WITH_PREFIX + "')")
+    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
     @ApiOperation(value = "Выйти")
-    @PostMapping(RouterConstants.AUTHENTICATION_LOGUOT)
+    @PostMapping(RouterConstants.AUTHENTICATION_LOGOUT)
     public String logout(HttpServletResponse response, HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){
@@ -65,14 +64,14 @@ public class AuthenticationController {
         return "redirect:/";
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.USER_WITH_PREFIX + "')")
+    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
     @ApiOperation(value = "Выйти")
-    @GetMapping(RouterConstants.AUTHENTICATION_LOGUOT)
+    @GetMapping(RouterConstants.AUTHENTICATION_LOGOUT)
     public String logoutGet(HttpServletResponse response, HttpServletRequest request) {
         return this.logout(response, request);
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.SUPER_ADMIN_WITH_PREFIX + "')")
+    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_SUPER_ADMIN + "')")
     @ApiOperation(value = "Генерация пароля по строке")
     @GetMapping(RouterConstants.AUTHENTICATION_GENERATE_PASS)
     public String getPass(@ApiParam(value = "Пароль", required = true) @RequestParam("pass") String pass) {
@@ -113,7 +112,7 @@ public class AuthenticationController {
         return new TokenJson(getToken(userDetails));
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.USER_WITH_PREFIX + "')")
+    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
     @ApiOperation(value = "Обновление токена", notes = "Обновление токена.")
     @GetMapping(RouterConstants.AUTHENTICATION_REFRESH_TOKEN)
     public TokenJson refreshToken(){
