@@ -55,6 +55,7 @@
     <include file="classpath:SQL/39-relative-table.xml"/>
     <include file="classpath:SQL/40-personal-document-table.xml"/>
     <include file="classpath:SQL/41-military-registration-table.xml"/>
+    <include file="classpath:SQL/42-combination-table.xml"/>
 
 
 

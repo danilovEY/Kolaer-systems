@@ -69,12 +69,30 @@ export class EmployeeCardComponent implements OnInit, OnDestroy {
             this.employeeId.toString()
         );
 
+        const staffMovementsMenuItem: NbMenuItem = new NbMenuItem();
+        staffMovementsMenuItem.title = 'Движение персонала';
+        staffMovementsMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
+            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_STAFF_MOVEMENTS_URL,
+            PathVariableConstant.EMPLOYEE_ID,
+            this.employeeId.toString()
+        );
+
+        const combinationsMenuItem: NbMenuItem = new NbMenuItem();
+        combinationsMenuItem.title = 'Совмещения';
+        combinationsMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
+            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMBINATIONS_URL,
+            PathVariableConstant.EMPLOYEE_ID,
+            this.employeeId.toString()
+        );
+
         this.employeeInfoMenu.push(
             commonMenuItem,
             educationsMenuItem,
             achievementsMenuItem,
             punishmentsMenuItem,
-            employmentHistoriesMenuItem
+            employmentHistoriesMenuItem,
+            staffMovementsMenuItem,
+            combinationsMenuItem
         );
     }
 

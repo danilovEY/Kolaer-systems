@@ -40,8 +40,11 @@ public class StaffMovementEntity extends DefaultEntity {
     @Column(name = "card_slam", length = 50)
     private String cardSlam;
 
-    @Column(name = "subclass_working_conditions", length = 50)
-    private String subclassWorkingConditions;
+    @Column(name = "class_working_conditions", length = 50)
+    private String classWorkingConditions;
+
+    @Column(name = "sub_class_working_conditions", length = 50)
+    private String subClassWorkingConditions;
 
     @Column(name = "order_number", length = 50)
     private String orderNumber;
@@ -49,9 +52,9 @@ public class StaffMovementEntity extends DefaultEntity {
     @Column(name = "order_date")
     private LocalDate orderDate;
 
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
+    @Column(name = "start_work_date", nullable = false)
+    private LocalDate startWorkDate;
 
-    @Column(name = "end_date")
-    private LocalDate endDate;
+    @Column(name = "end_work_date")
+    private LocalDate endWorkDate;
 }

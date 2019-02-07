@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                <span>Движение персонала</span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <custom-table #staffMovementTable
+                              [columns]="staffMovementColumns"
+                              [source]="staffMovementDataSource"
+                              [actionAdd]="false">
+
+                </custom-table>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>

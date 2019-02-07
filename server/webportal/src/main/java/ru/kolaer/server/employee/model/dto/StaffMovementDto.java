@@ -18,9 +18,10 @@ public class StaffMovementDto extends DefaultDto {
     private BigDecimal salary;
     private Integer surchargeHarmfulness;
     private String cardSlam;
-    private String subclassWorkingConditions;
+    private String classWorkingConditions;
+    private String subClassWorkingConditions;
     private String orderNumber;
     private LocalDate orderDate;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDate startWorkDate;
+    private LocalDate endWorkDate;
 }

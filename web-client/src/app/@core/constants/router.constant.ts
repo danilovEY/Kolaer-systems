@@ -11,7 +11,9 @@ export class RouterConstant {
     public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EDUCATIONS_PART_URL = 'educations';
     public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_ACHIEVEMENTS_PART_URL = 'achievements';
     public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PUNISHMENTS_PART_URL = 'punishments';
-    public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_PART_URL = 'employment-histories';
+    public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_PART_URL = 'employment_histories';
+    public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_STAFF_MOVEMENTS_PART_URL = 'staff_movements';
+    public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMBINATIONS_PART_URL = 'combinations';
 
 
     public static readonly PAGES_URL = `/${RouterConstant.PAGES_PART_URL}`;
@@ -47,6 +49,14 @@ export class RouterConstant {
     public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_URL =
         RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_URL +
         `/${RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_PART_URL}`;
+
+    public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_STAFF_MOVEMENTS_URL =
+        RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_URL +
+        `/${RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_STAFF_MOVEMENTS_PART_URL}`;
+
+    public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMBINATIONS_URL =
+        RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_URL +
+        `/${RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMBINATIONS_PART_URL}`;
 
     public static createUrlFromUrlTemplate(urlTemplate: string, urlParamName: string, urlParamValue: string) {
         return urlTemplate.replace(':' + urlParamName, urlParamValue);

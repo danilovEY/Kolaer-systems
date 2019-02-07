@@ -15,6 +15,8 @@ import {EmptyRouterComponent} from "../../../@theme/components/empty-router.comp
 import {EmployeeCardAchievementsComponent} from "./employees/employee-card/achievements/employee-card-achievements.component";
 import {EmployeeCardPunishmentsComponent} from "./employees/employee-card/punishments/employee-card-punishments.component";
 import {EmployeeCardEmploymentHistoriesComponent} from "./employees/employee-card/employment-histories/employee-card-employment-histories.component";
+import {EmployeeCardStaffMovementsComponent} from "./employees/employee-card/staff-movements/employee-card-staff-movements.component";
+import {EmployeeCardCombinationsComponent} from "./employees/employee-card/combinations/employee-card-combinations.component";
 
 
 const routes: Routes = [
@@ -33,19 +35,38 @@ const routes: Routes = [
                 children: [
                     {path: '', redirectTo: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PART_URL},
                     {
-                        path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PART_URL, component: EmployeeCardComponent,
+                        path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PART_URL,
+                        component: EmployeeCardComponent,
                         children: [
                             {path: '', redirectTo: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_PART_URL},
-                            {path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_PART_URL,
-                                component: EmployeeCardCommonsComponent},
-                            {path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EDUCATIONS_PART_URL,
-                                component: EmployeeCardEducationsComponent},
-                            {path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_ACHIEVEMENTS_PART_URL,
-                                component: EmployeeCardAchievementsComponent},
-                            {path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PUNISHMENTS_PART_URL,
-                                component: EmployeeCardPunishmentsComponent},
-                            {path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_PART_URL,
-                                component: EmployeeCardEmploymentHistoriesComponent}
+                            {
+                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_PART_URL,
+                                component: EmployeeCardCommonsComponent
+                            },
+                            {
+                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EDUCATIONS_PART_URL,
+                                component: EmployeeCardEducationsComponent
+                            },
+                            {
+                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_ACHIEVEMENTS_PART_URL,
+                                component: EmployeeCardAchievementsComponent
+                            },
+                            {
+                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PUNISHMENTS_PART_URL,
+                                component: EmployeeCardPunishmentsComponent
+                            },
+                            {
+                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_PART_URL,
+                                component: EmployeeCardEmploymentHistoriesComponent
+                            },
+                            {
+                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_STAFF_MOVEMENTS_PART_URL,
+                                component: EmployeeCardStaffMovementsComponent
+                            },
+                            {
+                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMBINATIONS_PART_URL,
+                                component: EmployeeCardCombinationsComponent
+                            }
                         ]
                     }
                 ]

@@ -38,7 +38,7 @@
 
             <column name="class_working_conditions" type="VARCHAR(50)"/>
 
-            <column name="subclass_working_conditions" type="VARCHAR(50)"/>
+            <column name="sub_class_working_conditions" type="VARCHAR(50)"/>
 
             <column name="order_number" type="VARCHAR(20)"/>
 

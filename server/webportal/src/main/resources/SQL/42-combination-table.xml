@@ -4,8 +4,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="35" author="Danilov">
-        <createTable tableName="punishment">
+    <changeSet id="42" author="Danilov">
+        <createTable tableName="combination">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" unique="true"/>
             </column>
@@ -14,29 +14,21 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="name" type="VARCHAR(100)">
+            <column name="post" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="status" type="VARCHAR(20)">
+            <column name="start_date" type="DATE">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="order_number" type="VARCHAR(20)">
+            <column name="end_date" type="DATE">
                 <constraints nullable="false"/>
             </column>
-
-            <column name="order_date" type="DATE">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="start_punishment_date" type="DATE">
-                <constraints nullable="false"/>
-            </column>
-
+            
         </createTable>
 
-        <addPrimaryKey tableName="punishment" columnNames="id"/>
+        <addPrimaryKey tableName="combination" columnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>
