@@ -14,6 +14,7 @@ import {RouterConstant} from "../../../@core/constants/router.constant";
 import {EmptyRouterComponent} from "../../../@theme/components/empty-router.component";
 import {EmployeeCardAchievementsComponent} from "./employees/employee-card/achievements/employee-card-achievements.component";
 import {EmployeeCardPunishmentsComponent} from "./employees/employee-card/punishments/employee-card-punishments.component";
+import {EmployeeCardEmploymentHistoriesComponent} from "./employees/employee-card/employment-histories/employee-card-employment-histories.component";
 
 
 const routes: Routes = [
@@ -42,7 +43,9 @@ const routes: Routes = [
                             {path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_ACHIEVEMENTS_PART_URL,
                                 component: EmployeeCardAchievementsComponent},
                             {path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PUNISHMENTS_PART_URL,
-                                component: EmployeeCardPunishmentsComponent}
+                                component: EmployeeCardPunishmentsComponent},
+                            {path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_PART_URL,
+                                component: EmployeeCardEmploymentHistoriesComponent}
                         ]
                     }
                 ]

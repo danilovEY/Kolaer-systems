@@ -5,6 +5,7 @@ import {Cell} from "ng2-smart-table";
 import {Utils} from "../../../../../../@core/utils/utils";
 import {EmployeeCardPunishmentsDataSource} from "./employee-card-punishments.data-source";
 import {EmployeeAchievementModel} from "../../../../../../@core/models/employee/employee-achievement.model";
+import {EmployeePunishmentModel} from "../../../../../../@core/models/employee/employee-punishment.model";
 
 @Component({
     selector: 'employee-card-punishments',
@@ -70,7 +71,7 @@ export class EmployeeCardPunishmentsComponent implements OnInit {
             addable: false,
             filter: false,
             sort: false,
-            valuePrepareFunction(a: any, value: EmployeeAchievementModel, cell: Cell) {
+            valuePrepareFunction(a: any, value: EmployeePunishmentModel, cell: Cell) {
                 return Utils.getDateFormat(value.orderDate);
             }
         }, null);

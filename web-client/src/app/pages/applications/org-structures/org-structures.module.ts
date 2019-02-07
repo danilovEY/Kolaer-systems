@@ -13,6 +13,7 @@ import {EmployeeCardCommonsComponent} from './employees/employee-card/commons/em
 import {EmployeeCardEducationsComponent} from './employees/employee-card/educations/employee-card-educations.component';
 import {EmployeeCardAchievementsComponent} from "./employees/employee-card/achievements/employee-card-achievements.component";
 import {EmployeeCardPunishmentsComponent} from "./employees/employee-card/punishments/employee-card-punishments.component";
+import {EmployeeCardEmploymentHistoriesComponent} from "./employees/employee-card/employment-histories/employee-card-employment-histories.component";
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import {EmployeeCardPunishmentsComponent} from "./employees/employee-card/punish
         EmployeeCardCommonsComponent,
         EmployeeCardEducationsComponent,
         EmployeeCardAchievementsComponent,
-        EmployeeCardPunishmentsComponent
+        EmployeeCardPunishmentsComponent,
+        EmployeeCardEmploymentHistoriesComponent
     ]
 })
 export class OrgStructuresModule {

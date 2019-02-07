@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-12">
+        <nb-card>
+            <nb-card-header>
+                <span>Трудовая книжка</span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <custom-table #employmentHistoryTable
+                              [columns]="employmentHistoryColumns"
+                              [source]="employmentHistoryDataSource"
+                              [actionAdd]="false">
+
+                </custom-table>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>
