@@ -12,6 +12,7 @@ public class PunishmentDto extends DefaultDto {
     private Long employeeId;
     private String name;
     private String orderNumber;
+    private String status;
     private LocalDate orderDate;
     private LocalDate startPunishmentDate;
 }

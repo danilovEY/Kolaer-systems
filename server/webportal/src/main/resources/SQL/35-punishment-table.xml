@@ -35,4 +35,12 @@
         <addPrimaryKey tableName="punishment" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="35-1" author="Danilov">
+        <addColumn tableName="punishment">
+            <column name="status" type="VARCHAR(20)" defaultValue="Наложено">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

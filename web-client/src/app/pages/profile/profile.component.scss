@@ -1,7 +1,7 @@
 @import '../../@theme/styles/themes';
 @import '~bootstrap/scss/mixins/breakpoints';
 @import '~font-awesome/scss/_variables';
-@import '~@nebular/theme/styles/global/bootstrap/breakpoints';
+@import '~@nebular/theme/styles/global/breakpoints';
 
 @mixin input-field-icon($content-icon, $padding-text) {
   position: relative;

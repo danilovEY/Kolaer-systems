@@ -19,6 +19,7 @@ public class PunishmentMapper {
         dto.setName(entity.getName());
         dto.setOrderDate(entity.getOrderDate());
         dto.setOrderNumber(entity.getOrderNumber());
+        dto.setStatus(entity.getStatus());
         dto.setStartPunishmentDate(entity.getStartPunishmentDate());
 
         return dto;

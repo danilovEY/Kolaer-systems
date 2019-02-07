@@ -52,13 +52,16 @@ import {NgbDateRusParserFormatter} from './components/table/ngb-date-rus-parser.
 import {TableModule} from 'primeng/table';
 import {MessageModule} from 'primeng/message';
 import {TypeWorkEditComponent} from './components/table/type-work-edit.component';
+import {EmptyRouterComponent} from "./components/empty-router.component";
+import {RouterModule} from "@angular/router";
 
 // import {NbSecurityModule} from '@nebular/security';
 
 const BASE_MODULES = [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule
 ];
 
 const NB_MODULES = [
@@ -110,6 +113,7 @@ const COMPONENTS = [
     DateTimeEditComponent,
     PlacementEditComponent,
     TypeWorkEditComponent,
+    EmptyRouterComponent
 ];
 
 const PIPES = [

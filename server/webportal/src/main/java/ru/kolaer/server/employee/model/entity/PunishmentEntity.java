@@ -21,8 +21,11 @@ public class PunishmentEntity extends DefaultEntity {
     @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @Column(name = "order_number", length = 100, nullable = false)
+    @Column(name = "order_number", length = 20, nullable = false)
     private String orderNumber;
+
+    @Column(name = "status", length = 20, nullable = false)
+    private String status;
 
     @Column(name = "order_date", nullable = false)
     private LocalDate orderDate;

@@ -1,12 +1,12 @@
-import {CustomDataSource} from '../../../../@core/models/custom.data-source';
-import {Page} from '../../../../@core/models/page.model';
-import {EmployeeModel} from '../../../../@core/models/employee.model';
-import {EmployeeService} from '../../../../@core/services/employee.service';
-import {EmployeeSortModel} from '../../../../@core/models/employee-sort.model';
-import {EmployeeFilterModel} from '../../../../@core/models/employee-filter.model';
-import {FindEmployeeRequestModel} from '../../../../@core/models/find-employee-request.model';
+import {CustomDataSource} from '../../../../../@core/models/custom.data-source';
+import {Page} from '../../../../../@core/models/page.model';
+import {EmployeeModel} from '../../../../../@core/models/employee.model';
+import {EmployeeService} from '../../../../../@core/services/employee.service';
+import {EmployeeSortModel} from '../../../../../@core/models/employee-sort.model';
+import {EmployeeFilterModel} from '../../../../../@core/models/employee-filter.model';
+import {FindEmployeeRequestModel} from '../../../../../@core/models/find-employee-request.model';
 
-export class EmployeesDataSource extends CustomDataSource<EmployeeModel> {
+export class EmployeesListDataSource extends CustomDataSource<EmployeeModel> {
 
     constructor(private employeeService: EmployeeService, private departmentId?: number) {
         super();
@@ -36,3 +36,4 @@ export class EmployeesDataSource extends CustomDataSource<EmployeeModel> {
         }
     }
 }
+
