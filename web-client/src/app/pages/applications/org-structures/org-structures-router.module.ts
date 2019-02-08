@@ -21,6 +21,7 @@ import {EmployeeCardVacationsComponent} from "./employees/employee-card/vacation
 import {EmployeeCardPersonalDataComponent} from "./employees/employee-card/personal-data/employee-card-personal-data.component";
 import {EmployeeCardRelativesComponent} from "./employees/employee-card/relatives/employee-card-relatives.component";
 import {EmployeeCardPersonalDocumentsComponent} from "./employees/employee-card/personal-documents/employee-card-personal-documents.component";
+import {EmployeeCardMilitaryRegistrationComponent} from "./employees/employee-card/military-registration/employee-card-military-registration.component";
 
 
 const routes: Routes = [
@@ -86,6 +87,10 @@ const routes: Routes = [
                             {
                                 path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DOCUMENTS_PART_URL,
                                 component: EmployeeCardPersonalDocumentsComponent
+                            },
+                            {
+                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_MILITARY_REGISTRATION_PART_URL,
+                                component: EmployeeCardMilitaryRegistrationComponent
                             }
                         ]
                     }

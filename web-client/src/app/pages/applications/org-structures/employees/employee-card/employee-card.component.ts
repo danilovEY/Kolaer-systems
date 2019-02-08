@@ -117,6 +117,14 @@ export class EmployeeCardComponent implements OnInit, OnDestroy {
             this.employeeId.toString()
         );
 
+        const militaryRegistrationMenuItem: NbMenuItem = new NbMenuItem();
+        militaryRegistrationMenuItem.title = 'Воинский учёт';
+        militaryRegistrationMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
+            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_MILITARY_REGISTRATION_URL,
+            PathVariableConstant.EMPLOYEE_ID,
+            this.employeeId.toString()
+        );
+
         this.employeeInfoMenu.push(
             commonMenuItem,
             educationsMenuItem,
@@ -128,7 +136,8 @@ export class EmployeeCardComponent implements OnInit, OnDestroy {
             vacationsMenuItem,
             personalDataMenuItem,
             relativesMenuItem,
-            personalDocumentsMenuItem
+            personalDocumentsMenuItem,
+            militaryRegistrationMenuItem
         );
     }
 

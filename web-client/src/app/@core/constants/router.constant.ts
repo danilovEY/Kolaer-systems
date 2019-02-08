@@ -18,6 +18,7 @@ export class RouterConstant {
     public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DATA_PART_URL = 'personal_data';
     public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_RELATIVES_PART_URL = 'relatives';
     public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DOCUMENTS_PART_URL = 'personal_documents';
+    public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_MILITARY_REGISTRATION_PART_URL = 'military_registration';
 
 
     public static readonly PAGES_URL = `/${RouterConstant.PAGES_PART_URL}`;
@@ -77,6 +78,10 @@ export class RouterConstant {
     public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DOCUMENTS_URL =
         RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_URL +
         `/${RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DOCUMENTS_PART_URL}`;
+
+    public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_MILITARY_REGISTRATION_URL =
+        RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_URL +
+        `/${RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_MILITARY_REGISTRATION_PART_URL}`;
 
     public static createUrlFromUrlTemplate(urlTemplate: string, urlParamName: string, urlParamValue: string) {
         return urlTemplate.replace(':' + urlParamName, urlParamValue);
