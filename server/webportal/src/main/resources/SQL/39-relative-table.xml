@@ -18,6 +18,10 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="relation_degree" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="date_of_birth" type="date">
                 <constraints nullable="false"/>
             </column>
