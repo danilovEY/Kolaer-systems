@@ -14,9 +14,10 @@ import {RouterConstant} from "../../../@core/constants/router.constant";
 import {EmptyRouterComponent} from "../../../@theme/components/empty-router.component";
 import {EmployeeCardAchievementsComponent} from "./employees/employee-card/achievements/employee-card-achievements.component";
 import {EmployeeCardPunishmentsComponent} from "./employees/employee-card/punishments/employee-card-punishments.component";
-import {EmployeeCardEmploymentHistoriesComponent} from "./employees/employee-card/employment-histories/employee-card-employment-histories.component";
+import {EmployeeCardEmploymentHistoriesComponent} from "./employees/employee-card/employment-histories/employee-card-employment-histories.component"; // tslint:disable
 import {EmployeeCardStaffMovementsComponent} from "./employees/employee-card/staff-movements/employee-card-staff-movements.component";
 import {EmployeeCardCombinationsComponent} from "./employees/employee-card/combinations/employee-card-combinations.component";
+import {EmployeeCardVacationsComponent} from "./employees/employee-card/vacations/employee-card-vacations.component";
 
 
 const routes: Routes = [
@@ -66,6 +67,10 @@ const routes: Routes = [
                             {
                                 path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMBINATIONS_PART_URL,
                                 component: EmployeeCardCombinationsComponent
+                            },
+                            {
+                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_VACATIONS_PART_URL,
+                                component: EmployeeCardVacationsComponent
                             }
                         ]
                     }

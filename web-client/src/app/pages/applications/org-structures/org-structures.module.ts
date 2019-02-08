@@ -16,6 +16,7 @@ import {EmployeeCardPunishmentsComponent} from "./employees/employee-card/punish
 import {EmployeeCardEmploymentHistoriesComponent} from "./employees/employee-card/employment-histories/employee-card-employment-histories.component"; // tslint:disable
 import {EmployeeCardStaffMovementsComponent} from "./employees/employee-card/staff-movements/employee-card-staff-movements.component";
 import {EmployeeCardCombinationsComponent} from "./employees/employee-card/combinations/employee-card-combinations.component";
+import {EmployeeCardVacationsComponent} from "./employees/employee-card/vacations/employee-card-vacations.component";
 
 @NgModule({
     imports: [
@@ -37,7 +38,8 @@ import {EmployeeCardCombinationsComponent} from "./employees/employee-card/combi
         EmployeeCardPunishmentsComponent,
         EmployeeCardEmploymentHistoriesComponent,
         EmployeeCardStaffMovementsComponent,
-        EmployeeCardCombinationsComponent
+        EmployeeCardCombinationsComponent,
+        EmployeeCardVacationsComponent
     ]
 })
 export class OrgStructuresModule {
