@@ -109,6 +109,14 @@ export class EmployeeCardComponent implements OnInit, OnDestroy {
             this.employeeId.toString()
         );
 
+        const personalDocumentsMenuItem: NbMenuItem = new NbMenuItem();
+        personalDocumentsMenuItem.title = 'Персональные документы';
+        personalDocumentsMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
+            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DOCUMENTS_URL,
+            PathVariableConstant.EMPLOYEE_ID,
+            this.employeeId.toString()
+        );
+
         this.employeeInfoMenu.push(
             commonMenuItem,
             educationsMenuItem,
@@ -119,7 +127,8 @@ export class EmployeeCardComponent implements OnInit, OnDestroy {
             combinationsMenuItem,
             vacationsMenuItem,
             personalDataMenuItem,
-            relativesMenuItem
+            relativesMenuItem,
+            personalDocumentsMenuItem
         );
     }
 
