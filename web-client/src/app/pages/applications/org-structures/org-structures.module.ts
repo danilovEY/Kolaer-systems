@@ -18,6 +18,7 @@ import {EmployeeCardStaffMovementsComponent} from "./employees/employee-card/sta
 import {EmployeeCardCombinationsComponent} from "./employees/employee-card/combinations/employee-card-combinations.component";
 import {EmployeeCardVacationsComponent} from "./employees/employee-card/vacations/employee-card-vacations.component";
 import {EmployeeCardPersonalDataComponent} from "./employees/employee-card/personal-data/employee-card-personal-data.component";
+import {EmployeeCardRelativesComponent} from "./employees/employee-card/relatives/employee-card-relatives.component";
 
 @NgModule({
     imports: [
@@ -41,7 +42,8 @@ import {EmployeeCardPersonalDataComponent} from "./employees/employee-card/perso
         EmployeeCardStaffMovementsComponent,
         EmployeeCardCombinationsComponent,
         EmployeeCardVacationsComponent,
-        EmployeeCardPersonalDataComponent
+        EmployeeCardPersonalDataComponent,
+        EmployeeCardRelativesComponent
     ]
 })
 export class OrgStructuresModule {

@@ -21,6 +21,9 @@ public class RelativeEntity extends DefaultEntity {
     @Column(name = "initials")
     private String initials;
 
+    @Column(name = "relation_degree", length = 50)
+    private String relationDegree;
+
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 }

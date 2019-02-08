@@ -2,15 +2,14 @@
     <div class="col-12">
         <nb-card>
             <nb-card-header>
-                <span>Персональные данные</span>
+                <span>Родственники</span>
             </nb-card-header>
 
             <nb-card-body>
-                <custom-table #personalDataTable
-                              [columns]="personalDataColumns"
-                              [source]="personalDataDataSource"
+                <custom-table #relativeTable
+                              [columns]="relativeColumns"
+                              [source]="relativeDataSource"
                               [actionAdd]="false">
-
                 </custom-table>
             </nb-card-body>
         </nb-card>

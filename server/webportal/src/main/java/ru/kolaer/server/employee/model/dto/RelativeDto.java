@@ -11,5 +11,6 @@ import java.time.LocalDate;
 public class RelativeDto extends DefaultDto {
     private Long employeeId;
     private String initials;
+    private String relationDegree;
     private LocalDate dateOfBirth;
 }
