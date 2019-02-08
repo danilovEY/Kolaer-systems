@@ -11,9 +11,11 @@
                         #employeeTable
                               [columns]="employeesColumns"
                               [source]="employeesSource"
-                              [actionAdd]="true"
-                              [actionDelete]="true"
-                              [actionEdit]="true"
+                              [actions]="employeeActions"
+                              [actionAdd]="false"
+                              [actionDelete]="false"
+                              [actionEdit]="false"
+                              (action)="employeesAction($event)"
                               (edit)="employeesEdit($event)"
                               (delete)="employeesDelete($event)"
                               (create)="employeesCreate($event)">
@@ -26,7 +28,7 @@
                               [source]="employeesSource"
                               [actionAdd]="false"
                               [actionDelete]="false"
-                              [actionEdit]="true"
+                              [actionEdit]="false"
                               (edit)="employeesOnlyWithTypeWorkEdit($event)">
 
                 </custom-table>

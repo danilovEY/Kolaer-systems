@@ -16,6 +16,11 @@ import {DateEditComponent} from '../../../../../@theme/components/table/date-edi
 import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {UpdateTypeWorkEmployeeRequestModel} from '../../../../../@core/models/update-type-work-employee-request.model';
+import {CustomActionEventModel} from "../../../../../@theme/components/table/custom-action-event.model";
+import {CustomActionModel} from "../../../../../@theme/components/table/custom-action.model";
+import {Router} from "@angular/router";
+import {RouterConstant} from "../../../../../@core/constants/router.constant";
+import {PathVariableConstant} from "../../../../../@core/constants/path-variable.constant";
 
 @Component({
     selector: 'employees-list',
@@ -23,6 +28,8 @@ import {UpdateTypeWorkEmployeeRequestModel} from '../../../../../@core/models/up
     templateUrl: './employees-list.component.html'
 })
 export class EmployeesListComponent implements OnInit {
+    private readonly openActionName: string = 'open';
+
     @ViewChild('employeeTable')
     employeeTable: CustomTableComponent;
 
@@ -31,13 +38,15 @@ export class EmployeesListComponent implements OnInit {
 
     employeesColumns: Column[] = [];
     employeesOnlyWithTypeWorkColumns: Column[] = [];
+    employeeActions: CustomActionModel[] = [];
     employeesSource: EmployeesListDataSource;
     employeesLoading: boolean = true;
 
     currentAccount: SimpleAccountModel;
 
     constructor(private employeeService: EmployeeService,
-                private accountService: AccountService) {
+                private accountService: AccountService,
+                private router: Router) {
     }
 
 
@@ -154,6 +163,13 @@ export class EmployeesListComponent implements OnInit {
             departmentColumn,
             birthdayColumn
         );
+
+        const openAction: CustomActionModel = new CustomActionModel();
+        openAction.name = this.openActionName;
+        openAction.content = '<i class="fa fa-eye"></i>';
+        openAction.description = 'Открыть';
+
+        this.employeeActions.push(openAction);
     }
 
     employeesEdit(event: TableEventEditModel<EmployeeModel>) {
@@ -216,5 +232,17 @@ export class EmployeesListComponent implements OnInit {
         this.employeeService.updateTypeWorkEmployee(event.data.id, request)
             .subscribe((employee: EmployeeModel) => event.confirm.resolve(event.newData, employee),
                 error2 => event.confirm.reject({}));
+    }
+
+    employeesAction(event: CustomActionEventModel<EmployeeModel>) {
+        if (event.action.name === this.openActionName) {
+            const url: string = RouterConstant.createUrlFromUrlTemplate(
+                RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_URL,
+                PathVariableConstant.EMPLOYEE_ID,
+                event.data.id.toString()
+            );
+
+            this.router.navigate([url]);
+        }
     }
 }
