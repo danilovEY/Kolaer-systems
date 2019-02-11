@@ -31,6 +31,7 @@ public class EmployeeDto implements BaseDto {
     private EnumCategory category;
     private boolean harmfulness;
     private TypeWorkDto typeWork;
+    private String contractNumber;
 
     public EmployeeDto(Long id) {
         this.id = id;

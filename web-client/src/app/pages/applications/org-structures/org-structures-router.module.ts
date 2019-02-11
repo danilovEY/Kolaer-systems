@@ -10,7 +10,7 @@ import {EmployeeCardComponent} from './employees/employee-card/employee-card.com
 import {EmployeesComponent} from './employees/employees.component';
 import {EmployeeCardCommonsComponent} from './employees/employee-card/commons/employee-card-commons.component';
 import {EmployeeCardEducationsComponent} from './employees/employee-card/educations/employee-card-educations.component';
-import {RouterConstant} from "../../../@core/constants/router.constant";
+import {RouterClientConstant} from "../../../@core/constants/router-client.constant";
 import {EmptyRouterComponent} from "../../../@theme/components/empty-router.component";
 import {EmployeeCardAchievementsComponent} from "./employees/employee-card/achievements/employee-card-achievements.component";
 import {EmployeeCardPunishmentsComponent} from "./employees/employee-card/punishments/employee-card-punishments.component";
@@ -31,65 +31,65 @@ const routes: Routes = [
     {path: 'sync', component: OrgStructuresSyncComponent},
     {path: 'type-work', component: TypeWorkComponent},
     {
-        path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_PART_URL, component: EmployeesComponent,
+        path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_PART_URL, component: EmployeesComponent,
         children: [
             {path: '', redirectTo: 'list'},
             {path: 'list', component: EmployeesListComponent},
             {
-                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_PART_URL, component: EmptyRouterComponent,
+                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_PART_URL, component: EmptyRouterComponent,
                 children: [
-                    {path: '', redirectTo: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PART_URL},
+                    {path: '', redirectTo: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PART_URL},
                     {
-                        path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PART_URL,
+                        path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PART_URL,
                         component: EmployeeCardComponent,
                         children: [
-                            {path: '', redirectTo: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_PART_URL},
+                            {path: '', redirectTo: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_PART_URL},
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_PART_URL,
                                 component: EmployeeCardCommonsComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EDUCATIONS_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EDUCATIONS_PART_URL,
                                 component: EmployeeCardEducationsComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_ACHIEVEMENTS_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_ACHIEVEMENTS_PART_URL,
                                 component: EmployeeCardAchievementsComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PUNISHMENTS_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PUNISHMENTS_PART_URL,
                                 component: EmployeeCardPunishmentsComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_PART_URL,
                                 component: EmployeeCardEmploymentHistoriesComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_STAFF_MOVEMENTS_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_STAFF_MOVEMENTS_PART_URL,
                                 component: EmployeeCardStaffMovementsComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMBINATIONS_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMBINATIONS_PART_URL,
                                 component: EmployeeCardCombinationsComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_VACATIONS_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_VACATIONS_PART_URL,
                                 component: EmployeeCardVacationsComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DATA_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DATA_PART_URL,
                                 component: EmployeeCardPersonalDataComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_RELATIVES_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_RELATIVES_PART_URL,
                                 component: EmployeeCardRelativesComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DOCUMENTS_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DOCUMENTS_PART_URL,
                                 component: EmployeeCardPersonalDocumentsComponent
                             },
                             {
-                                path: RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_MILITARY_REGISTRATION_PART_URL,
+                                path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_MILITARY_REGISTRATION_PART_URL,
                                 component: EmployeeCardMilitaryRegistrationComponent
                             }
                         ]

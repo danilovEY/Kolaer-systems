@@ -199,6 +199,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         entity.setPhoto(Optional.ofNullable(dto.getPhoto()).map(photo -> photo.substring(utilService.getCurrentHostUrl().length())).orElse(null));
         entity.setCategory(dto.getCategory());
         entity.setHarmfulness(dto.isHarmfulness());
+        entity.setContractNumber(dto.getContractNumber());
 
         return entity;
     }
@@ -221,6 +222,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         dto.setCategory(entity.getCategory());
         dto.setPhoto(Optional.ofNullable(entity.getPhoto()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
         dto.setHarmfulness(entity.isHarmfulness());
+        dto.setContractNumber(entity.getContractNumber());
 
         return dto;
     }

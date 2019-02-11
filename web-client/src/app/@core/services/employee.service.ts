@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
 import {EMPTY, Observable, of} from 'rxjs/index';
 import {AuthenticationRestService} from '../modules/auth/authentication-rest.service';
 import {AuthenticationObserverService} from './authentication-observer.service';
@@ -18,17 +17,12 @@ import {FindEmployeeRequestModel} from '../models/find-employee-request.model';
 import {HistoryChangeModel} from '../models/history-change.model';
 import {HistoryChangeEventEnum} from '../models/history-change-event.enum';
 import {UpdateTypeWorkEmployeeRequestModel} from '../models/update-type-work-employee-request.model';
+import {PathVariableConstant} from "../constants/path-variable.constant";
+import {RouterServiceConstant} from "../constants/router-service.constant";
+import {Utils} from "../utils/utils";
 
 @Injectable()
 export class EmployeeService extends BaseService implements AuthenticationObserverService {
-    private readonly getEmployeeUrl: string = environment.publicServerUrl + '/employees';
-    private readonly getAllEmployeesUrl: string = `${this.getEmployeeUrl}/get/all`;
-    private readonly getAllEmployeesByDepIdUrl: string = `${this.getEmployeeUrl}/get/all/by/dep`;
-    private readonly uploadEmployeesUrl: string = `${this.getEmployeeUrl}/sync`;
-    private readonly sendReportForOldDbUrl: string = `${this.getEmployeeUrl}/old/report`;
-    private readonly getAllEmployeeBirthdayToday: string = `${this.getEmployeeUrl}/get/birthday/today`;
-    private readonly getAllOtherEmployeeBirthdayToday: string =
-        `${environment.publicServerUrl}/organizations/employees/get/users/birthday/today`;
 
     private _currentEmployeeModel: EmployeeModel = undefined;
 
@@ -70,7 +64,13 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
             return this.accountService.getCurrentAccount().pipe(
                 switchMap((account: SimpleAccountModel) =>
                     account.employeeId
-                        ? this._httpClient.get<EmployeeModel>(this.getEmployeeUrl + `/${account.employeeId}`)
+                        ? this._httpClient.get<EmployeeModel>(
+                            Utils.createUrlFromUrlTemplate(
+                                RouterServiceConstant.EMPLOYEES_ID_URL,
+                                PathVariableConstant.EMPLOYEE_ID,
+                                account.employeeId.toString()
+                            )
+                        )
                         : EMPTY
                 ),
                 tap((employee: EmployeeModel) => this._currentEmployeeModel = this.convertModel(employee)),
@@ -90,7 +90,7 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
         params = params.append('page', page.toString()).append('pagesize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 
-        return this._httpClient.get<Page<EmployeeModel>>(this.getAllEmployeesUrl, {params: params})
+        return this._httpClient.get<Page<EmployeeModel>>(RouterServiceConstant.EMPLOYEES_ALL_URL, {params: params})
             .pipe(tap((request: Page<EmployeeModel>) => request.data.map(this.convertModel)));
     }
 
@@ -103,45 +103,67 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
             .append('onOnePage', String(findRequest.onOnePage))
             .append('departmentIds', findRequest.departmentIds.toString());
 
-        return this._httpClient.get<Page<EmployeeModel>>(this.getEmployeeUrl, {params: params})
+        return this._httpClient.get<Page<EmployeeModel>>(RouterServiceConstant.EMPLOYEES_URL, {params: params})
             .pipe(tap((request: Page<EmployeeModel>) => request.data.forEach(this.convertModel)));
     }
 
     getEmployeesBirthdayToday(): Observable<EmployeeModel[]> {
-        return this._httpClient.get<EmployeeModel[]>(this.getAllEmployeeBirthdayToday)
+        return this._httpClient.get<EmployeeModel[]>(RouterServiceConstant.EMPLOYEES_ALL_BIRTHDAY)
             .pipe(tap((employees: EmployeeModel[]) => employees.map(this.convertModel)));
     }
 
     getOtherEmployeesBirthdayToday(): Observable<OtherEmployeeModel[]> {
-        return this._httpClient.get<OtherEmployeeModel[]>(this.getAllOtherEmployeeBirthdayToday)
+        return this._httpClient.get<OtherEmployeeModel[]>(RouterServiceConstant.OTHER_EMPLOYEES_ALL_BIRTHDAY)
             .pipe(tap((employees: OtherEmployeeModel[]) => employees.map(this.convertToOtherEmployeeModel)));
     }
 
+    getEmployeeById(employeeId: number): Observable<EmployeeModel> {
+        const url = Utils.createUrlFromUrlTemplate(
+            RouterServiceConstant.EMPLOYEES_ID_URL,
+            PathVariableConstant.EMPLOYEE_ID,
+            employeeId.toString()
+        );
+
+        return this._httpClient.get<EmployeeModel>(url)
+            .pipe(map((response: EmployeeModel) => this.convertModel(response)));
+    }
+
     updateEmployee(employeeId: number, employee: EmployeeRequestModel): Observable<EmployeeModel> {
-        const url = `${this.getEmployeeUrl}/${employeeId}`;
+        const url = Utils.createUrlFromUrlTemplate(
+            RouterServiceConstant.EMPLOYEES_ID_URL,
+            PathVariableConstant.EMPLOYEE_ID,
+            employeeId.toString()
+        );
 
         return this._httpClient.put<EmployeeModel>(url, employee)
             .pipe(map((response: EmployeeModel) => this.convertModel(response)));
     }
 
     updateTypeWorkEmployee(employeeId: number, request: UpdateTypeWorkEmployeeRequestModel): Observable<EmployeeModel> {
-        const url = `${this.getEmployeeUrl}/${employeeId}/type-work`;
+        const url = Utils.createUrlFromUrlTemplate(
+            RouterServiceConstant.EMPLOYEES_ID_TYPE_WORK_URL,
+            PathVariableConstant.EMPLOYEE_ID,
+            employeeId.toString()
+        );
 
         return this._httpClient.put<EmployeeModel>(url, request)
             .pipe(map((response: EmployeeModel) => this.convertModel(response)));
     }
 
     createEmployee(employee: EmployeeRequestModel): Observable<EmployeeModel> {
-        return this._httpClient.post<EmployeeModel>(this.getEmployeeUrl, employee)
+        return this._httpClient.post<EmployeeModel>(RouterServiceConstant.EMPLOYEES_URL, employee)
             .pipe(map((response: EmployeeModel) => this.convertModel(response)));
     }
 
     deleteEmployee(employeeId: number): Observable<any> {
-        const url = `${this.getEmployeeUrl}/${employeeId}`;
+        const url = Utils.createUrlFromUrlTemplate(
+            RouterServiceConstant.EMPLOYEES_ID_URL,
+            PathVariableConstant.EMPLOYEE_ID,
+            employeeId.toString()
+        );
 
         return this._httpClient.delete(url);
     }
-
 
     convertModel(model: EmployeeModel): EmployeeModel {
         model.birthday =  model.birthday ? new Date(model.birthday) : null;
@@ -161,12 +183,12 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
         const formData: FormData = new FormData();
         formData.append('file', file);
 
-        return this._httpClient.post(this.uploadEmployeesUrl, formData)
+        return this._httpClient.post(RouterServiceConstant.EMPLOYEES_SYNC, formData)
             .pipe(map((request: HistoryChangeModel[]) => request.map(this.convertToHistoryChangeModel)));
     }
 
     sendReportForOldDb(): Observable<any> {
-        return this._httpClient.post(this.sendReportForOldDbUrl, null);
+        return this._httpClient.post(RouterServiceConstant.EMPLOYEES_OLD_REPORT, null);
     }
 
     convertToHistoryChangeModel(model: HistoryChangeModel): HistoryChangeModel {

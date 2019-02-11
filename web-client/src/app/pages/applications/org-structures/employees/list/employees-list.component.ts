@@ -19,7 +19,7 @@ import {UpdateTypeWorkEmployeeRequestModel} from '../../../../../@core/models/up
 import {CustomActionEventModel} from "../../../../../@theme/components/table/custom-action-event.model";
 import {CustomActionModel} from "../../../../../@theme/components/table/custom-action.model";
 import {Router} from "@angular/router";
-import {RouterConstant} from "../../../../../@core/constants/router.constant";
+import {RouterClientConstant} from "../../../../../@core/constants/router-client.constant";
 import {PathVariableConstant} from "../../../../../@core/constants/path-variable.constant";
 
 @Component({
@@ -236,8 +236,8 @@ export class EmployeesListComponent implements OnInit {
 
     employeesAction(event: CustomActionEventModel<EmployeeModel>) {
         if (event.action.name === this.openActionName) {
-            const url: string = RouterConstant.createUrlFromUrlTemplate(
-                RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_URL,
+            const url: string = Utils.createUrlFromUrlTemplate(
+                RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_URL,
                 PathVariableConstant.EMPLOYEE_ID,
                 event.data.id.toString()
             );

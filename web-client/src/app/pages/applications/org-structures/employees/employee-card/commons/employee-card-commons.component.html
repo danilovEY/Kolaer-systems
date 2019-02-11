@@ -6,67 +6,69 @@
             </nb-card-header>
 
             <nb-card-body>
+                <ngx-loading [show]="employeeDetailsLoading"></ngx-loading>
+
                 <form>
                     <div class="form-group row">
                         <label for="personnelNumber" class="col-sm-3 right-label">Табельный нормер:</label>
                         <div class="col-sm-9">
-                            <input type="number" disabled class="form-control" id="personnelNumber" value="17249999">
+                            <input type="number" disabled class="form-control" id="personnelNumber" [value]="selectedEmployee?.personnelNumber">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="initials" class="col-sm-3 right-label">ФИО:</label>
                         <div class="col-sm-9">
-                            <input type="text" disabled class="form-control" id="initials" value="Иванов Иван Иванович">
+                            <input type="text" disabled class="form-control" id="initials" [value]="selectedEmployee?.initials">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="department-name" class="col-sm-3 right-label">Подразделение:</label>
                         <div class="col-sm-9">
-                            <input type="text" disabled class="form-control" id="department-name" value="ЦРЭТО">
+                            <input type="text" disabled class="form-control" id="department-name" [value]="selectedEmployee?.department?.abbreviatedName">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="post-name" class="col-sm-3 right-label">Должность:</label>
                         <div class="col-sm-9">
-                            <input type="text" disabled class="form-control" id="post-name" value="Инженер">
+                            <input type="text" disabled class="form-control" id="post-name" [value]="selectedEmployee?.post?.abbreviatedName">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="date-of-birth" class="col-sm-3 right-label">Дата рождения:</label>
                         <div class="col-sm-9">
-                            <input type="text" disabled class="form-control" id="date-of-birth" value="14.07.1993">
+                            <input type="text" disabled class="form-control" id="date-of-birth" [value]="selectedEmployee?.birthday | date: 'dd.MM.yyyy'">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="category" class="col-sm-3 right-label">Категория:</label>
                         <div class="col-sm-9">
-                            <input type="text" disabled class="form-control" id="category" value="Руководитель">
+                            <input type="text" disabled class="form-control" id="category" [value]="getCategoryName(selectedEmployee?.category)">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="employment-date" class="col-sm-3 right-label">Дата приема:</label>
                         <div class="col-sm-9">
-                            <input type="text" disabled class="form-control" id="employment-date" value="15.08.2015">
+                            <input type="text" disabled class="form-control" id="employment-date" [value]="selectedEmployee?.employmentDate | date: 'dd.MM.yyyy'">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="employment-contract-number" class="col-sm-3 right-label">Номер трудового договора:</label>
                         <div class="col-sm-9">
-                            <input type="text" disabled class="form-control" id="employment-contract-number" value="156">
+                            <input type="text" disabled class="form-control" id="employment-contract-number" [value]="selectedEmployee?.contractNumber ? selectedEmployee?.contractNumber : null">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="dismissal-date" class="col-sm-3 right-label">Дата увольнения:</label>
                         <div class="col-sm-9">
-                            <input type="text" disabled class="form-control" id="dismissal-date" value="15.08.2022">
+                            <input type="text" disabled class="form-control" id="dismissal-date" [value]="selectedEmployee?.dismissalDate | date: 'dd.MM.yyyy'">
                         </div>
                     </div>
                 </form>

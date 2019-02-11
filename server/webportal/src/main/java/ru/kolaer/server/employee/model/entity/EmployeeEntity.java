@@ -93,4 +93,7 @@ public class EmployeeEntity extends DefaultEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_work_id", insertable=false, updatable=false)
     private TypeWorkEntity typeWork;
+
+    @Column(name = "contract_number", length = 20)
+    private String contractNumber;
 }

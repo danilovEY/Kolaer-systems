@@ -4,7 +4,10 @@ import {AccountService} from '../../../../../@core/services/account.service';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subject} from "rxjs";
 import {PathVariableConstant} from "../../../../../@core/constants/path-variable.constant";
-import {RouterConstant} from "../../../../../@core/constants/router.constant";
+import {RouterClientConstant} from "../../../../../@core/constants/router-client.constant";
+import {takeUntil} from "rxjs/operators";
+import {EmployeeCardService} from "./employee-card.service";
+import {Utils} from "../../../../../@core/utils/utils";
 
 @Component({
     selector: 'employee-card',
@@ -14,115 +17,131 @@ import {RouterConstant} from "../../../../../@core/constants/router.constant";
 export class EmployeeCardComponent implements OnInit, OnDestroy {
     private readonly ngUnsubscribe = new Subject();
 
-    readonly employeeInfoMenu: NbMenuItem[] = [];
-
-    private employeeId: number;
+    employeeInfoMenu: NbMenuItem[] = [];
 
     constructor(private nbMenuService: NbMenuService,
                 private accountService: AccountService,
                 private router: Router,
+                private employeeCardService: EmployeeCardService,
                 private activatedRoute: ActivatedRoute) {
 
     }
 
     ngOnInit(): void {
-        this.employeeId = this.activatedRoute.parent.snapshot.params[PathVariableConstant.EMPLOYEE_ID];
+
+        this.activatedRoute.parent.params
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(params => {
+                const employeeId: number = params[PathVariableConstant.EMPLOYEE_ID];
+
+                if (!isNaN(employeeId)) {
+                    this.employeeCardService.setSelectedEmployeeId(employeeId);
+
+                    this.initMenuItems(employeeId);
+                } else {
+                    this.router.navigate(['/']);
+                }
+        });
+    }
+
+    initMenuItems(employeeId: number) {
+        this.employeeInfoMenu = [];
 
         const commonMenuItem: NbMenuItem = new NbMenuItem();
         commonMenuItem.title = 'Общая информация';
         commonMenuItem.home = true;
-        commonMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_URL,
+        commonMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMMONS_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const educationsMenuItem: NbMenuItem = new NbMenuItem();
         educationsMenuItem.title = 'Образование';
-        educationsMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EDUCATIONS_URL,
+        educationsMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EDUCATIONS_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const achievementsMenuItem: NbMenuItem = new NbMenuItem();
         achievementsMenuItem.title = 'Достижения';
-        achievementsMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_ACHIEVEMENTS_URL,
+        achievementsMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_ACHIEVEMENTS_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const punishmentsMenuItem: NbMenuItem = new NbMenuItem();
         punishmentsMenuItem.title = 'Взыскания';
-        punishmentsMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PUNISHMENTS_URL,
+        punishmentsMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PUNISHMENTS_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const employmentHistoriesMenuItem: NbMenuItem = new NbMenuItem();
         employmentHistoriesMenuItem.title = 'Трудовая книжка';
-        employmentHistoriesMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_URL,
+        employmentHistoriesMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EMPLOYMENT_HISTORIES_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const staffMovementsMenuItem: NbMenuItem = new NbMenuItem();
         staffMovementsMenuItem.title = 'Движение персонала';
-        staffMovementsMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_STAFF_MOVEMENTS_URL,
+        staffMovementsMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_STAFF_MOVEMENTS_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const combinationsMenuItem: NbMenuItem = new NbMenuItem();
         combinationsMenuItem.title = 'Совмещения';
-        combinationsMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMBINATIONS_URL,
+        combinationsMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_COMBINATIONS_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const vacationsMenuItem: NbMenuItem = new NbMenuItem();
         vacationsMenuItem.title = 'Планируемые отпуска';
-        vacationsMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_VACATIONS_URL,
+        vacationsMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_VACATIONS_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const personalDataMenuItem: NbMenuItem = new NbMenuItem();
         personalDataMenuItem.title = 'Персональные данные';
-        personalDataMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DATA_URL,
+        personalDataMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DATA_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const relativesMenuItem: NbMenuItem = new NbMenuItem();
         relativesMenuItem.title = 'Родственники';
-        relativesMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_RELATIVES_URL,
+        relativesMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_RELATIVES_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const personalDocumentsMenuItem: NbMenuItem = new NbMenuItem();
         personalDocumentsMenuItem.title = 'Персональные документы';
-        personalDocumentsMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DOCUMENTS_URL,
+        personalDocumentsMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DOCUMENTS_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         const militaryRegistrationMenuItem: NbMenuItem = new NbMenuItem();
         militaryRegistrationMenuItem.title = 'Воинский учёт';
-        militaryRegistrationMenuItem.link = RouterConstant.createUrlFromUrlTemplate(
-            RouterConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_MILITARY_REGISTRATION_URL,
+        militaryRegistrationMenuItem.link = Utils.createUrlFromUrlTemplate(
+            RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_MILITARY_REGISTRATION_URL,
             PathVariableConstant.EMPLOYEE_ID,
-            this.employeeId.toString()
+            employeeId.toString()
         );
 
         this.employeeInfoMenu.push(
@@ -143,5 +162,6 @@ export class EmployeeCardComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.ngUnsubscribe.next(true);
+        this.ngUnsubscribe.complete();
     }
 }

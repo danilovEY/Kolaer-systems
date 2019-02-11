@@ -91,4 +91,18 @@ export class Utils {
             return Utils.datePipe.transform(date, 'dd.MM.yyyy HH:mm');
         }
     }
+
+    public static createUrlFromUrlTemplate(urlTemplate: string, urlParamName: string, urlParamValue: string) {
+        return this.createUrlFromUrlTemplateMap(urlTemplate,  new Map().set(urlParamName, urlParamValue));
+    }
+
+    public static createUrlFromUrlTemplateMap(urlTemplate: string, urlParamNameValueMap: Map<string, string>) {
+        let newUrl = urlTemplate;
+
+        for (const urlName of Array.from(urlParamNameValueMap.keys())) {
+            newUrl = newUrl.replace(':' + urlName, urlParamNameValueMap.get(urlName));
+        }
+
+        return newUrl;
+    }
 }

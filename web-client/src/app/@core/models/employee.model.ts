@@ -21,4 +21,5 @@ export class EmployeeModel extends BaseModel {
     post: PostModel;
     harmfulness: boolean;
     typeWork: TypeWorkModel;
+    contractNumber: string;
 }

@@ -16,6 +16,7 @@ public class EducationMapper {
         EducationDto dto = new EducationDto();
         dto.setId(entity.getId());
         dto.setDocument(entity.getDocument());
+        dto.setQualification(entity.getQualification());
         dto.setDocumentNumber(entity.getDocumentNumber());
         dto.setEmployeeId(entity.getEmployeeId());
         dto.setExpirationDate(entity.getExpirationDate());

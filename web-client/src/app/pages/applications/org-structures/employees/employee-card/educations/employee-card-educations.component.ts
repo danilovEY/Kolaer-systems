@@ -5,6 +5,8 @@ import {Column} from "ng2-smart-table/lib/data-set/column";
 import {Cell} from "ng2-smart-table";
 import {Utils} from "../../../../../../@core/utils/utils";
 import {EmployeeEducationModel} from "../../../../../../@core/models/employee/employee-education.model";
+import {EmployeeEducationService} from "../../../../../../@core/services/employee-education.service";
+import {EmployeeCardService} from "../employee-card.service";
 
 @Component({
     selector: 'employee-card-educations',
@@ -17,10 +19,11 @@ export class EmployeeCardEducationsComponent implements OnInit {
     educationTable: CustomTableComponent;
 
     educationColumns: Column[] = [];
-    educationDataSource: EmployeeCardEducationDataSource = new EmployeeCardEducationDataSource();
+    educationDataSource: EmployeeCardEducationDataSource;
 
-    constructor() {
-
+    constructor(private employeeEducationService: EmployeeEducationService,
+                private employeeCardService: EmployeeCardService) {
+        this.educationDataSource = new EmployeeCardEducationDataSource(employeeEducationService, employeeCardService);
     }
 
     ngOnInit(): void {
