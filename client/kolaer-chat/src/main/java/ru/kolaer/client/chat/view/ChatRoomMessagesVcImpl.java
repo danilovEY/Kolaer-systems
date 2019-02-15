@@ -164,13 +164,13 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
             AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
                     .getAuthentication()
                     .getAuthorizedUser();
-//            if(authorizedUser.isAccessOit()) {
-//                if(!contextMenu.getItems().contains(hideMessages)) {
-//                    contextMenu.getItems().add(hideMessages); TODO: refactoring
-//                }
-//            } else {
-//                contextMenu.getItems().remove(hideMessages);
-//            }
+            if(authorizedUser.hasAccess(ClientChatAccessConstant.CHAT_DELETE_MESSAGE)) {
+                if(!contextMenu.getItems().contains(hideMessages)) {
+                    contextMenu.getItems().add(hideMessages);
+                }
+            } else {
+                contextMenu.getItems().remove(hideMessages);
+            }
         });
 
         chatMessageDtoListView.setContextMenu(contextMenu);

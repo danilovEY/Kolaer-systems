@@ -55,7 +55,7 @@ public class EmployeeController {
     }
 
     @ApiOperation("Получить сотрудника")
-    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_GET + "','" + EmployeeAccessConstant.EMPLOYEE_GET_CURRENT + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_GET + "')")
     @GetMapping(RouterConstants.EMPLOYEES_ID)
     public EmployeeDto getAllEmployees(@PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId) {
         return this.employeeService.getById(employeeId);

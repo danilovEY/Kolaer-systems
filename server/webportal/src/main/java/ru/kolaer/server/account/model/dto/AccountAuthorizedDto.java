@@ -1,12 +1,15 @@
 package ru.kolaer.server.account.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
@@ -37,5 +40,23 @@ public class AccountAuthorizedDto implements UserDetails, CredentialsContainer {
     public void eraseCredentials() {
         this.password = null;
         this.credentialsNonExpired = false;
+    }
+
+    @JsonIgnore
+    public boolean hasAccess(String access) {
+        return authorities
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(access::equals);
+    }
+
+    @JsonIgnore
+    public boolean hasAnyAccess(String... accesses) {
+        List<String> accessList = Arrays.asList(accesses);
+
+        return authorities
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(accessList::contains);
     }
 }
