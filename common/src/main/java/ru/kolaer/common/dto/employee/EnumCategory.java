@@ -1,4 +1,4 @@
-package ru.kolaer.common.dto.kolaerweb;
+package ru.kolaer.common.dto.employee;
 
 /**
  * Created by danilovey on 13.10.2017.

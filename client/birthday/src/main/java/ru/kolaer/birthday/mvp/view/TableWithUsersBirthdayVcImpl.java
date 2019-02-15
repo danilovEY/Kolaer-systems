@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.tools.BirthdayTools;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;

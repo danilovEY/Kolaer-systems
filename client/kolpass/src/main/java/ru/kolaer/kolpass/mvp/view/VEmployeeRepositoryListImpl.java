@@ -4,7 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

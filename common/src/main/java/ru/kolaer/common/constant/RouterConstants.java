@@ -3,19 +3,38 @@ package ru.kolaer.common.constant;
 public interface RouterConstants {
 
     String EMPLOYEES = "/employees";
-    String EMPLOYEE_ID = EMPLOYEES + "/{" + PathVariableConstants.EMPLOYEE_ID + "}";
-    String EMPLOYEE_ID_ACHIEVEMENTS = EMPLOYEE_ID + "/achievements";
-    String EMPLOYEE_ID_EDUCATIONS = EMPLOYEE_ID + "/educations";
-    String EMPLOYEE_ID_EMPLOYMENT_HISTORIES = EMPLOYEE_ID + "/employment_histories";
-    String EMPLOYEE_ID_MILITARY_REGISTRATIONS = EMPLOYEE_ID + "/military_registrations";
-    String EMPLOYEE_ID_PERSONAL_DATA = EMPLOYEE_ID + "/personal_data";
-    String EMPLOYEE_ID_PUNISHMENTS = EMPLOYEE_ID + "/punishments";
-    String EMPLOYEE_ID_RELATIVES = EMPLOYEE_ID + "/relatives";
+    String EMPLOYEES_DAYS_OF_BIRTHS = EMPLOYEES + "/days_of_births";
+    String EMPLOYEES_SYNC = EMPLOYEES + "/sync";
+    String EMPLOYEES_REPORT = EMPLOYEES + "/report";
+    String EMPLOYEES_REPORT_OLD = EMPLOYEES_REPORT + "/old";
+    String EMPLOYEES_ID = EMPLOYEES + "/{" + PathVariableConstants.EMPLOYEE_ID + "}";
+    String EMPLOYEES_ID_ACHIEVEMENTS = EMPLOYEES_ID + "/achievements";
+    String EMPLOYEES_ID_EDUCATIONS = EMPLOYEES_ID + "/educations";
+    String EMPLOYEES_ID_EMPLOYMENT_HISTORIES = EMPLOYEES_ID + "/employment_histories";
+    String EMPLOYEES_ID_MILITARY_REGISTRATIONS = EMPLOYEES_ID + "/military_registrations";
+    String EMPLOYEES_ID_PERSONAL_DATA = EMPLOYEES_ID + "/personal_data";
+    String EMPLOYEES_ID_PUNISHMENTS = EMPLOYEES_ID + "/punishments";
+    String EMPLOYEES_ID_RELATIVES = EMPLOYEES_ID + "/relatives";
+    String EMPLOYEES_ID_TYPE_WORK = EMPLOYEES_ID + "/type_work";
+    String EMPLOYEES_ID_STAFF_MOVEMENTS = EMPLOYEES_ID + "/staff_movements";
+    String EMPLOYEES_ID_PERSONAL_DOCUMENTS = EMPLOYEES_ID + "/personal_documents";
+
+
+    String TYPE_WORKS = "/type-works";
+    String TYPE_WORKS_ID = TYPE_WORKS + "/{" + PathVariableConstants.TYPE_WORK_ID + "}";
 
 
     String DEPARTMENTS = "/departments";
-    String DEPARTMENT_FIND = DEPARTMENTS + "/find";
-    String DEPARTMENT_BY_ID = DEPARTMENTS + "/{" + PathVariableConstants.DEPARTMENT_ID + "}";
+    String DEPARTMENTS_FIND = DEPARTMENTS + "/find";
+    String DEPARTMENTS_ID = DEPARTMENTS + "/{" + PathVariableConstants.DEPARTMENT_ID + "}";
+
+
+    String CONTACTS = "/contacts";
+    String CONTACTS_DEPARTMENTS = CONTACTS + "/departments";
+    String CONTACTS_DEPARTMENTS_ID = CONTACTS_DEPARTMENTS + "/{" + PathVariableConstants.DEPARTMENT_ID + "}";
+    String CONTACTS_DEPARTMENTS_ID_TYPE = CONTACTS_DEPARTMENTS_ID + "/{" + PathVariableConstants.CONTACT_TYPE + "}";
+    String CONTACTS_EMPLOYEES = CONTACTS + "/employees";
+    String CONTACTS_EMPLOYEES_ID = CONTACTS_EMPLOYEES + "/{" + PathVariableConstants.EMPLOYEE_ID + "}";
 
 
     String AUTHENTICATION = "/authentication";

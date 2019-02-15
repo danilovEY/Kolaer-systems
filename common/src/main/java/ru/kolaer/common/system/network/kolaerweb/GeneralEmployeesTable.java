@@ -1,6 +1,6 @@
 package ru.kolaer.common.system.network.kolaerweb;
 
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.system.network.UserDataBase;
 
 /**

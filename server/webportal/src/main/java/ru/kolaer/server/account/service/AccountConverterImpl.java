@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.account.model.entity.AccountEntity;
 import ru.kolaer.server.contact.model.entity.ContactEntity;
 import ru.kolaer.server.core.service.impl.UtilService;
@@ -41,14 +41,12 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setEmail(dto.getEmail());
         accountEntity.setUsername(dto.getUsername());
         accountEntity.setChatName(dto.getChatName());
-        accountEntity.setAvatarUrl(Optional.ofNullable(dto.getAvatarUrl()).map(photo -> photo.substring(utilService.getCurrentHostUrl().length())).orElse(null));
-        accountEntity.setAccessUser(dto.isAccessUser());
-        accountEntity.setAccessOit(dto.isAccessOit());
-        accountEntity.setAccessOk(dto.isAccessOk());
-        accountEntity.setAccessVacationAdmin(dto.isAccessVacationAdmin());
-        accountEntity.setAccessVacationDepEdit(dto.isAccessVacationDepEdit());
-        accountEntity.setAccessVacationDepEdit(dto.isAccessVacationDepEdit());
-        accountEntity.setAccessTypeWork(dto.isAccessTypeWork());
+        accountEntity.setAccess(dto.getAccess());
+        accountEntity.setAvatarUrl(
+                Optional.ofNullable(dto.getAvatarUrl())
+                        .map(photo -> photo.substring(utilService.getCurrentHostUrl().length()))
+                        .orElse(null)
+        );
 
         accountEntity.setEmployeeId(Optional.ofNullable(dto.getEmployee())
                 .map(EmployeeDto::getId)
@@ -72,13 +70,12 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setEmail(model.getEmail());
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
-        accountDto.setAvatarUrl(Optional.ofNullable(model.getAvatarUrl()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
-        accountDto.setAccessUser(model.isAccessUser());
-        accountDto.setAccessOit(model.isAccessOit());
-        accountDto.setAccessOk(model.isAccessOk());
-        accountDto.setAccessVacationAdmin(model.isAccessVacationAdmin());
-        accountDto.setAccessVacationDepEdit(model.isAccessVacationDepEdit());
-        accountDto.setAccessTypeWork(model.isAccessTypeWork());
+        accountDto.setAccess(model.getAccess());
+        accountDto.setAvatarUrl(
+                Optional.ofNullable(model.getAvatarUrl())
+                        .map(photo -> utilService.getCurrentHostUrl() + photo)
+                        .orElse(null)
+        );
 
         if(model.getEmployeeId() != null) {
             accountDto.setEmployee(employeeConverter.convertToDto(model.getEmployee()));
@@ -130,13 +127,12 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setEmail(model.getEmail());
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
-        accountDto.setAccessUser(model.isAccessUser());
-        accountDto.setAvatarUrl(Optional.ofNullable(model.getAvatarUrl()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
-        accountDto.setAccessOit(model.isAccessOit());
-        accountDto.setAccessOk(model.isAccessOk());
-        accountDto.setAccessVacationAdmin(model.isAccessVacationAdmin());
-        accountDto.setAccessVacationDepEdit(model.isAccessVacationDepEdit());
-        accountDto.setAccessTypeWork(model.isAccessTypeWork());
+        accountDto.setAccess(model.getAccess());
+        accountDto.setAvatarUrl(
+                Optional.ofNullable(model.getAvatarUrl())
+                        .map(photo -> utilService.getCurrentHostUrl() + photo)
+                        .orElse(null)
+        );
 
         Optional.ofNullable(model.getEmployeeId())
                 .map(EmployeeDto::new)
@@ -170,8 +166,6 @@ public class AccountConverterImpl implements AccountConverter {
                 .map(passwordEncoder::encode)
                 .ifPresent(accountEntity::setPassword);
 
-        accountEntity.setAccessUser(true);
-
         return accountEntity;
     }
 
@@ -183,13 +177,13 @@ public class AccountConverterImpl implements AccountConverter {
         accountSimpleDto.setEmail(accountEntity.getEmail());
         accountSimpleDto.setUsername(accountEntity.getUsername());
         accountSimpleDto.setChatName(accountEntity.getChatName());
-        accountSimpleDto.setAvatarUrl(Optional.ofNullable(accountEntity.getAvatarUrl()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
-        accountSimpleDto.setAccessOit(accountEntity.isAccessOit());
-        accountSimpleDto.setAccessUser(accountEntity.isAccessUser());
-        accountSimpleDto.setAccessOk(accountEntity.isAccessOk());
-        accountSimpleDto.setAccessVacationAdmin(accountEntity.isAccessVacationAdmin());
-        accountSimpleDto.setAccessVacationDepEdit(accountEntity.isAccessVacationDepEdit());
-        accountSimpleDto.setAccessTypeWork(accountEntity.isAccessTypeWork());
+        accountSimpleDto.setAccess(accountEntity.getAccess());
+        accountSimpleDto.setAvatarUrl(
+                Optional.ofNullable(accountEntity.getAvatarUrl())
+                        .map(photo -> utilService.getCurrentHostUrl() + photo)
+                        .orElse(null)
+        );
+
 
         return accountSimpleDto;
     }
@@ -202,14 +196,11 @@ public class AccountConverterImpl implements AccountConverter {
         accountSimpleDto.setUsername(dto.getUsername());
         accountSimpleDto.setChatName(dto.getChatName());
         accountSimpleDto.setAvatarUrl(dto.getAvatarUrl());
-        accountSimpleDto.setAccessOit(dto.isAccessOit());
-        accountSimpleDto.setAccessUser(dto.isAccessUser());
-        accountSimpleDto.setAccessOk(dto.isAccessOk());
-        accountSimpleDto.setAccessVacationAdmin(dto.isAccessVacationAdmin());
-        accountSimpleDto.setAccessVacationDepEdit(dto.isAccessVacationDepEdit());
-        accountSimpleDto.setAccessTypeWork(dto.isAccessTypeWork());
+        accountSimpleDto.setAccess(dto.getAccess());
 
-        Optional.ofNullable(dto.getEmployee()).map(EmployeeDto::getId).ifPresent(accountSimpleDto::setEmployeeId);
+        Optional.ofNullable(dto.getEmployee())
+                .map(EmployeeDto::getId)
+                .ifPresent(accountSimpleDto::setEmployeeId);
 
         return accountSimpleDto;
     }

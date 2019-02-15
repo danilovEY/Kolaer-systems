@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
+import ru.kolaer.server.account.AccountAccessConstant;
 import ru.kolaer.server.account.dao.AccountDao;
+import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.account.model.entity.AccountEntity;
+import ru.kolaer.server.contact.ContactAccessConstant;
 import ru.kolaer.server.contact.dao.ContactDao;
 import ru.kolaer.server.contact.model.entity.ContactEntity;
 import ru.kolaer.server.contact.service.ContactService;
@@ -77,10 +80,15 @@ public class AccountServiceImpl
             throw new UnexpectedRequestParams("Не указан пароль аккаунта");
         }
 
-        AccountEntity currentAccount = defaultEntityDao.findName(authenticationService.getCurrentLogin());
+        AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
 
         if(passwordEncoder.matches(Optional.ofNullable(changePasswordDto.getOldPassword()).orElse(""), currentAccount.getPassword())) {
-            currentAccount.setPassword(passwordEncoder.encode(Optional.ofNullable(changePasswordDto.getNewPassword()).orElse("")));
+            AccountEntity accountEntity = defaultEntityDao.findById(currentAccount.getId());
+
+            accountEntity.setPassword(passwordEncoder.encode(Optional.ofNullable(changePasswordDto.getNewPassword()).orElse("")));
+            defaultEntityDao.update(accountEntity);
+
+            currentAccount.eraseCredentials();
         } else {
             throw new UnexpectedRequestParams("Неправильный старый пароль!");
         }
@@ -93,21 +101,21 @@ public class AccountServiceImpl
             throw new UnexpectedRequestParams("Не указан ID аккаунта");
         }
 
-        AccountEntity currentAccount = defaultEntityDao.findName(authenticationService.getCurrentLogin());
+        AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
 
-        if(!currentAccount.isAccessOit() && !currentAccount.getId().equals(accountSimpleDto.getId())) {
+        if(!authenticationService.containsAccess(AccountAccessConstant.ACCOUNTS_EDIT_ALL) && currentAccount.getId() != accountSimpleDto.getId()) {
             throw new ForbiddenException("У вас нет доступа для редактирования");
         }
 
-        currentAccount.setUsername(accountSimpleDto.getUsername());
-        currentAccount.setChatName(accountSimpleDto.getChatName());
-        currentAccount.setEmail(accountSimpleDto.getEmail());
+        AccountEntity accountEntity = defaultEntityDao.findName(currentAccount.getUsername());
 
-        AccountSimpleDto result = defaultConverter.convertToSimpleDto(defaultEntityDao.update(currentAccount));
+        accountEntity.setUsername(accountSimpleDto.getUsername());
+        accountEntity.setChatName(accountSimpleDto.getChatName());
+        accountEntity.setEmail(accountSimpleDto.getEmail());
 
-        authenticationService.resetOnLogin(accountSimpleDto.getUsername());
+        defaultEntityDao.update(accountEntity);
 
-        return result;
+        return accountSimpleDto;
     }
 
     @Override
@@ -147,13 +155,13 @@ public class AccountServiceImpl
     @Override
     @Transactional
     public ContactDto updateContact(ContactRequestDto contactRequestDto) {
-        AccountSimpleDto accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+        AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
 
-        if (accountSimpleByAuthentication.getEmployeeId() == null) {
+        if (currentAccount.getEmployeeId() == null) {
             throw new NotFoundDataException("К вашей учетной записи не привязан сотрудник");
         }
 
-        EmployeeEntity employee = employeeDao.findById(accountSimpleByAuthentication.getEmployeeId());
+        EmployeeEntity employee = employeeDao.findById(currentAccount.getEmployeeId());
 
         ContactEntity contact = employee.getContact();
         if (contact == null) {
@@ -165,7 +173,7 @@ public class AccountServiceImpl
         contact.setWorkPhoneNumber(contactRequestDto.getWorkPhoneNumber());
         contact.setPlacementId(contactRequestDto.getPlacementId());
 
-        if (accountSimpleByAuthentication.isAccessOit() || accountSimpleByAuthentication.isAccessOk()) {
+        if (authenticationService.containsAccess(ContactAccessConstant.CONTACT_EMAIL_EDIT_ALL)) {
             contact.setEmail(contactRequestDto.getEmail());
         }
 
@@ -175,18 +183,18 @@ public class AccountServiceImpl
             employee = employeeDao.save(employee);
         }
 
-        return contactService.getContactByEmployeeId(accountSimpleByAuthentication.getEmployeeId());
+        return contactService.getContactByEmployeeId(currentAccount.getEmployeeId());
     }
 
     @Override
     public ContactDto getContact() {
-        AccountSimpleDto accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+        AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
 
-        if (accountSimpleByAuthentication.getEmployeeId() == null) {
+        if (currentAccount.getEmployeeId() == null) {
             throw new NotFoundDataException("К вашей учетной записи не привязан сотрудник");
         }
 
-        return contactService.getContactByEmployeeId(accountSimpleByAuthentication.getEmployeeId());
+        return contactService.getContactByEmployeeId(currentAccount.getEmployeeId());
     }
 
     @Override

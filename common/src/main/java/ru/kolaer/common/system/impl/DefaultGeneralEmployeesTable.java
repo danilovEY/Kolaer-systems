@@ -1,7 +1,11 @@
 package ru.kolaer.common.system.impl;
 
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.dto.kolaerweb.*;
+import ru.kolaer.common.dto.employee.EmployeeDto;
+import ru.kolaer.common.dto.employee.EnumGender;
+import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
+import ru.kolaer.common.dto.kolaerweb.ServerResponse;
+import ru.kolaer.common.dto.kolaerweb.TypePostEnum;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.common.system.network.kolaerweb.GeneralEmployeesTable;
 

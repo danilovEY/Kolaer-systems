@@ -1,7 +1,7 @@
 package ru.kolaer.server.employee.service;
 
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.service.BirthdayService;
 import ru.kolaer.server.core.service.DefaultService;
 import ru.kolaer.server.employee.model.dto.EmployeeRequestDto;

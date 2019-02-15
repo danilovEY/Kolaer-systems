@@ -4,7 +4,7 @@ import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.model.dto.upload.UploadFileDto;
 import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;

@@ -2,7 +2,7 @@ package ru.kolaer.server.account.service;
 
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.account.model.entity.AccountEntity;
 import ru.kolaer.server.core.converter.BaseConverter;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;

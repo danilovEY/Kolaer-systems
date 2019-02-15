@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.dto.auth.AccountSimpleDto;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
-import ru.kolaer.server.core.exception.ForbiddenException;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.service.AbstractDefaultService;
@@ -200,17 +198,7 @@ public class EmployeeServiceImpl
             request.setTypeWorkId(null);
         }
 
-        AccountSimpleDto currentAccount = authenticationService.getAccountSimpleByAuthentication();
         EmployeeEntity updatableEmployee = defaultEntityDao.findById(employeeId);
-
-        if (!currentAccount.isAccessOit() || !currentAccount.isAccessOk()) {
-            EmployeeEntity currentEmployee = defaultEntityDao.findById(currentAccount.getEmployeeId());
-
-            if(!currentEmployee.getDepartmentId().equals(updatableEmployee.getDepartmentId())) {
-                throw new ForbiddenException("У вас нет доступа для изменения данных у данного сотрудника");
-            }
-        }
-
         updatableEmployee.setTypeWorkId(request.getTypeWorkId());
         updatableEmployee.setHarmfulness(request.isHarmfulness());
 

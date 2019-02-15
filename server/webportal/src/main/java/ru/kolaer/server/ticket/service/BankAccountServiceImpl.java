@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.model.dto.*;
 import ru.kolaer.server.core.service.AbstractDefaultService;

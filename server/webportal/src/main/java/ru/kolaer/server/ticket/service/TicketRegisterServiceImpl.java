@@ -4,8 +4,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.tools.Tools;
+import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.core.bean.RegisterTicketScheduler;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.ServerException;
@@ -147,7 +147,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
         ticketRegisterEntity.setCreateRegister(LocalDateTime.now());
 
         if(this.authenticationService.isAuth()) {
-            AccountSimpleDto accountSimpleByAuthentication = this.authenticationService.getAccountSimpleByAuthentication();
+            AccountAuthorizedDto accountSimpleByAuthentication = this.authenticationService.getAccountAuthorized();
             ticketRegisterEntity.setAccountId(accountSimpleByAuthentication.getId());
         }
 

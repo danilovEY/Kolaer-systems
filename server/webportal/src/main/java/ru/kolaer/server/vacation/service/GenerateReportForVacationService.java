@@ -9,7 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.core.converter.DateTimeConverter;
 import ru.kolaer.server.core.exception.NotFoundDataException;

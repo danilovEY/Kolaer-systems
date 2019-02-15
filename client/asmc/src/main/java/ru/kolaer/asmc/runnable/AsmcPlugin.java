@@ -127,9 +127,9 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public void login(AccountDto account) {
-        if(this.splitListContent != null && account.isAccessOit()) {
-            this.splitListContent.setAccess(true);
-        }
+//        if(this.splitListContent != null && account.isAccessOit()) { TODO: refactoring
+//            this.splitListContent.setAccess(true);
+//        }
     }
 
     @Override

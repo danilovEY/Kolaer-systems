@@ -13,7 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.core.model.dto.FilterType;
 import ru.kolaer.server.core.model.dto.ResultUpdate;

@@ -3,6 +3,8 @@ package ru.kolaer.common.dto.auth;
 import lombok.Data;
 import ru.kolaer.common.dto.BaseDto;
 
+import java.util.Collection;
+
 /**
  * Created by Danilov on 24.07.2016.
  * Структура аккаунта в БД.
@@ -15,10 +17,6 @@ public class AccountSimpleDto implements BaseDto {
     private String email;
     private String avatarUrl;
     private Long employeeId;
-    private boolean accessOit;
-    private boolean accessUser = true;
-    private boolean accessOk;
-    private boolean accessVacationAdmin;
-    private boolean accessVacationDepEdit;
-    private boolean accessTypeWork;
+    private Collection<String> access;
+
 }

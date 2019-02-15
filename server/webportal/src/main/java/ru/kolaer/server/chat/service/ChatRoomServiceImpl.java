@@ -13,12 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.auth.AccountDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.error.ErrorCode;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.IdDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
 import ru.kolaer.common.dto.kolaerweb.kolchat.*;
 import ru.kolaer.server.account.dao.AccountDao;
+import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.account.model.entity.AccountEntity;
 import ru.kolaer.server.chat.dao.ChatMessageDao;
 import ru.kolaer.server.chat.dao.ChatRoomDao;
@@ -118,7 +119,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     @Override
     @Transactional(readOnly = true)
     public List<ChatRoomDto> getAllRoomForAuthUser() {
-        List<ChatRoomEntity> allByUserInRoom = defaultEntityDao.findAllByUser(authenticationService.getAccountByAuthentication().getId());
+        List<ChatRoomEntity> allByUserInRoom = defaultEntityDao.findAllByUser(authenticationService.getAccountAuthorized().getId());
 
         if(allByUserInRoom.isEmpty()) {
             return Collections.emptyList();
@@ -160,7 +161,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     @Transactional
     public void markReadMessages(IdsDto idsDto, boolean read) {
         if(idsDto != null && !CollectionUtils.isEmpty(idsDto.getIds())) {
-            AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+            AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
             chatMessageDao.markRead(idsDto.getIds(), accountByAuthentication.getId(), read);
         }
     }
@@ -268,7 +269,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             throw new UnexpectedRequestParams("Должен быть ID пользователя");
         }
 
-        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+        AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
 
         List<Long> allUserIds = Arrays.asList(idDto.getId(), accountByAuthentication.getId());
 
@@ -282,7 +283,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         group = createGroup(null);
         group.setType(ChatGroupType.SINGLE);
         group.setRoomKey(roomKey);
-        group.setUserCreated(createChatUserDto(accountByAuthentication));
+//        group.setUserCreated(createChatUserDto(accountByAuthentication)); // TODO: refactoring
         group.getUsers().addAll(getUsersByIds(allUserIds));
         group = this.save(group);
 
@@ -306,8 +307,8 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
 
         List<ChatRoomDto> roomDtos = new ArrayList<>(idsDto.getIds().size());
 
-        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
-        ChatUserDto authChatUserDto = createChatUserDto(accountByAuthentication);
+        AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
+        ChatUserDto authChatUserDto = null; // createChatUserDto(accountByAuthentication) TODO: refactoring
 
         for (Long accountId : idsDto.getIds()) {
             List<Long> allUserIds = Arrays.asList(accountId, accountByAuthentication.getId());
@@ -359,7 +360,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             throw new UnexpectedRequestParams("Должны быть ID пользователей");
         }
 
-        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+        AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
 
         List<Long> allUserIds = idsDto.getIds().stream().distinct().collect(Collectors.toList());
         if(!allUserIds.contains(accountByAuthentication.getId())) {
@@ -375,7 +376,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             group = createGroup(name);
             group.setRoomKey(roomKey);
             group.setType(ChatGroupType.PRIVATE);
-            group.setUserCreated(createChatUserDto(accountByAuthentication));
+            //group.setUserCreated(createChatUserDto(accountByAuthentication)); TODO: refactoring
             group.getUsers().addAll(getUsersByIds(allUserIds));
             group = this.save(group);
 
@@ -448,7 +449,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     public ChatRoomDto createPublicGroup(String name, IdsDto idsDto) {
         ChatRoomDto group = createGroup(name);
         group.setType(ChatGroupType.PUBLIC);
-        group.setUserCreated(createChatUserDto(authenticationService.getAccountByAuthentication()));
+//        group.setUserCreated(createChatUserDto(authenticationService.getAccountAuthorized())); TODO: refactoring
         return group;
     }
 
@@ -459,7 +460,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             throw new UnexpectedRequestParams("Должны быть ID групп");
         }
 
-        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+        AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
         Long authAccountId = accountByAuthentication.getId();
 
         Map<Long, List<Long>> allUsersByRooms = defaultEntityDao.findAllUsersByRooms(idsDto.getIds());
@@ -496,10 +497,10 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     @Transactional
     public void hideMessage(IdsDto idsDto, boolean hide) {
         if(idsDto != null && !CollectionUtils.isEmpty(idsDto.getIds())) {
-            AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+            AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
             List<ChatMessageEntity> hideMessages = chatMessageDao.findById(idsDto.getIds())
                     .stream()
-                    .filter(message -> accountByAuthentication.isAccessOit() || message.getAccountId().equals(accountByAuthentication.getId()))
+//                    .filter(message -> accountByAuthentication.isAccessOit() || message.getAccountId().equals(accountByAuthentication.getId())) TODO: refactoring
                     .collect(Collectors.toList());
 
             if(hideMessages.isEmpty()) {
@@ -526,13 +527,12 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     @Transactional
     public void deleteMessage(IdsDto idsDto) {
         if(idsDto != null && !CollectionUtils.isEmpty(idsDto.getIds())) {
-            AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+            AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
 
             List<ChatMessageEntity> messages = chatMessageDao.findById(idsDto.getIds());
             List<ChatMessageEntity> removedMessages = messages
                     .stream()
-                    .filter(message -> accountByAuthentication.isAccessOit() ||
-                            message.getAccountId().equals(accountByAuthentication.getId()))
+//                    .filter(message -> accountByAuthentication.isAccessOit() || message.getAccountId().equals(accountByAuthentication.getId())) TODO: refactoring
                     .collect(Collectors.toList());
 
             if (!removedMessages.isEmpty()) {

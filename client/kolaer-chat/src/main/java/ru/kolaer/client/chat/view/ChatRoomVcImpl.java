@@ -70,11 +70,11 @@ public class ChatRoomVcImpl implements ChatRoomVc {
             for (ChatMessageDto chatMessageDto : infoMessageActionDto.getChatMessageDtoList()) {
                 if(chatMessageDto.getRoomId().equals(chatRoomDto.getId())) {
                     if(infoMessageActionDto.getCommand() == ChatInfoCommand.HIDE_MESSAGES) {
-                        if(authorizedUser.isAccessOit()) {
-                            chatRoomMessagesVc.hideMessage(chatMessageDto);
-                        } else {
-                            chatRoomMessagesVc.removeMessage(chatMessageDto);
-                        }
+//                        if(authorizedUser.isAccessOit()) {
+//                            chatRoomMessagesVc.hideMessage(chatMessageDto); TODO: refactoring
+//                        } else {
+//                            chatRoomMessagesVc.removeMessage(chatMessageDto);
+//                        }
                     } else if(infoMessageActionDto.getCommand() == ChatInfoCommand.DELETE_MESSAGES) {
                         chatRoomMessagesVc.removeMessage(chatMessageDto);
                     }

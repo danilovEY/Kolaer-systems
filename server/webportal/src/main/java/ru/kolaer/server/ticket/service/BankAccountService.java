@@ -1,7 +1,7 @@
 package ru.kolaer.server.ticket.service;
 
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.model.dto.FilterParam;
 import ru.kolaer.server.core.model.dto.SortParam;
 import ru.kolaer.server.core.service.DefaultService;

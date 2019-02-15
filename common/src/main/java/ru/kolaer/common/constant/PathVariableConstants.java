@@ -4,6 +4,8 @@ public interface PathVariableConstants {
 
     String EMPLOYEE_ID = "employeeId";
     String DEPARTMENT_ID = "departmentId";
+    String TYPE_WORK_ID = "typeWorkId";
+    String CONTACT_TYPE = "contactType";
     String DATE = "date";
     String TIME = "time";
 

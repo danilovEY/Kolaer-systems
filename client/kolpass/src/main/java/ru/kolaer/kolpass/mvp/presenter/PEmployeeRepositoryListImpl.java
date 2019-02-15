@@ -3,7 +3,7 @@ package ru.kolaer.kolpass.mvp.presenter;
 import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.common.system.UniformSystemEditorKit;
 import ru.kolaer.common.system.network.kolaerweb.KolpassTable;

@@ -1,7 +1,7 @@
 package ru.kolaer.kolpass.mvp.view;
 
 import javafx.scene.layout.BorderPane;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.mvp.view.BaseView;
 
 import java.util.function.Function;

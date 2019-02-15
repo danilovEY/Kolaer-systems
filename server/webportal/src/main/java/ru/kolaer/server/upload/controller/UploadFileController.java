@@ -35,7 +35,7 @@ public class UploadFileController {
 //        final String pathToResources = env.getProperty("path.to_resources");
 //        final String urlToResources = env.getProperty("url.to_resources");
 //
-//        final String userName = this.authenticationService.getAccountByAuthentication().getUsername();
+//        final String userName = this.authenticationService.getAccountAuthorized().getUsername();
 //
 //        String resourceDirPath = pathToResources + userName;
 //

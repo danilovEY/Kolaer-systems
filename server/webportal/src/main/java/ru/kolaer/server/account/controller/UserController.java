@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
-import ru.kolaer.server.account.AccountRoleConstant;
+import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.account.service.AccountService;
 import ru.kolaer.server.core.model.dto.account.ChangePasswordDto;
 import ru.kolaer.server.core.model.dto.concact.ContactDto;
@@ -36,42 +36,42 @@ public class UserController {
         this.accountService = accountService;
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @PreAuthorize("isAuthenticated()")
     @ApiOperation("Получить авторизированный аккаунт")
     @GetMapping(RouterConstants.USER_WITH_EMPLOYEE)
     public AccountDto getUser() {
-        return this.authenticationService.getAccountByAuthentication();
+        return this.accountService.getById(authenticationService.getAccountAuthorized().getId());
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @PreAuthorize("isAuthenticated()")
     @ApiOperation("Получить авторизированный аккаунт")
     @GetMapping(RouterConstants.USER)
-    public AccountSimpleDto getSimpleUser() {
-        return this.authenticationService.getAccountSimpleByAuthentication();
+    public AccountAuthorizedDto getSimpleUser() {
+        return this.authenticationService.getAccountAuthorized();
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @PreAuthorize("isAuthenticated()")
     @ApiOperation("Обновить авторизированный аккаунт")
     @PutMapping(RouterConstants.USER)
     public void updateUser(@RequestBody AccountSimpleDto accountEntity) {
         this.accountService.update(accountEntity);
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @PreAuthorize("isAuthenticated()")
     @ApiOperation("Изменить пароль")
     @PutMapping(RouterConstants.USER_PASSWORD)
     public void updatePassword(@RequestBody ChangePasswordDto changePasswordDto) {
         accountService.updatePassword(changePasswordDto);
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "Получить контакты")
     @GetMapping(RouterConstants.USER_CONTACT)
     public ContactDto getContact() {
         return accountService.getContact();
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "Обновить контакты")
     @PutMapping(RouterConstants.USER_CONTACT)
     public ContactDto updateContact(@RequestBody ContactRequestDto contactRequestDto) {

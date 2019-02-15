@@ -1,6 +1,6 @@
 package ru.kolaer.birthday.mvp.model;
 
-import ru.kolaer.common.dto.kolaerweb.EnumGender;
+import ru.kolaer.common.dto.employee.EnumGender;
 
 import java.util.Date;
 

@@ -104,28 +104,28 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
 
             ServerResponse serverResponse;
 
-            if(UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser().isAccessOit()) {
-                serverResponse = UniformSystemEditorKitSingleton.getInstance()
-                        .getUSNetwork()
-                        .getKolaerWebServer()
-                        .getApplicationDataBase()
-                        .getChatTable()
-                        .deleteMessage(new IdsDto(removeMessage));
-            } else {
-                serverResponse = UniformSystemEditorKitSingleton.getInstance()
-                        .getUSNetwork()
-                        .getKolaerWebServer()
-                        .getApplicationDataBase()
-                        .getChatTable()
-                        .hideMessage(new IdsDto(removeMessage));
-            }
+//            if(UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser().isAccessOit()) { TODO: refactoring
+//                serverResponse = UniformSystemEditorKitSingleton.getInstance()
+//                        .getUSNetwork()
+//                        .getKolaerWebServer()
+//                        .getApplicationDataBase()
+//                        .getChatTable()
+//                        .deleteMessage(new IdsDto(removeMessage));
+//            } else {
+//                serverResponse = UniformSystemEditorKitSingleton.getInstance()
+//                        .getUSNetwork()
+//                        .getKolaerWebServer()
+//                        .getApplicationDataBase()
+//                        .getChatTable()
+//                        .hideMessage(new IdsDto(removeMessage));
+//            }
 
-            if (serverResponse.isServerError()) {
-                UniformSystemEditorKitSingleton.getInstance()
-                        .getUISystemUS()
-                        .getNotification()
-                        .showErrorNotify(serverResponse.getExceptionMessage());
-            }
+//            if (serverResponse.isServerError()) {
+//                UniformSystemEditorKitSingleton.getInstance() TODO: refactoring
+//                        .getUISystemUS()
+//                        .getNotification()
+//                        .showErrorNotify(serverResponse.getExceptionMessage());
+//            }
         });
 
         hideMessages.setOnAction(e -> {
@@ -159,13 +159,13 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
             AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
                     .getAuthentication()
                     .getAuthorizedUser();
-            if(authorizedUser.isAccessOit()) {
-                if(!contextMenu.getItems().contains(hideMessages)) {
-                    contextMenu.getItems().add(hideMessages);
-                }
-            } else {
-                contextMenu.getItems().remove(hideMessages);
-            }
+//            if(authorizedUser.isAccessOit()) {
+//                if(!contextMenu.getItems().contains(hideMessages)) {
+//                    contextMenu.getItems().add(hideMessages); TODO: refactoring
+//                }
+//            } else {
+//                contextMenu.getItems().remove(hideMessages);
+//            }
         });
 
         chatMessageDtoListView.setContextMenu(contextMenu);

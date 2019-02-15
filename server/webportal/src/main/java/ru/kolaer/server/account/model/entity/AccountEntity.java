@@ -6,6 +6,7 @@ import ru.kolaer.server.core.model.entity.DefaultEntity;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * Created by Danilov on 24.07.2016.
@@ -40,25 +41,10 @@ public class AccountEntity extends DefaultEntity {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "access_oit", nullable = false)
-    private boolean accessOit;
-
-    @Column(name = "access_user", nullable = false)
-    private boolean accessUser = true;
-
-    @Column(name = "access_ok", nullable = false)
-    private boolean accessOk;
-
     @Column(name = "block", nullable = false)
     private boolean block;
 
-    @Column(name = "access_vacation_admin", nullable = false)
-    private boolean accessVacationAdmin;
-
-    @Column(name = "access_vacation_dep_edit", nullable = false)
-    private boolean accessVacationDepEdit;
-
-    @Column(name = "access_type_work", nullable = false)
-    private boolean accessTypeWork;
+    @ElementCollection
+    private Collection<String> access;
 
 }

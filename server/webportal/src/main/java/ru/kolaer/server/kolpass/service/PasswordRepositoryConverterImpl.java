@@ -3,9 +3,9 @@ package ru.kolaer.server.kolpass.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.kolaer.common.dto.auth.AccountDto;
-import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.server.account.dao.AccountDao;
+import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.account.service.AccountConverter;
 import ru.kolaer.server.core.service.AuthenticationService;
 import ru.kolaer.server.kolpass.model.entity.PasswordRepositoryEntity;
@@ -49,8 +49,8 @@ public class PasswordRepositoryConverterImpl implements PasswordRepositoryConver
         oldDto.setName(newModel.getName());
         oldDto.setUrlImage(newModel.getUrlImage());
 
-        AccountSimpleDto currentAccount = authenticationService.getAccountSimpleByAuthentication();
-        if(newModel.getAccountId() != null && !currentAccount.getId().equals(newModel.getAccountId())) {
+        AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
+        if(newModel.getAccountId() != null && currentAccount.getId() != newModel.getAccountId()) {
             oldDto.setAccount(accountConverter.convertToDto(newModel.getAccount()));
         }
 
@@ -67,7 +67,7 @@ public class PasswordRepositoryConverterImpl implements PasswordRepositoryConver
                 .map(PasswordRepositoryEntity::getAccountId)
                 .collect(Collectors.toList());
 
-        AccountSimpleDto currentAccount = authenticationService.getAccountSimpleByAuthentication();
+        AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
         accountIds.remove(currentAccount.getId());
 
         Map<Long, AccountDto> accountMap = accountConverter.convertToDto(accountDao.findById(accountIds))

@@ -1,7 +1,7 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
 import ru.kolaer.common.dto.BaseModel;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.mvp.presenter.BasePresenter;
 import ru.kolaer.common.system.network.kolaerweb.KolpassTable;
 import ru.kolaer.kolpass.mvp.view.VRepositoryContent;

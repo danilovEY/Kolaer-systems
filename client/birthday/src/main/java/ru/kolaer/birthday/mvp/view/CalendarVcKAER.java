@@ -2,7 +2,7 @@ package ru.kolaer.birthday.mvp.view;
 
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
 

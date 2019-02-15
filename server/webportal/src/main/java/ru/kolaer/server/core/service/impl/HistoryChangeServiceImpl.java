@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.kolaer.common.dto.auth.AccountSimpleDto;
+import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.core.dao.HistoryChangeDao;
 import ru.kolaer.server.core.model.dto.holiday.HistoryChangeDto;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
@@ -43,18 +43,18 @@ public class HistoryChangeServiceImpl implements HistoryChangeService {
         historyChangeEntity.setEventDate(LocalDateTime.now());
         historyChangeEntity.setEvent(Optional.ofNullable(event).orElse(HistoryChangeEvent.UNKNOWN));
 
-        AccountSimpleDto accountSimpleByAuthentication = null;
+        AccountAuthorizedDto accountSimpleByAuthentication = null;
 
         if(authenticationService.isAuth()) {
-            accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+            accountSimpleByAuthentication = authenticationService.getAccountAuthorized();
 
             Optional.ofNullable(accountSimpleByAuthentication)
-                    .map(AccountSimpleDto::getId)
+                    .map(AccountAuthorizedDto::getId)
                     .ifPresent(historyChangeEntity::setAccountId);
         }
 
         HistoryChangeDto historyChangeDto = convertToDto(historyChangeDao.persist(historyChangeEntity));
-        historyChangeDto.setAccount(accountSimpleByAuthentication);
+//        historyChangeDto.setAccount(accountSimpleByAuthentication); TODO: refactoring
         return historyChangeDto;
     }
 
@@ -64,18 +64,18 @@ public class HistoryChangeServiceImpl implements HistoryChangeService {
         historyChangeEntity.setEventDate(LocalDateTime.now());
         historyChangeEntity.setEvent(Optional.ofNullable(event).orElse(HistoryChangeEvent.UNKNOWN));
 
-        AccountSimpleDto accountSimpleByAuthentication = null;
+        AccountAuthorizedDto accountSimpleByAuthentication = null;
 
         if(authenticationService.isAuth()) {
-            accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+            accountSimpleByAuthentication = authenticationService.getAccountAuthorized();
 
             Optional.ofNullable(accountSimpleByAuthentication)
-                    .map(AccountSimpleDto::getId)
+                    .map(AccountAuthorizedDto::getId)
                     .ifPresent(historyChangeEntity::setAccountId);
         }
 
         HistoryChangeDto historyChangeDto = convertToDto(historyChangeDao.persist(historyChangeEntity));
-        historyChangeDto.setAccount(accountSimpleByAuthentication);
+//        historyChangeDto.setAccount(accountSimpleByAuthentication); TODO: refactoring
         return historyChangeDto;
     }
 

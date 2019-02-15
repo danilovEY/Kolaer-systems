@@ -5,10 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.error.ErrorCode;
-import ru.kolaer.common.dto.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageDto;
+import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.chat.dao.ChatMessageDao;
 import ru.kolaer.server.chat.dao.ChatRoomDao;
 import ru.kolaer.server.chat.model.entity.ChatMessageEntity;
@@ -43,18 +42,18 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
     @Override
     @Transactional(readOnly = true)
     public List<ChatMessageDto> getAllByRoom(Long roomId) {
-        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+        AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
 
         ChatRoomEntity chatRoomEntity = chatRoomDao.findById(roomId);
 
-        if(chatRoomEntity != null && (accountByAuthentication.isAccessOit() ||
-                chatRoomEntity.getType() == ChatGroupType.MAIN ||
-                chatRoomEntity.getType() == ChatGroupType.PUBLIC ||
-                chatRoomEntity.getUserCreatedId().equals(accountByAuthentication.getId()) ||
-                chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId()))) {
-            return checkReads(defaultConverter.convertToDto(defaultEntityDao.findAllByRoom(roomId, accountByAuthentication.isAccessOit())),
-                    accountByAuthentication.getId());
-        }
+//        if(chatRoomEntity != null && (accountByAuthentication.isAccessOit() ||
+//                chatRoomEntity.getType() == ChatGroupType.MAIN ||
+//                chatRoomEntity.getType() == ChatGroupType.PUBLIC ||
+//                chatRoomEntity.getUserCreatedId().equals(accountByAuthentication.getId()) || TODO: refactoring
+//                chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId()))) {
+//            return checkReads(defaultConverter.convertToDto(defaultEntityDao.findAllByRoom(roomId, accountByAuthentication.isAccessOit())),
+//                    accountByAuthentication.getId());
+//        }
 
         log.info("У пользователя: {} нет доступа к чату: {}", accountByAuthentication.getId(), roomId);
 
@@ -66,31 +65,31 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
     @Override
     @Transactional(readOnly = true)
     public Page<ChatMessageDto> getAllByRoom(Long room, Integer number, Integer pageSize) {
-        AccountDto accountByAuthentication = authenticationService.getAccountByAuthentication();
+        AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
         ChatRoomEntity chatRoomEntity = chatRoomDao.findById(room);
 
-        if(chatRoomEntity != null && (accountByAuthentication.isAccessOit() ||
-                chatRoomEntity.getType() == ChatGroupType.MAIN ||
-                chatRoomEntity.getType() == ChatGroupType.PUBLIC ||
-                chatRoomEntity.getUserCreatedId().equals(accountByAuthentication.getId()) ||
-                chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId()))) {
-            Long count;
-            List<ChatMessageDto> results;
-
-            if(pageSize == null || pageSize == 0) {
-                results = getAllByRoom(room);
-                count = (long) results.size();
-                pageSize = count.intValue();
-            } else {
-                count = defaultEntityDao.findCountByRoom(room, accountByAuthentication.isAccessOit());
-                results = defaultConverter.convertToDto(defaultEntityDao
-                        .findAllByRoom(room, accountByAuthentication.isAccessOit(), number, pageSize));
-            }
-
-            results = checkReads(results, accountByAuthentication.getId());
-
-            return new Page<>(results, number, count, pageSize);
-        }
+//        if(chatRoomEntity != null && (accountByAuthentication.isAccessOit() ||
+//                chatRoomEntity.getType() == ChatGroupType.MAIN ||
+//                chatRoomEntity.getType() == ChatGroupType.PUBLIC ||
+//                chatRoomEntity.getUserCreatedId().equals(accountByAuthentication.getId()) ||
+//                chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId()))) {
+//            Long count;
+//            List<ChatMessageDto> results;
+//
+//            if(pageSize == null || pageSize == 0) {
+//                results = getAllByRoom(room); TODO: refactoring
+//                count = (long) results.size();
+//                pageSize = count.intValue();
+//            } else {
+//                count = defaultEntityDao.findCountByRoom(room, accountByAuthentication.isAccessOit());
+//                results = defaultConverter.convertToDto(defaultEntityDao
+//                        .findAllByRoom(room, accountByAuthentication.isAccessOit(), number, pageSize));
+//            }
+//
+//            results = checkReads(results, accountByAuthentication.getId());
+//
+//            return new Page<>(results, number, count, pageSize);
+//        }
 
         log.info("У пользователя: {} нет доступа к чату: {}", accountByAuthentication.getId(), room);
 

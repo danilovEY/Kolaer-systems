@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.tools.BirthdayTools;
-import ru.kolaer.common.dto.kolaerweb.EnumGender;
+import ru.kolaer.common.dto.employee.EnumGender;
 
 import java.net.URL;
 

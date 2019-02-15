@@ -1,6 +1,6 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.common.system.UniformSystemEditorKit;
 import ru.kolaer.common.system.network.kolaerweb.KolpassTable;

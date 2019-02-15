@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.kolaerweb.TypeDay;
+import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.core.exception.ForbiddenException;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
@@ -110,12 +110,12 @@ public class VacationServiceImpl implements VacationService {
     @Override
     @Transactional
     public VacationBalanceDto getBalance(FindBalanceRequest request) {
-        AccountSimpleDto account = authenticationService.getAccountSimpleByAuthentication();
+        AccountAuthorizedDto account = authenticationService.getAccountAuthorized();
 
-        if(!account.isAccessVacationAdmin() && !account.isAccessOk() && !account.isAccessOit() &&
-                (account.getEmployeeId() != null && request.getEmployeeId() != account.getEmployeeId())) {
-            checkVacationDepartment(request.getEmployeeId(), account.getEmployeeId());
-        }
+//        if(!account.isAccessVacationAdmin() && !account.isAccessOk() && !account.isAccessOit() &&
+//                (account.getEmployeeId() != null && request.getEmployeeId() != account.getEmployeeId())) { TODO: refactoring
+//            checkVacationDepartment(request.getEmployeeId(), account.getEmployeeId());
+//        }
 
         return vacationConverter.convertToDto(getBalanceEntity(request.getEmployeeId()));
     }
@@ -204,12 +204,12 @@ public class VacationServiceImpl implements VacationService {
             throw new NotFoundDataException("Отпуск не найден");
         }
 
-        AccountSimpleDto account = authenticationService.getAccountSimpleByAuthentication();
+        AccountAuthorizedDto account = authenticationService.getAccountAuthorized();
 
-        if (!account.isAccessVacationAdmin()) {
-            checkVacationPeriod(vacationEntity.getVacationFrom().getYear());
-            checkVacationDepartment(vacationEntity.getEmployeeId(), account.getEmployeeId());
-        }
+//        if (!account.isAccessVacationAdmin()) {
+//            checkVacationPeriod(vacationEntity.getVacationFrom().getYear());
+//            checkVacationDepartment(vacationEntity.getEmployeeId(), account.getEmployeeId()); TODO: refactoring
+//        }
 
         int yearBeforeUpdate = vacationEntity.getVacationFrom().getYear();
         int year = LocalDate.now().getYear();
@@ -881,11 +881,11 @@ public class VacationServiceImpl implements VacationService {
             throw new UnexpectedRequestParams("Дата начала должена быть меньше или равно дате конца");
         }
 
-        AccountSimpleDto account = authenticationService.getAccountSimpleByAuthentication();
+        AccountAuthorizedDto account = authenticationService.getAccountAuthorized();
 
-        if (!account.isAccessVacationAdmin()) {
-            checkVacationPeriod(request.getVacationFrom().getYear());
-            checkVacationDepartment(request.getEmployeeId(), account.getEmployeeId());
-        }
+//        if (!account.isAccessVacationAdmin()) {
+//            checkVacationPeriod(request.getVacationFrom().getYear()); TODO: refactoring
+//            checkVacationDepartment(request.getEmployeeId(), account.getEmployeeId());
+//        }
     }
 }

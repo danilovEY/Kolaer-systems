@@ -1,7 +1,8 @@
-package ru.kolaer.common.dto.kolaerweb;
+package ru.kolaer.common.dto.employee;
 
 import lombok.Data;
 import ru.kolaer.common.dto.BaseDto;
+import ru.kolaer.common.dto.kolaerweb.DepartmentShortDto;
 import ru.kolaer.common.dto.post.PostDto;
 
 import java.util.Date;
@@ -11,18 +12,16 @@ import java.util.Date;
  * Структура сотрудника в БД.
  */
 @Data
-public class EmployeeShortDto implements BaseDto {
+public class EmployeeWithoutPersonalDataDto implements BaseDto {
     private Long id;
-    private Long personnelNumber;
-    private String initials;
+    private String firstName;
+    private String secondName;
+    private String thirdName;
     private String workPhoneNumber;
-    private String homePhoneNumber;
     private EnumGender gender;
     private DepartmentShortDto department;
     private PostDto post;
     private Date birthday;
-    private Date employmentDate;
-    private Date dismissalDate;
     private String email;
     private String photo;
 }

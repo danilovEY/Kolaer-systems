@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
-import ru.kolaer.server.account.AccountRoleConstant;
+import ru.kolaer.server.employee.EmployeeAccessConstant;
 import ru.kolaer.server.employee.model.dto.AchievementDto;
 import ru.kolaer.server.employee.service.AchievementService;
 
@@ -28,8 +28,8 @@ public class AchievementController {
         this.achievementService = achievementService;
     }
 
-    @GetMapping(RouterConstants.EMPLOYEE_ID_ACHIEVEMENTS)
-    @PreAuthorize("hasAnyRole('" + AccountRoleConstant.ROLE_SUPER_ADMIN + "')")
+    @GetMapping(RouterConstants.EMPLOYEES_ID_ACHIEVEMENTS)
+    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_ACHIEVEMENTS_GET + "')")
     @ApiOperation("Получить достижения сотрудника")
     public List<AchievementDto> findAchievementByEmployeeId(
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId

@@ -3,8 +3,8 @@ package ru.kolaer.server.employee.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.kolaer.common.dto.kolaerweb.EnumCategory;
-import ru.kolaer.common.dto.kolaerweb.EnumGender;
+import ru.kolaer.common.dto.employee.EnumCategory;
+import ru.kolaer.common.dto.employee.EnumGender;
 import ru.kolaer.server.contact.model.entity.ContactEntity;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 

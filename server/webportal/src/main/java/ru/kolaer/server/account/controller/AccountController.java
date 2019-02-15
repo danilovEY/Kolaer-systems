@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.auth.AccountDto;
-import ru.kolaer.server.account.AccountRoleConstant;
+import ru.kolaer.server.account.AccountAccessConstant;
 import ru.kolaer.server.account.service.AccountService;
 import ru.kolaer.server.core.model.dto.account.AccountFilter;
 import ru.kolaer.server.core.model.dto.account.AccountSort;
@@ -30,7 +30,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PreAuthorize("hasAnyRole('" + AccountRoleConstant.ROLE_SUPER_ADMIN + "')")
+    @PreAuthorize("hasRole('" + AccountAccessConstant.ACCOUNTS_GET_ALL + "')")
     @ApiOperation(value = "Получить все аккаунты")
     @GetMapping(RouterConstants.ACCOUNTS)
     public Page<AccountDto> getAllAccounts(@RequestParam(value = "page", defaultValue = "0") Integer number,

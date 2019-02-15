@@ -6,23 +6,25 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.kolaer.common.constant.PathVariableConstants;
+import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
-import ru.kolaer.server.core.annotation.UrlDeclaration;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.model.dto.ResultUpdate;
 import ru.kolaer.server.core.model.dto.holiday.HistoryChangeDto;
 import ru.kolaer.server.core.service.UpdatableEmployeeService;
 import ru.kolaer.server.core.service.UpdateEmployeesService;
+import ru.kolaer.server.employee.EmployeeAccessConstant;
 import ru.kolaer.server.employee.model.dto.EmployeeRequestDto;
 import ru.kolaer.server.employee.model.dto.UpdateTypeWorkEmployeeRequestDto;
-import ru.kolaer.server.employee.model.request.EmployeeFilter;
-import ru.kolaer.server.employee.model.request.EmployeeSort;
 import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
 import ru.kolaer.server.employee.service.EmployeeService;
 
+import javax.validation.constraints.Min;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,9 +36,9 @@ import java.util.List;
  * Рест контроллер для работы с сотрудниками.
  */
 @RestController
-@RequestMapping(value = "/employees")
 @Api(tags = "Сотрудники КолАЭР", description = "Сотрудники из организации КолАЭР.")
 @Slf4j
+@Validated
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -52,70 +54,46 @@ public class EmployeeController {
         this.updatableEmployeeService = updatableEmployeeService;
     }
 
-    @ApiOperation(
-            value = "Получить всех сотрудников"
-    )
-    @UrlDeclaration(description = "Получить всех сотрудников", isAccessAll = true)
-    @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<EmployeeDto> getAllEmployees(@RequestParam(value = "page", defaultValue = "1") Integer number,
-                                             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
-                                             EmployeeSort sortParam,
-                                             EmployeeFilter filter) {
-        return this.employeeService.getAll(sortParam, filter, number, pageSize);
-    }
-
-    @ApiOperation(value = "Получить сотрудника")
-    @UrlDeclaration(description = "Получить сотрудника", isAccessAll = true)
-    @RequestMapping(value = "/{employeeId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public EmployeeDto getAllEmployees(@PathVariable(value = "employeeId") Long employeeId) {
+    @ApiOperation("Получить сотрудника")
+    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_GET + "','" + EmployeeAccessConstant.EMPLOYEE_GET_CURRENT + "')")
+    @GetMapping(RouterConstants.EMPLOYEES_ID)
+    public EmployeeDto getAllEmployees(@PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId) {
         return this.employeeService.getById(employeeId);
     }
 
-    @ApiOperation(value = "Добавить сотрудника")
-    @UrlDeclaration(description = "Добавить сотрудника", isUser = false, isOk = true, requestMethod = RequestMethod.POST)
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation("Добавить сотрудника")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_ADD + "')")
+    @PostMapping(RouterConstants.EMPLOYEES)
     public EmployeeDto createEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
         return this.employeeService.add(employeeRequestDto);
     }
 
-    @ApiOperation(value = "Обновить сотрудника")
-    @UrlDeclaration(description = "Обновить сотрудника", isUser = false, isOk = true, requestMethod = RequestMethod.PUT)
-    @RequestMapping(value = "/{employeeId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public EmployeeDto updateEmployee(@PathVariable(value = "employeeId") Long employeeId,
-                                      @RequestBody EmployeeRequestDto employeeRequestDto) {
+    @ApiOperation("Обновить сотрудника")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_EDIT + "')")
+    @PutMapping(RouterConstants.EMPLOYEES_ID)
+    public EmployeeDto updateEmployee(@PathVariable(PathVariableConstants.EMPLOYEE_ID) Long employeeId,
+            @RequestBody EmployeeRequestDto employeeRequestDto) {
         return this.employeeService.update(employeeId, employeeRequestDto);
     }
 
-    @ApiOperation(value = "Изменить вид работы сотрудника")
-    @UrlDeclaration(isUser = false, isOk = true, isTypeWork = true, requestMethod = RequestMethod.PUT)
-    @RequestMapping(value = "/{employeeId}/type-work", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public EmployeeDto updateEmployee(@PathVariable(value = "employeeId") Long employeeId,
-                                      @RequestBody UpdateTypeWorkEmployeeRequestDto request) {
+    @ApiOperation("Изменить вид работы сотрудника")
+    @PutMapping(RouterConstants.EMPLOYEES_ID_TYPE_WORK)
+    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_TYPE_WORK_EDIT_DEPARTMENT + "')")
+    public EmployeeDto updateEmployee(@PathVariable(PathVariableConstants.EMPLOYEE_ID) Long employeeId,
+            @RequestBody UpdateTypeWorkEmployeeRequestDto request) {
         return this.employeeService.updateWorkType(employeeId, request);
     }
 
-    @ApiOperation(value = "Удалить сотрудника")
-    @UrlDeclaration(description = "Удалить сотрудника", isUser = false, isOk = true, requestMethod = RequestMethod.DELETE)
-    @RequestMapping(value = "/{employeeId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void deleteEmployee(@PathVariable(value = "employeeId") Long employeeId) {
+    @ApiOperation("Удалить сотрудника")
+    @DeleteMapping(RouterConstants.EMPLOYEES_ID)
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_DELETE + "')")
+    public void deleteEmployee(@PathVariable(PathVariableConstants.EMPLOYEE_ID) Long employeeId) {
         this.employeeService.delete(employeeId);
     }
 
-    @ApiOperation(
-            value = "Получить всех сотрудников из подразделения по ID"
-    )
-    @UrlDeclaration(description = "Получить всех сотрудников из подразделения", isAccessAll = true)
-    @RequestMapping(value = "/get/all/by/dep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<EmployeeDto> getAllEmployeesByDep(
-            @ApiParam("Подразделение") @RequestParam(value = "id") Long id,
-            @RequestParam(value = "page", defaultValue = "1") Integer number,
-            @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-        return this.employeeService.getUsersByDepartmentId(number, pageSize, id);
-    }
-
     @ApiOperation(value = "Получить всех сотрудников")
-    @UrlDeclaration(description = "Получить всех сотрудников", isAccessAll = true)
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_GET + "')")
+    @GetMapping(RouterConstants.EMPLOYEES)
     public Page<EmployeeDto> getAllEmployees(@ModelAttribute FindEmployeePageRequest request) {
         return this.employeeService.getEmployees(request);
     }
@@ -124,8 +102,8 @@ public class EmployeeController {
             value = "Получить всех сотрудников (между датами)",
             notes = "Получить всех сотрудников у кого день рождение между датами"
     )
-    @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение между датами", isAccessAll = true)
-    @RequestMapping(value = "/get/birthday/{startDate}/{endDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("permitAll()")
+    @GetMapping(RouterConstants.EMPLOYEES + "/get/birthday/{startDate}/{endDate}") //TODO: Need refactoring
     public List<EmployeeDto> getUsersRangeBirthday(
             final @ApiParam(value = "Дата с", required = true) @PathVariable String startDate,
             final @ApiParam(value = "Дата по", required = true) @PathVariable String endDate) throws ParseException {
@@ -142,8 +120,8 @@ public class EmployeeController {
             value = "Получить всех сотрудников (сегодня)",
             notes = "Получить всех сотрудников у кого сегодня день рождение"
     )
-    @UrlDeclaration(description = "Получить всех сотрудников у кого сегодня день рождение", isAccessAll = true)
-    @RequestMapping(value = "/get/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("permitAll()")
+    @GetMapping(RouterConstants.EMPLOYEES + "/get/birthday/today") //TODO: Need refactoring
     public List<EmployeeDto> getUsersRangeBirthday() {
         return this.employeeService.getUserBirthdayToday();
     }
@@ -153,8 +131,8 @@ public class EmployeeController {
             value = "Получить всех сотрудников (в определенную дату)",
             notes = "Получить всех сотрудников у кого день рождение в определенную дату"
     )
-    @UrlDeclaration(description = "Получить всех сотрудников у кого день рождение в определенную дату", isAccessAll = true)
-    @RequestMapping(value = "/get/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("permitAll()")
+    @GetMapping(RouterConstants.EMPLOYEES + "/get/birthday/{date}") //TODO: Need refactoring
     public List<EmployeeDto> getUsersRangeBirthday(
            final @ApiParam(value = "Дата", required = true) @PathVariable String date) throws ParseException {
         final SimpleDateFormat sdf = date.contains("-")
@@ -169,8 +147,8 @@ public class EmployeeController {
             value = "Получить количество сотрудников (в определенную датату)",
             notes = "Получить количество сотрудников у кого день рождение в определенную датату"
     )
-    @UrlDeclaration(description = "Получить количество сотрудников у кого день рождение в определенную датату", isAccessAll = true)
-    @RequestMapping(value = "/get/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("permitAll()")
+    @GetMapping(RouterConstants.EMPLOYEES + "/get/birthday/{date}/count") //TODO: Need refactoring
     public int getCountUsersBirthday(
             final @ApiParam(value = "Дата", required = true) @PathVariable String date) throws ParseException {
         final SimpleDateFormat sdf = date.contains("-")
@@ -181,25 +159,15 @@ public class EmployeeController {
         return this.employeeService.getCountUserBirthday(dateParse);
     }
 
-    @ApiOperation(
-            value = "Получить сотрудника по инициалам"
-    )
-    @UrlDeclaration(description = "Получить сотрудника по имени", isAccessAll = true)
-    @RequestMapping(value = "/get/by/initials/{initials}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<EmployeeDto> getUsersByInitials(
-            final @ApiParam(value = "Инициалы", required = true) @PathVariable String initials) {
-        return this.employeeService.getUsersByInitials(initials);
-    }
-
-    @RequestMapping(value = "/sync", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @UrlDeclaration(description = "Обновить сотрудников КолАЭР из xlsx", requestMethod = RequestMethod.POST, isUser = false, isOk = true)
+    @PostMapping(RouterConstants.EMPLOYEES_SYNC)
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_SYNC + "')")
     @ApiOperation(value = "Обновить сотрудников КолАЭР из xlsx")
     public List<HistoryChangeDto> uploadEmployee(@RequestParam("file")MultipartFile file) throws IOException {
         return updateEmployeesService.updateEmployees(file.getInputStream());
     }
 
-    @RequestMapping(value = "/old/report", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @UrlDeclaration(description = "Сформировать выгрузку для старой базы", requestMethod = RequestMethod.POST, isUser = false)
+    @PostMapping(RouterConstants.EMPLOYEES_REPORT_OLD)
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_REPORT_OLD + "')")
     @ApiOperation(value = "Сформировать выгрузку для старой базы")
     public void generateAndSendReportForOldDb() {
         updatableEmployeeService.updateEmployee(new ResultUpdate());

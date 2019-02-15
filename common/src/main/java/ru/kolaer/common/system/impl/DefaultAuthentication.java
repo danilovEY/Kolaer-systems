@@ -2,7 +2,12 @@ package ru.kolaer.common.system.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.common.dto.auth.AccountDto;
-import ru.kolaer.common.dto.kolaerweb.*;
+import ru.kolaer.common.dto.employee.EmployeeDto;
+import ru.kolaer.common.dto.employee.EnumGender;
+import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
+import ru.kolaer.common.dto.kolaerweb.TokenJson;
+import ru.kolaer.common.dto.kolaerweb.TypePostEnum;
+import ru.kolaer.common.dto.kolaerweb.UserAndPassJson;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.common.observers.AuthenticationObserver;
 import ru.kolaer.common.system.Authentication;

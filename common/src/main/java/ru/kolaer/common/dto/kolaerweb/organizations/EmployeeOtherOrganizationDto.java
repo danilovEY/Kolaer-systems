@@ -2,8 +2,8 @@ package ru.kolaer.common.dto.kolaerweb.organizations;
 
 import lombok.Data;
 import ru.kolaer.common.dto.BaseDto;
-import ru.kolaer.common.dto.kolaerweb.EnumCategory;
-import ru.kolaer.common.dto.kolaerweb.EnumGender;
+import ru.kolaer.common.dto.employee.EnumCategory;
+import ru.kolaer.common.dto.employee.EnumGender;
 
 import java.util.Date;
 

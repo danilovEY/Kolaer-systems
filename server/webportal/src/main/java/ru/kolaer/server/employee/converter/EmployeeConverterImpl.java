@@ -2,10 +2,12 @@ package ru.kolaer.server.employee.converter;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.kolaer.common.dto.employee.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeWithoutPersonalDataDto;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.common.dto.post.PostDto;
+import ru.kolaer.server.contact.service.ContactService;
 import ru.kolaer.server.core.service.impl.UtilService;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.service.DepartmentService;
@@ -28,6 +30,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
     private final DepartmentConverter departmentConverter;
     private final TypeWorkService typeWorkService;
     private final TypeWorkConverter typeWorkConverter;
+    private final ContactService contactService;
     private final UtilService utilService;
 
     @Override
@@ -225,5 +228,46 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         dto.setContractNumber(entity.getContractNumber());
 
         return dto;
+    }
+
+    @Override
+    public EmployeeWithoutPersonalDataDto convertToEmployeeWithoutPersonalDataDto(EmployeeEntity entity) {
+        EmployeeWithoutPersonalDataDto employeeWithoutPersonalDataDto = new EmployeeWithoutPersonalDataDto();
+        employeeWithoutPersonalDataDto.setFirstName(entity.getFirstName());
+        employeeWithoutPersonalDataDto.setSecondName(entity.getSecondName());
+        employeeWithoutPersonalDataDto.setThirdName(entity.getThirdName());
+        employeeWithoutPersonalDataDto.setBirthday(entity.getBirthday());
+        employeeWithoutPersonalDataDto.setPhoto(entity.getPhoto());
+        employeeWithoutPersonalDataDto.setGender(entity.getGender());
+
+
+        return employeeWithoutPersonalDataDto;
+    }
+
+    @Override
+    public List<EmployeeWithoutPersonalDataDto> convertToEmployeeWithoutPersonalDataDtos(List<EmployeeEntity> entities) {
+//        Set<Long> contactIds = entities.stream()
+//                .map(EmployeeEntity::getContactId)
+//                .collect(Collectors.toSet());
+//
+//        Set<Long> departmentIds = entities.stream()
+//                .map(EmployeeEntity::getDepartmentId)
+//                .collect(Collectors.toSet());
+//
+//        Set<Long> postIds = entities.stream()
+//                .map(EmployeeEntity::getPostId)
+//                .collect(Collectors.toSet());
+//
+//        Map<Long, DepartmentDto> departmentMap = departmentService.getById(departmentIds)
+//                .stream()
+//                .collect(Collectors.toMap(DepartmentDto::getId, Function.identity()));
+//
+//        Map<Long, PostDto> postMap = postService.getById(departmentIds)
+//                .stream()
+//                .collect(Collectors.toMap(PostDto::getId, Function.identity()));
+
+
+
+        return null;
     }
 }

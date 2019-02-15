@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.server.account.dao.AccountDao;
+import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.account.service.AccountConverter;
 import ru.kolaer.server.core.exception.ForbiddenException;
 import ru.kolaer.server.core.exception.NotFoundDataException;
@@ -56,7 +56,7 @@ public class QueueServiceImpl
             throw new ForbiddenException("Очередь не доступна");
         }
 
-        AccountSimpleDto accountSimpleByAuthentication = authenticationService.getAccountSimpleByAuthentication();
+        AccountAuthorizedDto accountSimpleByAuthentication = authenticationService.getAccountAuthorized();
 
         QueueRequestEntity queueRequestEntity = defaultConverter.convertToModel(queueRequestDto);
         queueRequestEntity.setId(null);

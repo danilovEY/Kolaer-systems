@@ -1,12 +1,14 @@
 package ru.kolaer.server.employee.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
+import ru.kolaer.server.employee.EmployeeAccessConstant;
 import ru.kolaer.server.employee.model.dto.PersonalDataDto;
 import ru.kolaer.server.employee.service.PersonalDataService;
 
@@ -24,7 +26,8 @@ public class PersonalDataController {
         this.personalDataService = personalDataService;
     }
 
-    @GetMapping(RouterConstants.EMPLOYEE_ID_PERSONAL_DATA)
+    @GetMapping(RouterConstants.EMPLOYEES_ID_PERSONAL_DATA)
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_PERSONAL_DATA_GET + "')")
     public List<PersonalDataDto> getPersonalDataByEmployeeId(
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId
     ) {

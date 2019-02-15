@@ -10,6 +10,7 @@ import ru.kolaer.common.dto.kolaerweb.kolchat.ChatInfoCommand;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatInfoUserActionDto;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatUserStatus;
+import ru.kolaer.server.account.service.AccountService;
 import ru.kolaer.server.chat.service.ChatRoomService;
 import ru.kolaer.server.core.service.AuthenticationService;
 
@@ -24,12 +25,16 @@ import java.util.Date;
 public class SessionConnectedEventListener implements ApplicationListener<SessionConnectedEvent> {
     private final ChatRoomService chatService;
     private final AuthenticationService authenticationService;
+    private final AccountService accountService;
 
 
     public SessionConnectedEventListener(ChatRoomService chatService,
-                                         AuthenticationService authenticationService) {
+            AuthenticationService authenticationService,
+            AccountService accountService
+    ) {
         this.chatService = chatService;
         this.authenticationService = authenticationService;
+        this.accountService = accountService;
     }
 
     @Override
@@ -38,8 +43,7 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
 
         Principal user = sha.getUser();
 
-        AccountDto accountDto = authenticationService
-                .getAccountWithEmployeeByLogin(user.getName());
+        AccountDto accountDto = accountService.getByLogin(user.getName());
 
         ChatUserDto chatUserDto = chatService.getUserByAccountId(accountDto.getId());
         if (chatUserDto != null && chatUserDto.getSessionId() != null) {

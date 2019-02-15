@@ -2,7 +2,7 @@ package ru.kolaer.kolpass.mvp.presenter;
 
 import javafx.util.Pair;
 import ru.kolaer.common.dto.BaseModel;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.common.mvp.presenter.BasePresenter;
 import ru.kolaer.common.system.network.kolaerweb.KolpassTable;

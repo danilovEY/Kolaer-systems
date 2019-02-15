@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.dto.kolaerweb.TokenJson;
 import ru.kolaer.common.dto.kolaerweb.UserAndPassJson;
-import ru.kolaer.server.account.AccountRoleConstant;
+import ru.kolaer.server.account.AccountAccessConstant;
 import ru.kolaer.server.core.service.impl.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +52,7 @@ public class AuthenticationController {
         this.userDetailsService = userDetailsService;
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "Выйти")
     @PostMapping(RouterConstants.AUTHENTICATION_LOGOUT)
     public String logout(HttpServletResponse response, HttpServletRequest request) {
@@ -64,14 +64,14 @@ public class AuthenticationController {
         return "redirect:/";
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "Выйти")
     @GetMapping(RouterConstants.AUTHENTICATION_LOGOUT)
     public String logoutGet(HttpServletResponse response, HttpServletRequest request) {
         return this.logout(response, request);
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_SUPER_ADMIN + "')")
+    @PreAuthorize("hasRole('" + AccountAccessConstant.GENERATE_PASSWORDS + "')")
     @ApiOperation(value = "Генерация пароля по строке")
     @GetMapping(RouterConstants.AUTHENTICATION_GENERATE_PASS)
     public String getPass(@ApiParam(value = "Пароль", required = true) @RequestParam("pass") String pass) {
@@ -112,7 +112,7 @@ public class AuthenticationController {
         return new TokenJson(getToken(userDetails));
     }
 
-    @PreAuthorize("hasRole('" + AccountRoleConstant.ROLE_USER + "')")
+    @PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "Обновление токена", notes = "Обновление токена.")
     @GetMapping(RouterConstants.AUTHENTICATION_REFRESH_TOKEN)
     public TokenJson refreshToken(){

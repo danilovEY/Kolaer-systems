@@ -2,7 +2,7 @@ package ru.kolaer.server.core.model.dto.passport;
 
 import lombok.Data;
 import ru.kolaer.common.dto.BaseDto;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 
 /**
  * Created by danilovey on 24.01.2017.

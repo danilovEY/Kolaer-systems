@@ -1,8 +1,9 @@
-package ru.kolaer.common.dto.kolaerweb;
+package ru.kolaer.common.dto.employee;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.kolaer.common.dto.BaseDto;
+import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.common.dto.post.PostDto;
 

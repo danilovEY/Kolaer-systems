@@ -2,7 +2,7 @@ package ru.kolaer.server.ticket.model.dto;
 
 import lombok.Data;
 import ru.kolaer.common.dto.BaseDto;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.ticket.model.TypeOperation;
 
 /**

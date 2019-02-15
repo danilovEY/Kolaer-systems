@@ -4,7 +4,7 @@ import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.mvp.model.impl.UserModelImpl;
 import ru.kolaer.birthday.mvp.view.BirthdayInfoPane;
 import ru.kolaer.birthday.mvp.view.BirthdayInfoPaneImpl;
-import ru.kolaer.common.dto.kolaerweb.EmployeeDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 import ru.kolaer.common.mvp.view.BaseView;
