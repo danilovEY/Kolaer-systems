@@ -5,11 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.kolaer.common.constant.EmployeeAccessConstant;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
-import ru.kolaer.server.employee.EmployeeAccessConstant;
 import ru.kolaer.server.employee.model.request.FindTypeWorkRequest;
 import ru.kolaer.server.employee.service.TypeWorkService;
 

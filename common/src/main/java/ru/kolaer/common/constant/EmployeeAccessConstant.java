@@ -1,6 +1,4 @@
-package ru.kolaer.server.employee;
-
-import ru.kolaer.server.core.security.CommonAccessConstant;
+package ru.kolaer.common.constant;
 
 public interface EmployeeAccessConstant extends CommonAccessConstant {
     String TYPE_WORKS_ADD = PREFIX + "TYPE_WORKS_ADD";

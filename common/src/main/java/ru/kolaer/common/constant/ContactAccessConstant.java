@@ -1,6 +1,4 @@
-package ru.kolaer.server.contact;
-
-import ru.kolaer.server.core.security.CommonAccessConstant;
+package ru.kolaer.common.constant;
 
 public interface ContactAccessConstant extends CommonAccessConstant {
     String CONTACTS_EDIT_ALL = PREFIX + "CONTACTS_EDIT_ALL";

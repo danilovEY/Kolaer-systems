@@ -1,6 +1,4 @@
-package ru.kolaer.server.vacation;
-
-import ru.kolaer.server.core.security.CommonAccessConstant;
+package ru.kolaer.common.constant;
 
 public interface VacationAccessConstant extends CommonAccessConstant {
     String ROLE_VACATION_ADMIN = PREFIX +"VACATION_ADMIN";

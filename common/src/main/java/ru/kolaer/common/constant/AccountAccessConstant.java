@@ -1,6 +1,4 @@
-package ru.kolaer.server.account;
-
-import ru.kolaer.server.core.security.CommonAccessConstant;
+package ru.kolaer.common.constant;
 
 public interface AccountAccessConstant extends CommonAccessConstant {
     String GENERATE_PASSWORDS = PREFIX + "GENERATE_PASSWORDS";
