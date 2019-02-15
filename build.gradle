@@ -62,7 +62,6 @@ task buildPlugins (dependsOn: [':client:asmc:buildApp',
                                ':client:birthday:buildApp',
                                ':client:kolpass:buildApp',
                                ':client:kolaer-chat:buildApp',
-                               ':client:wer:buildApp',
                                ':client:browser:buildApp'])
 task buildClient (dependsOn: [buildMainClient, buildPlugins])
 
