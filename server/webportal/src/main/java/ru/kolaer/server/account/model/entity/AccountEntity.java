@@ -14,7 +14,7 @@ import java.util.Collection;
  */
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
+@Entity(name = "account")
 @Table(name = "account")
 @Data
 public class AccountEntity extends DefaultEntity {
@@ -44,7 +44,7 @@ public class AccountEntity extends DefaultEntity {
     @Column(name = "block", nullable = false)
     private boolean block;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Collection<String> access;
 
 }

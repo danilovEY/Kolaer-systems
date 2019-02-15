@@ -70,7 +70,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setEmail(model.getEmail());
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
-        accountDto.setAccess(model.getAccess());
+        accountDto.setAccess(new HashSet<>(model.getAccess()));
         accountDto.setAvatarUrl(
                 Optional.ofNullable(model.getAvatarUrl())
                         .map(photo -> utilService.getCurrentHostUrl() + photo)
@@ -127,7 +127,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountDto.setEmail(model.getEmail());
         accountDto.setUsername(model.getUsername());
         accountDto.setChatName(model.getChatName());
-        accountDto.setAccess(model.getAccess());
+        accountDto.setAccess(new HashSet<>(model.getAccess()));
         accountDto.setAvatarUrl(
                 Optional.ofNullable(model.getAvatarUrl())
                         .map(photo -> utilService.getCurrentHostUrl() + photo)
@@ -177,7 +177,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountSimpleDto.setEmail(accountEntity.getEmail());
         accountSimpleDto.setUsername(accountEntity.getUsername());
         accountSimpleDto.setChatName(accountEntity.getChatName());
-        accountSimpleDto.setAccess(accountEntity.getAccess());
+        accountSimpleDto.setAccess(new HashSet<>(accountEntity.getAccess()));
         accountSimpleDto.setAvatarUrl(
                 Optional.ofNullable(accountEntity.getAvatarUrl())
                         .map(photo -> utilService.getCurrentHostUrl() + photo)

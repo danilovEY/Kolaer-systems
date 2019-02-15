@@ -10,8 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.core.service.AuthenticationService;
 
-import javax.annotation.PreDestroy;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * Created by danilovey on 31.08.2016.
@@ -27,13 +26,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return auth != null && !auth.getName().equals("anonymousUser");
     }
 
-//    @Override
-////    @Cacheable(value = "accounts", cacheManager = "springCM")
-//    @Transactional(readOnly = true)
-//    public AccountAuthorizedDto getAccountWithEmployeeByLogin(String login) {
-//        return accountConverter.convertToDto(accountDao.findName(login));
-//    }
-
     @Override
     public AccountAuthorizedDto getAccountAuthorized() {
         if (!isAuth()) throw new AuthenticationServiceException("Вы не авторизованы");
@@ -44,14 +36,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .getPrincipal();
     }
 
-//    @Override
-////    @CacheEvict(value = "accounts", key = "#login", cacheManager = "springCM")
-//    public AccountAuthorizedDto resetOnLogin(String login) {
-//        return getAccountWithEmployeeByLogin(login);
-//    }
-
     @Override
-    public boolean containsAccess(@NotNull String access) {
+    public boolean containsAccess(@NotEmpty String access) {
         return isAuth() && SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -59,11 +45,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(authority -> authority.equals(access));
-    }
-
-    @PreDestroy
-//    @CacheEvict(value = "accounts", cacheManager = "springCM")
-    public void destroy() {
     }
 
 }

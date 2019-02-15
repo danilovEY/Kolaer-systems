@@ -11,6 +11,7 @@ import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.account.model.entity.AccountEntity;
 import ru.kolaer.server.account.repository.AccountAccessRepository;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -43,7 +44,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //            throw new UserIsBlockException();
 //        }
 
-        Set<String> accessNames = accountAccessRepository.findByAccountId(account.getId());
+//        Set<String> accessNames = new HashSet<>(accountAccessRepository.findByAccountId(account.getId()));
+        Set<String> accessNames = new HashSet<>(account.getAccess());
 
         return new AccountAuthorizedDto(
                 account.getId(),
@@ -51,7 +53,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 account.getPassword(),
                 account.getEmployeeId(),
                 accessNames,
-                account.isBlock()
+                !account.isBlock()
         );
     }
 }

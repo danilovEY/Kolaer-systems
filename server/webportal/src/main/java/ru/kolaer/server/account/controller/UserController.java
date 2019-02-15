@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
-import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.account.service.AccountService;
 import ru.kolaer.server.core.model.dto.account.ChangePasswordDto;
 import ru.kolaer.server.core.model.dto.concact.ContactDto;
@@ -46,8 +45,8 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @ApiOperation("Получить авторизированный аккаунт")
     @GetMapping(RouterConstants.USER)
-    public AccountAuthorizedDto getSimpleUser() {
-        return this.authenticationService.getAccountAuthorized();
+    public AccountSimpleDto getSimpleUser() {
+        return this.accountService.getSimpleAccountById(authenticationService.getAccountAuthorized().getId());
     }
 
     @PreAuthorize("isAuthenticated()")

@@ -119,6 +119,12 @@ public class AccountServiceImpl
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public AccountSimpleDto getSimpleAccountById(long accountId) {
+        return defaultConverter.convertToSimpleDto(defaultEntityDao.findById(accountId));
+    }
+
+    @Override
     @Transactional
     public void updateEmployee(ResultUpdate resultUpdate) {
         List<AccountEntity> addsAccountEntity = resultUpdate.getAddEmployee()

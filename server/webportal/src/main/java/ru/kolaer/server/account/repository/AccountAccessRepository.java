@@ -23,7 +23,7 @@ public class AccountAccessRepository {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         List<String> accessCodes = entityManager
-                .createNativeQuery("SELECT access FROM account_access WHERE account_id = :accountId", String.class)
+                .createNativeQuery("SELECT access FROM account_access WHERE account_id = :accountId")
                 .setParameter("accountId", accountId)
                 .getResultList();
 

@@ -57,6 +57,8 @@
     <include file="classpath:SQL/41-military-registration-table.xml"/>
     <include file="classpath:SQL/42-combination-table.xml"/>
 
+    <include file="classpath:SQL/43-account-access-table.xml"/>
+
 
 
 

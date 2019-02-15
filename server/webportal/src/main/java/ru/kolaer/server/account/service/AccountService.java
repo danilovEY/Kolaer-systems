@@ -17,6 +17,7 @@ public interface AccountService extends DefaultService<AccountDto>, UpdatableEmp
     void updatePassword(ChangePasswordDto changePasswordDto);
 
     AccountSimpleDto update(AccountSimpleDto accountSimpleDto);
+    AccountSimpleDto getSimpleAccountById(long accountId);
 
     ContactDto updateContact(ContactRequestDto contactRequestDto);
 

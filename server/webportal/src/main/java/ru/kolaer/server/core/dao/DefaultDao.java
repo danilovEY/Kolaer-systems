@@ -142,7 +142,7 @@ public interface DefaultDao<T extends DefaultEntity> {
     }
 
     default String getEntityName(Class<?> cls) {
-        return cls.getSimpleName();
+        return cls.getName();
     }
 
     Class<T> getEntityClass();
