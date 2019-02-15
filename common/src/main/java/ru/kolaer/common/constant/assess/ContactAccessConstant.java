@@ -1,4 +1,4 @@
-package ru.kolaer.common.constant;
+package ru.kolaer.common.constant.assess;
 
 public interface ContactAccessConstant extends CommonAccessConstant {
     String CONTACTS_EDIT = PREFIX + "CONTACTS_EDIT";

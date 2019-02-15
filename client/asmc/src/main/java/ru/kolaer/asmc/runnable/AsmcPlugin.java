@@ -11,7 +11,7 @@ import ru.kolaer.asmc.mvp.model.DataService;
 import ru.kolaer.asmc.mvp.model.DataServiceImpl;
 import ru.kolaer.asmc.mvp.service.AutoUploadData;
 import ru.kolaer.asmc.mvp.view.*;
-import ru.kolaer.common.constant.AccountAccessConstant;
+import ru.kolaer.common.constant.assess.ClientAsupAccessConstant;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.mvp.view.BaseView;
 import ru.kolaer.common.observers.AuthenticationObserver;
@@ -128,7 +128,7 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public void login(AccountDto account) {
-        if(this.splitListContent != null && account.hasAccess(AccountAccessConstant.LOGIN_IN_ASUP)) {
+        if(this.splitListContent != null && account.hasAccess(ClientAsupAccessConstant.LOGIN_IN_ASUP)) {
             this.splitListContent.setAccess(true);
         }
     }

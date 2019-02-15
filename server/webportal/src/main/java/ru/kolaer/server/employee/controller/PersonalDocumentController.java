@@ -6,9 +6,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.common.constant.EmployeeAccessConstant;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
+import ru.kolaer.common.constant.assess.EmployeeAccessConstant;
 import ru.kolaer.server.employee.model.dto.PersonalDocumentDto;
 import ru.kolaer.server.employee.service.PersonalDocumentService;
 

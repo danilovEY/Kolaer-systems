@@ -1,4 +1,4 @@
-package ru.kolaer.common.constant;
+package ru.kolaer.common.constant.assess;
 
 public interface EmployeeAccessConstant extends CommonAccessConstant {
     String TYPE_WORKS_ADD = PREFIX + "TYPE_WORKS_ADD";

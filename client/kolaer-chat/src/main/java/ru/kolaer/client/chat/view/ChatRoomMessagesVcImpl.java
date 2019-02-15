@@ -13,6 +13,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.client.chat.service.ChatClient;
+import ru.kolaer.common.constant.assess.ClientChatAccessConstant;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
@@ -104,28 +105,32 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
 
             ServerResponse serverResponse;
 
-//            if(UniformSystemEditorKitSingleton.getInstance().getAuthentication().getAuthorizedUser().isAccessOit()) { TODO: refactoring
-//                serverResponse = UniformSystemEditorKitSingleton.getInstance()
-//                        .getUSNetwork()
-//                        .getKolaerWebServer()
-//                        .getApplicationDataBase()
-//                        .getChatTable()
-//                        .deleteMessage(new IdsDto(removeMessage));
-//            } else {
-//                serverResponse = UniformSystemEditorKitSingleton.getInstance()
-//                        .getUSNetwork()
-//                        .getKolaerWebServer()
-//                        .getApplicationDataBase()
-//                        .getChatTable()
-//                        .hideMessage(new IdsDto(removeMessage));
-//            }
+            if(UniformSystemEditorKitSingleton.getInstance()
+                    .getAuthentication()
+                    .getAuthorizedUser()
+                    .hasAccess(ClientChatAccessConstant.CHAT_DELETE_MESSAGE)
+            ) {
+                serverResponse = UniformSystemEditorKitSingleton.getInstance()
+                        .getUSNetwork()
+                        .getKolaerWebServer()
+                        .getApplicationDataBase()
+                        .getChatTable()
+                        .deleteMessage(new IdsDto(removeMessage));
+            } else {
+                serverResponse = UniformSystemEditorKitSingleton.getInstance()
+                        .getUSNetwork()
+                        .getKolaerWebServer()
+                        .getApplicationDataBase()
+                        .getChatTable()
+                        .hideMessage(new IdsDto(removeMessage));
+            }
 
-//            if (serverResponse.isServerError()) {
-//                UniformSystemEditorKitSingleton.getInstance() TODO: refactoring
-//                        .getUISystemUS()
-//                        .getNotification()
-//                        .showErrorNotify(serverResponse.getExceptionMessage());
-//            }
+            if (serverResponse.isServerError()) {
+                UniformSystemEditorKitSingleton.getInstance()
+                        .getUISystemUS()
+                        .getNotification()
+                        .showErrorNotify(serverResponse.getExceptionMessage());
+            }
         });
 
         hideMessages.setOnAction(e -> {
