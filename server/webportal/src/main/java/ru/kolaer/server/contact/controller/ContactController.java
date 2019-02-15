@@ -58,7 +58,7 @@ public class ContactController {
     }
 
     @ApiOperation(value = "Обновить контакты")
-    @PreAuthorize("hasRole('" + ContactAccessConstant.CONTACTS_EDIT_ALL + "')")
+    @PreAuthorize("hasRole('" + ContactAccessConstant.CONTACTS_EDIT + "')")
     @PutMapping(RouterConstants.CONTACTS_EMPLOYEES_ID)
     public ContactDto updateContact(@PathVariable(PathVariableConstants.EMPLOYEE_ID) long employeeId,
                                     @RequestBody ContactRequestDto contactRequestDto) {

@@ -103,7 +103,7 @@ public class AccountServiceImpl
 
         AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
 
-        if(!authenticationService.containsAccess(AccountAccessConstant.ACCOUNTS_EDIT_ALL) && currentAccount.getId() != accountSimpleDto.getId()) {
+        if(!authenticationService.containsAccess(AccountAccessConstant.ACCOUNTS_EDIT) && currentAccount.getId() != accountSimpleDto.getId()) {
             throw new ForbiddenException("У вас нет доступа для редактирования");
         }
 
@@ -179,7 +179,7 @@ public class AccountServiceImpl
         contact.setWorkPhoneNumber(contactRequestDto.getWorkPhoneNumber());
         contact.setPlacementId(contactRequestDto.getPlacementId());
 
-        if (authenticationService.containsAccess(ContactAccessConstant.CONTACT_EMAIL_EDIT_ALL)) {
+        if (authenticationService.containsAccess(ContactAccessConstant.CONTACT_EMAIL_EDIT)) {
             contact.setEmail(contactRequestDto.getEmail());
         }
 
