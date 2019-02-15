@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import ru.kolaer.common.constant.assess.ChatAccessConstant;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.error.ErrorCode;
@@ -283,7 +284,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         group = createGroup(null);
         group.setType(ChatGroupType.SINGLE);
         group.setRoomKey(roomKey);
-//        group.setUserCreated(createChatUserDto(accountByAuthentication)); // TODO: refactoring
+        group.setUserCreated(createChatUserDto(accountDao.findById(accountByAuthentication.getId())));
         group.getUsers().addAll(getUsersByIds(allUserIds));
         group = this.save(group);
 
@@ -308,7 +309,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
         List<ChatRoomDto> roomDtos = new ArrayList<>(idsDto.getIds().size());
 
         AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
-        ChatUserDto authChatUserDto = null; // createChatUserDto(accountByAuthentication) TODO: refactoring
+        ChatUserDto authChatUserDto = createChatUserDto(accountDao.findById(accountByAuthentication.getId()));
 
         for (Long accountId : idsDto.getIds()) {
             List<Long> allUserIds = Arrays.asList(accountId, accountByAuthentication.getId());
@@ -331,7 +332,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
                 .filter(room -> room.getId() == null)
                 .collect(Collectors.toMap(ChatRoomDto::getRoomKey, Function.identity()));
 
-        List<ChatRoomDto> saveRooms = save(persistRooms.values().stream().collect(Collectors.toList()));
+        List<ChatRoomDto> saveRooms = save(new ArrayList<>(persistRooms.values()));
 
         for (ChatRoomDto saveRoom : saveRooms) {
             saveRoom.setUsers(persistRooms.get(saveRoom.getRoomKey()).getUsers());
@@ -376,7 +377,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             group = createGroup(name);
             group.setRoomKey(roomKey);
             group.setType(ChatGroupType.PRIVATE);
-            //group.setUserCreated(createChatUserDto(accountByAuthentication)); TODO: refactoring
+            group.setUserCreated(createChatUserDto(accountDao.findById(accountByAuthentication.getId())));
             group.getUsers().addAll(getUsersByIds(allUserIds));
             group = this.save(group);
 
@@ -449,7 +450,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
     public ChatRoomDto createPublicGroup(String name, IdsDto idsDto) {
         ChatRoomDto group = createGroup(name);
         group.setType(ChatGroupType.PUBLIC);
-//        group.setUserCreated(createChatUserDto(authenticationService.getAccountAuthorized())); TODO: refactoring
+        group.setUserCreated(createChatUserDto(accountDao.findById(authenticationService.getAccountAuthorized().getId())));
         return group;
     }
 
@@ -500,7 +501,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
             List<ChatMessageEntity> hideMessages = chatMessageDao.findById(idsDto.getIds())
                     .stream()
-//                    .filter(message -> accountByAuthentication.isAccessOit() || message.getAccountId().equals(accountByAuthentication.getId())) TODO: refactoring
+                    .filter(message -> accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_DELETE_MESSAGE) || message.getAccountId().equals(accountByAuthentication.getId()))
                     .collect(Collectors.toList());
 
             if(hideMessages.isEmpty()) {
@@ -532,7 +533,7 @@ public class ChatRoomServiceImpl extends AbstractDefaultService<ChatRoomDto, Cha
             List<ChatMessageEntity> messages = chatMessageDao.findById(idsDto.getIds());
             List<ChatMessageEntity> removedMessages = messages
                     .stream()
-//                    .filter(message -> accountByAuthentication.isAccessOit() || message.getAccountId().equals(accountByAuthentication.getId())) TODO: refactoring
+                    .filter(message -> accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_DELETE_MESSAGE) || message.getAccountId().equals(accountByAuthentication.getId()))
                     .collect(Collectors.toList());
 
             if (!removedMessages.isEmpty()) {

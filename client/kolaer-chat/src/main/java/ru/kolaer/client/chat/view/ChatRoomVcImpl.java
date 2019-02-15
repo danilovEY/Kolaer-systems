@@ -7,7 +7,7 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.util.StringUtils;
 import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.ChatRoomObserver;
-import ru.kolaer.common.constant.assess.ClientChatAccessConstant;
+import ru.kolaer.common.constant.assess.ChatAccessConstant;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
@@ -71,7 +71,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
             for (ChatMessageDto chatMessageDto : infoMessageActionDto.getChatMessageDtoList()) {
                 if(chatMessageDto.getRoomId().equals(chatRoomDto.getId())) {
                     if(infoMessageActionDto.getCommand() == ChatInfoCommand.HIDE_MESSAGES) {
-                        if(authorizedUser.hasAccess(ClientChatAccessConstant.CHAT_DELETE_MESSAGE)) {
+                        if(authorizedUser.hasAccess(ChatAccessConstant.CHAT_DELETE_MESSAGE)) {
                             chatRoomMessagesVc.hideMessage(chatMessageDto);
                         } else {
                             chatRoomMessagesVc.removeMessage(chatMessageDto);

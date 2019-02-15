@@ -1,6 +1,6 @@
 package ru.kolaer.common.constant.assess;
 
-public interface ClientAsupAccessConstant extends CommonAccessConstant {
+public interface AsupAccessConstant extends CommonAccessConstant {
     /**
      * Авторизация в плагине "АСУП" в клиенте.
      */

@@ -13,7 +13,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.client.chat.service.ChatClient;
-import ru.kolaer.common.constant.assess.ClientChatAccessConstant;
+import ru.kolaer.common.constant.assess.ChatAccessConstant;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
@@ -108,7 +108,7 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
             if(UniformSystemEditorKitSingleton.getInstance()
                     .getAuthentication()
                     .getAuthorizedUser()
-                    .hasAccess(ClientChatAccessConstant.CHAT_DELETE_MESSAGE)
+                    .hasAccess(ChatAccessConstant.CHAT_DELETE_MESSAGE)
             ) {
                 serverResponse = UniformSystemEditorKitSingleton.getInstance()
                         .getUSNetwork()
@@ -164,7 +164,7 @@ public class ChatRoomMessagesVcImpl implements ChatRoomMessagesVc {
             AccountDto authorizedUser = UniformSystemEditorKitSingleton.getInstance()
                     .getAuthentication()
                     .getAuthorizedUser();
-            if(authorizedUser.hasAccess(ClientChatAccessConstant.CHAT_DELETE_MESSAGE)) {
+            if(authorizedUser.hasAccess(ChatAccessConstant.CHAT_DELETE_MESSAGE)) {
                 if(!contextMenu.getItems().contains(hideMessages)) {
                     contextMenu.getItems().add(hideMessages);
                 }
