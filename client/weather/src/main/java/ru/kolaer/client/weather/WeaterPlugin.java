@@ -1,9 +1,9 @@
 package ru.kolaer.client.weather;
 
 import javafx.scene.Node;
+import ru.kolaer.client.core.plugins.UniformSystemPlugin;
+import ru.kolaer.client.core.plugins.services.Service;
 import ru.kolaer.client.weather.service.WeatherService;
-import ru.kolaer.common.plugins.UniformSystemPlugin;
-import ru.kolaer.common.plugins.services.Service;
 
 import java.util.Collection;
 import java.util.Collections;

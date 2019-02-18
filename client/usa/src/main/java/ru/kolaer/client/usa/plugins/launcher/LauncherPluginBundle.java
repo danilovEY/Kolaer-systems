@@ -1,7 +1,7 @@
 package ru.kolaer.client.usa.plugins.launcher;
 
+import ru.kolaer.client.core.plugins.UniformSystemPlugin;
 import ru.kolaer.client.usa.plugins.PluginBundle;
-import ru.kolaer.common.plugins.UniformSystemPlugin;
 
 /**
  * Created by danilovey on 17.08.2016.

@@ -2,7 +2,7 @@ package ru.kolaer.client.usa.mvp.view;
 
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
-import ru.kolaer.common.mvp.view.BaseView;
+import ru.kolaer.client.core.mvp.view.BaseView;
 
 /**
  * View вкладки с контентом плагина.

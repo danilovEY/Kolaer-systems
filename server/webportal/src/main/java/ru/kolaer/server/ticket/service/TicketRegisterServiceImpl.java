@@ -4,7 +4,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.common.tools.Tools;
 import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.core.bean.RegisterTicketScheduler;
 import ru.kolaer.server.core.exception.NotFoundDataException;
@@ -38,6 +37,7 @@ import ru.kolaer.server.upload.service.UploadFileService;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,6 +50,8 @@ import java.util.stream.Collectors;
 @Service
 public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegisterDto, TicketRegisterEntity,
         TicketRegisterDao, TicketRegisterConverter> implements TicketRegisterService {
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+
     private final TicketDao ticketDao;
     private final RegisterTicketScheduler registerTicketScheduler;
     private final BankAccountDao bankAccountDao;
@@ -227,8 +229,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
             registerEntity.setClose(true);
 
             String text = "Сформированные талоны ЛПП и время исполнения файла: " +
-                    (config.isImmediate() ? "сейчас" : Tools.dateTimeToString(config.getInTime())) +
-                    ". Файл во вложении!";
+                    (config.isImmediate() ? "сейчас" : dateTimeFormatter.format(config.getInTime())) + ". Файл во вложении!";
 
             boolean send = this.registerTicketScheduler.sendMail(uploadFileEntity, text);
             if(send) {

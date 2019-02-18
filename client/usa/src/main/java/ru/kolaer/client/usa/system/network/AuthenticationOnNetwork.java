@@ -3,14 +3,14 @@ package ru.kolaer.client.usa.system.network;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.client.core.observers.AuthenticationObserver;
+import ru.kolaer.client.core.system.Authentication;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.usa.tools.Resources;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 import ru.kolaer.common.dto.kolaerweb.TokenJson;
 import ru.kolaer.common.dto.kolaerweb.UserAndPassJson;
-import ru.kolaer.common.observers.AuthenticationObserver;
-import ru.kolaer.common.system.Authentication;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
 
 import java.io.File;
 import java.io.IOException;

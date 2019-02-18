@@ -2,12 +2,12 @@ package ru.kolaer.client.usa.system.network.kolaerweb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.core.system.network.kolaerweb.NotifyMessageTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.NotifyMessageDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.common.system.network.kolaerweb.NotifyMessageTable;
 
 import java.util.HashMap;
 import java.util.Map;

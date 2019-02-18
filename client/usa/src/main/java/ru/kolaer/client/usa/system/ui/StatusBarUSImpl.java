@@ -4,8 +4,8 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
-import ru.kolaer.common.system.ui.ProgressBarObservable;
-import ru.kolaer.common.system.ui.StatusBarUS;
+import ru.kolaer.client.core.system.ui.ProgressBarObservable;
+import ru.kolaer.client.core.system.ui.StatusBarUS;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

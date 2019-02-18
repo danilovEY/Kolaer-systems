@@ -12,11 +12,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import ru.kolaer.client.core.system.ui.NotificationType;
+import ru.kolaer.client.core.system.ui.NotificationView;
+import ru.kolaer.client.core.system.ui.NotifyAction;
+import ru.kolaer.client.core.tools.Tools;
 import ru.kolaer.common.dto.kolaerweb.NotifyMessageDto;
-import ru.kolaer.common.system.ui.NotificationType;
-import ru.kolaer.common.system.ui.NotificationView;
-import ru.kolaer.common.system.ui.NotifyAction;
-import ru.kolaer.common.tools.Tools;
 
 import java.util.Date;
 import java.util.List;

@@ -3,12 +3,12 @@ package ru.kolaer.client.usa.system.ui;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import ru.kolaer.client.core.observers.AuthenticationObserver;
+import ru.kolaer.client.core.system.Authentication;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.core.system.ui.MenuBarUS;
+import ru.kolaer.client.core.tools.Tools;
 import ru.kolaer.common.dto.auth.AccountDto;
-import ru.kolaer.common.observers.AuthenticationObserver;
-import ru.kolaer.common.system.Authentication;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.common.system.ui.MenuBarUS;
-import ru.kolaer.common.tools.Tools;
 
 import java.util.function.Consumer;
 

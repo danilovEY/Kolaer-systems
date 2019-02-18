@@ -11,5 +11,6 @@ include ':client:kolpass'
 include ':client:kolaer-chat'
 include ':client:messages'
 include ':client:counter'
-include 'client:weather'
+include ':client:weather'
+include ':client:client-core'
 

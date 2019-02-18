@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.client.core.system.network.kolaerweb.ServerTools;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
 import ru.kolaer.common.dto.kolaerweb.DateTimeJson;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
-import ru.kolaer.common.system.network.kolaerweb.ServerTools;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

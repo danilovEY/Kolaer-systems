@@ -1,7 +1,6 @@
 package ru.kolaer.client.usa.system.ui;
 
 import javafx.stage.Stage;
-import ru.kolaer.common.system.ui.*;
 
 /**
  * Реализация системных (приложения) объектов.

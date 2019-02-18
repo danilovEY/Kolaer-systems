@@ -3,8 +3,8 @@ package ru.kolaer.client.usa.mvp.viewmodel.impl;
 import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.common.mvp.view.VDialog;
-import ru.kolaer.common.tools.Tools;
+import ru.kolaer.client.core.mvp.view.VDialog;
+import ru.kolaer.client.core.tools.Tools;
 
 public class VSimpleDialog implements VDialog {
 	private final Logger LOG = LoggerFactory.getLogger(VSimpleDialog.class);

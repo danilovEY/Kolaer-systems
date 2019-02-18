@@ -2,9 +2,9 @@ package ru.kolaer.client.usa.plugins;
 
 
 import javafx.scene.Parent;
-import ru.kolaer.common.plugins.UniformSystemPlugin;
-import ru.kolaer.common.plugins.services.Service;
-import ru.kolaer.common.system.UniformSystemEditorKit;
+import ru.kolaer.client.core.plugins.UniformSystemPlugin;
+import ru.kolaer.client.core.plugins.services.Service;
+import ru.kolaer.client.core.system.UniformSystemEditorKit;
 
 import java.net.URL;
 import java.util.Collection;

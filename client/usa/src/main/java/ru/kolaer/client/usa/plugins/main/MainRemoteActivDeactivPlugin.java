@@ -2,8 +2,8 @@ package ru.kolaer.client.usa.plugins.main;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kolaer.client.core.plugins.UniformSystemPlugin;
 import ru.kolaer.client.usa.services.RemoteActivationDeactivationPlugin;
-import ru.kolaer.common.plugins.UniformSystemPlugin;
 
 /**
  * Класс для удаленного закрытия основного приложения.

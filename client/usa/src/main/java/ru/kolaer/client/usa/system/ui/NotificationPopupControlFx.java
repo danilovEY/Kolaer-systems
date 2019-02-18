@@ -6,11 +6,11 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.control.Notifications;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.core.system.ui.NotificationUS;
+import ru.kolaer.client.core.system.ui.NotifyAction;
+import ru.kolaer.client.core.tools.Tools;
 import ru.kolaer.common.dto.error.ServerExceptionMessage;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.common.system.ui.NotificationUS;
-import ru.kolaer.common.system.ui.NotifyAction;
-import ru.kolaer.common.tools.Tools;
 
 import java.util.Collections;
 import java.util.List;

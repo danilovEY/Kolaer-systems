@@ -1,7 +1,7 @@
 package ru.kolaer.kolpass.mvp.view;
 
 import javafx.scene.layout.BorderPane;
-import ru.kolaer.common.mvp.view.BaseView;
+import ru.kolaer.client.core.mvp.view.BaseView;
 
 /**
  * Created by danilovey on 16.02.2017.

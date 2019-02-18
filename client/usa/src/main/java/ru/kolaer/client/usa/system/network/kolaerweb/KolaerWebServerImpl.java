@@ -2,12 +2,12 @@ package ru.kolaer.client.usa.system.network.kolaerweb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
+import ru.kolaer.client.core.system.network.ServerStatus;
+import ru.kolaer.client.core.system.network.kolaerweb.ApplicationDataBase;
+import ru.kolaer.client.core.system.network.kolaerweb.KolaerWebServer;
+import ru.kolaer.client.core.system.network.kolaerweb.ServerTools;
 import ru.kolaer.client.usa.tools.Resources;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
-import ru.kolaer.common.system.network.ServerStatus;
-import ru.kolaer.common.system.network.kolaerweb.ApplicationDataBase;
-import ru.kolaer.common.system.network.kolaerweb.KolaerWebServer;
-import ru.kolaer.common.system.network.kolaerweb.ServerTools;
 
 import java.net.HttpURLConnection;
 import java.net.URL;

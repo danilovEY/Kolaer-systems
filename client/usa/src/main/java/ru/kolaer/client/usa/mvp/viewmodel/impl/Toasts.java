@@ -19,10 +19,10 @@ import javafx.stage.Screen;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.controlsfx.tools.Utils;
-import ru.kolaer.common.system.ui.NotificationType;
-import ru.kolaer.common.system.ui.NotificationView;
-import ru.kolaer.common.system.ui.NotifyAction;
-import ru.kolaer.common.tools.Tools;
+import ru.kolaer.client.core.system.ui.NotificationType;
+import ru.kolaer.client.core.system.ui.NotificationView;
+import ru.kolaer.client.core.system.ui.NotifyAction;
+import ru.kolaer.client.core.tools.Tools;
 
 import java.util.Collections;
 import java.util.List;
