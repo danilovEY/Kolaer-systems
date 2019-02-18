@@ -1,8 +1,8 @@
 package ru.kolaer.kolpass.mvp.presenter;
 
+import ru.kolaer.client.core.mvp.presenter.BasePresenter;
 import ru.kolaer.common.dto.BaseModel;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
-import ru.kolaer.common.mvp.presenter.BasePresenter;
 import ru.kolaer.kolpass.mvp.view.VRepositoryPassword;
 
 import java.util.function.Function;

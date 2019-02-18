@@ -10,13 +10,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.client.chat.service.ChatClient;
+import ru.kolaer.client.core.mvp.view.BaseView;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.core.tools.Tools;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatRoomDto;
-import ru.kolaer.common.mvp.view.BaseView;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.common.tools.Tools;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Date;

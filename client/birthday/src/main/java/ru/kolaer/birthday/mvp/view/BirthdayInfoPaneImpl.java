@@ -12,7 +12,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import ru.kolaer.birthday.mvp.model.UserModel;
 import ru.kolaer.birthday.tools.BirthdayTools;
-import ru.kolaer.common.system.ui.StaticView;
+import ru.kolaer.client.core.system.ui.StaticView;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -7,9 +7,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
-import ru.kolaer.common.plugins.UniformSystemPlugin;
-import ru.kolaer.common.system.UniformSystemEditorKit;
-import ru.kolaer.common.tools.Tools;
+import ru.kolaer.client.core.plugins.UniformSystemPlugin;
+import ru.kolaer.client.core.system.UniformSystemEditorKit;
+import ru.kolaer.client.core.tools.Tools;
 
 import java.io.File;
 import java.util.Collections;

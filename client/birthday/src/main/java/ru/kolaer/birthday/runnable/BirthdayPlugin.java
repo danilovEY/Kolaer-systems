@@ -5,9 +5,9 @@ import ru.kolaer.birthday.mvp.view.MainContentVc;
 import ru.kolaer.birthday.mvp.view.MainContentVcImpl;
 import ru.kolaer.birthday.service.BirthdayOnHoliday;
 import ru.kolaer.birthday.service.BirthdayService;
-import ru.kolaer.common.plugins.UniformSystemPlugin;
-import ru.kolaer.common.plugins.services.Service;
-import ru.kolaer.common.system.UniformSystemEditorKit;
+import ru.kolaer.client.core.plugins.UniformSystemPlugin;
+import ru.kolaer.client.core.plugins.services.Service;
+import ru.kolaer.client.core.system.UniformSystemEditorKit;
 
 import java.util.ArrayList;
 import java.util.List;

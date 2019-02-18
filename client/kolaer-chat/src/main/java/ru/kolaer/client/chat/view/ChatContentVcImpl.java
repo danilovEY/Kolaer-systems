@@ -7,14 +7,14 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.client.chat.service.*;
+import ru.kolaer.client.core.mvp.view.BaseView;
+import ru.kolaer.client.core.plugins.UniformSystemPlugin;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.core.tools.Tools;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 import ru.kolaer.common.dto.kolaerweb.kolchat.*;
-import ru.kolaer.common.mvp.view.BaseView;
-import ru.kolaer.common.plugins.UniformSystemPlugin;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.common.tools.Tools;
 
 import java.util.Collections;
 import java.util.List;

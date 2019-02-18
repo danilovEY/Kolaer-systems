@@ -9,8 +9,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import ru.kolaer.client.core.system.ui.StaticView;
 import ru.kolaer.common.dto.counter.CounterDto;
-import ru.kolaer.common.system.ui.StaticView;
 
 import java.util.function.Consumer;
 

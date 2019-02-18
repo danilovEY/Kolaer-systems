@@ -8,12 +8,12 @@ import ru.kolaer.client.chat.service.ChatClient;
 import ru.kolaer.client.chat.service.ChatClientImpl;
 import ru.kolaer.client.chat.view.ChatContentVc;
 import ru.kolaer.client.chat.view.ChatContentVcImpl;
+import ru.kolaer.client.core.observers.AuthenticationObserver;
+import ru.kolaer.client.core.plugins.UniformSystemPlugin;
+import ru.kolaer.client.core.system.UniformSystemEditorKit;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.core.tools.Tools;
 import ru.kolaer.common.dto.auth.AccountDto;
-import ru.kolaer.common.observers.AuthenticationObserver;
-import ru.kolaer.common.plugins.UniformSystemPlugin;
-import ru.kolaer.common.system.UniformSystemEditorKit;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.common.tools.Tools;
 
 import java.util.function.Consumer;
 

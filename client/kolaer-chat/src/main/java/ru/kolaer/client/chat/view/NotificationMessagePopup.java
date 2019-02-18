@@ -3,15 +3,15 @@ package ru.kolaer.client.chat.view;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import ru.kolaer.client.core.mvp.view.BaseView;
+import ru.kolaer.client.core.plugins.UniformSystemPlugin;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.core.system.ui.NotificationType;
+import ru.kolaer.client.core.system.ui.NotificationView;
+import ru.kolaer.client.core.system.ui.NotifyAction;
+import ru.kolaer.client.core.tools.Tools;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageDto;
-import ru.kolaer.common.mvp.view.BaseView;
-import ru.kolaer.common.plugins.UniformSystemPlugin;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.common.system.ui.NotificationType;
-import ru.kolaer.common.system.ui.NotificationView;
-import ru.kolaer.common.system.ui.NotifyAction;
-import ru.kolaer.common.tools.Tools;
 
 import java.util.Collections;
 

@@ -11,7 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.tools.Resources;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 
 import java.util.Optional;
 

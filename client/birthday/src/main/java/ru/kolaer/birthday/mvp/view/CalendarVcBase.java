@@ -7,7 +7,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import ru.kolaer.birthday.mvp.presenter.ObserverCalendar;
-import ru.kolaer.common.tools.Tools;
+import ru.kolaer.client.core.tools.Tools;
 
 import java.time.LocalDate;
 import java.util.function.Consumer;

@@ -1,6 +1,6 @@
 package ru.kolaer.birthday.runnable;
 
-import ru.kolaer.common.plugins.services.Service;
+import ru.kolaer.client.core.plugins.services.Service;
 
 import javax.swing.*;
 import java.awt.*;

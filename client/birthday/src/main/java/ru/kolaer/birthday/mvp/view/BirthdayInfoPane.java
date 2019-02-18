@@ -1,7 +1,7 @@
 package ru.kolaer.birthday.mvp.view;
 
 import ru.kolaer.birthday.mvp.model.UserModel;
-import ru.kolaer.common.system.ui.StaticView;
+import ru.kolaer.client.core.system.ui.StaticView;
 
 import java.util.List;
 

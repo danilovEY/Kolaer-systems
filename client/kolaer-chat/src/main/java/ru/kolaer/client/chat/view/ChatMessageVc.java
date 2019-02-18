@@ -1,8 +1,8 @@
 package ru.kolaer.client.chat.view;
 
 import javafx.scene.Node;
+import ru.kolaer.client.core.mvp.view.BaseView;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageDto;
-import ru.kolaer.common.mvp.view.BaseView;
 
 /**
  * Created by danilovey on 02.11.2017.

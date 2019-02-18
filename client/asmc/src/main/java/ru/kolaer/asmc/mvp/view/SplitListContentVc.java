@@ -2,7 +2,7 @@ package ru.kolaer.asmc.mvp.view;
 
 import javafx.scene.Node;
 import ru.kolaer.asmc.mvp.presenter.Access;
-import ru.kolaer.common.mvp.view.BaseView;
+import ru.kolaer.client.core.mvp.view.BaseView;
 
 /**
  * Created by danilovey on 21.02.2017.

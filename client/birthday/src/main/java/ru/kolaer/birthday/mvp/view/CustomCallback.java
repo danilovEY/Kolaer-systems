@@ -7,7 +7,7 @@ import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.birthday.tools.BirthdayTools;
-import ru.kolaer.common.tools.Tools;
+import ru.kolaer.client.core.tools.Tools;
 
 import java.time.LocalDate;
 import java.util.Date;

@@ -14,11 +14,11 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import org.springframework.web.socket.sockjs.frame.Jackson2SockJsMessageCodec;
+import ru.kolaer.client.core.system.Authentication;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatConstants;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatRoomDto;
-import ru.kolaer.common.system.Authentication;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
 
 import java.lang.reflect.Type;
 import java.util.*;

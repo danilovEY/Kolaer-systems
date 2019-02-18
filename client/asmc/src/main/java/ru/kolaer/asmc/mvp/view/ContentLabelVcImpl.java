@@ -11,8 +11,8 @@ import javafx.scene.layout.FlowPane;
 import ru.kolaer.asmc.mvp.model.DataService;
 import ru.kolaer.asmc.mvp.model.MGroup;
 import ru.kolaer.asmc.mvp.model.MLabel;
-import ru.kolaer.common.mvp.view.BaseView;
-import ru.kolaer.common.tools.Tools;
+import ru.kolaer.client.core.mvp.view.BaseView;
+import ru.kolaer.client.core.tools.Tools;
 
 import java.util.*;
 import java.util.function.Consumer;

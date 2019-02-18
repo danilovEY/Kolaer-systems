@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.asmc.mvp.model.DataService;
 import ru.kolaer.asmc.mvp.model.DataServiceObserver;
 import ru.kolaer.asmc.mvp.model.MGroup;
-import ru.kolaer.common.plugins.services.Service;
-import ru.kolaer.common.system.impl.UniformSystemEditorKitSingleton;
+import ru.kolaer.client.core.plugins.services.Service;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

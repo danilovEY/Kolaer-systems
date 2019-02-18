@@ -3,8 +3,8 @@ package ru.kolaer.client.chat.view;
 import javafx.scene.Parent;
 import ru.kolaer.client.chat.service.ChatObserver;
 import ru.kolaer.client.chat.service.ChatRoomObserver;
+import ru.kolaer.client.core.mvp.view.BaseView;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageDto;
-import ru.kolaer.common.mvp.view.BaseView;
 
 import java.util.List;
 import java.util.function.Consumer;
