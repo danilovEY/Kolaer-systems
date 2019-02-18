@@ -37,6 +37,21 @@ public interface RouterConstants {
     String CONTACTS_EMPLOYEES_ID = CONTACTS_EMPLOYEES + "/{" + PathVariableConstants.EMPLOYEE_ID + "}";
 
 
+    String VACATIONS = "/vacations";
+    String VACATIONS_ID = VACATIONS + "/{" + PathVariableConstants.VACATION_ID + "}";
+    String VACATIONS_PERIODS = VACATIONS + "/periods";
+    String VACATIONS_BALANCE = VACATIONS + "/balance";
+    String VACATIONS_CALCULATE = VACATIONS + "/calculate";
+    String VACATIONS_CALCULATE_DAYS = VACATIONS_CALCULATE + "/days";
+    String VACATIONS_CALCULATE_DATE = VACATIONS_CALCULATE + "/date";
+    String VACATIONS_REPORT = VACATIONS + "/report";
+    String VACATIONS_REPORT_CALENDAR = VACATIONS_REPORT + "/calendar";
+    String VACATIONS_REPORT_CALENDAR_EXPORT = VACATIONS_REPORT_CALENDAR + "/export";
+    String VACATIONS_REPORT_DISTRIBUTE = VACATIONS_REPORT + "/distribute";
+    String VACATIONS_REPORT_TOTAL_COUNT = VACATIONS_REPORT + "/total_count";
+    String VACATIONS_REPORT_EXPORT = VACATIONS_REPORT + "/export";
+
+
     String AUTHENTICATION = "/authentication";
     String AUTHENTICATION_LOGOUT = AUTHENTICATION + "/logout";
     String AUTHENTICATION_LOGIN = AUTHENTICATION + "/login";

@@ -4,10 +4,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.post.PostDto;
-import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.employee.model.dto.PostRequestDto;
 import ru.kolaer.server.employee.model.request.FindPostPageRequest;
 import ru.kolaer.server.employee.model.request.PostFilter;
@@ -29,7 +29,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "Получить все должности")
-    @UrlDeclaration(description = "Получить все должности")
+    @PreAuthorize("permitAll()")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PostDto> getAllDepartment(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                           @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
@@ -39,21 +39,21 @@ public class PostController {
     }
 
     @ApiOperation(value = "Найти должности")
-    @UrlDeclaration
+    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/find", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PostDto> getAllDepartment(FindPostPageRequest request) {
         return this.postService.find(request);
     }
 
     @ApiOperation(value = "Добавить должность")
-    @UrlDeclaration(description = "Добавить должность", isUser = false, requestMethod = RequestMethod.POST, isOk = true)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PostDto addPost(@RequestBody PostRequestDto postRequestDto) {
         return postService.add(postRequestDto);
     }
 
     @ApiOperation(value = "Обновит должность")
-    @UrlDeclaration(description = "Обновит должность", isUser = false, requestMethod = RequestMethod.PUT, isOk = true)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{postId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PostDto updatePost(@PathVariable("postId") Long postId,
                                            @RequestBody PostRequestDto postRequestDto) {
@@ -61,7 +61,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "Удалить должность")
-    @UrlDeclaration(description = "Удалить должность", isUser = false, requestMethod = RequestMethod.DELETE, isOk = true)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{depId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deletePost(@PathVariable("postId") Long postId) {
         postService.delete(postId, true);

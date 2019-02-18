@@ -11,4 +11,5 @@ public interface PathVariableConstants {
 
     String FROM_DATE = "fromDate";
     String TO_DATE = "toDate";
+    String VACATION_ID = "vacationId";
 }

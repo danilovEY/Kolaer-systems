@@ -4,13 +4,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.NotifyMessageDto;
-import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.notification.service.NotifyMessageService;
 
 /**
@@ -31,7 +31,7 @@ public class NotifyMessageController {
     @ApiOperation(
             value = "Получить последнее оповещение"
     )
-    @UrlDeclaration(description = "Получить последнее оповещение", isAccessAll = true)
+    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/get/last", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public NotifyMessageDto getLastNotifyMessage() {
         return notifyMessageService.getLastNotifyMessage();
@@ -40,7 +40,7 @@ public class NotifyMessageController {
     @ApiOperation(
             value = "Получить последнее оповещение"
     )
-    @UrlDeclaration(description = "Получить оповещения", isAccessAll = true)
+    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<NotifyMessageDto> getNotifyMessages(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                                     @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {

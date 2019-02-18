@@ -1,5 +1,6 @@
 package ru.kolaer.server.chat.controller;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -7,6 +8,7 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.IdDto;
@@ -17,7 +19,6 @@ import ru.kolaer.common.dto.kolaerweb.kolchat.ChatRoomDto;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatUserDto;
 import ru.kolaer.server.chat.service.ChatMessageService;
 import ru.kolaer.server.chat.service.ChatRoomService;
-import ru.kolaer.server.core.annotation.UrlDeclaration;
 
 import java.util.Collection;
 import java.util.Date;
@@ -51,67 +52,78 @@ public class ChatController {
         chatService.send(message);
     }
 
-    @UrlDeclaration(description = "Получить список своих комнат")
+    @ApiOperation("Получить список своих комнат")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/room/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ChatRoomDto> getRoomFromAuthUser() {
         return chatService.getAllRoomForAuthUser();
     }
 
-    @UrlDeclaration(description = "Получить список активных пользователей чата")
+    @ApiOperation("Получить список активных пользователей чата")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/user/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Collection<ChatUserDto> getOnlineUsers() {
         return chatService.getOnlineUsers();
     }
 
-    @UrlDeclaration(description = "Создать приватную комнату пользователей чата", requestMethod = RequestMethod.POST)
+    @ApiOperation("Создать приватную комнату пользователей чата")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/room/private", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ChatRoomDto createPrivateRoom(@RequestBody IdsDto idsDto, @RequestParam(required = false) String name) {
         return chatService.createPrivateGroup(name, idsDto);
     }
 
-    @UrlDeclaration(description = "Создать комнату на двоих", requestMethod = RequestMethod.POST)
+    @ApiOperation("Создать комнату на двоих")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/room/single", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ChatRoomDto getOrCreateSingleRoom(@RequestBody IdDto idDto) {
         return chatService.createSingleGroup(idDto);
     }
 
-    @UrlDeclaration(description = "Создать комнату на двоих", requestMethod = RequestMethod.POST)
+    @ApiOperation("Создать комнату на двоих")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/room/singles", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ChatRoomDto> getOrCreateSingleRooms(@RequestBody IdsDto idsDto) {
         return chatService.createSingleGroup(idsDto);
     }
 
-    @UrlDeclaration(description = "Скрыть сообщения", requestMethod = RequestMethod.POST)
+    @ApiOperation("Скрыть сообщения")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/message/hide", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void hideMessages(@RequestBody IdsDto idsDto) {
         chatService.hideMessage(idsDto, true);
     }
 
-    @UrlDeclaration(description = "Удалить сообщения", requestMethod = RequestMethod.POST)
+    @ApiOperation("Удалить сообщения")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/message/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteMessages(@RequestBody IdsDto idsDto) {
         chatService.deleteMessage(idsDto);
     }
 
-    @UrlDeclaration(description = "Выйти из комнат", requestMethod = RequestMethod.POST)
+    @ApiOperation("Выйти из комнат")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/room/quit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void quitFromRooms(@RequestBody IdsDto idsDto) {
         chatService.quitFromRooms(idsDto);
     }
 
-    @UrlDeclaration(description = "Пометить сообщение как прочитанное сообщения", requestMethod = RequestMethod.POST)
+    @ApiOperation("Пометить сообщение как прочитанное сообщения")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/message/read", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void markAsReadMessages(@RequestBody IdsDto idsDto) {
         chatService.markReadMessages(idsDto, true);
     }
 
-    @UrlDeclaration(description = "Получить комнату по id комнаты", requestMethod = RequestMethod.GET)
+    @ApiOperation("Получить комнату по id комнаты")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/room/{roomId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ChatRoomDto getRoom(@PathVariable("roomId") Long roomId) {
         return chatService.getById(roomId);
     }
 
-    @UrlDeclaration(description = "Получить сообщения группы", requestMethod = RequestMethod.GET)
+    @ApiOperation("Получить сообщения группы")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/room/{roomId}/messages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<ChatMessageDto> getMessagesRoom(@PathVariable("roomId") Long roomId,
                                                 @RequestParam(value = "page", defaultValue = "0") Integer number,
@@ -120,7 +132,8 @@ public class ChatController {
     }
 
 
-    @UrlDeclaration(description = "Получить активного пользователя по ID аккаунту")
+    @ApiOperation("Получить активного пользователя по ID аккаунту")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/active", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ChatUserDto getActiveUserByAccountId(@RequestParam("account_id") Long accountId) {
         return chatService.getUserByAccountId(accountId);

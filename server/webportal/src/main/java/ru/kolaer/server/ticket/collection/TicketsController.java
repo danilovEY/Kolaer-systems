@@ -5,9 +5,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
-import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.core.bean.RegisterTicketScheduler;
 import ru.kolaer.server.ticket.model.dto.RequestTicketDto;
 import ru.kolaer.server.ticket.model.dto.TicketDto;
@@ -36,7 +36,7 @@ public class TicketsController {
     }
 
     @ApiOperation(value = "Добавить е-майл")
-    @UrlDeclaration(description = "Добавить е-майл")
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/generate/add", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<String> addEmail(@RequestParam("mail") String mail) {
         this.registerTicketScheduler.addEmail(mail);
@@ -44,7 +44,7 @@ public class TicketsController {
     }
 
     @ApiOperation(value = "Удалить е-майл")
-    @UrlDeclaration(description = "Удалить е-майл")
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/generate/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<String> removeEmail(@RequestParam("mail") String mail) {
         this.registerTicketScheduler.removeEmail(mail);
@@ -52,14 +52,14 @@ public class TicketsController {
     }
 
     @ApiOperation(value = "Получить все е-майлы")
-    @UrlDeclaration(description = "Получить все е-майлы")
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/generate/emails", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<String> getEmails() {
         return registerTicketScheduler.getEmails();
     }
 
     @ApiOperation(value = "Получить все реестры талонов")
-    @UrlDeclaration(description = "Получить все реестры талонов")
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<TicketRegisterDto> getAllRegister(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                                   @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
@@ -69,7 +69,7 @@ public class TicketsController {
     }
 
     @ApiOperation(value = "Добавить все аккаунты в реестр")
-    @UrlDeclaration(description = "Добавить все аккаунты в реестр", requestMethod = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{regId}/full", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TicketRegisterDto addToRegisterAllAccounts(@PathVariable("regId") Long regId,
                                                       @RequestBody GenerateTicketRegister generateTicketRegister) {
@@ -77,28 +77,28 @@ public class TicketsController {
     }
 
     @ApiOperation(value = "Получить реестр по ID")
-    @UrlDeclaration(description = "Получить реестр по ID", requestMethod = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{regId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TicketRegisterDto getRegister(@PathVariable("regId") Long regId) {
         return this.ticketRegisterService.getById(regId);
     }
 
     @ApiOperation(value = "Сгенерировать реестр с добавлением всех аккаунтов")
-    @UrlDeclaration(description = "Сгенерировать реестр с добавлением всех аккаунтов", requestMethod = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/full", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TicketRegisterDto generateNewRegisterAndAddAllAccounts(@RequestBody GenerateTicketRegister generateTicketRegister) {
         return this.ticketRegisterService.createRegisterForAllAccounts(generateTicketRegister);
     }
 
     @ApiOperation(value = "Сгенерировать пустой реестр")
-    @UrlDeclaration(description = "Сгенерировать пустой реестр", requestMethod = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/empty", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TicketRegisterDto generateNewEmptyRegister() {
         return this.ticketRegisterService.createEmptyRegister();
     }
 
     @ApiOperation(value = "Сформировать отчет реестра")
-    @UrlDeclaration(description = "Сформировать отчет реестра", requestMethod = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{regId}/report", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TicketRegisterDto generateReportForRegisterAndDownload(@PathVariable("regId") Long regId,
                                                     @RequestBody ReportTicketsConfig reportTicketsConfig,
@@ -107,7 +107,7 @@ public class TicketsController {
     }
 
     @ApiOperation(value = "Сформировать отчет реестра и отправить")
-    @UrlDeclaration(description = "Сформировать отчет реестра и отправить", requestMethod = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{regId}/report/send", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TicketRegisterDto generateReportForRegisterAndSend(@PathVariable("regId") Long regId,
                                                     @RequestBody ReportTicketsConfig reportTicketsConfig) {
@@ -115,14 +115,14 @@ public class TicketsController {
     }
 
     @ApiOperation(value = "Удалить реестр")
-    @UrlDeclaration(description = "Удалить реестра", requestMethod = RequestMethod.DELETE)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{regId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteRegister(@PathVariable("regId") Long regId) {
         this.ticketRegisterService.delete(regId);
     }
 
     @ApiOperation(value = "Получить талоны по ID реестра")
-    @UrlDeclaration(description = "Получить талоны по ID реестра")
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{regId}/tickets", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<TicketDto> getTickets(@ApiParam(value = "ID реестра", required = true) @PathVariable("regId") Long regId,
                                       @RequestParam(value = "page", defaultValue = "0") Integer number,
@@ -133,7 +133,7 @@ public class TicketsController {
     }
 
     @ApiOperation(value = "Добавить талон по ID реестра")
-    @UrlDeclaration(description = "Добавить талон по ID реестра", requestMethod = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{regId}/tickets", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TicketDto addTicket(@ApiParam(value = "ID реестра", required = true) @PathVariable("regId") Long regId,
                                      @RequestBody RequestTicketDto ticketDto) {
@@ -141,7 +141,7 @@ public class TicketsController {
     }
 
     @ApiOperation(value = "Удалить талон по ID реестра")
-    @UrlDeclaration(description = "Удалить талон по ID реестра", requestMethod = RequestMethod.DELETE)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{regId}/tickets/{ticketId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteTicket(@ApiParam(value = "ID реестра", required = true) @PathVariable("regId") Long regId,
                              @ApiParam(value = "ID талона", required = true) @PathVariable("ticketId") Long ticketId) {
@@ -149,7 +149,7 @@ public class TicketsController {
     }
 
     @ApiOperation(value = "Обновить талон по ID реестра")
-    @UrlDeclaration(description = "Получить талон по ID реестра", requestMethod = RequestMethod.PUT)
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/{regId}/tickets/{ticketId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TicketDto updateTicket(@ApiParam(value = "ID реестра", required = true) @PathVariable("regId") Long regId,
                                @ApiParam(value = "ID талона", required = true) @PathVariable("ticketId") Long ticketId,

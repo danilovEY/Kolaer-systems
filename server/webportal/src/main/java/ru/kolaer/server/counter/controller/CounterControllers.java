@@ -4,11 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.dto.counter.CounterDto;
-import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.counter.service.CounterService;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class CounterControllers {
     @ApiOperation(
             value = "Получить все счетчики"
     )
-    @UrlDeclaration(description = "Получить все счетчики", isAccessAll = true)
+    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<CounterDto> getAllCounters() {
         return  this.counterService.getAll();

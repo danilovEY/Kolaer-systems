@@ -5,12 +5,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
-import ru.kolaer.server.core.annotation.UrlDeclaration;
 import ru.kolaer.server.kolpass.model.request.RepositoryPasswordFilter;
 import ru.kolaer.server.kolpass.model.request.RepositoryPasswordSort;
 import ru.kolaer.server.kolpass.service.PasswordRepositoryService;
@@ -32,7 +32,7 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Получить все свои хранилища")
-    @UrlDeclaration(description = "Получить все свои хранилища")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PasswordRepositoryDto> getAllPersonalRepositoryPasswords(
             @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
@@ -43,14 +43,14 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Получить хранилище")
-    @UrlDeclaration(description = "Получить хранилище")
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/rep/{repId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PasswordRepositoryDto getRepositoryPasswords(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId) {
         return passwordRepositoryService.getById(repId);
     }
 
     @ApiOperation(value = "Получить всех расширенных пользователей")
-    @UrlDeclaration(description = "Получить всех расширенных пользователей", requestMethod = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/share", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PasswordRepositoryDto> getAccountsFromSharePasswordRepository(
             @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
@@ -61,7 +61,7 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Добавить новое хранилище")
-    @UrlDeclaration(description = "Добавить новое хранилище", requestMethod = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PasswordRepositoryDto addRepositoryPasswords(
             @ApiParam("Наименование хранилища") @RequestBody PasswordRepositoryDto repositoryPassword) {
@@ -69,7 +69,7 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Добавить новый пароль в хранилище")
-    @UrlDeclaration(description = "Добавить новый пароль в хранилище", requestMethod = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/{repId}/passwords", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PasswordHistoryDto addPasswordHistory(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
@@ -78,7 +78,7 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Расшарить пароль для пользователей")
-    @UrlDeclaration(description = "Расшарить пароль для пользователей", requestMethod = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/{repId}/share", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void sharePasswordRepository(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
@@ -87,7 +87,7 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Удалить пользователя из расшаривания")
-    @UrlDeclaration(description = "Удалить пользователя из расшаривания", requestMethod = RequestMethod.DELETE)
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/{repId}/share", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteSharePasswordRepository(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
@@ -96,7 +96,7 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Получить всех расширенных пользователей")
-    @UrlDeclaration(description = "Получить всех расширенных пользователей", requestMethod = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/{repId}/share", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<AccountDto> getAccountsFromSharePasswordRepository(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId) {
@@ -104,7 +104,7 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Удалить новый пароль в хранилище")
-    @UrlDeclaration(description = "Удалить новый пароль в хранилище", requestMethod = RequestMethod.DELETE)
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/{repId}/passwords/{passId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deletePasswordHistory(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
@@ -113,14 +113,14 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Удалить хранилище")
-    @UrlDeclaration(description = "Удалить хранилище", requestMethod = RequestMethod.DELETE)
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/{repId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deleteRepositoryPassword(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId) {
         this.passwordRepositoryService.deleteByIdRep(repId);
     }
 
     @ApiOperation(value = "Обновить хранилище")
-    @UrlDeclaration(description = "Обновить хранилище", requestMethod = RequestMethod.PUT)
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/{repId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updateRepositoryPassword(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
                                          @ApiParam("Наименование хранилища") @RequestBody PasswordRepositoryDto repositoryPassword) {
@@ -129,14 +129,14 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Очистить хранилище")
-    @UrlDeclaration(description = "Очистить хранилище", requestMethod = RequestMethod.DELETE)
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/{repId}/clear", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void clearRepositoryPassword(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId) {
         this.passwordRepositoryService.clearRepository(repId);
     }
 
     @ApiOperation(value = "Получить историю хранилища")
-    @UrlDeclaration(description = "Получить историю хранилища")
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/rep/{repId}/passwords", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PasswordHistoryDto> getRepositoryPasswordHistory(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
@@ -146,7 +146,7 @@ public class KolpassController {
     }
 
     @ApiOperation(value = "Получить последний логин хранилища")
-    @UrlDeclaration(description = "Получить последний логин хранилища")
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/rep/{repId}/passwords/last", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PasswordHistoryDto getLastHistoryInRepository(@ApiParam("ID Хринилища") @PathVariable("repId") Long repId){
         return this.passwordRepositoryService.getLastHistoryInRepository(repId);
