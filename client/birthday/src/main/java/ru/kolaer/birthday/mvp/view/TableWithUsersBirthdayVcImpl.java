@@ -84,7 +84,6 @@ public class TableWithUsersBirthdayVcImpl implements TableWithUsersBirthdayVc {
 					if(item == null || item.equals("")){
 						imageView.setImage(new Image(getClass().getResource("/nonePicture.jpg").toString(), false));
 					} else {
-						System.out.println(item);
 						imageView.setImage(new Image(item, false));
 					}
 					this.setGraphic(imageView);
@@ -196,8 +195,6 @@ public class TableWithUsersBirthdayVcImpl implements TableWithUsersBirthdayVc {
 	public void showTodayBirthday() {
 		ExecutorService executorService = Executors.newSingleThreadExecutor();
 		executorService.submit(() -> {
-			Date now = new Date();
-
 			List<UserModel> userModels = new ArrayList<>();
 
 			ServerResponse<List<EmployeeDto>> usersDataAll = UniformSystemEditorKitSingleton.getInstance()
@@ -205,7 +202,7 @@ public class TableWithUsersBirthdayVcImpl implements TableWithUsersBirthdayVc {
 					.getKolaerWebServer()
 					.getApplicationDataBase()
 					.getGeneralEmployeesTable()
-					.getUsersByBirthday(now);
+					.getUsersBirthdayToday();
 
 			if(!usersDataAll.isServerError()) {
 				List<UserModel> users = usersDataAll

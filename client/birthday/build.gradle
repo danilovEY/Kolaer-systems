@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '1.6.9'
+version '1.6.10'
 
 
 def projectName = "ru.kolaer.birthday"
@@ -9,6 +9,8 @@ def projectJarName = projectNameWithVersion + ".jar"
 apply plugin: 'osgi'
 
 dependencies {
+    compile project(":client:client-core")
+    
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
@@ -17,20 +19,11 @@ jar {
     baseName = project.name
     manifest {
         name = 'Дни рождения'
+        attributes 'Main-Class': 'ru.kolaer.birthday.runnable.BirthdaySwing'
         symbolicName = projectName
     }
-}
-
-task createJar(type: Jar) {
-    archiveName = projectJarName
-    baseName = project.name
-    manifest {
-        attributes 'Main-Class': 'ru.kolaer.birthday.runnable.BirthdaySwing'
-    }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }
-
 
 task copyJarToBin(dependsOn: jar) {
     doLast {

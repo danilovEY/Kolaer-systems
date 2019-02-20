@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.kolaer.birthday.mvp.model.UserModel;
+import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.employee.EnumGender;
 import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
-import ru.kolaer.common.dto.other.DbDataAll;
 import ru.kolaer.common.dto.post.PostDto;
 
 import java.util.Date;
@@ -44,20 +44,6 @@ public class UserModelImpl implements UserModel {
 	private String initials;
 	private String email;
 	private EnumGender gender;
-	
-	public UserModelImpl(DbDataAll user) {
-		setOrganization("КолАтомэнергоремонт");
-		setInitials(user.getInitials());
-		setBirthday(user.getBirthday());
-		setDepartment(user.getDepartament());
-		setPost(user.getPost());
-		setPhoneNumber(user.getPhone());
-		setEmail(user.getEmail());
-		setFirstName(user.getName());
-		setSecondName(user.getSurname());
-		setThirdName(user.getPatronymic());
-		setIcon(user.getVCard());
-	}
 
 	public UserModelImpl(EmployeeDto user) {
 		setOrganization("КолАтомэнергоремонт");
@@ -71,8 +57,13 @@ public class UserModelImpl implements UserModel {
 			postName += " " + postEntity.getRang() + " " + postEntity.getType().getName();
 		}
 
+        String photoUrl = UniformSystemEditorKitSingleton.getInstance()
+                    .getUSNetwork()
+                    .getKolaerWebServer()
+                    .getUrl() + user.getPhoto();
+
 		setPost(postName);
-		setIcon(user.getPhoto());
+		setIcon(photoUrl);
 		setGender(user.getGender());
 	}
 

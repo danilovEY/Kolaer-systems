@@ -51,7 +51,7 @@ public class BirthdaySwing implements Service {
 		SwingUtilities.invokeLater(() -> {
 			List<String> list = new ArrayList<>();
 			try{
-				URL oracle = new URL("http://aerdc02:8080/kolaer-web/rest/employees/get/birthday/today");
+				URL oracle = new URL("http://aerkl-s-app02:8080/employees/get/birthday/today");
 
 		        BufferedReader in = new BufferedReader(
 		        new InputStreamReader(oracle.openStream(), "UTF-8"));
@@ -60,7 +60,6 @@ public class BirthdaySwing implements Service {
 		        while ((inputLine = in.readLine()) != null)
 		        	text += inputLine;	        
 		        in.close();
-		        System.out.println(text);
 		        String user = "";
 		        
 		        for(String date : text.split(",")){
@@ -70,7 +69,7 @@ public class BirthdaySwing implements Service {
 		        	}  	
 		        }
 		        
-		        oracle = new URL("http://aerdc02:8080/kolaer-web/rest/organizations/employees/get/users/birthday/today");
+		        oracle = new URL("http://aerkl-s-app02:8080/organizations/employees/get/users/birthday/today");
 				
 		        in = new BufferedReader(
 		        new InputStreamReader(oracle.openStream(), "UTF-8"));

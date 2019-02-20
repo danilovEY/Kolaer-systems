@@ -31,7 +31,12 @@ public class BirthdayOnHoliday implements Service {
 	public void run() {
 		NetworkUS usNetwork = UniformSystemEditorKitSingleton.getInstance().getUSNetwork();
 
-		ServerResponse<List<Holiday>> holidays = usNetwork.getOtherPublicAPI().getHolidaysTable().getHolidaysInThisMonth();
+		ServerResponse<List<Holiday>> holidays = usNetwork
+				.getKolaerWebServer()
+				.getApplicationDataBase()
+				.getHolidaysTable()
+				.getHolidaysInThisMonth();
+
 		LocalDate now = LocalDate.now();
 
 		if(now.getDayOfWeek().getValue() == 5) {
