@@ -1,15 +1,13 @@
 package ru.kolaer.client.usa.system.network;
 
-import ch.qos.logback.classic.Level;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.core.system.network.NetworkUS;
 import ru.kolaer.client.core.system.network.OtherPublicAPI;
 import ru.kolaer.client.core.system.network.kolaerweb.KolaerWebServer;
+import ru.kolaer.client.usa.system.SettingsSingleton;
 import ru.kolaer.client.usa.system.network.kolaerweb.KolaerWebServerImpl;
-import ru.kolaer.client.usa.tools.Resources;
 
 import java.nio.charset.Charset;
 
@@ -20,34 +18,33 @@ import java.nio.charset.Charset;
  * @version 0.1
  */
 public class NetworkUSRestTemplate implements NetworkUS {
-	private final RestTemplate globalRestTemplate;
-	private final KolaerWebServer kolaerWebServer;
-	/**БД через RESTful.*/
-	private final OtherPublicAPI otherPublicAPI;
+    private final RestTemplate globalRestTemplate;
+    private final KolaerWebServer kolaerWebServer;
+    private final OtherPublicAPI otherPublicAPI;
 
-	public NetworkUSRestTemplate(ObjectMapper objectMapper) {
-		this.globalRestTemplate = new RestTemplate();
-		this.globalRestTemplate.getMessageConverters()
-				.add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-		//Убираем лог REST'a (засоряет)
-		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.springframework.web.client.RestTemplate")).setLevel(Level.INFO);
-		this.globalRestTemplate.setErrorHandler(new ResponseErrorHandlerNotifications(objectMapper));
+    public NetworkUSRestTemplate(ObjectMapper objectMapper) {
+        this.globalRestTemplate = new RestTemplate();
+        this.globalRestTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        this.globalRestTemplate.setErrorHandler(new ResponseErrorHandlerNotifications(objectMapper));
 
-		this.kolaerWebServer = new KolaerWebServerImpl(objectMapper, globalRestTemplate, new StringBuilder("http://").append(Resources.URL_TO_PUBLIC_SERVER));
-		this.otherPublicAPI = new OtherPublicAPIImpl(objectMapper, globalRestTemplate);
-	}
+        this.kolaerWebServer = new KolaerWebServerImpl(objectMapper, globalRestTemplate,
+                SettingsSingleton.getInstance().getUrlServerMain(),
+                SettingsSingleton.getInstance().getUrlServiceChat());
 
-	@Override
-	public KolaerWebServer getKolaerWebServer() {
-		return this.kolaerWebServer;
-	}
+        this.otherPublicAPI = new OtherPublicAPIImpl(objectMapper, globalRestTemplate);
+    }
 
-	@Override
-	public OtherPublicAPI getOtherPublicAPI() {
-		return this.otherPublicAPI;
-	}
+    @Override
+    public KolaerWebServer getKolaerWebServer() {
+        return this.kolaerWebServer;
+    }
 
-	public RestTemplate getGlobalRestTemplate() {
-		return globalRestTemplate;
-	}
+    @Override
+    public OtherPublicAPI getOtherPublicAPI() {
+        return this.otherPublicAPI;
+    }
+
+    public RestTemplate getGlobalRestTemplate() {
+        return globalRestTemplate;
+    }
 }

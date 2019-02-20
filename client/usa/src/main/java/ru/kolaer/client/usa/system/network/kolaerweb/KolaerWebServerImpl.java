@@ -6,49 +6,30 @@ import ru.kolaer.client.core.system.network.ServerStatus;
 import ru.kolaer.client.core.system.network.kolaerweb.ApplicationDataBase;
 import ru.kolaer.client.core.system.network.kolaerweb.KolaerWebServer;
 import ru.kolaer.client.core.system.network.kolaerweb.ServerTools;
-import ru.kolaer.client.usa.tools.Resources;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * Created by Danilov on 28.07.2016.
  */
 public class KolaerWebServerImpl implements KolaerWebServer {
-    private final ObjectMapper objectMapper;
-    private final RestTemplate globalRestTemplate;
     private final ApplicationDataBase applicationDataBase;
     private final ServerTools serverTools;
+    private final String path;
 
-    public KolaerWebServerImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, StringBuilder path) {
-        this.objectMapper = objectMapper;
-        this.globalRestTemplate = globalRestTemplate;
-        this.applicationDataBase = new ApplicationDataBaseImpl(objectMapper, globalRestTemplate,
-                path.append("/rest").toString());
-        this.serverTools = new ServerToolsImpl(objectMapper, globalRestTemplate, path.toString());
+    public KolaerWebServerImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, String path, String chatSocketUrl) {
+        this.path = path;
+        this.applicationDataBase = new ApplicationDataBaseImpl(objectMapper, globalRestTemplate, path, chatSocketUrl);
+        this.serverTools = new ServerToolsImpl(objectMapper, globalRestTemplate, path);
     }
 
     @Override
     public ServerResponse<ServerStatus> getServerStatus() {
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("http://"+Resources.URL_TO_PUBLIC_SERVER.toString()).openConnection();
-            connection.setRequestMethod("HEAD");
-            int responseCode = connection.getResponseCode();
-            connection.disconnect();
-            if(200 >= responseCode && responseCode <= 399) {
-                return ServerResponse.createServerResponse(ServerStatus.AVAILABLE);
-            }
-        } catch (Exception ex) {
-            return ServerResponse.createServerResponse(ServerStatus.NOT_AVAILABLE);
-        }
-
-        return ServerResponse.createServerResponse(ServerStatus.UNKNOWN);
+        return ServerResponse.createServerResponse(ServerStatus.AVAILABLE); //TODO replace to getting from server
     }
 
     @Override
     public String getUrl() {
-        return Resources.URL_TO_PUBLIC_SERVER.toString();
+        return path;
     }
 
     @Override

@@ -1,28 +1,26 @@
 package ru.kolaer.client.usa.tools;
 
-import java.io.InputStream;
-import java.net.URL;
-
 public interface Resources {
-	String CACHE_PATH = "D:\\Документы\\KolaerCache";
+	String VERSION = "4.4";
 
-	String PRIVATE_SERVER_URL_PARAM = "private-server";
-	String PUBLIC_SERVER_URL_PARAM = "public-server";
-	String SERVICE_PARAM = "service";
-	String TRAY_PARAM = "tray";
-	String RAND_DIR_CACHE_PARAM = "rand-dir-cache";
+	String PROPERTIES_NAME_URL_SERVER_MAIN = "url.server.main";
+	String PROPERTIES_NAME_URL_SERVICE_CHAT = "url.service.chat";
+	String PROPERTIES_NAME_MULTIPLE_INSTANT = "multiple.instant";
+	String PROPERTIES_NAME_PATH_CACHE_RAND = "path.cache.rand";
+	String PROPERTIES_NAME_PATH_CACHE = "path.cache";
+	String PROPERTIES_NAME_PATH_PLUGINS = "path.plugins";
+	String PROPERTIES_NAME_SERVICE_ENABLE = "service.enable";
+	String PROPERTIES_NAME_TRAY_ENABLE = "tray.enable";
 
-	String VERSION = "4.3.8";
-	
-	String PATH_TO_DIR_WITH_PLUGINS = "plugins";
-	StringBuilder URL_TO_PRIVATE_SERVER = new StringBuilder("localhost:8080/ru.kolaer.server.restful");
-	StringBuilder URL_TO_PUBLIC_SERVER = new StringBuilder("localhost:8080/kolaer-web");
+	String PROPERTIES_DEFAULT_VALUE_URL_SERVER_MAIN = "http://localhost:8080";
+	String PROPERTIES_DEFAULT_VALUE_URL_SERVICE_CHAT = "ws://localhost:8080";
+	String PROPERTIES_DEFAULT_VALUE_MULTIPLE_INSTANT = "false";
+	String PROPERTIES_DEFAULT_VALUE_PATH_CACHE_RAND = "false";
+	String PROPERTIES_DEFAULT_VALUE_PATH_CACHE = "cache";
+	String PROPERTIES_DEFAULT_VALUE_PATH_PLUGINS = "plugins";
+	String PROPERTIES_DEFAULT_VALUE_SERVICE_ENABLE = "true";
+	String PROPERTIES_DEFAULT_VALUE_TRAY_ENABLE = "true";
 
+	String CONFIG_PATH ="/config.properties";
 
-	URL ICON_START_BUTTON = Resources.class.getResource("/css/aerIcon.png");
-	InputStream ICON_MAIN_FRAME = Resources.class.getResourceAsStream("/css/favicon.ico");
-	
-	String L_MENU_FILE = "Файл";
-	String L_MENU_HELP = "Помощь";
-	
-}	
+}

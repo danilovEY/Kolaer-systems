@@ -3,6 +3,7 @@ package ru.kolaer.client.usa.system.network;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.core.system.network.ChatTable;
+import ru.kolaer.client.core.system.network.ServerStatus;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.kolaerweb.IdDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
@@ -29,11 +30,12 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     private final String URL_POST_QUIT_FROM_ROOM;
     private final String URL_DELETE_MESSAGES;
     private final String URL_GET_ACTIVE_BY_ACCOUNT_ID;
+    private final String socketUrl;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     
 
-    public ChatTableImpl(String url, RestTemplate restTemplate, ObjectMapper objectMapper) {
+    public ChatTableImpl(RestTemplate restTemplate, ObjectMapper objectMapper, String url, String socketUrl) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.URL_HIDE_MESSAGES = url + "/message/hide";
@@ -47,6 +49,7 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
         this.URL_POST_CREATE_SINGLES_GROUP = url + "/room/singles";
         this.URL_GET_GROUP = url + "/room/";
         this.URL_GET_ACTIVE_BY_ACCOUNT_ID = url + "/active?account_id=";
+        this.socketUrl = socketUrl;
     }
 
 
@@ -126,5 +129,15 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
         return postServerResponse(restTemplate, URL_READ_MESSAGES,
                 idsDto,
                 String.class, objectMapper);
+    }
+
+    @Override
+    public ServerResponse<ServerStatus> getServerStatus() {
+        return ServerResponse.createServerResponse();
+    }
+
+    @Override
+    public String getUrl() {
+        return this.socketUrl;
     }
 }

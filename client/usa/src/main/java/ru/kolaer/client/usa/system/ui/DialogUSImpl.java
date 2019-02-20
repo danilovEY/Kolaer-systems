@@ -13,10 +13,10 @@ import org.controlsfx.dialog.ProgressDialog;
 import ru.kolaer.client.core.system.Authentication;
 import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.core.system.network.ServerStatus;
+import ru.kolaer.client.core.system.network.kolaerweb.KolaerWebServer;
 import ru.kolaer.client.core.system.ui.DialogUS;
 import ru.kolaer.client.core.system.ui.UISystemUS;
 import ru.kolaer.client.core.tools.Tools;
-import ru.kolaer.client.usa.tools.Resources;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 import ru.kolaer.common.dto.kolaerweb.UserAndPassJson;
 
@@ -91,9 +91,10 @@ public class DialogUSImpl implements DialogUS {
 			protected Boolean call() throws Exception {
 				this.updateTitle("Подключение к серверу");
 				this.updateMessage("Проверка доступности сервера...");
-				ServerResponse<ServerStatus> responceServerStatus = UniformSystemEditorKitSingleton.getInstance()
+				KolaerWebServer kolaerWebServer = UniformSystemEditorKitSingleton.getInstance()
 						.getUSNetwork()
-						.getKolaerWebServer()
+						.getKolaerWebServer();
+				ServerResponse<ServerStatus> responceServerStatus = kolaerWebServer
 						.getServerStatus();
 				if (!responceServerStatus.isServerError()
 						&& responceServerStatus.getResponse() == ServerStatus.AVAILABLE) { // TODO: !!!
@@ -127,7 +128,7 @@ public class DialogUSImpl implements DialogUS {
 						);
 					}
 				} else {
-					log.warn("Сервер {} недоступен!", Resources.URL_TO_PUBLIC_SERVER);
+					log.warn("Сервер {} недоступен!", kolaerWebServer.getUrl());
 					uiSystemUS.getNotification().showErrorNotify("Ошибка!",
 							"Сервер недоступен!");
 				}

@@ -6,7 +6,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.core.observers.AuthenticationObserver;
 import ru.kolaer.client.core.system.Authentication;
 import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.client.usa.tools.Resources;
+import ru.kolaer.client.usa.system.SettingsSingleton;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 import ru.kolaer.common.dto.kolaerweb.TokenJson;
@@ -18,7 +18,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,23 +27,22 @@ import java.util.Optional;
  */
 @Slf4j
 public class AuthenticationOnNetwork implements Authentication, RestTemplateService {
-    private final String TEMP_NAME = Resources.CACHE_PATH + "\\remember_login.txt";
     private final List<AuthenticationObserver> authenticationObserverList = new ArrayList<>();
     private final RestTemplate restTemplate;
-    private final String pathToServer;
     private final ObjectMapper objectMapper;
     private AccountDto accountsEntity;
     private TokenJson tokenJson;
     private boolean isAuth = false;
+    private final String PATH_REMEMBER_TOKEN;
     private final String URL_TO_GET_TOKEN;
     private final String URL_TO_GET_USER;
 
-    public AuthenticationOnNetwork(RestTemplate restTemplate, ObjectMapper objectMapper) {
+    public AuthenticationOnNetwork(RestTemplate restTemplate, ObjectMapper objectMapper, String path) {
         this.objectMapper = objectMapper;
         this.restTemplate = restTemplate;
-        this.pathToServer = "http://" + Resources.URL_TO_PUBLIC_SERVER + "/rest/authentication";
-        this.URL_TO_GET_TOKEN = this.pathToServer + "/login";
-        this.URL_TO_GET_USER = "http://" + Resources.URL_TO_PUBLIC_SERVER + "/rest/user/get";
+        this.PATH_REMEMBER_TOKEN = SettingsSingleton.getInstance().getPathCache() + "\\remember_token.txt";
+        this.URL_TO_GET_TOKEN = path + "/authentication/login";
+        this.URL_TO_GET_USER = path + "/user/employee";
     }
 
     public boolean login(UserAndPassJson userAndPassJson) {
@@ -66,26 +65,38 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
                     .getNotification()
                     .showErrorNotify(response.getExceptionMessage());
         } else {
-            this.tokenJson = response.getResponse();
-            log.info("Токен получен: {}", tokenJson);
+            return readToken(response.getResponse());
+        }
 
-            ServerResponse<AccountDto> accountServerResponse = getServerResponse(restTemplate, URL_TO_GET_USER +
-                            "?token=" + this.tokenJson.getToken(),
-                    AccountDto.class,
-                    objectMapper);
+        return false;
+    }
 
-            if(accountServerResponse.isServerError()) {
-                UniformSystemEditorKitSingleton.getInstance()
-                        .getUISystemUS()
-                        .getNotification()
-                        .showErrorNotify(accountServerResponse.getExceptionMessage());
-            } else {
-                accountsEntity = accountServerResponse.getResponse();
-                log.info("Пользователь получен: {}", accountsEntity);
-                isAuth = true;
-                notifyObserversLogin();
-                return true;
-            }
+    private boolean readToken(TokenJson token) {
+        if (token == null) {
+            throw new IllegalArgumentException("Token can't be a null!");
+        } else if (this.isAuth) {
+            this.logout();
+        }
+
+        this.tokenJson = token;
+        log.info("Токен получен: {}", tokenJson);
+
+        ServerResponse<AccountDto> accountServerResponse = getServerResponse(restTemplate, URL_TO_GET_USER +
+                        "?token=" + this.tokenJson.getToken(),
+                AccountDto.class,
+                objectMapper);
+
+        if(accountServerResponse.isServerError()) {
+            UniformSystemEditorKitSingleton.getInstance()
+                    .getUISystemUS()
+                    .getNotification()
+                    .showErrorNotify(accountServerResponse.getExceptionMessage());
+        } else {
+            accountsEntity = accountServerResponse.getResponse();
+            log.info("Пользователь получен: {}", accountsEntity);
+            isAuth = true;
+            notifyObserversLogin();
+            return true;
         }
 
         return false;
@@ -93,47 +104,42 @@ public class AuthenticationOnNetwork implements Authentication, RestTemplateServ
 
     @Override
     public boolean login(UserAndPassJson userAndPassJson, boolean remember) {
+        boolean isLogin = login(userAndPassJson);
+
         if(remember) {
             try {
-                final List<String> loginAndPassList =
-                        Arrays.asList(userAndPassJson.getUsername(), userAndPassJson.getPassword());
-
-                Files.write(Paths.get(TEMP_NAME),
-                        loginAndPassList, Charset.forName("UTF-8"));
+                Files.write(
+                        Paths.get(PATH_REMEMBER_TOKEN),
+                        Collections.singletonList(tokenJson.getToken()),
+                        Charset.forName("UTF-8")
+                );
             } catch (IOException e) {
                 log.error("Не удалось запомнить логин и пароль!", e);
                 UniformSystemEditorKitSingleton.getInstance().getUISystemUS()
                         .getNotification().showErrorNotify("Ошибка!", "Не удалось запомнить логин и пароль!");
             }
         } else {
-            new File(TEMP_NAME).delete();
+            new File(PATH_REMEMBER_TOKEN).delete();
         }
 
-        return this.login(userAndPassJson);
+        return isLogin;
     }
 
     @Override
     public boolean loginIsRemember() {
-        if(new File(TEMP_NAME).exists()) {
+        if(new File(PATH_REMEMBER_TOKEN).exists()) {
             try {
-                final List<String> strings = Files
-                        .readAllLines(Paths.get(TEMP_NAME), Charset.forName("UTF-8"));
-
-                final UserAndPassJson userAndPassJson = new UserAndPassJson();
-
-                if(strings.size() > 0) {
-                    userAndPassJson.setUsername(strings.get(0));
-                }
-
-                if(strings.size() > 1) {
-                    userAndPassJson.setPassword(strings.get(1));
-                }
-
-                return this.login(userAndPassJson);
+                return Files.readAllLines(Paths.get(PATH_REMEMBER_TOKEN), Charset.forName("UTF-8"))
+                        .stream()
+                        .findFirst()
+                        .map(TokenJson::new)
+                        .map(this::readToken)
+                        .orElse(false);
             } catch (IOException e) {
                 log.error("Не удалось прочитать авто логин!", e);
             }
         }
+
         return false;
     }
 

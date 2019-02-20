@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.client.usa.mvp.viewmodel.impl.VMMainFrameImpl;
+import ru.kolaer.client.usa.system.SettingsSingleton;
 import ru.kolaer.client.usa.tools.Resources;
 
 import javax.swing.*;
@@ -17,15 +18,16 @@ import java.util.Optional;
 public class Launcher {
 	private static final Logger LOG = LoggerFactory.getLogger(Launcher.class);
 
-	private static final String MULTIPLE_KEY = "--multiple";
-	public static final String pathToCache = Resources.CACHE_PATH;
-	public static final String pathToRunFile = pathToCache + "\\runnable.usa";
-	public static final String pathToShowAppFile = pathToCache + "\\runnable_show.usa";
+	public static String pathToRunFile;
+	public static String pathToShowAppFile;
 
 	public static void main(final String[] args) {
 		LOG.info("Version: {}", Resources.VERSION);
 
-		if(containsKey(MULTIPLE_KEY, args) || !appIsRun()) {
+		pathToRunFile = SettingsSingleton.getInstance().getPathCache() + "\\runnable.usa";
+		pathToShowAppFile = SettingsSingleton.getInstance().getPathCache() + "\\runnable_show.usa";
+
+		if(SettingsSingleton.getInstance().isMultipleInstant() || !appIsRun()) {
 			delete(new File(pathToRunFile));
 			Platform.setImplicitExit(false);
 			Application.launch(VMMainFrameImpl.class ,args);
@@ -75,7 +77,7 @@ public class Launcher {
 	}
 
 	private static boolean appIsRun() {
-		final File pathToDir = new File(pathToCache);
+		final File pathToDir = new File(SettingsSingleton.getInstance().getPathCache());
 
 		if(!pathToDir.exists())
 			pathToDir.mkdirs();

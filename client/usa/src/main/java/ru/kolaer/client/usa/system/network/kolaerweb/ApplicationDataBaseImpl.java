@@ -3,6 +3,8 @@ package ru.kolaer.client.usa.system.network.kolaerweb;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.core.system.network.ChatTable;
+import ru.kolaer.client.core.system.network.HolidaysTable;
+import ru.kolaer.client.core.system.network.kolaerweb.*;
 import ru.kolaer.client.usa.system.network.ChatTableImpl;
 
 /**
@@ -15,8 +17,9 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
     private final EmployeeOtherOrganizationTable employeeOtherOrganizationTable;
     private final KolpassTable kolpassTable;
     private final ChatTable chatTable;
+    private HolidaysTable holidaysTable;
 
-    public ApplicationDataBaseImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, String path) {
+    public ApplicationDataBaseImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, String path, String chatSocketUrl) {
         this.generalEmployeesTable = new GeneralEmployeesTableImpl(objectMapper, globalRestTemplate,
                 path + "/employees");
 
@@ -31,7 +34,11 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
 
         this.kolpassTable = new KolpassTableImpl(objectMapper, globalRestTemplate,
                 path + "/kolpass");
-        this.chatTable = new ChatTableImpl(path + "/chat", globalRestTemplate, objectMapper);
+
+        this.chatTable = new ChatTableImpl(globalRestTemplate, objectMapper, path + "/chat", chatSocketUrl);
+
+        this.holidaysTable = new HolidaysTableImpl(objectMapper, globalRestTemplate,
+                path + "/non-security/holidays");
     }
 
     @Override
@@ -57,6 +64,11 @@ public class ApplicationDataBaseImpl implements ApplicationDataBase {
     @Override
     public EmployeeOtherOrganizationTable getEmployeeOtherOrganizationTable() {
         return this.employeeOtherOrganizationTable;
+    }
+
+    @Override
+    public HolidaysTable getHolidaysTable() {
+        return this.holidaysTable;
     }
 
     public ChatTable getChatTable() {

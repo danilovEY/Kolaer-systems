@@ -32,6 +32,10 @@ public class ResponseErrorHandlerNotifications extends DefaultResponseErrorHandl
                     .showErrorNotify("Неверные данные!",
                             this.getMessage(this.getExceptionMessageRequest(response))); break;
 
+            case 401: notification
+                    .showErrorNotify("Не авторизирован!",
+                            this.getMessage(this.getExceptionMessageRequest(response))); break;
+
             case 403: notification
                     .showErrorNotify("Нет доступа!",
                             this.getMessage(this.getExceptionMessageRequest(response))); break;

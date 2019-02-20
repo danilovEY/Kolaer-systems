@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.client.core.observers.AuthenticationObserver;
 import ru.kolaer.client.core.plugins.services.Service;
 import ru.kolaer.client.core.system.UniformSystemEditorKit;
-import ru.kolaer.client.core.system.impl.DefaultStaticUS;
 import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.core.tools.Tools;
 import ru.kolaer.client.usa.plugins.PluginBundle;
@@ -23,6 +22,7 @@ import ru.kolaer.client.usa.plugins.PluginManager;
 import ru.kolaer.client.usa.plugins.info.InfoPaneBundle;
 import ru.kolaer.client.usa.plugins.info.InfoPanePlugin;
 import ru.kolaer.client.usa.services.HideShowMainStage;
+import ru.kolaer.client.usa.system.SettingsSingleton;
 import ru.kolaer.client.usa.system.network.AuthenticationOnNetwork;
 import ru.kolaer.client.usa.system.network.NetworkUSRestTemplate;
 import ru.kolaer.client.usa.system.ui.MenuBarUSImpl;
@@ -32,8 +32,6 @@ import ru.kolaer.client.usa.tools.Resources;
 import ru.kolaer.common.dto.auth.AccountDto;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -44,11 +42,6 @@ import java.util.concurrent.*;
  */
 @Slf4j
 public class VMMainFrameImpl extends Application implements AuthenticationObserver {
-    /**
-     * Мапа где ключ и значение соответствует ключам и значениям приложения.
-     */
-    private static final Map<String, String> PARAM = new HashMap<>();
-
     /**
      * Панель с контентом главного окна.
      */
@@ -251,10 +244,13 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
 
         NetworkUSRestTemplate network = new NetworkUSRestTemplate(objectMapper);
         UISystemUSImpl uiSystemUS = new UISystemUSImpl();
-        AuthenticationOnNetwork authentication = new AuthenticationOnNetwork(network.getGlobalRestTemplate(), objectMapper);
+        AuthenticationOnNetwork authentication = new AuthenticationOnNetwork(
+                network.getGlobalRestTemplate(),
+                objectMapper,
+                SettingsSingleton.getInstance().getUrlServerMain()
+        );
 
         uiSystemUS.setMenuBarUS(menuBarUS);
-        uiSystemUS.setStaticUS(new DefaultStaticUS());
         uiSystemUS.setNotification(new NotificationPopupControlFx());
         uiSystemUS.setMainStage(stage);
 
@@ -276,25 +272,12 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
         return editorKit;
     }
     private void initApplicationParams() {
-        String pathServerRest = PARAM.get(Resources.PRIVATE_SERVER_URL_PARAM);
-        if (pathServerRest != null) {
-            Resources.URL_TO_PRIVATE_SERVER.delete(0, Resources.URL_TO_PRIVATE_SERVER.length()).append(pathServerRest);
-            log.info("Private server: {}", Resources.URL_TO_PRIVATE_SERVER.toString());
-        }
-
-        String pathServerWeb = PARAM.get(Resources.PUBLIC_SERVER_URL_PARAM);
-        if (pathServerWeb != null) {
-            Resources.URL_TO_PUBLIC_SERVER.delete(0, Resources.URL_TO_PUBLIC_SERVER.length()).append(pathServerWeb);
-            log.info("Public server: {}", Resources.URL_TO_PUBLIC_SERVER.toString());
-        }
-
-        String service = PARAM.get(Resources.SERVICE_PARAM);
-        if (service == null || !service.equals("false")) {
+        if (SettingsSingleton.getInstance().isServiceEnable()) {
             servicesManager.setAutoRun(true);
             log.info("Service ON");
         }
 
-        pluginManager.setUniqueCacheDir(PARAM.getOrDefault(Resources.RAND_DIR_CACHE_PARAM, "false").equals("true"));
+        pluginManager.setUniqueCacheDir(SettingsSingleton.getInstance().isPathCacheRand());
     }
 
     @Override
@@ -306,8 +289,6 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
         stage.setMinWidth(850);
         stage.setTitle("Единая система КолАЭР " + Resources.VERSION );
         stage.setOnCloseRequest(event -> System.exit(0));
-
-        PARAM.putAll(getParameters().getNamed());
 
         stage.setScene(new Scene(mainPane));
         stage.getIcons().add(new Image(getClass().getResource("/css/aerIcon.png").toString(), false));

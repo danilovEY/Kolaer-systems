@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kolaer.client.core.plugins.UniformSystemPlugin;
 import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.client.usa.tools.Resources;
+import ru.kolaer.client.usa.system.SettingsSingleton;
 
 import java.io.File;
 import java.net.URL;
@@ -31,54 +31,53 @@ public class PluginManager {
     private Framework framework;
 
     public PluginManager() {
-        this(new SearchPlugins(), false);
+        this(new SearchPlugins());
     }
 
-    public PluginManager(SearchPlugins searchPlugins, boolean uniqueCacheDir) {
+    public PluginManager(SearchPlugins searchPlugins) {
         this.searchPlugins = searchPlugins;
-        this.uniqueCacheDir = uniqueCacheDir;
     }
 
     public void initialization() throws Exception {
         String cacheDir = "plugins";
 
-        if(uniqueCacheDir) {
+        if(SettingsSingleton.getInstance().isPathCacheRand()) {
             cacheDir += "\\" + UUID.randomUUID().toString();
         }
 
-        final File frameworkDir = new File(Resources.CACHE_PATH, cacheDir);
+        final File frameworkDir = new File(SettingsSingleton.getInstance().getPathCache(), cacheDir);
 
         final Map<String, String> frameworkProperties = new HashMap<>();
         frameworkProperties.put(Constants.FRAMEWORK_STORAGE, frameworkDir.getCanonicalPath());
+        frameworkProperties.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
         frameworkProperties.put("felix.log.level", "3");
         frameworkProperties.put(Constants.FRAMEWORK_BEGINNING_STARTLEVEL, "2");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES, "org.osgi.framework, "+
-                "ru.kolaer.api.mvp.model, "+
-                "ru.kolaer.api.mvp.model.kolaerweb, "+
-                "ru.kolaer.api.exceptions, "+
-                "ru.kolaer.api.mvp.model.error, "+
-                "ru.kolaer.api.mvp.model.other, "+
-                "ru.kolaer.api.mvp.model.kolaerweb.psr, "+
-                "ru.kolaer.api.mvp.model.kolaerweb.webportal, "+
-                "ru.kolaer.api.mvp.model.kolaerweb.webportal.rss, "+
-                "ru.kolaer.api.mvp.model.kolaerweb.kolpass, "+
-                "ru.kolaer.api.mvp.model.kolaerweb.kolchat, "+
-                "ru.kolaer.api.mvp.model.restful, "+
-                "ru.kolaer.api.mvp.presenter, "+
-                "ru.kolaer.api.mvp.view, "+
-                "ru.kolaer.api.observers, "+
-                "ru.kolaer.api.plugins, "+
-                "ru.kolaer.api.plugins.services, "+
-                "ru.kolaer.api.system, "+
-                "ru.kolaer.api.system.impl, "+
-                "ru.kolaer.api.system.network, "+
-                "ru.kolaer.api.system.network.kolaerweb, "+
-                "ru.kolaer.api.mvp.model.kolaerweb.organizations, "+
-                "ru.kolaer.api.system.network.restful, "+
-                "ru.kolaer.api.system.ui, "+
-                "ru.kolaer.api.tools" +
-                ",org.controlsfx.control.textfield, org.controlsfx.dialog, org.controlsfx.dialog, org.controlsfx.validation, javafx.scene.web");
+                "ru.kolaer.common.dto, "+
+                "ru.kolaer.common.dto.auth, "+
+                "ru.kolaer.common.dto.kolaerweb, "+
+                "ru.kolaer.common.dto.error, "+
+                "ru.kolaer.common.dto.other, "+
+                "ru.kolaer.common.dto.employee, "+
+                "ru.kolaer.common.dto.post, "+
+                "ru.kolaer.common.dto.kolaerweb.kolpass, "+
+                "ru.kolaer.common.dto.kolaerweb.organizations, "+
+                "ru.kolaer.common.dto.kolaerweb.kolchat, "+
+                "ru.kolaer.common.dto.restful, "+
+                "ru.kolaer.client.core.mvp.presenter, "+
+                "ru.kolaer.client.core.mvp.view, "+
+                "ru.kolaer.client.core.observers, "+
+                "ru.kolaer.client.core.plugins, "+
+                "ru.kolaer.client.core.plugins.services, "+
+                "ru.kolaer.client.core.system, "+
+                "ru.kolaer.client.core.system.impl, "+
+                "ru.kolaer.client.core.system.network, "+
+                "ru.kolaer.client.core.system.network.kolaerweb, "+
+                "ru.kolaer.client.core.system.network.restful, "+
+                "ru.kolaer.client.core.system.ui, "+
+                "ru.kolaer.client.core.tools," +
+                "org.controlsfx.control.textfield, org.controlsfx.dialog, org.controlsfx.dialog, org.controlsfx.validation, javafx.scene.web");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
                 "javafx.application,javax.websocket,javafx.beans.property,javax.xml.stream,javax.net.ssl,org.xml.sax,javax.xml.transform,javax.xml.parsers,javax.xml.namespace," +

@@ -29,7 +29,7 @@
 	 
 	  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-	        <fileNamePattern>logs/${HOSTNAME}/logs_%d{dd-MM-yyyy}.log</fileNamePattern>
+	        <fileNamePattern>D:\\Документы\\KolaerCache\\logs\\${HOSTNAME}\\logs_%d{dd-MM-yyyy}.log</fileNamePattern>
 	    </rollingPolicy>
 	
 					<encoder>
@@ -38,6 +38,7 @@
 	</appender>
 	
      <logger name="ru.danilov.client.javafx" level="DEBUG"/>
+     <logger name="org.springframework.web.client" level="INFO"/>
 
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
