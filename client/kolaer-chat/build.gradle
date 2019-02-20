@@ -18,6 +18,8 @@ buildscript {
 }
 
 dependencies {
+    compile project(":client:client-core")
+    
     compile('org.springframework.boot:spring-boot-starter-websocket')
 }
 
@@ -33,18 +35,10 @@ jar {
                 "javax.xml.parsers,org.w3c.dom,javax.xml.transform.dom",
                 "*;version=\"0\";resolution:=optional"
     }
-}
-
-task createJar(type: Jar) {
-    archiveName = projectJarName
-    baseName = project.name
-    manifest = jar.manifest
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }
 
-
-task copyJarToBin(dependsOn: createJar) {
+task copyJarToBin(dependsOn: jar) {
     doLast {
         copy {
             from 'build/libs/' + projectJarName

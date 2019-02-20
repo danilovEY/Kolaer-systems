@@ -44,7 +44,7 @@ public class ChatClientImpl implements ChatClient {
     private Future<?> waitConnect;
 
     public ChatClientImpl(String urlRoot) {
-        url = "ws://" + urlRoot + "/rest/non-security/chat";
+        url = urlRoot + "/chat";
         log.info("WebSocket url: {}", url);
     }
 
