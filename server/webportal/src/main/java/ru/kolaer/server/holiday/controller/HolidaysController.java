@@ -31,7 +31,6 @@ public class HolidaysController {
     }
 
     @ApiOperation(value = "Получить все праздники")
-    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/non-security/holidays", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<HolidayDto> getAll(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                    @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
@@ -41,38 +40,34 @@ public class HolidaysController {
     }
 
     @ApiOperation(value = "Добавить праздник")
-    @PreAuthorize("permitAll()") // TODO: add role
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/holidays", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public HolidayDto addHoliday(@RequestBody HolidayDto holidayDto) {
         return this.holidayService.add(holidayDto);
     }
 
     @ApiOperation(value = "Редактировать праздник")
-    @PreAuthorize("permitAll()") // TODO: add role
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/holidays/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public HolidayDto updateHoliday(@PathVariable("id") Long id, @RequestBody HolidayDto holidayDto) {
         return this.holidayService.update(id, holidayDto);
     }
 
     @ApiOperation(value = "Удалить праздник")
-    @PreAuthorize("permitAll()") // TODO: add role
+    @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/holidays/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void updateHoliday(@PathVariable("id") Long id) {
         this.holidayService.delete(id);
     }
 
     @ApiOperation(value = "Получить все праздники")
-    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/non-security/holidays/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @Deprecated
     public List<Holiday> getHolidaysAll() {
         return this.holidayService.getAllHolidays();
     }
 
     @ApiOperation("Получить праздники в месяце")
-    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/non-security/holidays/get/{month}/{year}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Deprecated
     public List<Holiday> getPublicHolidays(
             @ApiParam(value = "Номер месяца", required = true) @PathVariable final String month,
             @ApiParam(value = "Номер года", required = true) @PathVariable final String year) {
@@ -81,7 +76,6 @@ public class HolidaysController {
     }
 
     @ApiOperation(value = "Получить все праздники в году")
-    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/non-security/holidays/get/{year}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<HolidayDto> getAllInMonth(@PathVariable("year") int year) {
         return this.holidayService.getAllByYear(year);

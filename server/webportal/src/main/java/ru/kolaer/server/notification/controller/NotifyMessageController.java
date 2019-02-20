@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,19 +27,13 @@ public class NotifyMessageController {
         this.notifyMessageService = notifyMessageService;
     }
 
-    @ApiOperation(
-            value = "Получить последнее оповещение"
-    )
-    @PreAuthorize("permitAll()")
+    @ApiOperation("Получить последнее оповещение")
     @RequestMapping(value = "/get/last", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public NotifyMessageDto getLastNotifyMessage() {
         return notifyMessageService.getLastNotifyMessage();
     }
 
-    @ApiOperation(
-            value = "Получить последнее оповещение"
-    )
-    @PreAuthorize("permitAll()")
+    @ApiOperation("Получить последнее оповещение")
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<NotifyMessageDto> getNotifyMessages(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                                     @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {

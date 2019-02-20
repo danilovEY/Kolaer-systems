@@ -32,7 +32,6 @@ public class ContactController {
 
 
     @ApiOperation(value = "Поиск по контактам")
-    @PreAuthorize("permitAll()")
     @GetMapping(RouterConstants.CONTACTS)
     public Page<ContactDto> searchContacts(@RequestParam(value = "page", defaultValue = "1") Integer number,
             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
@@ -41,14 +40,12 @@ public class ContactController {
     }
 
     @ApiOperation(value = "Получить список подразделений")
-    @PreAuthorize("permitAll()")
     @GetMapping(RouterConstants.CONTACTS_DEPARTMENTS)
     public List<DepartmentDto> getAllDepartments() {
         return contactService.getAllDepartments();
     }
 
     @ApiOperation(value = "Получить список контактов подразделения")
-    @PreAuthorize("permitAll()")
     @GetMapping(RouterConstants.CONTACTS_DEPARTMENTS_ID_TYPE)
     public Page<ContactDto> getAllContactsByDepartment(@RequestParam(value = "page", defaultValue = "1") Integer number,
                                                        @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,

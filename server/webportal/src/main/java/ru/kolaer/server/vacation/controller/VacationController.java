@@ -66,7 +66,6 @@ public class VacationController {
     }
 
     @ApiOperation(value = "Получить периоды")
-    @PreAuthorize("permitAll()")
     @GetMapping(RouterConstants.VACATIONS_PERIODS)
     public Page<VacationPeriodDto> getVacationPeriods(@ModelAttribute FindVacationPeriodPageRequest request) {
         return vacationService.getVacationPeriods(request);
@@ -87,14 +86,12 @@ public class VacationController {
     }
 
     @ApiOperation(value = "Расчитать дней отпуска между датами")
-    @PreAuthorize("permitAll()")
     @PostMapping(RouterConstants.VACATIONS_CALCULATE_DAYS)
     public VacationCalculateDto getCalculateDaysBetweenDate(@RequestBody VacationCalculateDaysRequest request) {
         return vacationService.vacationCalculate(request);
     }
 
     @ApiOperation(value = "Расчитать дату отпуска между началом даты и дней")
-    @PreAuthorize("permitAll()")
     @PostMapping(RouterConstants.VACATIONS_CALCULATE_DATE)
     public VacationCalculateDto getCalculateDaysBetweenDate(@RequestBody VacationCalculateDateRequest request) {
         return vacationService.vacationCalculate(request);

@@ -203,11 +203,11 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 UploadFileEntity photoFile = new UploadFileEntity(); //TODO: replace to batch insert
                 photoFile.setAbsolutePath(true);
                 photoFile.setFileCreate(LocalDateTime.now());
-                photoFile.setFileName(employee.getInitials() + ".jpg");
+                photoFile.setFileName(employee.getPersonnelNumber() + ".jpg");
                 photoFile.setPath(utilService.getExternalPhotoPath() + photoFile.getFileName());
                 photoFile = uploadFileDao.save(photoFile);
 
-                employee.setPhoto("upload/file/" + photoFile.getId() + "/" + photoFile.getFileName()); //TODO: replace to batch insert
+                employee.setPhoto("/upload/file/" + photoFile.getId() + "/" + photoFile.getFileName()); //TODO: replace to batch insert
             }
         } catch (EntityExistsException e) {
             log.error("Фото для '{}' уже есть.", employee.getInitials());

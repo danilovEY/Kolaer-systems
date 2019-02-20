@@ -102,7 +102,6 @@ public class EmployeeController {
             value = "Получить всех сотрудников (между датами)",
             notes = "Получить всех сотрудников у кого день рождение между датами"
     )
-    @PreAuthorize("permitAll()")
     @GetMapping(RouterConstants.EMPLOYEES + "/get/birthday/{startDate}/{endDate}") //TODO: Need refactoring
     public List<EmployeeDto> getUsersRangeBirthday(
             final @ApiParam(value = "Дата с", required = true) @PathVariable String startDate,
@@ -120,7 +119,6 @@ public class EmployeeController {
             value = "Получить всех сотрудников (сегодня)",
             notes = "Получить всех сотрудников у кого сегодня день рождение"
     )
-    @PreAuthorize("permitAll()")
     @GetMapping(RouterConstants.EMPLOYEES + "/get/birthday/today") //TODO: Need refactoring
     public List<EmployeeDto> getUsersRangeBirthday() {
         return this.employeeService.getUserBirthdayToday();
@@ -131,7 +129,6 @@ public class EmployeeController {
             value = "Получить всех сотрудников (в определенную дату)",
             notes = "Получить всех сотрудников у кого день рождение в определенную дату"
     )
-    @PreAuthorize("permitAll()")
     @GetMapping(RouterConstants.EMPLOYEES + "/get/birthday/{date}") //TODO: Need refactoring
     public List<EmployeeDto> getUsersRangeBirthday(
            final @ApiParam(value = "Дата", required = true) @PathVariable String date) throws ParseException {
@@ -147,7 +144,6 @@ public class EmployeeController {
             value = "Получить количество сотрудников (в определенную датату)",
             notes = "Получить количество сотрудников у кого день рождение в определенную датату"
     )
-    @PreAuthorize("permitAll()")
     @GetMapping(RouterConstants.EMPLOYEES + "/get/birthday/{date}/count") //TODO: Need refactoring
     public int getCountUsersBirthday(
             final @ApiParam(value = "Дата", required = true) @PathVariable String date) throws ParseException {

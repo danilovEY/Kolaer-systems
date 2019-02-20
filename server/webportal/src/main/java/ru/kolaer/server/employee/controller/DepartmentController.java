@@ -32,7 +32,6 @@ public class DepartmentController {
 
     @ApiOperation(value = "Получить все подразделения")
     @GetMapping(RouterConstants.DEPARTMENTS)
-    @PreAuthorize("permitAll()")
     public Page<DepartmentDto> getAllDepartment(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                                 @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                                 DepartmentSort sortParam,
@@ -42,7 +41,6 @@ public class DepartmentController {
 
     @ApiOperation(value = "Найти подразделения")
     @GetMapping(RouterConstants.DEPARTMENTS_FIND)
-    @PreAuthorize("permitAll()")
     public Page<DepartmentDto> getAllDepartment(@ModelAttribute FindDepartmentPageRequest request) {
         return departmentService.find(request);
     }

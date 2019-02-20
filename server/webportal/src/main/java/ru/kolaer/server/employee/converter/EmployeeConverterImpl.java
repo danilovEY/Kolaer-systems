@@ -8,7 +8,6 @@ import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.contact.service.ContactService;
-import ru.kolaer.server.core.service.impl.UtilService;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.service.DepartmentService;
 import ru.kolaer.server.employee.service.PostService;
@@ -31,7 +30,6 @@ public class EmployeeConverterImpl implements EmployeeConverter {
     private final TypeWorkService typeWorkService;
     private final TypeWorkConverter typeWorkConverter;
     private final ContactService contactService;
-    private final UtilService utilService;
 
     @Override
     public List<EmployeeDto> convertToDto(List<EmployeeEntity> model) {
@@ -199,7 +197,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         entity.setDismissalDate(dto.getDismissalDate());
         entity.setEmploymentDate(dto.getEmploymentDate());
         entity.setGender(dto.getGender());
-        entity.setPhoto(Optional.ofNullable(dto.getPhoto()).map(photo -> photo.substring(utilService.getCurrentHostUrl().length())).orElse(null));
+        entity.setPhoto(dto.getPhoto());
         entity.setCategory(dto.getCategory());
         entity.setHarmfulness(dto.isHarmfulness());
         entity.setContractNumber(dto.getContractNumber());
@@ -223,7 +221,7 @@ public class EmployeeConverterImpl implements EmployeeConverter {
         dto.setGender(entity.getGender());
         dto.setInitials(entity.getInitials());
         dto.setCategory(entity.getCategory());
-        dto.setPhoto(Optional.ofNullable(entity.getPhoto()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
+        dto.setPhoto(entity.getPhoto());
         dto.setHarmfulness(entity.isHarmfulness());
         dto.setContractNumber(entity.getContractNumber());
 

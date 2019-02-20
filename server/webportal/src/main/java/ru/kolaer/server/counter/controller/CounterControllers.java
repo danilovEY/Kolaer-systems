@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,10 +27,7 @@ public class CounterControllers {
         this.counterService = counterService;
     }
 
-    @ApiOperation(
-            value = "Получить все счетчики"
-    )
-    @PreAuthorize("permitAll()")
+    @ApiOperation("Получить все счетчики")
     @RequestMapping(value = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<CounterDto> getAllCounters() {
         return  this.counterService.getAll();

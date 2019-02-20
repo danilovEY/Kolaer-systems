@@ -126,7 +126,7 @@ public class ChatController {
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/room/{roomId}/messages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<ChatMessageDto> getMessagesRoom(@PathVariable("roomId") Long roomId,
-                                                @RequestParam(value = "page", defaultValue = "0") Integer number,
+                                                @RequestParam(value = "page", defaultValue = "1") Integer number,
                                                 @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return chatMessageService.getAllByRoom(roomId, number, pageSize);
     }

@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +34,6 @@ public class EmployeeOtherOrganizationController {
 	@ApiOperation(
 			value = "Получить всех сотрудников"
 	)
-	@PreAuthorize("permitAll()")
 	@RequestMapping(value = "/get/users/max", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganizationDto> getUsers() {
 		return employeeOtherOrganizationService.getAll();
@@ -45,7 +43,6 @@ public class EmployeeOtherOrganizationController {
 			value = "Получить число (количество сотрудников)",
 			notes = "Получить число строк общего колличества сотрудников"
 	)
-	@PreAuthorize("permitAll()")
 	@RequestMapping(value = "/get/users/сount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Long getRowCount() {
 		return 1L;//employeeOtherOrganizationService.getRowCount(); TODO !!!!
@@ -55,7 +52,6 @@ public class EmployeeOtherOrganizationController {
 			value = "Получить сотрудников (в периоде)",
 			notes = "Получить сотрудников в периоде числа"
 	)
-	@PreAuthorize("permitAll()")
 	@RequestMapping(value = "/get/users/birthday/{startDate}/{endDate}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthday(
 			final @ApiParam(value = "Дата с", required = true) @PathVariable String startDate,
@@ -78,7 +74,6 @@ public class EmployeeOtherOrganizationController {
 			value = "Получить сотрудников (сегодня)",
 			notes = "Получить сотрудников у кого сегодня день рождения"
 	)
-	@PreAuthorize("permitAll()")
 	@RequestMapping(value = "/get/users/birthday/today", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthday() {
 		return employeeOtherOrganizationService.getUserBirthdayToday();
@@ -88,7 +83,6 @@ public class EmployeeOtherOrganizationController {
 			value = "Получить сотрудников (в указанный день)",
 			notes = "Получить сотрудников у кого день рождения в указанный день"
 	)
-	@PreAuthorize("permitAll()")
 	@RequestMapping(value = "/get/users/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthday(
 			final @ApiParam(value = "Дата", required = true) @PathVariable String date) {
@@ -109,7 +103,6 @@ public class EmployeeOtherOrganizationController {
 			value = "Получить сотрудников (в указанный день и организации)",
 			notes = "Получить сотрудников у кого день рождения в указанный день из указанной организации"
 	)
-	@PreAuthorize("permitAll()")
 	@RequestMapping(value = "/get/users/{organization}/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthdayAndOrg(
 			final @ApiParam(value = "Дата", required = true) @PathVariable String date,
@@ -131,7 +124,6 @@ public class EmployeeOtherOrganizationController {
 			value = "Получить число сотрудников (в указанный день)",
 			notes = "Получить число сотрудников у кого день рождения в указанный день"
 	)
-	@PreAuthorize("permitAll()")
 	@RequestMapping(value = "/get/users/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Integer getCountUsersBirthday(final @ApiParam(value = "Дата", required = true) @PathVariable String date) {
 		final SimpleDateFormat sdf = date.contains("-")
@@ -151,7 +143,6 @@ public class EmployeeOtherOrganizationController {
 			value = "Получить число сотрудников (в указанный день и организации)",
 			notes = "Получить число сотрудников у кого день рождения в указанный день из указанной организации"
 	)
-	@PreAuthorize("permitAll()")
 	@RequestMapping(value = "/get/users/{organization}/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public int getCountUsersBirthday(
 			final @ApiParam(value = "Дата", required = true) @PathVariable String date,
@@ -173,7 +164,6 @@ public class EmployeeOtherOrganizationController {
 			value = "Получить сотрудников по инициалам",
 			notes = "Получить сотрудников по инициалам"
 	)
-	@PreAuthorize("permitAll()")
 	@RequestMapping(value = "/get/users/by/initials/{initials}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganizationDto> getUsersByInitials(
 			final @ApiParam(value = "Иничиалы", required = true) @PathVariable String initials) {

@@ -29,7 +29,6 @@ public class PostController {
     }
 
     @ApiOperation(value = "Получить все должности")
-    @PreAuthorize("permitAll()")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PostDto> getAllDepartment(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                           @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
@@ -39,7 +38,6 @@ public class PostController {
     }
 
     @ApiOperation(value = "Найти должности")
-    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/find", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PostDto> getAllDepartment(FindPostPageRequest request) {
         return this.postService.find(request);
