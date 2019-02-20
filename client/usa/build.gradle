@@ -28,17 +28,23 @@ dependencies {
 
 }
 
-task createJar(type: Jar) {
+processResources {
+    doLast {
+        file("build/resources/main/config.properties").delete()
+        file("build/resources/main/config-prod.properties").renameTo("build/resources/main/config.properties")
+    }
+}
+
+jar {
     archiveName = projectJarName
     baseName = project.name
     manifest {
         attributes 'Main-Class': 'ru.kolaer.client.usa.runnable.Launcher'
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }
 
-task copyJarToBin(dependsOn: createJar) {
+task copyJarToBin(dependsOn: [jar]) {
     doLast {
         copy {
             from 'build/libs/' + projectJarName
@@ -46,5 +52,6 @@ task copyJarToBin(dependsOn: createJar) {
         }
     }
 }
+
 
 task buildApp (dependsOn: [clean, copyJarToBin])
