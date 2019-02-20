@@ -34,4 +34,4 @@ task copyJarToBin(dependsOn: jar) {
     }
 }
 
-task buildApp(dependsOn : [copyJarToBin])
+task buildApp(dependsOn : [clean, copyJarToBin])

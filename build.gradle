@@ -7,16 +7,9 @@ allprojects {
         mavenLocal()
     }
 
-    task wrapper(type: Wrapper) {
-        gradleVersion = 2.3
-    }
-}
-
-project(":common") {
-    apply plugin: 'java'
-
-    compileJava.options.encoding = 'UTF-8'
-    sourceCompatibility = 1.8
+//    task wrapper(type: Wrapper) {
+//        gradleVersion = 2.3
+//    }
 }
 
 project(":client") {
@@ -29,20 +22,6 @@ project(":client") {
 
     subprojects {
         apply plugin: 'java'
-
-        if(name == "usa") {
-            dependencies {
-                compile(project(':common'))
-            }
-        } else {
-            dependencies {
-                compileOnly "org.projectlombok:lombok:1.16.12"
-                compile(project(':common')) {
-                    exclude group: 'com.fasterxml.jackson.core'
-                }
-
-            }
-        }
 
         compileJava.options.encoding = 'UTF-8'
         sourceCompatibility = 1.8

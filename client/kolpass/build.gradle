@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '1.1'
+version '1.1.1'
 
 def projectName = "ru.kolaer.kolpass"
 def projectNameWithVersion = projectName + "-" + version
@@ -8,6 +8,8 @@ def projectJarName = projectNameWithVersion + ".jar"
 apply plugin: 'osgi'
 
 dependencies {
+    compile project(":client:client-core")
+    
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
@@ -17,20 +19,11 @@ jar {
     manifest {
         name = 'Парольница (KolPass)'
         symbolicName = projectName
-        instruction "Bundle-ClassPath", "."
     }
-}
-
-task createJar(type: Jar) {
-    archiveName = projectJarName
-    baseName = project.name
-    manifest = jar.manifest
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }
 
-
-task copyJarToBin(dependsOn: createJar) {
+task copyJarToBin(dependsOn: jar) {
     doLast {
         copy {
             from 'build/libs/' + projectJarName
@@ -39,4 +32,4 @@ task copyJarToBin(dependsOn: createJar) {
     }
 }
 
-task buildApp(dependsOn : [copyJarToBin])
+task buildApp(dependsOn : [clean, copyJarToBin])

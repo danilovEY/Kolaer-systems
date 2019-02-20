@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '0.1.1'
+version '0.1.2'
 
 def projectName = "ru.kolaer.weather"
 def projectNameWithVersion = projectName + "-" + version
@@ -8,6 +8,8 @@ def projectJarName = projectNameWithVersion + ".jar"
 apply plugin: 'osgi'
 
 dependencies {
+    compile project(":client:client-core")
+    
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
@@ -17,19 +19,9 @@ jar {
     manifest {
         name = 'Погода'
         symbolicName = projectName
-//        instruction "Bundle-ClassPath", "."
-//        instruction "Import-Package", "*;version=\"0\";resolution:=optional"
     }
-}
-
-task createJar(type: Jar) {
-    archiveName = projectJarName
-    baseName = project.name
-    manifest = jar.manifest
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }
-
 
 task copyJarToBin(dependsOn: jar) {
     doLast {
@@ -40,4 +32,4 @@ task copyJarToBin(dependsOn: jar) {
     }
 }
 
-task buildApp(dependsOn : [copyJarToBin])
+task buildApp(dependsOn : [clean, copyJarToBin])

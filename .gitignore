@@ -10,3 +10,4 @@
 !.gitignore
 !Architecture.png
 web-client.iml
+!config.properties
