@@ -20,9 +20,6 @@ public class UniformSystemEditorKitSingleton implements UniformSystemEditorKit {
 	}
 
 	public static UniformSystemEditorKit getInstance() {
-		if(instance == null)
-			setInstance(new DefaultUniformSystemEditorKit());
-
 		return instance;
 	}
 

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by danilovey on 10.11.2017.
  */
-public interface ChatTable {
+public interface ChatTable extends Server {
     ServerResponse<List<ChatRoomDto>> getRooms();
     ServerResponse<List<ChatUserDto>> getOnlineUser();
 
