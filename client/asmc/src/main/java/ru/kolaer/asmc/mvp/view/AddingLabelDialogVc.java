@@ -40,6 +40,7 @@ public class AddingLabelDialogVc {
         TextField pathAppText = new TextField();
         TextField textPriority = new TextField();
         TextField pathOpenAppWith = new TextField();
+        CheckBox autoRun = new CheckBox("Автозапуск");
         Dialog<MLabel> dialog = new Dialog<>();
 
         mainPane.setPadding(new Insets(5,10,5,10));
@@ -92,6 +93,9 @@ public class AddingLabelDialogVc {
         contentPane.add(new Label("Приоритет:"), 0, 5);
         contentPane.add(textPriority, 1, 5);
 
+        contentPane.add(new Label("Автозапуск:"), 0, 6);
+        contentPane.add(autoRun, 1, 6);
+
         contentPane.getColumnConstraints().add(columnConstraints);
 
         mainPane.setCenter(contentPane);
@@ -131,6 +135,7 @@ public class AddingLabelDialogVc {
                 result.setPathApplication(pathAppText.getText());
                 result.setPriority(priority);
                 result.setPathOpenAppWith(pathOpenAppWith.getText());
+                result.setAutoRun(autoRun.isSelected());
 
                 return result;
             }
@@ -155,6 +160,7 @@ public class AddingLabelDialogVc {
             infoLabelText.setText(mLabel.getInfo());
             pathAppText.setText(mLabel.getPathApplication());
             pathOpenAppWith.setText(mLabel.getPathOpenAppWith());
+            autoRun.setSelected(mLabel.isAutoRun());
             if (mLabel.getPathImage() == null || mLabel.getPathImage().isEmpty()) {
                 rbNoneIcon.setSelected(true);
                 image.setImage(null);
@@ -248,10 +254,6 @@ public class AddingLabelDialogVc {
 
 		return fileChooser.showOpenDialog(null);
 	}
-
-	private static void updateIcon(File file) {
-
-    }
 
     public static Optional<MLabel> showAndWait(MLabel model) {
         return initialization(model).showAndWait();

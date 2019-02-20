@@ -233,7 +233,7 @@ public class GroupTreeVcImpl implements GroupTreeVc {
 
     @Override
     public void updateData(List<MGroup> groupList) {
-        if(groupList != null) {
+        if(groupList != null && isViewInit()) {
             Tools.runOnWithOutThreadFX(() -> {
                 ObservableList<TreeItem<MGroup>> children = rootNode.getContent().getChildren();
                 children.clear();

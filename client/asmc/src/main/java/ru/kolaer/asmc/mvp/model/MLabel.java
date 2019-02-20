@@ -12,6 +12,7 @@ public class MLabel {
 	private String pathOpenAppWith;
 	private String pathApplication;
 	private int priority = 0;
+	private boolean autoRun;
 
     public MLabel(MLabel originModel) {
         this.priority = originModel.getPriority();
@@ -20,5 +21,6 @@ public class MLabel {
         this.pathImage = originModel.getPathImage();
         this.pathApplication = originModel.getPathApplication();
         this.pathOpenAppWith = originModel.getPathOpenAppWith();
+        this.autoRun = originModel.isAutoRun();
     }
 }

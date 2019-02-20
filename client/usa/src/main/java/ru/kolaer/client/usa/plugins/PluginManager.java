@@ -61,6 +61,7 @@ public class PluginManager {
                 "ru.kolaer.common.dto.other, "+
                 "ru.kolaer.common.dto.employee, "+
                 "ru.kolaer.common.dto.post, "+
+                "ru.kolaer.common.dto.counter, "+
                 "ru.kolaer.common.dto.kolaerweb.kolpass, "+
                 "ru.kolaer.common.dto.kolaerweb.organizations, "+
                 "ru.kolaer.common.dto.kolaerweb.kolchat, "+

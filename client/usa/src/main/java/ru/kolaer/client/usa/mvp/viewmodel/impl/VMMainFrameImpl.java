@@ -106,7 +106,7 @@ public class VMMainFrameImpl extends Application implements AuthenticationObserv
 //                }
 //            }
 
-            ExecutorService executorService = Executors.newCachedThreadPool();
+            ExecutorService executorService = Executors.newFixedThreadPool(5);
 
             initPluginManager
                     .getSearchPlugins()

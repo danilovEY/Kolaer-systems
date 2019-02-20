@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import ru.kolaer.asmc.mvp.model.DataService;
 import ru.kolaer.asmc.mvp.model.DataServiceImpl;
+import ru.kolaer.asmc.mvp.service.AutoRunService;
 import ru.kolaer.asmc.mvp.service.AutoUploadData;
 import ru.kolaer.asmc.mvp.view.*;
 import ru.kolaer.client.core.mvp.view.BaseView;
@@ -20,8 +21,8 @@ import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.common.constant.assess.AsupAccessConstant;
 import ru.kolaer.common.dto.auth.AccountDto;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -36,6 +37,7 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
     private GroupTreeVc groupTreeVc;
     private ContentLabelVc contentLabelVc;
     private AutoUploadData autoUploadData;
+    private AutoRunService autoRunService;
 
     @Override
     public void initialization(UniformSystemEditorKit editorKit) throws Exception {
@@ -46,22 +48,26 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
         groupTreeVc = new GroupTreeVcImpl(dataService);
         contentLabelVc = new ContentLabelVcImpl(dataService);
         autoUploadData = new AutoUploadData(dataService);
+        autoRunService = new AutoRunService(dataService);
 
         dataService.registerObserver(groupTreeVc);
         dataService.registerObserver(contentLabelVc);
         dataService.registerObserver(autoUploadData);
+        dataService.registerObserver(autoRunService);
 
         splitListContent = new SplitListContentVcImpl(groupTreeVc, contentLabelVc);
+
+        CompletableFuture.runAsync(() -> dataService.loadData());
     }
 
     @Override
     public Collection<Service> getServices() {
-        return Collections.singletonList(autoUploadData);
+        return Arrays.asList(autoUploadData, autoRunService);
     }
 
     @Override
     public void start() throws Exception {
-        CompletableFuture.runAsync(() -> dataService.loadData());
+
     }
 
     private void initMenuBar() {
