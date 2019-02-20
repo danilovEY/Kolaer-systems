@@ -39,7 +39,7 @@ public class InfoPaneVcImpl implements InfoPaneVc {
     public void initView(Consumer<InfoPaneVc> viewVisit) {
         mainPane = new BorderPane();
 
-        staticViewPane = new FlowPane(Orientation.VERTICAL);
+        staticViewPane = new FlowPane(Orientation.HORIZONTAL);
         staticViewPane.setAlignment(Pos.TOP_CENTER);
         staticViewPane.setHgap(20);
         staticViewPane.setVgap(20);
