@@ -5,6 +5,7 @@ import {OtherEmployeeModel} from '../../@core/models/other-employee.model';
 import {ServerExceptionModel} from '../../@core/models/server-exception.model';
 import {NbTabComponent, NbTabsetComponent} from '@nebular/theme/components/tabset/tabset.component';
 import {finalize} from 'rxjs/internal/operators';
+import {environment} from "../../../environments/environment";
 
 @Component({
     selector: 'ngx-dashboard',
@@ -67,6 +68,8 @@ export class DashboardComponent implements OnInit {
     }
 
     encodeUrl(employee: EmployeeModel): string {
-        return employee.photo ? encodeURI(employee.photo) : '/assets/images/no_photo.jpg';
+        return employee.photo
+            ? environment.publicServerUrl + encodeURI(employee.photo)
+            : '/assets/images/no_photo.jpg';
     }
 }

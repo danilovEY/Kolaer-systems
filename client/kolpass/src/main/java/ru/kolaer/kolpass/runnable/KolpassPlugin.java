@@ -36,7 +36,9 @@ public class KolpassPlugin implements UniformSystemPlugin, AuthenticationObserve
 
     @Override
     public void stop() throws Exception {
-        this.pSplitContentAndListRep.clear();
+        if (isViewInit()) {
+            this.pSplitContentAndListRep.clear();
+        }
     }
 
     @Override

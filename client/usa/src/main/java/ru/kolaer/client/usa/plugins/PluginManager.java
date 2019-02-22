@@ -78,6 +78,7 @@ public class PluginManager {
                 "ru.kolaer.client.core.system.network.restful, "+
                 "ru.kolaer.client.core.system.ui, "+
                 "ru.kolaer.client.core.tools," +
+                "com.fasterxml.jackson.databind," +
                 "org.controlsfx.control.textfield, org.controlsfx.dialog, org.controlsfx.dialog, org.controlsfx.validation, javafx.scene.web");
 
         frameworkProperties.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "" +
@@ -87,7 +88,7 @@ public class PluginManager {
                 "javafx.fxml, javafx.geometry, javafx.scene, javafx.scene.control, javafx.scene.canvas, javafx.scene.image, " +
                 "javafx.scene.input , javafx.scene.layout, javafx.util, javafx.concurrent, javafx.scene.paint," +
                 "javafx.scene.text, javafx.stage, javax.swing, javafx.embed.swing, com.sun.javafx.scene.control.skin, " +
-                "javafx.scene.control.cell, org.slf4j;version=1.7.7");
+                "javafx.scene.control.cell, com.fasterxml.jackson.databind, org.slf4j;version=1.7.7");
 
         this.framework = new Felix(frameworkProperties);
 

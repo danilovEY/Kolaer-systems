@@ -50,8 +50,6 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
         autoUploadData = new AutoUploadData(dataService);
         autoRunService = new AutoRunService(dataService);
 
-        dataService.registerObserver(groupTreeVc);
-        dataService.registerObserver(contentLabelVc);
         dataService.registerObserver(autoUploadData);
         dataService.registerObserver(autoRunService);
 
@@ -67,7 +65,11 @@ public class AsmcPlugin implements UniformSystemPlugin, AuthenticationObserver {
 
     @Override
     public void start() throws Exception {
+        dataService.registerObserver(groupTreeVc);
+        dataService.registerObserver(contentLabelVc);
 
+        groupTreeVc.updateData(dataService.getModel());
+        contentLabelVc.updateData(dataService.getModel());
     }
 
     private void initMenuBar() {

@@ -149,10 +149,10 @@ public class UploadFileServiceImpl
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("FAIL!");
+                throw new RuntimeException("Файл не найден или его не открыть: " + filename);
             }
         } catch (MalformedURLException e) {
-            throw new RuntimeException("FAIL!");
+            throw new RuntimeException(e);
         }
     }
 
