@@ -7,7 +7,7 @@
                        [selectAllDepartments]="true"
                        [calculateIntersections]="false"
                        [groupByDepartments]="true"
-                       [selectDepartments]="currentAccount && currentAccount.accessVacationAdmin"
+                       [selectDepartments]="currentAccount && canReadAllVacations()"
                        (onChangeFilter)="changeFilter($event)"
                        (onAcceptFilter)="generateReportDistribute($event)">
         </report-filter>

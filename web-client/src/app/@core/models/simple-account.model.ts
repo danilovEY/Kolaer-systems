@@ -6,10 +6,5 @@ export class SimpleAccountModel extends BaseModel {
 	email: string;
     avatarUrl: string;
 	employeeId: number;
-	accessOit: boolean;
-	accessUser: boolean;
-	accessOk: boolean;
-    accessVacationAdmin: boolean;
-    accessVacationDepEdit: boolean;
-    accessTypeWork: boolean;
+    access: string[];
 }

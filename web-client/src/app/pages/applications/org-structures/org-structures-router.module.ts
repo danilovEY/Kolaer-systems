@@ -1,6 +1,5 @@
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
-import {OrgStructuresComponent} from './org-structures.component';
 import {EmployeesListComponent} from './employees/list/employees-list.component';
 import {DepartmentsComponent} from './departments/departments.component';
 import {PostsComponent} from './posts/posts.component';
@@ -25,7 +24,6 @@ import {EmployeeCardMilitaryRegistrationComponent} from "./employees/employee-ca
 
 
 const routes: Routes = [
-    {path: '', component: OrgStructuresComponent, redirectTo: 'employees'},
     {path: 'departments', component: DepartmentsComponent},
     {path: 'posts', component: PostsComponent},
     {path: 'sync', component: OrgStructuresSyncComponent},

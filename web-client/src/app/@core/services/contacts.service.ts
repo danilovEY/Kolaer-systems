@@ -24,11 +24,11 @@ export class ContactsService {
         return this.http.get<DepartmentModel[]>(this.getDepartmentsUrl);
     }
 
-    getContactsByDepartment(page: number = 1, pageSize: number = 15, depId: number, contactType: ContactTypeModel)
+    getContactsByDepartment(pageNum: number = 1, pageSize: number = 15, depId: number, contactType: ContactTypeModel)
     : Observable<Page<ContactModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
+        params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
 
         const url: string = `${this.nonSecurityContactsUrl}/${depId}/${contactType}`;
@@ -36,10 +36,10 @@ export class ContactsService {
         return this.http.get<Page<ContactModel>>(url, {params});
     }
 
-    getContactsBySearch(page: number = 1, pageSize: number = 15, search: string): Observable<Page<ContactModel>> {
+    getContactsBySearch(pageNum: number = 1, pageSize: number = 15, search: string): Observable<Page<ContactModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
+        params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
         params = params.append('search', search);
 

@@ -9,11 +9,11 @@ public interface AccountAccessConstant extends CommonAccessConstant {
     /**
      * Получить всех пользователей
      */
-    String ACCOUNTS_GET = PREFIX + "ACCOUNTS_GET";
+    String ACCOUNTS_READ = PREFIX + "ACCOUNTS_READ";
 
     /**
      * Отредактировать пользователей
      */
-    String ACCOUNTS_EDIT = PREFIX + "ACCOUNTS_EDIT";
+    String ACCOUNTS_WRITE = PREFIX + "ACCOUNTS_WRITE";
 
 }

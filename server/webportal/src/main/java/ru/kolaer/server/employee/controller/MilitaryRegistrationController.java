@@ -27,7 +27,7 @@ public class MilitaryRegistrationController {
     }
 
     @GetMapping(RouterConstants.EMPLOYEES_ID_MILITARY_REGISTRATIONS)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_MILITARY_REGISTRATIONS_GET + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_MILITARY_REGISTRATIONS_READ + "')")
     public List<MilitaryRegistrationDto> getMilitaryRegistrationsByEmployeeId(
         @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId
     ) {

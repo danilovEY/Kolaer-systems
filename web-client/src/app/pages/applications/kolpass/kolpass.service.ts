@@ -23,7 +23,7 @@ export class KolpassService extends BaseService {
         super();
     }
 
-    getAllMyRepositories(page: number = 1, pageSize: number = 15): Observable<Page<RepositoryPasswordModel>> {
+    getAllMyRepositories(pageNum: number = 1, pageSize: number = 15): Observable<Page<RepositoryPasswordModel>> {
         if (!this.authService.authentication) {
             return EMPTY;
         }
@@ -31,7 +31,7 @@ export class KolpassService extends BaseService {
 
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
+        params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
         
         return this.httpClient.get<Page<RepositoryPasswordModel>>(this.repositoryUrl, { params: params });
@@ -83,7 +83,7 @@ export class KolpassService extends BaseService {
         return this.httpClient.get<RepositoryPasswordModel>(url);
     }
 
-    getHistoryInRepository(repId: number, page: number = 1, pageSize: number = 15): Observable<Page<PasswordHistoryModel>> {
+    getHistoryInRepository(repId: number, pageNum: number = 1, pageSize: number = 15): Observable<Page<PasswordHistoryModel>> {
         if (!this.authService.authentication) {
             return EMPTY;
         }
@@ -91,7 +91,7 @@ export class KolpassService extends BaseService {
 
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
+        params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
 
         const url: string = `${this.repositoryUrl}/${repId}${this.getHistoryByRepositoryUrl}`;
@@ -142,7 +142,7 @@ export class KolpassService extends BaseService {
         return this.httpClient.post<PasswordHistoryModel>(url, newPassword);
     }
 
-    getSharedAccountsByRepId(repId: number, page: number = 1, pageSize: number = 15): Observable<AccountModel[]> {
+    getSharedAccountsByRepId(repId: number, pageNum: number = 1, pageSize: number = 15): Observable<AccountModel[]> {
         if (!this.authService.authentication) {
             return EMPTY;
         }
@@ -150,7 +150,7 @@ export class KolpassService extends BaseService {
 
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
+        params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
 
         const url: string = `${this.repositoryUrl}/${repId}/share`;
@@ -179,7 +179,7 @@ export class KolpassService extends BaseService {
     }
 
     getSharedRepositories(sort: RepositoryPasswordSortModel, filter: RepositoryPasswordFilterModel,
-                          page: number, pageSize: number): Observable<Page<RepositoryPasswordModel>> {
+                          pageNum: number, pageSize: number): Observable<Page<RepositoryPasswordModel>> {
         if (!this.authService.authentication) {
             return EMPTY;
         }
@@ -187,7 +187,7 @@ export class KolpassService extends BaseService {
 
         let params = new HttpParams();
 
-        params = params.append('page', page.toString()).append('pagesize', pageSize.toString());
+        params = params.append('pageNum', pageNum.toString()).append('pagesize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 
         const url: string = `${this.repositoryUrl}/share`;

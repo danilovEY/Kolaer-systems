@@ -29,10 +29,10 @@ public class PlacementController {
 
     @ApiOperation(value = "Получить все помещения")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<PlacementDto> getAllPlacement(@RequestParam(value = "page", defaultValue = "1") Integer number,
+    public Page<PlacementDto> getAllPlacement(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                               @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                               PlacementSort sortParam,
                                               PlacementFilter filter) {
-        return placementService.getAll(sortParam, filter, number, pageSize);
+        return placementService.getAll(sortParam, filter, pageNum, pageSize);
     }
 }

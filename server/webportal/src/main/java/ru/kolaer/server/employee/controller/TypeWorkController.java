@@ -24,21 +24,21 @@ public class TypeWorkController {
     }
 
     @ApiOperation(value = "Получить тип работы")
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.TYPE_WORKS_GET + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.TYPE_WORKS_READ + "')")
     @GetMapping(RouterConstants.TYPE_WORKS)
     public Page<TypeWorkDto> getTypeWorks(@ModelAttribute FindTypeWorkRequest request) {
         return typeWorkService.getAll(request);
     }
 
     @ApiOperation(value = "Добавить тип работы")
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.TYPE_WORKS_ADD + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.TYPE_WORKS_WRITE + "')")
     @PostMapping(RouterConstants.TYPE_WORKS)
     public TypeWorkDto addTypeWork(@RequestBody TypeWorkDto request) {
         return typeWorkService.add(request);
     }
 
     @ApiOperation(value = "Редактировать тип работы")
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.TYPE_WORKS_EDIT + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.TYPE_WORKS_WRITE + "')")
     @PutMapping(RouterConstants.TYPE_WORKS_ID)
     public TypeWorkDto updateTypeWork(@PathVariable(PathVariableConstants.TYPE_WORK_ID) Long typeWorkId,
             @RequestBody TypeWorkDto request) {
@@ -46,7 +46,7 @@ public class TypeWorkController {
     }
 
     @ApiOperation(value = "Удалить тип работы")
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.TYPE_WORKS_DELETE + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.TYPE_WORKS_WRITE + "')")
     @DeleteMapping(RouterConstants.TYPE_WORKS_ID)
     public void deleteTypeWork(@PathVariable(PathVariableConstants.TYPE_WORK_ID) Long typeWorkId) {
         typeWorkService.deleteTypeWork(typeWorkId);

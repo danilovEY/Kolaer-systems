@@ -13,6 +13,7 @@ import {Utils} from '../../../../@core/utils/utils';
 import {PostRequestModel} from '../../../../@core/models/post-request.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
+import {RoleConstant} from "../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'posts',
@@ -126,5 +127,9 @@ export class PostsComponent implements OnInit {
                 .subscribe(response => event.confirm.resolve({}),
                     error2 => event.confirm.reject({}));
         }
+    }
+
+    canWritePost(): boolean {
+        return this.currentAccount.access.includes(RoleConstant.POSTS_WRITE);
     }
 }

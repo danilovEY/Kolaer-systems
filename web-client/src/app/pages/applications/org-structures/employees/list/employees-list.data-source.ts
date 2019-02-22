@@ -16,7 +16,7 @@ export class EmployeesListDataSource extends CustomDataSource<EmployeeModel> {
         if (this.departmentId && this.departmentId > 0) {
             const request = new FindEmployeeRequestModel();
             request.departmentIds = [this.departmentId];
-            request.number = page;
+            request.pageNum = page;
             request.pageSize = pageSize;
 
             return this.employeeService.findAllEmployees(request)

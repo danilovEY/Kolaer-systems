@@ -134,7 +134,7 @@ public interface DefaultDao<T extends DefaultEntity> {
     }
 
     default int getFirstResult(PaginationRequest request) {
-        return (request.getNumber() - 1) * request.getPageSize();
+        return (request.getPageNum() - 1) * request.getPageSize();
     }
 
     default String getEntityName() {

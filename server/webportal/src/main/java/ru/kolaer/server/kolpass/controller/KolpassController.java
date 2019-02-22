@@ -35,11 +35,11 @@ public class KolpassController {
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PasswordRepositoryDto> getAllPersonalRepositoryPasswords(
-            @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
+            @ApiParam("Номер страници") @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
             RepositoryPasswordSort sort,
             RepositoryPasswordFilter filter) {
-        return passwordRepositoryService.getAll(sort, filter, number, pageSize);
+        return passwordRepositoryService.getAll(sort, filter, pageNum, pageSize);
     }
 
     @ApiOperation(value = "Получить хранилище")

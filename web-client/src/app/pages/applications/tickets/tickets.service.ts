@@ -24,10 +24,10 @@ export class TicketsService extends BaseService {
     }
 
     getAllTicketRegisters(sort?: RegisterTicketsSortModel, filter?: RegisterTicketsFilterModel,
-                          page: number = 1, pageSize: number = 15): Observable<Page<TicketRegisterModel>> {
+                          pageNum: number = 1, pageSize: number = 15): Observable<Page<TicketRegisterModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
+        params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 
@@ -35,10 +35,10 @@ export class TicketsService extends BaseService {
     }
 
     getAllTicketsByRegisterId(regId: number, sort?: TicketsSortModel, filter?: TicketsFilterModel,
-                              page: number = 1, pageSize: number = 15): Observable<Page<TicketModel>> {
+                              pageNum: number = 1, pageSize: number = 15): Observable<Page<TicketModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
+        params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 

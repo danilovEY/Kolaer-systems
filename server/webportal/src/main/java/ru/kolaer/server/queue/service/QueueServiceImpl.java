@@ -128,7 +128,7 @@ public class QueueServiceImpl
         List<QueueRequestEntity> requests = this.defaultEntityDao.findLastRequests(pageQueueRequest);
 
         if (requests.isEmpty()) {
-            return new Page<>(Collections.emptyList(), pageQueueRequest.getNumber(), 0, pageQueueRequest.getPageSize());
+            return new Page<>(Collections.emptyList(), pageQueueRequest.getPageNum(), 0, pageQueueRequest.getPageSize());
         }
 
         Map<Long, QueueRequestDto> requestMap = defaultConverter.convertToRequestDto(requests)
@@ -154,7 +154,7 @@ public class QueueServiceImpl
             schedulers.add(queueScheduleDto);
         }
 
-        return new Page<>(schedulers, pageQueueRequest.getNumber(), count, pageQueueRequest.getPageSize());
+        return new Page<>(schedulers, pageQueueRequest.getPageNum(), count, pageQueueRequest.getPageSize());
     }
 
     @Override

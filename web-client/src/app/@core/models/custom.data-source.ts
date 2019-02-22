@@ -11,7 +11,7 @@ export abstract class CustomDataSource<T> extends LocalDataSource {
     protected readonly onChangedLoading = new Subject<boolean>();
     protected dataPage: Page<T> = {
         data: [],
-        number: 0,
+        pageNum: 0,
         pageSize: 1,
         total: 0
     };
@@ -55,7 +55,7 @@ export abstract class CustomDataSource<T> extends LocalDataSource {
         const sort = this.getSort();
         const filter = this.getFilter();
 
-        if (this.getPage() === this.dataPage.number &&
+        if (this.getPage() === this.dataPage.pageNum &&
             this.dataPage.pageSize === this.getPageSize() &&
             sort === this.currentSort &&
             filter === this.currentFilter) {
@@ -86,7 +86,7 @@ export abstract class CustomDataSource<T> extends LocalDataSource {
     abstract loadElements(page: number, pageSize: number): Promise<T[]>;
 
     setData(response: T[]): T[] {
-        this.dataPage.number = 1;
+        this.dataPage.pageNum = 1;
         this.dataPage.data = response;
         this.dataPage.total = response.length;
         this.data = response;

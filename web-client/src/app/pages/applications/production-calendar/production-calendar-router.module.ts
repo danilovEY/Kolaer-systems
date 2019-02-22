@@ -3,7 +3,6 @@ import {Route, RouterModule} from '@angular/router';
 import {ProductionCalendarComponent} from './production-calendar.component';
 import {ProductionCalendarMainComponent} from './main/production-calendar-main.component';
 import {ProductionCalendarEditComponent} from './edit/production-calendar-edit.component';
-import {AdminGuardService} from '../../../@core/modules/auth/admin-guard.service';
 
 const router: Route[] = [
     {
@@ -17,7 +16,6 @@ const router: Route[] = [
     },
     {
         path: 'edit',
-        canActivate: [AdminGuardService],
         component: ProductionCalendarEditComponent
     }
 ];

@@ -17,6 +17,7 @@ import {TypeOperationEnum} from '../main/type-operation.enum';
 import {EmployeeWithAccountEditComponent} from './employee-with-account-edit.component';
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
+import {RoleConstant} from "../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'register-detailed',
@@ -64,7 +65,7 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
 
                 this.accountService.getCurrentAccount()
                     .subscribe((account: SimpleAccountModel) => {
-                        if (account.accessOit ||
+                        if (account.access.includes(RoleConstant.TICKET_REGISTER_WRITE) ||
                             account.id === this.selectedTicketRegister.accountId && !this.selectedTicketRegister.close) {
                             this.customTable.settings.actions.add = true;
                             this.customTable.settings.actions.edit = true;

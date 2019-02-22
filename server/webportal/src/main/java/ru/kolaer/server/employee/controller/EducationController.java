@@ -27,7 +27,7 @@ public class EducationController {
     }
 
     @GetMapping(RouterConstants.EMPLOYEES_ID_EDUCATIONS)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_EDUCATIONS_GET + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_EDUCATIONS_READ + "')")
     public List<EducationDto> getEducations(@PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId) {
         return educationService.findEducations(employeeId);
     }

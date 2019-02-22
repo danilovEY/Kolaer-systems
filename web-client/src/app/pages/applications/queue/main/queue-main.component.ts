@@ -152,7 +152,7 @@ export class QueueMainComponent {
             event.action.name === SmartTableService.DELETE_ACTION_NAME) {
 
             return QueueMainComponent.currentAccount ?
-                event.data.request.id === QueueMainComponent.currentAccount.id || QueueMainComponent.currentAccount.accessOit
+                event.data.request.id === QueueMainComponent.currentAccount.id
                 : false;
         }
 

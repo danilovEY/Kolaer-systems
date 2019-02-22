@@ -52,6 +52,10 @@ public interface RouterConstants {
     String VACATIONS_REPORT_EXPORT = VACATIONS_REPORT + "/export";
 
 
+    String BANK = "bank";
+    String BANK_ID = BANK + "/{" + PathVariableConstants.BANK_ACCOUNT_ID + "}";
+    String BANK_EMPLOYEE = BANK + "/employee";
+
     String AUTHENTICATION = "/authentication";
     String AUTHENTICATION_LOGOUT = AUTHENTICATION + "/logout";
     String AUTHENTICATION_LOGIN = AUTHENTICATION + "/login";

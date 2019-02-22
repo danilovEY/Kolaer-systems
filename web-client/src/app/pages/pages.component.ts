@@ -4,6 +4,7 @@ import {NbMenuItem} from '@nebular/theme';
 import {AuthenticationRestService} from '../@core/modules/auth/authentication-rest.service';
 import {AccountService} from '../@core/services/account.service';
 import {SimpleAccountModel} from '../@core/models/simple-account.model';
+import {RoleConstant} from "../@core/constants/role.constant";
 
 @Component({
     selector: 'ngx-pages',
@@ -194,25 +195,38 @@ export class PagesComponent implements OnInit {
 
             this.accountService.getCurrentAccount()
                 .subscribe((account: SimpleAccountModel) => {
-                    if (account.accessOk || account.accessOit || account.accessTypeWork) {
-                        orgStructureMenuItem.children.push(employeesMenuItem,
-                            postsMenuItem,
-                            departmentsMenuItem,
-                            typeWorkMenuItem);
+                    if (account.access.includes(RoleConstant.EMPLOYEES_READ)) {
+                        orgStructureMenuItem.children.push(employeesMenuItem);
+                    }
+
+                    orgStructureMenuItem.children.push(departmentsMenuItem);
+                    orgStructureMenuItem.children.push(postsMenuItem);
+
+                    if (account.access.includes(RoleConstant.TYPE_WORKS_READ)) {
+                        orgStructureMenuItem.children.push(typeWorkMenuItem);
+                    }
+
+                    if (orgStructureMenuItem.children.length > 0) {
                         this.menu.push(orgStructureMenuItem);
                     }
 
-                   if (account.accessOit) {
-                       ticketsMenuItem.children.push(bankAccountMenuItem);
-                       productionCalendarMenuItem.children.push(productionCalendarEditMenuItem);
-                       orgStructureMenuItem.children.push(orgStructureSyncMenuItem);
-                   }
+                    if (account.access.includes(RoleConstant.BANK_ACCOUNTS_READ)) {
+                        ticketsMenuItem.children.push(bankAccountMenuItem);
+                    }
 
-                   if (account.accessVacationAdmin || account.accessVacationDepEdit) {
-                       vacationMenuItem.children.push(vacationSetMenuItem,
-                           reportExportMenuItem,
-                           vacationReportMenuItem);
-                   }
+                    if (account.access.includes(RoleConstant.EMPLOYEES_SYNC)) {
+                        orgStructureMenuItem.children.push(orgStructureSyncMenuItem);
+                    }
+
+
+                    if (account.access.includes(RoleConstant.VACATIONS_READ) ||
+                        account.access.includes(RoleConstant.VACATIONS_READ_DEPARTMENT)) {
+                        vacationMenuItem.children.push(vacationSetMenuItem,
+                            reportExportMenuItem,
+                            vacationReportMenuItem);
+                    }
+
+                    // productionCalendarMenuItem.children.push(productionCalendarEditMenuItem); TODO: add role
                 });
         }
     }

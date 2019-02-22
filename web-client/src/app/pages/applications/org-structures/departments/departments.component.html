@@ -10,9 +10,9 @@
                 <custom-table #departmentsTable
                               [columns]="departmentsColumns"
                               [source]="departmentsSource"
-                              [actionAdd]="!currentAccount || currentAccount && (currentAccount.accessOk || currentAccount.accessOit || currentAccount.accessTypeWork)"
-                              [actionDelete]="!currentAccount || currentAccount && (currentAccount.accessOk || currentAccount.accessOit || currentAccount.accessTypeWork)"
-                              [actionEdit]="!currentAccount || currentAccount && (currentAccount.accessOk || currentAccount.accessOit || currentAccount.accessTypeWork)"
+                              [actionAdd]="!currentAccount || currentAccount && canWriteDepartment()"
+                              [actionDelete]="!currentAccount || currentAccount && canWriteDepartment()"
+                              [actionEdit]="!currentAccount || currentAccount && canWriteDepartment()"
                               (edit)="departmentsEdit($event)"
                               (delete)="departmentsDelete($event)"
                               (create)="departmentsCreate($event)">

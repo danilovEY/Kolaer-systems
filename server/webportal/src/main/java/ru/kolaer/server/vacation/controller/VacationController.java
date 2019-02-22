@@ -38,21 +38,21 @@ public class VacationController {
 
     @ApiOperation(value = "Получить отпуска")
     @GetMapping(RouterConstants.VACATIONS)
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_GET + "','" + VacationAccessConstant.VACATIONS_GET_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_READ + "','" + VacationAccessConstant.VACATIONS_READ_DEPARTMENT + "')")
     public Page<VacationDto> getVacations(@ModelAttribute FindVacationPageRequest request) {
         return vacationService.getVacations(request);
     }
 
     @ApiOperation(value = "Добавить отпуск")
     @PostMapping(RouterConstants.VACATIONS)
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_ADD + "','" + VacationAccessConstant.VACATIONS_ADD_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_WRITE + "','" + VacationAccessConstant.VACATIONS_WRITE_DEPARTMENT + "')")
     public VacationDto addVacations(@RequestBody VacationDto request) {
         return vacationService.addVacation(request);
     }
 
     @ApiOperation(value = "Редактировать отпуск")
     @PutMapping(RouterConstants.VACATIONS_ID)
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_EDIT + "','" + VacationAccessConstant.VACATIONS_EDIT_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_WRITE + "','" + VacationAccessConstant.VACATIONS_WRITE_DEPARTMENT + "')")
     public VacationDto updateVacations(@PathVariable(PathVariableConstants.VACATION_ID) @Min(1) long vacationId,
             @RequestBody VacationDto request) {
         return vacationService.updateVacation(vacationId, request);
@@ -60,7 +60,7 @@ public class VacationController {
 
     @ApiOperation(value = "Удалить отпуск")
     @DeleteMapping(RouterConstants.VACATIONS_ID)
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_DELETE + "','" + VacationAccessConstant.VACATIONS_DELETE_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_WRITE + "','" + VacationAccessConstant.VACATIONS_WRITE_DEPARTMENT + "')")
     public void deleteVacations(@PathVariable(PathVariableConstants.VACATION_ID) @Min(1) long vacationId) {
         vacationService.deleteVacation(vacationId);
     }
@@ -72,14 +72,14 @@ public class VacationController {
     }
 
     @ApiOperation(value = "Получить баланс")
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_BALANCE_GET + "','" + VacationAccessConstant.VACATIONS_BALANCE_GET_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_BALANCE_READ + "','" + VacationAccessConstant.VACATIONS_BALANCE_READ_DEPARTMENT + "')")
     @GetMapping(RouterConstants.VACATIONS_BALANCE)
     public VacationBalanceDto getBalance(@ModelAttribute FindBalanceRequest request) {
         return vacationService.getBalance(request);
     }
 
     @ApiOperation(value = "Изменить баланс")
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_BALANCE_EDIT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_BALANCE_WRITE + "')")
     @PutMapping(RouterConstants.VACATIONS_BALANCE)
     public VacationBalanceDto getBalance(@RequestBody VacationBalanceDto balance) {
         return vacationService.updateVacationBalance(balance);
@@ -98,35 +98,35 @@ public class VacationController {
     }
 
     @ApiOperation(value = "Сгенерировать отчет для календаря")
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_GET + "','" + VacationAccessConstant.VACATIONS_GET_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_READ + "','" + VacationAccessConstant.VACATIONS_READ_DEPARTMENT + "')")
     @GetMapping(RouterConstants.VACATIONS_REPORT_CALENDAR_EXPORT)
     public ResponseEntity generateVacationReportCalendar(@ModelAttribute GenerateReportCalendarRequest request, HttpServletResponse response) {
         return generateCalendarReportForVacationService.generateCalendarReportExtort(request, response);
     }
 
     @ApiOperation(value = "Сгенерировать отчет и скачать для календаря")
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_GET + "','" + VacationAccessConstant.VACATIONS_GET_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_READ + "','" + VacationAccessConstant.VACATIONS_READ_DEPARTMENT + "')")
     @GetMapping(RouterConstants.VACATIONS_REPORT_CALENDAR)
     public List<VacationReportCalendarEmployeeDto> generateVacationReportCalendar(@ModelAttribute GenerateReportCalendarRequest request) {
         return vacationService.generateReportCalendar(request);
     }
 
     @ApiOperation(value = "Сгенерировать отчет для распределения")
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_GET + "','" + VacationAccessConstant.VACATIONS_GET_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_READ + "','" + VacationAccessConstant.VACATIONS_READ_DEPARTMENT + "')")
     @GetMapping(RouterConstants.VACATIONS_REPORT_DISTRIBUTE)
     public VacationReportDistributeDto generateVacationReportDistribute(@ModelAttribute GenerateReportDistributeRequest request) {
         return vacationService.generateReportDistribute(request);
     }
 
     @ApiOperation(value = "Сгенерировать отчет для соотношений")
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_GET + "','" + VacationAccessConstant.VACATIONS_GET_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_READ + "','" + VacationAccessConstant.VACATIONS_READ_DEPARTMENT + "')")
     @GetMapping(RouterConstants.VACATIONS_REPORT_TOTAL_COUNT)
     public List<VacationReportPipeDto> generateVacationReportTotalCount(@ModelAttribute GenerateReportTotalCountRequest request) {
         return vacationService.generateReportTotalCount(request);
     }
 
     @ApiOperation(value = "Сгенерировать отчет в эксель")
-    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_GET + "','" + VacationAccessConstant.VACATIONS_GET_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_READ + "','" + VacationAccessConstant.VACATIONS_READ_DEPARTMENT + "')")
     @GetMapping(RouterConstants.VACATIONS_REPORT_EXPORT)
     public ResponseEntity generateVacationReportExport(@ModelAttribute GenerateReportExportRequest request,
                                                        HttpServletResponse response) {

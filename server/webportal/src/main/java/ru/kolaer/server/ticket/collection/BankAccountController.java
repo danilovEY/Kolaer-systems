@@ -4,9 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.kolaer.common.constant.PathVariableConstants;
+import ru.kolaer.common.constant.RouterConstants;
+import ru.kolaer.common.constant.assess.TicketAccessConstant;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.employee.model.request.EmployeeFilter;
@@ -29,45 +31,45 @@ public class BankAccountController {
     private final BankAccountService bankAccountService;
 
     @ApiOperation(value = "Получить все счета")
-    @PreAuthorize("isAuthenticated()") // TODO: add role
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<BankAccountDto> getAll(@RequestParam(value = "page", defaultValue = "0") Integer number,
+    @PreAuthorize("hasRole('" + TicketAccessConstant.BANK_ACCOUNTS_READ + "')")
+    @GetMapping(RouterConstants.BANK)
+    public Page<BankAccountDto> getAll(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                        @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                        BankAccountSort sortParam,
                                        BankAccountFilter filter) {
-        return bankAccountService.getAll(sortParam, filter, number, pageSize);
+        return bankAccountService.getAll(sortParam, filter, pageNum, pageSize);
     }
 
     @ApiOperation(value = "Получить сотрудников которые имеют счета")
-    @PreAuthorize("isAuthenticated()") // TODO: add role
-    @RequestMapping(value = "/employees", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<EmployeeDto> getAllEmployees(@RequestParam(value = "page", defaultValue = "0") Integer number,
+    @PreAuthorize("hasRole('" + TicketAccessConstant.BANK_ACCOUNTS_READ + "')")
+    @GetMapping(RouterConstants.BANK_EMPLOYEE)
+    public Page<EmployeeDto> getAllEmployees(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                              @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                              EmployeeSort sortParam,
                                              EmployeeFilter filter) {
-        return bankAccountService.getAllEntityWithAccount(sortParam, filter, number, pageSize);
+        return bankAccountService.getAllEntityWithAccount(sortParam, filter, pageNum, pageSize);
     }
 
     @ApiOperation(value = "Добавить счет")
-    @PreAuthorize("isAuthenticated()") // TODO: add role
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('" + TicketAccessConstant.BANK_ACCOUNTS_READ + "')")
+    @PostMapping(RouterConstants.BANK)
     public BankAccountDto addBankAccount(@RequestBody BankAccountRequest bankAccountRequest) {
         return bankAccountService.add(bankAccountRequest);
     }
 
     @ApiOperation(value = "Обновит счет")
-    @PreAuthorize("isAuthenticated()") // TODO: add role
-    @RequestMapping(value = "/{bankId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void deleteBankAccount(@PathVariable("bankId") Long bankId,
+    @PreAuthorize("hasRole('" + TicketAccessConstant.BANK_ACCOUNTS_READ + "')")
+    @PutMapping(RouterConstants.BANK_ID)
+    public void deleteBankAccount(@PathVariable(PathVariableConstants.BANK_ACCOUNT_ID) Long bankAccountId,
                                   @RequestBody BankAccountRequest bankAccountRequest) {
-        bankAccountService.update(bankId, bankAccountRequest);
+        bankAccountService.update(bankAccountId, bankAccountRequest);
     }
 
     @ApiOperation(value = "Удалить счет")
-    @PreAuthorize("isAuthenticated()") // TODO: add role
-    @RequestMapping(value = "/{bankId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void deleteBankAccount(@PathVariable("bankId") Long bankId) {
-        bankAccountService.delete(bankId);
+    @PreAuthorize("hasRole('" + TicketAccessConstant.BANK_ACCOUNTS_READ + "')")
+    @DeleteMapping(RouterConstants.BANK_ID)
+    public void deleteBankAccount(@PathVariable(PathVariableConstants.BANK_ACCOUNT_ID) Long bankAccountId) {
+        bankAccountService.delete(bankAccountId);
     }
 
 }

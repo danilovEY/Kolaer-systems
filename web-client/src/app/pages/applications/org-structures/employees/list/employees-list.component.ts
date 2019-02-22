@@ -21,6 +21,7 @@ import {CustomActionModel} from "../../../../../@theme/components/table/custom-a
 import {Router} from "@angular/router";
 import {RouterClientConstant} from "../../../../../@core/constants/router-client.constant";
 import {PathVariableConstant} from "../../../../../@core/constants/path-variable.constant";
+import {RoleConstant} from "../../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'employees-list',
@@ -55,7 +56,7 @@ export class EmployeesListComponent implements OnInit {
             .subscribe(account => {
                 this.currentAccount = account;
 
-                if (!this.currentAccount.accessOk) {
+                if (!this.currentAccount.access.includes(RoleConstant.EMPLOYEES_READ)) {
                     this.employeeService.getCurrentEmployee()
                         .subscribe(employee => {
                             this.employeesSource = new EmployeesListDataSource(this.employeeService, employee.department.id);
@@ -244,5 +245,9 @@ export class EmployeesListComponent implements OnInit {
 
             this.router.navigate([url]);
         }
+    }
+
+    canWriteEmployees(): boolean {
+        return this.currentAccount.access.includes(RoleConstant.EMPLOYEES_WRITE);
     }
 }

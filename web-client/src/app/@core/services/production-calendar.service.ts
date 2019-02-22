@@ -39,10 +39,10 @@ export class ProductionCalendarService extends BaseService {
     }
 
     getAllHoliday(sort?: HolidaySortModel, filter?: HolidayFilterModel,
-                  page: number = 1, pageSize: number = 15): Observable<Page<HolidayModel>> {
+                  pageNum: number = 1, pageSize: number = 15): Observable<Page<HolidayModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString()).append('pagesize', pageSize.toString());
+        params = params.append('pageNum', pageNum.toString()).append('pagesize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 
         return this.http.get<Page<HolidayModel>>(this.utlNotSecurityHolidays, {params})

@@ -9,6 +9,6 @@ public interface ChatAccessConstant extends CommonAccessConstant {
     /**
      * Получить все комнаты
      */
-    String CHAT_ROOMS_GET = PREFIX + "CHAT_ROOMS_GET";
+    String CHAT_ROOMS_READ = PREFIX + "CHAT_ROOMS_READ";
 
 }

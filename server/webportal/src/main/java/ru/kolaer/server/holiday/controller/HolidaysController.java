@@ -32,11 +32,11 @@ public class HolidaysController {
 
     @ApiOperation(value = "Получить все праздники")
     @RequestMapping(value = "/non-security/holidays", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<HolidayDto> getAll(@RequestParam(value = "page", defaultValue = "0") Integer number,
+    public Page<HolidayDto> getAll(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                    @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                    HolidaySort sortParam,
                                    HolidayFilter filter) {
-        return this.holidayService.getAll(sortParam, filter, number, pageSize);
+        return this.holidayService.getAll(sortParam, filter, pageNum, pageSize);
     }
 
     @ApiOperation(value = "Добавить праздник")

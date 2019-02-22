@@ -10,6 +10,7 @@ import {DepartmentModel} from '../../../../@core/models/department.model';
 import {DepartmentRequestModel} from '../../../../@core/models/department-request.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
+import {RoleConstant} from "../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'departments',
@@ -84,5 +85,9 @@ export class DepartmentsComponent implements OnInit {
                 .subscribe(response => event.confirm.resolve({}),
                     error2 => event.confirm.reject({}));
         }
+    }
+
+    canWriteDepartment(): boolean {
+        return this.currentAccount.access.includes(RoleConstant.DEPARTMENTS_WRITE);
     }
 }

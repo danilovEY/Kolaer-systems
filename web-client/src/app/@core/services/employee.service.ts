@@ -84,10 +84,10 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
     }
 
     getAllEmployees(sort?: EmployeeSortModel, filter?: EmployeeFilterModel,
-                    page: number = 1, pageSize: number = 15): Observable<Page<EmployeeModel>> {
+                    pageNum: number = 1, pageSize: number = 15): Observable<Page<EmployeeModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString()).append('pagesize', pageSize.toString());
+        params = params.append('pageNum', pageNum.toString()).append('pageSize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 
         return this._httpClient.get<Page<EmployeeModel>>(RouterServiceConstant.EMPLOYEES_ALL_URL, {params: params})
@@ -97,9 +97,9 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
     findAllEmployees(findRequest: FindEmployeeRequestModel): Observable<Page<EmployeeModel>> {
         let params = new HttpParams();
 
-        params = params.append('number', String(findRequest.number))
+        params = params.append('pageNum', String(findRequest.pageNum))
             .append('query', findRequest.query)
-            .append('pagesize', String(findRequest.pageSize))
+            .append('pageSize', String(findRequest.pageSize))
             .append('onOnePage', String(findRequest.onOnePage))
             .append('departmentIds', findRequest.departmentIds.toString());
 

@@ -8,6 +8,7 @@ import {SimpleAccountModel} from '../../../../../@core/models/simple-account.mod
 import {ReportFilterModel} from '../../model/report-filter.model';
 import {GenerateReportExportRequestModel} from '../../model/generate-report-export-request.model';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
+import {RoleConstant} from "../../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'vacation-export',
@@ -42,7 +43,7 @@ export class VacationExportComponent implements OnInit {
             .subscribe(account => {
                 this.currentAccount = account;
 
-                if (!account.accessVacationAdmin) {
+                if (!account.access.includes(RoleConstant.VACATIONS_READ)) {
                     this.employeeService.getCurrentEmployee()
                         .subscribe(employee => this.filterModel.selectedDepartments = [employee.department]);
                 }
@@ -91,6 +92,9 @@ export class VacationExportComponent implements OnInit {
                     this.toasterService.popAsync(toast);
                 }
             });
+    }
 
+    canReadAllVacations(): boolean {
+        return this.currentAccount.access.includes(RoleConstant.VACATIONS_READ);
     }
 }

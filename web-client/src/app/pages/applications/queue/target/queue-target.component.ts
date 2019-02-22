@@ -56,11 +56,11 @@ export class QueueTargetComponent {
         this.accountService.getCurrentAccount()
             .subscribe(account => {
                 QueueTargetComponent.currentAccount = account;
-                if (account.accessOit) {
-                    this.isAdd = true;
-
-                    this.customTable.table.initGrid();
-                }
+                // if (account.accessOit) { TODO: add role
+                //     this.isAdd = true;
+                //
+                //     this.customTable.table.initGrid();
+                // }
             });
 
         const nameColumn: Column = new Column('name', {
@@ -94,7 +94,8 @@ export class QueueTargetComponent {
         if (event.action.name === SmartTableService.EDIT_ACTION_NAME ||
             event.action.name === SmartTableService.DELETE_ACTION_NAME) {
 
-            return QueueTargetComponent.currentAccount ? QueueTargetComponent.currentAccount.accessOit : false;
+            // return QueueTargetComponent.currentAccount ? QueueTargetComponent.currentAccount.accessOit : false; TODO: add role
+            return false;
         }
 
         return true;

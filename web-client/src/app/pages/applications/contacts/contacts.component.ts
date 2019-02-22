@@ -123,9 +123,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
             .subscribe((account: SimpleAccountModel) => {
                 ContactsComponent.currentAccount = account;
 
-                if (account && (account.accessOit || account.accessOk)) {
-                    this.contactsTable.table.initGrid();
-                }
+                // if (account && (account.accessOit || account.accessOk)) { TODO add role
+                //     this.contactsTable.table.initGrid();
+                // }
             });
 
         this.initColumns();
@@ -255,9 +255,11 @@ export class ContactsComponent implements OnInit, OnDestroy {
         }
 
         if (event.action.name === SmartTableService.EDIT_ACTION_NAME) {
-            return ContactsComponent.currentAccount
-                ? ContactsComponent.currentAccount.accessOit || ContactsComponent.currentAccount.accessOk
-                : false;
+            // return ContactsComponent.currentAccount TODO add role
+            //     ? ContactsComponent.currentAccount.accessOit || ContactsComponent.currentAccount.accessOk
+            //     : false;
+
+            return false;
         }
 
         return true;

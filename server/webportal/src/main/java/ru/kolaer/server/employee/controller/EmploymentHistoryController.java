@@ -26,7 +26,7 @@ public class EmploymentHistoryController {
     }
 
     @GetMapping(RouterConstants.EMPLOYEES_ID_EMPLOYMENT_HISTORIES)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_EMPLOYMENT_HISTORIES_GET + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_EMPLOYMENT_HISTORIES_READ + "')")
     public List<EmploymentHistoryDto> getEmploymentHistoriesByEmployeeId(
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId
     ) {

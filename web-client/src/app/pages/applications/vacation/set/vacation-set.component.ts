@@ -32,6 +32,7 @@ import {VacationBalanceModel} from '../model/vacation-balance.model';
 import {tap} from 'rxjs/internal/operators';
 import {SmartTableService} from '../../../../@core/services/smart-table.service';
 import {FormControl, FormGroup} from '@angular/forms';
+import {RoleConstant} from "../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'vacation-set',
@@ -95,7 +96,7 @@ export class VacationSetComponent implements OnInit {
         });
 
         this.vacationPeriodService.selectedPeriodEvent.subscribe(period => {
-            if (this.currentAccount.accessVacationAdmin || this.currentAccount.accessOit || !this.isClosed(this.selectedPeriod)) {
+            if (this.currentAccount.access.includes(RoleConstant.VACATIONS_WRITE) || !this.isClosed(this.selectedPeriod)) {
                 this.smartTableService.addEditAction();
                 this.smartTableService.addDeleteAction();
             } else {
@@ -113,7 +114,7 @@ export class VacationSetComponent implements OnInit {
             .subscribe(account => {
                 this.currentAccount = account;
 
-                if (account.accessVacationAdmin) {
+                if (this.currentAccount.access.includes(RoleConstant.VACATIONS_WRITE)) {
                     this.formBalance.controls['prevYearBalance'].enable();
                     this.formBalance.controls['currentYearBalance'].enable();
                     this.formBalance.controls['nextYearBalance'].enable();
@@ -123,7 +124,7 @@ export class VacationSetComponent implements OnInit {
 
                     this.departmentService.getAllDepartments(sort, new DepartmentFilterModel(), 1, 1000)
                         .subscribe(depPage => this.departments = depPage.data);
-                } else if (account.accessVacationDepEdit) {
+                } else if (this.currentAccount.access.includes(RoleConstant.VACATIONS_WRITE_DEPARTMENT)) {
                     this.employeeService.getCurrentEmployee()
                         .subscribe(employee => {
                             this.selectedDepartment = employee.department;

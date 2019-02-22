@@ -33,18 +33,18 @@ public class QueueController {
     @ApiOperation(value = "Получить все цели")
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<QueueTargetDto> getAllTarget(@RequestParam(value = "page", defaultValue = "1") Integer number,
+    public Page<QueueTargetDto> getAllTarget(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                              @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-        return queueService.getAll(number, pageSize);
+        return queueService.getAll(pageNum, pageSize);
     }
 
     @ApiOperation(value = "Получить все очереди у цели")
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/{id}/request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<QueueRequestDto> getAllRequest(@PathVariable("id") Long id,
-                                               @RequestParam(value = "page", defaultValue = "1") Integer number,
+                                               @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-        return queueService.getAllQueueRequestByTarget(id, number, pageSize);
+        return queueService.getAllQueueRequestByTarget(id, pageNum, pageSize);
     }
 
     @ApiOperation(value = "Получить рассписание")

@@ -188,7 +188,7 @@ public class EmployeeServiceImpl
         long count = defaultEntityDao.findAllEmployeeCount(request);
         List<EmployeeDto> employees = defaultConverter.convertToDto(defaultEntityDao.findAllEmployee(request));
 
-        return new Page<>(employees, request.getNumber(), count, request.getPageSize());
+        return new Page<>(employees, request.getPageNum(), count, request.getPageSize());
     }
 
     @Override

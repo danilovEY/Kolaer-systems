@@ -29,7 +29,7 @@ public class AchievementController {
     }
 
     @GetMapping(RouterConstants.EMPLOYEES_ID_ACHIEVEMENTS)
-    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_ACHIEVEMENTS_GET + "')")
+    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_ACHIEVEMENTS_READ + "')")
     @ApiOperation("Получить достижения сотрудника")
     public List<AchievementDto> findAchievementByEmployeeId(
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId

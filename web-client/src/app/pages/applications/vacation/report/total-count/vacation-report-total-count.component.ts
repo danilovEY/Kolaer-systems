@@ -11,6 +11,7 @@ import {VacationReportPipeModel} from '../../model/vacation-report-pipe.model';
 import {GenerateReportTotalCountRequestModel} from '../../model/generate-report-total-count-request.model';
 import * as html2canvas from 'html2canvas';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
+import {RoleConstant} from "../../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'vacation-report-total-count',
@@ -63,7 +64,7 @@ export class VacationReportTotalCountComponent implements OnInit, OnDestroy {
             .subscribe(account => {
                 this.currentAccount = account;
 
-                if (!account.accessVacationAdmin) {
+                if (!account.access.includes(RoleConstant.VACATIONS_READ)) {
                     this.employeeService.getCurrentEmployee()
                         .subscribe(employee => this.filterModel.selectedDepartments = [employee.department]);
                 }
@@ -125,4 +126,7 @@ export class VacationReportTotalCountComponent implements OnInit, OnDestroy {
         this.themeSubscription.unsubscribe();
     }
 
+    canReadAllVacations(): boolean {
+        return this.currentAccount.access.includes(RoleConstant.VACATIONS_READ);
+    }
 }

@@ -5,7 +5,7 @@
         <report-filter [multiSelectDepartment]="false"
                        [(filterModel)]="filterModel"
                        [selectAllDepartments]="false"
-                       [selectDepartments]="currentAccount && currentAccount.accessVacationAdmin"
+                       [selectDepartments]="currentAccount && canReadAllVacations()"
                        (onChangeFilter)="changeFilter($event)"
                        actionTitle="Поиск"
                        (onAcceptFilter)="generateReportCalendar($event)">

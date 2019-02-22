@@ -18,10 +18,10 @@ export class QueueService extends BaseService {
         super();
     }
 
-    getAllQueueTargets(page: number = 1, pageSize: number = 15): Observable<Page<QueueTargetModel>> {
+    getAllQueueTargets(pageNum: number = 1, pageSize: number = 15): Observable<Page<QueueTargetModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
+        params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
 
         return this.http.get<Page<QueueTargetModel>>(this.queueTargetsUrl, {params: params});
@@ -49,10 +49,10 @@ export class QueueService extends BaseService {
         return this.http.delete<Object>(url);
     }
 
-    getAllQueueRequest(targetId: number, page: number = 1, pageSize: number = 15): Observable<Page<QueueRequestModel>> {
+    getAllQueueRequest(targetId: number, pageNum: number = 1, pageSize: number = 15): Observable<Page<QueueRequestModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
+        params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
 
         const url: string = `${this.queueTargetsUrl}/${targetId}/request`;

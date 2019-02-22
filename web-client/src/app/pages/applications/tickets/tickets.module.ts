@@ -8,6 +8,7 @@ import {BankAccountsComponent} from './bank-accounts/bank-accounts.component';
 import {BankAccountService} from './bank-accounts/bank-account.service';
 import {RegisterDetailedComponent} from './register-detailed/register-detailed.component';
 import {EmployeeWithAccountEditComponent} from './register-detailed/employee-with-account-edit.component';
+import {BankAccountGuardService} from "./bank-account-guard.service";
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import {EmployeeWithAccountEditComponent} from './register-detailed/employee-wit
     providers: [
         TicketsService,
         BankAccountService,
+        BankAccountGuardService
     ],
     entryComponents: [
         EmployeeWithAccountEditComponent

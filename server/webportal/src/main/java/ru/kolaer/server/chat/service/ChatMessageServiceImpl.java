@@ -48,12 +48,12 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
 
         ChatRoomEntity chatRoomEntity = chatRoomDao.findById(roomId);
 
-        if(chatRoomEntity != null && (accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_ROOMS_GET) ||
+        if(chatRoomEntity != null && (accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_ROOMS_READ) ||
                 chatRoomEntity.getType() == ChatGroupType.MAIN ||
                 chatRoomEntity.getType() == ChatGroupType.PUBLIC ||
                 chatRoomEntity.getUserCreatedId().equals(accountByAuthentication.getId()) ||
                 chatRoomEntity.getAccountIds().contains(accountByAuthentication.getId()))) {
-            return checkReads(defaultConverter.convertToDto(defaultEntityDao.findAllByRoom(roomId, accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_ROOMS_GET))),
+            return checkReads(defaultConverter.convertToDto(defaultEntityDao.findAllByRoom(roomId, accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_ROOMS_READ))),
                     accountByAuthentication.getId());
         }
 
@@ -70,7 +70,7 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
         AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
         ChatRoomEntity chatRoomEntity = chatRoomDao.findById(room);
 
-        if(chatRoomEntity != null && (accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_ROOMS_GET) ||
+        if(chatRoomEntity != null && (accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_ROOMS_READ) ||
                 chatRoomEntity.getType() == ChatGroupType.MAIN ||
                 chatRoomEntity.getType() == ChatGroupType.PUBLIC ||
                 chatRoomEntity.getUserCreatedId().equals(accountByAuthentication.getId()) ||
@@ -83,9 +83,9 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
                 count = (long) results.size();
                 pageSize = count.intValue();
             } else {
-                count = defaultEntityDao.findCountByRoom(room, accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_ROOMS_GET));
+                count = defaultEntityDao.findCountByRoom(room, accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_ROOMS_READ));
                 results = defaultConverter.convertToDto(defaultEntityDao
-                        .findAllByRoom(room, accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_ROOMS_GET), number, pageSize));
+                        .findAllByRoom(room, accountByAuthentication.hasAccess(ChatAccessConstant.CHAT_ROOMS_READ), number, pageSize));
             }
 
             results = checkReads(results, accountByAuthentication.getId());

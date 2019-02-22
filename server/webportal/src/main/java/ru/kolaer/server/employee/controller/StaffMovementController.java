@@ -27,7 +27,7 @@ public class StaffMovementController {
     }
 
     @GetMapping(RouterConstants.EMPLOYEES_ID_STAFF_MOVEMENTS)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_STAFF_MOVEMENTS_GET + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_STAFF_MOVEMENTS_READ + "')")
     public List<StaffMovementDto> findStaffMovementByEmployeeId(
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId
     ) {

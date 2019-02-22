@@ -26,7 +26,7 @@ public class PersonalDocumentController {
     }
 
     @GetMapping(RouterConstants.EMPLOYEES_ID_PERSONAL_DOCUMENTS)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_PERSONAL_DOCUMENT_GET_GET + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_PERSONAL_DOCUMENT_READ + "')")
     public List<PersonalDocumentDto> findPersonalDocumentByEmployeeId(
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId
     ) {

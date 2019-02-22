@@ -48,7 +48,7 @@ public class TypeWorkServiceImpl
         Long allCount = defaultEntityDao.findCountAll(request);
         List<TypeWorkDto> all = defaultConverter.convertToDto(defaultEntityDao.findAll(request));
 
-        return new Page<>(all, request.getNumber(), allCount, request.getPageSize());
+        return new Page<>(all, request.getPageNum(), allCount, request.getPageSize());
 
     }
 }

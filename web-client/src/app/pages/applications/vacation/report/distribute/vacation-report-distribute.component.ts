@@ -12,6 +12,7 @@ import {SimpleAccountModel} from '../../../../../@core/models/simple-account.mod
 import * as shape from 'd3-shape';
 import * as html2canvas from 'html2canvas';
 import {Utils} from '../../../../../@core/utils/utils';
+import {RoleConstant} from "../../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'vacation-report-distribute',
@@ -60,7 +61,7 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
             .subscribe(account => {
                 this.currentAccount = account;
 
-                if (!account.accessVacationAdmin) {
+                if (!account.access.includes(RoleConstant.VACATIONS_READ)) {
                     this.employeeService.getCurrentEmployee()
                         .subscribe(employee => this.filterModel.selectedDepartments = [employee.department]);
                 }
@@ -139,5 +140,9 @@ export class VacationReportDistributeComponent implements OnInit, OnDestroy {
 
     private convertToString(objects: any[], map: Function) {
         return objects.length > 0 ? ' | ' + objects.map(obj => map(obj)).join(', ') : '';
+    }
+
+    canReadAllVacations(): boolean {
+        return this.currentAccount.access.includes(RoleConstant.VACATIONS_READ);
     }
 }

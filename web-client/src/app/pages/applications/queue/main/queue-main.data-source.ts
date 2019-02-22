@@ -13,7 +13,7 @@ export class QueueMainDataSource extends CustomDataSource<QueueScheduleModel> {
     loadElements(page: number, pageSize: number): Promise<QueueScheduleModel[]> {
         const filter: QueueTargetFilterPageModel = new QueueTargetFilterPageModel();
         filter.pageSize = pageSize;
-        filter.number = page;
+        filter.pageNum = page;
 
         return this.queueService.getSchedulers(filter)
             .toPromise()

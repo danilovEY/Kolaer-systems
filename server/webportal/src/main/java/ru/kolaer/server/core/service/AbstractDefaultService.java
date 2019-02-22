@@ -133,7 +133,7 @@ public abstract class AbstractDefaultService<T extends BaseDto,
     @Override
     @Transactional(readOnly = true)
     public Page<T> getAll(PaginationRequest request) {
-        return this.getAll(null, null, request.getNumber(), request.getPageSize());
+        return this.getAll(null, null, request.getPageNum(), request.getPageSize());
     }
 
     @Override

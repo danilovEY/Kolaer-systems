@@ -7,10 +7,5 @@ export class AccountModel extends BaseModel {
 	email: string;
     avatarUrl: string;
 	employee: EmployeeModel;
-	accessOit: boolean;
-	accessUser: boolean;
-	accessOk: boolean;
-	accessVacationAdmin: boolean;
-	accessVacationDepEdit: boolean;
-    accessTypeWork: boolean;
+    access: string[];
 }

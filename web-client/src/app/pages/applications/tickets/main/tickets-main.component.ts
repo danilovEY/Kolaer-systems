@@ -22,6 +22,7 @@ import {Utils} from '../../../../@core/utils/utils';
 import {ServerExceptionModel} from '../../../../@core/models/server-exception.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {finalize} from 'rxjs/internal/operators';
+import {RoleConstant} from "../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'main-tickets',
@@ -128,7 +129,7 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
             .subscribe((account: SimpleAccountModel) => {
                 TicketsMainComponent.currentAccount = account;
 
-                if (account && account.accessOit) {
+                if (account && account.access.includes(RoleConstant.TICKET_REGISTER_REPORT)) {
                     const generateAndDownloadAction: CustomActionModel = new CustomActionModel();
                     generateAndDownloadAction.name = TicketsMainComponent.generateAndDownloadActionName;
                     generateAndDownloadAction.content = '<i class="fa fa-download"></i>';
@@ -219,7 +220,8 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
 
     actionBeforeValueView(event: CustomActionEventModel<TicketRegisterModel>): boolean {
         if (event.action.name === TicketsMainComponent.generateAndSendActionName) {
-            return (TicketsMainComponent.currentAccount && TicketsMainComponent.currentAccount.accessOit ||
+            return (TicketsMainComponent.currentAccount &&
+                TicketsMainComponent.currentAccount.access.includes(RoleConstant.TICKET_REGISTER_REPORT) ||
                 TicketsMainComponent.currentAccount && event.data.accountId &&
                 event.data.accountId === TicketsMainComponent.currentAccount.id && !event.data.close)
         }
@@ -323,5 +325,9 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
         for (let index = elements.length - 1; index >= 0; index--) {
             this.renderer.setStyle(elements[index], 'display', 'none');
         }
+    }
+
+    canWriteTicketRegister(): boolean {
+        return TicketsMainComponent.currentAccount.access.includes(RoleConstant.TICKET_REGISTER_WRITE);
     }
 }

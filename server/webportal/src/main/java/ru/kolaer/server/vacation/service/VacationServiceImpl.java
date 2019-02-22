@@ -90,7 +90,7 @@ public class VacationServiceImpl implements VacationService {
                 : vacationDao.findAllVacation(request);
 
         return new Page<>(vacationConverter.convertToDto(allVacation),
-                request.getNumber(),
+                request.getPageNum(),
                 countVacation,
                 request.getPageSize());
     }
@@ -102,7 +102,7 @@ public class VacationServiceImpl implements VacationService {
         List<VacationPeriodEntity> allPeriods = vacationDao.findAllPeriods(request);
 
         return new Page<>(vacationConverter.convertToDtos(allPeriods),
-                request.getNumber(),
+                request.getPageNum(),
                 countPeriods,
                 request.getPageSize());
     }

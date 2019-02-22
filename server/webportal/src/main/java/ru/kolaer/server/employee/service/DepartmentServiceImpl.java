@@ -83,6 +83,6 @@ public class DepartmentServiceImpl
         long count = defaultEntityDao.findCount(request);
         List<DepartmentDto> departments = defaultConverter.convertToDto(defaultEntityDao.find(request));
 
-        return new Page<>(departments, request.getNumber(), count, request.getPageSize());
+        return new Page<>(departments, request.getPageNum(), count, request.getPageSize());
     }
 }

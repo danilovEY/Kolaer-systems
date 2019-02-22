@@ -12,7 +12,7 @@ export class TypeWorkDataSource extends CustomDataSource<TypeWorkModel> {
 
     loadElements(page: number, pageSize: number): Promise<TypeWorkModel[]> {
         const request: FindTypeWorkRequest = new FindTypeWorkRequest();
-        request.number = page;
+        request.pageNum = page;
         request.pageSize = pageSize;
 
         return this.typeWorkService.getAll(request)

@@ -6,6 +6,7 @@ import {HistoryChangeEventEnum} from '../../../../@core/models/history-change-ev
 import {ServerExceptionModel} from '../../../../@core/models/server-exception.model';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {AccountService} from '../../../../@core/services/account.service';
+import {RoleConstant} from "../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'org-structures-sync',
@@ -96,5 +97,9 @@ export class OrgStructuresSyncComponent implements OnInit {
     sendReportForOldDb(): void {
         this.employeeService.sendReportForOldDb()
             .subscribe(event => {})
+    }
+
+    canSendReportForOld(): boolean {
+        return this.currentAccount.access.includes(RoleConstant.EMPLOYEES_REPORT_OLD);
     }
 }

@@ -32,11 +32,11 @@ public class DepartmentController {
 
     @ApiOperation(value = "Получить все подразделения")
     @GetMapping(RouterConstants.DEPARTMENTS)
-    public Page<DepartmentDto> getAllDepartment(@RequestParam(value = "page", defaultValue = "0") Integer number,
+    public Page<DepartmentDto> getAllDepartment(@RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
                                                 @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                                 DepartmentSort sortParam,
                                                 DepartmentFilter filter) {
-        return departmentService.getAll(sortParam, filter, number, pageSize);
+        return departmentService.getAll(sortParam, filter, pageNum, pageSize);
     }
 
     @ApiOperation(value = "Найти подразделения")
@@ -47,14 +47,14 @@ public class DepartmentController {
 
     @ApiOperation(value = "Добавить подразделение")
     @PostMapping(RouterConstants.DEPARTMENTS)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.DEPARTMENTS_ADD + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.DEPARTMENTS_WRITE + "')")
     public DepartmentDto addDepartment(@RequestBody DepartmentRequestDto departmentRequestDto) {
         return departmentService.add(departmentRequestDto);
     }
 
     @ApiOperation(value = "Обновит подразделение")
     @PutMapping(RouterConstants.DEPARTMENTS_ID)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.DEPARTMENTS_EDIT + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.DEPARTMENTS_WRITE + "')")
     public DepartmentDto updateDepartment(@PathVariable(PathVariableConstants.DEPARTMENT_ID) Long depId,
             @RequestBody DepartmentRequestDto departmentRequestDto) {
         return departmentService.update(depId, departmentRequestDto);
@@ -62,7 +62,7 @@ public class DepartmentController {
 
     @ApiOperation(value = "Удалить подразделение")
     @DeleteMapping(RouterConstants.DEPARTMENTS_ID)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.DEPARTMENTS_DELETE + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.DEPARTMENTS_WRITE + "')")
     public void deleteDepartment(@PathVariable(PathVariableConstants.DEPARTMENT_ID) Long depId) {
         departmentService.delete(depId, true);
     }

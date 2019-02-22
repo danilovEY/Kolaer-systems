@@ -33,10 +33,10 @@ public class ContactController {
 
     @ApiOperation(value = "Поиск по контактам")
     @GetMapping(RouterConstants.CONTACTS)
-    public Page<ContactDto> searchContacts(@RequestParam(value = "page", defaultValue = "1") Integer number,
+    public Page<ContactDto> searchContacts(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
             @RequestParam(value = "search") String search) {
-        return contactService.searchContacts(number, pageSize, search);
+        return contactService.searchContacts(pageNum, pageSize, search);
     }
 
     @ApiOperation(value = "Получить список подразделений")
@@ -55,7 +55,7 @@ public class ContactController {
     }
 
     @ApiOperation(value = "Обновить контакты")
-    @PreAuthorize("hasRole('" + ContactAccessConstant.CONTACTS_EDIT + "')")
+    @PreAuthorize("hasRole('" + ContactAccessConstant.CONTACTS_WRITE + "')")
     @PutMapping(RouterConstants.CONTACTS_EMPLOYEES_ID)
     public ContactDto updateContact(@PathVariable(PathVariableConstants.EMPLOYEE_ID) long employeeId,
                                     @RequestBody ContactRequestDto contactRequestDto) {

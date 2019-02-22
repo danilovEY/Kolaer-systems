@@ -10,8 +10,7 @@ export class RouterServiceConstant {
     public static readonly EMPLOYEES_ID_TYPE_WORK_URL: string =
         RouterServiceConstant.EMPLOYEES_ID_URL + `/type-work`;
 
-    public static readonly EMPLOYEES_ALL_URL: string = `${RouterServiceConstant.EMPLOYEES_URL}/get/all`;
-    public static readonly EMPLOYEES_ALL_BY_DEP_ID: string = `${RouterServiceConstant.EMPLOYEES_URL}/get/all/by/dep`;
+    public static readonly EMPLOYEES_ALL_URL: string = `${RouterServiceConstant.EMPLOYEES_URL}`;
     public static readonly EMPLOYEES_SYNC: string = `${RouterServiceConstant.EMPLOYEES_URL}/sync`;
     public static readonly EMPLOYEES_OLD_REPORT: string = `${RouterServiceConstant.EMPLOYEES_URL}/old/report`;
     public static readonly EMPLOYEES_ALL_BIRTHDAY: string = `${RouterServiceConstant.EMPLOYEES_URL}/get/birthday/today`;

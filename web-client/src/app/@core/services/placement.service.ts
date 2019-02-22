@@ -18,10 +18,10 @@ export class PlacementService extends BaseService {
     }
 
     getAllPlacements(sort: PlacementSortModel, filter: PlacementFilterModel,
-                     page: number = 1, pageSize: number = 15): Observable<Page<PlacementModel>> {
+                     pageNum: number = 1, pageSize: number = 15): Observable<Page<PlacementModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString()).append('pagesize', pageSize.toString());
+        params = params.append('pageNum', pageNum.toString()).append('pagesize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 
         return this._httpClient.get<Page<PlacementModel>>(this.getPlacementUrl, {params: params});

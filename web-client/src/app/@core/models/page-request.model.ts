@@ -1,4 +1,4 @@
 export class PageRequestModel {
-    public number: number = 1;
+    public pageNum: number = 1;
     public pageSize: number = 15;
 }

@@ -5,7 +5,7 @@
         <report-filter [pipeCharts]="false"
                        [(filterModel)]="filterModel"
                        [selectAllDepartments]="false"
-                       [selectDepartments]="currentAccount && currentAccount.accessVacationAdmin"
+                       [selectDepartments]="currentAccount && canReadAllVacations()"
                        actionTitle="Скачать"
                        [multiSelectDepartment]="true"
                        (onChangeFilter)="changeFilter($event)"

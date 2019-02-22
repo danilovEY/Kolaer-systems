@@ -76,6 +76,6 @@ public class PostServiceImpl
         long count = defaultEntityDao.findCount(request);
         List<PostDto> posts = defaultConverter.convertToDto(defaultEntityDao.find(request));
 
-        return new Page<>(posts, request.getNumber(), count, request.getPageSize());
+        return new Page<>(posts, request.getPageNum(), count, request.getPageSize());
     }
 }

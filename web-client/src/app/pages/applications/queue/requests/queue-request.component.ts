@@ -167,7 +167,7 @@ export class QueueRequestComponent implements OnInit, OnDestroy {
             event.action.name === SmartTableService.DELETE_ACTION_NAME) {
 
             return QueueRequestComponent.currentAccount ?
-                event.data.account.id === QueueRequestComponent.currentAccount.id || QueueRequestComponent.currentAccount.accessOit
+                event.data.account.id === QueueRequestComponent.currentAccount.id
                 : false;
         }
 

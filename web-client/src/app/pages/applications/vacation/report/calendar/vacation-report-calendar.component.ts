@@ -10,6 +10,7 @@ import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
 import {VacationReportCalendarDayModel} from '../../model/vacation-report-calendar-day.model';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
+import {RoleConstant} from "../../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'vacation-report',
@@ -55,7 +56,7 @@ export class VacationReportCalendarComponent implements OnInit {
             .subscribe(account => {
                 this.currentAccount = account;
 
-                if (!account.accessVacationAdmin) {
+                if (!account.access.includes(RoleConstant.VACATIONS_READ)) {
                     this.employeeService.getCurrentEmployee()
                         .subscribe(employee => this.filterModel.selectedDepartments = [employee.department]);
                 }
@@ -198,5 +199,9 @@ export class VacationReportCalendarComponent implements OnInit {
         }
 
         return '';
+    }
+
+    canReadAllVacations(): boolean {
+        return this.currentAccount.access.includes(RoleConstant.VACATIONS_READ);
     }
 }

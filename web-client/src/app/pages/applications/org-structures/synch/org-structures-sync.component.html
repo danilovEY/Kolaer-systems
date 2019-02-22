@@ -3,7 +3,7 @@
         <nb-card>
             <nb-card-header>
                 <span>Синхронизация сотрудников КолАЭР</span>
-                <button *ngIf="this.currentAccount && this.currentAccount.accessOit"
+                <button *ngIf="this.currentAccount && canSendReportForOld()"
                         class="btn btn-primary" type="button"
                         (click)="sendReportForOldDb()">
                     Отправить выгрузку для старой базы

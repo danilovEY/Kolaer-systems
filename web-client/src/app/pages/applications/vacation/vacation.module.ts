@@ -17,6 +17,7 @@ import {MultiSelectModule} from 'primeng/primeng';
 import {VacationExportComponent} from './report/export/vacation-export.component';
 import {VacationReportTotalCountComponent} from './report/total-count/vacation-report-total-count.component';
 import {ReportFilterDescriptionComponent} from './component/report-filter-description/report-filter-description.component';
+import {VacationGuardService} from "./vacation-guard.service";
 
 @NgModule({
     imports: [
@@ -46,7 +47,8 @@ import {ReportFilterDescriptionComponent} from './component/report-filter-descri
     ],
     providers: [
         VacationService,
-        VacationPeriodService
+        VacationPeriodService,
+        VacationGuardService
     ]
 })
 export class VacationModule {

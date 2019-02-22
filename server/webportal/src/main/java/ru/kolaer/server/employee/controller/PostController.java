@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.kolaer.common.constant.assess.EmployeeAccessConstant;
 import ru.kolaer.common.dto.Page;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.employee.model.dto.PostRequestDto;
@@ -30,11 +31,11 @@ public class PostController {
 
     @ApiOperation(value = "Получить все должности")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<PostDto> getAllDepartment(@RequestParam(value = "page", defaultValue = "0") Integer number,
+    public Page<PostDto> getAllDepartment(@RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
                                           @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                           PostSort sortParam,
                                           PostFilter filter) {
-        return this.postService.getAll(sortParam, filter, number, pageSize);
+        return this.postService.getAll(sortParam, filter, pageNum, pageSize);
     }
 
     @ApiOperation(value = "Найти должности")
@@ -44,14 +45,14 @@ public class PostController {
     }
 
     @ApiOperation(value = "Добавить должность")
-    @PreAuthorize("isAuthenticated()") // TODO: add role
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.POSTS_WRITE + "')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PostDto addPost(@RequestBody PostRequestDto postRequestDto) {
         return postService.add(postRequestDto);
     }
 
     @ApiOperation(value = "Обновит должность")
-    @PreAuthorize("isAuthenticated()") // TODO: add role
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.POSTS_WRITE + "')")
     @RequestMapping(value = "/{postId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PostDto updatePost(@PathVariable("postId") Long postId,
                                            @RequestBody PostRequestDto postRequestDto) {
@@ -59,7 +60,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "Удалить должность")
-    @PreAuthorize("isAuthenticated()") // TODO: add role
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.POSTS_WRITE + "')")
     @RequestMapping(value = "/{depId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void deletePost(@PathVariable("postId") Long postId) {
         postService.delete(postId, true);

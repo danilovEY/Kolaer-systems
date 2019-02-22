@@ -26,7 +26,7 @@ public class RelativeController {
     }
 
     @GetMapping(RouterConstants.EMPLOYEES_ID_RELATIVES)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_RELATIVES_GET + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_RELATIVES_READ + "')")
     public List<RelativeDto> getRelativesByEmployeeId(
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId
     ) {

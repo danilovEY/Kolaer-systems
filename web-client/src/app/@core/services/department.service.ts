@@ -21,10 +21,10 @@ export class DepartmentService extends BaseService {
     }
 
     getAllDepartments(sort?: DepartmentSortModel, filter?: DepartmentFilterModel,
-                    page: number = 1, pageSize: number = 15): Observable<Page<DepartmentModel>> {
+                    pageNum: number = 1, pageSize: number = 15): Observable<Page<DepartmentModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString()).append('pagesize', pageSize.toString());
+        params = params.append('pageNum', pageNum.toString()).append('pagesize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 
         return this._httpClient.get<Page<DepartmentModel>>(this.getDepartmentUrl, {params: params});
@@ -47,7 +47,7 @@ export class DepartmentService extends BaseService {
     find(request: FindDepartmentPageRequest): Observable<Page<DepartmentModel>> {
         let params = new HttpParams();
 
-        params = params.append('number', String(request.number))
+        params = params.append('pageNum', String(request.pageNum))
             .append('pagesize', String(request.pageSize))
             .append('onOnePage', String(request.onOnePage))
             .append('query', request.query);

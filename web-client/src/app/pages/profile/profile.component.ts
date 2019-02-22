@@ -133,10 +133,9 @@ export class ProfileComponent implements OnInit {
                 this.formAccount.controls['login'].setValue(account.username);
                 this.formAccount.controls['email'].setValue(account.email);
 
-                if (!account.accessOit) {
-                    this.formContact.get('email').disable();
-                    this.formContact.get('type').disable();
-                }
+                this.formContact.get('email').disable(); // TODO: add role
+                this.formContact.get('type').disable(); // TODO: add role
+
             });
     }
 
@@ -154,8 +153,7 @@ export class ProfileComponent implements OnInit {
         currentAccountToSend.chatName = this.formAccount.value.chatName;
         currentAccountToSend.username = this.formAccount.value.login;
         currentAccountToSend.email = this.formAccount.value.email;
-        currentAccountToSend.accessOit = this.currentAccount.accessOit;
-        currentAccountToSend.accessUser = this.currentAccount.accessUser;
+        currentAccountToSend.access = this.currentAccount.access;
         currentAccountToSend.employeeId = this.currentAccount.employeeId;
         currentAccountToSend.id = this.currentAccount.id;
 

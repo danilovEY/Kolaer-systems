@@ -55,21 +55,21 @@ public class EmployeeController {
     }
 
     @ApiOperation("Получить сотрудника")
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_GET + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_READ + "')")
     @GetMapping(RouterConstants.EMPLOYEES_ID)
-    public EmployeeDto getAllEmployees(@PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId) {
+    public EmployeeDto getEmployee(@PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId) {
         return this.employeeService.getById(employeeId);
     }
 
     @ApiOperation("Добавить сотрудника")
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_ADD + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_WRITE + "')")
     @PostMapping(RouterConstants.EMPLOYEES)
     public EmployeeDto createEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
         return this.employeeService.add(employeeRequestDto);
     }
 
     @ApiOperation("Обновить сотрудника")
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_EDIT + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_WRITE + "')")
     @PutMapping(RouterConstants.EMPLOYEES_ID)
     public EmployeeDto updateEmployee(@PathVariable(PathVariableConstants.EMPLOYEE_ID) Long employeeId,
             @RequestBody EmployeeRequestDto employeeRequestDto) {
@@ -78,7 +78,7 @@ public class EmployeeController {
 
     @ApiOperation("Изменить вид работы сотрудника")
     @PutMapping(RouterConstants.EMPLOYEES_ID_TYPE_WORK)
-    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_TYPE_WORK_EDIT_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_TYPE_WORK_WRITE_DEPARTMENT + "')")
     public EmployeeDto updateEmployee(@PathVariable(PathVariableConstants.EMPLOYEE_ID) Long employeeId,
             @RequestBody UpdateTypeWorkEmployeeRequestDto request) {
         return this.employeeService.updateWorkType(employeeId, request);
@@ -86,13 +86,13 @@ public class EmployeeController {
 
     @ApiOperation("Удалить сотрудника")
     @DeleteMapping(RouterConstants.EMPLOYEES_ID)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_DELETE + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_WRITE + "')")
     public void deleteEmployee(@PathVariable(PathVariableConstants.EMPLOYEE_ID) Long employeeId) {
         this.employeeService.delete(employeeId);
     }
 
     @ApiOperation(value = "Получить всех сотрудников")
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_GET + "')")
+    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_READ + "')")
     @GetMapping(RouterConstants.EMPLOYEES)
     public Page<EmployeeDto> getAllEmployees(@ModelAttribute FindEmployeePageRequest request) {
         return this.employeeService.getEmployees(request);

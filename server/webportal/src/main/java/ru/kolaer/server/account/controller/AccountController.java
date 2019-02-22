@@ -30,7 +30,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PreAuthorize("hasRole('" + AccountAccessConstant.ACCOUNTS_GET + "')")
+    @PreAuthorize("hasRole('" + AccountAccessConstant.ACCOUNTS_READ + "')")
     @ApiOperation(value = "Получить все аккаунты")
     @GetMapping(RouterConstants.ACCOUNTS)
     public Page<AccountDto> getAllAccounts(@RequestParam(value = "page", defaultValue = "0") Integer number,

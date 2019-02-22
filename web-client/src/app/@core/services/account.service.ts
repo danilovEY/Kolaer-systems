@@ -48,10 +48,10 @@ export class AccountService extends BaseService implements AuthenticationObserve
     }
 
     getAllAccounts(sort?: AccountSortModel, filter?: AccountFilterModel,
-                    page: number = 1, pageSize: number = 15): Observable<Page<AccountModel>> {
+                   pageNum: number = 1, pageSize: number = 15): Observable<Page<AccountModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString()).append('pagesize', pageSize.toString());
+        params = params.append('pageNum', pageNum.toString()).append('pagesize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 
         return this._httpClient.get<Page<AccountModel>>(this._getAccountsUrl, {params: params});

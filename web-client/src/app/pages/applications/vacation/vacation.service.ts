@@ -44,7 +44,7 @@ export class VacationService extends BaseService {
         const params: HttpParams = new HttpParams()
             .append('employeeId', request.employeeId.toString())
             .append('year', request.year.toString())
-            .append('number', request.number.toString())
+            .append('number', request.pageNum.toString())
             .append('pagesize', request.pageSize.toString());
         
         return this.http.get<Page<VacationModel>>(this.FIND_VACATION_URL, {params: params});

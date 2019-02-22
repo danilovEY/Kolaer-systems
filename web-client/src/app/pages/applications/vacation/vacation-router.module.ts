@@ -4,7 +4,7 @@ import {VacationComponent} from './vacation.component';
 import {VacationMainComponent} from './main/vacation-main.component';
 import {VacationSetComponent} from './set/vacation-set.component';
 import {VacationReportCalendarComponent} from './report/calendar/vacation-report-calendar.component';
-import {VacationGuardService} from '../../../@core/modules/auth/vacation-guard.service';
+import {VacationGuardService} from './vacation-guard.service';
 import {VacationReportDistributeComponent} from './report/distribute/vacation-report-distribute.component';
 import {VacationExportComponent} from './report/export/vacation-export.component';
 import {VacationReportTotalCountComponent} from './report/total-count/vacation-report-total-count.component';

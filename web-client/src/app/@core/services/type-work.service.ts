@@ -19,7 +19,7 @@ export class TypeWorkService extends BaseService {
         const params: HttpParams = new HttpParams()
             .append('searchName', request.searchName ? request.searchName.toString() : '')
             .append('departmentIds', request.departmentIds.toString())
-            .append('number', request.number.toString())
+            .append('pageNum', request.pageNum.toString())
             .append('pagesize', request.pageSize.toString());
 
         return this.http.get<Page<TypeWorkModel>>(this.getTypeWorksUrl, {params: params});
