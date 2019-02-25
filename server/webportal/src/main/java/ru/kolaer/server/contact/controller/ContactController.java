@@ -39,6 +39,7 @@ public class ContactController {
         return contactService.searchContacts(pageNum, pageSize, search);
     }
 
+    //TODO remove
     @ApiOperation(value = "Получить список подразделений")
     @GetMapping(RouterConstants.CONTACTS_DEPARTMENTS)
     public List<DepartmentDto> getAllDepartments() {

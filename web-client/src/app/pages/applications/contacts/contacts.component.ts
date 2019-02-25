@@ -21,6 +21,7 @@ import {TableEventEditModel} from '../../../@theme/components/table/table-event-
 import {ContactRequestModel} from '../../../@core/models/contact-request.model';
 import {CustomActionEventModel} from '../../../@theme/components/table/custom-action-event.model';
 import {SmartTableService} from '../../../@core/services/smart-table.service';
+import {environment} from "../../../../environments/environment";
 
 @Component({
     selector: 'contacts',
@@ -145,8 +146,10 @@ export class ContactsComponent implements OnInit, OnDestroy {
             filter: false,
             valuePrepareFunction(a: any, value: ContactModel, cell: Cell) {
                 return value.photo
-                    ? `<img src="${value.photo}" height="${ 250 / 2 }" width="${200 / 2}" alt="${value.initials}">`
-                    : `<img src="/assets/images/no_photo.jpg" height="${ 250 / 2 }" width="${290 / 2}" alt="${value.initials}">`;
+                    ? `<img src="${environment.publicServerUrl + value.photo}" 
+                            height="${ 250 / 2 }" width="${200 / 2}" alt="${value.initials}">`
+                    : `<img src="/assets/images/no_photo.jpg" 
+                            height="${ 250 / 2 }" width="${290 / 2}" alt="${value.initials}">`;
             }
         }, undefined);
 

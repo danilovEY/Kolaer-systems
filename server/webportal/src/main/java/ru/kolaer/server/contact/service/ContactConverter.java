@@ -11,7 +11,6 @@ import ru.kolaer.server.contact.model.entity.ContactType;
 import ru.kolaer.server.core.model.dto.concact.ContactDto;
 import ru.kolaer.server.core.model.dto.concact.ContactRequestDto;
 import ru.kolaer.server.core.model.dto.placement.PlacementDto;
-import ru.kolaer.server.core.service.impl.UtilService;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.service.DepartmentService;
 import ru.kolaer.server.employee.service.PostService;
@@ -30,7 +29,6 @@ public class ContactConverter {
     private final ContactDao contactDao;
     private final DepartmentService departmentService;
     private final PostService postService;
-    private final UtilService utilService;
 
     public List<ContactDto> employeeToContact(List<EmployeeEntity> employees) {
         if (CollectionUtils.isEmpty(employees)) {
@@ -88,7 +86,7 @@ public class ContactConverter {
             ContactDto contactDto = new ContactDto();
             contactDto.setEmployeeId(employee.getId());
             contactDto.setInitials(employee.getInitials());
-            contactDto.setPhoto(Optional.ofNullable(employee.getPhoto()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
+            contactDto.setPhoto(employee.getPhoto());
 
             contactDto.setDepartment(depMap.get(employee.getDepartmentId()));
             contactDto.setPost(postMap.get(employee.getPostId()));
@@ -115,7 +113,7 @@ public class ContactConverter {
         ContactDto contactDto = new ContactDto();
         contactDto.setEmployeeId(employee.getId());
         contactDto.setInitials(employee.getInitials());
-        contactDto.setPhoto(Optional.ofNullable(employee.getPhoto()).map(photo -> utilService.getCurrentHostUrl() + photo).orElse(null));
+        contactDto.setPhoto(employee.getPhoto());
 
         contactDto.setDepartment(departmentService.getById(employee.getDepartmentId()));
         contactDto.setPost(postService.getById(employee.getPostId()));

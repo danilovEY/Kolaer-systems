@@ -11,9 +11,9 @@ import {ContactRequestModel} from '../models/contact-request.model';
 
 @Injectable()
 export class ContactsService {
-    private readonly nonSecurityContactsUrl: string = `${environment.publicServerUrl}/non-security/contact`;
-    private readonly getDepartmentsUrl: string = `${this.nonSecurityContactsUrl}/departments`;
-    private readonly updateContactUrl: string = `${environment.publicServerUrl}/contact/employee`;
+    private readonly contactsUrl: string = `${environment.publicServerUrl}/contacts`;
+    private readonly getDepartmentsUrl: string = `${this.contactsUrl}/departments`;
+    private readonly updateContactUrl: string = `${this.contactsUrl}/employees`;
     private readonly myContactUrl: string = `${environment.publicServerUrl}/user/contact`;
 
     constructor(private http: HttpClient) {
@@ -31,7 +31,7 @@ export class ContactsService {
         params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
 
-        const url: string = `${this.nonSecurityContactsUrl}/${depId}/${contactType}`;
+        const url: string = `${this.getDepartmentsUrl}/${depId}/${contactType}`;
 
         return this.http.get<Page<ContactModel>>(url, {params});
     }
@@ -43,7 +43,7 @@ export class ContactsService {
         params = params.append('pagesize', pageSize.toString());
         params = params.append('search', search);
 
-        return this.http.get<Page<ContactModel>>(this.nonSecurityContactsUrl, {params});
+        return this.http.get<Page<ContactModel>>(this.contactsUrl, {params});
     }
 
     updateContact(employeeId: number, model: ContactRequestModel): Observable<ContactModel> {

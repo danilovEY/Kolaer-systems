@@ -14,27 +14,26 @@ public interface VacationAccessConstant extends CommonAccessConstant {
     /**
      * Добавить отпуск сотруднику
      */
-    String VACATIONS_WRITE = PREFIX + "VACATIONS_ADD";
+    String VACATIONS_WRITE = PREFIX + "VACATIONS_WRITE";
 
     /**
      * Добавить отпуск сотруднику из своего подразделения
      */
-    String VACATIONS_WRITE_DEPARTMENT = PREFIX + "VACATIONS_ADD_DEPARTMENT";
+    String VACATIONS_WRITE_DEPARTMENT = PREFIX + "VACATIONS_WRITE_DEPARTMENT";
 
     /**
      * Получить баланс дней у сотрудников
      */
-    String VACATIONS_BALANCE_READ = PREFIX + "VACATIONS_DELETE";
+    String VACATIONS_BALANCE_READ = PREFIX + "VACATIONS_BALANCE_READ";
 
     /**
      * Получить баланс дней у сотрудников из своего подразделения
      */
-    String VACATIONS_BALANCE_READ_DEPARTMENT = PREFIX + "VACATIONS_DELETE_DEPARTMENT";
+    String VACATIONS_BALANCE_READ_DEPARTMENT = PREFIX + "VACATIONS_BALANCE_READ_DEPARTMENT";
 
     /**
      * Изменить баланс дней у сотрудников
      */
-    String VACATIONS_BALANCE_WRITE = PREFIX + "VACATIONS_DELETE_DEPARTMENT";
+    String VACATIONS_BALANCE_WRITE = PREFIX + "VACATIONS_BALANCE_WRITE";
 
-    String VACATIONS_REPORT_GENERATE = PREFIX + "VACATIONS_DELETE_DEPARTMENT";
 }
