@@ -3,12 +3,11 @@ import {ContactModel} from '../../../@core/models/contact.model';
 import {ContactTypeModel} from '../../../@core/models/contact-type.model';
 import {ContactsService} from '../../../@core/services/contacts.service';
 import {Page} from '../../../@core/models/page.model';
-import {Utils} from '../../../@core/utils/utils';
 
 export class ContactsDataSource extends CustomDataSource<ContactModel> {
     constructor(private contactsService: ContactsService,
                 private departmentId: number = 0,
-                private contactType: ContactTypeModel = ContactTypeModel.OTHER,
+                private contactType: ContactTypeModel = ContactTypeModel.MAIN,
                 private search?: string) {
         super();
     }
@@ -31,12 +30,14 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
     
     setDepAndType(depId: number, contactType: ContactTypeModel): void {
         this.departmentId = depId;
-        this.contactType = <ContactTypeModel>Utils.keyFromValue(ContactTypeModel, ContactTypeModel[contactType]);
+        this.contactType = contactType;
 
         this.search = null;
 
         this.refreshFromServer();
     }
+
+
 
     setSearch(search: string) {
         this.departmentId = 0;

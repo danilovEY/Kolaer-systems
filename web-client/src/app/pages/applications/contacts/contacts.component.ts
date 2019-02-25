@@ -4,7 +4,6 @@ import {ContactsService} from '../../../@core/services/contacts.service';
 import {DepartmentModel} from '../../../@core/models/department.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ContactsDataSource} from './contacts-data-source';
-import {Subscription} from 'rxjs/Rx';
 import {Cell} from 'ng2-smart-table';
 import {ContactTypeModel} from '../../../@core/models/contact-type.model';
 import {NbMenuBag} from '@nebular/theme/components/menu/menu.service';
@@ -22,6 +21,8 @@ import {ContactRequestModel} from '../../../@core/models/contact-request.model';
 import {CustomActionEventModel} from '../../../@theme/components/table/custom-action-event.model';
 import {SmartTableService} from '../../../@core/services/smart-table.service';
 import {environment} from "../../../../environments/environment";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
     selector: 'contacts',
@@ -31,7 +32,7 @@ import {environment} from "../../../../environments/environment";
 export class ContactsComponent implements OnInit, OnDestroy {
     private static currentAccount: SimpleAccountModel;
 
-    private sub: Subscription;
+    private readonly destroySubjects: Subject<any> = new Subject<any>();
     private departmentId: number = 0;
 
     private contactType: ContactTypeModel;
@@ -53,29 +54,34 @@ export class ContactsComponent implements OnInit, OnDestroy {
         this.contactsSource = new ContactsDataSource(this.contactsService);
         this.contactsSource.onLoading().subscribe(load => this.contactsLoading = load);
 
-        this.sub = this.activatedRoute.queryParams.subscribe(params => {
-            this.departmentId = params['depId'] ? params['depId'] : 0;
-            this.contactType = params['contactType'] ? params['contactType'].toUpperCase() : null;
-            this.searchValue = params['search'] ? params['search'] : null;
+        this.activatedRoute.queryParams
+            .pipe(takeUntil(this.destroySubjects))
+            .subscribe(params => {
+                const contactTypeName: string = params['contactType'];
 
-            if (this.searchValue && this.searchValue.trim().length > 2) {
-                this.contactsSource.setSearch(this.searchValue);
-            } else if (this.departmentId && this.departmentId > 0) {
-                this.contactsSource.setDepAndType(this.departmentId, this.contactType);
-            }
-        });
+                this.departmentId = params['depId'] ? params['depId'] : 0;
+                this.searchValue = params['search'] ? params['search'] : null;
+                this.contactType = contactTypeName ? ContactTypeModel[contactTypeName.toUpperCase()] : undefined;
+
+                if (this.searchValue && this.searchValue.trim().length > 2) {
+                    this.contactsSource.setSearch(this.searchValue);
+                } else if (this.departmentId && this.departmentId > 0) {
+                    this.contactsSource.setDepAndType(this.departmentId, this.contactType);
+                }
+            });
     }
 
     ngOnDestroy(): void {
-        if (this.sub) {
-            this.sub.unsubscribe();
-        }
+        console.log(this.destroySubjects.observers.length);
+        this.destroySubjects.next(true);
+        this.destroySubjects.complete();
     }
 
     ngOnInit() {
         this.contactsService.getDepartments()
-            .subscribe((departaments: DepartmentModel[]) => {
-                for (const dep of departaments) {
+            .pipe(takeUntil(this.destroySubjects))
+            .subscribe((departments: DepartmentModel[]) => {
+                for (const dep of departments) {
                     const departmentMenuItem: NbMenuItem = new NbMenuItem();
                     departmentMenuItem.title = `${dep.code} - ${dep.abbreviatedName}`;
                     departmentMenuItem.expanded = false;
@@ -102,8 +108,10 @@ export class ContactsComponent implements OnInit, OnDestroy {
                         departmentMenuItem.expanded = true;
                         if (this.contactType === ContactTypeModel.MAIN) {
                             departmentMainMenuItem.selected = true;
+                            departmentMainMenuItem.link = '/pages/app/contacts';
                         } else {
                             departmentOtherMenuItem.selected = true;
+                            departmentOtherMenuItem.link = '/pages/app/contacts';
                         }
                     }
 
@@ -115,12 +123,13 @@ export class ContactsComponent implements OnInit, OnDestroy {
                     this.menu.push(departmentMenuItem);
                 }
 
-                if (this.departmentId === 0 && this.searchValue === null) {
+                if (this.departmentId < 1 && this.searchValue === null) {
                     this.navigateToFirstItem();
                 }
             });
 
         this.accountService.getCurrentAccount()
+            .pipe(takeUntil(this.destroySubjects))
             .subscribe((account: SimpleAccountModel) => {
                 ContactsComponent.currentAccount = account;
 
@@ -133,9 +142,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
     }
 
     initColumns(): void {
-        this.nbMenuService.onItemClick().subscribe((menuBag: NbMenuBag) => {
-            this.navigateToMenuItem(menuBag.item);
-        });
+        this.nbMenuService.onItemClick()
+            .pipe(takeUntil(this.destroySubjects))
+            .subscribe((menuBag: NbMenuBag) => this.navigateToMenuItem(menuBag.item));
 
         const photoColumn: Column = new Column('photo', {
             title: 'Фото',
@@ -296,16 +305,21 @@ export class ContactsComponent implements OnInit, OnDestroy {
     }
 
     navigateToMenuItem(menuItem: NbMenuItem) {
-        this.nbMenuService.getSelectedItem('departments-list').subscribe((menuBag: NbMenuBag) => {
-            if (menuBag && menuBag.item) {
-                menuBag.item.selected = false;
-                menuBag.item.link = null;
-            }
-        });
+        if (menuItem.parent && this.menu.includes(menuItem.parent)) {
+            this.nbMenuService
+                .getSelectedItem('departments-list')
+                .pipe(takeUntil(this.destroySubjects))
+                .subscribe((menuBag: NbMenuBag) => {
+                    if (menuBag && menuBag.item) {
+                        menuBag.item.selected = false;
+                        menuBag.item.link = null;
+                    }
+                });
 
-        menuItem.link = '/pages/app/contacts';
+            menuItem.link = '/pages/app/contacts';
 
-        return this.router.navigate(['/pages/app/contacts'], { queryParams: menuItem.queryParams} );
+            return this.router.navigate(['/pages/app/contacts'], { queryParams: menuItem.queryParams} );
+        }
     }
 
     findContacts(): void {

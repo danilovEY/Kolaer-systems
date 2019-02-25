@@ -31,7 +31,7 @@ export class ContactsService {
         params = params.append('pageNum', pageNum.toString());
         params = params.append('pagesize', pageSize.toString());
 
-        const url: string = `${this.getDepartmentsUrl}/${depId}/${contactType}`;
+        const url: string = `${this.getDepartmentsUrl}/${depId}/${ContactTypeModel[contactType]}`;
 
         return this.http.get<Page<ContactModel>>(url, {params});
     }
