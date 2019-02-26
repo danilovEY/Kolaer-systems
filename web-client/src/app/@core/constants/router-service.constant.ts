@@ -20,4 +20,7 @@ export class RouterServiceConstant {
     public static readonly EMPLOYEES_ID_EDUCATION_URL: string =
         RouterServiceConstant.EMPLOYEES_ID_URL + `/educations`;
 
+    public static readonly USER_URL: string = RouterServiceConstant.ROOT_URL + `/user`;
+    public static readonly USER_EMPLOYEE_URL: string = RouterServiceConstant.USER_URL + `/employee`;
+    public static readonly USER_CONTACT_URL: string = RouterServiceConstant.USER_URL + `/contact`;
 }

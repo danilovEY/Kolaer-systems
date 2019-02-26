@@ -52,7 +52,10 @@ export class ContactsComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private activatedRoute: ActivatedRoute) {
         this.contactsSource = new ContactsDataSource(this.contactsService);
-        this.contactsSource.onLoading().subscribe(load => this.contactsLoading = load);
+        this.contactsSource
+            .onLoading()
+            .pipe(takeUntil(this.destroySubjects))
+            .subscribe(load => this.contactsLoading = load);
 
         this.activatedRoute.queryParams
             .pipe(takeUntil(this.destroySubjects))
@@ -290,6 +293,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
         }
 
         this.contactsService.updateContact(event.data.employeeId, contactRequestModel)
+            .pipe(takeUntil(this.destroySubjects))
             .subscribe((contact: ContactModel) => event.confirm.resolve(event.newData, contact),
                 error2 => event.confirm.reject({}));
     }

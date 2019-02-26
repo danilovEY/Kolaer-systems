@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AccountService} from '../../@core/services/account.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {AuthenticationRestService} from '../../@core/modules/auth/authentication-rest.service';
 import {ServerExceptionModel} from '../../@core/models/server-exception.model';
@@ -10,7 +10,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SimpleAccountModel} from '../../@core/models/simple-account.model';
 import {EmployeeService} from '../../@core/services/employee.service';
 import {EmployeeModel} from '../../@core/models/employee.model';
-import {catchError, finalize, map} from 'rxjs/internal/operators';
+import {catchError, finalize, map, takeUntil} from 'rxjs/internal/operators';
 import {ContactsService} from '../../@core/services/contacts.service';
 import {ContactModel} from '../../@core/models/contact.model';
 import {ContactRequestModel} from '../../@core/models/contact-request.model';
@@ -31,9 +31,10 @@ import {UserService} from '../../@core/services/user.service';
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
-    private readonly updateAccountUrl: string = `${environment.publicServerUrl}/user/update`;
-    private readonly updatePasswordUrl: string = `${environment.publicServerUrl}/user/update/password`;
+export class ProfileComponent implements OnInit, OnDestroy {
+    private readonly destroySubjects: Subject<any> = new Subject<any>();
+
+    readonly serverUrl: string = environment.publicServerUrl;
 
     config: ToasterConfig = new ToasterConfig({
         positionClass: 'toast-top-right',
@@ -75,14 +76,12 @@ export class ProfileComponent implements OnInit {
                 private placementService: PlacementService,
                 private toasterService: ToasterService,
                 private authService: AuthenticationRestService,
-                private modalService: NgbModal,
-                private httpClient: HttpClient) {
+                private modalService: NgbModal) {
     }
 
     ngOnInit() {
         this.formAccount = new FormGroup({
             login: new FormControl('', [Validators.minLength(3)]),
-            email: new FormControl('', [Validators.email]),
             chatName: new FormControl('', [Validators.minLength(3)]),
         });
 
@@ -91,7 +90,6 @@ export class ProfileComponent implements OnInit {
             mobilePhoneNumber: new FormControl(''),
             pager: new FormControl(''),
             placement: new FormControl(''),
-            type: new FormControl(''),
             email: new FormControl('', [Validators.email])
         });
 
@@ -116,26 +114,32 @@ export class ProfileComponent implements OnInit {
 
        this.updateCurrentAccount();
 
-        this.employeeService.getCurrentEmployee().subscribe(
-            (employee: EmployeeModel) => this.currentEmployee = employee, error2 => console.log(error2));
+        this.employeeService.getCurrentEmployee()
+            .pipe(takeUntil(this.destroySubjects))
+            .subscribe((employee: EmployeeModel) =>
+                this.currentEmployee = employee, error2 => console.log(error2));
 
         this.contactsService.getMyContacts()
+            .pipe(takeUntil(this.destroySubjects))
             .subscribe((contact: ContactModel) => this.updateContactsField(contact));
+    }
+
+    ngOnDestroy() {
+        this.destroySubjects.next(true);
+        this.destroySubjects.complete();
     }
 
     private updateCurrentAccount(cache: boolean = true) {
         this.accountService
             .getCurrentAccount(cache)
+            .pipe(takeUntil(this.destroySubjects))
             .subscribe((account: SimpleAccountModel) => {
                 this.currentAccount = account;
 
                 this.formAccount.controls['chatName'].setValue(account.chatName);
                 this.formAccount.controls['login'].setValue(account.username);
-                this.formAccount.controls['email'].setValue(account.email);
 
                 this.formContact.get('email').disable(); // TODO: add role
-                this.formContact.get('type').disable(); // TODO: add role
-
             });
     }
 
@@ -152,12 +156,12 @@ export class ProfileComponent implements OnInit {
         const currentAccountToSend: SimpleAccountModel = new SimpleAccountModel();
         currentAccountToSend.chatName = this.formAccount.value.chatName;
         currentAccountToSend.username = this.formAccount.value.login;
-        currentAccountToSend.email = this.formAccount.value.email;
         currentAccountToSend.access = this.currentAccount.access;
         currentAccountToSend.employeeId = this.currentAccount.employeeId;
         currentAccountToSend.id = this.currentAccount.id;
 
-        this.httpClient.post(this.updateAccountUrl, currentAccountToSend)
+        this.accountService.updateAccount(currentAccountToSend)
+            .pipe(takeUntil(this.destroySubjects))
             .subscribe(
                 (result: any) => {
                     this.successChangeAccount = true;
@@ -186,7 +190,8 @@ export class ProfileComponent implements OnInit {
         changePassword.oldPassword = this.changePassForm.value.oldPassword;
         changePassword.newPassword = this.changePassForm.value.newPassword;
 
-        this.httpClient.post(this.updatePasswordUrl, changePassword)
+        this.accountService.updateCurrentAccountPassword(changePassword)
+            .pipe(takeUntil(this.destroySubjects))
             .pipe(finalize(() => {
                 this.changePassForm.reset();
             }))
@@ -212,7 +217,6 @@ export class ProfileComponent implements OnInit {
         contactRequestModel.email =  this.formContact.value.email;
         contactRequestModel.mobilePhoneNumber = this.formContact.value.mobilePhoneNumber;
         contactRequestModel.workPhoneNumber = this.formContact.value.workPhoneNumber;
-        contactRequestModel.type = this.formContact.value.type;
         contactRequestModel.pager = this.formContact.value.pager;
 
         if (this.formContact.value.placement) {
@@ -251,7 +255,6 @@ export class ProfileComponent implements OnInit {
         this.formContact.controls['mobilePhoneNumber'].setValue(contact.mobilePhoneNumber);
         this.formContact.controls['pager'].setValue(contact.pager);
         this.formContact.controls['placement'].setValue(contact.placement);
-        this.formContact.controls['type'].setValue(ContactTypeModel[contact.type]);
         this.formContact.controls['email'].setValue(contact.email);
     }
 }

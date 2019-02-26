@@ -53,11 +53,11 @@ public class KolpassController {
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/share", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PasswordRepositoryDto> getAccountsFromSharePasswordRepository(
-            @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
+            @ApiParam("Номер страници") @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
             RepositoryPasswordSort sort,
             RepositoryPasswordFilter filter) {
-        return passwordRepositoryService.getAllShared(sort, filter, number, pageSize);
+        return passwordRepositoryService.getAllShared(sort, filter, pageNum, pageSize);
     }
 
     @ApiOperation(value = "Добавить новое хранилище")
@@ -140,9 +140,9 @@ public class KolpassController {
     @RequestMapping(value = "/rep/{repId}/passwords", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<PasswordHistoryDto> getRepositoryPasswordHistory(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
-            @ApiParam("Номер страници") @RequestParam(value = "page", defaultValue = "0") Integer number,
-            @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
-        return this.passwordRepositoryService.getHistoryByIdRepository(repId, number, pageSize);
+            @ApiParam("Номер страници") @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+            @ApiParam("Размер страници") @RequestParam(value = "pageSize", defaultValue = "15") Integer pageSize) {
+        return this.passwordRepositoryService.getHistoryByIdRepository(repId, pageNum, pageSize);
     }
 
     @ApiOperation(value = "Получить последний логин хранилища")

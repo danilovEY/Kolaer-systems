@@ -25,6 +25,7 @@ import ru.kolaer.server.core.model.dto.concact.ContactDto;
 import ru.kolaer.server.core.model.dto.concact.ContactRequestDto;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.core.service.AuthenticationService;
+import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 
@@ -43,22 +44,25 @@ public class AccountServiceImpl
         implements AccountService {
     private final ContactDao contactDao;
     private final EmployeeDao employeeDao;
+    private final EmployeeConverter employeeConverter;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationService authenticationService;
     private final ContactService contactService;
 
     @Autowired
     protected AccountServiceImpl(AuthenticationService authenticationService,
-                                 AccountDao defaultEntityDao,
-                                 AccountConverter accountConverter,
-                                 ContactDao contactDao,
-                                 EmployeeDao employeeDao,
-                                 PasswordEncoder passwordEncoder,
-                                 ContactService contactService) {
+            AccountDao defaultEntityDao,
+            AccountConverter accountConverter,
+            ContactDao contactDao,
+            EmployeeDao employeeDao,
+            EmployeeConverter employeeConverter,
+            PasswordEncoder passwordEncoder,
+            ContactService contactService) {
         super(defaultEntityDao, accountConverter);
         this.authenticationService = authenticationService;
         this.contactDao = contactDao;
         this.employeeDao = employeeDao;
+        this.employeeConverter = employeeConverter;
         this.passwordEncoder = passwordEncoder;
         this.contactService = contactService;
     }
@@ -103,7 +107,8 @@ public class AccountServiceImpl
 
         AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
 
-        if(!authenticationService.containsAccess(AccountAccessConstant.ACCOUNTS_WRITE) && currentAccount.getId() != accountSimpleDto.getId()) {
+        if(!authenticationService.containsAccess(AccountAccessConstant.ACCOUNTS_WRITE) &&
+                currentAccount.getId() != accountSimpleDto.getId()) {
             throw new ForbiddenException("У вас нет доступа для редактирования");
         }
 
@@ -111,7 +116,6 @@ public class AccountServiceImpl
 
         accountEntity.setUsername(accountSimpleDto.getUsername());
         accountEntity.setChatName(accountSimpleDto.getChatName());
-        accountEntity.setEmail(accountSimpleDto.getEmail());
 
         defaultEntityDao.update(accountEntity);
 
@@ -201,6 +205,14 @@ public class AccountServiceImpl
         }
 
         return contactService.getContactByEmployeeId(currentAccount.getEmployeeId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public EmployeeDto getEmployee() {
+        AccountAuthorizedDto accountAuthorized = authenticationService.getAccountAuthorized();
+
+        return employeeConverter.convertToDto(employeeDao.findById(accountAuthorized.getEmployeeId()));
     }
 
     @Override

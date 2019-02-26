@@ -11,11 +11,13 @@ import {AccountSortModel} from '../models/account-sort.model';
 import {AccountFilterModel} from '../models/account-filter.model';
 import {AccountModel} from '../models/account.model';
 import {BaseService} from './base.service';
+import {ChangePasswordModel} from "../models/change-password.model";
 
 @Injectable()
 export class AccountService extends BaseService implements AuthenticationObserverService {
-    private readonly _getAuthUserUrl: string = environment.publicServerUrl + '/user';
-    private readonly _getAccountsUrl: string = environment.publicServerUrl + '/accounts';
+    private static readonly CURRENT_USER_URL: string = environment.publicServerUrl + '/user';
+    private static readonly CURRENT_USER_PASSWORD_URL: string = AccountService.CURRENT_USER_URL + '/password';
+    private static readonly ACCOUNTS_URL: string = environment.publicServerUrl + '/accounts';
 
     private _currentAccountModel: SimpleAccountModel = undefined;
 
@@ -36,7 +38,7 @@ export class AccountService extends BaseService implements AuthenticationObserve
         if (cache && this._currentAccountModel || !this._authService.authentication) {
             return of(this._currentAccountModel);
         } else {
-            return this._httpClient.get<SimpleAccountModel>(this._getAuthUserUrl)
+            return this._httpClient.get<SimpleAccountModel>(AccountService.CURRENT_USER_URL)
                 .pipe(tap((account: SimpleAccountModel) => this._currentAccountModel = account),
                     catchError(error => {
                         if (error.status === 403 || error.status === 401) {
@@ -54,6 +56,14 @@ export class AccountService extends BaseService implements AuthenticationObserve
         params = params.append('pageNum', pageNum.toString()).append('pagesize', pageSize.toString());
         params = this.getSortAndFilterParam(params, sort, filter);
 
-        return this._httpClient.get<Page<AccountModel>>(this._getAccountsUrl, {params: params});
+        return this._httpClient.get<Page<AccountModel>>(AccountService.ACCOUNTS_URL, {params: params});
+    }
+
+    updateAccount(currentAccountToSend: SimpleAccountModel): Observable<AccountModel> {
+        return this._httpClient.put<AccountModel>(AccountService.CURRENT_USER_URL, currentAccountToSend);
+    }
+
+    updateCurrentAccountPassword(changePassword: ChangePasswordModel): Observable<any> {
+        return this._httpClient.put<AccountModel>(AccountService.CURRENT_USER_PASSWORD_URL, changePassword);
     }
 }

@@ -1,18 +1,16 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {EMPTY, Observable, of} from 'rxjs/index';
+import {Observable, of} from 'rxjs/index';
 import {AuthenticationRestService} from '../modules/auth/authentication-rest.service';
 import {AuthenticationObserverService} from './authentication-observer.service';
-import {SimpleAccountModel} from '../models/simple-account.model';
 import {EmployeeModel} from '../models/employee.model';
-import {AccountService} from './account.service';
 import {OtherEmployeeModel} from '../models/other-employee.model';
 import {Page} from '../models/page.model';
 import {EmployeeSortModel} from '../models/employee-sort.model';
 import {EmployeeFilterModel} from '../models/employee-filter.model';
 import {BaseService} from './base.service';
 import {EmployeeRequestModel} from '../models/employee-request.model';
-import {catchError, map, switchMap, tap} from 'rxjs/internal/operators';
+import {catchError, map, tap} from 'rxjs/internal/operators';
 import {FindEmployeeRequestModel} from '../models/find-employee-request.model';
 import {HistoryChangeModel} from '../models/history-change.model';
 import {HistoryChangeEventEnum} from '../models/history-change-event.enum';
@@ -43,8 +41,7 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
     }
 
     constructor(private _httpClient: HttpClient,
-                private _authService: AuthenticationRestService,
-                private accountService: AccountService) {
+                private _authService: AuthenticationRestService) {
         super();
         this._authService.registerObserver(this);
     }
@@ -61,25 +58,16 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
         if (cache && this._currentEmployeeModel) {
             return of(this._currentEmployeeModel);
         } else {
-            return this.accountService.getCurrentAccount().pipe(
-                switchMap((account: SimpleAccountModel) =>
-                    account.employeeId
-                        ? this._httpClient.get<EmployeeModel>(
-                            Utils.createUrlFromUrlTemplate(
-                                RouterServiceConstant.EMPLOYEES_ID_URL,
-                                PathVariableConstant.EMPLOYEE_ID,
-                                account.employeeId.toString()
-                            )
-                        )
-                        : EMPTY
-                ),
-                tap((employee: EmployeeModel) => this._currentEmployeeModel = this.convertModel(employee)),
-                catchError(error => {
-                    if (error.status === 403 || error.status === 401) {
-                        this._authService.logout().subscribe();
-                    }
-                    return Observable.throw(error);
-                }));
+            return this._httpClient.get(RouterServiceConstant.USER_EMPLOYEE_URL)
+                .pipe(
+                    tap((employee: EmployeeModel) => this._currentEmployeeModel = this.convertModel(employee)),
+                    catchError(error => {
+                        if (error.status === 403 || error.status === 401) {
+                            this._authService.logout().subscribe();
+                        }
+                        return Observable.throw(error);
+                    })
+                );
         }
     }
 

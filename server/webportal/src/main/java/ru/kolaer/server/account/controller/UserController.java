@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.constant.RouterConstants;
-import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.account.service.AccountService;
 import ru.kolaer.server.core.model.dto.account.ChangePasswordDto;
 import ru.kolaer.server.core.model.dto.concact.ContactDto;
@@ -37,13 +37,6 @@ public class UserController {
 
     @PreAuthorize("isAuthenticated()")
     @ApiOperation("Получить авторизированный аккаунт")
-    @GetMapping(RouterConstants.USER_WITH_EMPLOYEE)
-    public AccountDto getUser() {
-        return this.accountService.getById(authenticationService.getAccountAuthorized().getId());
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @ApiOperation("Получить авторизированный аккаунт")
     @GetMapping(RouterConstants.USER)
     public AccountSimpleDto getSimpleUser() {
         return this.accountService.getSimpleAccountById(authenticationService.getAccountAuthorized().getId());
@@ -61,6 +54,13 @@ public class UserController {
     @PutMapping(RouterConstants.USER_PASSWORD)
     public void updatePassword(@RequestBody ChangePasswordDto changePasswordDto) {
         accountService.updatePassword(changePasswordDto);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @ApiOperation(value = "Получить текущего сотрудника")
+    @GetMapping(RouterConstants.USER_EMPLOYEE)
+    public EmployeeDto getEmployee() {
+        return accountService.getEmployee();
     }
 
     @PreAuthorize("isAuthenticated()")

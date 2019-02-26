@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {NbMenuService, NbSidebarService} from '@nebular/theme';
 import {NbMenuItem} from '@nebular/theme/components/menu/menu.service';
@@ -6,13 +6,16 @@ import {AuthenticationRestService} from '../../../@core/modules/auth/authenticat
 import {AccountService} from '../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../@core/models/simple-account.model';
 import {RouterNavigatorService} from '../../../@core/services/router-navigator.service';
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
     selector: 'ngx-header',
     styleUrls: ['./header.component.scss'],
     templateUrl: './header.component.html',
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
+    private readonly destroySubjects: Subject<any> = new Subject();
     private readonly profileMenuItem: NbMenuItem = new NbMenuItem();
     private readonly singOutMenuItem: NbMenuItem = new NbMenuItem();
     private readonly singInMenuItem: NbMenuItem = new NbMenuItem();
@@ -31,6 +34,7 @@ export class HeaderComponent implements OnInit {
         if (this.authService.authentication && !this.accountModel) {
             this.accountService
                 .getCurrentAccount()
+                .pipe(takeUntil(this.destroySubjects))
                 .subscribe((account: SimpleAccountModel) => this.accountModel = account,
                     error2 => {console.log(error2)});
         }
@@ -55,6 +59,11 @@ export class HeaderComponent implements OnInit {
         }
 
         this.userMenu.push(this.profileMenuItem, this.singOutMenuItem, this.singInMenuItem);
+    }
+
+    ngOnDestroy() {
+        this.destroySubjects.next(true);
+        this.destroySubjects.complete();
     }
 
     toggleSidebar(): boolean {

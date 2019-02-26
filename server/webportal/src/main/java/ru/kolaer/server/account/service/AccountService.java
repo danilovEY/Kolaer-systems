@@ -2,6 +2,7 @@ package ru.kolaer.server.account.service;
 
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.model.dto.account.ChangePasswordDto;
 import ru.kolaer.server.core.model.dto.concact.ContactDto;
 import ru.kolaer.server.core.model.dto.concact.ContactRequestDto;
@@ -22,4 +23,6 @@ public interface AccountService extends DefaultService<AccountDto>, UpdatableEmp
     ContactDto updateContact(ContactRequestDto contactRequestDto);
 
     ContactDto getContact();
+
+    EmployeeDto getEmployee();
 }

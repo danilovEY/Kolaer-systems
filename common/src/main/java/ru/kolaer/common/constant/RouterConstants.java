@@ -67,9 +67,9 @@ public interface RouterConstants {
 
 
     String USER = "/user";
-    String USER_WITH_EMPLOYEE = USER + "/employee";
     String USER_PASSWORD = USER + "/password";
     String USER_CONTACT = USER + "/contact";
+    String USER_EMPLOYEE = USER + "/employee";
 
 
     String NON_SECURITY = "/non-security";

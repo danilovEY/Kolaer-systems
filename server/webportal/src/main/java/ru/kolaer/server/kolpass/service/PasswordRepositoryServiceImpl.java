@@ -11,6 +11,7 @@ import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
 import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.account.service.AccountService;
+import ru.kolaer.server.core.exception.ForbiddenException;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.model.dto.FilterType;
@@ -113,11 +114,10 @@ public class PasswordRepositoryServiceImpl
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
         List<Long> allAccountFromShareRepository = defaultEntityDao.findAllAccountFromShareRepository(repId);
 
-//        if(!accountSimpleByAuthentication.isAccessOit() &&
-//                !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId()) && TODO: refactoring
-//                !allAccountFromShareRepository.contains(accountSimpleByAuthentication.getId())) {
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId()) &&
+                !allAccountFromShareRepository.contains(accountSimpleByAuthentication.getId())) {
+            throw new ForbiddenException();
+        }
 
         return super.getById(repId);
     }
@@ -129,9 +129,9 @@ public class PasswordRepositoryServiceImpl
 
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
 
-//        if(!accountSimpleByAuthentication.isAccessOit() && !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) { TODO: refactoring
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
 
         PasswordHistoryEntity passwordHistoryEntity = passwordHistoryConverter.convertToModel(passwordHistoryDto);
 
@@ -150,13 +150,12 @@ public class PasswordRepositoryServiceImpl
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
         List<Long> allAccountFromShareRepository = defaultEntityDao.findAllAccountFromShareRepository(repId);
 
-//        if(!accountSimpleByAuthentication.isAccessOit() &&
-//                !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId()) && TODO: refactoring
-//                !allAccountFromShareRepository.contains(accountSimpleByAuthentication.getId())) {
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId()) &&
+                !allAccountFromShareRepository.contains(accountSimpleByAuthentication.getId())) {
+            throw new ForbiddenException();
+        }
 
-        if(pageSize == null || pageSize == 0) {
+        if(pageSize == null || pageSize < 1) {
             List<PasswordHistoryDto> result = passwordHistoryDao.findAllHistoryByIdRepository(repId)
                     .stream()
                     .map(passwordHistoryConverter::convertToDto)
@@ -180,9 +179,9 @@ public class PasswordRepositoryServiceImpl
 
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
 
-//        if(!accountSimpleByAuthentication.isAccessOit() && !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) { TODO: refactoring
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
 
         passwordHistoryDao.deleteAllByIdRep(repId);
         defaultEntityDao.delete(passwordRepositoryEntity);
@@ -195,9 +194,9 @@ public class PasswordRepositoryServiceImpl
 
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
 
-//        if(!accountSimpleByAuthentication.isAccessOit() && !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) { TODO: refactoring
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
 
         passwordHistoryDao.deleteAllByIdRep(repId);
     }
@@ -213,10 +212,9 @@ public class PasswordRepositoryServiceImpl
 
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
 
-//        if(!accountSimpleByAuthentication.isAccessOit() &&
-//                !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) { TODO: refactoring
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
 
         List<Long> allAccountFromShareRepository = defaultEntityDao.findAllAccountFromShareRepository(repId);
 
@@ -234,9 +232,9 @@ public class PasswordRepositoryServiceImpl
 
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
 
-//        if(!accountSimpleByAuthentication.isAccessOit() && !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) { TODO: refactoring
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
 
         defaultEntityDao.deleteShareRepositoryToAccount(repId, accountId);
     }
@@ -248,10 +246,9 @@ public class PasswordRepositoryServiceImpl
 
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
 
-//        if(!accountSimpleByAuthentication.isAccessOit() &&
-//                !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) { TODO: refactoring
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
 
         List<Long> allAccountFromShareRepository = defaultEntityDao.findAllAccountFromShareRepository(repId);
 
@@ -269,9 +266,9 @@ public class PasswordRepositoryServiceImpl
 
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
 
-//        if(!accountSimpleByAuthentication.isAccessOit() && !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) { TODO: refactoring
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
 
         PasswordHistoryEntity passwordHistoryEntity = passwordHistoryDao.findByRepAndId(repId, passId);
 
@@ -299,11 +296,10 @@ public class PasswordRepositoryServiceImpl
 
         List<Long> allAccountFromShareRepository = defaultEntityDao.findAllAccountFromShareRepository(repId);
 
-//        if(!accountSimpleByAuthentication.isAccessOit() &&
-//                !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId()) && TODO: refactoring
-//                !allAccountFromShareRepository.contains(accountSimpleByAuthentication.getId())) {
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId()) &&
+                !allAccountFromShareRepository.contains(accountSimpleByAuthentication.getId())) {
+            throw new ForbiddenException();
+        }
 
         PasswordHistoryEntity lastHistory = this.passwordHistoryDao.findLastHistoryInRepository(repId);
         if(lastHistory == null) {
@@ -324,10 +320,9 @@ public class PasswordRepositoryServiceImpl
 
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(dto.getId());
 
-//        if(!accountSimpleByAuthentication.isAccessOit() &&
-//                !accountSimpleByAuthentication.getId().equals(passwordRepositoryEntity.getAccountId())) { TODO: refactoring
-//            throw new ForbiddenException();
-//        }
+        if(!Long.valueOf(accountSimpleByAuthentication.getId()).equals(passwordRepositoryEntity.getAccountId())) {
+            throw new ForbiddenException();
+        }
 
         passwordRepositoryEntity.setName(dto.getName());
         passwordRepositoryEntity.setUrlImage(dto.getUrlImage());
