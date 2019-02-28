@@ -6,28 +6,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.constant.assess.AccountAccessConstant;
-import ru.kolaer.common.constant.assess.ContactAccessConstant;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.account.dao.AccountDao;
 import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.account.model.entity.AccountEntity;
-import ru.kolaer.server.contact.dao.ContactDao;
-import ru.kolaer.server.contact.model.entity.ContactEntity;
 import ru.kolaer.server.contact.service.ContactService;
 import ru.kolaer.server.core.exception.ForbiddenException;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.model.dto.ResultUpdate;
 import ru.kolaer.server.core.model.dto.account.ChangePasswordDto;
-import ru.kolaer.server.core.model.dto.concact.ContactDto;
+import ru.kolaer.server.core.model.dto.concact.ContactDetailsDto;
 import ru.kolaer.server.core.model.dto.concact.ContactRequestDto;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.core.service.AuthenticationService;
 import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;
-import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +38,6 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl
         extends AbstractDefaultService<AccountDto, AccountEntity, AccountDao, AccountConverter>
         implements AccountService {
-    private final ContactDao contactDao;
     private final EmployeeDao employeeDao;
     private final EmployeeConverter employeeConverter;
     private final PasswordEncoder passwordEncoder;
@@ -53,14 +48,12 @@ public class AccountServiceImpl
     protected AccountServiceImpl(AuthenticationService authenticationService,
             AccountDao defaultEntityDao,
             AccountConverter accountConverter,
-            ContactDao contactDao,
             EmployeeDao employeeDao,
             EmployeeConverter employeeConverter,
             PasswordEncoder passwordEncoder,
             ContactService contactService) {
         super(defaultEntityDao, accountConverter);
         this.authenticationService = authenticationService;
-        this.contactDao = contactDao;
         this.employeeDao = employeeDao;
         this.employeeConverter = employeeConverter;
         this.passwordEncoder = passwordEncoder;
@@ -164,40 +157,18 @@ public class AccountServiceImpl
 
     @Override
     @Transactional
-    public ContactDto updateContact(ContactRequestDto contactRequestDto) {
+    public ContactDetailsDto updateContact(ContactRequestDto contactRequestDto) {
         AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
 
         if (currentAccount.getEmployeeId() == null) {
             throw new NotFoundDataException("К вашей учетной записи не привязан сотрудник");
         }
 
-        EmployeeEntity employee = employeeDao.findById(currentAccount.getEmployeeId());
-
-        ContactEntity contact = employee.getContact();
-        if (contact == null) {
-            contact = new ContactEntity();
-        }
-
-        contact.setPager(contactRequestDto.getPager());
-        contact.setMobilePhoneNumber(contactRequestDto.getMobilePhoneNumber());
-        contact.setWorkPhoneNumber(contactRequestDto.getWorkPhoneNumber());
-        contact.setPlacementId(contactRequestDto.getPlacementId());
-
-        if (authenticationService.containsAccess(ContactAccessConstant.CONTACT_EMAIL_WRITE)) {
-            contact.setEmail(contactRequestDto.getEmail());
-        }
-
-        Long idContact = contactDao.save(contact).getId();
-        if (!idContact.equals(employee.getContactId())) {
-            employee.setContactId(idContact);
-            employee = employeeDao.save(employee);
-        }
-
-        return contactService.getContactByEmployeeId(currentAccount.getEmployeeId());
+        return contactService.saveContact(currentAccount.getEmployeeId(), contactRequestDto);
     }
 
     @Override
-    public ContactDto getContact() {
+    public ContactDetailsDto getContact() {
         AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
 
         if (currentAccount.getEmployeeId() == null) {

@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.core.system.network.kolaerweb.GeneralEmployeesTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 
@@ -39,7 +39,7 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable, RestTem
     }
 
     @Override
-    public ServerResponse<Page<EmployeeDto>> getAllUser() {
+    public ServerResponse<PageDto<EmployeeDto>> getAllUser() {
         return getPageResponse(restTemplate, this.URL_GET_ALL, EmployeeDto.class, objectMapper);
     }
 

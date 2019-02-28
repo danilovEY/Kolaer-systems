@@ -3,7 +3,7 @@ package ru.kolaer.server.ticket.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.model.dto.*;
@@ -76,7 +76,7 @@ public class BankAccountServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public Page<EmployeeDto> getAllEntityWithAccount(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize) {
+    public PageDto<EmployeeDto> getAllEntityWithAccount(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize) {
         Map<String, FilterValue> filtersForEmployee = new HashMap<>();
         filtersForEmployee.put("deleted", new FilterValue("deleted", false, FilterType.EQUAL));
 
@@ -91,7 +91,7 @@ public class BankAccountServiceImpl
         Long employeeCount = employeeDao.findAllCount(filters);
         List<EmployeeDto> employeeAll = employeeConverter.convertToDto(employeeDao.findAll(sort, filters, number, pageSize));
 
-        return new Page<>(employeeAll, number, employeeCount, pageSize);
+        return new PageDto<>(employeeAll, number, employeeCount, pageSize);
     }
 
     @Override

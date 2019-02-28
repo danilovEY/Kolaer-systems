@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.constant.assess.TicketAccessConstant;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.server.core.bean.RegisterTicketScheduler;
 import ru.kolaer.server.ticket.model.dto.RequestTicketDto;
 import ru.kolaer.server.ticket.model.dto.TicketDto;
@@ -62,7 +62,7 @@ public class TicketsController {
     @ApiOperation(value = "Получить все реестры талонов")
     @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<TicketRegisterDto> getAllRegister(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+    public PageDto<TicketRegisterDto> getAllRegister(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                   @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                                   RegisterTicketSort sortParam,
                                                   RegisterTicketFilter ticketFilter) {
@@ -125,7 +125,7 @@ public class TicketsController {
     @ApiOperation(value = "Получить талоны по ID реестра")
     @PreAuthorize("hasRole('" + TicketAccessConstant.TICKET_REGISTER_READ + "')")
     @RequestMapping(value = "/{regId}/tickets", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<TicketDto> getTickets(@ApiParam(value = "ID реестра", required = true) @PathVariable("regId") Long regId,
+    public PageDto<TicketDto> getTickets(@ApiParam(value = "ID реестра", required = true) @PathVariable("regId") Long regId,
                                       @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                       @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                       TicketSort sortParam,

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.constant.assess.EmployeeAccessConstant;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.server.employee.model.request.FindTypeWorkRequest;
 import ru.kolaer.server.employee.service.TypeWorkService;
@@ -26,7 +26,7 @@ public class TypeWorkController {
     @ApiOperation(value = "Получить тип работы")
     @PreAuthorize("hasRole('" + EmployeeAccessConstant.TYPE_WORKS_READ + "')")
     @GetMapping(RouterConstants.TYPE_WORKS)
-    public Page<TypeWorkDto> getTypeWorks(@ModelAttribute FindTypeWorkRequest request) {
+    public PageDto<TypeWorkDto> getTypeWorks(@ModelAttribute FindTypeWorkRequest request) {
         return typeWorkService.getAll(request);
     }
 

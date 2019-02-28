@@ -197,12 +197,10 @@ public class UploadFileServiceImpl
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity loadFile(Long id, String filename, HttpServletResponse response) {
-        UploadFileDto uploadFileDto = getById(id);
-        if (uploadFileDto.getFileName().equals(filename)) {
-            return loadFile(uploadFileDto, response);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return Optional.ofNullable(getById(id))
+                .filter(uploadFileDto -> uploadFileDto.getFileName().equals(filename))
+                .map(uploadFileDto -> loadFile(uploadFileDto, response))
+                .orElseGet(ResponseEntity.notFound()::build);
     }
 
     @Override

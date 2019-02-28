@@ -3,7 +3,7 @@ package ru.kolaer.server.employee.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
@@ -72,10 +72,10 @@ public class PostServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PostDto> find(FindPostPageRequest request) {
+    public PageDto<PostDto> find(FindPostPageRequest request) {
         long count = defaultEntityDao.findCount(request);
         List<PostDto> posts = defaultConverter.convertToDto(defaultEntityDao.find(request));
 
-        return new Page<>(posts, request.getPageNum(), count, request.getPageSize());
+        return new PageDto<>(posts, request.getPageNum(), count, request.getPageSize());
     }
 }

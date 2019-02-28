@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.usa.system.network.kolaerweb.TokenToHeader;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.error.ErrorCode;
 import ru.kolaer.common.dto.error.ServerExceptionMessage;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public interface RestTemplateService extends TokenToHeader {
 
-    default <T> ServerResponse<Page<T>> getPageResponse(RestTemplate restTemplate, String url, Class<T> cls, ObjectMapper objectMapper) {
+    default <T> ServerResponse<PageDto<T>> getPageResponse(RestTemplate restTemplate, String url, Class<T> cls, ObjectMapper objectMapper) {
         try {
             return getPageResponse(restTemplate.exchange(url, HttpMethod.GET, getHeader(), String.class), cls, objectMapper);
         } catch (RestClientException ex) {
@@ -33,7 +33,7 @@ public interface RestTemplateService extends TokenToHeader {
         }
     }
 
-    default <T> ServerResponse<Page<T>> getPageResponse(RestTemplate restTemplate, String url, Class<T> cls, ObjectMapper objectMapper, Map<String, Object> urlVariables) {
+    default <T> ServerResponse<PageDto<T>> getPageResponse(RestTemplate restTemplate, String url, Class<T> cls, ObjectMapper objectMapper, Map<String, Object> urlVariables) {
         try {
             return getPageResponse(restTemplate.exchange(url, HttpMethod.GET, getHeader(), String.class, urlVariables), cls, objectMapper);
         } catch (RestClientException ex) {
@@ -114,8 +114,8 @@ public interface RestTemplateService extends TokenToHeader {
         return serverResponse;
     }
 
-    default <T> ServerResponse<Page<T>> getPageResponse(ResponseEntity<String> response, Class<T> cls, ObjectMapper objectMapper) {
-        ServerResponse<Page<T>> serverResponse = new ServerResponse<>();
+    default <T> ServerResponse<PageDto<T>> getPageResponse(ResponseEntity<String> response, Class<T> cls, ObjectMapper objectMapper) {
+        ServerResponse<PageDto<T>> serverResponse = new ServerResponse<>();
         try {
             HttpStatus statusCode = response.getStatusCode();
 
@@ -144,12 +144,12 @@ public interface RestTemplateService extends TokenToHeader {
                 : null;
     }
 
-    default <T> Page<T> readPageValue(ObjectMapper objectMapper, String content, Class<T> cls) throws IOException {
+    default <T> PageDto<T> readPageValue(ObjectMapper objectMapper, String content, Class<T> cls) throws IOException {
         if (StringUtils.hasText(content)) {
-            JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Page.class, cls);
+            JavaType javaType = objectMapper.getTypeFactory().constructParametricType(PageDto.class, cls);
             return objectMapper.readValue(content, javaType);
         } else {
-            return Page.createPage();
+            return PageDto.createPage();
         }
     }
 

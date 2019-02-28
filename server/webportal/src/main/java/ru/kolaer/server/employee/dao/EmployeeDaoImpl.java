@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.error.ErrorCode;
-import ru.kolaer.server.contact.model.entity.ContactType;
 import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.employee.model.dto.CountEmployeeInDepartmentDto;
@@ -19,7 +18,6 @@ import ru.kolaer.server.employee.model.request.FindEmployeeByDepartment;
 import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
 
 import javax.persistence.EntityManagerFactory;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +79,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .uniqueResult();
     }
 
-    @Override
+    /*@Override
     public List<EmployeeEntity> findEmployeesForContacts(int page, int pageSize, String searchText) {
         return getSession()
                 .createNativeQuery("SELECT * FROM employee t " +
@@ -155,7 +153,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .getSingleResult();
 
         return ((BigInteger) result).longValue();
-    }
+    }*/
 
     @Override
     public List<CountEmployeeInDepartmentDto> findEmployeeByDepartmentCount(FindEmployeeByDepartment request) {

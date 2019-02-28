@@ -1,6 +1,6 @@
 package ru.kolaer.server.chat.service;
 
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageDto;
 import ru.kolaer.server.core.service.DefaultService;
 
@@ -12,5 +12,5 @@ import java.util.List;
 public interface ChatMessageService extends DefaultService<ChatMessageDto> {
     List<ChatMessageDto> getAllByRoom(Long roomId);
 
-    Page<ChatMessageDto> getAllByRoom(Long roomId, Integer number, Integer pageSize);
+    PageDto<ChatMessageDto> getAllByRoom(Long roomId, Integer number, Integer pageSize);
 }

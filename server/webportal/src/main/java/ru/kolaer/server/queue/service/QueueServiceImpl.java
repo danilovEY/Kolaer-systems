@@ -3,7 +3,7 @@ package ru.kolaer.server.queue.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.server.account.dao.AccountDao;
 import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.account.service.AccountConverter;
@@ -90,13 +90,13 @@ public class QueueServiceImpl
 
     @Transactional
     @Override
-    public Page<QueueRequestDto> getAllQueueRequestByTarget(Long targetId, Integer number, Integer pageSize) {
+    public PageDto<QueueRequestDto> getAllQueueRequestByTarget(Long targetId, Integer number, Integer pageSize) {
         LocalDateTime now = LocalDateTime.now().minusHours(1);
 
         Long size = defaultEntityDao.findCountRequestByTargetId(targetId, now);
         List<QueueRequestEntity> requests = defaultEntityDao.findRequestById(targetId, now, number, pageSize);
 
-        return new Page<>(defaultConverter.convertToRequestDto(requests), number, size, pageSize);
+        return new PageDto<>(defaultConverter.convertToRequestDto(requests), number, size, pageSize);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class QueueServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public Page<QueueScheduleDto> getSchedulers(PageQueueRequest pageQueueRequest) {
+    public PageDto<QueueScheduleDto> getSchedulers(PageQueueRequest pageQueueRequest) {
         if(pageQueueRequest.getAfterFrom() == null) {
             pageQueueRequest.setAfterFrom(LocalDateTime.now().minusHours(1));
         }
@@ -128,7 +128,7 @@ public class QueueServiceImpl
         List<QueueRequestEntity> requests = this.defaultEntityDao.findLastRequests(pageQueueRequest);
 
         if (requests.isEmpty()) {
-            return new Page<>(Collections.emptyList(), pageQueueRequest.getPageNum(), 0, pageQueueRequest.getPageSize());
+            return new PageDto<>(Collections.emptyList(), pageQueueRequest.getPageNum(), 0, pageQueueRequest.getPageSize());
         }
 
         Map<Long, QueueRequestDto> requestMap = defaultConverter.convertToRequestDto(requests)
@@ -154,7 +154,7 @@ public class QueueServiceImpl
             schedulers.add(queueScheduleDto);
         }
 
-        return new Page<>(schedulers, pageQueueRequest.getPageNum(), count, pageQueueRequest.getPageSize());
+        return new PageDto<>(schedulers, pageQueueRequest.getPageNum(), count, pageQueueRequest.getPageSize());
     }
 
     @Override

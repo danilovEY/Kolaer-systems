@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordHistoryDto;
 import ru.kolaer.common.dto.kolaerweb.kolpass.PasswordRepositoryDto;
@@ -34,7 +34,7 @@ public class KolpassController {
     @ApiOperation(value = "Получить все свои хранилища")
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<PasswordRepositoryDto> getAllPersonalRepositoryPasswords(
+    public PageDto<PasswordRepositoryDto> getAllPersonalRepositoryPasswords(
             @ApiParam("Номер страници") @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
             RepositoryPasswordSort sort,
@@ -52,7 +52,7 @@ public class KolpassController {
     @ApiOperation(value = "Получить всех расширенных пользователей")
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/rep/share", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<PasswordRepositoryDto> getAccountsFromSharePasswordRepository(
+    public PageDto<PasswordRepositoryDto> getAccountsFromSharePasswordRepository(
             @ApiParam("Номер страници") @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
             @ApiParam("Размер страници") @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
             RepositoryPasswordSort sort,
@@ -138,7 +138,7 @@ public class KolpassController {
     @ApiOperation(value = "Получить историю хранилища")
     @PreAuthorize("isAuthenticated()") // TODO: add role
     @RequestMapping(value = "/rep/{repId}/passwords", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<PasswordHistoryDto> getRepositoryPasswordHistory(
+    public PageDto<PasswordHistoryDto> getRepositoryPasswordHistory(
             @ApiParam("ID Хринилища") @PathVariable("repId") Long repId,
             @ApiParam("Номер страници") @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
             @ApiParam("Размер страници") @RequestParam(value = "pageSize", defaultValue = "15") Integer pageSize) {

@@ -3,21 +3,22 @@ package ru.kolaer.server.placement.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.constant.RouterConstants;
+import ru.kolaer.common.dto.PageDto;
+import ru.kolaer.server.core.model.dto.PaginationRequest;
 import ru.kolaer.server.core.model.dto.placement.PlacementDto;
-import ru.kolaer.server.core.model.dto.placement.PlacementFilter;
-import ru.kolaer.server.core.model.dto.placement.PlacementSort;
 import ru.kolaer.server.placement.service.PlacementService;
+
+import javax.validation.constraints.NotNull;
 
 
 @Api(tags = "Помещения")
 @RestController
-@RequestMapping(value = "/placement")
+@Validated
 public class PlacementController {
 
     private final PlacementService placementService;
@@ -28,11 +29,8 @@ public class PlacementController {
     }
 
     @ApiOperation(value = "Получить все помещения")
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<PlacementDto> getAllPlacement(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                              @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
-                                              PlacementSort sortParam,
-                                              PlacementFilter filter) {
-        return placementService.getAll(sortParam, filter, pageNum, pageSize);
+    @GetMapping(RouterConstants.PLACEMENT)
+    public PageDto<PlacementDto> getAllPlacement(@ModelAttribute @NotNull PaginationRequest request) {
+        return placementService.findAll(request);
     }
 }

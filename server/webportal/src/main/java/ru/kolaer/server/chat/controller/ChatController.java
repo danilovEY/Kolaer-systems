@@ -10,7 +10,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.IdDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageDto;
@@ -125,7 +125,7 @@ public class ChatController {
     @ApiOperation("Получить сообщения группы")
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/room/{roomId}/messages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<ChatMessageDto> getMessagesRoom(@PathVariable("roomId") Long roomId,
+    public PageDto<ChatMessageDto> getMessagesRoom(@PathVariable("roomId") Long roomId,
                                                 @RequestParam(value = "page", defaultValue = "1") Integer number,
                                                 @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return chatMessageService.getAllByRoom(roomId, number, pageSize);

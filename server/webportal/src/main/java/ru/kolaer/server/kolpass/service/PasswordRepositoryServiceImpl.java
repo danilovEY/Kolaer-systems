@@ -3,7 +3,7 @@ package ru.kolaer.server.kolpass.service;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.error.UnexpectedParamsDescription;
@@ -63,7 +63,7 @@ public class PasswordRepositoryServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PasswordRepositoryDto> getAll(RepositoryPasswordSort sortParam, RepositoryPasswordFilter filterParam,
+    public PageDto<PasswordRepositoryDto> getAll(RepositoryPasswordSort sortParam, RepositoryPasswordFilter filterParam,
                                               Integer number, Integer pageSize) {
         RepositoryPasswordFilter filter = Optional.ofNullable(filterParam)
                 .orElse(new RepositoryPasswordFilter());
@@ -75,14 +75,14 @@ public class PasswordRepositoryServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PasswordRepositoryDto> getAllShared(RepositoryPasswordSort sortParam, RepositoryPasswordFilter filterParam,
+    public PageDto<PasswordRepositoryDto> getAllShared(RepositoryPasswordSort sortParam, RepositoryPasswordFilter filterParam,
                                                     Integer number, Integer pageSize) {
 
         AccountAuthorizedDto currentAccount = authenticationService.getAccountAuthorized();
 
         List<Long> repIds = defaultEntityDao.findAllRepositoryFromShare(currentAccount.getId());
         if(repIds.isEmpty()) {
-            return new Page<>();
+            return new PageDto<>();
         }
 
         RepositoryPasswordFilter filter = Optional.ofNullable(filterParam)
@@ -144,7 +144,7 @@ public class PasswordRepositoryServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PasswordHistoryDto> getHistoryByIdRepository(Long repId, Integer number, Integer pageSize) {
+    public PageDto<PasswordHistoryDto> getHistoryByIdRepository(Long repId, Integer number, Integer pageSize) {
         AccountAuthorizedDto accountSimpleByAuthentication = authenticationService.getAccountAuthorized();
 
         PasswordRepositoryEntity passwordRepositoryEntity = defaultEntityDao.findById(repId);
@@ -160,7 +160,7 @@ public class PasswordRepositoryServiceImpl
                     .stream()
                     .map(passwordHistoryConverter::convertToDto)
                     .collect(Collectors.toList());
-            return new Page<>(result, 0, 0, result.size());
+            return new PageDto<>(result, 0, 0, result.size());
         } else {
             Long count = passwordHistoryDao.findCountHistoryByIdRepository(repId, number, pageSize);
             List<PasswordHistoryDto> result = passwordHistoryDao.findHistoryByIdRepository(repId, number, pageSize)
@@ -168,7 +168,7 @@ public class PasswordRepositoryServiceImpl
                     .map(passwordHistoryConverter::convertToDto)
                     .collect(Collectors.toList());
 
-            return new Page<>(result, number, count, pageSize);
+            return new PageDto<>(result, number, count, pageSize);
         }
     }
 

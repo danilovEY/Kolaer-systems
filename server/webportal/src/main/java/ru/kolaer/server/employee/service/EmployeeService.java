@@ -1,6 +1,6 @@
 package ru.kolaer.server.employee.service;
 
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.service.BirthdayService;
 import ru.kolaer.server.core.service.DefaultService;
@@ -18,17 +18,17 @@ public interface EmployeeService extends BirthdayService<EmployeeDto>, DefaultSe
 
     List<EmployeeDto> getUsersByDepartmentId(Long id);
 
-    Page<EmployeeDto> getUsersByDepartmentId(int page, int pageSize, Long id);
+    PageDto<EmployeeDto> getUsersByDepartmentId(int page, int pageSize, Long id);
 
     EmployeeDto update(Long employeeId, EmployeeRequestDto employeeRequestDto);
 
     EmployeeDto add(EmployeeRequestDto employeeRequestDto);
 
-    List<EmployeeDto> getEmployeesForContacts(int page, int pageSize, String searchText);
+//    List<EmployeeDto> getEmployeesForContacts(int page, int pageSize, String searchText);
 
-    long getCountEmployeesForContacts(String searchText);
+//    long getCountEmployeesForContacts(String searchText);
 
-    Page<EmployeeDto> getEmployees(FindEmployeePageRequest request);
+    PageDto<EmployeeDto> getEmployees(FindEmployeePageRequest request);
 
     EmployeeDto updateWorkType(Long employeeId, UpdateTypeWorkEmployeeRequestDto request);
 }

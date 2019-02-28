@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.constant.assess.EmployeeAccessConstant;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.model.dto.ResultUpdate;
 import ru.kolaer.server.core.model.dto.holiday.HistoryChangeDto;
@@ -94,7 +94,7 @@ public class EmployeeController {
     @ApiOperation(value = "Получить всех сотрудников")
     @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_READ + "')")
     @GetMapping(RouterConstants.EMPLOYEES)
-    public Page<EmployeeDto> getAllEmployees(@ModelAttribute FindEmployeePageRequest request) {
+    public PageDto<EmployeeDto> getAllEmployees(@ModelAttribute FindEmployeePageRequest request) {
         return this.employeeService.getEmployees(request);
     }
 

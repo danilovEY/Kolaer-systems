@@ -4,7 +4,7 @@ import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.model.dto.account.ChangePasswordDto;
-import ru.kolaer.server.core.model.dto.concact.ContactDto;
+import ru.kolaer.server.core.model.dto.concact.ContactDetailsDto;
 import ru.kolaer.server.core.model.dto.concact.ContactRequestDto;
 import ru.kolaer.server.core.service.DefaultService;
 import ru.kolaer.server.core.service.UpdatableEmployeeService;
@@ -20,9 +20,9 @@ public interface AccountService extends DefaultService<AccountDto>, UpdatableEmp
     AccountSimpleDto update(AccountSimpleDto accountSimpleDto);
     AccountSimpleDto getSimpleAccountById(long accountId);
 
-    ContactDto updateContact(ContactRequestDto contactRequestDto);
+    ContactDetailsDto updateContact(ContactRequestDto contactRequestDto);
 
-    ContactDto getContact();
+    ContactDetailsDto getContact();
 
     EmployeeDto getEmployee();
 }

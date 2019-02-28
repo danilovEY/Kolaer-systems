@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.constant.assess.VacationAccessConstant;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.server.vacation.model.dto.*;
 import ru.kolaer.server.vacation.model.request.*;
 import ru.kolaer.server.vacation.service.GenerateCalendarReportForVacationService;
@@ -39,7 +39,7 @@ public class VacationController {
     @ApiOperation(value = "Получить отпуска")
     @GetMapping(RouterConstants.VACATIONS)
     @PreAuthorize("hasAnyRole('" + VacationAccessConstant.VACATIONS_READ + "','" + VacationAccessConstant.VACATIONS_READ_DEPARTMENT + "')")
-    public Page<VacationDto> getVacations(@ModelAttribute FindVacationPageRequest request) {
+    public PageDto<VacationDto> getVacations(@ModelAttribute FindVacationPageRequest request) {
         return vacationService.getVacations(request);
     }
 
@@ -67,7 +67,7 @@ public class VacationController {
 
     @ApiOperation(value = "Получить периоды")
     @GetMapping(RouterConstants.VACATIONS_PERIODS)
-    public Page<VacationPeriodDto> getVacationPeriods(@ModelAttribute FindVacationPeriodPageRequest request) {
+    public PageDto<VacationPeriodDto> getVacationPeriods(@ModelAttribute FindVacationPeriodPageRequest request) {
         return vacationService.getVacationPeriods(request);
     }
 

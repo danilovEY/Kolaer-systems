@@ -6,14 +6,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import ru.kolaer.client.core.system.Authentication;
 import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 
 /**
  * Created by danilovey on 13.02.2017.
  */
 public interface TokenToHeader {
-    default <T> ParameterizedTypeReference<Page<T>> getTypeFromPage(Class<T> cls) {
-        return new ParameterizedTypeReference<Page<T>>() {};
+    default <T> ParameterizedTypeReference<PageDto<T>> getTypeFromPage(Class<T> cls) {
+        return new ParameterizedTypeReference<PageDto<T>>() {};
     }
 
     default HttpHeaders getTokenToHeader() {

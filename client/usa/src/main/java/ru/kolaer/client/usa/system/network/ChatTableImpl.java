@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.core.system.network.ChatTable;
 import ru.kolaer.client.core.system.network.ServerStatus;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.IdDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
@@ -106,7 +106,7 @@ public class ChatTableImpl implements ChatTable, RestTemplateService {
     }
 
     @Override
-    public ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(long roomId) {
+    public ServerResponse<PageDto<ChatMessageDto>> getMessageByRoomId(long roomId) {
         return getPageResponse(restTemplate, URL_GET_GROUP + roomId + "/messages", ChatMessageDto.class, objectMapper);
     }
 

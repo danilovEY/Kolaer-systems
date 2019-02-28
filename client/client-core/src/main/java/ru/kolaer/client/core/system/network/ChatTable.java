@@ -1,6 +1,6 @@
 package ru.kolaer.client.core.system.network;
 
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.IdDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
@@ -26,7 +26,7 @@ public interface ChatTable extends Server {
     ServerResponse<List<ChatRoomDto>> createSingleRooms(IdsDto idDto);
 
     ServerResponse<ChatRoomDto> getRoomById(long roomId);
-    ServerResponse<Page<ChatMessageDto>> getMessageByRoomId(long roomId);
+    ServerResponse<PageDto<ChatMessageDto>> getMessageByRoomId(long roomId);
 
     ServerResponse hideMessage(IdsDto idsDto);
     ServerResponse deleteMessage(IdsDto idsDto);

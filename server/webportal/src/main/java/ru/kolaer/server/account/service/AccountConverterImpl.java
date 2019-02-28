@@ -9,6 +9,7 @@ import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.account.model.entity.AccountEntity;
 import ru.kolaer.server.contact.model.entity.ContactEntity;
+import ru.kolaer.server.contact.repository.ContactRepository;
 import ru.kolaer.server.core.service.impl.UtilService;
 import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;
@@ -27,6 +28,7 @@ public class AccountConverterImpl implements AccountConverter {
 
     private final EmployeeConverter employeeConverter;
     private final EmployeeDao employeeDao;
+    private final ContactRepository contactRepository;
     private final PasswordEncoder passwordEncoder;
     private final UtilService utilService;
 
@@ -158,7 +160,7 @@ public class AccountConverterImpl implements AccountConverter {
         accountEntity.setUsername(employeeEntity.getPersonnelNumber().toString());
         accountEntity.setChatName(employeeEntity.getInitials());
 
-        Optional.ofNullable(employeeEntity.getContact())
+        contactRepository.findByEmployeeId(employeeEntity.getId())
                 .map(ContactEntity::getEmail)
                 .ifPresent(accountEntity::setEmail);
 

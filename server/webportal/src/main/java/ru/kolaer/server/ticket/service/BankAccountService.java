@@ -1,6 +1,6 @@
 package ru.kolaer.server.ticket.service;
 
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.model.dto.FilterParam;
 import ru.kolaer.server.core.model.dto.SortParam;
@@ -13,5 +13,5 @@ public interface BankAccountService extends DefaultService<BankAccountDto> {
 
     BankAccountDto update(Long bankId, BankAccountRequest bankAccountRequest);
 
-    Page<EmployeeDto> getAllEntityWithAccount(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize);
+    PageDto<EmployeeDto> getAllEntityWithAccount(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize);
 }

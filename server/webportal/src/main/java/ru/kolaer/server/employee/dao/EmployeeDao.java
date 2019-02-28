@@ -1,7 +1,6 @@
 package ru.kolaer.server.employee.dao;
 
 
-import ru.kolaer.server.contact.model.entity.ContactType;
 import ru.kolaer.server.core.dao.BirthdayDao;
 import ru.kolaer.server.core.dao.DefaultDao;
 import ru.kolaer.server.employee.model.dto.CountEmployeeInDepartmentDto;
@@ -25,12 +24,11 @@ public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<Emp
 
     EmployeeEntity findByPersonnelNumber(Long id);
 
-    List<EmployeeEntity> findEmployeesForContacts(int page, int pageSize, String searchText);
+//    List<EmployeeEntity> findEmployeesForContacts(int page, int pageSize, String searchText);
+//    long findCountEmployeesForContacts(String searchText);
 
-    long findCountEmployeesForContacts(String searchText);
-
-    List<EmployeeEntity> findEmployeeByDepIdAndContactType(int page, int pageSize, long depId, ContactType type);
-    Long findCountEmployeeByDepIdAndContactType(long depId, ContactType type);
+//    List<EmployeeEntity> findEmployeeByDepIdAndContactType(int page, int pageSize, long depId, ContactType type);
+//    Long findCountEmployeeByDepIdAndContactType(long depId, ContactType type);
 
     List<CountEmployeeInDepartmentDto> findEmployeeByDepartmentCount(FindEmployeeByDepartment request);
 

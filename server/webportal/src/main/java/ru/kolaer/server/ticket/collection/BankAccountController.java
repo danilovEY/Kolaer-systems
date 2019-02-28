@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.constant.assess.TicketAccessConstant;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.employee.model.request.EmployeeFilter;
 import ru.kolaer.server.employee.model.request.EmployeeSort;
@@ -33,7 +33,7 @@ public class BankAccountController {
     @ApiOperation(value = "Получить все счета")
     @PreAuthorize("hasRole('" + TicketAccessConstant.BANK_ACCOUNTS_READ + "')")
     @GetMapping(RouterConstants.BANK)
-    public Page<BankAccountDto> getAll(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+    public PageDto<BankAccountDto> getAll(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                        @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                        BankAccountSort sortParam,
                                        BankAccountFilter filter) {
@@ -43,7 +43,7 @@ public class BankAccountController {
     @ApiOperation(value = "Получить сотрудников которые имеют счета")
     @PreAuthorize("hasRole('" + TicketAccessConstant.BANK_ACCOUNTS_READ + "')")
     @GetMapping(RouterConstants.BANK_EMPLOYEE)
-    public Page<EmployeeDto> getAllEmployees(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+    public PageDto<EmployeeDto> getAllEmployees(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                              @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                              EmployeeSort sortParam,
                                              EmployeeFilter filter) {

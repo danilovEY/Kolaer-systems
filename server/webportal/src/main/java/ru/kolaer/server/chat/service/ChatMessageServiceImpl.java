@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.constant.assess.ChatAccessConstant;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.error.ErrorCode;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatGroupType;
 import ru.kolaer.common.dto.kolaerweb.kolchat.ChatMessageDto;
@@ -66,7 +66,7 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ChatMessageDto> getAllByRoom(Long room, Integer number, Integer pageSize) {
+    public PageDto<ChatMessageDto> getAllByRoom(Long room, Integer number, Integer pageSize) {
         AccountAuthorizedDto accountByAuthentication = authenticationService.getAccountAuthorized();
         ChatRoomEntity chatRoomEntity = chatRoomDao.findById(room);
 
@@ -90,7 +90,7 @@ public class ChatMessageServiceImpl extends AbstractDefaultService<ChatMessageDt
 
             results = checkReads(results, accountByAuthentication.getId());
 
-            return new Page<>(results, number, count, pageSize);
+            return new PageDto<>(results, number, count, pageSize);
         }
 
         log.info("У пользователя: {} нет доступа к чату: {}", accountByAuthentication.getId(), room);

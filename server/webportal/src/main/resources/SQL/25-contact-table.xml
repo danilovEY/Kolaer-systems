@@ -46,4 +46,21 @@
     <changeSet id="25-3" author="Danilov">
         <renameColumn tableName="contact" oldColumnName="home_phone_number" newColumnName="mobile_phone_number" columnDataType="VARCHAR(255)"/>
     </changeSet>
+
+    <changeSet id="25-4" author="Danilov">
+        <addColumn tableName="contact">
+            <column name="employee_id" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <sql>
+            UPDATE contact AS c LEFT JOIN employee AS e ON e.contact_id=c.id SET c.employee_id=e.id WHERE e.contact_id IS NOT NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="25-5" author="Danilov">
+        <addUniqueConstraint tableName="contact" columnNames="employee_id"/>
+    </changeSet>
+
 </databaseChangeLog>

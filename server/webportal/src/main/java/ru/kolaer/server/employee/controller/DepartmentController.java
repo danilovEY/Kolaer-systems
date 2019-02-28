@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.constant.assess.EmployeeAccessConstant;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.server.employee.model.dto.DepartmentRequestDto;
 import ru.kolaer.server.employee.model.request.DepartmentFilter;
@@ -32,7 +32,7 @@ public class DepartmentController {
 
     @ApiOperation(value = "Получить все подразделения")
     @GetMapping(RouterConstants.DEPARTMENTS)
-    public Page<DepartmentDto> getAllDepartment(@RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
+    public PageDto<DepartmentDto> getAllDepartment(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                 @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                                 DepartmentSort sortParam,
                                                 DepartmentFilter filter) {
@@ -41,7 +41,7 @@ public class DepartmentController {
 
     @ApiOperation(value = "Найти подразделения")
     @GetMapping(RouterConstants.DEPARTMENTS_FIND)
-    public Page<DepartmentDto> getAllDepartment(@ModelAttribute FindDepartmentPageRequest request) {
+    public PageDto<DepartmentDto> getAllDepartment(@ModelAttribute FindDepartmentPageRequest request) {
         return departmentService.find(request);
     }
 

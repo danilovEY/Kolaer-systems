@@ -3,7 +3,7 @@ package ru.kolaer.server.ticket.service;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.core.bean.RegisterTicketScheduler;
 import ru.kolaer.server.core.exception.NotFoundDataException;
@@ -330,7 +330,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
 
     @Override
     @Transactional(readOnly = true)
-    public Page<TicketDto> getTicketsByRegisterId(Long regId, Integer number, Integer pageSize, SortParam sortParam, TicketFilter ticketFilter) {
+    public PageDto<TicketDto> getTicketsByRegisterId(Long regId, Integer number, Integer pageSize, SortParam sortParam, TicketFilter ticketFilter) {
         if(ticketFilter == null) {
             ticketFilter = new TicketFilter();
         }
@@ -343,6 +343,6 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
         Long count = ticketDao.findAllCount(filters);
         List<TicketDto> results = defaultConverter.convertToTicketDto(ticketDao.findAll(sort, filters, number, pageSize));
 
-        return new Page<>(results, number, count, pageSize);
+        return new PageDto<>(results, number, count, pageSize);
     }
 }

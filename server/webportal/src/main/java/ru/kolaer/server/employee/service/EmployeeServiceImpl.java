@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
@@ -80,10 +80,10 @@ public class EmployeeServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public Page<EmployeeDto> getUsersByDepartmentId(int page, int pageSize, Long id) {
+    public PageDto<EmployeeDto> getUsersByDepartmentId(int page, int pageSize, Long id) {
         if(page == 0) {
             List<EmployeeDto> employees = this.getUsersByDepartmentId(id);
-            return new Page<>(employees, page, 0, employees.size());
+            return new PageDto<>(employees, page, 0, employees.size());
         }
 
         Long count = defaultEntityDao.findCountByDepartmentById(id);
@@ -91,7 +91,7 @@ public class EmployeeServiceImpl
         List<EmployeeDto> result = defaultConverter
                 .convertToDto(defaultEntityDao.findByDepartmentById(page, pageSize, id));
 
-        return new Page<>(result, page, count, pageSize);
+        return new PageDto<>(result, page, count, pageSize);
     }
 
     @Override
@@ -169,26 +169,26 @@ public class EmployeeServiceImpl
         return defaultConverter.convertToDto(defaultEntityDao.save(employeeEntity));
     }
 
-    @Override
-    public List<EmployeeDto> getEmployeesForContacts(int page, int pageSize, String searchText) {
-        return StringUtils.hasText(searchText)
-                ? defaultConverter.convertToDto(defaultEntityDao.findEmployeesForContacts(page, pageSize, searchText))
-                : defaultConverter.convertToDto(defaultEntityDao.findAll(page, pageSize));
-    }
+//    @Override
+//    public List<EmployeeDto> getEmployeesForContacts(int page, int pageSize, String searchText) {
+//        return StringUtils.hasText(searchText)
+//                ? defaultConverter.convertToDto(defaultEntityDao.findEmployeesForContacts(page, pageSize, searchText))
+//                : defaultConverter.convertToDto(defaultEntityDao.findAll(page, pageSize));
+//    }
+//
+//    @Override
+//    public long getCountEmployeesForContacts(String searchText) {
+//        return StringUtils.hasText(searchText)
+//                ? defaultEntityDao.findCountEmployeesForContacts(searchText)
+//                : defaultEntityDao.findAllCount();
+//    }
 
     @Override
-    public long getCountEmployeesForContacts(String searchText) {
-        return StringUtils.hasText(searchText)
-                ? defaultEntityDao.findCountEmployeesForContacts(searchText)
-                : defaultEntityDao.findAllCount();
-    }
-
-    @Override
-    public Page<EmployeeDto> getEmployees(FindEmployeePageRequest request) {
+    public PageDto<EmployeeDto> getEmployees(FindEmployeePageRequest request) {
         long count = defaultEntityDao.findAllEmployeeCount(request);
         List<EmployeeDto> employees = defaultConverter.convertToDto(defaultEntityDao.findAllEmployee(request));
 
-        return new Page<>(employees, request.getPageNum(), count, request.getPageSize());
+        return new PageDto<>(employees, request.getPageNum(), count, request.getPageSize());
     }
 
     @Override

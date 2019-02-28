@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.constant.assess.EmployeeAccessConstant;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.employee.model.dto.PostRequestDto;
 import ru.kolaer.server.employee.model.request.FindPostPageRequest;
@@ -31,7 +31,7 @@ public class PostController {
 
     @ApiOperation(value = "Получить все должности")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<PostDto> getAllDepartment(@RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
+    public PageDto<PostDto> getAllDepartment(@RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
                                           @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                           PostSort sortParam,
                                           PostFilter filter) {
@@ -40,7 +40,7 @@ public class PostController {
 
     @ApiOperation(value = "Найти должности")
     @RequestMapping(value = "/find", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<PostDto> getAllDepartment(FindPostPageRequest request) {
+    public PageDto<PostDto> getAllDepartment(FindPostPageRequest request) {
         return this.postService.find(request);
     }
 

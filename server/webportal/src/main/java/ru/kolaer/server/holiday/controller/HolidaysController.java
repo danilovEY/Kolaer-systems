@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.DateTimeJson;
 import ru.kolaer.common.dto.kolaerweb.Holiday;
 import ru.kolaer.server.core.model.dto.holiday.HolidayDto;
@@ -32,7 +32,7 @@ public class HolidaysController {
 
     @ApiOperation(value = "Получить все праздники")
     @RequestMapping(value = "/non-security/holidays", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<HolidayDto> getAll(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+    public PageDto<HolidayDto> getAll(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                    @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                    HolidaySort sortParam,
                                    HolidayFilter filter) {

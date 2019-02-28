@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import ru.kolaer.common.dto.employee.EnumCategory;
 import ru.kolaer.common.dto.employee.EnumGender;
-import ru.kolaer.server.contact.model.entity.ContactEntity;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.*;
@@ -74,14 +73,6 @@ public class EmployeeEntity extends DefaultEntity {
 
     @Column(name = "photo", length = 300)
     private String photo;
-
-    @Column(name = "contact_id")
-    private Long contactId;
-
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contact_id", insertable=false, updatable=false)
-    private ContactEntity contact;
 
     @Column(name = "harmfulness", nullable = false)
     private boolean harmfulness;

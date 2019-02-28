@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.util.FieldUtils;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.dto.BaseDto;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.server.core.converter.BaseConverter;
 import ru.kolaer.server.core.dao.DefaultDao;
 import ru.kolaer.server.core.model.dto.*;
@@ -126,19 +126,19 @@ public abstract class AbstractDefaultService<T extends BaseDto,
 
     @Override
     @Transactional(readOnly = true)
-    public Page<T> getAll(Integer number, Integer pageSize) {
+    public PageDto<T> getAll(Integer number, Integer pageSize) {
         return this.getAll(null, null, number, pageSize);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<T> getAll(PaginationRequest request) {
+    public PageDto<T> getAll(PaginationRequest request) {
         return this.getAll(null, null, request.getPageNum(), request.getPageSize());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<T> getAll(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize) {
+    public PageDto<T> getAll(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize) {
         Long count;
         List<T> results;
 
@@ -154,7 +154,7 @@ public abstract class AbstractDefaultService<T extends BaseDto,
             results = defaultConverter.convertToDto(defaultEntityDao.findAll(sort, filters, number, pageSize));
         }
 
-        return new Page<>(results, number, count, pageSize);
+        return new PageDto<>(results, number, count, pageSize);
     }
 
     protected SortField getSortField(SortParam sortParam) {

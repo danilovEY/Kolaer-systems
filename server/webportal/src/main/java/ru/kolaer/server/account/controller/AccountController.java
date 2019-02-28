@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.constant.assess.AccountAccessConstant;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.server.account.service.AccountService;
 import ru.kolaer.server.core.model.dto.account.AccountFilter;
@@ -33,7 +33,7 @@ public class AccountController {
     @PreAuthorize("hasRole('" + AccountAccessConstant.ACCOUNTS_READ + "')")
     @ApiOperation(value = "Получить все аккаунты")
     @GetMapping(RouterConstants.ACCOUNTS)
-    public Page<AccountDto> getAllAccounts(@RequestParam(value = "page", defaultValue = "0") Integer number,
+    public PageDto<AccountDto> getAllAccounts(@RequestParam(value = "page", defaultValue = "0") Integer number,
                                            @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
                                            AccountSort sortParam,
                                            AccountFilter filter) {

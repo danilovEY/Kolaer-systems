@@ -1,7 +1,7 @@
 package ru.kolaer.server.vacation.service;
 
 import org.springframework.http.ResponseEntity;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.server.vacation.model.dto.*;
 import ru.kolaer.server.vacation.model.request.*;
 
@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface VacationService {
 
-    Page<VacationDto> getVacations(FindVacationPageRequest request);
+    PageDto<VacationDto> getVacations(FindVacationPageRequest request);
 
-    Page<VacationPeriodDto> getVacationPeriods(FindVacationPeriodPageRequest request);
+    PageDto<VacationPeriodDto> getVacationPeriods(FindVacationPeriodPageRequest request);
 
     VacationBalanceDto getBalance(FindBalanceRequest request);
 

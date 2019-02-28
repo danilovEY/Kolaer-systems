@@ -5,7 +5,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.core.system.network.kolaerweb.NotifyMessageTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.NotifyMessageDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 
@@ -43,12 +43,12 @@ public class NotifyMessageTableImpl implements NotifyMessageTable, RestTemplateS
     }
 
     @Override
-    public ServerResponse<Page<NotifyMessageDto>> getAllNotifyMessages() {
+    public ServerResponse<PageDto<NotifyMessageDto>> getAllNotifyMessages() {
         return getAllNotifyMessages(0, 7);
     }
 
     @Override
-    public ServerResponse<Page<NotifyMessageDto>> getAllNotifyMessages(int page, int pageSize) {
+    public ServerResponse<PageDto<NotifyMessageDto>> getAllNotifyMessages(int page, int pageSize) {
         Map<String, Object> urlVariables = new HashMap<>();
         urlVariables.put("page", page);
         urlVariables.put("pagesize", pageSize);

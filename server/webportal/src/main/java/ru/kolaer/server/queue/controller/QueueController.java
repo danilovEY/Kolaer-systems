@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.server.core.model.dto.queue.PageQueueRequest;
 import ru.kolaer.server.core.model.dto.queue.QueueRequestDto;
 import ru.kolaer.server.core.model.dto.queue.QueueScheduleDto;
@@ -33,7 +33,7 @@ public class QueueController {
     @ApiOperation(value = "Получить все цели")
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<QueueTargetDto> getAllTarget(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+    public PageDto<QueueTargetDto> getAllTarget(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                              @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return queueService.getAll(pageNum, pageSize);
     }
@@ -41,7 +41,7 @@ public class QueueController {
     @ApiOperation(value = "Получить все очереди у цели")
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/{id}/request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<QueueRequestDto> getAllRequest(@PathVariable("id") Long id,
+    public PageDto<QueueRequestDto> getAllRequest(@PathVariable("id") Long id,
                                                @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize) {
         return queueService.getAllQueueRequestByTarget(id, pageNum, pageSize);
@@ -50,7 +50,7 @@ public class QueueController {
     @ApiOperation(value = "Получить рассписание")
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/scheduler", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Page<QueueScheduleDto> getAllRequest(@ModelAttribute PageQueueRequest request) {
+    public PageDto<QueueScheduleDto> getAllRequest(@ModelAttribute PageQueueRequest request) {
         return queueService.getSchedulers(request);
     }
 

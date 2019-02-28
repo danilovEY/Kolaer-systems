@@ -1,6 +1,6 @@
 package ru.kolaer.server.employee.service;
 
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.server.core.service.DefaultService;
 import ru.kolaer.server.employee.model.dto.DepartmentRequestDto;
@@ -16,5 +16,5 @@ public interface DepartmentService extends DefaultService<DepartmentDto> {
 
     DepartmentDto update(Long depId, DepartmentRequestDto departmentRequestDto);
 
-    Page<DepartmentDto> find(FindDepartmentPageRequest request);
+    PageDto<DepartmentDto> find(FindDepartmentPageRequest request);
 }

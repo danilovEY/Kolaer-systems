@@ -10,7 +10,7 @@ import ru.kolaer.client.chat.service.ChatRoomObserver;
 import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.core.tools.Tools;
 import ru.kolaer.common.constant.assess.ChatAccessConstant;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.auth.AccountDto;
 import ru.kolaer.common.dto.kolaerweb.IdsDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
@@ -100,7 +100,7 @@ public class ChatRoomVcImpl implements ChatRoomVc {
 
         chatClient.subscribeRoom(this.chatRoomDto, this);
 
-        ServerResponse<Page<ChatMessageDto>> messageByRoomId = UniformSystemEditorKitSingleton.getInstance()
+        ServerResponse<PageDto<ChatMessageDto>> messageByRoomId = UniformSystemEditorKitSingleton.getInstance()
                 .getUSNetwork()
                 .getKolaerWebServer()
                 .getApplicationDataBase()

@@ -1,6 +1,6 @@
 package ru.kolaer.server.ticket.service;
 
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.server.core.model.dto.SortParam;
 import ru.kolaer.server.core.service.DefaultService;
 import ru.kolaer.server.ticket.model.dto.RequestTicketDto;
@@ -37,5 +37,5 @@ public interface TicketRegisterService extends DefaultService<TicketRegisterDto>
 
     TicketDto updateTicket(Long regId, Long ticketId, RequestTicketDto ticketDto);
 
-    Page<TicketDto> getTicketsByRegisterId(Long regId, Integer number, Integer pageSize, SortParam sortParam, TicketFilter ticketFilter);
+    PageDto<TicketDto> getTicketsByRegisterId(Long regId, Integer number, Integer pageSize, SortParam sortParam, TicketFilter ticketFilter);
 }

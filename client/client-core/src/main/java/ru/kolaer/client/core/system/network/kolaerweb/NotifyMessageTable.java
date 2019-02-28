@@ -1,6 +1,6 @@
 package ru.kolaer.client.core.system.network.kolaerweb;
 
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.NotifyMessageDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 
@@ -11,7 +11,7 @@ public interface NotifyMessageTable {
     ServerResponse<NotifyMessageDto> getLastNotifyMessage();
     ServerResponse addNotifyMessage(NotifyMessageDto notifyMessage);
 
-    ServerResponse<Page<NotifyMessageDto>> getAllNotifyMessages();
+    ServerResponse<PageDto<NotifyMessageDto>> getAllNotifyMessages();
 
-    ServerResponse<Page<NotifyMessageDto>> getAllNotifyMessages(int page, int pageSize);
+    ServerResponse<PageDto<NotifyMessageDto>> getAllNotifyMessages(int page, int pageSize);
 }

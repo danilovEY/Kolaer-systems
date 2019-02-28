@@ -1,6 +1,6 @@
 package ru.kolaer.server.employee.service;
 
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.core.service.DefaultService;
 import ru.kolaer.server.employee.model.dto.PostRequestDto;
@@ -14,5 +14,5 @@ public interface PostService extends DefaultService<PostDto> {
 
     PostDto update(Long postId, PostRequestDto postRequestDto);
 
-    Page<PostDto> find(FindPostPageRequest request);
+    PageDto<PostDto> find(FindPostPageRequest request);
 }

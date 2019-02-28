@@ -81,4 +81,5 @@ public interface RouterConstants {
     String NON_SECURITY_TOOLS_SERVER_TIME = NON_SECURITY_TOOLS_SERVER + "/time";
 
 
+    String PLACEMENT = "/placement";
 }

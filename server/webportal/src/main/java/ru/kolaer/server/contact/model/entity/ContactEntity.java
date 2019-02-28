@@ -3,15 +3,19 @@ package ru.kolaer.server.contact.model.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import ru.kolaer.server.core.model.entity.DefaultEntity;
-import ru.kolaer.server.placement.model.entity.PlacementEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "contact")
 @Data
 public class ContactEntity extends DefaultEntity {
+
+    @Column(name = "employee_id")
+    private Long employeeId;
 
     @Column(name = "email")
     private String email;
@@ -31,7 +35,4 @@ public class ContactEntity extends DefaultEntity {
     @Column(name = "place_id")
     private Long placementId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id", insertable=false, updatable=false)
-    private PlacementEntity placement;
 }

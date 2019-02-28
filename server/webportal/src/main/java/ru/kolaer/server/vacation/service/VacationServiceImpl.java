@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.TypeDay;
 import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.core.exception.ForbiddenException;
@@ -82,14 +82,14 @@ public class VacationServiceImpl implements VacationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<VacationDto> getVacations(FindVacationPageRequest request) {
+    public PageDto<VacationDto> getVacations(FindVacationPageRequest request) {
         long countVacation = vacationDao.findCountVacation(request);
 
         List<VacationEntity> allVacation = countVacation == 0
                 ? Collections.emptyList()
                 : vacationDao.findAllVacation(request);
 
-        return new Page<>(vacationConverter.convertToDto(allVacation),
+        return new PageDto<>(vacationConverter.convertToDto(allVacation),
                 request.getPageNum(),
                 countVacation,
                 request.getPageSize());
@@ -97,11 +97,11 @@ public class VacationServiceImpl implements VacationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<VacationPeriodDto> getVacationPeriods(FindVacationPeriodPageRequest request) {
+    public PageDto<VacationPeriodDto> getVacationPeriods(FindVacationPeriodPageRequest request) {
         Long countPeriods = vacationDao.findCountPeriods(request);
         List<VacationPeriodEntity> allPeriods = vacationDao.findAllPeriods(request);
 
-        return new Page<>(vacationConverter.convertToDtos(allPeriods),
+        return new PageDto<>(vacationConverter.convertToDtos(allPeriods),
                 request.getPageNum(),
                 countPeriods,
                 request.getPageSize());

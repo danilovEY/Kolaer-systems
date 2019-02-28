@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import ru.kolaer.client.core.system.network.kolaerweb.EmployeeOtherOrganizationTable;
 import ru.kolaer.client.usa.system.network.RestTemplateService;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 
@@ -47,7 +47,7 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 	}
 
 	@Override
-	public ServerResponse<Page<EmployeeOtherOrganizationDto>> getAllUser() {
+	public ServerResponse<PageDto<EmployeeOtherOrganizationDto>> getAllUser() {
 		return getPageResponse(restTemplate, URL_GET_ALL, EmployeeOtherOrganizationDto.class, objectMapper);
 	}
 

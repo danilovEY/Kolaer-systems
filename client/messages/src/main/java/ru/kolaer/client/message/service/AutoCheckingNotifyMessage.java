@@ -10,7 +10,7 @@ import ru.kolaer.client.core.system.impl.UniformSystemEditorKitSingleton;
 import ru.kolaer.client.core.system.ui.NotificationView;
 import ru.kolaer.client.core.system.ui.StaticView;
 import ru.kolaer.client.core.tools.Tools;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.NotifyMessageDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 
@@ -54,7 +54,7 @@ public class AutoCheckingNotifyMessage implements Service, StaticView {
         run = true;
 
         while (run) {
-            ServerResponse<Page<NotifyMessageDto>> allNotifyMessages = UniformSystemEditorKitSingleton.getInstance()
+            ServerResponse<PageDto<NotifyMessageDto>> allNotifyMessages = UniformSystemEditorKitSingleton.getInstance()
                     .getUSNetwork()
                     .getKolaerWebServer()
                     .getApplicationDataBase()

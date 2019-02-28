@@ -89,4 +89,9 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="4-4" author="Danilov">
+        <dropForeignKeyConstraint baseTableName="employee" constraintName="employee_contact_fk"/>
+        <dropColumn tableName="employee" columnName="contact_id"/>
+    </changeSet>
+
 </databaseChangeLog>

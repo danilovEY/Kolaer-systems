@@ -1,7 +1,7 @@
 package ru.kolaer.server.core.service;
 
 import ru.kolaer.common.dto.BaseDto;
-import ru.kolaer.common.dto.Page;
+import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.server.core.model.dto.FilterParam;
 import ru.kolaer.server.core.model.dto.PaginationRequest;
 import ru.kolaer.server.core.model.dto.SortParam;
@@ -35,8 +35,8 @@ public interface DefaultService<T extends BaseDto> {
     long deleteAll(List<Long> ids);
     void delete(List<T> dtos);
 
-    Page<T> getAll(Integer number, Integer pageSize);
-    Page<T> getAll(PaginationRequest request);
-    Page<T> getAll(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize);
+    PageDto<T> getAll(Integer number, Integer pageSize);
+    PageDto<T> getAll(PaginationRequest request);
+    PageDto<T> getAll(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize);
 
 }

@@ -14,7 +14,7 @@ import ru.kolaer.common.dto.auth.AccountSimpleDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.account.service.AccountService;
 import ru.kolaer.server.core.model.dto.account.ChangePasswordDto;
-import ru.kolaer.server.core.model.dto.concact.ContactDto;
+import ru.kolaer.server.core.model.dto.concact.ContactDetailsDto;
 import ru.kolaer.server.core.model.dto.concact.ContactRequestDto;
 import ru.kolaer.server.core.service.AuthenticationService;
 
@@ -66,14 +66,14 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "Получить контакты")
     @GetMapping(RouterConstants.USER_CONTACT)
-    public ContactDto getContact() {
+    public ContactDetailsDto getContact() {
         return accountService.getContact();
     }
 
     @PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "Обновить контакты")
     @PutMapping(RouterConstants.USER_CONTACT)
-    public ContactDto updateContact(@RequestBody ContactRequestDto contactRequestDto) {
+    public ContactDetailsDto updateContact(@RequestBody ContactRequestDto contactRequestDto) {
         return accountService.updateContact(contactRequestDto);
     }
 }
