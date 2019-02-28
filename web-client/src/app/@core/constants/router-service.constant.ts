@@ -23,4 +23,20 @@ export class RouterServiceConstant {
     public static readonly USER_URL: string = RouterServiceConstant.ROOT_URL + `/user`;
     public static readonly USER_EMPLOYEE_URL: string = RouterServiceConstant.USER_URL + `/employee`;
     public static readonly USER_CONTACT_URL: string = RouterServiceConstant.USER_URL + `/contact`;
+
+
+    public static readonly DEPARTMENTS_URL: string = RouterServiceConstant.ROOT_URL + `/departments`;
+    public static readonly DEPARTMENTS_ID_URL: string = RouterServiceConstant.DEPARTMENTS_URL +
+        `/:${PathVariableConstant.DEPARTMENT_ID}`;
+
+
+    public static readonly CONTACTS_URL: string = RouterServiceConstant.ROOT_URL + `/contacts`;
+    public static readonly CONTACTS_EMPLOYEES_URL: string = RouterServiceConstant.CONTACTS_URL + `/employees`;
+    public static readonly CONTACTS_EMPLOYEES_ID_URL: string = RouterServiceConstant.CONTACTS_EMPLOYEES_URL +
+        `/:${PathVariableConstant.EMPLOYEE_ID}`;
+    public static readonly CONTACTS_DEPARTMENTS_URL: string = RouterServiceConstant.CONTACTS_URL + `/departments`;
+    public static readonly CONTACTS_DEPARTMENTS_ID_URL: string = RouterServiceConstant.CONTACTS_DEPARTMENTS_URL +
+        `/:${PathVariableConstant.DEPARTMENT_ID}`;
+    public static readonly CONTACTS_DEPARTMENTS_ID_TYPE_URL: string = RouterServiceConstant.CONTACTS_DEPARTMENTS_ID_URL +
+        `/:${PathVariableConstant.CONTACT_TYPE}`;
 }

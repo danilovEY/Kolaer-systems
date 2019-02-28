@@ -103,11 +103,8 @@ public class EmployeeConverterImpl implements EmployeeConverter {
                     .ifPresent(employeeDto::setPost);
         }
 
-        if(model.getDepartmentId() != null) {
-            Optional.ofNullable(model.getDepartmentId())
-                    .map(departmentService::getById)
-                    .ifPresent(employeeDto::setDepartment);
-        }
+        departmentService.getById(model.getDepartmentId())
+                .ifPresent(employeeDto::setDepartment);
 
         if(model.getTypeWorkId() != null) {
             Optional.ofNullable(model.getTypeWorkId())

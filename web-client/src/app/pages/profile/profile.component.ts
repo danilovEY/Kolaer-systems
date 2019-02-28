@@ -11,7 +11,6 @@ import {SimpleAccountModel} from '../../@core/models/simple-account.model';
 import {EmployeeService} from '../../@core/services/employee.service';
 import {EmployeeModel} from '../../@core/models/employee.model';
 import {catchError, finalize, map, takeUntil} from 'rxjs/internal/operators';
-import {ContactsService} from '../../@core/services/contacts.service';
 import {ContactModel} from '../../@core/models/contact.model';
 import {ContactRequestModel} from '../../@core/models/contact-request.model';
 import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
@@ -71,7 +70,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     constructor(private accountService: AccountService,
                 private employeeService: EmployeeService,
-                private contactsService: ContactsService,
                 private userService: UserService,
                 private placementService: PlacementService,
                 private toasterService: ToasterService,
@@ -119,7 +117,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             .subscribe((employee: EmployeeModel) =>
                 this.currentEmployee = employee, error2 => console.log(error2));
 
-        this.contactsService.getMyContacts()
+        this.userService.getMyContacts()
             .pipe(takeUntil(this.destroySubjects))
             .subscribe((contact: ContactModel) => this.updateContactsField(contact));
     }

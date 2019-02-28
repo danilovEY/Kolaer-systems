@@ -14,12 +14,12 @@ import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.core.converter.DateTimeConverter;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.model.dto.upload.UploadFileDto;
-import ru.kolaer.server.employee.dao.DepartmentDao;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.dao.PostDao;
 import ru.kolaer.server.employee.model.entity.DepartmentEntity;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.model.entity.PostEntity;
+import ru.kolaer.server.employee.repository.DepartmentRepository;
 import ru.kolaer.server.upload.service.UploadFileService;
 import ru.kolaer.server.vacation.dao.VacationDao;
 import ru.kolaer.server.vacation.model.entity.VacationEntity;
@@ -38,18 +38,16 @@ public class GenerateReportForVacationService {
     private final UploadFileService uploadFileService;
     private final VacationDao vacationDao;
     private final EmployeeDao employeeDao;
-    private final DepartmentDao departmentDao;
+    private final DepartmentRepository departmentRepository;
     private final PostDao postDao;
 
-    public GenerateReportForVacationService(UploadFileService uploadFileService,
-                                            VacationDao vacationDao,
-                                            EmployeeDao employeeDao,
-                                            DepartmentDao departmentDao,
-                                            PostDao postDao) {
+    public GenerateReportForVacationService(UploadFileService uploadFileService, VacationDao vacationDao,
+            EmployeeDao employeeDao, DepartmentRepository departmentRepository, PostDao postDao
+    ) {
         this.uploadFileService = uploadFileService;
         this.vacationDao = vacationDao;
         this.employeeDao = employeeDao;
-        this.departmentDao = departmentDao;
+        this.departmentRepository = departmentRepository;
         this.postDao = postDao;
     }
 
@@ -110,7 +108,7 @@ public class GenerateReportForVacationService {
                 .map(EmployeeEntity::getDepartmentId)
                 .collect(Collectors.toSet());
 
-        Map<Long, DepartmentEntity> departmentMap = departmentDao.findById(departmentIds)
+        Map<Long, DepartmentEntity> departmentMap = departmentRepository.findAllById(departmentIds)
                 .stream()
                 .collect(Collectors.toMap(DepartmentEntity::getId, Function.identity()));
 

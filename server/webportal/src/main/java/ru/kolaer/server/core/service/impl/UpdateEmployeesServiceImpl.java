@@ -21,13 +21,13 @@ import ru.kolaer.server.core.service.HistoryChangeService;
 import ru.kolaer.server.core.service.UpdatableEmployeeService;
 import ru.kolaer.server.core.service.UpdateEmployeesService;
 import ru.kolaer.server.employee.converter.EmployeeConverter;
-import ru.kolaer.server.employee.dao.DepartmentDao;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.dao.PostDao;
 import ru.kolaer.server.employee.model.dto.ResultUpdateEmployeeDto;
 import ru.kolaer.server.employee.model.entity.DepartmentEntity;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.model.entity.PostEntity;
+import ru.kolaer.server.employee.repository.DepartmentRepository;
 import ru.kolaer.server.upload.dao.UploadFileDao;
 import ru.kolaer.server.upload.model.entity.UploadFileEntity;
 
@@ -50,7 +50,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
     private final EmployeeDao employeeDao;
     private final EmployeeConverter employeeConverter;
     private final PostDao postDao;
-    private final DepartmentDao departmentDao;
+    private final DepartmentRepository departmentRepository;
     private final UploadFileDao uploadFileDao;
     private final UtilService utilService;
 
@@ -67,8 +67,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             EmployeeDao employeeDao,
             EmployeeConverter employeeConverter,
             PostDao postDao,
-            DepartmentDao departmentDao,
-            UploadFileDao uploadFileDao,
+            DepartmentRepository departmentRepository, UploadFileDao uploadFileDao,
             UtilService utilService,
             HistoryChangeService historyChangeService,
             ExcelReaderEmployee excelReaderEmployee,
@@ -77,7 +76,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
         this.employeeDao = employeeDao;
         this.employeeConverter = employeeConverter;
         this.postDao = postDao;
-        this.departmentDao = departmentDao;
+        this.departmentRepository = departmentRepository;
         this.uploadFileDao = uploadFileDao;
         this.utilService = utilService;
 
@@ -239,7 +238,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 .map(UpdatableElement::getElement)
                 .collect(Collectors.toList());
 
-        departmentDao.save(departmentEntities);
+        departmentRepository.saveAll(departmentEntities);
 
         return departmentEntityMap;
     }
@@ -372,7 +371,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
     private List<HistoryChangeDto> updateDepMap(Map<String, UpdatableElement<DepartmentEntity>> departmentEntityMap) {
         List<HistoryChangeDto> histories = new ArrayList<>();
 
-        for (DepartmentEntity depEntityFromDb : departmentDao.findAll()) {
+        for (DepartmentEntity depEntityFromDb :  departmentRepository.findAll()) {
             String originKey = generateKey(depEntityFromDb);
 
             UpdatableElement<DepartmentEntity> updatableElement = departmentEntityMap

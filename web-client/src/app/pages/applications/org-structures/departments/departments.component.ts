@@ -6,7 +6,7 @@ import {TableEventDeleteModel} from '../../../../@theme/components/table/table-e
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {DepartmentsDataSource} from './departments.data-source';
 import {DepartmentService} from '../../../../@core/services/department.service';
-import {DepartmentModel} from '../../../../@core/models/department.model';
+import {DepartmentModel} from '../../../../@core/models/department/department.model';
 import {DepartmentRequestModel} from '../../../../@core/models/department-request.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';

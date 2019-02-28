@@ -1,9 +1,8 @@
 import {CustomDataSource} from '../../../../@core/models/custom.data-source';
 import {Page} from '../../../../@core/models/page.model';
-import {DepartmentModel} from '../../../../@core/models/department.model';
+import {DepartmentModel} from '../../../../@core/models/department/department.model';
 import {DepartmentService} from '../../../../@core/services/department.service';
-import {DepartmentSortModel} from '../../../../@core/models/department-sort.model';
-import {DepartmentFilterModel} from '../../../../@core/models/department-filter.model';
+import {FindDepartmentPageRequest} from "../../../../@core/models/department/find-department-page-request";
 
 export class DepartmentsDataSource extends CustomDataSource<DepartmentModel> {
 
@@ -12,14 +11,13 @@ export class DepartmentsDataSource extends CustomDataSource<DepartmentModel> {
     }
 
     loadElements(page: number, pageSize: number): Promise<DepartmentModel[]> {
-        const departmentSortModel: DepartmentSortModel =
-            this.getFilterModel(new DepartmentSortModel());
+        // const departmentSortModel: DepartmentSortModel =
+        //     this.getFilterModel(new DepartmentSortModel());
+        //
+        // const departmentFilterModel: DepartmentFilterModel =
+        //     this.getSortModel(new DepartmentFilterModel());
 
-        const departmentFilterModel: DepartmentFilterModel =
-            this.getSortModel(new DepartmentFilterModel());
-
-        return this.departmentService.getAllDepartments(departmentSortModel, departmentFilterModel,
-            page, pageSize)
+        return this.departmentService.find(FindDepartmentPageRequest.findRequest(page, pageSize))
             .toPromise()
             .then((response: Page<DepartmentModel>) => this.setDataPage(response));
     }

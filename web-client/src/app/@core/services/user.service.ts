@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Rx';
 import {environment} from '../../../environments/environment';
 import {ContactModel} from '../models/contact.model';
 import {ContactRequestModel} from '../models/contact-request.model';
+import {RouterServiceConstant} from "../constants/router-service.constant";
 
 @Injectable()
 export class UserService {
@@ -16,5 +17,9 @@ export class UserService {
 
     updateMyContacts(model: ContactRequestModel): Observable<ContactModel> {
         return this.http.put<ContactModel>(this.UPDATE_CONTACT_URL, model);
+    }
+
+    getMyContacts(): Observable<ContactModel> {
+        return this.http.get<ContactModel>(RouterServiceConstant.USER_CONTACT_URL);
     }
 }

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DepartmentModel} from '../../../../../@core/models/department.model';
+import {DepartmentModel} from '../../../../../@core/models/department/department.model';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date';
 import {ToasterConfig, ToasterService} from 'angular2-toaster';
 import {NgbCalendar, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
@@ -125,7 +125,7 @@ export class ReportFilterComponent implements OnInit {
     }
 
     searchDepartment(event) {
-        this.departmentService.find(new FindDepartmentPageRequest(event.query))
+        this.departmentService.find(FindDepartmentPageRequest.searchDepartmentRequest(event.query))
             .subscribe(departmentPage => this.departmentsResult = departmentPage.data);
     }
 

@@ -1,4 +1,4 @@
-import {DepartmentModel} from '../../../../@core/models/department.model';
+import {DepartmentModel} from '../../../../@core/models/department/department.model';
 import {EmployeeModel} from '../../../../@core/models/employee.model';
 import {PostModel} from '../../../../@core/models/post.model';
 import {TypeWorkModel} from '../../../../@core/models/type-work.model';

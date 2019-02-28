@@ -20,6 +20,17 @@ export class BaseService {
         return httpParams;
     }
 
+    includeHttpParams(httpParams: HttpParams, paramModel: any): HttpParams {
+        if (paramModel) {
+            for (const key of Object.keys(paramModel)) {
+                httpParams = paramModel[key] !== undefined && paramModel[key] !== null
+                    ? httpParams.append(key, String(paramModel[key])) : httpParams;
+            }
+        }
+
+        return httpParams;
+    }
+
     convertModel(model: any): any {
         return model;
     }

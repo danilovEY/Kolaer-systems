@@ -1,5 +1,5 @@
 import {PostModel} from './post.model';
-import {DepartmentModel} from './department.model';
+import {DepartmentModel} from './department/department.model';
 import {ContactTypeModel} from './contact-type.model';
 import {PlacementModel} from './placement.model';
 

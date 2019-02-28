@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NbMenuItem, NbMenuService} from '@nebular/theme';
 import {ContactsService} from '../../../@core/services/contacts.service';
-import {DepartmentModel} from '../../../@core/models/department.model';
+import {DepartmentModel} from '../../../@core/models/department/department.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ContactsDataSource} from './contacts-data-source';
 import {Cell} from 'ng2-smart-table';
@@ -22,7 +22,11 @@ import {CustomActionEventModel} from '../../../@theme/components/table/custom-ac
 import {SmartTableService} from '../../../@core/services/smart-table.service';
 import {environment} from "../../../../environments/environment";
 import {Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import {map, takeUntil} from "rxjs/operators";
+import {DepartmentService} from "../../../@core/services/department.service";
+import {FindDepartmentPageRequest} from "../../../@core/models/department/find-department-page-request";
+import {Page} from "../../../@core/models/page.model";
+import {DepartmentSortTypeEnum} from "../../../@core/models/department/department-sort-type.enum";
 
 @Component({
     selector: 'contacts',
@@ -47,6 +51,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
     contactsColumn: Column[] = [];
 
     constructor(private contactsService: ContactsService,
+                private departmentService: DepartmentService,
                 private nbMenuService: NbMenuService,
                 private accountService: AccountService,
                 private router: Router,
@@ -75,14 +80,19 @@ export class ContactsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        console.log(this.destroySubjects.observers.length);
         this.destroySubjects.next(true);
         this.destroySubjects.complete();
     }
 
     ngOnInit() {
-        this.contactsService.getDepartments()
-            .pipe(takeUntil(this.destroySubjects))
+        const request = FindDepartmentPageRequest.findAllRequest();
+        request.sort = DepartmentSortTypeEnum.CODE;
+
+        this.departmentService.find(request)
+            .pipe(
+                takeUntil(this.destroySubjects),
+                map((departmentPage: Page<DepartmentModel>) => departmentPage.data)
+            )
             .subscribe((departments: DepartmentModel[]) => {
                 for (const dep of departments) {
                     const departmentMenuItem: NbMenuItem = new NbMenuItem();

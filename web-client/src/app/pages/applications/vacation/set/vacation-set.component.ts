@@ -3,12 +3,9 @@ import {EmployeeModel} from '../../../../@core/models/employee.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {EmployeeService} from '../../../../@core/services/employee.service';
 import {FindEmployeeRequestModel} from '../../../../@core/models/find-employee-request.model';
-import {DepartmentModel} from '../../../../@core/models/department.model';
+import {DepartmentModel} from '../../../../@core/models/department/department.model';
 import {DepartmentService} from '../../../../@core/services/department.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
-import {DepartmentSortModel} from '../../../../@core/models/department-sort.model';
-import {SortTypeEnum} from '../../../../@core/models/sort-type.enum';
-import {DepartmentFilterModel} from '../../../../@core/models/department-filter.model';
 import {VacationSetDataSource} from './vacation-set.data-source';
 import {VacationService} from '../vacation.service';
 import {Utils} from '../../../../@core/utils/utils';
@@ -33,6 +30,9 @@ import {tap} from 'rxjs/internal/operators';
 import {SmartTableService} from '../../../../@core/services/smart-table.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {RoleConstant} from "../../../../@core/constants/role.constant";
+import {FindDepartmentPageRequest} from "../../../../@core/models/department/find-department-page-request";
+import {DepartmentSortTypeEnum} from "../../../../@core/models/department/department-sort-type.enum";
+import {DirectionTypeEnum} from "../../../../@core/models/direction-type.enum";
 
 @Component({
     selector: 'vacation-set',
@@ -119,10 +119,14 @@ export class VacationSetComponent implements OnInit {
                     this.formBalance.controls['currentYearBalance'].enable();
                     this.formBalance.controls['nextYearBalance'].enable();
 
-                    const sort = new DepartmentSortModel();
-                    sort.sortAbbreviatedName = SortTypeEnum.ASC;
+                    const request = new FindDepartmentPageRequest();
+                    request.pageNum = 1;
+                    request.pageSize = 1000;
+                    request.deleted = false;
+                    request.sort = DepartmentSortTypeEnum.NAME;
+                    request.direction = DirectionTypeEnum.ASC;
 
-                    this.departmentService.getAllDepartments(sort, new DepartmentFilterModel(), 1, 1000)
+                    this.departmentService.find(request)
                         .subscribe(depPage => this.departments = depPage.data);
                 } else if (this.currentAccount.access.includes(RoleConstant.VACATIONS_WRITE_DEPARTMENT)) {
                     this.employeeService.getCurrentEmployee()

@@ -17,7 +17,6 @@ import ru.kolaer.server.core.model.dto.holiday.FindHolidayRequest;
 import ru.kolaer.server.core.service.AuthenticationService;
 import ru.kolaer.server.counter.dao.CounterDao;
 import ru.kolaer.server.counter.model.entity.CounterEntity;
-import ru.kolaer.server.employee.dao.DepartmentDao;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.dao.PostDao;
 import ru.kolaer.server.employee.model.dto.CountEmployeeInDepartmentDto;
@@ -25,6 +24,7 @@ import ru.kolaer.server.employee.model.entity.DepartmentEntity;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.model.request.FindEmployeeByDepartment;
 import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
+import ru.kolaer.server.employee.repository.DepartmentRepository;
 import ru.kolaer.server.holiday.dao.HolidayDao;
 import ru.kolaer.server.holiday.model.entity.HolidayEntity;
 import ru.kolaer.server.vacation.dao.VacationDao;
@@ -52,7 +52,7 @@ public class VacationServiceImpl implements VacationService {
     private final int DEFAULT_VACATION_DAYS = 52;
     private final VacationDao vacationDao;
     private final EmployeeDao employeeDao;
-    private final DepartmentDao departmentDao;
+    private final DepartmentRepository departmentRepository;
     private final PostDao postDao;
     private final CounterDao counterDao;
     private final GenerateReportForVacationService generateReportForVacationService;
@@ -60,18 +60,13 @@ public class VacationServiceImpl implements VacationService {
     private final HolidayDao holidayDao;
     private final AuthenticationService authenticationService;
 
-    public VacationServiceImpl(VacationDao vacationDao,
-                               EmployeeDao employeeDao,
-                               DepartmentDao departmentDao,
-                               PostDao postDao,
-                               CounterDao counterDao,
-                               GenerateReportForVacationService generateReportForVacationService,
-                               VacationConverter vacationConverter,
-                               HolidayDao holidayDao,
-                               AuthenticationService authenticationService) {
+    public VacationServiceImpl(VacationDao vacationDao, EmployeeDao employeeDao, DepartmentRepository departmentRepository,
+            PostDao postDao, CounterDao counterDao, GenerateReportForVacationService generateReportForVacationService,
+            VacationConverter vacationConverter, HolidayDao holidayDao, AuthenticationService authenticationService
+    ) {
         this.vacationDao = vacationDao;
         this.employeeDao = employeeDao;
-        this.departmentDao = departmentDao;
+        this.departmentRepository = departmentRepository;
         this.postDao = postDao;
         this.counterDao = counterDao;
         this.generateReportForVacationService = generateReportForVacationService;
@@ -537,7 +532,7 @@ public class VacationServiceImpl implements VacationService {
         List<VacationReportPipeDto> result = new ArrayList<>();
 
         if (request.isGroupByDepartments()) {
-             Map<Long, DepartmentEntity> departmentMap = departmentDao.findById(request.getDepartmentIds())
+             Map<Long, DepartmentEntity> departmentMap = departmentRepository.findAllById(request.getDepartmentIds())
                      .stream()
                      .collect(Collectors.toMap(DepartmentEntity::getId, Function.identity()));
 
