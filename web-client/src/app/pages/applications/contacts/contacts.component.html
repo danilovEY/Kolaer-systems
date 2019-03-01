@@ -16,7 +16,8 @@
                            [(ngModel)]="searchValue"
                            placeholder="Поиск">
                     <span class="input-group-append">
-                    <button [disabled]="search.invalid" class="btn btn-success input-group-text" (click)="findContacts()">
+                    <button [disabled]="search.invalid" class="btn input-group-text"
+                            [ngClass]="{'btn-success': !search.invalid}" (click)="findContacts()">
                         Найти
                     </button>
                 </span>
@@ -27,6 +28,7 @@
                 <ngx-loading [show]="contactsLoading"></ngx-loading>
                 <custom-table #contactsTable
                               [actionAdd]="false"
+                              [actionDelete]="false"
                               (edit)="contactsEdit($event)"
                               [columns]="contactsColumn"
                               [source]="contactsSource">

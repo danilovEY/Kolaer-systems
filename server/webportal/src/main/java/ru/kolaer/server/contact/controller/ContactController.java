@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.kolaer.common.constant.PathVariableConstants;
 import ru.kolaer.common.constant.RouterConstants;
@@ -14,12 +15,15 @@ import ru.kolaer.server.contact.service.ContactService;
 import ru.kolaer.server.core.model.dto.concact.ContactDetailsDto;
 import ru.kolaer.server.core.model.dto.concact.ContactRequestDto;
 
+import javax.validation.constraints.Min;
+
 /**
  * Created by danilovey on 31.08.2016.
  */
 @RestController
 @Api(tags = "Справочник контактов")
 @Slf4j
+@Validated
 public class ContactController {
     private final ContactService contactService;
 
@@ -45,10 +49,10 @@ public class ContactController {
     }
 
     @ApiOperation(value = "Обновить контакты")
-    @PreAuthorize("hasRole('" + ContactAccessConstant.CONTACTS_WRITE + "')")
+    @PreAuthorize("hasAnyRole('" + ContactAccessConstant.CONTACTS_WRITE + "','" + ContactAccessConstant.CONTACTS_DEPARTMENT_WRITE + "')")
     @PutMapping(RouterConstants.CONTACTS_EMPLOYEES_ID)
-    public ContactDetailsDto updateContact(@PathVariable(PathVariableConstants.EMPLOYEE_ID) long employeeId,
-                                    @RequestBody ContactRequestDto contactRequestDto) {
+    public ContactDetailsDto updateContact(@PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId,
+            @RequestBody ContactRequestDto contactRequestDto) {
         return contactService.saveContact(employeeId, contactRequestDto);
     }
 

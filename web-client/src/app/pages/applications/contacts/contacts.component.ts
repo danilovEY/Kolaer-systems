@@ -22,11 +22,14 @@ import {CustomActionEventModel} from '../../../@theme/components/table/custom-ac
 import {SmartTableService} from '../../../@core/services/smart-table.service';
 import {environment} from "../../../../environments/environment";
 import {Subject} from "rxjs";
-import {map, takeUntil} from "rxjs/operators";
+import {map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {DepartmentService} from "../../../@core/services/department.service";
 import {FindDepartmentPageRequest} from "../../../@core/models/department/find-department-page-request";
 import {Page} from "../../../@core/models/page.model";
 import {DepartmentSortTypeEnum} from "../../../@core/models/department/department-sort-type.enum";
+import {RoleConstant} from "../../../@core/constants/role.constant";
+import {EmployeeService} from "../../../@core/services/employee.service";
+import {EmployeeModel} from "../../../@core/models/employee.model";
 
 @Component({
     selector: 'contacts',
@@ -35,6 +38,7 @@ import {DepartmentSortTypeEnum} from "../../../@core/models/department/departmen
 })
 export class ContactsComponent implements OnInit, OnDestroy {
     private static currentAccount: SimpleAccountModel;
+    private static currentEmployee: EmployeeModel;
 
     private readonly destroySubjects: Subject<any> = new Subject<any>();
     private departmentId: number = 0;
@@ -54,6 +58,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
                 private departmentService: DepartmentService,
                 private nbMenuService: NbMenuService,
                 private accountService: AccountService,
+                private employeeService: EmployeeService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute) {
         this.contactsSource = new ContactsDataSource(this.contactsService);
@@ -90,8 +95,8 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
         this.departmentService.find(request)
             .pipe(
-                takeUntil(this.destroySubjects),
-                map((departmentPage: Page<DepartmentModel>) => departmentPage.data)
+                map((departmentPage: Page<DepartmentModel>) => departmentPage.data),
+                takeUntil(this.destroySubjects)
             )
             .subscribe((departments: DepartmentModel[]) => {
                 for (const dep of departments) {
@@ -142,13 +147,17 @@ export class ContactsComponent implements OnInit, OnDestroy {
             });
 
         this.accountService.getCurrentAccount()
-            .pipe(takeUntil(this.destroySubjects))
-            .subscribe((account: SimpleAccountModel) => {
-                ContactsComponent.currentAccount = account;
+            .pipe(
+                tap((account: SimpleAccountModel) => ContactsComponent.currentAccount = account),
+                switchMap(account => this.employeeService.getCurrentEmployee()),
+                takeUntil(this.destroySubjects)
+            )
+            .subscribe((employee: EmployeeModel) => {
+                ContactsComponent.currentEmployee = employee;
 
-                // if (account && (account.accessOit || account.accessOk)) { TODO add role
-                //     this.contactsTable.table.initGrid();
-                // }
+                if (employee) {
+                    this.contactsTable.table.initGrid();
+                }
             });
 
         this.initColumns();
@@ -241,6 +250,8 @@ export class ContactsComponent implements OnInit, OnDestroy {
         const emailColumn: Column = new Column('email', {
             title: 'Email',
             type: 'string',
+            editable: false,
+            addable: false,
             sort: false,
             filter: false,
         }, undefined);
@@ -275,16 +286,15 @@ export class ContactsComponent implements OnInit, OnDestroy {
     }
 
     actionBeforeValueView(event: CustomActionEventModel<ContactModel>) {
-        if (event.action.name === SmartTableService.DELETE_ACTION_NAME) {
-            return false;
-        }
-
         if (event.action.name === SmartTableService.EDIT_ACTION_NAME) {
-            // return ContactsComponent.currentAccount TODO add role
-            //     ? ContactsComponent.currentAccount.accessOit || ContactsComponent.currentAccount.accessOk
-            //     : false;
-
-            return false;
+            return ContactsComponent.currentAccount && (
+                ContactsComponent.currentAccount.access.includes(RoleConstant.CONTACTS_WRITE) ||
+                (
+                    ContactsComponent.currentAccount.access.includes(RoleConstant.CONTACTS_DEPARTMENT_WRITE) &&
+                    ContactsComponent.currentEmployee &&
+                    event.data.department.id === ContactsComponent.currentEmployee.department.id
+                )
+            );
         }
 
         return true;
@@ -292,10 +302,8 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
     contactsEdit(event: TableEventEditModel<ContactModel>) {
         const contactRequestModel: ContactRequestModel = new ContactRequestModel();
-        contactRequestModel.email = event.newData.email;
         contactRequestModel.mobilePhoneNumber = event.newData.mobilePhoneNumber;
         contactRequestModel.workPhoneNumber = event.newData.workPhoneNumber;
-        contactRequestModel.type = event.newData.type;
         contactRequestModel.pager = event.newData.pager;
 
         if (event.newData.placement) {
@@ -324,7 +332,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
                 .getSelectedItem('departments-list')
                 .pipe(takeUntil(this.destroySubjects))
                 .subscribe((menuBag: NbMenuBag) => {
-                    if (menuBag && menuBag.item) {
+                    if (menuBag && menuBag.item && menuBag.item !== menuItem) {
                         menuBag.item.selected = false;
                         menuBag.item.link = null;
                     }

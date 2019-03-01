@@ -3,12 +3,9 @@ import {Component, OnInit} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs/index';
 import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators'
 import {Page} from '../../../@core/models/page.model';
-import {SortTypeEnum} from '../../../@core/models/sort-type.enum';
 import {map} from "rxjs/internal/operators";
 import {PlacementModel} from "../../../@core/models/placement.model";
 import {PlacementService} from "../../../@core/services/placement.service";
-import {PlacementFilterModel} from "../../../@core/models/placement-filter.model";
-import {PlacementSortModel} from "../../../@core/models/placement-sort.model";
 
 @Component({
     selector: 'edit-placement',
@@ -50,7 +47,7 @@ export class PlacementEditComponent extends DefaultEditor implements OnInit {
             distinctUntilChanged(),
             tap(() => this.people3Loading = true),
             switchMap(term => this.placementService
-                .getAllPlacements(new PlacementSortModel(null, SortTypeEnum.ASC), new PlacementFilterModel(null, term), 0, 0)
+                .getAllPlacements()
                 .pipe(
                     map((request: Page<PlacementModel>) => request.data),
                     catchError(() => of([])),

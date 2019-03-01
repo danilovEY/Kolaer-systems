@@ -15,12 +15,9 @@ import {ContactModel} from '../../@core/models/contact.model';
 import {ContactRequestModel} from '../../@core/models/contact-request.model';
 import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
 import {Observable, of, Subject} from 'rxjs/index';
-import {SortTypeEnum} from '../../@core/models/sort-type.enum';
 import {Page} from '../../@core/models/page.model';
 import {PlacementService} from '../../@core/services/placement.service';
-import {PlacementFilterModel} from '../../@core/models/placement-filter.model';
 import {PlacementModel} from '../../@core/models/placement.model';
-import {PlacementSortModel} from '../../@core/models/placement-sort.model';
 import {ContactTypeModel} from '../../@core/models/contact-type.model';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 import {UserService} from '../../@core/services/user.service';
@@ -102,7 +99,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             distinctUntilChanged(),
             tap(() => this.people3Loading = true),
             switchMap(term => this.placementService
-                .getAllPlacements(new PlacementSortModel(null, SortTypeEnum.ASC), new PlacementFilterModel(null, term), 0, 0)
+                .getAllPlacements()
                 .pipe(
                     map((request: Page<PlacementModel>) => request.data),
                     catchError(() => of([])),
@@ -212,7 +209,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     submitContactsForm() {
         const contactRequestModel: ContactRequestModel = new ContactRequestModel();
-        contactRequestModel.email =  this.formContact.value.email;
         contactRequestModel.mobilePhoneNumber = this.formContact.value.mobilePhoneNumber;
         contactRequestModel.workPhoneNumber = this.formContact.value.workPhoneNumber;
         contactRequestModel.pager = this.formContact.value.pager;
