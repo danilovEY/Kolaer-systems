@@ -1,7 +1,7 @@
 package ru.kolaer.client.usa.tools;
 
 public interface Resources {
-	String VERSION = "4.4";
+	String VERSION = "4.4.1";
 
 	String PROPERTIES_NAME_URL_SERVER_MAIN = "url.server.main";
 	String PROPERTIES_NAME_URL_SERVICE_CHAT = "url.service.chat";
