@@ -15,6 +15,8 @@ import ru.kolaer.server.otheremployee.service.EmployeeOtherOrganizationService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +26,8 @@ import java.util.List;
 @Api(tags = "Содрудники филиалов")
 @Slf4j
 public class EmployeeOtherOrganizationController {
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 	private final EmployeeOtherOrganizationService employeeOtherOrganizationService;
 
 	@Autowired
@@ -56,18 +60,9 @@ public class EmployeeOtherOrganizationController {
 	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthday(
 			final @ApiParam(value = "Дата с", required = true) @PathVariable String startDate,
 			final @ApiParam(value = "Дата по", required = true) @PathVariable String endDate) {
-		final SimpleDateFormat sdf = startDate.contains("-")
-				? new SimpleDateFormat("yyyy-MM-dd")
-				: new SimpleDateFormat("dd.MM.yyyy");
-	    
-		try {
-			final Date startDatePasre = sdf.parse(startDate);
-			final Date endDatePasre = sdf.parse(endDate);
-			return employeeOtherOrganizationService.getUserRangeBirthday(startDatePasre, endDatePasre);
-		} catch (ParseException e) {
-			log.error("Ошибка! Не коректные данные: ({}, {})", startDate, endDate);
-			return Collections.emptyList();
-		}
+		LocalDate startDatePasre = LocalDate.parse(startDate, DATE_TIME_FORMATTER);
+		LocalDate endDatePasre = LocalDate.parse(endDate, DATE_TIME_FORMATTER);
+		return employeeOtherOrganizationService.getUserRangeBirthday(startDatePasre, endDatePasre);
 	}
 
 	@ApiOperation(
@@ -86,17 +81,8 @@ public class EmployeeOtherOrganizationController {
 	@RequestMapping(value = "/get/users/birthday/{date}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<EmployeeOtherOrganizationDto> getUsersRangeBirthday(
 			final @ApiParam(value = "Дата", required = true) @PathVariable String date) {
-		final SimpleDateFormat sdf = date.contains("-")
-				? new SimpleDateFormat("yyyy-MM-dd")
-				: new SimpleDateFormat("dd.MM.yyyy");
-	    
-		try {
-			final Date datePasre = sdf.parse(date);
-			return employeeOtherOrganizationService.getUsersByBirthday(datePasre);
-		} catch (ParseException e) {
-			log.error("Ошибка! Не коректные данные: ({})", date);
-			return Collections.emptyList();
-		}
+		LocalDate datePasre = LocalDate.parse(date, DATE_TIME_FORMATTER);
+		return employeeOtherOrganizationService.getUsersByBirthday(datePasre);
 	}
 
 	@ApiOperation(
@@ -126,17 +112,8 @@ public class EmployeeOtherOrganizationController {
 	)
 	@RequestMapping(value = "/get/users/birthday/{date}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Integer getCountUsersBirthday(final @ApiParam(value = "Дата", required = true) @PathVariable String date) {
-		final SimpleDateFormat sdf = date.contains("-")
-				? new SimpleDateFormat("yyyy-MM-dd")
-				: new SimpleDateFormat("dd.MM.yyyy");
-	    
-		try {
-			final Date datePasre = sdf.parse(date);
-			return employeeOtherOrganizationService.getCountUserBirthday(datePasre);
-		} catch (ParseException e) {
-			log.error("Ошибка! Не коректные данные: ({})", date);
-			return 0;
-		}
+		LocalDate datePasre = LocalDate.parse(date, DATE_TIME_FORMATTER);
+		return employeeOtherOrganizationService.getCountUserBirthday(datePasre);
 	}
 
 	@ApiOperation(

@@ -17,6 +17,7 @@ import ru.kolaer.server.employee.model.dto.UpdateTypeWorkEmployeeRequestDto;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -50,13 +51,13 @@ public class EmployeeServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeDto> getUserRangeBirthday(Date startData, Date endData) {
+    public List<EmployeeDto> getUserRangeBirthday(LocalDate startData, LocalDate endData) {
         return defaultConverter.convertToDto(defaultEntityDao.getUserRangeBirthday(startData, endData));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeDto> getUsersByBirthday(Date date) {
+    public List<EmployeeDto> getUsersByBirthday(LocalDate date) {
         return defaultConverter.convertToDto(defaultEntityDao.getUsersByBirthday(date));
     }
 
@@ -207,7 +208,7 @@ public class EmployeeServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public int getCountUserBirthday(Date date) {
+    public int getCountUserBirthday(LocalDate date) {
         return defaultEntityDao.getCountUserBirthday(date);
     }
 

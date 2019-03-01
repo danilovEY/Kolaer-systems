@@ -73,7 +73,7 @@ public class BirthdayOnHoliday implements Service {
 
 		ServerResponse<List<EmployeeDto>> employeeBirthdayTodayResponse = applicationDataBase
 				.getGeneralEmployeesTable()
-				.getUsersByBirthday(BirthdayTools.convertToDate(date));
+				.getUsersByBirthday(date);
 
 		List<UserModel> users = new ArrayList<>();
 
@@ -87,7 +87,7 @@ public class BirthdayOnHoliday implements Service {
 
 		ServerResponse<List<EmployeeOtherOrganizationDto>> otherEmployeeBirthdayTodayResponse = applicationDataBase
 				.getEmployeeOtherOrganizationTable()
-				.getUsersByBirthday(BirthdayTools.convertToDate(date));
+				.getUsersByBirthday(date);
 
 		if (!otherEmployeeBirthdayTodayResponse.isServerError()) {
 			List<EmployeeOtherOrganizationDto> employees = otherEmployeeBirthdayTodayResponse.getResponse();

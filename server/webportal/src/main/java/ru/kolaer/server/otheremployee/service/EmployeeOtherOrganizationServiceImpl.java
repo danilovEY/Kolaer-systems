@@ -8,6 +8,7 @@ import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.otheremployee.dao.EmployeeOtherOrganizationDao;
 import ru.kolaer.server.otheremployee.model.entity.EmployeeOtherOrganizationEntity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ public class EmployeeOtherOrganizationServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeOtherOrganizationDto> getUserRangeBirthday(Date startData, Date endData) {
+    public List<EmployeeOtherOrganizationDto> getUserRangeBirthday(LocalDate startData, LocalDate endData) {
         return defaultEntityDao.getUserRangeBirthday(startData, endData)
                 .stream()
                 .map(defaultConverter::convertToDto)
@@ -37,7 +38,7 @@ public class EmployeeOtherOrganizationServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeOtherOrganizationDto> getUsersByBirthday(Date date) {
+    public List<EmployeeOtherOrganizationDto> getUsersByBirthday(LocalDate date) {
         return defaultEntityDao.getUsersByBirthday(date)
                 .stream()
                 .map(defaultConverter::convertToDto)
@@ -64,7 +65,7 @@ public class EmployeeOtherOrganizationServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public int getCountUserBirthday(Date date) {
+    public int getCountUserBirthday(LocalDate date) {
         return defaultEntityDao.getCountUserBirthday(date);
     }
 

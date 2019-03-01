@@ -5,6 +5,7 @@ import ru.kolaer.server.core.dao.AbstractDefaultDao;
 import ru.kolaer.server.otheremployee.model.entity.EmployeeOtherOrganizationEntity;
 
 import javax.persistence.EntityManagerFactory;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,7 @@ public class EmployeeOtherOrganizationDaoImpl extends AbstractDefaultDao<Employe
 	}
 
 	@Override
-	public List<EmployeeOtherOrganizationEntity> getUserRangeBirthday(final Date startDate, final Date endDate) {
+	public List<EmployeeOtherOrganizationEntity> getUserRangeBirthday(final LocalDate startDate, final LocalDate endDate) {
 		return getSession()
 				.createQuery("FROM " + getEntityName() + " t where t.birthday BETWEEN :startDate AND :endDate", getEntityClass())
 	            .setParameter("startDate", startDate)
@@ -40,12 +41,12 @@ public class EmployeeOtherOrganizationDaoImpl extends AbstractDefaultDao<Employe
 	}
 	
 	@Override
-	public List<EmployeeOtherOrganizationEntity> getUsersByBirthday(final Date date) {
+	public List<EmployeeOtherOrganizationEntity> getUsersByBirthday(final LocalDate date) {
 		return getSession()
 				.createQuery("FROM " + getEntityName() +
 								" t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)",
 						getEntityClass())
-	            .setParameter("date", date)
+	            .setParameter("date", date.toString())
 	            .list();
 	}
 
@@ -60,10 +61,10 @@ public class EmployeeOtherOrganizationDaoImpl extends AbstractDefaultDao<Employe
 	}
 
 	@Override
-	public int getCountUserBirthday(final Date date) {
+	public int getCountUserBirthday(final LocalDate date) {
 		return getSession()
 				.createQuery("SELECT count(t.id) FROM " + getEntityName() + " t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date)", Long.class)
-				.setParameter("date", date)
+				.setParameter("date", date.toString())
 				.uniqueResult()
 				.intValue();
 	}
@@ -76,7 +77,7 @@ public class EmployeeOtherOrganizationDaoImpl extends AbstractDefaultDao<Employe
 								" t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)",
 						getEntityClass())
 				.setParameter("org", organization)
-				.setParameter("date", date)
+				.setParameter("date", date.toString())
 	            .list();
 	}
 
@@ -88,7 +89,7 @@ public class EmployeeOtherOrganizationDaoImpl extends AbstractDefaultDao<Employe
 								" t where t.organization = :org and day(t.birthday) = day(:date) and month(t.birthday) = month(:date)",
 				Long.class)
 				.setParameter("org", organization)
-				.setParameter("date", date)
+				.setParameter("date", date.toString())
 				.uniqueResult()
 				.intValue();
 	}

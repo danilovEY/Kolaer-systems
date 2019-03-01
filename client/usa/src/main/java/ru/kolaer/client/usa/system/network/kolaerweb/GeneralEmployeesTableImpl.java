@@ -9,9 +9,8 @@ import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable, RestTem
     private final String URL_GET_USERS_BY_INITIALS;
     private final String URL_GET_USERS_BIRTHDAY;
     private final String URL_GET_USERS_BIRTHDAY_TODAY;
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
@@ -50,21 +49,21 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable, RestTem
     }
 
     @Override
-    public ServerResponse<List<EmployeeDto>> getUsersByBirthday(final Date date) {
+    public ServerResponse<List<EmployeeDto>> getUsersByBirthday(final LocalDate date) {
         final SimpleStringProperty property = new SimpleStringProperty();
-        property.setValue(dateFormat.format(date));
+        property.setValue(dateTimeFormatter.format(date));
 
-        return getServerResponses(restTemplate, this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(), 
+        return getServerResponses(restTemplate, this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(),
                 EmployeeDto[].class,
                 objectMapper);
     }
 
     @Override
-    public ServerResponse<List<EmployeeDto>> getUsersByRangeBirthday(final Date dateBegin, final Date dateEnd) {
+    public ServerResponse<List<EmployeeDto>> getUsersByRangeBirthday(final LocalDate dateBegin, final LocalDate dateEnd) {
         final SimpleStringProperty propertyBegin = new SimpleStringProperty();
         final SimpleStringProperty propertyEnd = new SimpleStringProperty();
-        propertyBegin.setValue(dateFormat.format(dateBegin));
-        propertyEnd.setValue(dateFormat.format(dateEnd));
+        propertyBegin.setValue(dateTimeFormatter.format(dateBegin));
+        propertyEnd.setValue(dateTimeFormatter.format(dateEnd));
 
         return getServerResponses(restTemplate, URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(), 
                 EmployeeDto[].class,
@@ -79,9 +78,9 @@ public class GeneralEmployeesTableImpl implements GeneralEmployeesTable, RestTem
     }
 
     @Override
-    public ServerResponse<Integer> getCountUsersBirthday(final Date date) {
+    public ServerResponse<Integer> getCountUsersBirthday(final LocalDate date) {
         final SimpleStringProperty property = new SimpleStringProperty();
-        property.setValue(dateFormat.format(date));
+        property.setValue(dateTimeFormatter.format(date));
 
         return getServerResponse(restTemplate, URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "/count", 
                 Integer.class,

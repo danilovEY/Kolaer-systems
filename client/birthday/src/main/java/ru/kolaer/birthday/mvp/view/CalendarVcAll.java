@@ -9,8 +9,6 @@ import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -28,14 +26,14 @@ public class CalendarVcAll extends CalendarVcBase {
 					.getKolaerWebServer()
 					.getApplicationDataBase()
 					.getGeneralEmployeesTable()
-					.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+					.getUsersByBirthday(date);
 
 			ServerResponse<List<EmployeeOtherOrganizationDto>> usersDataOtherAll = UniformSystemEditorKitSingleton.getInstance()
 					.getUSNetwork()
 					.getKolaerWebServer()
 					.getApplicationDataBase()
 					.getEmployeeOtherOrganizationTable()
-					.getUsersByBirthday(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()), organization);
+					.getUsersByBirthday(date, organization);
 
 			if(!usersDataAll.isServerError() && !usersDataOtherAll.isServerError()) {
 				List<UserModel> users = usersDataAll

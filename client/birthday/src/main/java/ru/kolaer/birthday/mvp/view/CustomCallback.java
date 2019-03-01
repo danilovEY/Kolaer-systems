@@ -6,11 +6,9 @@ import javafx.scene.control.DatePicker;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.kolaer.birthday.tools.BirthdayTools;
 import ru.kolaer.client.core.tools.Tools;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -33,9 +31,9 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 	/**Флаг true, если нужно пересчитать пользователей и закрасить дату.*/
 	private boolean update = true;
 
-	private final Function<Date, Integer> gettingCount;
+	private final Function<LocalDate, Integer> gettingCount;
 
-	public CustomCallback(Function<Date, Integer> function) {
+	public CustomCallback(Function<LocalDate, Integer> function) {
 		gettingCount = function;
 	}
 
@@ -67,7 +65,7 @@ public class CustomCallback implements Callback<DatePicker, DateCell> {
 				}
 				
 				CompletableFuture.runAsync(() -> {
-					int countUsersDataAll = gettingCount.apply(BirthdayTools.convertToDate(item));
+					int countUsersDataAll = gettingCount.apply(item);
 					
 					if (countUsersDataAll != 0) {
 						int count = 255 - countUsersDataAll * 15;

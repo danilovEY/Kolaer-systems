@@ -27,8 +27,8 @@ import ru.kolaer.server.employee.service.EmployeeService;
 import javax.validation.constraints.Min;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -40,6 +40,7 @@ import java.util.List;
 @Slf4j
 @Validated
 public class EmployeeController {
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final EmployeeService employeeService;
     private final UpdateEmployeesService updateEmployeesService;
@@ -106,12 +107,8 @@ public class EmployeeController {
     public List<EmployeeDto> getUsersRangeBirthday(
             final @ApiParam(value = "Дата с", required = true) @PathVariable String startDate,
             final @ApiParam(value = "Дата по", required = true) @PathVariable String endDate) throws ParseException {
-        final SimpleDateFormat sdf = startDate.contains("-")
-                ? new SimpleDateFormat("yyyy-MM-dd")
-                : new SimpleDateFormat("dd.MM.yyyy");
-
-        final Date startDateParse = sdf.parse(startDate);
-        final Date endDateParse = sdf.parse(endDate);
+        final LocalDate startDateParse = LocalDate.parse(startDate,DATE_TIME_FORMATTER);
+        final LocalDate endDateParse = LocalDate.parse(endDate,DATE_TIME_FORMATTER);
         return employeeService.getUserRangeBirthday(startDateParse, endDateParse);
     }
 
@@ -132,11 +129,7 @@ public class EmployeeController {
     @GetMapping(RouterConstants.EMPLOYEES + "/get/birthday/{date}") //TODO: Need refactoring
     public List<EmployeeDto> getUsersRangeBirthday(
            final @ApiParam(value = "Дата", required = true) @PathVariable String date) throws ParseException {
-        final SimpleDateFormat sdf = date.contains("-")
-                ? new SimpleDateFormat("yyyy-MM-dd")
-                : new SimpleDateFormat("dd.MM.yyyy");
-
-        final Date dateParse = sdf.parse(date);
+        LocalDate dateParse = LocalDate.parse(date, DATE_TIME_FORMATTER);
         return this.employeeService.getUsersByBirthday(dateParse);
     }
 
@@ -147,11 +140,7 @@ public class EmployeeController {
     @GetMapping(RouterConstants.EMPLOYEES + "/get/birthday/{date}/count") //TODO: Need refactoring
     public int getCountUsersBirthday(
             final @ApiParam(value = "Дата", required = true) @PathVariable String date) throws ParseException {
-        final SimpleDateFormat sdf = date.contains("-")
-                ? new SimpleDateFormat("yyyy-MM-dd")
-                : new SimpleDateFormat("dd.MM.yyyy");
-
-        final Date dateParse = sdf.parse(date);
+        LocalDate dateParse = LocalDate.parse(date, DATE_TIME_FORMATTER);
         return this.employeeService.getCountUserBirthday(dateParse);
     }
 

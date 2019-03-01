@@ -18,7 +18,7 @@ import ru.kolaer.server.employee.model.request.FindEmployeeByDepartment;
 import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
 
 import javax.persistence.EntityManagerFactory;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -298,7 +298,7 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     }
 
     @Override
-    public List<EmployeeEntity> getUserRangeBirthday(@NonNull final Date startDate, @NonNull final Date endDate) {
+    public List<EmployeeEntity> getUserRangeBirthday(@NonNull final LocalDate startDate, @NonNull final LocalDate endDate) {
         return getSession()
                 .createQuery("FROM " + getEntityName() +
                         " t where t.birthday BETWEEN :startDate AND :endDate AND t.dismissalDate IS NULL " +
@@ -309,12 +309,12 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     }
 
     @Override
-    public List<EmployeeEntity> getUsersByBirthday(@NonNull final Date date) {
+    public List<EmployeeEntity> getUsersByBirthday(@NonNull final LocalDate date) {
         return getSession()
                 .createQuery("FROM " + getEntityName() +
                         " t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) AND t.dismissalDate IS NULL " +
                         "ORDER BY t.initials", EmployeeEntity.class)
-                .setParameter("date", date)
+                .setParameter("date", date.toString())
                 .list();
     }
 
@@ -328,11 +328,11 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     }
 
     @Override
-    public int getCountUserBirthday(@NonNull final Date date) {
+    public int getCountUserBirthday(@NonNull final LocalDate date) {
         return getSession()
                 .createQuery("SELECT count(t.personnelNumber) FROM " + getEntityName() +
                         " t where day(t.birthday) = day(:date) and month(t.birthday) = month(:date) AND t.dismissalDate IS NULL", Long.class)
-                .setParameter("date", date)
+                .setParameter("date", date.toString())
                 .uniqueResult()
                 .intValue();
     }

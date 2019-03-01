@@ -11,9 +11,8 @@ import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.kolaerweb.ServerResponse;
 import ru.kolaer.common.dto.kolaerweb.organizations.EmployeeOtherOrganizationDto;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -31,10 +30,10 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 	private final String URL_GET_USERS_BY_INITIALS;
 	private final String URL_GET_USERS_BIRTHDAY;
 	private final String URL_GET_USERS_BIRTHDAY_TODAY;
-	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private final ObjectMapper objectMapper;
 	private final RestTemplate restTemplate;
-	
+
 	public EmployeeOtherOrganizationTableImpl(ObjectMapper objectMapper, RestTemplate globalRestTemplate, final String path) {
 		this.objectMapper = objectMapper;
 		this.restTemplate = globalRestTemplate;
@@ -58,9 +57,9 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 	}
 
 	@Override
-	public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByBirthday(final Date date) {
+	public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByBirthday(LocalDate date) {
 		final SimpleStringProperty property = new SimpleStringProperty();
-		property.setValue(dateFormat.format(date));
+		property.setValue(dateTimeFormatter.format(date));
 
 		return getServerResponses(restTemplate, this.URL_GET_USERS_BIRTHDAY + "/" + property.getValue(),
 				EmployeeOtherOrganizationDto[].class,
@@ -68,11 +67,11 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 	}
 
 	@Override
-	public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByRangeBirthday(final Date dateBegin, final Date dateEnd) {
+	public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByRangeBirthday(final LocalDate dateBegin, final LocalDate dateEnd) {
 		final SimpleStringProperty propertyBegin = new SimpleStringProperty();
 		final SimpleStringProperty propertyEnd = new SimpleStringProperty();
-		propertyBegin.setValue(dateFormat.format(dateBegin));
-		propertyEnd.setValue(dateFormat.format(dateEnd));
+		propertyBegin.setValue(dateTimeFormatter.format(dateBegin));
+		propertyEnd.setValue(dateTimeFormatter.format(dateEnd));
 
 		return getServerResponses(restTemplate, URL_GET_USERS_BIRTHDAY + "/" + propertyBegin.getValue() + "/" + propertyEnd.getValue(),
 				EmployeeOtherOrganizationDto[].class,
@@ -87,9 +86,9 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 	}
 
 	@Override
-	public ServerResponse<Integer> getCountUsersBirthday(final Date date) {
+	public ServerResponse<Integer> getCountUsersBirthday(final LocalDate date) {
 		final SimpleStringProperty property = new SimpleStringProperty();
-		property.setValue(dateFormat.format(date));
+		property.setValue(dateTimeFormatter.format(date));
 
 		return getServerResponse(restTemplate, URL_GET_USERS_BIRTHDAY + "/" + property.getValue() + "/count",
 				Integer.class,
@@ -109,18 +108,18 @@ public class EmployeeOtherOrganizationTableImpl implements EmployeeOtherOrganiza
 	}
 
 	@Override
-	public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByBirthday(Date date, String organization) {
+	public ServerResponse<List<EmployeeOtherOrganizationDto>> getUsersByBirthday(LocalDate date, String organization) {
 		final SimpleStringProperty property = new SimpleStringProperty();
-		property.setValue(dateFormat.format(date));
+		property.setValue(dateTimeFormatter.format(date));
 		return getServerResponses(restTemplate, URL_GET_USERS + "/" + organization + "/birthday/" + property.getValue(),
 				EmployeeOtherOrganizationDto[].class,
 				objectMapper);
 	}
 
 	@Override
-	public ServerResponse<Integer> getCountUsersBirthday(Date date, String organization) {
+	public ServerResponse<Integer> getCountUsersBirthday(LocalDate date, String organization) {
 		final SimpleStringProperty property = new SimpleStringProperty();
-		property.setValue(dateFormat.format(date));
+		property.setValue(dateTimeFormatter.format(date));
 
 		return getServerResponse(restTemplate, URL_GET_USERS + "/" + organization + "/birthday/" + property.getValue() + "/count",
 				Integer.class,
