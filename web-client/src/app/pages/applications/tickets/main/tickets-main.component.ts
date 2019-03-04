@@ -23,6 +23,7 @@ import {ServerExceptionModel} from '../../../../@core/models/server-exception.mo
 import {HttpErrorResponse} from '@angular/common/http';
 import {finalize} from 'rxjs/internal/operators';
 import {RoleConstant} from "../../../../@core/constants/role.constant";
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'main-tickets',
@@ -72,7 +73,11 @@ export class TicketsMainComponent implements OnInit, OnDestroy {
                 private modalService: NgbModal,
                 private router: Router,
                 private renderer: Renderer2,
-                private accountService: AccountService) {
+                private accountService: AccountService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Талоны ЛПП');
+
     }
 
     ngOnInit() {

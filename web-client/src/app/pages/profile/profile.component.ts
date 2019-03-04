@@ -21,6 +21,7 @@ import {PlacementModel} from '../../@core/models/placement.model';
 import {ContactTypeModel} from '../../@core/models/contact-type.model';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 import {UserService} from '../../@core/services/user.service';
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'profile',
@@ -71,7 +72,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 private placementService: PlacementService,
                 private toasterService: ToasterService,
                 private authService: AuthenticationRestService,
+                private titleService: Title,
                 private modalService: NgbModal) {
+        this.titleService.setTitle('Профиль');
     }
 
     ngOnInit() {

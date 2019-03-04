@@ -22,7 +22,8 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
         }
 
         if (this.departmentId < 1) {
-           return new Promise(resolve => this.data);
+           return new Promise(resolve => resolve(new Page(this.data)))
+               .then((newData: Page<ContactModel>) => this.setDataPage(newData));
         }
 
         return this.contactsService.getContactsByDepartment(page, pageSize, this.departmentId, this.contactType)
@@ -39,11 +40,10 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
         if (!this.initData) {
             this.refreshFromServer();
         } else {
+            this.refreshFromServer();
             this.initData = false;
         }
     }
-
-
 
     setSearch(search: string) {
         this.departmentId = 0;
@@ -54,6 +54,7 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
         if (!this.initData) {
             this.refreshFromServer();
         } else {
+            this.refreshFromServer();
             this.initData = false;
         }
     }

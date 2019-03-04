@@ -17,6 +17,7 @@ import {TableEventDeleteModel} from '../../../../@theme/components/table/table-e
 import {RepositoryPasswordShareDataSource} from './repository-password-share.data-source';
 import {Cell} from 'ng2-smart-table';
 import {finalize} from 'rxjs/internal/operators';
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'repositories',
@@ -60,7 +61,11 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private renderer: Renderer2,
                 private chipboardService: ClipboardService,
-    private kolpassService: KolpassService) {
+                private kolpassService: KolpassService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Список паролей');
+
         this.myPassSource = new RepositoryPasswordDataSource(kolpassService);
         this.myPassSource.onLoading().subscribe(load => this.myPassLoading = load);
 

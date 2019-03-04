@@ -5,6 +5,7 @@ import {HolidayModel} from '../../../../@core/models/holiday.model';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {TypeDay} from '../../../../@core/models/typeday.enum';
 import {finalize} from 'rxjs/internal/operators';
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'production-calendar-main',
@@ -20,7 +21,11 @@ export class ProductionCalendarMainComponent implements OnInit {
     years: any[] = [];
     selectedYear: any;
 
-    constructor(private productionCalendarService: ProductionCalendarService) {
+    constructor(private productionCalendarService: ProductionCalendarService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Производственный календарь');
+
         const currentYear = new Date().getFullYear();
 
         this.years.push(

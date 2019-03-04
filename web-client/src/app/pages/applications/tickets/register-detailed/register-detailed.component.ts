@@ -18,6 +18,7 @@ import {EmployeeWithAccountEditComponent} from './employee-with-account-edit.com
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {RoleConstant} from "../../../../@core/constants/role.constant";
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'register-detailed',
@@ -48,7 +49,11 @@ export class RegisterDetailedComponent implements OnInit, OnDestroy {
     constructor(private ticketsService: TicketsService,
                 private toasterService: ToasterService,
                 private accountService: AccountService,
-                private activatedRoute: ActivatedRoute) {
+                private activatedRoute: ActivatedRoute,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Талоны ЛПП');
+
         this.sub = this.activatedRoute.params.subscribe(params => {
             this.registerId = params['id'];
         });

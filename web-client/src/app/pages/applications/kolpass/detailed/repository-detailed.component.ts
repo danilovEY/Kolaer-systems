@@ -21,6 +21,7 @@ import {PasswordHistoryShareDataSource} from './password-history-share.data-sour
 import {RepositoryPasswordModel} from '../repository-password.model';
 import {switchMap, tap} from 'rxjs/operators';
 import {finalize} from "rxjs/internal/operators";
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'repository-detailed',
@@ -67,7 +68,11 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
     constructor(private activatedRoute: ActivatedRoute,
                 private modalService: NgbModal,
                 private accountService: AccountService,
-                private kolpassService: KolpassService) {
+                private kolpassService: KolpassService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Пароль');
+
         this.sub = this.activatedRoute.params.subscribe(params => {
             this.repositoryId = params['id'];
 

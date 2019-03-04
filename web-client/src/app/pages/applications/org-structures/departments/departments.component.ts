@@ -11,6 +11,7 @@ import {DepartmentRequestModel} from '../../../../@core/models/department-reques
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {RoleConstant} from "../../../../@core/constants/role.constant";
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'departments',
@@ -28,7 +29,11 @@ export class DepartmentsComponent implements OnInit {
     currentAccount: SimpleAccountModel;
 
     constructor(private departmentService: DepartmentService,
-                private accountService: AccountService) {
+                private accountService: AccountService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Подразделения');
+
         this.departmentsSource = new DepartmentsDataSource(this.departmentService);
         this.departmentsSource.onLoading().subscribe(load => this.departmentsLoading = load);
     }

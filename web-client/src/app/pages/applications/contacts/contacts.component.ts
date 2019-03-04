@@ -30,6 +30,7 @@ import {DepartmentSortTypeEnum} from "../../../@core/models/department/departmen
 import {RoleConstant} from "../../../@core/constants/role.constant";
 import {EmployeeService} from "../../../@core/services/employee.service";
 import {EmployeeModel} from "../../../@core/models/employee.model";
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'contacts',
@@ -60,7 +61,10 @@ export class ContactsComponent implements OnInit, OnDestroy {
                 private accountService: AccountService,
                 private employeeService: EmployeeService,
                 private router: Router,
+                private titleService: Title,
                 private activatedRoute: ActivatedRoute) {
+        this.titleService.setTitle('Контакты');
+
         this.contactsSource = new ContactsDataSource(this.contactsService);
         this.contactsSource
             .onLoading()
@@ -70,6 +74,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
         this.activatedRoute.queryParams
             .pipe(takeUntil(this.destroySubjects))
             .subscribe(params => {
+
                 const contactTypeName: string = params['contactType'];
 
                 this.departmentId = params['depId'] ? params['depId'] : 0;
@@ -77,6 +82,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
                 this.contactType = contactTypeName ? ContactTypeModel[contactTypeName.toUpperCase()] : undefined;
 
                 if (this.searchValue && this.searchValue.trim().length > 2) {
+                    this.titleService.setTitle('Поиск контактов');
                     this.contactsSource.setSearch(this.searchValue);
                 } else if (this.departmentId && this.departmentId > 0) {
                     this.contactsSource.setDepAndType(this.departmentId, this.contactType);
@@ -124,6 +130,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
                     if (this.departmentId && Number(this.departmentId) === Number(dep.id)) {
                         departmentMenuItem.expanded = true;
+
+                        this.titleService.setTitle('Список контактов: ' + departmentMenuItem.title);
+
                         if (this.contactType === ContactTypeModel.MAIN) {
                             departmentMainMenuItem.selected = true;
                             departmentMainMenuItem.link = '/pages/app/contacts';
@@ -338,6 +347,8 @@ export class ContactsComponent implements OnInit, OnDestroy {
                         menuBag.item.link = null;
                     }
                 });
+
+            this.titleService.setTitle('Список контактов: ' + menuItem.parent.title);
 
             menuItem.link = '/pages/app/contacts';
 

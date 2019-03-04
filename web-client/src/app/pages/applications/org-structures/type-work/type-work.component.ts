@@ -7,6 +7,7 @@ import {TableEventAddModel} from '../../../../@theme/components/table/table-even
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
 import {TypeWorkModel} from '../../../../@core/models/type-work.model';
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'type-work-org-structure',
@@ -21,7 +22,11 @@ export class TypeWorkComponent {
     typeWorkSource: TypeWorkDataSource;
     typeWorkLoading: boolean = true;
 
-    constructor(private typeWorkService: TypeWorkService) {
+    constructor(private typeWorkService: TypeWorkService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Вид работ');
+
         this.typeWorkSource = new TypeWorkDataSource(this.typeWorkService);
         this.typeWorkSource.onLoading().subscribe(load => this.typeWorkLoading = load);
     }

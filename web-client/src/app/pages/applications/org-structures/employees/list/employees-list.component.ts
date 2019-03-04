@@ -22,6 +22,7 @@ import {Router} from "@angular/router";
 import {RouterClientConstant} from "../../../../../@core/constants/router-client.constant";
 import {PathVariableConstant} from "../../../../../@core/constants/path-variable.constant";
 import {RoleConstant} from "../../../../../@core/constants/role.constant";
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'employees-list',
@@ -47,7 +48,11 @@ export class EmployeesListComponent implements OnInit {
 
     constructor(private employeeService: EmployeeService,
                 private accountService: AccountService,
-                private router: Router) {
+                private router: Router,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Список сотрудников');
+
     }
 
 

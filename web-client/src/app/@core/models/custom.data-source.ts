@@ -9,18 +9,16 @@ export abstract class CustomDataSource<T> extends LocalDataSource {
     private initDataSource: boolean = false;
 
     protected readonly onChangedLoading = new Subject<boolean>();
-    protected dataPage: Page<T> = {
-        data: [],
-        pageNum: 0,
-        pageSize: 1,
-        total: 0
-    };
+    protected dataPage: Page<T> = new Page<T>();
     private currentSort: any;
     private currentFilter: any;
     private isRefresh: boolean = false;
 
     constructor(protected defaultSortConfig?: ColumnSort) {
         super();
+
+        this.currentSort = this.getSort();
+        this.currentFilter = this.getFilter();
     }
 
     protected paginate(data: Array<any>): Array<any> {

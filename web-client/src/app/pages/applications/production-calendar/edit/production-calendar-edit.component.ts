@@ -10,6 +10,7 @@ import {HolidayModel} from '../../../../@core/models/holiday.model';
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {TableEventAddModel} from '../../../../@theme/components/table/table-event-add.model';
 import {TableEventDeleteModel} from '../../../../@theme/components/table/table-event-delete.model';
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'production-calendar-edit',
@@ -21,7 +22,11 @@ export class ProductionCalendarEditComponent implements OnInit {
     calendarSource: ProductionCalendarDataSource;
     calendarColumns: Column[] = [];
 
-    constructor(private productionCalendarService: ProductionCalendarService) {
+    constructor(private productionCalendarService: ProductionCalendarService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Производственный календарь');
+
         this.calendarSource = new ProductionCalendarDataSource(this.productionCalendarService);
         this.calendarSource.onLoading().subscribe(load => this.calendarLoading = load);
     }

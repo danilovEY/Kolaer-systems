@@ -7,6 +7,7 @@ import {ServerExceptionModel} from '../../../../@core/models/server-exception.mo
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {RoleConstant} from "../../../../@core/constants/role.constant";
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'org-structures-sync',
@@ -32,7 +33,10 @@ export class OrgStructuresSyncComponent implements OnInit {
     serverError: ServerExceptionModel;
 
     constructor(private employeeService: EmployeeService,
-                private accountService: AccountService) {
+                private accountService: AccountService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Синхронизация структуры организации');
 
     }
 

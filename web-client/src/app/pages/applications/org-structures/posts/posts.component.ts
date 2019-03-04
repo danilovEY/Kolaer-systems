@@ -14,6 +14,7 @@ import {PostRequestModel} from '../../../../@core/models/post-request.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {RoleConstant} from "../../../../@core/constants/role.constant";
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'posts',
@@ -31,7 +32,11 @@ export class PostsComponent implements OnInit {
     currentAccount: SimpleAccountModel;
 
     constructor(private postService: PostService,
-                private accountService: AccountService) {
+                private accountService: AccountService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Должности');
+
         this.postsSource = new PostsDataSource(this.postService);
         this.postsSource.onLoading().subscribe(load => this.postsLoading = load);
     }

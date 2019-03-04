@@ -17,6 +17,7 @@ import {BankAccountRequestModel} from './bank-account-request.model';
 import {Utils} from '../../../../@core/utils/utils';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ServerExceptionModel} from '../../../../@core/models/server-exception.model';
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'bank-accounts',
@@ -43,7 +44,11 @@ export class BankAccountsComponent implements OnInit {
     constructor(private bankAccountService: BankAccountService,
                 private employeeService: EmployeeService,
                 private toasterService: ToasterService,
-                private accountService: AccountService) {
+                private accountService: AccountService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Банковские счета');
+
         this.source = new BankAccountDataSource(this.bankAccountService);
         this.source.onLoading().subscribe(value => this.loadingBankAccounts = value);
     }

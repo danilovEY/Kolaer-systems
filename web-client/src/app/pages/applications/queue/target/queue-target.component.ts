@@ -14,6 +14,7 @@ import {TableEventAddModel} from '../../../../@theme/components/table/table-even
 import {TableEventEditModel} from '../../../../@theme/components/table/table-event-edit.model';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {SmartTableService} from '../../../../@core/services/smart-table.service';
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'queue-target',
@@ -47,7 +48,11 @@ export class QueueTargetComponent {
     constructor(private queueService: QueueService,
                 private toasterService: ToasterService,
                 private router: Router,
-                private accountService: AccountService) {
+                private accountService: AccountService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Бронирование кабинетов');
+
         this.source = new QueueTargetDataSource(this.queueService);
         this.source.onLoading().subscribe(value => this.loadingQueueTarget = value);
     }

@@ -18,6 +18,7 @@ import {DateTimeEditComponent} from '../../../../@theme/components/table/date-ti
 import {CustomActionEventModel} from '../../../../@theme/components/table/custom-action-event.model';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
 import {SmartTableService} from '../../../../@core/services/smart-table.service';
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'queue-main',
@@ -52,7 +53,11 @@ export class QueueRequestComponent implements OnInit, OnDestroy {
                 private toasterService: ToasterService,
                 private router: Router,
                 private accountService: AccountService,
-                private activatedRoute: ActivatedRoute) {
+                private activatedRoute: ActivatedRoute,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Бронирование кабинетов');
+
         this.sub = this.activatedRoute.params.subscribe(params => {
             this.targetId = params['id'];
 

@@ -17,6 +17,7 @@ import {QueueScheduleModel} from '../../../../@core/models/queue-schedule.model'
 import {Cell} from 'ng2-smart-table';
 import {Utils} from '../../../../@core/utils/utils';
 import {SmartTableService} from '../../../../@core/services/smart-table.service';
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'queue-main',
@@ -45,7 +46,11 @@ export class QueueMainComponent {
 
     constructor(private queueService: QueueService,
                 private router: Router,
-                private accountService: AccountService) {
+                private accountService: AccountService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Бронирование кабинетов');
+
         this.source = new QueueMainDataSource(this.queueService);
         this.source.onLoading().subscribe(value => this.loadingQueueRequest = value);
     }
