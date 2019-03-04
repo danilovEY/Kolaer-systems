@@ -15,7 +15,7 @@ public class PageDto<T> implements Serializable {
 
     private int number = 0;
 
-    private int total = 0;
+    private long total = 0;
 
     private int pageSize = 0;
 
@@ -23,7 +23,7 @@ public class PageDto<T> implements Serializable {
         this(Collections.emptyList(), 1, 0, 0);
     }
 
-    public PageDto(List<T> data, int number, int total, int pageSize) {
+    public PageDto(List<T> data, int number, long total, int pageSize) {
         this.data = data;
         this.number = number;
         if(pageSize == 0){
@@ -35,8 +35,8 @@ public class PageDto<T> implements Serializable {
         }
     }
 
-    public PageDto(List<T> data, int number, Long count, int pageSize) {
-        this(data, number, count.intValue(), pageSize);
+    public PageDto(List<T> data, int number, int count, int pageSize) {
+        this(data, number, (long) count, pageSize);
     }
 
     public static <T> PageDto<T> createPage() {

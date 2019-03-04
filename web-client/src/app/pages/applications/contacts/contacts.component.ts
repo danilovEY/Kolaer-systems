@@ -22,7 +22,7 @@ import {CustomActionEventModel} from '../../../@theme/components/table/custom-ac
 import {SmartTableService} from '../../../@core/services/smart-table.service';
 import {environment} from "../../../../environments/environment";
 import {Subject} from "rxjs";
-import {map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {DepartmentService} from "../../../@core/services/department.service";
 import {FindDepartmentPageRequest} from "../../../@core/models/department/find-department-page-request";
 import {Page} from "../../../@core/models/page.model";
@@ -149,6 +149,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
         this.accountService.getCurrentAccount()
             .pipe(
                 tap((account: SimpleAccountModel) => ContactsComponent.currentAccount = account),
+                filter((account: SimpleAccountModel) => account !== undefined),
                 switchMap(account => this.employeeService.getCurrentEmployee()),
                 takeUntil(this.destroySubjects)
             )

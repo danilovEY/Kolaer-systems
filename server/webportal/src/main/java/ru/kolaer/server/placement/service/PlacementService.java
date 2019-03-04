@@ -30,7 +30,7 @@ public class PlacementService {
         return new PageDto<>(
                 placementConverter.convertToDto(page.getContent()),
                 request.getPageNum(),
-                page.getTotalPages(),
+                page.getTotalElements(),
                 request.getPageSize()
         );
     }

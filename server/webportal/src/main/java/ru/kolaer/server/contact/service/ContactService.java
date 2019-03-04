@@ -66,7 +66,7 @@ public class ContactService {
         return new PageDto<>(
                 contactMapper.convertToDto(contactPages.getContent(), employeeIds),
                 page,
-                contactPages.getTotalPages(),
+                contactPages.getTotalElements(),
                 pageSize
         );
     }
@@ -134,7 +134,7 @@ public class ContactService {
         return new PageDto<>(
                 contactMapper.convertToDto(page.getContent(), employeeIds, type),
                 pageNum,
-                page.getTotalPages(),
+                page.getTotalElements(),
                 pageSize
         );
     }
