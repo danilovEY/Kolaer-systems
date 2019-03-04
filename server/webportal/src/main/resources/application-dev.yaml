@@ -3,7 +3,8 @@ spring:
     hibernate:
       ddl-auto: none
     properties:
-      hibernate.format_sql: false
+      hibernate.current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+      hibernate.format_sql: true
       hibernate.use_sql_comments: false
       hibernate.batch.size: 15
       hibernate.dialect: org.hibernate.dialect.MySQLDialect
@@ -11,17 +12,17 @@ spring:
       hibernate.order_updates: true
     show-sql: true
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    data-password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
     data-username: root
-    url: jdbc:mysql://localhost:3306/application_db_test?zeroDateTimeBehavior=convertToNull&useSSL=false
+    data-password: root
+    url: jdbc:mysql://localhost:3306/application_db_test?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false&serverTimezone=UTC
     hikari:
-      password: ${spring.datasource.data-username}
       username: ${spring.datasource.data-username}
+      password: ${spring.datasource.data-password}
   liquibase:
     change-log: classpath:/liquibase-changeLog.xml
     user: ${spring.datasource.data-username}
-    password: ${spring.datasource.data-username}
+    password: ${spring.datasource.data-password}
   application:
     name: kolaer-web-test
   mail:
@@ -31,9 +32,35 @@ spring:
     port: 25
     properties:
       mail.smtps.auth: false
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
 server:
   port: 8080
 
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework: INFO
+  config: classpath:logback-dev.xml
+
+host:
+  current:
+    url: http://localhost:8080/
+
+path:
+  external:
+    photo: \\\\aerdc02.kolaer.local\\e$\\SHARE\\PHOTO\\avatars\\
+
+tickets:
+  email: oit@kolaer.ru
+
+old:
+  db:
+    report:
+      email: oit@kolaer.ru
+
+secret_key: kolaer_key
+
