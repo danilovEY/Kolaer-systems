@@ -34,15 +34,15 @@ public class ContactController {
     @ApiOperation(value = "Поиск по контактам")
     @GetMapping(RouterConstants.CONTACTS)
     public PageDto<ContactDetailsDto> searchContacts(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-            @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
+            @RequestParam(value = "pageSize", defaultValue = "15") Integer pageSize,
             @RequestParam(value = "search") String search) {
         return contactService.searchContacts(pageNum, pageSize, search);
     }
 
     @ApiOperation(value = "Получить список контактов подразделения")
     @GetMapping(RouterConstants.CONTACTS_DEPARTMENTS_ID_TYPE)
-    public PageDto<ContactDetailsDto> getAllContactsByDepartment(@RequestParam(value = "page", defaultValue = "1") Integer number,
-                                                       @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
+    public PageDto<ContactDetailsDto> getAllContactsByDepartment(@RequestParam(value = "pageNum", defaultValue = "1") Integer number,
+                                                       @RequestParam(value = "pageSize", defaultValue = "15") Integer pageSize,
                                                        @PathVariable(PathVariableConstants.DEPARTMENT_ID) long depId,
                                                        @PathVariable(PathVariableConstants.CONTACT_TYPE) ContactType type) {
         return contactService.getAllContactsByDepartment(number, pageSize, depId, type);

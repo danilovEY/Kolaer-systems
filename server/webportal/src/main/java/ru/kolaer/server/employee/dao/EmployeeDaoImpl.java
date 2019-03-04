@@ -22,6 +22,8 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by Danilov on 27.07.2016.
@@ -45,11 +47,13 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
     }
 
     @Override
-    public List<EmployeeEntity> findByDepartmentById(@NonNull Long id) {
+    public Set<Long> findByDepartmentById(@NonNull Long id) {
         return getSession()
-                .createQuery("FROM " + getEntityName() + " emp WHERE emp.department.id = :id AND emp.dismissalDate IS NULL ORDER BY emp.initials", EmployeeEntity.class)
+                .createQuery("SELECT id FROM " + getEntityName() + " emp WHERE emp.department.id = :id AND emp.dismissalDate IS NULL ORDER BY emp.initials", Long.class)
                 .setParameter("id", id)
-                .list();
+                .list()
+                .stream()
+                .collect(Collectors.toSet());
     }
 
     @Override

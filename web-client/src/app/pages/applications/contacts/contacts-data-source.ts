@@ -5,6 +5,8 @@ import {ContactsService} from '../../../@core/services/contacts.service';
 import {Page} from '../../../@core/models/page.model';
 
 export class ContactsDataSource extends CustomDataSource<ContactModel> {
+    private initData: boolean = true;
+
     constructor(private contactsService: ContactsService,
                 private departmentId: number = 0,
                 private contactType: ContactTypeModel = ContactTypeModel.MAIN,
@@ -34,7 +36,11 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
 
         this.search = null;
 
-        this.refreshFromServer();
+        if (!this.initData) {
+            this.refreshFromServer();
+        } else {
+            this.initData = false;
+        }
     }
 
 
@@ -45,6 +51,10 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
 
         this.search = search;
 
-        this.refreshFromServer();
+        if (!this.initData) {
+            this.refreshFromServer();
+        } else {
+            this.initData = false;
+        }
     }
 }

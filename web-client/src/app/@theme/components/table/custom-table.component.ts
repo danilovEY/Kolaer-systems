@@ -31,6 +31,12 @@ import {SmartTableService} from '../../../@core/services/smart-table.service';
                          (createConfirm)="createConfirm($event)"
                          (editConfirm)="editConfirm($event)">
         </ng2-smart-table>
+
+        <div class="text-left">
+            <label>
+                Отображено с {{ getCountStartElement() }} по {{ getCountEndElement() }} из {{ getTotalCounts() }} записей
+            </label>
+        </div>
     `
 })
 export class CustomTableComponent implements OnInit, OnDestroy {
@@ -220,5 +226,29 @@ export class CustomTableComponent implements OnInit, OnDestroy {
 
     setActionAdd(isAdd: boolean) {
         this.actionAdd = isAdd;
+    }
+
+    getTotalCounts(): number {
+        return this.source ? this.source.count() : 0;
+    }
+
+    getCurrentPageNumber(): number {
+        return this.source ? this.source.getPaging().page : 0;
+    }
+
+    getCurrentPageSize(): number {
+        return this.source ? this.source.getPaging().perPage : 0;
+    }
+
+    getCountStartElement(): number {
+        const countStartElements = (this.getCurrentPageNumber() - 1) * this.getCurrentPageSize() + 1;
+
+        return this.getTotalCounts() < countStartElements ? this.getTotalCounts() : countStartElements;
+    }
+
+    getCountEndElement(): number {
+        const countEndElements = this.getCurrentPageNumber() * this.getCurrentPageSize();
+
+        return this.getTotalCounts() < countEndElements ? this.getTotalCounts() : countEndElements;
     }
 }

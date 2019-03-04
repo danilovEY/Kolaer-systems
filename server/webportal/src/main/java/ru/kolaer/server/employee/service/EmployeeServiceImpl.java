@@ -75,18 +75,7 @@ public class EmployeeServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeDto> getUsersByDepartmentId(Long id) {
-        return defaultConverter.convertToDto(defaultEntityDao.findByDepartmentById(id));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public PageDto<EmployeeDto> getUsersByDepartmentId(int page, int pageSize, Long id) {
-        if(page == 0) {
-            List<EmployeeDto> employees = this.getUsersByDepartmentId(id);
-            return new PageDto<>(employees, page, 0, employees.size());
-        }
-
         Long count = defaultEntityDao.findCountByDepartmentById(id);
 
         List<EmployeeDto> result = defaultConverter

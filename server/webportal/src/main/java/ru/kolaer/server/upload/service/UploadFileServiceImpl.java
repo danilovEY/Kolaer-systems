@@ -1,6 +1,8 @@
 package ru.kolaer.server.upload.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,9 @@ public class UploadFileServiceImpl
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
     private final Path rootLocation = Paths.get("upload");
 
+    private UploadFileService self;
+
+    @Autowired
     public UploadFileServiceImpl(UploadFileDao uploadFileDao, UploadFileConverter uploadFileConverter) {
         super(uploadFileDao, uploadFileConverter);
     }
@@ -197,10 +202,17 @@ public class UploadFileServiceImpl
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity loadFile(Long id, String filename, HttpServletResponse response) {
-        return Optional.ofNullable(getById(id))
+        return Optional.ofNullable(self != null ? self.getById(id) : getById(id))
                 .filter(uploadFileDto -> uploadFileDto.getFileName().equals(filename))
                 .map(uploadFileDto -> loadFile(uploadFileDto, response))
                 .orElseGet(ResponseEntity.notFound()::build);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value="uploads", key = "{#id}")
+    public UploadFileDto getById(Long id) {
+        return super.getById(id);
     }
 
     @Override
@@ -221,5 +233,10 @@ public class UploadFileServiceImpl
         } catch (IOException e) {
             throw new RuntimeException("Could not initialize storage!", e);
         }
+    }
+
+    @Autowired(required = false)
+    public void setSelf(UploadFileService self) {
+        this.self = self;
     }
 }

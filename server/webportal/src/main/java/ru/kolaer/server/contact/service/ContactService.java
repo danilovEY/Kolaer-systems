@@ -46,6 +46,8 @@ public class ContactService {
                 .collect(Collectors.toSet());
 
         FindEmployeePageRequest findEmployeePageRequest = new FindEmployeePageRequest();
+        findEmployeePageRequest.setPageNum(page);
+        findEmployeePageRequest.setPageSize(pageSize);
         findEmployeePageRequest.setQuery(searchText);
 
         Set<Long> employeeIds = employeeDao.findAllEmployee(findEmployeePageRequest)
@@ -115,10 +117,7 @@ public class ContactService {
 
     @Transactional(readOnly = true)
     public PageDto<ContactDetailsDto> getAllContactsByDepartment(int pageNum, int pageSize, long depId, ContactType type) {
-        Set<Long> employeeIds = employeeDao.findByDepartmentById(depId)
-                .stream()
-                .map(EmployeeEntity::getId)
-                .collect(Collectors.toSet());
+        Set<Long> employeeIds = employeeDao.findByDepartmentById(depId);
 
         FindContactPageRequest findContactPageRequest = new FindContactPageRequest();
         findContactPageRequest.setEmployeeIds(employeeIds);

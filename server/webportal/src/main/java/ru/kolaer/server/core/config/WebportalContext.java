@@ -91,7 +91,7 @@ public class WebportalContext implements WebMvcConfigurer {
 
     @Bean(name = "springCM")
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("accounts");
+        return new ConcurrentMapCacheManager("uploads");
     }
 
     @Bean

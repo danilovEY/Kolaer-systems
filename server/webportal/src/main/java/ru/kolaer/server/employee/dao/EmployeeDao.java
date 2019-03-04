@@ -9,6 +9,7 @@ import ru.kolaer.server.employee.model.request.FindEmployeeByDepartment;
 import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Danilov on 27.07.2016.
@@ -17,7 +18,7 @@ import java.util.List;
 public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<EmployeeEntity> {
     List<EmployeeEntity> findEmployeeByInitials(String initials);
 
-    List<EmployeeEntity> findByDepartmentById(Long id);
+    Set<Long> findByDepartmentById(Long id);
 
     List<EmployeeEntity> findByDepartmentById(int page, int pageSize, Long id);
     Long findCountByDepartmentById(Long id);
