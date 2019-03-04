@@ -6,6 +6,7 @@ import {ServerExceptionModel} from '../../@core/models/server-exception.model';
 import {NbTabComponent, NbTabsetComponent} from '@nebular/theme/components/tabset/tabset.component';
 import {finalize} from 'rxjs/internal/operators';
 import {environment} from "../../../environments/environment";
+import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'ngx-dashboard',
@@ -29,7 +30,10 @@ export class DashboardComponent implements OnInit {
 
     today: Date = new Date();
 
-    constructor(private employeeService: EmployeeService) {
+    constructor(private employeeService: EmployeeService,
+                private titleService: Title
+    ) {
+        this.titleService.setTitle('Информационная панель');
     }
 
     ngOnInit() {
