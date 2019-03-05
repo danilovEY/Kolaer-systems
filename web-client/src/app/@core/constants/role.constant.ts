@@ -13,6 +13,7 @@ export class RoleConstant {
 
 
     public static readonly EMPLOYEES_READ: string = RoleConstant.PREFIX + 'EMPLOYEES_READ';
+    public static readonly EMPLOYEES_READ_DEPARTMENT: string = RoleConstant.PREFIX + 'EMPLOYEES_READ_DEPARTMENT';
     public static readonly EMPLOYEES_WRITE: string = RoleConstant.PREFIX + 'EMPLOYEES_WRITE';
     public static readonly EMPLOYEES_SYNC: string = RoleConstant.PREFIX + 'EMPLOYEES_SYNC';
     public static readonly EMPLOYEES_REPORT_OLD: string = RoleConstant.PREFIX + 'EMPLOYEES_REPORT_OLD';
@@ -29,4 +30,8 @@ export class RoleConstant {
 
     public static readonly CONTACTS_WRITE: string = RoleConstant.PREFIX + 'CONTACTS_WRITE';
     public static readonly CONTACTS_DEPARTMENT_WRITE: string = RoleConstant.PREFIX + 'CONTACTS_DEPARTMENT_WRITE';
+
+
+    public static readonly EMPLOYEE_EDUCATIONS_READ: string = RoleConstant.PREFIX + 'EMPLOYEE_EDUCATIONS_READ';
+    public static readonly EMPLOYEE_EDUCATIONS_READ_DEPARTMENT: string = RoleConstant.PREFIX + 'EMPLOYEE_EDUCATIONS_READ_DEPARTMENT';
 }

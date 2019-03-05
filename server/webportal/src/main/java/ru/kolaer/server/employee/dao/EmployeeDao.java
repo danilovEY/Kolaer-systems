@@ -9,6 +9,7 @@ import ru.kolaer.server.employee.model.request.FindEmployeeByDepartment;
 import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -35,4 +36,6 @@ public interface EmployeeDao extends DefaultDao<EmployeeEntity>, BirthdayDao<Emp
 
     long findAllEmployeeCount(FindEmployeePageRequest request);
     List<EmployeeEntity> findAllEmployee(FindEmployeePageRequest request);
+
+    Optional<Long> employeeEqualDepartment(long currentEmployeeId, long checkedEmployeeId);
 }

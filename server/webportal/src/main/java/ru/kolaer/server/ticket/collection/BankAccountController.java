@@ -11,8 +11,6 @@ import ru.kolaer.common.constant.RouterConstants;
 import ru.kolaer.common.constant.assess.TicketAccessConstant;
 import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
-import ru.kolaer.server.employee.model.request.EmployeeFilter;
-import ru.kolaer.server.employee.model.request.EmployeeSort;
 import ru.kolaer.server.ticket.model.dto.BankAccountDto;
 import ru.kolaer.server.ticket.model.request.BankAccountFilter;
 import ru.kolaer.server.ticket.model.request.BankAccountRequest;
@@ -42,12 +40,11 @@ public class BankAccountController {
 
     @ApiOperation(value = "Получить сотрудников которые имеют счета")
     @PreAuthorize("hasRole('" + TicketAccessConstant.BANK_ACCOUNTS_READ + "')")
-    @GetMapping(RouterConstants.BANK_EMPLOYEE)
+    @GetMapping(RouterConstants.BANK_EMPLOYEES)
     public PageDto<EmployeeDto> getAllEmployees(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                             @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
-                                             EmployeeSort sortParam,
-                                             EmployeeFilter filter) {
-        return bankAccountService.getAllEntityWithAccount(sortParam, filter, pageNum, pageSize);
+            @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
+            @RequestParam(value = "query") String query) {
+        return bankAccountService.getAllEntityWithAccount(query, pageNum, pageSize);
     }
 
     @ApiOperation(value = "Добавить счет")

@@ -93,7 +93,7 @@ public class EmployeeController {
     }
 
     @ApiOperation(value = "Получить всех сотрудников")
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEES_READ + "')")
+    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEES_READ + "','" + EmployeeAccessConstant.EMPLOYEES_READ_DEPARTMENT + "')")
     @GetMapping(RouterConstants.EMPLOYEES)
     public PageDto<EmployeeDto> getAllEmployees(@ModelAttribute FindEmployeePageRequest request) {
         return this.employeeService.getEmployees(request);

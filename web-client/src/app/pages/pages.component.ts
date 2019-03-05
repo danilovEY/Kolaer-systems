@@ -195,7 +195,9 @@ export class PagesComponent implements OnInit {
 
             this.accountService.getCurrentAccount()
                 .subscribe((account: SimpleAccountModel) => {
-                    if (account.access.includes(RoleConstant.EMPLOYEES_READ)) {
+                    if (account.access.includes(RoleConstant.EMPLOYEES_READ) ||
+                        account.access.includes(RoleConstant.EMPLOYEES_READ_DEPARTMENT)
+                    ) {
                         orgStructureMenuItem.children.push(employeesMenuItem);
                     }
 

@@ -19,10 +19,7 @@ import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
 
 import javax.persistence.EntityManagerFactory;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -289,6 +286,15 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
         return entityQuery
                 .setProperties(params)
                 .list();
+    }
+
+    @Override
+    public Optional<Long> employeeEqualDepartment(long currentEmployeeId, long checkedEmployeeId) {
+        return getSession()
+                .createQuery("SELECT e1.departmentId FROM " + getEntityName() + " AS e1 WHERE e1.id=:checkedEmployeeId AND e1.departmentId=(SELECT e2.departmentId FROM " + getEntityName() + " AS e2 WHERE e2.id=:currentEmployeeId)", Long.class)
+                .setParameter("checkedEmployeeId", checkedEmployeeId)
+                .setParameter("currentEmployeeId", currentEmployeeId)
+                .uniqueResultOptional();
     }
 
     private String getOrder(EmployeeSortType sortType) {

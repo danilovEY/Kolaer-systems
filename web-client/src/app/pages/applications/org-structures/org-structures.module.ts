@@ -22,6 +22,8 @@ import {EmployeeCardRelativesComponent} from "./employees/employee-card/relative
 import {EmployeeCardPersonalDocumentsComponent} from "./employees/employee-card/personal-documents/employee-card-personal-documents.component";
 import {EmployeeCardMilitaryRegistrationComponent} from "./employees/employee-card/military-registration/employee-card-military-registration.component";
 import {EmployeeCardService} from "./employees/employee-card/employee-card.service";
+import {EmployeeListGuardService} from "./services/employee-list-guard.service";
+import {EmployeeEducationsGuardService} from "./services/employee-educations-guard.service";
 
 @NgModule({
     imports: [
@@ -51,7 +53,9 @@ import {EmployeeCardService} from "./employees/employee-card/employee-card.servi
         EmployeeCardMilitaryRegistrationComponent
     ],
     providers: [
-        EmployeeCardService
+        EmployeeCardService,
+        EmployeeListGuardService,
+        EmployeeEducationsGuardService
     ]
 })
 export class OrgStructuresModule {

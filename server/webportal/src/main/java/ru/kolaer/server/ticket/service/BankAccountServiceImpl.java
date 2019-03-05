@@ -6,18 +6,16 @@ import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
-import ru.kolaer.server.core.model.dto.*;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;
+import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
 import ru.kolaer.server.ticket.dao.BankAccountDao;
 import ru.kolaer.server.ticket.model.dto.BankAccountDto;
 import ru.kolaer.server.ticket.model.entity.BankAccountEntity;
 import ru.kolaer.server.ticket.model.request.BankAccountRequest;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class BankAccountServiceImpl
@@ -76,22 +74,21 @@ public class BankAccountServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    public PageDto<EmployeeDto> getAllEntityWithAccount(SortParam sortParam, FilterParam filterParam, Integer number, Integer pageSize) {
-        Map<String, FilterValue> filtersForEmployee = new HashMap<>();
-        filtersForEmployee.put("deleted", new FilterValue("deleted", false, FilterType.EQUAL));
+    public PageDto<EmployeeDto> getAllEntityWithAccount(String query, Integer number, Integer pageSize) {
 
-        List<Long> allEmployeeIds = this.defaultEntityDao.findAllEmployeeIds(filtersForEmployee);
+        FindEmployeePageRequest findEmployeePageRequest = new FindEmployeePageRequest();
+        findEmployeePageRequest.setPageNum(number);
+        findEmployeePageRequest.setPageSize(pageSize);
+        findEmployeePageRequest.setQuery(query);
 
-        Map<String, FilterValue> filters = getFilters(filterParam);
-        filters.put("ids", new FilterValue("id", allEmployeeIds, FilterType.IN));
+//        Long employeeCount = employeeDao.findAllEmployeeCount(findEmployeePageRequest);
+        List<EmployeeDto> employeeAll = employeeConverter.convertToDto(employeeDao.findAllEmployee(findEmployeePageRequest));
 
-        SortField sort = getSortField(sortParam);
+//        defaultEntityDao.findAllEmployeeIds()
 
+//        return new PageDto<>(employeeAll, number, employeeCount, pageSize); TODO: refactoring
 
-        Long employeeCount = employeeDao.findAllCount(filters);
-        List<EmployeeDto> employeeAll = employeeConverter.convertToDto(employeeDao.findAll(sort, filters, number, pageSize));
-
-        return new PageDto<>(employeeAll, number, employeeCount, pageSize);
+        return PageDto.createPage();
     }
 
     @Override

@@ -21,6 +21,8 @@ import {EmployeeCardPersonalDataComponent} from "./employees/employee-card/perso
 import {EmployeeCardRelativesComponent} from "./employees/employee-card/relatives/employee-card-relatives.component";
 import {EmployeeCardPersonalDocumentsComponent} from "./employees/employee-card/personal-documents/employee-card-personal-documents.component";
 import {EmployeeCardMilitaryRegistrationComponent} from "./employees/employee-card/military-registration/employee-card-military-registration.component";
+import {EmployeeListGuardService} from "./services/employee-list-guard.service";
+import {EmployeeEducationsGuardService} from "./services/employee-educations-guard.service";
 
 
 const routes: Routes = [
@@ -32,7 +34,7 @@ const routes: Routes = [
         path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_PART_URL, component: EmployeesComponent,
         children: [
             {path: '', redirectTo: 'list'},
-            {path: 'list', component: EmployeesListComponent},
+            {path: 'list', component: EmployeesListComponent, canActivate: [EmployeeListGuardService]},
             {
                 path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_PART_URL, component: EmptyRouterComponent,
                 children: [
@@ -48,7 +50,8 @@ const routes: Routes = [
                             },
                             {
                                 path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_EDUCATIONS_PART_URL,
-                                component: EmployeeCardEducationsComponent
+                                component: EmployeeCardEducationsComponent,
+                                canActivate: [EmployeeEducationsGuardService]
                             },
                             {
                                 path: RouterClientConstant.ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_ACHIEVEMENTS_PART_URL,

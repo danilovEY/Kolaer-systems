@@ -5,10 +5,8 @@ import {EmployeeModel} from '../../../@core/models/employee.model';
 import {Observable, of, Subject} from 'rxjs/index';
 import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators'
 import {Page} from '../../../@core/models/page.model';
-import {SortTypeEnum} from '../../../@core/models/sort-type.enum';
-import {EmployeeSortModel} from '../../../@core/models/employee-sort.model';
-import {EmployeeFilterModel} from '../../../@core/models/employee-filter.model';
 import {map} from 'rxjs/internal/operators';
+import {FindEmployeeRequestModel} from "../../../@core/models/find-employee-request.model";
 
 @Component({
     selector: 'edit-employee',
@@ -42,14 +40,13 @@ export class EmployeeEditComponent extends DefaultEditor implements OnInit {
         super();
     }
 
-
     ngOnInit(): void {
         this.people3$ = this.people3input$.pipe(
             debounceTime(1000),
             distinctUntilChanged(),
             tap(() => this.people3Loading = true),
             switchMap(term => this.employeeService
-                .getAllEmployees(new EmployeeSortModel(null, SortTypeEnum.ASC), new EmployeeFilterModel(null, term), 0, 0)
+                .findAllEmployees(FindEmployeeRequestModel.findAll())
                 .pipe(
                     map((request: Page<EmployeeModel>) => request.data),
                     catchError(() => of([])), 

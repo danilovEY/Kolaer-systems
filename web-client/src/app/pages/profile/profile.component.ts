@@ -18,7 +18,6 @@ import {Observable, of, Subject} from 'rxjs/index';
 import {Page} from '../../@core/models/page.model';
 import {PlacementService} from '../../@core/services/placement.service';
 import {PlacementModel} from '../../@core/models/placement.model';
-import {ContactTypeModel} from '../../@core/models/contact-type.model';
 import {Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 import {UserService} from '../../@core/services/user.service';
 import {Title} from "@angular/platform-browser";
@@ -60,11 +59,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     people3$: Observable<PlacementModel[]>;
     people3Loading = false;
     people3input$ = new Subject<string>();
-
-    contactTypes: ContactTypeModel[] = [
-        ContactTypeModel.MAIN,
-        ContactTypeModel.OTHER
-    ];
 
     constructor(private accountService: AccountService,
                 private employeeService: EmployeeService,

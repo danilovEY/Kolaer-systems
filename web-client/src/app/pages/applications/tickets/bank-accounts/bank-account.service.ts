@@ -8,8 +8,6 @@ import {BankAccountRequestModel} from './bank-account-request.model';
 import {BankAccountFilterModel} from './bank-account-filter.model';
 import {BankAccountSortModel} from './bank-account-sort.model';
 import {BaseService} from '../../../../@core/services/base.service';
-import {EmployeeSortModel} from '../../../../@core/models/employee-sort.model';
-import {EmployeeFilterModel} from '../../../../@core/models/employee-filter.model';
 import {EmployeeModel} from '../../../../@core/models/employee.model';
 
 @Injectable()
@@ -20,13 +18,11 @@ export class BankAccountService extends BaseService {
         super();
     }
 
-    getAllEmployeesWithAccount(sort?: EmployeeSortModel, filter?: EmployeeFilterModel,
-                      page: number = 1, pageSize: number = 15): Observable<Page<EmployeeModel>> {
+    // TODO: refactoring
+    findAllEmployeesWithAccount(query: string): Observable<Page<EmployeeModel>> {
         let params = new HttpParams();
 
-        params = params.append('page', page.toString());
-        params = params.append('pagesize', pageSize.toString());
-        params = this.getSortAndFilterParam(params, sort, filter);
+        params = params.append('query', query);
 
         const url: string = `${this.bankAccountUrl}/employees`;
 

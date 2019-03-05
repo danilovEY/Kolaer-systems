@@ -18,6 +18,7 @@ public interface RouterConstants {
     String EMPLOYEES_ID_TYPE_WORK = EMPLOYEES_ID + "/type_work";
     String EMPLOYEES_ID_STAFF_MOVEMENTS = EMPLOYEES_ID + "/staff_movements";
     String EMPLOYEES_ID_PERSONAL_DOCUMENTS = EMPLOYEES_ID + "/personal_documents";
+    String EMPLOYEES_ID_COMBINATIONS = EMPLOYEES_ID + "/combinations";
 
 
     String TYPE_WORKS = "/type-works";
@@ -54,7 +55,7 @@ public interface RouterConstants {
 
     String BANK = "bank";
     String BANK_ID = BANK + "/{" + PathVariableConstants.BANK_ACCOUNT_ID + "}";
-    String BANK_EMPLOYEE = BANK + "/employee";
+    String BANK_EMPLOYEES = BANK + "/employees";
 
     String AUTHENTICATION = "/authentication";
     String AUTHENTICATION_LOGOUT = AUTHENTICATION + "/logout";

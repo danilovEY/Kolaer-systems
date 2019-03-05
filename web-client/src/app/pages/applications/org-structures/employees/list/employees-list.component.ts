@@ -1,17 +1,14 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Column} from 'ng2-smart-table/lib/data-set/column';
 import {CustomTableComponent} from '../../../../../@theme/components/index';
 import {EmployeesListDataSource} from './employees-list.data-source';
 import {EmployeeService} from '../../../../../@core/services/employee.service';
-import {TableEventAddModel} from '../../../../../@theme/components/table/table-event-add.model';
 import {EmployeeModel} from '../../../../../@core/models/employee.model';
-import {TableEventDeleteModel} from '../../../../../@theme/components/table/table-event-delete.model';
 import {TableEventEditModel} from '../../../../../@theme/components/table/table-event-edit.model';
 import {Cell} from 'ng2-smart-table';
 import {Utils} from '../../../../../@core/utils/utils';
 import {PostEditComponent} from '../../../../../@theme/components/table/post-edit.component';
 import {DepartmentEditComponent} from '../../../../../@theme/components/table/department-edit.component';
-import {EmployeeRequestModel} from '../../../../../@core/models/employee-request.model';
 import {DateEditComponent} from '../../../../../@theme/components/table/date-edit.component';
 import {AccountService} from '../../../../../@core/services/account.service';
 import {SimpleAccountModel} from '../../../../../@core/models/simple-account.model';
@@ -23,20 +20,20 @@ import {RouterClientConstant} from "../../../../../@core/constants/router-client
 import {PathVariableConstant} from "../../../../../@core/constants/path-variable.constant";
 import {RoleConstant} from "../../../../../@core/constants/role.constant";
 import {Title} from "@angular/platform-browser";
+import {takeUntil, tap} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
     selector: 'employees-list',
     styleUrls: ['./employees-list.component.scss'],
     templateUrl: './employees-list.component.html'
 })
-export class EmployeesListComponent implements OnInit {
+export class EmployeesListComponent implements OnInit, OnDestroy {
     private readonly openActionName: string = 'open';
+    private readonly destroySubjects: Subject<any> = new Subject<any>();
 
     @ViewChild('employeeTable')
     employeeTable: CustomTableComponent;
-
-    @ViewChild('employeeOnlyWithTypeWorkTable')
-    employeeOnlyWithTypeWorkTable: CustomTableComponent;
 
     employeesColumns: Column[] = [];
     employeesOnlyWithTypeWorkColumns: Column[] = [];
@@ -52,18 +49,24 @@ export class EmployeesListComponent implements OnInit {
                 private titleService: Title
     ) {
         this.titleService.setTitle('Список сотрудников');
-
     }
 
+    ngOnDestroy() {
+        this.destroySubjects.next(true);
+        this.destroySubjects.complete();
+    }
 
     ngOnInit() {
         this.accountService.getCurrentAccount()
-            .subscribe(account => {
-                this.currentAccount = account;
-
+            .pipe(
+                tap((account: SimpleAccountModel) => this.currentAccount = account),
+                takeUntil(this.destroySubjects)
+            )
+            .subscribe((account: SimpleAccountModel) => {
                 if (!this.currentAccount.access.includes(RoleConstant.EMPLOYEES_READ)) {
                     this.employeeService.getCurrentEmployee()
-                        .subscribe(employee => {
+                        .pipe(takeUntil(this.destroySubjects))
+                        .subscribe((employee: EmployeeModel) => {
                             this.employeesSource = new EmployeesListDataSource(this.employeeService, employee.department.id);
                             this.employeesSource.onLoading().subscribe(load => this.employeesLoading = load);
                         });
@@ -72,33 +75,6 @@ export class EmployeesListComponent implements OnInit {
                     this.employeesSource.onLoading().subscribe(load => this.employeesLoading = load);
                 }
             });
-
-        const initialsReadOnlyColumn: Column = new Column('initials', {
-            title: 'Имя',
-            type: 'string',
-            editable: false,
-            addable: false,
-            filter: false,
-            sort: false,
-        }, null);
-
-        const postReadOnlyColumn: Column = new Column('post', {
-            title: 'Должность',
-            type: 'string',
-            editable: false,
-            addable: false,
-            editor: {
-                type: 'custom',
-                component: PostEditComponent,
-            },
-            filter: false,
-            sort: false,
-            valuePrepareFunction(a: any, value: EmployeeModel, cell: Cell) {
-                return value.post.abbreviatedName;
-            }
-        }, null);
-
-
 
         const personnelNumberColumn: Column = new Column('personnelNumber', {
             title: 'Табельный номер',
@@ -157,10 +133,6 @@ export class EmployeesListComponent implements OnInit {
             }
         }, null);
 
-        this.employeesOnlyWithTypeWorkColumns.push(
-            initialsReadOnlyColumn,
-            postReadOnlyColumn);
-
         this.employeesColumns.push(personnelNumberColumn,
             secondNameColumn,
             firstNameColumn,
@@ -176,57 +148,6 @@ export class EmployeesListComponent implements OnInit {
         openAction.description = 'Открыть';
 
         this.employeeActions.push(openAction);
-    }
-
-    employeesEdit(event: TableEventEditModel<EmployeeModel>) {
-        const employeeRequestModel: EmployeeRequestModel = new EmployeeRequestModel();
-        employeeRequestModel.firstName = event.newData.firstName;
-        employeeRequestModel.secondName = event.newData.secondName;
-        employeeRequestModel.thirdName = event.newData.thirdName;
-        employeeRequestModel.birthday = Utils.getDateTimeToSend(event.newData.birthday);
-        employeeRequestModel.category = event.newData.category;
-        employeeRequestModel.gender = event.newData.gender;
-        employeeRequestModel.personnelNumber = event.newData.personnelNumber;
-        employeeRequestModel.postId = event.newData.post ? event.newData.post.id : null;
-        employeeRequestModel.departmentId = event.newData.department ? event.newData.department.id : null;
-        employeeRequestModel.typeWorkId = event.newData.typeWork ? event.newData.typeWork.id : null;
-        employeeRequestModel.harmfulness = event.newData.harmfulness === true || String(event.newData.harmfulness) === 'Да';
-        event.newData.harmfulness = employeeRequestModel.harmfulness;
-
-        this.employeeService.updateEmployee(event.data.id, employeeRequestModel)
-            .subscribe((employee: EmployeeModel) => event.confirm.resolve(event.newData, employee),
-                error2 => event.confirm.reject({}));
-    }
-
-
-    employeesCreate(event: TableEventAddModel<EmployeeModel>) {
-        const employeeRequestModel: EmployeeRequestModel = new EmployeeRequestModel();
-        employeeRequestModel.firstName = event.newData.firstName;
-        employeeRequestModel.secondName = event.newData.secondName;
-        employeeRequestModel.thirdName = event.newData.thirdName;
-        employeeRequestModel.birthday = Utils.getDateTimeToSend(event.newData.birthday);
-        employeeRequestModel.category = event.newData.category;
-        employeeRequestModel.gender = event.newData.gender;
-        employeeRequestModel.personnelNumber = event.newData.personnelNumber;
-        employeeRequestModel.postId = event.newData.post ? event.newData.post.id : null;
-        employeeRequestModel.departmentId = event.newData.department ? event.newData.department.id : null;
-        employeeRequestModel.typeWorkId = event.newData.typeWork ? event.newData.typeWork.id : null;
-        employeeRequestModel.harmfulness = event.newData.harmfulness === true || String(event.newData.harmfulness) === 'Да';
-        event.newData.harmfulness = employeeRequestModel.harmfulness;
-
-        this.employeeService.createEmployee(employeeRequestModel)
-            .subscribe((employee: EmployeeModel) => event.confirm.resolve(employee),
-                error2 => event.confirm.reject({}));
-    }
-
-    employeesDelete(event: TableEventDeleteModel<EmployeeModel>) {
-        if (confirm(`Вы действительно хотите удалить: ${event.data.initials}?`)) {
-            this.employeeService.deleteEmployee(event.data.id)
-                .subscribe(response => event.confirm.resolve(),
-                    error2 => event.confirm.reject({}));
-        } else {
-            event.confirm.reject({});
-        }
     }
 
     employeesOnlyWithTypeWorkEdit(event: TableEventEditModel<EmployeeModel>) {
@@ -250,9 +171,5 @@ export class EmployeesListComponent implements OnInit {
 
             this.router.navigate([url]);
         }
-    }
-
-    canWriteEmployees(): boolean {
-        return this.currentAccount.access.includes(RoleConstant.EMPLOYEES_WRITE);
     }
 }

@@ -27,7 +27,8 @@ public class PunishmentController {
     }
 
     @GetMapping(RouterConstants.EMPLOYEES_ID_PUNISHMENTS)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_PUNISHMENTS_READ + "')")
+    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_PUNISHMENTS_READ + "','" +
+            EmployeeAccessConstant.EMPLOYEE_PUNISHMENTS_READ_DEPARTMENT + "')")
     public List<PunishmentDto> getPunishmentsByEmployeeId(
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId
     ) {

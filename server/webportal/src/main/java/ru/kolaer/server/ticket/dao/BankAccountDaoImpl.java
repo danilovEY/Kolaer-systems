@@ -7,6 +7,7 @@ import ru.kolaer.server.core.model.dto.FilterValue;
 import ru.kolaer.server.ticket.model.entity.BankAccountEntity;
 
 import javax.persistence.EntityManagerFactory;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,6 +47,14 @@ public class BankAccountDaoImpl extends AbstractDefaultDao<BankAccountEntity> im
                 .setParameter("employeeId", employeeId)
                 .uniqueResultOptional()
                 .orElse(null);
+    }
+
+    @Override
+    public List<BankAccountEntity> findAllByEmployeeIds(Collection<Long> employeeIds) {
+        return getSession()
+                .createQuery("FROM " + getEntityName() + " b WHERE b.employeeId IN (:employeeIds)", BankAccountEntity.class)
+                .setParameter("employeeIds", employeeIds)
+                .list();
     }
 
     @Override

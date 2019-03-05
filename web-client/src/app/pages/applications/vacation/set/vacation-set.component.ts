@@ -33,6 +33,7 @@ import {RoleConstant} from "../../../../@core/constants/role.constant";
 import {FindDepartmentPageRequest} from "../../../../@core/models/department/find-department-page-request";
 import {DepartmentSortTypeEnum} from "../../../../@core/models/department/department-sort-type.enum";
 import {DirectionTypeEnum} from "../../../../@core/models/direction-type.enum";
+import {environment} from "../../../../../environments/environment";
 
 @Component({
     selector: 'vacation-set',
@@ -40,6 +41,8 @@ import {DirectionTypeEnum} from "../../../../@core/models/direction-type.enum";
     styleUrls: ['./vacation-set.component.scss']
 })
 export class VacationSetComponent implements OnInit {
+
+    private static readonly PUBLIC_SERVER_URL = environment.publicServerUrl;
 
     @ViewChild('customTable')
     customTable: CustomTableComponent;
@@ -332,5 +335,11 @@ export class VacationSetComponent implements OnInit {
                 };
                 this.toasterService.popAsync(toast);
             });
+    }
+
+    getPhotoSelectedEmployee(): string {
+        return this.selectedEmployee
+            ? VacationSetComponent.PUBLIC_SERVER_URL + this.selectedEmployee.photo
+            : '';
     }
 }

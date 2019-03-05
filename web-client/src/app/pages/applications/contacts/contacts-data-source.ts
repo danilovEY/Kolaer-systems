@@ -5,8 +5,6 @@ import {ContactsService} from '../../../@core/services/contacts.service';
 import {Page} from '../../../@core/models/page.model';
 
 export class ContactsDataSource extends CustomDataSource<ContactModel> {
-    private initData: boolean = true;
-
     constructor(private contactsService: ContactsService,
                 private departmentId: number = 0,
                 private contactType: ContactTypeModel = ContactTypeModel.MAIN,
@@ -22,8 +20,8 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
         }
 
         if (this.departmentId < 1) {
-           return new Promise(resolve => resolve(new Page(this.data)))
-               .then((newData: Page<ContactModel>) => this.setDataPage(newData));
+            return new Promise(resolve => resolve(this.data))
+               .then((newData: ContactModel[]) => this.setData(newData));
         }
 
         return this.contactsService.getContactsByDepartment(page, pageSize, this.departmentId, this.contactType)
@@ -37,12 +35,7 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
 
         this.search = null;
 
-        if (!this.initData) {
-            this.refreshFromServer();
-        } else {
-            this.refreshFromServer();
-            this.initData = false;
-        }
+        this.refreshFromServer();
     }
 
     setSearch(search: string) {
@@ -51,11 +44,6 @@ export class ContactsDataSource extends CustomDataSource<ContactModel> {
 
         this.search = search;
 
-        if (!this.initData) {
-            this.refreshFromServer();
-        } else {
-            this.refreshFromServer();
-            this.initData = false;
-        }
+        this.refreshFromServer();
     }
 }

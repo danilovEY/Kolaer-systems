@@ -27,7 +27,8 @@ public class PersonalDataController {
     }
 
     @GetMapping(RouterConstants.EMPLOYEES_ID_PERSONAL_DATA)
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_PERSONAL_DATA_READ + "')")
+    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_PERSONAL_DATA_READ + "','" +
+            EmployeeAccessConstant.EMPLOYEE_PERSONAL_DATA_READ_DEPARTMENT + "')")
     public List<PersonalDataDto> getPersonalDataByEmployeeId(
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId
     ) {

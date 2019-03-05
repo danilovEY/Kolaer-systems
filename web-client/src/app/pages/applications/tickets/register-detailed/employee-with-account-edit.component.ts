@@ -4,10 +4,7 @@ import {Observable, of, Subject} from 'rxjs/index';
 import {catchError, debounceTime, distinctUntilChanged, map, switchMap, tap} from 'rxjs/operators'
 import {BankAccountService} from '../bank-accounts/bank-account.service';
 import {EmployeeModel} from '../../../../@core/models/employee.model';
-import {EmployeeSortModel} from '../../../../@core/models/employee-sort.model';
-import {EmployeeFilterModel} from '../../../../@core/models/employee-filter.model';
 import {Page} from '../../../../@core/models/page.model';
-import {SortTypeEnum} from '../../../../@core/models/sort-type.enum';
 
 @Component({
     selector: 'edit-employee',
@@ -45,7 +42,7 @@ export class EmployeeWithAccountEditComponent extends DefaultEditor implements O
             distinctUntilChanged(),
             tap(() => this.people3Loading = true),
             switchMap(term => this.bankAccountService
-                .getAllEmployeesWithAccount(new EmployeeSortModel(null, SortTypeEnum.ASC), new EmployeeFilterModel(null, `%${term}%`), 0, 0)
+                .findAllEmployeesWithAccount(term)
                 .pipe(
                     map((request: Page<EmployeeModel>) => request.data),
                     catchError(() => of([])),

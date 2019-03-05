@@ -6,8 +6,6 @@ import {AuthenticationObserverService} from './authentication-observer.service';
 import {EmployeeModel} from '../models/employee.model';
 import {OtherEmployeeModel} from '../models/other-employee.model';
 import {Page} from '../models/page.model';
-import {EmployeeSortModel} from '../models/employee-sort.model';
-import {EmployeeFilterModel} from '../models/employee-filter.model';
 import {BaseService} from './base.service';
 import {EmployeeRequestModel} from '../models/employee-request.model';
 import {catchError, map, tap} from 'rxjs/internal/operators';
@@ -46,7 +44,6 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
         this._authService.registerObserver(this);
     }
 
-
     login(): void {
     }
 
@@ -69,17 +66,6 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
                     })
                 );
         }
-    }
-
-    getAllEmployees(sort?: EmployeeSortModel, filter?: EmployeeFilterModel,
-                    pageNum: number = 1, pageSize: number = 15): Observable<Page<EmployeeModel>> {
-        let params = new HttpParams();
-
-        params = params.append('pageNum', pageNum.toString()).append('pageSize', pageSize.toString());
-        params = this.getSortAndFilterParam(params, sort, filter);
-
-        return this._httpClient.get<Page<EmployeeModel>>(RouterServiceConstant.EMPLOYEES_ALL_URL, {params: params})
-            .pipe(tap((request: Page<EmployeeModel>) => request.data.map(this.convertModel)));
     }
 
     findAllEmployees(findRequest: FindEmployeeRequestModel): Observable<Page<EmployeeModel>> {

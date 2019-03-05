@@ -4,8 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import ru.kolaer.common.constant.assess.EmployeeAccessConstant;
 import ru.kolaer.common.dto.PageDto;
 import ru.kolaer.common.dto.employee.EmployeeDto;
+import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
+import ru.kolaer.server.core.exception.ForbiddenException;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.service.AbstractDefaultService;
@@ -20,6 +23,7 @@ import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by danilovey on 09.08.2016.
@@ -159,22 +163,22 @@ public class EmployeeServiceImpl
         return defaultConverter.convertToDto(defaultEntityDao.save(employeeEntity));
     }
 
-//    @Override
-//    public List<EmployeeDto> getEmployeesForContacts(int page, int pageSize, String searchText) {
-//        return StringUtils.hasText(searchText)
-//                ? defaultConverter.convertToDto(defaultEntityDao.findEmployeesForContacts(page, pageSize, searchText))
-//                : defaultConverter.convertToDto(defaultEntityDao.findAll(page, pageSize));
-//    }
-//
-//    @Override
-//    public long getCountEmployeesForContacts(String searchText) {
-//        return StringUtils.hasText(searchText)
-//                ? defaultEntityDao.findCountEmployeesForContacts(searchText)
-//                : defaultEntityDao.findAllCount();
-//    }
-
     @Override
+    @Transactional(readOnly = true)
     public PageDto<EmployeeDto> getEmployees(FindEmployeePageRequest request) {
+        AccountAuthorizedDto accountAuthorized = authenticationService.getAccountAuthorized();
+
+        if (!authenticationService.containsAccess(EmployeeAccessConstant.EMPLOYEES_READ)) {
+            EmployeeEntity currentEmployee = Optional.ofNullable(accountAuthorized.getEmployeeId())
+                    .map(defaultEntityDao::findById)
+                    .orElseThrow(() -> new ForbiddenException("У вас нет доступа"));
+
+            if(request.getDepartmentIds().size() > 1 ||
+                    !request.getDepartmentIds().contains(currentEmployee.getDepartmentId())) {
+                throw new ForbiddenException("У вас нет доступа");
+            }
+        }
+
         long count = defaultEntityDao.findAllEmployeeCount(request);
         List<EmployeeDto> employees = defaultConverter.convertToDto(defaultEntityDao.findAllEmployee(request));
 
