@@ -7,8 +7,10 @@ import ru.kolaer.server.core.model.entity.DefaultEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -48,5 +50,8 @@ public class BusinessTripEntity extends DefaultEntity {
 
     @Column(name = "comment")
     private String comment;
+
+    @OneToMany(mappedBy = "businessTripId")
+    private List<BusinessTripEmployeeEntity> employees;
 
 }

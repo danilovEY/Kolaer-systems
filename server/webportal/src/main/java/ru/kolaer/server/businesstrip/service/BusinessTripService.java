@@ -1,6 +1,8 @@
 package ru.kolaer.server.businesstrip.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -12,8 +14,13 @@ import ru.kolaer.server.businesstrip.model.dto.request.FindBusinessTripRequest;
 import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripDetailDto;
 import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripDto;
 import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripEmployeeDto;
+import ru.kolaer.server.businesstrip.model.entity.BusinessTripEmployeeEntity;
+import ru.kolaer.server.businesstrip.model.entity.BusinessTripEntity;
 import ru.kolaer.server.businesstrip.repository.BusinessTripEmployeeRepository;
 import ru.kolaer.server.businesstrip.repository.BusinessTripRepository;
+import ru.kolaer.server.businesstrip.repository.BusinessTripSpecifications;
+import ru.kolaer.server.core.converter.CommonConverter;
+import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 
 import javax.validation.constraints.Min;
@@ -40,12 +47,38 @@ public class BusinessTripService {
 
     @Transactional(readOnly = true)
     public PageDto<BusinessTripDto> findAllBusinessTrip(@NotNull FindBusinessTripRequest request) {
-        return PageDto.createPage();
+        Page<BusinessTripEntity> businessTrips = businessTripRepository.findAll(BusinessTripSpecifications.findAll(request),
+                request.toPageRequest(Sort.Direction.DESC, "id"));
+
+        return CommonConverter.toPageDto(businessTrips, businessTripMapper::mapToBusinessTripDtos);
+    }
+
+    @Transactional(readOnly = true)
+    public BusinessTripDto getBusinessTripById(@Min(1) long businessTripId) {
+        return businessTripRepository.findById(businessTripId)
+                .map(businessTripMapper::mapToBusinessTripDto)
+                .orElseThrow(NotFoundDataException::new);
     }
 
     @Transactional
     public long createBusinessTrip(@NotNull CreateBusinessTripRequest request) {
         return 0L;
+    }
+
+    @Transactional
+    public BusinessTripDetailDto editBusinessTrip(@Min(1) long businessTripId, @NotNull EditBusinessTripRequest request) {
+        return null;
+    }
+
+    @Transactional
+    public Long removeBusinessTripById(@Min(1) long businessTripId) {
+        BusinessTripEntity businessTripEntity = businessTripRepository.findById(businessTripId)
+                .orElseThrow(NotFoundDataException::new);
+
+        businessTripEmployeeRepository.deleteAllByBusinessTripId(businessTripId);
+        businessTripRepository.delete(businessTripEntity);
+
+        return businessTripId;
     }
 
     @Transactional
@@ -57,16 +90,12 @@ public class BusinessTripService {
 
     @Transactional
     public long removeEmployeeToBusinessTrip(@Min(1) long businessTripId, @Min(1) long employeeId) {
-        return 0L;
-    }
+        BusinessTripEmployeeEntity entity = businessTripEmployeeRepository
+                .findByBusinessTripIdAndEmployeeId(businessTripId, employeeId)
+                .orElseThrow(NotFoundDataException::new);
 
-    @Transactional
-    public BusinessTripDetailDto editBusinessTrip(@Min(1) long businessTripId, @NotNull EditBusinessTripRequest request) {
-        return null;
-    }
+        businessTripEmployeeRepository.delete(entity);
 
-    @Transactional
-    public Long removeBusinessTripById(@Min(1) long businessTripId) {
-        return null;
+        return employeeId;
     }
 }

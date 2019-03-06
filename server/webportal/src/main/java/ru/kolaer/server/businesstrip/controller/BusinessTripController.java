@@ -44,10 +44,19 @@ public class BusinessTripController {
 
     @PatchMapping(RouterConstants.BUSINESS_TRIP_ID)
     @PreAuthorize("hasRole('" + BusinessTripAccessConstant.BUSINESS_TRIP_WRITE + "')")
-    public BusinessTripDetailDto editBusinessTrip(@PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId,
+    public BusinessTripDetailDto editBusinessTrip(
+            @PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId,
             @RequestBody EditBusinessTripRequest request
     ) {
         return businessTripService.editBusinessTrip(businessTripId, request);
+    }
+
+    @GetMapping(RouterConstants.BUSINESS_TRIP_ID)
+    @PreAuthorize("hasRole('" + BusinessTripAccessConstant.BUSINESS_TRIP_READ + "')")
+    public BusinessTripDto getBusinessTrip(
+            @PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId
+    ) {
+        return businessTripService.getBusinessTripById(businessTripId);
     }
 
     @DeleteMapping(RouterConstants.BUSINESS_TRIP_ID)
@@ -58,7 +67,8 @@ public class BusinessTripController {
 
     @PostMapping(RouterConstants.BUSINESS_TRIP_ID_EMPLOYEE)
     @PreAuthorize("hasRole('" + BusinessTripAccessConstant.BUSINESS_TRIP_WRITE + "')")
-    public BusinessTripEmployeeDto addEmployeeToBusinessTrip(@PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId,
+    public BusinessTripEmployeeDto addEmployeeToBusinessTrip(
+            @PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId,
             @RequestBody AddEmployeeToBusinessTripRequest request
     ) {
         return businessTripService.addEmployeeToBusinessTrip(businessTripId, request);
@@ -66,7 +76,8 @@ public class BusinessTripController {
 
     @DeleteMapping(RouterConstants.BUSINESS_TRIP_ID_EMPLOYEE_ID)
     @PreAuthorize("hasRole('" + BusinessTripAccessConstant.BUSINESS_TRIP_WRITE + "')")
-    public Long removeEmployeeToBusinessTrip(@PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId,
+    public Long removeEmployeeToBusinessTrip(
+            @PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId,
             @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId
     ) {
         return businessTripService.removeEmployeeToBusinessTrip(businessTripId, employeeId);
