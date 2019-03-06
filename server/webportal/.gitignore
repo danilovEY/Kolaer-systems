@@ -4,5 +4,10 @@
 !settings.gradle
 !/pom.xml
 !/src
+!/src/main/resources/SQL
+!/src/main/resources/template
+!/src/main/resources/liquibase-changeLog.xml
+!/src/main/resources/simple_application.yaml
+!/src/main/resources/simple_logback.xml
 !*.md
 !.gitignore

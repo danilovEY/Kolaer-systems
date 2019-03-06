@@ -33,13 +33,13 @@ public class BusinessTripEntity extends DefaultEntity {
     @Column(name = "document_date", nullable = false)
     private LocalDate documentDate;
 
-    @Column(name = "reason_description", nullable = false)
+    @Column(name = "reason_description")
     private String reasonDescription;
 
-    @Column(name = "reason_document_number", nullable = false, length = 50)
+    @Column(name = "reason_document_number", length = 50)
     private String reasonDocumentNumber;
 
-    @Column(name = "reason_document_date", nullable = false)
+    @Column(name = "reason_document_date")
     private LocalDate reasonDocumentDate;
 
     @Column(name = "chief_employee_id", nullable = false)
