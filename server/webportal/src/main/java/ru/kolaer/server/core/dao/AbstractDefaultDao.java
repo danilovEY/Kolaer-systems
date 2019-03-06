@@ -148,7 +148,7 @@ public abstract class AbstractDefaultDao<T extends DefaultEntity> implements Def
     @Override
     public List<T> findById(Collection<Long> ids) {
         if(ids == null || ids.isEmpty()) {
-            return null;
+            return Collections.emptyList();
         }
 
         return getSession()
