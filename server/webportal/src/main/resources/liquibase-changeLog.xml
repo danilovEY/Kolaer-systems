@@ -59,6 +59,9 @@
 
     <include file="classpath:SQL/43-account-access-table.xml"/>
 
+    <include file="classpath:SQL/44-business-trip-table.xml"/>
+    <include file="classpath:SQL/45-business-trip-employee-table.xml"/>
+
 
 
 

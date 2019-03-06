@@ -83,4 +83,10 @@ public interface RouterConstants {
 
 
     String PLACEMENT = "/placement";
+
+
+    String BUSINESS_TRIP = "/business_trip";
+    String BUSINESS_TRIP_ID = BUSINESS_TRIP + "{" + PathVariableConstants.BUSINESS_TRIP_ID + "}";
+    String BUSINESS_TRIP_ID_EMPLOYEE = BUSINESS_TRIP_ID + "/employee";
+    String BUSINESS_TRIP_ID_EMPLOYEE_ID = BUSINESS_TRIP_ID_EMPLOYEE + "/{" + PathVariableConstants.EMPLOYEE_ID + "}";
 }
