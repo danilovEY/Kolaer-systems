@@ -1,6 +1,6 @@
 @import '../../@theme/styles/themes';
 @import '~bootstrap/scss/mixins/breakpoints';
-@import '~font-awesome/scss/_variables';
+//@import '~@fortawesome/fontawesome-free/scss/_variables';
 @import '~@nebular/theme/styles/global/breakpoints';
 
 @mixin input-field-icon($content-icon, $padding-text) {
@@ -33,19 +33,19 @@
   }
 
   .input-group.has-user-icon {
-    @include input-field-icon($fa-var-user, 3.5rem);
+    @include input-field-icon('$fa-var-user', 3.5rem);
   }
 
   .input-group.has-email-icon {
-    @include input-field-icon($fa-var-envelope, 3.5rem);
+    @include input-field-icon('$fa-var-envelope', 3.5rem);
   }
 
   .input-group.has-smile-icon {
-    @include input-field-icon($fa-var-smile-o, 3.5rem);
+    @include input-field-icon('$fa-var-smile', 3.5rem);
   }
 
   .input-group.has-password-icon {
-    @include input-field-icon($fa-var-lock, 3.5rem);
+    @include input-field-icon('$fa-var-lock', 3.5rem);
   }
 
   .inner-title {

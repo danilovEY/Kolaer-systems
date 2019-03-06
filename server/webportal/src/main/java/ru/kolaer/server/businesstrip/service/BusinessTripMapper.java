@@ -2,8 +2,8 @@ package ru.kolaer.server.businesstrip.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripDestinationDto;
 import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripDto;
+import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripEmployeeDto;
 import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripEmployeeInfo;
 import ru.kolaer.server.businesstrip.model.entity.BusinessTripEmployeeEntity;
 import ru.kolaer.server.businesstrip.model.entity.BusinessTripEntity;
@@ -138,15 +138,12 @@ public class BusinessTripMapper {
 
         EmployeeEntity writerEmployee = employeeMap.get(entity.getWriterEmployeeId());
 
-        List<BusinessTripDestinationDto> destinations = employees.stream()
-                .map(this::mapToBusinessTripDestinationDto)
-                .collect(Collectors.toList());
-
-        List<BusinessTripEmployeeInfo> businessTripEmployees = employees.stream()
+        List<BusinessTripEmployeeDto> businessTripEmployees = employees.stream()
                 .map(businessTripEmployee -> {
                     EmployeeEntity employee = employeeMap.get(businessTripEmployee.getEmployeeId());
 
-                    return mapToBusinessTripEmployeeInfo(
+                    return mapToBusinessTripEmployeeDto(
+                            businessTripEmployee,
                             employee,
                             departmentMap.get(employee.getDepartmentId()),
                             postMap.get(employee.getPostId())
@@ -154,7 +151,6 @@ public class BusinessTripMapper {
                 })
                 .collect(Collectors.toList());
 
-        businessTrip.setDestinations(destinations);
         businessTrip.setEmployees(businessTripEmployees);
         businessTrip.setWriterEmployee(mapToBusinessTripEmployeeInfo(
                 writerEmployee,
@@ -165,6 +161,24 @@ public class BusinessTripMapper {
         return businessTrip;
     }
 
+    private BusinessTripEmployeeDto mapToBusinessTripEmployeeDto(@NotNull BusinessTripEmployeeEntity entity,
+            @NotNull EmployeeEntity employee, @NotNull DepartmentEntity department, @NotNull PostEntity post
+    ) {
+        BusinessTripEmployeeDto businessTripEmployeeDto = new BusinessTripEmployeeDto();
+        businessTripEmployeeDto.setEmployee(mapToBusinessTripEmployeeInfo(employee, department, post));
+        businessTripEmployeeDto.setBusinessTripFrom(entity.getBusinessTripFrom());
+        businessTripEmployeeDto.setBusinessTripTo(entity.getBusinessTripTo());
+        businessTripEmployeeDto.setBusinessTripDays(entity.getBusinessTripDays());
+        businessTripEmployeeDto.setBusinessTripId(entity.getBusinessTripId());
+        businessTripEmployeeDto.setDestinationCountry(entity.getDestinationCountry());
+        businessTripEmployeeDto.setDestinationCity(entity.getDestinationCity());
+        businessTripEmployeeDto.setDestinationOrganizationName(entity.getDestinationOrganizationName());
+        businessTripEmployeeDto.setTargetDescription(entity.getTargetDescription());
+        businessTripEmployeeDto.setSourceOfFinancing(entity.getSourceOfFinancing());
+
+        return businessTripEmployeeDto;
+    }
+
     private BusinessTripEmployeeInfo mapToBusinessTripEmployeeInfo(@NotNull EmployeeEntity employee,
             @NotNull DepartmentEntity department, @NotNull PostEntity post
     ) {
@@ -173,14 +187,5 @@ public class BusinessTripMapper {
         businessTripEmployeeInfo.setDepartmentName(department.getAbbreviatedName());
         businessTripEmployeeInfo.setPostName(post.getAbbreviatedName());
         return businessTripEmployeeInfo;
-    }
-
-    private BusinessTripDestinationDto mapToBusinessTripDestinationDto(@NotNull BusinessTripEmployeeEntity entity) {
-        BusinessTripDestinationDto businessTripDestinationDto = new BusinessTripDestinationDto();
-        businessTripDestinationDto.setDestinationCity(entity.getDestinationCity());
-        businessTripDestinationDto.setDestinationCountry(entity.getDestinationCountry());
-        businessTripDestinationDto.setDestinationOrganizationName(entity.getDestinationOrganizationName());
-
-        return businessTripDestinationDto;
     }
 }

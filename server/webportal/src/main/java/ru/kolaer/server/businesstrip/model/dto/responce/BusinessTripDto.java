@@ -18,7 +18,6 @@ public class BusinessTripDto extends DefaultDto {
     private LocalDate documentDate;
     private String comment;
     private BusinessTripEmployeeInfo writerEmployee;
-    private List<BusinessTripEmployeeInfo> employees;
-    private List<BusinessTripDestinationDto> destinations;
+    private List<BusinessTripEmployeeDto> employees;
 
 }

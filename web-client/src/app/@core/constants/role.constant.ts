@@ -34,4 +34,8 @@ export class RoleConstant {
 
     public static readonly EMPLOYEE_EDUCATIONS_READ: string = RoleConstant.PREFIX + 'EMPLOYEE_EDUCATIONS_READ';
     public static readonly EMPLOYEE_EDUCATIONS_READ_DEPARTMENT: string = RoleConstant.PREFIX + 'EMPLOYEE_EDUCATIONS_READ_DEPARTMENT';
+
+
+    public static readonly BUSINESS_TRIP_READ: string = RoleConstant.PREFIX + 'BUSINESS_TRIP_READ';
+
 }

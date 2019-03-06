@@ -40,6 +40,11 @@ const routes: Routes = [{
             loadChildren: 'app/pages/applications/vacation/vacation.module#VacationModule',
             canActivate: [AuthGuardService]
         },
+        {
+            path: 'business-trip',
+            loadChildren: 'app/pages/applications/business-trip/business-trip.module#BusinessTripModule',
+            canActivate: [AuthGuardService]
+        },
     ]
 }];
 

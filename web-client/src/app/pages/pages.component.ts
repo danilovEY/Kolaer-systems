@@ -170,7 +170,7 @@ export class PagesComponent implements OnInit {
         // ======= Талоны ЛПП ======
         const ticketsMenuItem: NbMenuItem = new NbMenuItem();
         ticketsMenuItem.title = 'Талоны ЛПП';
-        ticketsMenuItem.icon = 'fa fa-ticket';
+        ticketsMenuItem.icon = 'fas fa-ticket-alt';
         ticketsMenuItem.children = [];
 
         const ticketsMainMenuItem: NbMenuItem = new NbMenuItem();
@@ -180,6 +180,18 @@ export class PagesComponent implements OnInit {
         const bankAccountMenuItem: NbMenuItem = new NbMenuItem();
         bankAccountMenuItem.title = 'Счета';
         bankAccountMenuItem.link = 'app/tickets/bank-accounts';
+
+        // =======График командировок ========
+        const businessTripMenuItem: NbMenuItem = new NbMenuItem();
+        businessTripMenuItem.title = 'График командировок';
+        businessTripMenuItem.icon = 'fas fa-business-time';
+        businessTripMenuItem.children = [];
+
+        const businessTripListMenuItem: NbMenuItem = new NbMenuItem();
+        businessTripListMenuItem.title = 'Список';
+        businessTripListMenuItem.link = 'app/business-trip/list';
+
+
 
         this.menu.push(dashboardMenuItem, appMenuMenuItem);
         this.menu.push(contactsMenuItem);
@@ -226,6 +238,12 @@ export class PagesComponent implements OnInit {
                         vacationMenuItem.children.push(vacationSetMenuItem,
                             reportExportMenuItem,
                             vacationReportMenuItem);
+                    }
+
+                    if (account.access.includes(RoleConstant.BUSINESS_TRIP_READ)) {
+                        businessTripMenuItem.children.push(businessTripListMenuItem);
+
+                        this.menu.push(businessTripMenuItem);
                     }
 
                     // productionCalendarMenuItem.children.push(productionCalendarEditMenuItem); TODO: add role

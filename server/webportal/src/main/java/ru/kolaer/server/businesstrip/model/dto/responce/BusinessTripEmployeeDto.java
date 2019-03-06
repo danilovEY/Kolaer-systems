@@ -10,13 +10,14 @@ import java.time.LocalDate;
 @Data
 public class BusinessTripEmployeeDto extends DefaultDto {
 
-    private Long businessTripId;
+    private long businessTripId;
     private BusinessTripEmployeeInfo employee;
     private String destinationCountry;
     private String destinationCity;
     private String destinationOrganizationName;
     private LocalDate businessTripFrom;
     private LocalDate businessTripTo;
+    private int businessTripDays;
     private String targetDescription;
     private String sourceOfFinancing;
 

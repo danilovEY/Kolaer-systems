@@ -16,10 +16,10 @@ import java.time.LocalDate;
 public class BusinessTripEmployeeEntity extends DefaultEntity {
 
     @Column(name = "business_trip_id", nullable = false)
-    private Long businessTripId;
+    private long businessTripId;
 
     @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    private long employeeId;
 
     @Column(name = "destination_country", nullable = false, length = 50)
     private String destinationCountry;
@@ -35,6 +35,9 @@ public class BusinessTripEmployeeEntity extends DefaultEntity {
 
     @Column(name = "business_trip_to", nullable = false)
     private LocalDate businessTripTo;
+
+    @Column(name = "business_trip_days", nullable = false)
+    private int businessTripDays;
 
     @Column(name = "target_description", nullable = false)
     private String targetDescription;
