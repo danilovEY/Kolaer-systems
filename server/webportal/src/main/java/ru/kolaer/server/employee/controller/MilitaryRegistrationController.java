@@ -13,7 +13,6 @@ import ru.kolaer.server.employee.model.dto.MilitaryRegistrationDto;
 import ru.kolaer.server.employee.service.MilitaryRegistrationService;
 
 import javax.validation.constraints.Min;
-import java.util.List;
 
 @RestController
 @Validated
@@ -29,7 +28,7 @@ public class MilitaryRegistrationController {
     @GetMapping(RouterConstants.EMPLOYEES_ID_MILITARY_REGISTRATIONS)
     @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEE_MILITARY_REGISTRATIONS_READ + "','" +
             EmployeeAccessConstant.EMPLOYEE_MILITARY_REGISTRATIONS_READ_DEPARTMENT + "')")
-    public List<MilitaryRegistrationDto> getMilitaryRegistrationsByEmployeeId(
+    public MilitaryRegistrationDto getMilitaryRegistrationsByEmployeeId(
         @PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId
     ) {
         return militaryRegistrationService.findMilitaryRegistrationsByEmployeeId(employeeId);

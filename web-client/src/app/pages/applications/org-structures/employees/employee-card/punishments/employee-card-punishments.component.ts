@@ -6,6 +6,8 @@ import {Utils} from "../../../../../../@core/utils/utils";
 import {EmployeeCardPunishmentsDataSource} from "./employee-card-punishments.data-source";
 import {EmployeeAchievementModel} from "../../../../../../@core/models/employee/employee-achievement.model";
 import {EmployeePunishmentModel} from "../../../../../../@core/models/employee/employee-punishment.model";
+import {EmployeeCardService} from "../employee-card.service";
+import {EmployeePunishmentService} from "./employee-punishment.service";
 
 @Component({
     selector: 'employee-card-punishments',
@@ -18,10 +20,11 @@ export class EmployeeCardPunishmentsComponent implements OnInit {
     punishmentTable: CustomTableComponent;
 
     punishmentColumns: Column[] = [];
-    punishmentDataSource: EmployeeCardPunishmentsDataSource = new EmployeeCardPunishmentsDataSource();
+    punishmentDataSource: EmployeeCardPunishmentsDataSource;
 
-    constructor() {
-
+    constructor(private employeeCardService: EmployeeCardService,
+                private employeePunishmentService: EmployeePunishmentService) {
+        this.punishmentDataSource = new EmployeeCardPunishmentsDataSource(employeeCardService, employeePunishmentService);
     }
 
     ngOnInit(): void {

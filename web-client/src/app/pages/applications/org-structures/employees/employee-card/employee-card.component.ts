@@ -8,6 +8,8 @@ import {RouterClientConstant} from "../../../../../@core/constants/router-client
 import {takeUntil} from "rxjs/operators";
 import {EmployeeCardService} from "./employee-card.service";
 import {Utils} from "../../../../../@core/utils/utils";
+import {SimpleAccountModel} from "../../../../../@core/models/simple-account.model";
+import {RoleConstant} from "../../../../../@core/constants/role.constant";
 
 @Component({
     selector: 'employee-card',
@@ -28,7 +30,6 @@ export class EmployeeCardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
         this.activatedRoute.parent.params
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(params => {
@@ -144,20 +145,68 @@ export class EmployeeCardComponent implements OnInit, OnDestroy {
             employeeId.toString()
         );
 
-        this.employeeInfoMenu.push(
-            commonMenuItem,
-            educationsMenuItem,
-            achievementsMenuItem,
-            punishmentsMenuItem,
-            employmentHistoriesMenuItem,
-            staffMovementsMenuItem,
-            combinationsMenuItem,
-            vacationsMenuItem,
-            personalDataMenuItem,
-            relativesMenuItem,
-            personalDocumentsMenuItem,
-            militaryRegistrationMenuItem
-        );
+        this.accountService.getCurrentAccount()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe((account: SimpleAccountModel) => {
+                this.employeeInfoMenu.push(commonMenuItem);
+
+                if (account.access.includes(RoleConstant.EMPLOYEE_EDUCATIONS_READ) ||
+                    account.access.includes(RoleConstant.EMPLOYEE_EDUCATIONS_READ_DEPARTMENT)) {
+                    this.employeeInfoMenu.push(educationsMenuItem);
+                }
+
+                if (account.access.includes(RoleConstant.EMPLOYEE_ACHIEVEMENTS_READ) ||
+                    account.access.includes(RoleConstant.EMPLOYEE_ACHIEVEMENTS_READ_DEPARTMENT)) {
+                    this.employeeInfoMenu.push(achievementsMenuItem);
+                }
+
+                if (account.access.includes(RoleConstant.EMPLOYEE_PUNISHMENTS_READ) ||
+                    account.access.includes(RoleConstant.EMPLOYEE_PUNISHMENTS_READ_DEPARTMENT)) {
+                    this.employeeInfoMenu.push(punishmentsMenuItem);
+                }
+
+                if (account.access.includes(RoleConstant.EMPLOYEE_EMPLOYMENT_HISTORIES_READ) ||
+                    account.access.includes(RoleConstant.EMPLOYEE_EMPLOYMENT_HISTORIES_READ_DEPARTMENT)) {
+                    this.employeeInfoMenu.push(employmentHistoriesMenuItem);
+                }
+
+                if (account.access.includes(RoleConstant.EMPLOYEE_STAFF_MOVEMENTS_READ) ||
+                    account.access.includes(RoleConstant.EMPLOYEE_STAFF_MOVEMENTS_READ_DEPARTMENT)) {
+                    this.employeeInfoMenu.push(staffMovementsMenuItem);
+                }
+
+                if (account.access.includes(RoleConstant.EMPLOYEE_COMBINATION_READ) ||
+                    account.access.includes(RoleConstant.EMPLOYEE_COMBINATION_READ_DEPARTMENT)) {
+                    this.employeeInfoMenu.push(combinationsMenuItem);
+                }
+
+                // if (account.access.includes(RoleConstant.EMPLOYEE_EDUCATIONS_READ) || TODO complete
+                //     account.access.includes(RoleConstant.EMPLOYEE_EDUCATIONS_READ_DEPARTMENT) {
+                //     this.employeeInfoMenu.push(vacationsMenuItem);
+                // }
+
+                if (account.access.includes(RoleConstant.EMPLOYEE_PERSONAL_DATA_READ) ||
+                    account.access.includes(RoleConstant.EMPLOYEE_PERSONAL_DATA_READ_DEPARTMENT)) {
+                    this.employeeInfoMenu.push(personalDataMenuItem);
+                }
+
+                if (account.access.includes(RoleConstant.EMPLOYEE_RELATIVES_READ) ||
+                    account.access.includes(RoleConstant.EMPLOYEE_RELATIVES_READ_DEPARTMENT)) {
+                    this.employeeInfoMenu.push(relativesMenuItem);
+                }
+
+                if (account.access.includes(RoleConstant.EMPLOYEE_PERSONAL_DOCUMENT_READ) ||
+                    account.access.includes(RoleConstant.EMPLOYEE_PERSONAL_DOCUMENT_READ_DEPARTMENT)) {
+                    this.employeeInfoMenu.push(personalDocumentsMenuItem);
+                }
+
+                if (account.access.includes(RoleConstant.EMPLOYEE_MILITARY_REGISTRATIONS_READ) ||
+                    account.access.includes(RoleConstant.EMPLOYEE_MILITARY_REGISTRATIONS_READ_DEPARTMENT)) {
+                    this.employeeInfoMenu.push(militaryRegistrationMenuItem);
+                }
+
+                this.employeeInfoMenu.sort((a, b) => a.title > b.title ? 1 : -1);
+            });
     }
 
     ngOnDestroy(): void {

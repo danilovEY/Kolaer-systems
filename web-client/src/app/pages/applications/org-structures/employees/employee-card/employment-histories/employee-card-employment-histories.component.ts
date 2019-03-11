@@ -1,26 +1,32 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CustomTableComponent} from "../../../../../../@theme/components";
 import {Column} from "ng2-smart-table/lib/data-set/column";
 import {Cell} from "ng2-smart-table";
 import {Utils} from "../../../../../../@core/utils/utils";
 import {EmployeeCardEmploymentHistoriesDataSource} from "./employee-card-employment-histories.data-source";
 import {EmploymentHistoryModel} from "../../../../../../@core/models/employee/employment-history.model";
+import {Subject} from "rxjs";
+import {EmployeeEmploymentHistoriesService} from "./employee-employment-histories.service";
+import {EmployeeCardService} from "../employee-card.service";
 
 @Component({
     selector: 'employee-card-employment-histories',
     templateUrl: './employee-card-employment-histories.component.html',
     styleUrls: ['./employee-card-employment-histories.component.scss']
 })
-export class EmployeeCardEmploymentHistoriesComponent implements OnInit {
+export class EmployeeCardEmploymentHistoriesComponent implements OnInit, OnDestroy {
+    private readonly destroySubjects: Subject<any> = new Subject<any>();
 
     @ViewChild('employmentHistoryTable')
     employmentHistoryTable: CustomTableComponent;
 
     employmentHistoryColumns: Column[] = [];
-    employmentHistoryDataSource: EmployeeCardEmploymentHistoriesDataSource = new EmployeeCardEmploymentHistoriesDataSource();
+    employmentHistoryDataSource: EmployeeCardEmploymentHistoriesDataSource;
 
-    constructor() {
-
+    constructor(private employeeCardService: EmployeeCardService,
+                private employeeEmploymentHistoriesService: EmployeeEmploymentHistoriesService) {
+        this.employmentHistoryDataSource =
+            new EmployeeCardEmploymentHistoriesDataSource(this.employeeCardService, this.employeeEmploymentHistoriesService);
     }
 
     ngOnInit(): void {
@@ -72,6 +78,11 @@ export class EmployeeCardEmploymentHistoriesComponent implements OnInit {
             startWorkDateColumn,
             endWorkDateColumn
         );
+    }
+
+    ngOnDestroy() {
+        this.destroySubjects.next(true);
+        this.destroySubjects.complete();
     }
 
 }

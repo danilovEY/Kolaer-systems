@@ -24,6 +24,16 @@ import {EmployeeCardMilitaryRegistrationComponent} from "./employees/employee-ca
 import {EmployeeCardService} from "./employees/employee-card/employee-card.service";
 import {EmployeeListGuardService} from "./services/employee-list-guard.service";
 import {EmployeeEducationsGuardService} from "./services/employee-educations-guard.service";
+import {EmployeeEducationService} from "./employees/employee-card/educations/employee-education.service";
+import {EmployeeMilitaryRegistrationService} from "./employees/employee-card/military-registration/employee-military-registration.service";
+import {EmployeeAchievementService} from "./employees/employee-card/achievements/employee-achievement.service";
+import {EmployeeCombinationsService} from "./employees/employee-card/combinations/employee-combinations.service";
+import {EmployeeEmploymentHistoriesService} from "./employees/employee-card/employment-histories/employee-employment-histories.service";
+import {EmployeePersonalDataService} from "./employees/employee-card/personal-data/employee-personal-data.service";
+import {EmployeePersonalDocumentService} from "./employees/employee-card/personal-documents/employee-personal-document.service";
+import {EmployeePunishmentService} from "./employees/employee-card/punishments/employee-punishment.service";
+import {EmployeeRelativeService} from "./employees/employee-card/relatives/employee-relative.service";
+import {EmployeeStaffMovementsService} from "./employees/employee-card/staff-movements/employee-staff-movements.service";
 
 @NgModule({
     imports: [
@@ -55,7 +65,17 @@ import {EmployeeEducationsGuardService} from "./services/employee-educations-gua
     providers: [
         EmployeeCardService,
         EmployeeListGuardService,
-        EmployeeEducationsGuardService
+        EmployeeEducationsGuardService,
+        EmployeeEducationService,
+        EmployeeMilitaryRegistrationService,
+        EmployeeAchievementService,
+        EmployeeCombinationsService,
+        EmployeeEmploymentHistoriesService,
+        EmployeePersonalDataService,
+        EmployeePersonalDocumentService,
+        EmployeePunishmentService,
+        EmployeeRelativeService,
+        EmployeeStaffMovementsService
     ]
 })
 export class OrgStructuresModule {

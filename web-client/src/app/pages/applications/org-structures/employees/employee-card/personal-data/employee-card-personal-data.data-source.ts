@@ -1,25 +1,20 @@
 import {CustomDataSource} from "../../../../../../@core/models/custom.data-source";
 import {EmployeePersonalDataModel} from "../../../../../../@core/models/employee/employee-personal-data.model";
+import {EmployeePersonalDataService} from "./employee-personal-data.service";
+import {EmployeeCardService} from "../employee-card.service";
 
 export class EmployeeCardPersonalDataDataSource extends CustomDataSource<EmployeePersonalDataModel> {
-    private readonly fakeList: EmployeePersonalDataModel[] = [];
 
-    constructor() {
+    constructor(private employeeCardService: EmployeeCardService,
+                private employeePersonalDataService: EmployeePersonalDataService) {
         super();
-
-        const emp: EmployeePersonalDataModel = new EmployeePersonalDataModel();
-        emp.maritalStatus = 'Жен/ЗМ';
-        emp.phoneNumber = '8-999-999-99-99';
-        emp.addressRegistration = '1111111, г. Мурманск';
-        emp.addressResidential = '1111111, г. Полярные Зори';
-        emp.placeOfBirth = 'г. Пермь';
-
-        this.fakeList.push(emp)
     }
 
     loadElements(page: number, pageSize: number): Promise<EmployeePersonalDataModel[]> {
-        return new Promise<EmployeePersonalDataModel[]>(resolve => resolve(this.fakeList));
+        return this.employeePersonalDataService
+            .getPersonalDataByEmployeeId(this.employeeCardService.selectedEmployeeId.getValue())
+            .toPromise()
+            .then((personalData: EmployeePersonalDataModel[]) => this.setData(personalData));
     }
-
 
 }

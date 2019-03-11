@@ -5,6 +5,8 @@ import {Cell} from "ng2-smart-table";
 import {Utils} from "../../../../../../@core/utils/utils";
 import {EmployeeCardVacationsDataSource} from "./employee-card-vacations.data-source";
 import {VacationModel} from "../../../../vacation/model/vacation.model";
+import {EmployeeCardService} from "../employee-card.service";
+import {VacationService} from "../../../../vacation/vacation.service";
 
 @Component({
     selector: 'employee-card-vacations',
@@ -19,7 +21,8 @@ export class EmployeeCardVacationsComponent implements OnInit {
     vacationColumns: Column[] = [];
     vacationDataSource: EmployeeCardVacationsDataSource = new EmployeeCardVacationsDataSource();
 
-    constructor() {
+    constructor(private employeeCardService: EmployeeCardService,
+                private vacationService: VacationService) {
 
     }
 

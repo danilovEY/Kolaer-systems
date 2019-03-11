@@ -1,26 +1,32 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CustomTableComponent} from "../../../../../../@theme/components";
 import {Column} from "ng2-smart-table/lib/data-set/column";
 import {Cell} from "ng2-smart-table";
 import {Utils} from "../../../../../../@core/utils/utils";
 import {EmployeeCardCombinationsDataSource} from "./employee-card-combinations.data-source";
 import {EmployeeCombinationModel} from "../../../../../../@core/models/employee/employee-combination.model";
+import {EmployeeCombinationsService} from "./employee-combinations.service";
+import {Subject} from "rxjs";
+import {EmployeeCardService} from "../employee-card.service";
 
 @Component({
     selector: 'employee-card-combinations',
     templateUrl: './employee-card-combinations.component.html',
     styleUrls: ['./employee-card-combinations.component.scss']
 })
-export class EmployeeCardCombinationsComponent implements OnInit {
+export class EmployeeCardCombinationsComponent implements OnInit, OnDestroy {
+    private readonly destroySubjects: Subject<any> = new Subject<any>();
 
     @ViewChild('combinationTable')
     combinationTable: CustomTableComponent;
 
     combinationColumns: Column[] = [];
-    combinationDataSource: EmployeeCardCombinationsDataSource = new EmployeeCardCombinationsDataSource();
+    combinationDataSource: EmployeeCardCombinationsDataSource;
 
-    constructor() {
-
+    constructor(private employeeCardService: EmployeeCardService,
+                private employeeCombinationService: EmployeeCombinationsService) {
+        this.combinationDataSource =
+            new EmployeeCardCombinationsDataSource(this.employeeCardService, this.employeeCombinationService);
     }
 
     ngOnInit(): void {
@@ -62,6 +68,11 @@ export class EmployeeCardCombinationsComponent implements OnInit {
             startDateColumn,
             endDateColumn
         );
+    }
+
+    ngOnDestroy() {
+        this.destroySubjects.next(true);
+        this.destroySubjects.complete();
     }
 
 }

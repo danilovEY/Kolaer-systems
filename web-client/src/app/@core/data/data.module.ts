@@ -12,7 +12,6 @@ import {ContactsService} from '../services/contacts.service';
 import {TypeWorkService} from '../services/type-work.service';
 import {SmartTableService} from '../services/smart-table.service';
 import {UserService} from '../services/user.service';
-import {EmployeeEducationService} from "../services/employee-education.service";
 
 const SERVICES = [
     AccountService,
@@ -26,8 +25,7 @@ const SERVICES = [
     ContactsService,
     TypeWorkService,
     SmartTableService,
-    UserService,
-    EmployeeEducationService
+    UserService
 ];
 
 @NgModule({

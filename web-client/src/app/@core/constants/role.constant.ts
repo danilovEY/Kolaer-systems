@@ -33,8 +33,46 @@ export class RoleConstant {
 
 
     public static readonly EMPLOYEE_EDUCATIONS_READ: string = RoleConstant.PREFIX + 'EMPLOYEE_EDUCATIONS_READ';
-    public static readonly EMPLOYEE_EDUCATIONS_READ_DEPARTMENT: string = RoleConstant.PREFIX + 'EMPLOYEE_EDUCATIONS_READ_DEPARTMENT';
+    public static readonly EMPLOYEE_EDUCATIONS_READ_DEPARTMENT: string = RoleConstant.PREFIX +
+        'EMPLOYEE_EDUCATIONS_READ_DEPARTMENT';
 
+    public static readonly EMPLOYEE_ACHIEVEMENTS_READ: string = RoleConstant.PREFIX + 'EMPLOYEE_ACHIEVEMENTS_READ';
+    public static readonly EMPLOYEE_ACHIEVEMENTS_READ_DEPARTMENT: string = RoleConstant.PREFIX +
+        'EMPLOYEE_ACHIEVEMENTS_READ_DEPARTMENT';
+
+    public static readonly EMPLOYEE_EMPLOYMENT_HISTORIES_READ: string = RoleConstant.PREFIX +
+        'EMPLOYEE_EMPLOYMENT_HISTORIES_READ';
+    public static readonly EMPLOYEE_EMPLOYMENT_HISTORIES_READ_DEPARTMENT: string = RoleConstant.PREFIX +
+        'EMPLOYEE_EMPLOYMENT_HISTORIES_READ_DEPARTMENT';
+
+    public static readonly EMPLOYEE_MILITARY_REGISTRATIONS_READ: string = RoleConstant.PREFIX +
+        'EMPLOYEE_MILITARY_REGISTRATIONS_READ';
+    public static readonly EMPLOYEE_MILITARY_REGISTRATIONS_READ_DEPARTMENT: string = RoleConstant.PREFIX +
+        'EMPLOYEE_MILITARY_REGISTRATIONS_READ_DEPARTMENT';
+
+    public static readonly EMPLOYEE_PERSONAL_DATA_READ: string = RoleConstant.PREFIX + 'EMPLOYEE_PERSONAL_DATA_READ';
+    public static readonly EMPLOYEE_PERSONAL_DATA_READ_DEPARTMENT: string = RoleConstant.PREFIX +
+        'EMPLOYEE_PERSONAL_DATA_READ_DEPARTMENT';
+
+    public static readonly EMPLOYEE_PUNISHMENTS_READ: string = RoleConstant.PREFIX + 'EMPLOYEE_PUNISHMENTS_READ';
+    public static readonly EMPLOYEE_PUNISHMENTS_READ_DEPARTMENT: string = RoleConstant.PREFIX +
+        'EMPLOYEE_PUNISHMENTS_READ_DEPARTMENT';
+
+    public static readonly EMPLOYEE_RELATIVES_READ: string = RoleConstant.PREFIX + 'EMPLOYEE_RELATIVES_READ';
+    public static readonly EMPLOYEE_RELATIVES_READ_DEPARTMENT: string = RoleConstant.PREFIX +
+        'EMPLOYEE_RELATIVES_READ_DEPARTMENT';
+
+    public static readonly EMPLOYEE_STAFF_MOVEMENTS_READ: string = RoleConstant.PREFIX + 'EMPLOYEE_STAFF_MOVEMENTS_READ';
+    public static readonly EMPLOYEE_STAFF_MOVEMENTS_READ_DEPARTMENT: string = RoleConstant.PREFIX +
+        'EMPLOYEE_STAFF_MOVEMENTS_READ_DEPARTMENT';
+
+    public static readonly EMPLOYEE_PERSONAL_DOCUMENT_READ: string = RoleConstant.PREFIX + 'EMPLOYEE_PERSONAL_DOCUMENT_READ';
+    public static readonly EMPLOYEE_PERSONAL_DOCUMENT_READ_DEPARTMENT: string = RoleConstant.PREFIX +
+        'EMPLOYEE_PERSONAL_DOCUMENT_READ_DEPARTMENT';
+
+    public static readonly EMPLOYEE_COMBINATION_READ: string = RoleConstant.PREFIX + 'EMPLOYEE_COMBINATION_READ';
+    public static readonly EMPLOYEE_COMBINATION_READ_DEPARTMENT: string = RoleConstant.PREFIX +
+        'EMPLOYEE_COMBINATION_READ_DEPARTMENT';
 
     public static readonly BUSINESS_TRIP_READ: string = RoleConstant.PREFIX + 'BUSINESS_TRIP_READ';
 

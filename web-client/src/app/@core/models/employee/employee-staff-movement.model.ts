@@ -1,6 +1,6 @@
 import {BaseModel} from "../base.model";
 
-export class StaffMovementModel extends BaseModel {
+export class EmployeeStaffMovementModel extends BaseModel {
     employeeId: number;
     name: string;
     post: string;

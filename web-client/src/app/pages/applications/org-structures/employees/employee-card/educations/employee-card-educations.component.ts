@@ -5,7 +5,7 @@ import {Column} from "ng2-smart-table/lib/data-set/column";
 import {Cell} from "ng2-smart-table";
 import {Utils} from "../../../../../../@core/utils/utils";
 import {EmployeeEducationModel} from "../../../../../../@core/models/employee/employee-education.model";
-import {EmployeeEducationService} from "../../../../../../@core/services/employee-education.service";
+import {EmployeeEducationService} from "./employee-education.service";
 import {EmployeeCardService} from "../employee-card.service";
 
 @Component({

@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import ru.kolaer.common.constant.assess.EmployeeAccessConstant;
 import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.core.exception.ForbiddenException;
+import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.service.AuthenticationService;
 import ru.kolaer.server.employee.converter.MilitaryRegistrationMapper;
 import ru.kolaer.server.employee.dao.EmployeeDao;
@@ -13,8 +14,6 @@ import ru.kolaer.server.employee.model.dto.MilitaryRegistrationDto;
 import ru.kolaer.server.employee.repository.MilitaryRegistrationRepository;
 
 import javax.validation.constraints.Min;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -35,7 +34,7 @@ public class MilitaryRegistrationService {
     }
 
     @Transactional(readOnly = true)
-    public List<MilitaryRegistrationDto> findMilitaryRegistrationsByEmployeeId(@Min(1) long employeeId) {
+    public MilitaryRegistrationDto findMilitaryRegistrationsByEmployeeId(@Min(1) long employeeId) {
         AccountAuthorizedDto accountAuthorized = authenticationService.getAccountAuthorized();
 
         if (!accountAuthorized.hasAccess(EmployeeAccessConstant.EMPLOYEE_MILITARY_REGISTRATIONS_READ)) {
@@ -46,8 +45,7 @@ public class MilitaryRegistrationService {
 
         return militaryRegistrationRepository
                 .findByEmployeeId(employeeId)
-                .stream()
                 .map(militaryRegistrationMapper::mapToMilitaryRegistrationDto)
-                .collect(Collectors.toList());
+                .orElseThrow(NotFoundDataException::new);
     }
 }

@@ -17,8 +17,48 @@ export class RouterServiceConstant {
     public static readonly OTHER_EMPLOYEES_ALL_BIRTHDAY: string =
         RouterServiceConstant.ROOT_URL + `/organizations/employees/get/users/birthday/today`;
 
+
     public static readonly EMPLOYEES_ID_EDUCATION_URL: string =
         RouterServiceConstant.EMPLOYEES_ID_URL + `/educations`;
+
+
+    public static readonly EMPLOYEES_ID_MILITARY_REGISTRATION_URL: string =
+        RouterServiceConstant.EMPLOYEES_ID_URL + `/military_registrations`;
+
+
+    public static readonly EMPLOYEES_ID_ACHIEVEMENTS_URL: string =
+        RouterServiceConstant.EMPLOYEES_ID_URL + `/achievements`;
+
+
+    public static readonly EMPLOYEES_ID_COMBINATIONS_URL: string =
+        RouterServiceConstant.EMPLOYEES_ID_URL + `/combinations`;
+
+
+    public static readonly EMPLOYEES_ID_EMPLOYMENT_HISTORIES_URL: string =
+        RouterServiceConstant.EMPLOYEES_ID_URL + `/employment_histories`;
+
+
+    public static readonly EMPLOYEES_ID_PERSONAL_DATA_URL: string =
+        RouterServiceConstant.EMPLOYEES_ID_URL + `/personal_data`;
+
+
+    public static readonly EMPLOYEES_ID_PERSONAL_DOCUMENTS_URL: string =
+        RouterServiceConstant.EMPLOYEES_ID_URL + `/personal_documents`;
+
+
+    public static readonly EMPLOYEES_ID_PUNISHMENTS_URL: string =
+        RouterServiceConstant.EMPLOYEES_ID_URL + `/punishments`;
+
+
+    public static readonly EMPLOYEES_ID_RELATIVES_URL: string =
+        RouterServiceConstant.EMPLOYEES_ID_URL + `/relatives`;
+
+
+    public static readonly EMPLOYEES_ID_STAFF_MOVEMENTS_URL: string =
+        RouterServiceConstant.EMPLOYEES_ID_URL + `/staff_movements`;
+
+
+
 
     public static readonly USER_URL: string = RouterServiceConstant.ROOT_URL + `/user`;
     public static readonly USER_EMPLOYEE_URL: string = RouterServiceConstant.USER_URL + `/employee`;

@@ -1,6 +1,6 @@
 import {CustomDataSource} from "../../../../../../@core/models/custom.data-source";
 import {EmployeeEducationModel} from "../../../../../../@core/models/employee/employee-education.model";
-import {EmployeeEducationService} from "../../../../../../@core/services/employee-education.service";
+import {EmployeeEducationService} from "./employee-education.service";
 import {EmployeeCardService} from "../employee-card.service";
 
 export class EmployeeCardEducationDataSource extends CustomDataSource<EmployeeEducationModel> {

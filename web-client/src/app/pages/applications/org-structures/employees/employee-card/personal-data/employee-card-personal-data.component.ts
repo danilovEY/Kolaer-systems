@@ -1,26 +1,32 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CustomTableComponent} from "../../../../../../@theme/components";
 import {Column} from "ng2-smart-table/lib/data-set/column";
 import {Cell} from "ng2-smart-table";
 import {Utils} from "../../../../../../@core/utils/utils";
 import {EmployeeCardPersonalDataDataSource} from "./employee-card-personal-data.data-source";
 import {EmployeePersonalDataModel} from "../../../../../../@core/models/employee/employee-personal-data.model";
+import {EmployeePersonalDataService} from "./employee-personal-data.service";
+import {Subject} from "rxjs";
+import {EmployeeCardService} from "../employee-card.service";
 
 @Component({
     selector: 'employee-card-personal-data',
     templateUrl: './employee-card-personal-data.component.html',
     styleUrls: ['./employee-card-personal-data.component.scss']
 })
-export class EmployeeCardPersonalDataComponent implements OnInit {
+export class EmployeeCardPersonalDataComponent implements OnInit, OnDestroy {
+    private readonly destroySubjects: Subject<any> = new Subject<any>();
 
     @ViewChild('personalDataTable')
     personalDataTable: CustomTableComponent;
 
     personalDataColumns: Column[] = [];
-    personalDataDataSource: EmployeeCardPersonalDataDataSource = new EmployeeCardPersonalDataDataSource();
+    personalDataDataSource: EmployeeCardPersonalDataDataSource;
 
-    constructor() {
-
+    constructor(private employeeCardService: EmployeeCardService,
+                private employeePersonalDataService: EmployeePersonalDataService) {
+        this.personalDataDataSource =
+            new EmployeeCardPersonalDataDataSource(this.employeeCardService, this.employeePersonalDataService);
     }
 
 
@@ -100,6 +106,11 @@ export class EmployeeCardPersonalDataComponent implements OnInit {
             disabilityGroupColumn,
             disabilityDateColumn
         );
+    }
+
+    ngOnDestroy() {
+        this.destroySubjects.next(true);
+        this.destroySubjects.complete();
     }
 
 }

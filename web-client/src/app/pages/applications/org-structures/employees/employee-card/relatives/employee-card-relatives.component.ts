@@ -5,6 +5,8 @@ import {Cell} from "ng2-smart-table";
 import {Utils} from "../../../../../../@core/utils/utils";
 import {EmployeeCardRelativesDataSource} from "./employee-card-relatives.data-source";
 import {EmployeeRelativeModel} from "../../../../../../@core/models/employee/employee-relative.model";
+import {EmployeeCardService} from "../employee-card.service";
+import {EmployeeRelativeService} from "./employee-relative.service";
 
 @Component({
     selector: 'employee-card-relatives',
@@ -17,10 +19,11 @@ export class EmployeeCardRelativesComponent implements OnInit {
     relativeTable: CustomTableComponent;
 
     relativeColumns: Column[] = [];
-    relativeDataSource: EmployeeCardRelativesDataSource = new EmployeeCardRelativesDataSource();
+    relativeDataSource: EmployeeCardRelativesDataSource;
 
-    constructor() {
-
+    constructor(private employeeCardService: EmployeeCardService,
+                private employeeRelativeService: EmployeeRelativeService) {
+        this.relativeDataSource = new EmployeeCardRelativesDataSource(this.employeeCardService, employeeRelativeService);
     }
 
     ngOnInit(): void {

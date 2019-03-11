@@ -68,6 +68,13 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
         }
     }
 
+    getCurrentEmployeeId(cache: boolean = true): Observable<number> {
+        return this.getCurrentEmployee(cache)
+            .pipe(
+                map((currentEmployee: EmployeeModel) => currentEmployee.id)
+            )
+    }
+
     findAllEmployees(findRequest: FindEmployeeRequestModel): Observable<Page<EmployeeModel>> {
         let params = new HttpParams();
 

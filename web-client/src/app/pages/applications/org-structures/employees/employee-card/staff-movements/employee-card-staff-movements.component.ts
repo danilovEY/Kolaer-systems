@@ -4,7 +4,9 @@ import {Column} from "ng2-smart-table/lib/data-set/column";
 import {Cell} from "ng2-smart-table";
 import {Utils} from "../../../../../../@core/utils/utils";
 import {EmployeeCardStaffMovementsDataSource} from "./employee-card-staff-movements.data-source"
-import {StaffMovementModel} from "../../../../../../@core/models/employee/staff-movement.model";
+import {EmployeeStaffMovementModel} from "../../../../../../@core/models/employee/employee-staff-movement.model";
+import {EmployeeCardService} from "../employee-card.service";
+import {EmployeeStaffMovementsService} from "./employee-staff-movements.service";
 
 @Component({
     selector: 'employee-card-staff-movements',
@@ -17,10 +19,12 @@ export class EmployeeCardStaffMovementsComponent implements OnInit {
     staffMovementTable: CustomTableComponent;
 
     staffMovementColumns: Column[] = [];
-    staffMovementDataSource: EmployeeCardStaffMovementsDataSource = new EmployeeCardStaffMovementsDataSource();
+    staffMovementDataSource: EmployeeCardStaffMovementsDataSource;
 
-    constructor() {
-
+    constructor(private employeeCardService: EmployeeCardService,
+                private employeeStaffMovementsService: EmployeeStaffMovementsService) {
+        this.staffMovementDataSource =
+            new EmployeeCardStaffMovementsDataSource(this.employeeCardService, this.employeeStaffMovementsService);
     }
 
     ngOnInit(): void {
@@ -31,7 +35,7 @@ export class EmployeeCardStaffMovementsComponent implements OnInit {
             addable: false,
             filter: false,
             sort: false,
-            valuePrepareFunction(a: any, value: StaffMovementModel, cell: Cell) {
+            valuePrepareFunction(a: any, value: EmployeeStaffMovementModel, cell: Cell) {
                 return Utils.getDateFormat(value.startWorkDate);
             }
         }, null);
@@ -43,7 +47,7 @@ export class EmployeeCardStaffMovementsComponent implements OnInit {
             addable: false,
             filter: false,
             sort: false,
-            valuePrepareFunction(a: any, value: StaffMovementModel, cell: Cell) {
+            valuePrepareFunction(a: any, value: EmployeeStaffMovementModel, cell: Cell) {
                 return Utils.getDateFormat(value.endWorkDate);
             }
         }, null);
@@ -145,7 +149,7 @@ export class EmployeeCardStaffMovementsComponent implements OnInit {
             addable: false,
             filter: false,
             sort: false,
-            valuePrepareFunction(a: any, value: StaffMovementModel, cell: Cell) {
+            valuePrepareFunction(a: any, value: EmployeeStaffMovementModel, cell: Cell) {
                 return Utils.getDateFormat(value.orderDate);
             }
         }, null);

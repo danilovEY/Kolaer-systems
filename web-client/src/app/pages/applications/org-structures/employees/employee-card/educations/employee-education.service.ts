@@ -1,10 +1,10 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {EmployeeEducationModel} from "../models/employee/employee-education.model";
-import {Utils} from "../utils/utils";
-import {RouterServiceConstant} from "../constants/router-service.constant";
-import {PathVariableConstant} from "../constants/path-variable.constant";
+import {EmployeeEducationModel} from "../../../../../../@core/models/employee/employee-education.model";
+import {Utils} from "../../../../../../@core/utils/utils";
+import {RouterServiceConstant} from "../../../../../../@core/constants/router-service.constant";
+import {PathVariableConstant} from "../../../../../../@core/constants/path-variable.constant";
 
 @Injectable()
 export class EmployeeEducationService {

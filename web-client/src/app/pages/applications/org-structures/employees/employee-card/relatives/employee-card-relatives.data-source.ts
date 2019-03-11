@@ -1,22 +1,19 @@
 import {CustomDataSource} from "../../../../../../@core/models/custom.data-source";
 import {EmployeeRelativeModel} from "../../../../../../@core/models/employee/employee-relative.model";
+import {EmployeeCardService} from "../employee-card.service";
+import {EmployeeRelativeService} from "./employee-relative.service";
 
 export class EmployeeCardRelativesDataSource extends CustomDataSource<EmployeeRelativeModel> {
-    private readonly fakeList: EmployeeRelativeModel[] = [];
 
-    constructor() {
+    constructor(private employeeCardService: EmployeeCardService,
+                private employeeRelativeService: EmployeeRelativeService) {
         super();
-
-        const emp: EmployeeRelativeModel = new EmployeeRelativeModel();
-        emp.relationDegree = 'Сын';
-        emp.initials = 'Иванов Андрей Иванович';
-        emp.dateOfBirth = new Date();
-
-        this.fakeList.push(emp);
     }
 
     loadElements(page: number, pageSize: number): Promise<EmployeeRelativeModel[]> {
-        return new Promise<EmployeeRelativeModel[]>(resolve => resolve(this.fakeList));
+        return this.employeeRelativeService.getRelativesByEmployeeId(this.employeeCardService.selectedEmployeeId.getValue())
+            .toPromise()
+            .then((relatives: EmployeeRelativeModel[]) => this.setData(relatives));
     }
 
 }
