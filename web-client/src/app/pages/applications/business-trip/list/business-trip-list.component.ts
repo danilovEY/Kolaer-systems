@@ -4,8 +4,8 @@ import {Title} from "@angular/platform-browser";
 
 @Component({
     selector: 'business-trip-list',
-    templateUrl: '/business-trip-list.component.html',
-    styleUrls: ['/business-trip-list.component.scss']
+    templateUrl: './business-trip-list.component.html',
+    styleUrls: ['./business-trip-list.component.scss']
 })
 export class BusinessTripListComponent {
 
