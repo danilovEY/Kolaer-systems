@@ -56,7 +56,8 @@ public class EmployeeController {
     }
 
     @ApiOperation("Получить сотрудника")
-    @PreAuthorize("hasRole('" + EmployeeAccessConstant.EMPLOYEE_READ + "')")
+    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEES_READ + "','" +
+            EmployeeAccessConstant.EMPLOYEES_READ_DEPARTMENT + "')")
     @GetMapping(RouterConstants.EMPLOYEES_ID)
     public EmployeeDto getEmployee(@PathVariable(PathVariableConstants.EMPLOYEE_ID) @Min(1) long employeeId) {
         return this.employeeService.getById(employeeId);
@@ -93,7 +94,8 @@ public class EmployeeController {
     }
 
     @ApiOperation(value = "Получить всех сотрудников")
-    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEES_READ + "','" + EmployeeAccessConstant.EMPLOYEES_READ_DEPARTMENT + "')")
+    @PreAuthorize("hasAnyRole('" + EmployeeAccessConstant.EMPLOYEES_READ + "','" +
+            EmployeeAccessConstant.EMPLOYEES_READ_DEPARTMENT + "')")
     @GetMapping(RouterConstants.EMPLOYEES)
     public PageDto<EmployeeDto> getAllEmployees(@ModelAttribute FindEmployeePageRequest request) {
         return this.employeeService.getEmployees(request);

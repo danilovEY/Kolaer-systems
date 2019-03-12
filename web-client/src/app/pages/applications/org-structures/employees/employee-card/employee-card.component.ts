@@ -10,6 +10,8 @@ import {EmployeeCardService} from "./employee-card.service";
 import {Utils} from "../../../../../@core/utils/utils";
 import {SimpleAccountModel} from "../../../../../@core/models/simple-account.model";
 import {RoleConstant} from "../../../../../@core/constants/role.constant";
+import {EmployeeService} from "../../../../../@core/services/employee.service";
+import {EmployeeModel} from "../../../../../@core/models/employee.model";
 
 @Component({
     selector: 'employee-card',
@@ -20,10 +22,12 @@ export class EmployeeCardComponent implements OnInit, OnDestroy {
     private readonly ngUnsubscribe = new Subject();
 
     employeeInfoMenu: NbMenuItem[] = [];
+    selectedEmployee: EmployeeModel;
 
     constructor(private nbMenuService: NbMenuService,
                 private accountService: AccountService,
                 private router: Router,
+                private employeeService: EmployeeService,
                 private employeeCardService: EmployeeCardService,
                 private activatedRoute: ActivatedRoute) {
 
@@ -37,6 +41,9 @@ export class EmployeeCardComponent implements OnInit, OnDestroy {
 
                 if (!isNaN(employeeId)) {
                     this.employeeCardService.setSelectedEmployeeId(employeeId);
+
+                    this.employeeService.getEmployeeById(employeeId)
+                        .subscribe((employee: EmployeeModel) => this.selectedEmployee = employee);
 
                     this.initMenuItems(employeeId);
                 } else {

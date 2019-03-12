@@ -39,4 +39,11 @@
         <addPrimaryKey tableName="punishment" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="35-1" author="Danilov">
+        <dropNotNullConstraint tableName="punishment" columnName="status" columnDataType="VARCHAR(20)"/>
+        <dropNotNullConstraint tableName="punishment" columnName="order_number" columnDataType="VARCHAR(20)"/>
+        <dropNotNullConstraint tableName="punishment" columnName="order_date" columnDataType="DATE"/>
+        <dropNotNullConstraint tableName="punishment" columnName="start_punishment_date" columnDataType="DATE"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -31,4 +31,9 @@
         <addPrimaryKey tableName="combination" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="42-1" author="Danilov">
+        <dropNotNullConstraint tableName="combination" columnName="start_date" columnDataType="DATE"/>
+        <dropNotNullConstraint tableName="combination" columnName="end_date" columnDataType="DATE"/>
+    </changeSet>
+
 </databaseChangeLog>

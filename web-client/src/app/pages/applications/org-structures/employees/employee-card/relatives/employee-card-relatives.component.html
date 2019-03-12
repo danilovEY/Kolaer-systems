@@ -7,6 +7,8 @@
 
             <nb-card-body>
                 <custom-table #relativeTable
+                              [actionEdit]="false"
+                              [actionDelete]="false"
                               [columns]="relativeColumns"
                               [source]="relativeDataSource"
                               [actionAdd]="false">

@@ -31,4 +31,8 @@
         <addPrimaryKey tableName="employment_history" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="36-1" author="Danilov">
+        <dropNotNullConstraint tableName="employment_history" columnName="start_work_date" columnDataType="DATE"/>
+    </changeSet>
+
 </databaseChangeLog>

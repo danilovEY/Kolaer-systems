@@ -55,4 +55,11 @@
         <addPrimaryKey tableName="staff_movement" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="37-1" author="Danilov">
+        <dropNotNullConstraint tableName="staff_movement" columnName="department" columnDataType="VARCHAR(255)"/>
+        <dropNotNullConstraint tableName="staff_movement" columnName="category_unit" columnDataType="VARCHAR(50)"/>
+        <dropNotNullConstraint tableName="staff_movement" columnName="salary" columnDataType="DECIMAL(19,2)"/>
+        <dropNotNullConstraint tableName="staff_movement" columnName="start_date" columnDataType="DATE"/>
+    </changeSet>
+
 </databaseChangeLog>

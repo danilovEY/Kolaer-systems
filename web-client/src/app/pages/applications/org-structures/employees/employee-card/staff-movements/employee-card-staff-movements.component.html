@@ -7,6 +7,8 @@
 
             <nb-card-body>
                 <custom-table #staffMovementTable
+                              [actionEdit]="false"
+                              [actionDelete]="false"
                               [columns]="staffMovementColumns"
                               [source]="staffMovementDataSource"
                               [actionAdd]="false">

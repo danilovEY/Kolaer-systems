@@ -7,6 +7,8 @@
 
             <nb-card-body>
                 <custom-table #combinationTable
+                              [actionEdit]="false"
+                              [actionDelete]="false"
                               [columns]="combinationColumns"
                               [source]="combinationDataSource"
                               [actionAdd]="false">

@@ -31,4 +31,9 @@
         <addPrimaryKey tableName="relative" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="39-1" author="Danilov">
+        <dropNotNullConstraint tableName="relative" columnName="relation_degree" columnDataType="VARCHAR(50)"/>
+        <dropNotNullConstraint tableName="relative" columnName="date_of_birth" columnDataType="DATE"/>
+    </changeSet>
+
 </databaseChangeLog>

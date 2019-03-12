@@ -21,10 +21,10 @@ public class PersonalDocumentEntity extends DefaultEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "date_of_issue", nullable = false)
+    @Column(name = "date_of_issue")
     private LocalDate dateOfIssue;
 
-    @Column(name = "document_number", length = 50, nullable = false)
+    @Column(name = "document_number", length = 50)
     private String documentNumber;
 
     @Column(name = "issued_by")

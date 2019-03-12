@@ -7,6 +7,8 @@
 
             <nb-card-body>
                 <custom-table #employmentHistoryTable
+                              [actionEdit]="false"
+                              [actionDelete]="false"
                               [columns]="employmentHistoryColumns"
                               [source]="employmentHistoryDataSource"
                               [actionAdd]="false">

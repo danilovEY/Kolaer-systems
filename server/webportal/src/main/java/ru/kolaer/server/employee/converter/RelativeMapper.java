@@ -18,6 +18,7 @@ public class RelativeMapper {
         dto.setDateOfBirth(entity.getDateOfBirth());
         dto.setEmployeeId(entity.getEmployeeId());
         dto.setInitials(entity.getInitials());
+        dto.setRelationDegree(entity.getRelationDegree());
 
         return dto;
     }

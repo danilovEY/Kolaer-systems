@@ -27,4 +27,8 @@
         <addPrimaryKey tableName="military_registration" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="41-1" author="Danilov">
+        <dropNotNullConstraint tableName="military_registration" columnName="status_by" columnDataType="VARCHAR(255)"/>
+    </changeSet>
+
 </databaseChangeLog>

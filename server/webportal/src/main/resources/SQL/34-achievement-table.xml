@@ -31,4 +31,9 @@
         <addPrimaryKey tableName="achievement" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="34-1" author="Danilov">
+        <dropNotNullConstraint tableName="achievement" columnName="order_number" columnDataType="VARCHAR(20)"/>
+        <dropNotNullConstraint tableName="achievement" columnName="order_date" columnDataType="DATE"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -40,4 +40,10 @@
         <addPrimaryKey tableName="personal_data" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="38-1" author="Danilov">
+        <dropNotNullConstraint tableName="personal_data" columnName="address_registration" columnDataType="VARCHAR(255)"/>
+        <dropNotNullConstraint tableName="personal_data" columnName="address_residential" columnDataType="VARCHAR(255)"/>
+        <dropNotNullConstraint tableName="personal_data" columnName="place_of_birth" columnDataType="VARCHAR(255)"/>
+    </changeSet>
+
 </databaseChangeLog>

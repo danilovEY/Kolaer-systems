@@ -7,6 +7,8 @@
 
             <nb-card-body>
                 <custom-table #punishmentTable
+                              [actionEdit]="false"
+                              [actionDelete]="false"
                               [columns]="punishmentColumns"
                               [source]="punishmentDataSource"
                               [actionAdd]="false">

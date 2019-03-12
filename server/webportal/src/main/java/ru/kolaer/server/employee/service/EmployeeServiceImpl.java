@@ -45,6 +45,21 @@ public class EmployeeServiceImpl
 
     @Override
     @Transactional(readOnly = true)
+    public EmployeeDto getById(Long employeeId) {
+
+        AccountAuthorizedDto accountAuthorized = authenticationService.getAccountAuthorized();
+
+        if (!accountAuthorized.hasAccess(EmployeeAccessConstant.EMPLOYEES_READ)) {
+            if (!defaultEntityDao.employeeEqualDepartment(accountAuthorized.getEmployeeId(), employeeId).isPresent()) {
+                throw new ForbiddenException();
+            }
+        }
+
+        return super.getById(employeeId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public EmployeeDto getByPersonnelNumber(Long id) {
         if(id == null || id < 1) {
             return null;

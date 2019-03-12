@@ -7,6 +7,8 @@
 
             <nb-card-body>
                 <custom-table #employeeTable
+                              [actionEdit]="false"
+                              [actionDelete]="false"
                               [columns]="achievementColumns"
                               [source]="achievementDataSource"
                               [actionAdd]="false">

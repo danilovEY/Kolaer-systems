@@ -7,6 +7,8 @@
 
             <nb-card-body>
                 <custom-table #personalDocumentTable
+                              [actionEdit]="false"
+                              [actionDelete]="false"
                               [columns]="personalDocumentColumns"
                               [source]="personalDocumentDataSource"
                               [actionAdd]="false">

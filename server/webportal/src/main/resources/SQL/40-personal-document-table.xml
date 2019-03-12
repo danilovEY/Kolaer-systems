@@ -33,4 +33,9 @@
         <addPrimaryKey tableName="personal_document" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="40-1" author="Danilov">
+        <dropNotNullConstraint tableName="personal_document" columnName="date_of_issue" columnDataType="DATE"/>
+        <dropNotNullConstraint tableName="personal_document" columnName="document_number" columnDataType="VARCHAR(50)"/>
+    </changeSet>
+
 </databaseChangeLog>

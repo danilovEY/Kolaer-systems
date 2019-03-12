@@ -19,6 +19,7 @@ public class PersonalDocumentMapper {
         personalDocumentDto.setDateOfIssue(entity.getDateOfIssue());
         personalDocumentDto.setDocumentNumber(entity.getDocumentNumber());
         personalDocumentDto.setIssuedBy(entity.getIssuedBy());
+        personalDocumentDto.setName(entity.getName());
 
         return personalDocumentDto;
     }

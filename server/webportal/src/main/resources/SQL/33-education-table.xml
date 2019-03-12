@@ -47,4 +47,14 @@
         <addPrimaryKey tableName="education" columnNames="id"/>
     </changeSet>
 
+    <changeSet id="33-1" author="Danilov">
+        <dropNotNullConstraint tableName="education" columnName="type_education" columnDataType="VARCHAR(100)"/>
+        <dropNotNullConstraint tableName="education" columnName="institution" columnDataType="VARCHAR(255)"/>
+        <dropNotNullConstraint tableName="education" columnName="specialty" columnDataType="VARCHAR(255)"/>
+        <dropNotNullConstraint tableName="education" columnName="qualification" columnDataType="VARCHAR(255)"/>
+        <dropNotNullConstraint tableName="education" columnName="document" columnDataType="VARCHAR(50)"/>
+        <dropNotNullConstraint tableName="education" columnName="document_number" columnDataType="VARCHAR(20)"/>
+        <dropNotNullConstraint tableName="education" columnName="expiration_date" columnDataType="DATE"/>
+    </changeSet>
+
 </databaseChangeLog>
