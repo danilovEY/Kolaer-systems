@@ -124,7 +124,7 @@ public class GenerateReportForOldDbService implements UpdatableEmployeeService {
 
     private String createCells(HSSFRow row, EmployeeDto employee) {
         String departmentName = Optional.ofNullable(employee.getDepartment())
-                .map(dep -> String.format("%s (%s)", dep.getAbbreviatedName(), dep.getName()))
+                .map(dep -> String.format("%s (%s)", dep.getAbbreviatedName().replaceAll("\"", "|"), dep.getName()))
                 .orElse("NONE (Unknown)");
 
         String postName = Optional.ofNullable(employee.getPost())

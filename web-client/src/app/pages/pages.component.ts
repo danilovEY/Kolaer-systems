@@ -243,7 +243,7 @@ export class PagesComponent implements OnInit {
                     if (account.access.includes(RoleConstant.BUSINESS_TRIP_READ)) {
                         businessTripMenuItem.children.push(businessTripListMenuItem);
 
-                        // this.menu.push(businessTripMenuItem); TODO complete app
+                        this.menu.push(businessTripMenuItem);
                     }
 
                     // productionCalendarMenuItem.children.push(productionCalendarEditMenuItem); TODO: add role

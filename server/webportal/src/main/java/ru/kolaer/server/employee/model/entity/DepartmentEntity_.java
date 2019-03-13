@@ -14,7 +14,6 @@ public class DepartmentEntity_ {
     public static volatile SingularAttribute<DepartmentEntity, String> abbreviatedName;
     public static volatile SingularAttribute<DepartmentEntity, Long> chiefEmployeeId;
     public static volatile SingularAttribute<DepartmentEntity, Boolean> deleted;
-    public static volatile SingularAttribute<DepartmentEntity, String> externalId;
     public static volatile SingularAttribute<DepartmentEntity, Integer> code;
 
 }

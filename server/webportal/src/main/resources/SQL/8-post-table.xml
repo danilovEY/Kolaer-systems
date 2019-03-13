@@ -35,4 +35,8 @@
         <addUniqueConstraint tableName="post" columnNames="external_id"/>
     </changeSet>
 
+    <changeSet id="8-4" author="Danilov">
+        <dropColumn tableName="post" columnName="external_id"/>
+    </changeSet>
+
 </databaseChangeLog>

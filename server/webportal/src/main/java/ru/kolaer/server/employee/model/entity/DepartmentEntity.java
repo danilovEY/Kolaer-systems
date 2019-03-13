@@ -29,9 +29,6 @@ public class DepartmentEntity extends DefaultEntity {
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
 
-    @Column(name = "external_id")
-    private String externalId;
-
     @Column(name = "code")
     private int code;
 

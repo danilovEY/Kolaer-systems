@@ -7,6 +7,7 @@ import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Created by Danilov on 24.07.2016.
@@ -45,6 +46,6 @@ public class AccountEntity extends DefaultEntity {
     private boolean block;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private Collection<String> access;
+    private Collection<String> access = Collections.emptyList();
 
 }

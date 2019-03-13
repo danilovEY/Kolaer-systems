@@ -93,5 +93,14 @@
 
         <addNotNullConstraint tableName="account" columnName="access_ok" columnDataType="BOOLEAN"/>
     </changeSet>
+    
+    <changeSet id="1-11" author="Danilov">
+        <dropColumn tableName="account" columnName="access_type_work"/>
+        <dropColumn tableName="account" columnName="access_oit"/>
+        <dropColumn tableName="account" columnName="access_user"/>
+        <dropColumn tableName="account" columnName="access_ok"/>
+        <dropColumn tableName="account" columnName="access_vacation_admin"/>
+        <dropColumn tableName="account" columnName="access_vacation_dep_edit"/>
+    </changeSet>
 
 </databaseChangeLog>

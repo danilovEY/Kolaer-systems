@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
  */
 @Service
 public class ExcelReaderPost implements ExcelReader<PostEntity> {
-    private static String POST_ID = "ШтатДолжность";
     private static String POST_CODE = "Код должности";
     private static String POST_SHORT_NAME = "Штатная должность";
     private static String POST_FULL_NAME_1 = "Шт.должность (полное) 1";
@@ -28,9 +27,6 @@ public class ExcelReaderPost implements ExcelReader<PostEntity> {
     @Override
     public PostEntity parse(XSSFRow row, List<String> nameColumns) {
         PostEntity postEntity = new PostEntity();
-
-//        String value = getStringValue(nameColumns, POST_ID, row);
-//        postEntity.setExternalId(value);
 
         String value = getStringValue(nameColumns, POST_FULL_NAME_1, row);
         postEntity.setName(value);

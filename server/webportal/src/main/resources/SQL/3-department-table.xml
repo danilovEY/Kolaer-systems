@@ -49,4 +49,8 @@
         <addUniqueConstraint tableName="department" columnNames="external_id"/>
     </changeSet>
 
+    <changeSet id="4-5" author="Danilov">
+        <dropColumn tableName="department" columnName="external_id"/>
+    </changeSet>
+
 </databaseChangeLog>

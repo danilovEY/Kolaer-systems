@@ -35,9 +35,6 @@ public class PostEntity extends DefaultEntity {
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
 
-    @Column(name = "external_id")
-    private String externalId;
-
     @Override
     public String toString() {
         return "PostEntity{" +
@@ -48,7 +45,6 @@ public class PostEntity extends DefaultEntity {
                 ", type=" + type +
                 ", rang=" + rang +
                 ", deleted=" + deleted +
-                ", externalId='" + externalId + '\'' +
                 '}';
     }
 }

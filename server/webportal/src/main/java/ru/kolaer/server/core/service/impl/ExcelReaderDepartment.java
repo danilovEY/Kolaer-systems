@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
  */
 @Service
 public class ExcelReaderDepartment implements ExcelReader<DepartmentEntity> {
-    private static String DEP_ID = "Подразделение";
     private static String DEP_SHORT_NAME_TEXT = "Текст Подразделение";
     private static String DEP_FULL_NAME_FULL_OLD = "Подразделение (полное)";
     private static String DEP_FULL_NAME_FULL_1 = "Подразделение (полное) 1";
@@ -28,9 +27,6 @@ public class ExcelReaderDepartment implements ExcelReader<DepartmentEntity> {
     public DepartmentEntity parse(XSSFRow row, List<String> nameColumns) {
         DepartmentEntity departmentEntity = new DepartmentEntity();
         departmentEntity.setCode(99);
-
-        String value = getStringValue(nameColumns, DEP_ID, row);
-        departmentEntity.setExternalId(value);
 
         String depShortName = getStringValue(nameColumns, DEP_SHORT_NAME_TEXT, row);
         departmentEntity.setAbbreviatedName(depShortName);

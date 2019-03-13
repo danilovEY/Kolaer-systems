@@ -9,7 +9,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import ru.kolaer.common.dto.error.ErrorCode;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
 import ru.kolaer.server.core.model.dto.ResultUpdate;
@@ -21,6 +20,7 @@ import ru.kolaer.server.core.service.HistoryChangeService;
 import ru.kolaer.server.core.service.UpdatableEmployeeService;
 import ru.kolaer.server.core.service.UpdateEmployeesService;
 import ru.kolaer.server.employee.converter.EmployeeConverter;
+import ru.kolaer.server.employee.dao.DepartmentDao;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.dao.PostDao;
 import ru.kolaer.server.employee.model.dto.ResultUpdateEmployeeDto;
@@ -29,14 +29,11 @@ import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.model.entity.PostEntity;
 import ru.kolaer.server.employee.repository.DepartmentRepository;
 import ru.kolaer.server.upload.dao.UploadFileDao;
-import ru.kolaer.server.upload.model.entity.UploadFileEntity;
 
-import javax.persistence.EntityExistsException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -51,6 +48,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
     private final EmployeeConverter employeeConverter;
     private final PostDao postDao;
     private final DepartmentRepository departmentRepository;
+    private final DepartmentDao departmentDao;
     private final UploadFileDao uploadFileDao;
     private final UtilService utilService;
 
@@ -63,20 +61,15 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
     private final ExcelReaderDepartment excelReaderDepartment;
     private final ExcelReaderPost excelReaderPost;
 
-    public UpdateEmployeesServiceImpl(
-            EmployeeDao employeeDao,
-            EmployeeConverter employeeConverter,
-            PostDao postDao,
-            DepartmentRepository departmentRepository, UploadFileDao uploadFileDao,
-            UtilService utilService,
-            HistoryChangeService historyChangeService,
-            ExcelReaderEmployee excelReaderEmployee,
-            ExcelReaderDepartment excelReaderDepartment,
-            ExcelReaderPost excelReaderPost) {
+    public UpdateEmployeesServiceImpl(EmployeeDao employeeDao, EmployeeConverter employeeConverter, PostDao postDao,
+            DepartmentRepository departmentRepository, DepartmentDao departmentDao, UploadFileDao uploadFileDao,
+            UtilService utilService, HistoryChangeService historyChangeService, ExcelReaderEmployee excelReaderEmployee,
+            ExcelReaderDepartment excelReaderDepartment, ExcelReaderPost excelReaderPost) {
         this.employeeDao = employeeDao;
         this.employeeConverter = employeeConverter;
         this.postDao = postDao;
         this.departmentRepository = departmentRepository;
+        this.departmentDao = departmentDao;
         this.uploadFileDao = uploadFileDao;
         this.utilService = utilService;
 
@@ -197,20 +190,20 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
     }
 
     private EmployeeEntity updatePhoto(EmployeeEntity employee) {
-        try {
-            if (employee.getPhoto() == null) {
-                UploadFileEntity photoFile = new UploadFileEntity(); //TODO: replace to batch insert
-                photoFile.setAbsolutePath(true);
-                photoFile.setFileCreate(LocalDateTime.now());
-                photoFile.setFileName(employee.getPersonnelNumber() + ".jpg");
-                photoFile.setPath(utilService.getExternalPhotoPath() + photoFile.getFileName());
-                photoFile = uploadFileDao.save(photoFile);
-
-                employee.setPhoto("/upload/file/" + photoFile.getId() + "/" + photoFile.getFileName()); //TODO: replace to batch insert
-            }
-        } catch (EntityExistsException e) {
-            log.error("Фото для '{}' уже есть.", employee.getInitials());
-        }
+//        try { TODO refactoring
+//            if (employee.getPhoto() == null) {
+//                UploadFileEntity photoFile = new UploadFileEntity(); //TODO: replace to batch insert
+//                photoFile.setAbsolutePath(true);
+//                photoFile.setFileCreate(LocalDateTime.now());
+//                photoFile.setFileName(employee.getPersonnelNumber() + ".jpg");
+//                photoFile.setPath(utilService.getExternalPhotoPath() + photoFile.getFileName());
+//                photoFile = uploadFileDao.save(photoFile);
+//
+//                employee.setPhoto("/upload/file/" + photoFile.getId() + "/" + photoFile.getFileName()); //TODO: replace to batch insert
+//            }
+//        } catch (EntityExistsException e) {
+//            log.error("Фото для '{}' уже есть.", employee.getInitials());
+//        }
 
         return employee;
     }
@@ -238,7 +231,7 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 .map(UpdatableElement::getElement)
                 .collect(Collectors.toList());
 
-        departmentRepository.saveAll(departmentEntities);
+        departmentDao.save(departmentEntities); // TODO replace to repository
 
         return departmentEntityMap;
     }
@@ -285,12 +278,10 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                         !Objects.equals(employeeEntityFromDb.getFirstName(),employeeEntity.getFirstName()) ||
                         !Objects.equals(employeeEntityFromDb.getSecondName(),employeeEntity.getSecondName()) ||
                         !Objects.equals(employeeEntityFromDb.getThirdName(),employeeEntity.getThirdName()) ||
-                        !Objects.equals(employeeEntityFromDb.getGender(),employeeEntity.getGender()) ||
-                        !Objects.equals(employeeEntityFromDb.getBirthday(),employeeEntity.getBirthday()) ||
                         !Objects.equals(employeeEntityFromDb.getDepartmentId(), departmentId) ||
                         !Objects.equals(employeeEntityFromDb.getPostId(), postId) ||
-                        !Objects.equals(employeeEntityFromDb.getCategory(),employeeEntity.getCategory()) ||
-                        !Objects.equals(employeeEntityFromDb.getEmploymentDate(),employeeEntity.getEmploymentDate()) ||
+                        employeeEntityFromDb.getGender() != employeeEntity.getGender() ||
+                        employeeEntityFromDb.getCategory() != employeeEntity.getCategory() ||
                         employeeEntityFromDb.getDismissalDate() != null) {
                     updatableElement.setUpdate(true);
                 }
@@ -391,7 +382,6 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 String valueOld = historyChangeService.objectToJson(depEntityFromDb);
 
                 if(!Objects.equals(depEntityFromDb.getName(), departmentEntity.getName()) ||
-                        !Objects.equals(depEntityFromDb.getExternalId(), departmentEntity.getExternalId()) ||
                         depEntityFromDb.isDeleted()) {
                     updatableElement.setUpdate(true);
                 }
@@ -401,7 +391,6 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 }
 
                 depEntityFromDb.setName(departmentEntity.getName());
-                depEntityFromDb.setExternalId(departmentEntity.getExternalId());
                 depEntityFromDb.setDeleted(false);
 
                 if(updatableElement.isUpdate()) {
@@ -455,7 +444,6 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
 
                 if(!Objects.equals(postEntityFromDb.getName(), postEntity.getName()) ||
                         !Objects.equals(postEntityFromDb.getCode(), postEntity.getCode()) ||
-                        !Objects.equals(postEntityFromDb.getExternalId(), postEntity.getExternalId()) ||
                         !Objects.equals(postEntityFromDb.getRang(), postEntity.getRang()) ||
                         !Objects.equals(postEntityFromDb.getType(), postEntity.getType()) ||
                         postEntityFromDb.isDeleted()) {
@@ -471,7 +459,6 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
                 postEntityFromDb.setRang(postEntity.getRang());
                 postEntityFromDb.setName(postEntity.getName());
                 postEntityFromDb.setCode(postEntity.getCode());
-                postEntityFromDb.setExternalId(postEntity.getExternalId());
 
                 if(updatableElement.isUpdate()) {
                     HistoryChangeDto historyChange = historyChangeService
@@ -502,14 +489,6 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             return null;
         }
 
-//        return StringUtils.hasText(entity.getExternalId())
-//                ? entity.getExternalId()
-//                : entity.getName() + entity.getCode() +
-//                Optional.ofNullable(entity.getRang())
-//                        .map(Object::toString).orElse("") +
-//                Optional.ofNullable(entity.getType())
-//                        .map(TypePostEnum::getName).orElse("");
-
         return entity.getAbbreviatedName();
     }
 
@@ -528,8 +507,6 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
             return null;
         }
 
-        return StringUtils.hasText(entity.getExternalId())
-                ? entity.getExternalId()
-                : entity.getAbbreviatedName();
+        return entity.getName();
     }
 }

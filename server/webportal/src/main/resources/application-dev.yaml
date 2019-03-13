@@ -52,15 +52,15 @@ host:
 
 path:
   external:
-    photo: \\\\aerdc02.kolaer.local\\e$\\SHARE\\PHOTO\\avatars\\
+    photo: \\aerdc02.kolaer.local\e$\SHARE\PHOTO\avatars\
 
 tickets:
-  email: oit@kolaer.ru
+  email: danilovey@kolaer.ru
 
 old:
   db:
     report:
-      email: oit@kolaer.ru
+      email: danilovey@kolaer.ru
 
 secret_key: kolaer_key
 
