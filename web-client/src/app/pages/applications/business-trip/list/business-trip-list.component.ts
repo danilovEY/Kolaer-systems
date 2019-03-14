@@ -18,6 +18,9 @@ import {takeUntil} from "rxjs/operators";
 import {Cell} from "ng2-smart-table";
 import {BusinessTripEmployeeModel} from "../model/business-trip-employee.model";
 import {BusinessTripTypeEnum} from "../model/business-trip-type.enum";
+import {Router} from "@angular/router";
+import {RouterClientConstant} from "../../../../@core/constants/router-client.constant";
+import {PathVariableConstant} from "../../../../@core/constants/path-variable.constant";
 
 @Component({
     selector: 'business-trip-list',
@@ -49,6 +52,7 @@ export class BusinessTripListComponent implements OnInit, OnDestroy {
 
     constructor(private businessTripService: BusinessTripService,
                 private accountService: AccountService,
+                private router: Router,
                 private titleService: Title) {
         this.titleService.setTitle('Список командировок');
 
@@ -213,7 +217,15 @@ export class BusinessTripListComponent implements OnInit, OnDestroy {
     }
 
     action(event: CustomActionEventModel<BusinessTripModel>) {
-        console.log(event.action.name);
+        if (event.action.name === SmartTableService.EDIT_ACTION_NAME) {
+            const url: string = Utils.createUrlFromUrlTemplate(
+                RouterClientConstant.BUSINESS_TRIP_ID_URL,
+                PathVariableConstant.BUSINESS_TRIP_ID,
+                event.data.id.toString()
+            );
+
+            this.router.navigate([url]);
+        }
     }
 
     ngOnDestroy() {

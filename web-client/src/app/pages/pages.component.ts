@@ -5,6 +5,7 @@ import {AuthenticationRestService} from '../@core/modules/auth/authentication-re
 import {AccountService} from '../@core/services/account.service';
 import {SimpleAccountModel} from '../@core/models/simple-account.model';
 import {RoleConstant} from "../@core/constants/role.constant";
+import {RouterClientConstant} from "../@core/constants/router-client.constant";
 
 @Component({
     selector: 'ngx-pages',
@@ -189,7 +190,7 @@ export class PagesComponent implements OnInit {
 
         const businessTripListMenuItem: NbMenuItem = new NbMenuItem();
         businessTripListMenuItem.title = 'Список';
-        businessTripListMenuItem.link = 'app/business-trip/list';
+        businessTripListMenuItem.link = RouterClientConstant.BUSINESS_TRIP_LIST_URL;
 
 
 

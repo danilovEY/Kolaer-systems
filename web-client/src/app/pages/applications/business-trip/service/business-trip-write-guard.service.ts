@@ -7,7 +7,7 @@ import {SimpleAccountModel} from "../../../../@core/models/simple-account.model"
 import {RoleConstant} from "../../../../@core/constants/role.constant";
 
 @Injectable()
-export class BusinessTripListGuardService implements CanActivate {
+export class BusinessTripWriteGuardService implements CanActivate {
     constructor(private _accountService: AccountService,
                 private _router: Router) {
     }
@@ -15,7 +15,7 @@ export class BusinessTripListGuardService implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
        return this._accountService.getCurrentAccount(false)
             .pipe(
-                map((account: SimpleAccountModel) => account.access.includes(RoleConstant.BUSINESS_TRIP_READ)),
+                map((account: SimpleAccountModel) => account.access.includes(RoleConstant.BUSINESS_TRIP_WRITE)),
                 tap((hasAccess: boolean) => {
                     if (!hasAccess) {
                         this._router.navigate(['/auth/login']);

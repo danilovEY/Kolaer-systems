@@ -82,5 +82,7 @@ export class RouterServiceConstant {
 
 
     public static readonly BUSINESS_TRIP_URL: string = RouterServiceConstant.ROOT_URL + `/business_trip`;
+    public static readonly BUSINESS_TRIP_ID_URL: string = RouterServiceConstant.BUSINESS_TRIP_URL +
+        `/:${PathVariableConstant.BUSINESS_TRIP_ID}`;
 
 }

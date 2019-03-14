@@ -1,17 +1,30 @@
 import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
 import {BusinessTripListComponent} from "./list/business-trip-list.component";
-import {BusinessTripListGuardService} from "./service/business-trip-list-guard.service";
+import {BusinessTripReadGuardService} from "./service/business-trip-read-guard.service";
+import {BusinessTripDetailsComponent} from "./details/business-trip-details.component";
+import {RouterClientConstant} from "../../../@core/constants/router-client.constant";
+import {BusinessTripWriteGuardService} from "./service/business-trip-write-guard.service";
 
 const routes: Routes = [
     {
         path: '',
-        redirectTo: 'list'
+        redirectTo: RouterClientConstant.BUSINESS_TRIP_LIST_PART_URL
     },
     {
-        path: 'list',
+        path: RouterClientConstant.BUSINESS_TRIP_LIST_PART_URL,
         component: BusinessTripListComponent,
-        canActivate: [BusinessTripListGuardService]
+        canActivate: [BusinessTripReadGuardService]
+    },
+    {
+        path: RouterClientConstant.BUSINESS_TRIP_ID_PART_URL,
+        component: BusinessTripDetailsComponent,
+        canActivate: [BusinessTripWriteGuardService]
+    },
+    {
+        path: RouterClientConstant.BUSINESS_TRIP_CREATE_PART_URL,
+        component: BusinessTripDetailsComponent,
+        canActivate: [BusinessTripWriteGuardService]
     }
 ];
 

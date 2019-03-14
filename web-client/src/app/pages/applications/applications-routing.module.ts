@@ -2,6 +2,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {ApplicationsComponent} from './applications.component';
 import {AuthGuardService} from '../../@core/modules/auth/auth-guard.service';
+import {RouterClientConstant} from "../../@core/constants/router-client.constant";
 
 const routes: Routes = [{
     path: '',
@@ -41,7 +42,7 @@ const routes: Routes = [{
             canActivate: [AuthGuardService]
         },
         {
-            path: 'business-trip',
+            path: RouterClientConstant.BUSINESS_TRIP_PART_URL,
             loadChildren: 'app/pages/applications/business-trip/business-trip.module#BusinessTripModule',
             canActivate: [AuthGuardService]
         },

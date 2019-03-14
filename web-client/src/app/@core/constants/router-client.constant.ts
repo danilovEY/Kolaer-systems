@@ -20,11 +20,27 @@ export class RouterClientConstant {
     public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_PERSONAL_DOCUMENTS_PART_URL = 'personal_documents';
     public static readonly ORG_STRUCTURES_EMPLOYEES_ID_DETAILS_MILITARY_REGISTRATION_PART_URL = 'military_registration';
 
+    public static readonly BUSINESS_TRIP_PART_URL = 'business_trip';
+    public static readonly BUSINESS_TRIP_LIST_PART_URL = 'list';
+    public static readonly BUSINESS_TRIP_ID_PART_URL = ':' + PathVariableConstant.BUSINESS_TRIP_ID + '/details';
+    public static readonly BUSINESS_TRIP_CREATE_PART_URL = 'create';
 
     public static readonly PAGES_URL = `/${RouterClientConstant.PAGES_PART_URL}`;
 
+
     public static readonly APP_URL = RouterClientConstant.PAGES_URL + `/${RouterClientConstant.APP_PART_URL}`;
 
+    // ------BUSINESS_TRIP_URL---------
+    public static readonly BUSINESS_TRIP_URL = RouterClientConstant.APP_URL + `/${RouterClientConstant.BUSINESS_TRIP_PART_URL}`;
+
+    public static readonly BUSINESS_TRIP_LIST_URL = RouterClientConstant.BUSINESS_TRIP_URL +
+        `/${RouterClientConstant.BUSINESS_TRIP_LIST_PART_URL}`;
+
+    public static readonly BUSINESS_TRIP_CREATE_URL = RouterClientConstant.BUSINESS_TRIP_URL +
+        `/${RouterClientConstant.BUSINESS_TRIP_CREATE_PART_URL}`;
+
+    public static readonly BUSINESS_TRIP_ID_URL = RouterClientConstant.BUSINESS_TRIP_URL +
+        `/${RouterClientConstant.BUSINESS_TRIP_ID_PART_URL}`;
 
 
     // ------ORG_STRUCTURES_URL---------

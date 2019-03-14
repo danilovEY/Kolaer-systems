@@ -4,7 +4,9 @@ import {BusinessTripRoutingModule} from "./business-trip-routing.module";
 import {BusinessTripListComponent} from "./list/business-trip-list.component";
 import {BusinessTripService} from "./service/business-trip.service";
 import {ThemeModule} from "../../../@theme/theme.module";
-import {BusinessTripListGuardService} from "./service/business-trip-list-guard.service";
+import {BusinessTripReadGuardService} from "./service/business-trip-read-guard.service";
+import {BusinessTripDetailsComponent} from "./details/business-trip-details.component";
+import {BusinessTripWriteGuardService} from "./service/business-trip-write-guard.service";
 
 @NgModule({
     imports: [
@@ -13,11 +15,13 @@ import {BusinessTripListGuardService} from "./service/business-trip-list-guard.s
     ],
     declarations: [
         BusinessTripComponent,
-        BusinessTripListComponent
+        BusinessTripListComponent,
+        BusinessTripDetailsComponent
     ],
     providers: [
         BusinessTripService,
-        BusinessTripListGuardService
+        BusinessTripReadGuardService,
+        BusinessTripWriteGuardService
     ]
 })
 export class BusinessTripModule {
