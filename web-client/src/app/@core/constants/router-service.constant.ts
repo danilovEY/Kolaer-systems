@@ -79,4 +79,8 @@ export class RouterServiceConstant {
         `/:${PathVariableConstant.DEPARTMENT_ID}`;
     public static readonly CONTACTS_DEPARTMENTS_ID_TYPE_URL: string = RouterServiceConstant.CONTACTS_DEPARTMENTS_ID_URL +
         `/:${PathVariableConstant.CONTACT_TYPE}`;
+
+
+    public static readonly BUSINESS_TRIP_URL: string = RouterServiceConstant.ROOT_URL + `/business_trip`;
+
 }

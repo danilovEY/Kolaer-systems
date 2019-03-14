@@ -75,5 +75,6 @@ export class RoleConstant {
         'EMPLOYEE_COMBINATION_READ_DEPARTMENT';
 
     public static readonly BUSINESS_TRIP_READ: string = RoleConstant.PREFIX + 'BUSINESS_TRIP_READ';
+    public static readonly BUSINESS_TRIP_WRITE: string = RoleConstant.PREFIX + 'BUSINESS_TRIP_WRITE';
 
 }

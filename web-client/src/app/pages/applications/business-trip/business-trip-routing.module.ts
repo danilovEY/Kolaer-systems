@@ -1,6 +1,7 @@
 import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
 import {BusinessTripListComponent} from "./list/business-trip-list.component";
+import {BusinessTripListGuardService} from "./service/business-trip-list-guard.service";
 
 const routes: Routes = [
     {
@@ -9,7 +10,8 @@ const routes: Routes = [
     },
     {
         path: 'list',
-        component: BusinessTripListComponent
+        component: BusinessTripListComponent,
+        canActivate: [BusinessTripListGuardService]
     }
 ];
 

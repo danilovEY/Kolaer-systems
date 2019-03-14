@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -52,6 +53,6 @@ public class BusinessTripEntity extends DefaultEntity {
     private String comment;
 
     @OneToMany(mappedBy = "businessTripId")
-    private List<BusinessTripEmployeeEntity> employees;
+    private List<BusinessTripEmployeeEntity> employees = Collections.emptyList();
 
 }

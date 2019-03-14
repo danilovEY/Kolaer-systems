@@ -114,12 +114,12 @@ export class CustomTableComponent implements OnInit, OnDestroy {
             this.settings.mode = 'external';
         }
 
-        if (this.actionDelete) {
-            this.smartTableService.addDeleteAction();
-        }
-
         if (this.actionEdit) {
             this.smartTableService.addEditAction();
+        }
+
+        if (this.actionDelete) {
+            this.smartTableService.addDeleteAction();
         }
 
         if (this.actions.length > 0 || this.smartTableService.getActions(this.tableName).length > 0) {

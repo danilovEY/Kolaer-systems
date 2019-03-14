@@ -43,6 +43,26 @@ export class Utils {
         return 0;
     };
 
+    public static shortInitials(initials: string): string {
+        const splitInitials: string[] = initials.split(' ');
+
+        let shortInitials = '';
+
+        if (splitInitials.length > 0) {
+            shortInitials += splitInitials[0];
+        }
+
+        if (splitInitials.length > 1) {
+            shortInitials += ` ${splitInitials[1].substring(0, 1)}.`;
+        }
+
+        if (splitInitials.length > 2) {
+            shortInitials += ` ${splitInitials[2].substring(0, 1)}.`;
+        }
+
+        return shortInitials;
+    }
+
     public static getDirection(direction: string): number {
         return direction === 'asc' ? 1 : -1
     }
@@ -66,6 +86,10 @@ export class Utils {
 
     public static getDateFormat(date: Date): string {
         return Utils.datePipe.transform(date, 'dd.MM.yyyy');
+    }
+
+    public static getShortDateFormat(date: Date): string {
+        return Utils.datePipe.transform(date, 'dd.MM.yy');
     }
 
     public static getDateTimeFormatFromString(date: string): string {
