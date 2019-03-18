@@ -78,7 +78,7 @@
 
 
                         <div class="row">
-                            <div class="col-12" *ngIf="currentAccount.accessVacationAdmin">
+                            <div class="col-12" *ngIf="canReadBalance()">
                                 <div class="form-group">
                                     <label for="prevYearBalance">Остаток на предыдущий год</label>
                                     <div class="input-group">
@@ -143,7 +143,7 @@
                         </div>
                     </nb-card-body>
 
-                    <nb-card-footer *ngIf="currentAccount.accessVacationAdmin">
+                    <nb-card-footer *ngIf="canWriteBalance()">
                         <button type="submit" class="btn btn-primary" [disabled]="formBalance.invalid">
                             Сохранить
                         </button>

@@ -2,6 +2,9 @@ package ru.kolaer.server.businesstrip.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import ru.kolaer.server.businesstrip.model.BusinessTripType;
+import ru.kolaer.server.businesstrip.model.dto.request.CreateBusinessTripRequest;
+import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripDetailDto;
 import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripDto;
 import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripEmployeeDto;
 import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripEmployeeInfo;
@@ -89,6 +92,84 @@ public class BusinessTripMapper {
                         )
                 )
                 .collect(Collectors.toList());
+    }
+
+    public BusinessTripDetailDto mapToBusinessTripDetailDto(@NotNull BusinessTripEntity entity) {
+        BusinessTripDetailDto businessTripDetailDto = new BusinessTripDetailDto();
+        businessTripDetailDto.setId(entity.getId());
+        businessTripDetailDto.setBusinessTripType(entity.getBusinessTripType());
+        businessTripDetailDto.setComment(entity.getComment());
+        businessTripDetailDto.setDocumentDate(entity.getDocumentDate());
+        businessTripDetailDto.setDocumentNumber(entity.getDocumentNumber());
+        businessTripDetailDto.setOrganizationName(entity.getOrganizationName());
+        businessTripDetailDto.setOkpoCode(entity.getOkpoCode());
+        businessTripDetailDto.setReasonDescription(entity.getReasonDescription());
+        businessTripDetailDto.setReasonDocumentNumber(entity.getReasonDocumentNumber());
+        businessTripDetailDto.setReasonDocumentDate(entity.getReasonDocumentDate());
+
+        List<BusinessTripEmployeeEntity> employees = entity.getEmployees();
+
+        Set<Long> employeeIds = employees
+                .stream()
+                .map(BusinessTripEmployeeEntity::getEmployeeId)
+                .collect(Collectors.toSet());
+        employeeIds.add(entity.getWriterEmployeeId());
+        employeeIds.add(entity.getChiefEmployeeId());
+
+        Map<Long, EmployeeEntity> employeeMap = employeeDao.findById(employeeIds)
+                .stream()
+                .collect(Collectors.toMap(EmployeeEntity::getId, Function.identity()));
+
+        Set<Long> departmentIds = employeeMap.values()
+                .stream()
+                .map(EmployeeEntity::getDepartmentId)
+                .collect(Collectors.toSet());
+
+        Set<Long> postIds = employeeMap.values()
+                .stream()
+                .map(EmployeeEntity::getPostId)
+                .collect(Collectors.toSet());
+
+        Map<Long, DepartmentEntity> departmentMap = departmentRepository.findAllById(departmentIds)
+                .stream()
+                .collect(Collectors.toMap(DepartmentEntity::getId, Function.identity()));
+
+        Map<Long, PostEntity> postMap = postDao.findById(postIds)
+                .stream()
+                .collect(Collectors.toMap(PostEntity::getId, Function.identity()));
+
+        EmployeeEntity writerEmployee = employeeMap.get(entity.getWriterEmployeeId());
+        EmployeeEntity chiefEmployee = employeeMap.get(entity.getChiefEmployeeId());
+
+        List<BusinessTripEmployeeDto> businessTripEmployees = employees
+                .stream()
+                .map(businessTripEmployee -> {
+                    EmployeeEntity employee = employeeMap.get(businessTripEmployee.getEmployeeId());
+
+                    return mapToBusinessTripEmployeeDto(
+                            businessTripEmployee,
+                            employee,
+                            departmentMap.get(employee.getDepartmentId()),
+                            postMap.get(employee.getPostId())
+                    );
+                })
+                .collect(Collectors.toList());
+
+        businessTripDetailDto.setEmployees(businessTripEmployees);
+
+        businessTripDetailDto.setWriterEmployee(mapToBusinessTripEmployeeInfo(
+                writerEmployee,
+                departmentMap.get(writerEmployee.getDepartmentId()),
+                postMap.get(writerEmployee.getPostId())
+        ));
+
+        businessTripDetailDto.setChiefEmployee(mapToBusinessTripEmployeeInfo(
+                chiefEmployee,
+                departmentMap.get(chiefEmployee.getDepartmentId()),
+                postMap.get(chiefEmployee.getPostId())
+        ));
+
+        return businessTripDetailDto;
     }
 
     public BusinessTripDto mapToBusinessTripDto(@NotNull BusinessTripEntity entity) {
@@ -187,5 +268,24 @@ public class BusinessTripMapper {
         businessTripEmployeeInfo.setDepartmentName(department.getAbbreviatedName());
         businessTripEmployeeInfo.setPostName(post.getAbbreviatedName());
         return businessTripEmployeeInfo;
+    }
+
+    public BusinessTripEntity mapToBusinessTripEntity(CreateBusinessTripRequest request) {
+        BusinessTripEntity businessTripEntity = new BusinessTripEntity();
+        businessTripEntity.setBusinessTripType(request.getBusinessTripType());
+        businessTripEntity.setComment(request.getComment());
+        businessTripEntity.setChiefEmployeeId(request.getChiefEmployeeId());
+        businessTripEntity.setDocumentDate(request.getDocumentDate());
+        businessTripEntity.setDocumentNumber(request.getDocumentNumber());
+        businessTripEntity.setOkpoCode(request.getOkpoCode());
+        businessTripEntity.setOrganizationName(request.getOrganizationName());
+
+        if (request.getBusinessTripType() != BusinessTripType.DIRECTION) {
+            businessTripEntity.setReasonDescription(request.getReasonDescription());
+            businessTripEntity.setReasonDocumentNumber(request.getReasonDocumentNumber());
+            businessTripEntity.setReasonDocumentDate(request.getReasonDocumentDate());
+        }
+
+        return businessTripEntity;
     }
 }

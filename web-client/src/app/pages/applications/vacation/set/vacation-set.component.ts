@@ -342,4 +342,13 @@ export class VacationSetComponent implements OnInit {
             ? VacationSetComponent.PUBLIC_SERVER_URL + this.selectedEmployee.photo
             : '';
     }
+
+    canReadBalance(): boolean {
+        return this.currentAccount.access.includes(RoleConstant.VACATIONS_BALANCE_READ) ||
+            this.currentAccount.access.includes(RoleConstant.VACATIONS_BALANCE_READ_DEPARTMENT);
+    }
+
+    canWriteBalance(): boolean {
+        return this.currentAccount.access.includes(RoleConstant.VACATIONS_BALANCE_WRITE);
+    }
 }

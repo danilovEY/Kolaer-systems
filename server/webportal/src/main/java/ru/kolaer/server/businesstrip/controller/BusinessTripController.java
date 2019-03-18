@@ -53,7 +53,7 @@ public class BusinessTripController {
 
     @GetMapping(RouterConstants.BUSINESS_TRIP_ID)
     @PreAuthorize("hasRole('" + BusinessTripAccessConstant.BUSINESS_TRIP_READ + "')")
-    public BusinessTripDto getBusinessTrip(
+    public BusinessTripDetailDto getBusinessTrip(
             @PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId
     ) {
         return businessTripService.getBusinessTripById(businessTripId);

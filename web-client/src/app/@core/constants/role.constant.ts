@@ -10,6 +10,9 @@ export class RoleConstant {
     public static readonly VACATIONS_READ_DEPARTMENT: string = RoleConstant.PREFIX + 'VACATIONS_READ_DEPARTMENT';
     public static readonly VACATIONS_WRITE: string = RoleConstant.PREFIX + 'VACATIONS_WRITE';
     public static readonly VACATIONS_WRITE_DEPARTMENT: string = RoleConstant.PREFIX + 'VACATIONS_WRITE_DEPARTMENT';
+    public static readonly VACATIONS_BALANCE_READ: string = RoleConstant.PREFIX + 'VACATIONS_BALANCE_READ';
+    public static readonly VACATIONS_BALANCE_READ_DEPARTMENT: string = RoleConstant.PREFIX + 'VACATIONS_BALANCE_READ_DEPARTMENT';
+    public static readonly VACATIONS_BALANCE_WRITE: string = RoleConstant.PREFIX + 'VACATIONS_BALANCE_WRITE';
 
 
     public static readonly EMPLOYEES_READ: string = RoleConstant.PREFIX + 'EMPLOYEES_READ';

@@ -2,11 +2,161 @@
     <div class="col-12">
         <nb-card>
             <nb-card-header>
-                {{ currentBusinessTripDetailsModel?.comment }}
+                Командировка
             </nb-card-header>
 
             <nb-card-body>
+                <form (ngSubmit)="submitBusinessTripForm()" [formGroup]="formBusinessTrip">
+                    <div class="row">
+                        <div class="col-4">
+                            <label>Тип командировки:</label>
+                            <p-dropdown [style]="{'width':'100%'}"
+                                        [options]="businessTripTypes"
+                                        (ngModelChange)="selectBusinessTripType($event)"
+                                        placeholder="Выберите тип командироки..."
+                                        formControlName="businessTripType"
+                                        optionLabel="name"
+                                        [autoWidth]="false"
+                                        appendTo="body">
+                            </p-dropdown>
+                        </div>
 
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="documentNumber">Номер документа:</label>
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="documentNumber"
+                                           class="form-control"
+                                           formControlName="documentNumber"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="documentDate">Дата документа:</label>
+                                <div class="input-group">
+                                    <input class="form-control"
+                                           placeholder="Дата"
+                                           id="documentDate"
+                                           name="documentDate"
+                                           formControlName="documentDate"
+                                           container="body"
+                                           type="text"
+                                           [startDate]="currentDocumentDate"
+                                           ngbDatepicker #d="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                                            <i class="icon ion-md-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label for="organizationName">Наименование организации:</label>
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="organizationName"
+                                           class="form-control"
+                                           formControlName="organizationName"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="okpoCode">Код ОКПО:</label>
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="okpoCode"
+                                           class="form-control"
+                                           formControlName="okpoCode"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="comment">Комментарий:</label>
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="comment"
+                                           class="form-control"
+                                           formControlName="comment"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                        <div class="row" *ngIf="hasReason()">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="reasonDescription">Основание:</label>
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="reasonDescription"
+                                           class="form-control"
+                                           formControlName="reasonDescription"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="reasonDocumentNumber">Основание (Номер документа):</label>
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="reasonDocumentNumber"
+                                           class="form-control"
+                                           formControlName="reasonDocumentNumber"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="reasonDocumentDate">Основание (Дата документа):</label>
+                                <div class="input-group">
+                                    <input class="form-control"
+                                           placeholder="Дата"
+                                           id="reasonDocumentDate"
+                                           name="reasonDocumentDate"
+                                           formControlName="reasonDocumentDate"
+                                           container="body"
+                                           type="text"
+                                           [startDate]="currentReasonDocumentDate"
+                                           ngbDatepicker #d="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                                            <i class="icon ion-md-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary" [disabled]="formBusinessTrip.invalid">
+                            Сохранить
+                        </button>
+                    </div>
+                </form>
             </nb-card-body>
         </nb-card>
     </div>
