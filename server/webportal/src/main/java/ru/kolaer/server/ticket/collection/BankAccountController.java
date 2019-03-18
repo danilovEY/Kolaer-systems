@@ -22,7 +22,6 @@ import ru.kolaer.server.ticket.service.BankAccountService;
  */
 @RestController
 @Api(tags = "Банковские счета")
-@RequestMapping("/bank")
 @RequiredArgsConstructor
 @Slf4j
 public class BankAccountController {

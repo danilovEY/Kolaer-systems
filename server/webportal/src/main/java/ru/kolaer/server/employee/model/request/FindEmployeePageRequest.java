@@ -10,6 +10,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class FindEmployeePageRequest extends PaginationRequest {
+    private Set<Long> ids = Collections.emptySet();
     private Set<Long> typeWorkIds = Collections.emptySet();
     private Set<Long> postIds = Collections.emptySet();
     private Set<Long> departmentIds = Collections.emptySet();

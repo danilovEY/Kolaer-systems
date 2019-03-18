@@ -207,6 +207,11 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
 
         query = query.append(" WHERE emp.dismissalDate IS NULL");
 
+        if (!CollectionUtils.isEmpty(request.getIds())) {
+            query = query.append(" AND emp.id IN (:ids)");
+            params.put("ids", request.getIds());
+        }
+
         if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
             query = query.append(" AND emp.departmentId IN (:depIds)");
             params.put("depIds", request.getDepartmentIds());
@@ -248,6 +253,11 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .append(" AS emp");
 
         query = query.append(" WHERE emp.dismissalDate IS NULL");
+
+        if (!CollectionUtils.isEmpty(request.getIds())) {
+            query = query.append(" AND emp.id IN (:ids)");
+            params.put("ids", request.getIds());
+        }
 
         if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
             query = query.append(" AND emp.departmentId IN (:depIds)");
