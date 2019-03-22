@@ -11,19 +11,27 @@ import ru.kolaer.server.account.model.dto.AccountAuthorizedDto;
 import ru.kolaer.server.core.exception.ForbiddenException;
 import ru.kolaer.server.core.exception.NotFoundDataException;
 import ru.kolaer.server.core.exception.UnexpectedRequestParams;
+import ru.kolaer.server.core.model.entity.DefaultEntity;
 import ru.kolaer.server.core.service.AbstractDefaultService;
 import ru.kolaer.server.core.service.AuthenticationService;
 import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;
+import ru.kolaer.server.employee.dao.PostDao;
 import ru.kolaer.server.employee.model.dto.EmployeeRequestDto;
 import ru.kolaer.server.employee.model.dto.UpdateTypeWorkEmployeeRequestDto;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
+import ru.kolaer.server.employee.model.request.FindDepartmentPageRequest;
 import ru.kolaer.server.employee.model.request.FindEmployeePageRequest;
+import ru.kolaer.server.employee.model.request.FindPostPageRequest;
+import ru.kolaer.server.employee.repository.DepartmentRepository;
+import ru.kolaer.server.employee.repository.DepartmentSpecifications;
 
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by danilovey on 09.08.2016.
@@ -34,12 +42,15 @@ public class EmployeeServiceImpl
         extends AbstractDefaultService<EmployeeDto, EmployeeEntity, EmployeeDao, EmployeeConverter>
         implements EmployeeService {
 
+    private final DepartmentRepository departmentRepository;
+    private final PostDao postDao;
     private final AuthenticationService authenticationService;
 
-    protected EmployeeServiceImpl(EmployeeDao employeeDao,
-                                  EmployeeConverter converter,
-                                  AuthenticationService authenticationService) {
+    protected EmployeeServiceImpl(EmployeeDao employeeDao, EmployeeConverter converter,
+            DepartmentRepository departmentRepository, PostDao postDao, AuthenticationService authenticationService) {
         super(employeeDao, converter);
+        this.departmentRepository = departmentRepository;
+        this.postDao = postDao;
         this.authenticationService = authenticationService;
     }
 
@@ -192,6 +203,34 @@ public class EmployeeServiceImpl
                     !request.getDepartmentIds().contains(currentEmployee.getDepartmentId())) {
                 throw new ForbiddenException("У вас нет доступа");
             }
+        }
+
+        if (StringUtils.hasText(request.getFindByDepartmentName())) {
+            FindDepartmentPageRequest findDepartmentPageRequest = new FindDepartmentPageRequest();
+            findDepartmentPageRequest.setQuery(request.getFindByDepartmentName());
+            findDepartmentPageRequest.setPageSize(Integer.MAX_VALUE);
+
+            Set<Long> departmentIds = departmentRepository
+                    .findAll(DepartmentSpecifications.findAll(findDepartmentPageRequest))
+                    .stream()
+                    .map(DefaultEntity::getId)
+                    .collect(Collectors.toSet());
+
+            request.setDepartmentIds(departmentIds);
+        }
+
+        if (StringUtils.hasText(request.getFindByPostName())) {
+            FindPostPageRequest findPostPageRequest = new FindPostPageRequest();
+            findPostPageRequest.setPageSize(Integer.MAX_VALUE);
+            findPostPageRequest.setQuery(request.getFindByPostName());
+
+            Set<Long> postIds = postDao
+                    .find(findPostPageRequest)
+                    .stream()
+                    .map(DefaultEntity::getId)
+                    .collect(Collectors.toSet());
+
+            request.setPostIds(postIds);
         }
 
         long count = defaultEntityDao.findAllEmployeeCount(request);

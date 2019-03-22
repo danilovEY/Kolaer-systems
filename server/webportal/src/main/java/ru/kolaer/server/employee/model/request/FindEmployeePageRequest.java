@@ -14,8 +14,11 @@ public class FindEmployeePageRequest extends PaginationRequest {
     private Set<Long> typeWorkIds = Collections.emptySet();
     private Set<Long> postIds = Collections.emptySet();
     private Set<Long> departmentIds = Collections.emptySet();
-    private Set<Long> employeeIds = Collections.emptySet();
-    private String query;
-    private boolean onOnePage;
-    private EmployeeSortType sort = EmployeeSortType.INITIALS_ASC;
+    private Long findByPersonnelNumber;
+    private String findByAll;
+    private String findByInitials;
+    private String findByDepartmentName;
+    private String findByPostName;
+    private Boolean findByDeleted;
+    private Set<EmployeeSortType> sorts = Collections.singleton(EmployeeSortType.INITIALS_ASC);
 }

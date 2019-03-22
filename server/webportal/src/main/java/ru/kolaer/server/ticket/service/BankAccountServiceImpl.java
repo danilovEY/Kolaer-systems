@@ -90,7 +90,8 @@ public class BankAccountServiceImpl
         findEmployeePageRequest.setIds(new HashSet<>(allEmployeeIds));
         findEmployeePageRequest.setPageNum(number);
         findEmployeePageRequest.setPageSize(pageSize);
-        findEmployeePageRequest.setQuery(query);
+        findEmployeePageRequest.setFindByAll(query);
+        findEmployeePageRequest.setFindByDeleted(false);
 
         List<EmployeeEntity> employeeAll = employeeDao.findAllEmployee(findEmployeePageRequest);
         long countEmployees = employeeDao.findAllEmployeeCount(findEmployeePageRequest);

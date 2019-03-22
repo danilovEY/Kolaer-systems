@@ -34,9 +34,9 @@ public class AccountController {
     @ApiOperation(value = "Получить все аккаунты")
     @GetMapping(RouterConstants.ACCOUNTS)
     public PageDto<AccountDto> getAllAccounts(@RequestParam(value = "page", defaultValue = "0") Integer number,
-                                           @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize,
-                                           AccountSort sortParam,
-                                           AccountFilter filter) {
+            @RequestParam(value = "pagesize", defaultValue = "15") Integer pageSize, AccountSort sortParam,
+            AccountFilter filter
+    ) {
         return this.accountService.getAll(sortParam, filter, number, pageSize);
     }
 }

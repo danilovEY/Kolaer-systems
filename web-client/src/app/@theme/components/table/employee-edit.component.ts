@@ -6,7 +6,7 @@ import {Observable, of, Subject} from 'rxjs/index';
 import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators'
 import {Page} from '../../../@core/models/page.model';
 import {map} from 'rxjs/internal/operators';
-import {FindEmployeeRequestModel} from "../../../@core/models/find-employee-request.model";
+import {FindEmployeeRequestModel} from "../../../@core/models/employee/request/find-employee-request.model";
 
 @Component({
     selector: 'edit-employee',

@@ -154,7 +154,7 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
         }
     }
 
-    private selectBusinessTripType(selectBusinessTripType: BusinessTripTypeModel) {
+    selectBusinessTripType(selectBusinessTripType: BusinessTripTypeModel) {
         this.selectedBusinessTripType = selectBusinessTripType;
 
         this.initReason(this.hasReason());
@@ -165,12 +165,12 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
         this.destroySubjects.complete();
     }
 
-    private hasReason(): boolean {
+    hasReason(): boolean {
         return this.selectedBusinessTripType &&
             this.selectedBusinessTripType.businessTripType !== BusinessTripTypeEnum.DIRECTION;
     }
 
-    private submitBusinessTripForm() {
+    submitBusinessTripForm() {
         const documentDateStructure: NgbDateStruct = this.formBusinessTrip.controls['documentDate'].value;
 
         this.currentBusinessTripDetailsModel.documentDate = new Date(

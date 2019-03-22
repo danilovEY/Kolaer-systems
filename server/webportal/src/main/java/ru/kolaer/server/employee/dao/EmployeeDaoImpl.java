@@ -80,82 +80,6 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .uniqueResult();
     }
 
-    /*@Override
-    public List<EmployeeEntity> findEmployeesForContacts(int page, int pageSize, String searchText) {
-        return getSession()
-                .createNativeQuery("SELECT * FROM employee t " +
-                        " LEFT JOIN contact c ON c.id = t.contact_id" +
-                        " LEFT JOIN placement pl ON pl.id = c.place_id" +
-                        " LEFT JOIN department d ON d.id = t.department_id" +
-                        " LEFT JOIN post p ON p.id = t.post_id" +
-                        " where t.initials LIKE :searchText OR " +
-                        "d.name LIKE :searchText OR " +
-                        "d.abbreviated_name LIKE :searchText OR " +
-                        "p.abbreviated_name LIKE :searchText OR " +
-                        "t.contact_id IS NOT NULL AND (c.email LIKE :searchText OR " +
-                        "c.work_phone_number LIKE :searchText OR " +
-                        "c.pager LIKE :searchText OR (c.place_id IS NOT NULL AND pl.name LIKE :searchText)) ORDER BY t.initials",
-                        getEntityClass())
-                .setParameter("searchText", "%" + searchText + "%")
-                .setFirstResult((page - 1) * pageSize)
-                .setMaxResults(pageSize)
-                .list();
-    }
-
-    @Override
-    public long findCountEmployeesForContacts(String searchText) {
-        Object result = getSession()
-                .createNativeQuery("SELECT COUNT(t.id) FROM employee t " +
-                        " LEFT JOIN contact c ON c.id = t.contact_id" +
-                        " LEFT JOIN placement pl ON pl.id = c.place_id" +
-                        " LEFT JOIN department d ON d.id = t.department_id" +
-                        " LEFT JOIN post p ON p.id = t.post_id" +
-                        " where t.initials LIKE :searchText OR " +
-                        "d.name LIKE :searchText OR " +
-                        "d.abbreviated_name LIKE :searchText OR " +
-                        "p.abbreviated_name LIKE :searchText OR " +
-                        "t.contact_id IS NOT NULL AND (c.email LIKE :searchText OR " +
-                        "c.work_phone_number LIKE :searchText OR " +
-                        "c.pager LIKE :searchText OR (c.place_id IS NOT NULL AND pl.name LIKE :searchText))")
-                .setParameter("searchText", "%" + searchText + "%")
-                .getSingleResult();
-
-        return ((BigInteger) result).longValue();
-    }
-
-    @Override
-    public List<EmployeeEntity> findEmployeeByDepIdAndContactType(int page, int pageSize, long depId, ContactType type) {
-        return getSession()
-                .createNativeQuery("SELECT * FROM employee t " +
-                                "LEFT JOIN contact c ON c.id = t.contact_id " +
-                                "where t.department_id = :depId AND " +
-                                "((:contactType = :otherContactType AND t.contact_id IS NULL OR t.contact_id IS NOT NULL AND c.type = :contactType) OR " +
-                                "t.contact_id IS NOT NULL AND c.type = :contactType) ORDER BY t.initials",
-                        getEntityClass())
-                .setParameter("depId", depId)
-                .setParameter("contactType", type.ordinal())
-                .setParameter("otherContactType", ContactType.OTHER.ordinal())
-                .setFirstResult((page - 1) * pageSize)
-                .setMaxResults(pageSize)
-                .list();
-    }
-
-    @Override
-    public Long findCountEmployeeByDepIdAndContactType(long depId, ContactType type) {
-        Object result = getSession()
-                .createNativeQuery("SELECT COUNT(t.id) FROM employee t " +
-                                "LEFT JOIN contact c ON c.id = t.contact_id " +
-                                "where t.department_id = :depId AND " +
-                                "((:contactType = :otherContactType AND t.contact_id IS NULL OR t.contact_id IS NOT NULL AND c.type = :contactType) OR " +
-                                "t.contact_id IS NOT NULL AND c.type = :contactType)")
-                .setParameter("depId", depId)
-                .setParameter("contactType", type.ordinal())
-                .setParameter("otherContactType", ContactType.OTHER.ordinal())
-                .getSingleResult();
-
-        return ((BigInteger) result).longValue();
-    }*/
-
     @Override
     public List<CountEmployeeInDepartmentDto> findEmployeeByDepartmentCount(FindEmployeeByDepartment request) {
         Map<String, Object> params = new HashMap<>();
@@ -205,7 +129,13 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .append(getEntityName())
                 .append(" AS emp");
 
-        query = query.append(" WHERE emp.dismissalDate IS NULL");
+        query = query.append(" WHERE emp.id > 0");
+
+        if (request.getFindByDeleted() != null) {
+            query = request.getFindByDeleted().equals(Boolean.TRUE)
+                    ? query.append(" WHERE emp.dismissalDate IS NOT NULL")
+                    : query.append(" WHERE emp.dismissalDate IS NULL");
+        }
 
         if (!CollectionUtils.isEmpty(request.getIds())) {
             query = query.append(" AND emp.id IN (:ids)");
@@ -215,11 +145,6 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
         if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
             query = query.append(" AND emp.departmentId IN (:depIds)");
             params.put("depIds", request.getDepartmentIds());
-        }
-
-        if (!CollectionUtils.isEmpty(request.getEmployeeIds())) {
-            query = query.append(" AND emp.id IN (:employeeIds)");
-            params.put("employeeIds", request.getEmployeeIds());
         }
 
         if (!CollectionUtils.isEmpty(request.getPostIds())) {
@@ -232,9 +157,19 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
             params.put("typeWorkIds", request.getTypeWorkIds());
         }
 
-        if (StringUtils.hasText(request.getQuery())) {
-            query = query.append(" AND (LOWER(emp.initials) LIKE :query OR emp.personnelNumber LIKE :query)");
-            params.put("query", "%" + request.getQuery().trim().toLowerCase() + "%");
+        if (StringUtils.hasText(request.getFindByInitials())) {
+            query = query.append(" AND emp.initials LIKE :findByInitials");
+            params.put("findByInitials", "%" + request.getFindByInitials().trim().toLowerCase() + "%");
+        }
+
+        if (request.getFindByPersonnelNumber() != null) {
+            query = query.append(" AND str(emp.personnelNumber) LIKE :findByPersonnelNumber");
+            params.put("findByPersonnelNumber", "%" + request.getFindByPersonnelNumber() + "%");
+        }
+
+        if (StringUtils.hasText(request.getFindByAll())) {
+            query = query.append(" AND (emp.initials LIKE :findByAll OR str(emp.personnelNumber) LIKE :findByAll)");
+            params.put("findByAll", "%" + request.getFindByAll() + "%");
         }
 
         return getSession().createQuery(query.toString(), Long.class)
@@ -252,7 +187,13 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .append(getEntityName())
                 .append(" AS emp");
 
-        query = query.append(" WHERE emp.dismissalDate IS NULL");
+        query = query.append(" WHERE emp.id > 0");
+
+        if (request.getFindByDeleted() != null) {
+            query = request.getFindByDeleted().equals(Boolean.TRUE)
+                    ? query.append(" WHERE emp.dismissalDate IS NOT NULL")
+                    : query.append(" WHERE emp.dismissalDate IS NULL");
+        }
 
         if (!CollectionUtils.isEmpty(request.getIds())) {
             query = query.append(" AND emp.id IN (:ids)");
@@ -262,11 +203,6 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
         if (!CollectionUtils.isEmpty(request.getDepartmentIds())) {
             query = query.append(" AND emp.departmentId IN (:depIds)");
             params.put("depIds", request.getDepartmentIds());
-        }
-
-        if (!CollectionUtils.isEmpty(request.getEmployeeIds())) {
-            query = query.append(" AND emp.id IN (:employeeIds)");
-            params.put("employeeIds", request.getEmployeeIds());
         }
 
         if (!CollectionUtils.isEmpty(request.getPostIds())) {
@@ -279,21 +215,27 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
             params.put("typeWorkIds", request.getTypeWorkIds());
         }
 
-        if (StringUtils.hasText(request.getQuery())) {
-            query = query.append(" AND (LOWER(emp.initials) LIKE :query OR emp.personnelNumber LIKE :query)");
-            params.put("query", "%" + request.getQuery().trim().toLowerCase() + "%");
+        if (StringUtils.hasText(request.getFindByInitials())) {
+            query = query.append(" AND emp.initials LIKE :findByInitials");
+            params.put("findByInitials", "%" + request.getFindByInitials().trim().toLowerCase() + "%");
+        }
+
+        if (request.getFindByPersonnelNumber() != null) {
+            query = query.append(" AND str(emp.personnelNumber) LIKE :findByPersonnelNumber");
+            params.put("findByPersonnelNumber", "%" + request.getFindByPersonnelNumber() + "%");
+        }
+
+        if (StringUtils.hasText(request.getFindByAll())) {
+            query = query.append(" AND (emp.initials LIKE :findByAll OR str(emp.personnelNumber) LIKE :findByAll)");
+            params.put("findByAll", "%" + request.getFindByAll() + "%");
         }
 
         Query<EmployeeEntity> entityQuery = getSession()
-                .createQuery(query.append(getOrder(request.getSort())).toString(), EmployeeEntity.class);
-
-        if(!request.isOnOnePage()) {
-            entityQuery = entityQuery
-                    .setMaxResults(request.getPageSize())
-                    .setFirstResult(getFirstResult(request));
-        }
+                .createQuery(query.append(getOrder(request.getSorts())).toString(), EmployeeEntity.class);
 
         return entityQuery
+                .setMaxResults(request.getPageSize())
+                .setFirstResult(getFirstResult(request))
                 .setProperties(params)
                 .list();
     }
@@ -307,14 +249,25 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
                 .uniqueResultOptional();
     }
 
-    private String getOrder(EmployeeSortType sortType) {
-        if (sortType == null) return " ORDER BY emp.id ASC";
-
-        switch (sortType) {
-            case INITIALS_ASC: return " ORDER BY emp.initials ASC";
+    private String getOrder(EmployeeSortType sort) {
+        switch (sort) {
+            case INITIALS_ASC: return "emp.initials ASC";
+            case INITIALS_DESC: return "emp.initials DESC";
+            case PERSONNEL_NUMBER_ASC: return "emp.personnelNumber ASC";
+            case PERSONNEL_NUMBER_DESC: return "emp.personnelNumber DESC";
             case ID_ASC:
-                default: return " ORDER BY emp.id ASC";
+            default: return " emp.id ASC";
         }
+    }
+
+    private String getOrder(Collection<EmployeeSortType> sorts) {
+        if (CollectionUtils.isEmpty(sorts)) return " ORDER BY emp.id ASC";
+
+
+        return " ORDER BY " + sorts
+                .stream()
+                .map(this::getOrder)
+                .collect(Collectors.joining(","));
     }
 
     @Override

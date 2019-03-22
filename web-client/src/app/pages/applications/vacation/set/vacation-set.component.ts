@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {EmployeeModel} from '../../../../@core/models/employee.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {EmployeeService} from '../../../../@core/services/employee.service';
-import {FindEmployeeRequestModel} from '../../../../@core/models/find-employee-request.model';
+import {FindEmployeeRequestModel} from '../../../../@core/models/employee/request/find-employee-request.model';
 import {DepartmentModel} from '../../../../@core/models/department/department.model';
 import {DepartmentService} from '../../../../@core/services/department.service';
 import {SimpleAccountModel} from '../../../../@core/models/simple-account.model';
@@ -255,7 +255,7 @@ export class VacationSetComponent implements OnInit {
     selectDepartment(event: DepartmentModel) {
         const findRequest = new FindEmployeeRequestModel();
         findRequest.departmentIds = [event.id];
-        findRequest.onOnePage = true;
+        findRequest.pageSize = Number.MAX_VALUE;
 
         this.employeeService.findAllEmployees(findRequest)
             .subscribe(employeePage => {

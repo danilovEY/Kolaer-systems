@@ -5,7 +5,7 @@ import {EmployeesListDataSource} from './employees-list.data-source';
 import {EmployeeService} from '../../../../../@core/services/employee.service';
 import {EmployeeModel} from '../../../../../@core/models/employee.model';
 import {TableEventEditModel} from '../../../../../@theme/components/table/table-event-edit.model';
-import {Cell} from 'ng2-smart-table';
+import {Cell, LocalDataSource} from 'ng2-smart-table';
 import {Utils} from '../../../../../@core/utils/utils';
 import {PostEditComponent} from '../../../../../@theme/components/table/post-edit.component';
 import {DepartmentEditComponent} from '../../../../../@theme/components/table/department-edit.component';
@@ -15,7 +15,7 @@ import {SimpleAccountModel} from '../../../../../@core/models/simple-account.mod
 import {UpdateTypeWorkEmployeeRequestModel} from '../../../../../@core/models/update-type-work-employee-request.model';
 import {CustomActionEventModel} from "../../../../../@theme/components/table/custom-action-event.model";
 import {CustomActionModel} from "../../../../../@theme/components/table/custom-action.model";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {RouterClientConstant} from "../../../../../@core/constants/router-client.constant";
 import {PathVariableConstant} from "../../../../../@core/constants/path-variable.constant";
 import {RoleConstant} from "../../../../../@core/constants/role.constant";
@@ -38,17 +38,14 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     employeesColumns: Column[] = [];
     employeesOnlyWithTypeWorkColumns: Column[] = [];
     employeeActions: CustomActionModel[] = [];
-    employeesSource: EmployeesListDataSource;
+    employeesSource: LocalDataSource;
     employeesLoading: boolean = true;
 
     currentAccount: SimpleAccountModel;
 
-    constructor(private employeeService: EmployeeService,
-                private accountService: AccountService,
-                private router: Router,
-                private titleService: Title
-    ) {
-        this.titleService.setTitle('Список сотрудников');
+    constructor(private employeeService: EmployeeService, private accountService: AccountService, private router: Router,
+                private titleService: Title, private activatedRoute: ActivatedRoute) {
+
     }
 
     ngOnDestroy() {
@@ -57,6 +54,8 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.titleService.setTitle('Список сотрудников');
+
         this.accountService.getCurrentAccount()
             .pipe(
                 tap((account: SimpleAccountModel) => this.currentAccount = account),
@@ -67,39 +66,35 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
                     this.employeeService.getCurrentEmployee()
                         .pipe(takeUntil(this.destroySubjects))
                         .subscribe((employee: EmployeeModel) => {
-                            this.employeesSource = new EmployeesListDataSource(this.employeeService, employee.department.id);
-                            this.employeesSource.onLoading().subscribe(load => this.employeesLoading = load);
+                            const employeesSource: EmployeesListDataSource =
+                                new EmployeesListDataSource(this.employeeService, employee.department.id);
+                            employeesSource.onLoading().subscribe(load => this.employeesLoading = load);
+
+                            this.employeesSource = employeesSource;
                         });
                 } else {
-                    this.employeesSource = new EmployeesListDataSource(this.employeeService);
-                    this.employeesSource.onLoading().subscribe(load => this.employeesLoading = load);
+                    const employeesSource: EmployeesListDataSource = new EmployeesListDataSource(this.employeeService);
+                    employeesSource.onLoading().subscribe(load => this.employeesLoading = load);
+
+                    this.employeesSource = employeesSource;
                 }
             });
 
-        const personnelNumberColumn: Column = new Column('personnelNumber', {
+        const personnelNumberColumn: Column = new Column(EmployeesListDataSource.PERSONNEL_NUMBER_COLUMN_KEY, {
             title: 'Табельный номер',
             type: 'number',
             editable: false
         }, null);
 
-        const firstNameColumn: Column = new Column('firstName', {
-            title: 'Имя',
+        const initialsColumn: Column = new Column(EmployeesListDataSource.INITIALS_COLUMN_KEY, {
+            title: 'Инициалы',
             type: 'string'
         }, null);
 
-        const secondNameColumn: Column = new Column('secondName', {
-            title: 'Фамилия',
-            type: 'string'
-        }, null);
-
-        const thirdNameColumn: Column = new Column('thirdName', {
-            title: 'Отчество',
-            type: 'string'
-        }, null);
-
-        const postColumn: Column = new Column('post', {
+        const postColumn: Column = new Column(EmployeesListDataSource.POST_COLUMN_KEY, {
             title: 'Должность',
             type: 'string',
+            filter: false,
             editor: {
                 type: 'custom',
                 component: PostEditComponent,
@@ -109,9 +104,10 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
             }
         }, null);
 
-        const departmentColumn: Column = new Column('department', {
+        const departmentColumn: Column = new Column(EmployeesListDataSource.DEPARTMENT_COLUMN_KEY, {
             title: 'Подразделение',
             type: 'string',
+            filter: false,
             editor: {
                 type: 'custom',
                 component: DepartmentEditComponent,
@@ -121,9 +117,11 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
             }
         }, null);
 
-        const birthdayColumn: Column = new Column('birthday', {
+        const birthdayColumn: Column = new Column(EmployeesListDataSource.BIRTHDAY_COLUMN_KEY, {
             title: 'День рождения',
             type: 'string',
+            filter: false,
+            sort: false,
             editor: {
                 type: 'custom',
                 component: DateEditComponent,
@@ -133,10 +131,9 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
             }
         }, null);
 
-        this.employeesColumns.push(personnelNumberColumn,
-            secondNameColumn,
-            firstNameColumn,
-            thirdNameColumn,
+        this.employeesColumns.push(
+            personnelNumberColumn,
+            initialsColumn,
             postColumn,
             departmentColumn,
             birthdayColumn

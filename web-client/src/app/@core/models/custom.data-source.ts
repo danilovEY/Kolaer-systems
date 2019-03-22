@@ -111,6 +111,14 @@ export abstract class CustomDataSource<T> extends LocalDataSource {
         return this.dataPage.total;
     }
 
+    getSort(): ColumnSort[] {
+        return super.getSort();
+    }
+
+    getFilter(): TableFilters {
+        return super.getFilter();
+    }
+
     getFilterModel<C>(filterModel: C): C {
         const tableFilters: TableFilters = this.getFilter();
 

@@ -448,10 +448,11 @@ public class VacationServiceImpl implements VacationService {
             }
         } else {
             FindEmployeePageRequest findEmployeePageRequest = new FindEmployeePageRequest();
+            findEmployeePageRequest.setIds(request.getEmployeeIds());
             findEmployeePageRequest.setDepartmentIds(request.getDepartmentIds());
-            findEmployeePageRequest.setEmployeeIds(request.getEmployeeIds());
             findEmployeePageRequest.setPostIds(request.getPostIds());
             findEmployeePageRequest.setTypeWorkIds(request.getTypeWorkIds());
+            findEmployeePageRequest.setFindByDeleted(false);
 
             long totalCount = employeeDao.findAllEmployeeCount(findEmployeePageRequest);
 
@@ -563,10 +564,11 @@ public class VacationServiceImpl implements VacationService {
              }
         } else {
             FindEmployeePageRequest findEmployeePageRequest = new FindEmployeePageRequest();
+            findEmployeePageRequest.setIds(request.getEmployeeIds());
             findEmployeePageRequest.setDepartmentIds(request.getDepartmentIds());
-            findEmployeePageRequest.setEmployeeIds(request.getEmployeeIds());
             findEmployeePageRequest.setPostIds(request.getPostIds());
             findEmployeePageRequest.setTypeWorkIds(request.getTypeWorkIds());
+            findEmployeePageRequest.setFindByDeleted(false);
 
             long totalCount = employeeDao.findAllEmployeeCount(findEmployeePageRequest);
 

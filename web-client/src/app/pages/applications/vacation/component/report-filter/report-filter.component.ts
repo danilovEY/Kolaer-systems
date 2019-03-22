@@ -13,7 +13,7 @@ import {EmployeeService} from '../../../../../@core/services/employee.service';
 import {PostService} from '../../../../../@core/services/post.service';
 import {TypeWorkService} from '../../../../../@core/services/type-work.service';
 import {FindDepartmentPageRequest} from '../../../../../@core/models/department/find-department-page-request';
-import {FindEmployeeRequestModel} from '../../../../../@core/models/find-employee-request.model';
+import {FindEmployeeRequestModel} from '../../../../../@core/models/employee/request/find-employee-request.model';
 import {FindPostRequestModel} from '../../../../../@core/models/post/find-post-request.model';
 import {FindTypeWorkRequest} from '../../../../../@core/models/find-type-work-request';
 

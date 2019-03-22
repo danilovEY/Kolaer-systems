@@ -63,6 +63,15 @@ export class ContactsComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private titleService: Title,
                 private activatedRoute: ActivatedRoute) {
+
+    }
+
+    ngOnDestroy(): void {
+        this.destroySubjects.next(true);
+        this.destroySubjects.complete();
+    }
+
+    ngOnInit() {
         this.titleService.setTitle('Контакты');
 
         this.contactsSource = new ContactsDataSource(this.contactsService);
@@ -88,14 +97,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
                     this.contactsSource.setDepAndType(this.departmentId, this.contactType);
                 }
             });
-    }
 
-    ngOnDestroy(): void {
-        this.destroySubjects.next(true);
-        this.destroySubjects.complete();
-    }
-
-    ngOnInit() {
         const request = FindDepartmentPageRequest.findAllRequest();
         request.sort = DepartmentSortTypeEnum.CODE;
 

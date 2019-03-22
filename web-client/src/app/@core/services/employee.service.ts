@@ -9,7 +9,7 @@ import {Page} from '../models/page.model';
 import {BaseService} from './base.service';
 import {EmployeeRequestModel} from '../models/employee-request.model';
 import {catchError, map, tap} from 'rxjs/internal/operators';
-import {FindEmployeeRequestModel} from '../models/find-employee-request.model';
+import {FindEmployeeRequestModel} from '../models/employee/request/find-employee-request.model';
 import {HistoryChangeModel} from '../models/history-change.model';
 import {HistoryChangeEventEnum} from '../models/history-change-event.enum';
 import {UpdateTypeWorkEmployeeRequestModel} from '../models/update-type-work-employee-request.model';
@@ -76,13 +76,7 @@ export class EmployeeService extends BaseService implements AuthenticationObserv
     }
 
     findAllEmployees(findRequest: FindEmployeeRequestModel): Observable<Page<EmployeeModel>> {
-        let params = new HttpParams();
-
-        params = params.append('pageNum', String(findRequest.pageNum))
-            .append('query', findRequest.query)
-            .append('pageSize', String(findRequest.pageSize))
-            .append('onOnePage', String(findRequest.onOnePage))
-            .append('departmentIds', findRequest.departmentIds.toString());
+        const params = this.includeHttpParams(new HttpParams(), findRequest);
 
         return this._httpClient.get<Page<EmployeeModel>>(RouterServiceConstant.EMPLOYEES_URL, {params: params})
             .pipe(tap((request: Page<EmployeeModel>) => request.data.forEach(this.convertModel)));

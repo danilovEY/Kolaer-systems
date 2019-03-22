@@ -48,7 +48,8 @@ public class ContactService {
         FindEmployeePageRequest findEmployeePageRequest = new FindEmployeePageRequest();
         findEmployeePageRequest.setPageNum(page);
         findEmployeePageRequest.setPageSize(pageSize);
-        findEmployeePageRequest.setQuery(searchText);
+        findEmployeePageRequest.setFindByAll(searchText);
+        findEmployeePageRequest.setFindByDeleted(false);
 
         Set<Long> employeeIds = employeeDao.findAllEmployee(findEmployeePageRequest)
                 .stream()
