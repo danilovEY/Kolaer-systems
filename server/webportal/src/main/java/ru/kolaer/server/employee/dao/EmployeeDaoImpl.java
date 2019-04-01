@@ -133,8 +133,8 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
 
         if (request.getFindByDeleted() != null) {
             query = request.getFindByDeleted().equals(Boolean.TRUE)
-                    ? query.append(" WHERE emp.dismissalDate IS NOT NULL")
-                    : query.append(" WHERE emp.dismissalDate IS NULL");
+                    ? query.append(" AND emp.dismissalDate IS NOT NULL")
+                    : query.append(" AND emp.dismissalDate IS NULL");
         }
 
         if (!CollectionUtils.isEmpty(request.getIds())) {
@@ -191,8 +191,8 @@ public class EmployeeDaoImpl extends AbstractDefaultDao<EmployeeEntity> implemen
 
         if (request.getFindByDeleted() != null) {
             query = request.getFindByDeleted().equals(Boolean.TRUE)
-                    ? query.append(" WHERE emp.dismissalDate IS NOT NULL")
-                    : query.append(" WHERE emp.dismissalDate IS NULL");
+                    ? query.append(" AND emp.dismissalDate IS NOT NULL")
+                    : query.append(" AND emp.dismissalDate IS NULL");
         }
 
         if (!CollectionUtils.isEmpty(request.getIds())) {

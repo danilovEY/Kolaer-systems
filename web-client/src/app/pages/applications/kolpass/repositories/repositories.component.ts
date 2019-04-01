@@ -77,11 +77,15 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
         const nameColumn: Column = new Column('name', {
             title: 'Имя',
             type: 'string',
+            sort: false,
+            filter: false,
         }, undefined);
 
         const initialsColumn: Column = new Column('initials', {
             title: 'Пользователь',
             type: 'string',
+            sort: false,
+            filter: false,
             valuePrepareFunction(a: any, value: RepositoryPasswordModel, cell: Cell) {
                 if (value.account) {
                     return value.account.employee ? value.account.employee.initials : value.account.username;

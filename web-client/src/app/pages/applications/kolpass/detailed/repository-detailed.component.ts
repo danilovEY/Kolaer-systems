@@ -118,6 +118,8 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
         const dateColumn: Column = new Column('passwordWriteDate', {
             title: 'Время создания',
             type: 'date',
+            sort: false,
+            filter: false,
             valuePrepareFunction(value: number) {
                 const datePipe = new DatePipe('en-US');
                 return datePipe.transform(new Date(value), 'dd.MM.yyyy hh:mm:ss');
@@ -127,11 +129,15 @@ export class RepositoryDetailedComponent implements OnInit, OnDestroy {
         const loginColumn: Column = new Column('login', {
             title: 'Логин',
             type: 'string',
+            sort: false,
+            filter: false,
         }, undefined);
 
         const passColumn: Column = new Column('password', {
             title: 'Пароль',
             type: 'string',
+            sort: false,
+            filter: false,
         }, undefined);
 
         this.historyColumns.push(loginColumn, passColumn, dateColumn);

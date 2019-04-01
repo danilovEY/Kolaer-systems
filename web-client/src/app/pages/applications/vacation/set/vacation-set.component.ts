@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {EmployeeModel} from '../../../../@core/models/employee.model';
 import {AccountService} from '../../../../@core/services/account.service';
 import {EmployeeService} from '../../../../@core/services/employee.service';
@@ -26,7 +26,7 @@ import {VacationPeriodService} from '../vacation-period.service';
 import {Title} from '@angular/platform-browser';
 import {FindVacationBalanceRequestModel} from '../model/find-vacation-balance-request.model';
 import {VacationBalanceModel} from '../model/vacation-balance.model';
-import {tap} from 'rxjs/internal/operators';
+import {takeUntil, tap} from 'rxjs/internal/operators';
 import {SmartTableService} from '../../../../@core/services/smart-table.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {RoleConstant} from "../../../../@core/constants/role.constant";
@@ -34,15 +34,18 @@ import {FindDepartmentPageRequest} from "../../../../@core/models/department/fin
 import {DepartmentSortTypeEnum} from "../../../../@core/models/department/department-sort-type.enum";
 import {DirectionTypeEnum} from "../../../../@core/models/direction-type.enum";
 import {environment} from "../../../../../environments/environment";
+import {Subject} from "rxjs";
 
 @Component({
     selector: 'vacation-set',
     templateUrl: './vacation-set.component.html',
     styleUrls: ['./vacation-set.component.scss']
 })
-export class VacationSetComponent implements OnInit {
+export class VacationSetComponent implements OnInit, OnDestroy {
 
     private static readonly PUBLIC_SERVER_URL = environment.publicServerUrl;
+
+    private readonly destroySubjects: Subject<any> = new Subject<any>();
 
     @ViewChild('customTable')
     customTable: CustomTableComponent;
@@ -88,7 +91,14 @@ export class VacationSetComponent implements OnInit {
         this.titleService.setTitle('Задать отпуск');
 
         this.source = new VacationSetDataSource(this.vacationService);
-        this.source.onLoading().subscribe(load => this.loadingVacation = load);
+        this.source.onLoading()
+            .pipe(takeUntil(this.destroySubjects))
+            .subscribe(load => this.loadingVacation = load);
+    }
+
+    ngOnDestroy() {
+        this.destroySubjects.next(true);
+        this.destroySubjects.complete();
     }
 
     ngOnInit(): void {
@@ -98,22 +108,35 @@ export class VacationSetComponent implements OnInit {
             nextYearBalance: new FormControl({value: '', disabled: true})
         });
 
-        this.vacationPeriodService.selectedPeriodEvent.subscribe(period => {
-            if (this.currentAccount.access.includes(RoleConstant.VACATIONS_WRITE) || !this.isClosed(this.selectedPeriod)) {
-                this.smartTableService.addEditAction();
-                this.smartTableService.addDeleteAction();
-            } else {
-                this.smartTableService.removeEditAction();
-                this.smartTableService.removeDeleteAction();
-            }
-        });
-
-        this.vacationService.getPeriods()
-            .subscribe(periods => {
-                this.periods = periods.data;
+        this.vacationPeriodService.selectedPeriodEvent
+            .pipe(takeUntil(this.destroySubjects))
+            .subscribe(period => {
+                if (this.currentAccount.access.includes(RoleConstant.VACATIONS_WRITE) || !this.isClosed(this.selectedPeriod)) {
+                    this.smartTableService.addEditAction();
+                    this.smartTableService.addDeleteAction();
+                } else {
+                    this.smartTableService.removeEditAction();
+                    this.smartTableService.removeDeleteAction();
+                }
             });
 
+        this.vacationService.getPeriods()
+            .pipe(takeUntil(this.destroySubjects))
+            .subscribe(
+                periods => this.periods = periods.data,
+                responseError => {
+                    const toast: Toast = {
+                        type: 'error',
+                        title: 'Ошибка в операции',
+                        body: responseError.error.message,
+                    };
+
+                    this.toasterService.popAsync(toast);
+                }
+            );
+
         this.accountService.getCurrentAccount()
+            .pipe(takeUntil(this.destroySubjects))
             .subscribe(account => {
                 this.currentAccount = account;
 
@@ -130,14 +153,44 @@ export class VacationSetComponent implements OnInit {
                     request.direction = DirectionTypeEnum.ASC;
 
                     this.departmentService.find(request)
-                        .subscribe(depPage => this.departments = depPage.data);
+                        .pipe(takeUntil(this.destroySubjects))
+                        .subscribe(
+                            depPage => this.departments = depPage.data,
+                            responseError => {
+                                const toast: Toast = {
+                                    type: 'error',
+                                    title: 'Ошибка в операции',
+                                    body: responseError.error.message,
+                                };
+
+                                this.toasterService.popAsync(toast);
+                            }
+                         );
                 } else if (this.currentAccount.access.includes(RoleConstant.VACATIONS_WRITE_DEPARTMENT)) {
                     this.employeeService.getCurrentEmployee()
-                        .subscribe(employee => {
-                            this.selectedDepartment = employee.department;
-                            this.selectDepartment(this.selectedDepartment);
-                        });
+                        .pipe(takeUntil(this.destroySubjects))
+                        .subscribe(
+                            employee => {
+                                this.selectedDepartment = employee.department;
+                                this.selectDepartment(this.selectedDepartment);
+                            }, responseError => {
+                                const toast: Toast = {
+                                    type: 'error',
+                                    title: 'Ошибка в операции',
+                                    body: responseError.error.message,
+                                };
+
+                                this.toasterService.popAsync(toast);
+                            });
                 }
+            }, responseError => {
+                const toast: Toast = {
+                    type: 'error',
+                    title: 'Ошибка в операции',
+                    body: responseError.error.message,
+                };
+
+                this.toasterService.popAsync(toast);
             });
 
         const dateFromColumn = new Column('vacationFrom', {
@@ -204,7 +257,10 @@ export class VacationSetComponent implements OnInit {
         event.newData.employeeId = this.selectedEmployee.id;
 
         this.vacationService.updateVacation(event.data.id, event.newData)
-            .pipe(tap(vacation => this.updateBalance()))
+            .pipe(
+                tap(vacation => this.updateBalance()),
+                takeUntil(this.destroySubjects)
+            )
             .subscribe(
                 vacation => event.confirm.resolve(event.newData, vacation),
                 responseError => {
@@ -220,7 +276,10 @@ export class VacationSetComponent implements OnInit {
 
     delete(event: TableEventDeleteModel<VacationModel>) {
         this.vacationService.deleteVacation(event.data.id)
-            .pipe(tap(vacation => this.updateBalance()))
+            .pipe(
+                tap(vacation => this.updateBalance()),
+                takeUntil(this.destroySubjects)
+            )
             .subscribe(
                 responce => event.confirm.resolve(),
                 responseError => {
@@ -238,7 +297,10 @@ export class VacationSetComponent implements OnInit {
         event.newData.employeeId = this.selectedEmployee.id;
 
         this.vacationService.addVacation(event.newData)
-            .pipe(tap(vacation => this.updateBalance()))
+            .pipe(
+                tap(vacation => this.updateBalance()),
+                takeUntil(this.destroySubjects)
+            )
             .subscribe(
                 event.confirm.resolve,
                 responseError => {
@@ -255,12 +317,25 @@ export class VacationSetComponent implements OnInit {
     selectDepartment(event: DepartmentModel) {
         const findRequest = new FindEmployeeRequestModel();
         findRequest.departmentIds = [event.id];
-        findRequest.pageSize = Number.MAX_VALUE;
+        findRequest.pageSize = 1000;
 
         this.employeeService.findAllEmployees(findRequest)
-            .subscribe(employeePage => {
-                this.employees = employeePage.data;
-            });
+            .pipe(takeUntil(this.destroySubjects))
+            .subscribe(
+                employeePage => this.employees = employeePage.data,
+                responseError => {
+                    const toast: Toast = {
+                        type: 'error',
+                        title: 'Ошибка в операции',
+                        body: responseError.error.message,
+                    };
+
+                    this.toasterService.popAsync(toast);
+
+                    this.employees = [];
+                    this.selectedEmployee = undefined;
+                }
+            );
     }
 
     selectEmployee(event: EmployeeModel) {
@@ -278,11 +353,15 @@ export class VacationSetComponent implements OnInit {
             request.employeeId = this.selectedEmployee.id;
 
             this.vacationService.getVacationBalance(request)
-                .pipe(tap(balance => {
-                    this.formBalance.controls['prevYearBalance'].setValue(balance.prevYearBalance);
-                    this.formBalance.controls['currentYearBalance'].setValue(balance.currentYearBalance);
-                    this.formBalance.controls['nextYearBalance'].setValue(balance.nextYearBalance);
-                })).subscribe(balance => this.currentBalance = balance,
+                .pipe(
+                    tap(balance => {
+                        this.formBalance.controls['prevYearBalance'].setValue(balance.prevYearBalance);
+                        this.formBalance.controls['currentYearBalance'].setValue(balance.currentYearBalance);
+                        this.formBalance.controls['nextYearBalance'].setValue(balance.nextYearBalance);
+                    }),
+                    takeUntil(this.destroySubjects)
+                ).subscribe(
+                    balance => this.currentBalance = balance,
                     responseError => {
                         const toast: Toast = {
                             type: 'error',
@@ -317,6 +396,7 @@ export class VacationSetComponent implements OnInit {
         this.currentBalance.nextYearBalance = this.formBalance.value.nextYearBalance;
 
         this.vacationService.updateVacationBalance(this.currentBalance)
+            .pipe(takeUntil(this.destroySubjects))
             .subscribe(balance => {
                 this.currentBalance = balance;
 
