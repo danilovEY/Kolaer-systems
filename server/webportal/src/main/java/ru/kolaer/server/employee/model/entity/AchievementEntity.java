@@ -18,10 +18,10 @@ public class AchievementEntity extends DefaultEntity {
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
 
-    @Column(name = "name", length = 100, nullable = false)
+    @Column(name = "name", length = 255, nullable = false)
     private String name;
 
-    @Column(name = "order_number", length = 20, nullable = false)
+    @Column(name = "order_number", length = 100, nullable = false)
     private String orderNumber;
 
     @Column(name = "order_date", nullable = false)

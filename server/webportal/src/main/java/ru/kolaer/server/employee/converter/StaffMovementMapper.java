@@ -18,10 +18,13 @@ public class StaffMovementMapper {
         staffMovementDto.setCardSlam(entity.getCardSlam());
         staffMovementDto.setCategoryUnit(entity.getCategoryUnit());
         staffMovementDto.setClassWorkingConditions(entity.getClassWorkingConditions());
+        staffMovementDto.setSubClassWorkingConditions(entity.getSubClassWorkingConditions());
         staffMovementDto.setDepartment(entity.getDepartment());
         staffMovementDto.setEmployeeId(entity.getEmployeeId());
         staffMovementDto.setEndWorkDate(entity.getEndWorkDate());
+        staffMovementDto.setStartWorkDate(entity.getStartWorkDate());
         staffMovementDto.setName(entity.getName());
+        staffMovementDto.setOrderNumber(entity.getOrderNumber());
         staffMovementDto.setOrderDate(entity.getOrderDate());
         staffMovementDto.setPost(entity.getPost());
         staffMovementDto.setSalary(entity.getSalary());

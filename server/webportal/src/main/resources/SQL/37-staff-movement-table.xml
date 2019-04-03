@@ -62,4 +62,9 @@
         <dropNotNullConstraint tableName="staff_movement" columnName="start_date" columnDataType="DATE"/>
     </changeSet>
 
+    <changeSet id="37-2" author="Danilov">
+        <renameColumn tableName="staff_movement" oldColumnName="start_date" newColumnName="start_work_date" columnDataType="DATE"/>
+        <renameColumn tableName="staff_movement" oldColumnName="end_date" newColumnName="end_work_date" columnDataType="DATE"/>
+    </changeSet>
+
 </databaseChangeLog>

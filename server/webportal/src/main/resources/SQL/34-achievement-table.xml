@@ -36,4 +36,9 @@
         <dropNotNullConstraint tableName="achievement" columnName="order_date" columnDataType="DATE"/>
     </changeSet>
 
+    <changeSet id="34-2" author="Danilov">
+        <modifyDataType tableName="achievement" columnName="name" newDataType="VARCHAR(255)"/>
+        <modifyDataType tableName="achievement" columnName="order_number" newDataType="VARCHAR(100)"/>
+    </changeSet>
+
 </databaseChangeLog>

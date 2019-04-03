@@ -1,5 +1,5 @@
 group 'ru.kolaer'
-version '3.0.16'
+version '3.0.18'
 
 buildscript {
     ext {
