@@ -48,17 +48,17 @@
         <div class="form-group row">
             <div class="col-sm-9">
                 <div class="form-check">
-                    <label class="custom-control custom-radio">
-                        <input type="radio" class="custom-control-input" name="gridRadios" [checked]="isInTime" (change)="onChangeHeader()">
-                        <span class="custom-control-indicator"></span>
-                        <span class="custom-control-description">Обработка файла по времени</span>
+                    <label>
+                        <input type="radio" name="gridRadios" [checked]="isInTime" (change)="onChangeHeader()">
+                        <!--<span class="custom-control-indicator"></span>-->
+                        <span>Обработка файла по времени</span>
                     </label>
                 </div>
                 <div class="form-check">
-                    <label class="custom-control custom-radio">
-                        <input type="radio" class="custom-control-input" name="gridRadios" [checked]="!isInTime" (change)="onChangeHeader()">
-                        <span class="custom-control-indicator"></span>
-                        <span class="custom-control-description">Моментальная обработка файла</span>
+                    <label>
+                        <input type="radio" name="gridRadios" [checked]="!isInTime" (change)="onChangeHeader()">
+                        <!--<span class="custom-control-indicator"></span>-->
+                        <span>Моментальная обработка файла</span>
                     </label>
                 </div>
             </div>
@@ -91,24 +91,24 @@
             <div class="form-group row">
                 <div class="col-sm-9">
                     <div class="form-check">
-                        <label class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" value="DR" formControlName="type" checked>
-                            <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">Зачисление</span>
+                        <label >
+                            <input type="radio" value="DR" formControlName="type" checked>
+                            <!--<span class="custom-control-indicator"></span>-->
+                            <span>Зачисление</span>
                         </label>
                     </div>
                     <div class="form-check">
-                        <label class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" value="CR" formControlName="type">
-                            <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">Списание</span>
+                        <label>
+                            <input type="radio" value="CR" formControlName="type">
+                            <!--<span class="custom-control-indicator"></span>-->
+                            <span>Списание</span>
                         </label>
                     </div>
                     <div class="form-check">
-                        <label class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" value="ZR" formControlName="type">
-                            <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">Обнуление</span>
+                        <label>
+                            <input type="radio" value="ZR" formControlName="type">
+                            <!--<span class="custom-control-indicator"></span>-->
+                            <span>Обнуление</span>
                         </label>
                     </div>
                 </div>

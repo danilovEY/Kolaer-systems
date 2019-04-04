@@ -1,6 +1,5 @@
 package ru.kolaer.server.ticket.service;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolaer.common.dto.PageDto;
@@ -77,7 +76,7 @@ public class TicketRegisterServiceImpl extends AbstractDefaultService<TicketRegi
     }
 
     @Override
-    @Scheduled(cron = "0 0 8 26-31 * ?", zone = "Europe/Moscow")
+    //@Scheduled(cron = "0 0 8 26-31 * ?", zone = "Europe/Moscow")
     @Transactional
     public void generateZeroTicketsLastDayOfMonthScheduled() {
         LocalDate now = LocalDate.now();
