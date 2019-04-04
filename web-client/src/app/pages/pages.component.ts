@@ -202,7 +202,7 @@ export class PagesComponent implements OnInit {
             ticketsMenuItem.children.push(ticketsMainMenuItem);
 
             this.menu.push(vacationMenuItem);
-            this.menu.push(kolpassMenuItem);
+            // this.menu.push(kolpassMenuItem);
             this.menu.push(queueMenuItem);
             this.menu.push(ticketsMenuItem);
 

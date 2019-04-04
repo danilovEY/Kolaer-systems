@@ -3,9 +3,10 @@ import {EmployeeSortTypeEnum} from "./employee-sort-type.enum";
 
 export class FindEmployeeRequestModel extends PageRequestModel {
 
-    public static findAll(): FindEmployeeRequestModel {
+    public static findAll(findText: string = ''): FindEmployeeRequestModel {
         const request = new FindEmployeeRequestModel();
         request.findByDeleted = false;
+        request.findByAll = findText;
 
         return request;
     }
