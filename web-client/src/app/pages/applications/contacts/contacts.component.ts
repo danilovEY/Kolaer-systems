@@ -190,9 +190,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
             valuePrepareFunction(a: any, value: ContactModel, cell: Cell) {
                 return value.photo
                     ? `<img src="${environment.publicServerUrl + value.photo}" 
-                            height="${ 250 / 2 }" width="${200 / 2}" alt="${value.initials}">`
+                            height="133" width="100" alt="${value.initials}">`
                     : `<img src="/assets/images/no_photo.jpg" 
-                            height="${ 250 / 2 }" width="${290 / 2}" alt="${value.initials}">`;
+                            height="133" width="100" alt="${value.initials}">`;
             }
         }, undefined);
 
