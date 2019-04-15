@@ -145,7 +145,7 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
         }, undefined);
 
         const dateToColumn = new Column('businessTripTo', {
-            title: 'Конец отпуска',
+            title: 'Конец',
             type: 'date',
             editable: true,
             addable: true,
@@ -176,13 +176,63 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
             }
         }, undefined);
 
+        const destinationOrganizationNameColumn: Column = new Column('destinationOrganizationName', {
+            title: 'Организация',
+            type: 'string',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false
+        }, undefined);
+
+        const destinationCountryColumn: Column = new Column('destinationCountry', {
+            title: 'Страна назначения',
+            type: 'string',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false
+        }, undefined);
+
+        const destinationCityColumn: Column = new Column('destinationCity', {
+            title: 'Город назначения',
+            type: 'string',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false
+        }, undefined);
+
+        const targetDescriptionColumn: Column = new Column('targetDescription', {
+            title: 'Цель',
+            type: 'string',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false
+        }, undefined);
+
+        const sourceOfFinancingColumn: Column = new Column('sourceOfFinancing', {
+            title: 'Источник финансирования',
+            type: 'string',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false
+        }, undefined);
+
         this.employeeColumns.push(
             employeeColumn,
             postColumn,
             departmentColumn,
             dateFromColumn,
             dateToColumn,
-            daysColumn
+            daysColumn,
+            destinationOrganizationNameColumn,
+            destinationCountryColumn,
+            destinationCityColumn,
+            targetDescriptionColumn,
+            sourceOfFinancingColumn
         );
     }
 
@@ -196,8 +246,6 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
             .onLoading()
             .pipe(takeUntil(this.destroySubjects))
             .subscribe(loading => this.employeesLoading = loading);
-
-
     }
 
     private initBusinessTripFormValue(businessTripDetails: BusinessTripDetailsModel) {
