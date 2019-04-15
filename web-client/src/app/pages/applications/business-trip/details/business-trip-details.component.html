@@ -160,4 +160,26 @@
             </nb-card-body>
         </nb-card>
     </div>
+
+    <div class="col-12" *ngIf="!isCreatePage && employeeDataSource">
+        <nb-card>
+            <nb-card-header>
+                Сотрудники
+            </nb-card-header>
+
+            <nb-card-body>
+                <ngx-loading [show]="employeesLoading"></ngx-loading>
+
+                <custom-table #employeeTable
+                              [columns]="employeeColumns"
+                              [source]="employeeDataSource"
+                              [actionAdd]="true"
+                              [actionDelete]="true"
+                              [actionEdit]="true">
+
+                </custom-table>
+            </nb-card-body>
+        </nb-card>
+    </div>
+
 </div>

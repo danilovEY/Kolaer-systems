@@ -7,6 +7,9 @@ import {ThemeModule} from "../../../@theme/theme.module";
 import {BusinessTripReadGuardService} from "./service/business-trip-read-guard.service";
 import {BusinessTripDetailsComponent} from "./details/business-trip-details.component";
 import {BusinessTripWriteGuardService} from "./service/business-trip-write-guard.service";
+import {BusinessTripDetailsEmployeeToEditComponent} from "./details/business-trip-details-employee-to-edit.component";
+import {BusinessTripDetailsEmployeeFromEditComponent} from "./details/business-trip-details-employee-from-edit.component";
+import {BusinessTripDetailsEmployeeDaysEditComponent} from "./details/business-trip-details-employee-days-edit.component";
 
 @NgModule({
     imports: [
@@ -16,12 +19,21 @@ import {BusinessTripWriteGuardService} from "./service/business-trip-write-guard
     declarations: [
         BusinessTripComponent,
         BusinessTripListComponent,
-        BusinessTripDetailsComponent
+        BusinessTripDetailsComponent,
+        BusinessTripDetailsEmployeeDaysEditComponent,
+        BusinessTripDetailsEmployeeToEditComponent,
+        BusinessTripDetailsEmployeeFromEditComponent,
+
     ],
     providers: [
         BusinessTripService,
         BusinessTripReadGuardService,
         BusinessTripWriteGuardService
+    ],
+    entryComponents: [
+        BusinessTripDetailsEmployeeDaysEditComponent,
+        BusinessTripDetailsEmployeeToEditComponent,
+        BusinessTripDetailsEmployeeFromEditComponent
     ]
 })
 export class BusinessTripModule {

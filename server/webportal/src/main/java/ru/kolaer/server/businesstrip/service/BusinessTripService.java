@@ -27,6 +27,7 @@ import ru.kolaer.server.employee.dao.EmployeeDao;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Service
 @Validated
@@ -89,6 +90,15 @@ public class BusinessTripService {
         businessTripRepository.delete(businessTripEntity);
 
         return businessTripId;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BusinessTripEmployeeDto> getEmployeesByBusinessTripId(@Min(1) long businessTripId) {
+        List<BusinessTripEmployeeEntity> employees = businessTripRepository.findById(businessTripId)
+                .orElseThrow(NotFoundDataException::new)
+                .getEmployees();
+
+        return businessTripMapper.mapToBusinessTripEmployeeDtos(employees);
     }
 
     @Transactional

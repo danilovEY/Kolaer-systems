@@ -1,6 +1,7 @@
 package ru.kolaer.server.businesstrip.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import ru.kolaer.server.businesstrip.model.BusinessTripType;
 import ru.kolaer.server.businesstrip.model.dto.request.CreateBusinessTripRequest;
@@ -141,21 +142,21 @@ public class BusinessTripMapper {
         EmployeeEntity writerEmployee = employeeMap.get(entity.getWriterEmployeeId());
         EmployeeEntity chiefEmployee = employeeMap.get(entity.getChiefEmployeeId());
 
-        List<BusinessTripEmployeeDto> businessTripEmployees = employees
-                .stream()
-                .map(businessTripEmployee -> {
-                    EmployeeEntity employee = employeeMap.get(businessTripEmployee.getEmployeeId());
+//        List<BusinessTripEmployeeDto> businessTripEmployees = employees
+//                .stream()
+//                .map(businessTripEmployee -> {
+//                    EmployeeEntity employee = employeeMap.get(businessTripEmployee.getEmployeeId());
+//
+//                    return mapToBusinessTripEmployeeDto(
+//                            businessTripEmployee,
+//                            employee,
+//                            departmentMap.get(employee.getDepartmentId()),
+//                            postMap.get(employee.getPostId())
+//                    );
+//                })
+//                .collect(Collectors.toList());
 
-                    return mapToBusinessTripEmployeeDto(
-                            businessTripEmployee,
-                            employee,
-                            departmentMap.get(employee.getDepartmentId()),
-                            postMap.get(employee.getPostId())
-                    );
-                })
-                .collect(Collectors.toList());
-
-        businessTripDetailDto.setEmployees(businessTripEmployees);
+//        businessTripDetailDto.setEmployees(businessTripEmployees);
 
         businessTripDetailDto.setWriterEmployee(mapToBusinessTripEmployeeInfo(
                 writerEmployee,
@@ -287,5 +288,52 @@ public class BusinessTripMapper {
         }
 
         return businessTripEntity;
+    }
+
+    public List<BusinessTripEmployeeDto> mapToBusinessTripEmployeeDtos(@NotNull List<BusinessTripEmployeeEntity> employees) {
+        if (CollectionUtils.isEmpty(employees)) {
+            return Collections.emptyList();
+        }
+
+        Set<Long> employeeIds = employees
+                .stream()
+                .map(BusinessTripEmployeeEntity::getEmployeeId)
+                .collect(Collectors.toSet());
+
+        Map<Long, EmployeeEntity> employeeMap = employeeDao.findById(employeeIds)
+                .stream()
+                .collect(Collectors.toMap(EmployeeEntity::getId, Function.identity()));
+
+        Set<Long> departmentIds = employeeMap.values()
+                .stream()
+                .map(EmployeeEntity::getDepartmentId)
+                .collect(Collectors.toSet());
+
+        Set<Long> postIds = employeeMap.values()
+                .stream()
+                .map(EmployeeEntity::getPostId)
+                .collect(Collectors.toSet());
+
+        Map<Long, DepartmentEntity> departmentMap = departmentRepository.findAllById(departmentIds)
+                .stream()
+                .collect(Collectors.toMap(DepartmentEntity::getId, Function.identity()));
+
+        Map<Long, PostEntity> postMap = postDao.findById(postIds)
+                .stream()
+                .collect(Collectors.toMap(PostEntity::getId, Function.identity()));
+
+        return employees
+                .stream()
+                .map(businessTripEmployee -> {
+                    EmployeeEntity employee = employeeMap.get(businessTripEmployee.getEmployeeId());
+
+                    return mapToBusinessTripEmployeeDto(
+                            businessTripEmployee,
+                            employee,
+                            departmentMap.get(employee.getDepartmentId()),
+                            postMap.get(employee.getPostId())
+                    );
+                })
+                .collect(Collectors.toList());
     }
 }

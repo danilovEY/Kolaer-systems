@@ -18,6 +18,7 @@ import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripEmployeeDto;
 import ru.kolaer.server.businesstrip.service.BusinessTripService;
 
 import javax.validation.constraints.Min;
+import java.util.List;
 
 @RestController
 @Validated
@@ -65,7 +66,14 @@ public class BusinessTripController {
         return businessTripService.removeBusinessTripById(businessTripId);
     }
 
-    @PostMapping(RouterConstants.BUSINESS_TRIP_ID_EMPLOYEE)
+    @GetMapping(RouterConstants.BUSINESS_TRIP_ID_EMPLOYEES)
+    @PreAuthorize("hasRole('" + BusinessTripAccessConstant.BUSINESS_TRIP_READ + "')")
+    public List<BusinessTripEmployeeDto> getEmployeesByBusinessTrip(
+            @PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId) {
+        return businessTripService.getEmployeesByBusinessTripId(businessTripId);
+    }
+
+    @PostMapping(RouterConstants.BUSINESS_TRIP_ID_EMPLOYEES)
     @PreAuthorize("hasRole('" + BusinessTripAccessConstant.BUSINESS_TRIP_WRITE + "')")
     public BusinessTripEmployeeDto addEmployeeToBusinessTrip(
             @PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId,

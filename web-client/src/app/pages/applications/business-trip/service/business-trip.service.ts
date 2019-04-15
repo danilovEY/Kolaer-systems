@@ -9,6 +9,7 @@ import {FindBusinessTripRequestModel} from "../model/find-business-trip-request.
 import {BusinessTripDetailsModel} from "../model/business-trip-details.model";
 import {Utils} from "../../../../@core/utils/utils";
 import {PathVariableConstant} from "../../../../@core/constants/path-variable.constant";
+import {BusinessTripEmployeeModel} from "../model/business-trip-employee.model";
 
 @Injectable()
 export class BusinessTripService extends BaseService {
@@ -33,5 +34,15 @@ export class BusinessTripService extends BaseService {
         );
 
         return this.httpClient.get<BusinessTripDetailsModel>(url);
+    }
+
+    getEmployeesByBusinessTripId(businessTripId: number): Observable<BusinessTripEmployeeModel[]> {
+        const url = Utils.createUrlFromUrlTemplate(
+            RouterServiceConstant.BUSINESS_TRIP_ID_EMPLOYEES_URL,
+            PathVariableConstant.BUSINESS_TRIP_ID,
+            businessTripId.toString()
+        );
+
+        return this.httpClient.get<BusinessTripEmployeeModel[]>(url);
     }
 }

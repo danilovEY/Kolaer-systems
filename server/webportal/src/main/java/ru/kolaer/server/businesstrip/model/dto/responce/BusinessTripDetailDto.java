@@ -6,7 +6,6 @@ import ru.kolaer.common.dto.DefaultDto;
 import ru.kolaer.server.businesstrip.model.BusinessTripType;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -25,6 +24,5 @@ public class BusinessTripDetailDto extends DefaultDto {
 
     private BusinessTripEmployeeInfo chiefEmployee;
     private BusinessTripEmployeeInfo writerEmployee;
-    private List<BusinessTripEmployeeDto> employees;
 
 }

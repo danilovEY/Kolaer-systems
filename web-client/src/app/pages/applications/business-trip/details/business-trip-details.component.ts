@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {BusinessTripService} from "../service/business-trip.service";
 import {ActivatedRoute} from "@angular/router";
 import {Subject} from "rxjs";
@@ -9,6 +9,16 @@ import {BusinessTripTypeEnum} from "../model/business-trip-type.enum";
 import {BusinessTripTypeModel} from "../model/business-trip-type.model";
 import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Column} from "ng2-smart-table/lib/data-set/column";
+import {CustomTableComponent} from "../../../../@theme/components";
+import {Cell} from "ng2-smart-table";
+import {BusinessTripDetailsEmployeeDataSource} from "./business-trip-details-employee.data-source";
+import {EmployeeEditComponent} from "../../../../@theme/components/table/employee-edit.component";
+import {Utils} from "../../../../@core/utils/utils";
+import {BusinessTripEmployeeModel} from "../model/business-trip-employee.model";
+import {BusinessTripDetailsEmployeeFromEditComponent} from "./business-trip-details-employee-from-edit.component";
+import {BusinessTripDetailsEmployeeToEditComponent} from "./business-trip-details-employee-to-edit.component";
+import {BusinessTripDetailsEmployeeDaysEditComponent} from "./business-trip-details-employee-days-edit.component";
 
 @Component({
     selector: 'business-trip-details',
@@ -25,12 +35,20 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
         new BusinessTripTypeModel(BusinessTripTypeEnum.CANCEL, 'Отмена командировки')
     ];
 
+    @ViewChild('businessTripTable')
+    businessTripTable: CustomTableComponent;
+
     currentBusinessTripDetailsModel: BusinessTripDetailsModel = new BusinessTripDetailsModel();
     isCreatePage: boolean = true;
     selectedBusinessTripType: BusinessTripTypeModel;
     currentDocumentDate: NgbDateStruct;
     currentReasonDocumentDate: NgbDateStruct;
     formBusinessTrip: FormGroup;
+
+    employeesLoading: boolean = true;
+    employeeColumns: Column[] = [];
+
+    employeeDataSource: BusinessTripDetailsEmployeeDataSource;
 
     constructor(private businessTripService: BusinessTripService,
                 private activatedRoute: ActivatedRoute) {
@@ -48,8 +66,9 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
                 takeUntil(this.destroySubjects)
             )
             .subscribe((businessTripDetails: BusinessTripDetailsModel) => {
-                this.isCreatePage = true;
+                this.isCreatePage = false;
                 this.initBusinessTripFormValue(businessTripDetails);
+                this.initEmployeesTable(businessTripDetails);
             });
 
         this.formBusinessTrip = new FormGroup({
@@ -65,7 +84,120 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
         this.setCurrentDocumentDate(new Date());
         this.setCurrentReasonDocumentDate(new Date());
 
-        this.initBusinessTripFormValue(this.currentBusinessTripDetailsModel)
+        this.initBusinessTripFormValue(this.currentBusinessTripDetailsModel);
+        this.initEmployeesTableColumns();
+    }
+
+    private initEmployeesTableColumns(): void {
+        const employeeColumn: Column = new Column('employee', {
+            title: 'Сотрудник',
+            type: 'string',
+            filter: false,
+            sort: false,
+            editor: {
+                type: 'custom',
+                component: EmployeeEditComponent,
+            },
+            valuePrepareFunction(a: any, value: BusinessTripEmployeeModel, cell: Cell) {
+                return Utils.shortInitials(value.employee.initials);
+            }
+        }, undefined);
+
+        const postColumn: Column = new Column('employeePost', {
+            title: 'Должность',
+            type: 'string',
+            editable: false,
+            addable: false,
+            filter: false,
+            sort: false,
+            valuePrepareFunction(a: any, value: BusinessTripEmployeeModel, cell: Cell) {
+                return value.employee.postName;
+            }
+        }, undefined);
+
+        const departmentColumn: Column = new Column('employeeDepartment', {
+            title: 'Подразделние',
+            type: 'string',
+            editable: false,
+            addable: false,
+            filter: false,
+            sort: false,
+            valuePrepareFunction(a: any, value: BusinessTripEmployeeModel, cell: Cell) {
+                return value.employee.departmentName;
+            }
+        }, undefined);
+
+        const dateFromColumn = new Column('businessTripFrom', {
+            title: 'Начало',
+            type: 'date',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false,
+            editor: {
+                type: 'custom',
+                config: {},
+                component: BusinessTripDetailsEmployeeFromEditComponent,
+            },
+            valuePrepareFunction(value: string) {
+                return Utils.getDateFormatFromString(value);
+            }
+        }, undefined);
+
+        const dateToColumn = new Column('businessTripTo', {
+            title: 'Конец отпуска',
+            type: 'date',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false,
+            editor: {
+                type: 'custom',
+                config: {},
+                component: BusinessTripDetailsEmployeeToEditComponent,
+            },
+            valuePrepareFunction(value: string) {
+                return Utils.getDateFormatFromString(value);
+            }
+        }, undefined);
+
+
+        const daysColumn: Column = new Column('businessTripDays', {
+            title: 'Дней',
+            type: 'number',
+            editable: true,
+            addable: true,
+            filter: false,
+            sort: false,
+            editor: {
+                type: 'custom',
+                config: {},
+                component: BusinessTripDetailsEmployeeDaysEditComponent
+            }
+        }, undefined);
+
+        this.employeeColumns.push(
+            employeeColumn,
+            postColumn,
+            departmentColumn,
+            dateFromColumn,
+            dateToColumn,
+            daysColumn
+        );
+    }
+
+    private initEmployeesTable(businessTripDetails: BusinessTripDetailsModel): void {
+        this.employeeDataSource = new BusinessTripDetailsEmployeeDataSource(
+            this.businessTripService,
+            businessTripDetails.id
+        );
+
+        this.employeeDataSource
+            .onLoading()
+            .pipe(takeUntil(this.destroySubjects))
+            .subscribe(loading => this.employeesLoading = loading);
+
+
     }
 
     private initBusinessTripFormValue(businessTripDetails: BusinessTripDetailsModel) {

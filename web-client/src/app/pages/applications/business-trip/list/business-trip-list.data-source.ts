@@ -15,10 +15,6 @@ export class BusinessTripListDataSource extends CustomDataSource<BusinessTripMod
         request.pageNum = page;
         request.pageSize = pageSize;
 
-        // if (this.departmentId && this.departmentId > 0) {
-        //     request.departmentIds = [this.departmentId];
-        // }
-
         return this.businessTripService.findBusinessTrips(request)
             .toPromise()
             .then((response: Page<BusinessTripModel>) => this.setDataPage(response));

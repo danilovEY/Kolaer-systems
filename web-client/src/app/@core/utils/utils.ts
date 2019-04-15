@@ -3,6 +3,7 @@ import {DatePipe} from '@angular/common';
 
 export class Utils {
     private static datePipe = new DatePipe('en-US');
+    private static readonly ONE_DAY: number = 1000 * 60 * 60 * 24;
 
     public static readonly RU_LOCAL = {
         firstDayOfWeek: 1,
@@ -128,5 +129,17 @@ export class Utils {
         }
 
         return newUrl;
+    }
+
+    public static calculateInDaysBetweenDates(from: Date, to: Date): number {
+        return Math.round((to.getTime() - from.getTime()) / this.ONE_DAY) + 1;
+    }
+
+    public static calculateDateBetweenDateAndDays(from: Date, days: number): Date {
+        if (days <= 0) {
+            return from;
+        }
+
+        return new Date(from.getTime() + (this.ONE_DAY * days - 1));
     }
 }
