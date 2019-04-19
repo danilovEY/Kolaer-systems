@@ -86,7 +86,27 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label>Сотрудники:</label>
+                                <div class="input-group">
+                                    <p-autoComplete id="chief"
+                                                    formControlName="chief"
+                                                    [multiple]="false"
+                                                    [suggestions]="employeesResult"
+                                                    [delay]="1000"
+                                                    [inputStyle]="{'width': '100%'}"
+                                                    [style]="{'width': '100%'}"
+                                                    emptyMessage="Не найдено"
+                                                    placeholder="Введите текст для поиска"
+                                                    appendTo="body"
+                                                    field="initials"
+                                                    (completeMethod)="searchEmployee($event)">
+                                    </p-autoComplete>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-9">
                             <div class="form-group">
                                 <label for="comment">Комментарий:</label>
                                 <div class="input-group">
@@ -175,7 +195,10 @@
                               [source]="employeeDataSource"
                               [actionAdd]="true"
                               [actionDelete]="true"
-                              [actionEdit]="true">
+                              [actionEdit]="true"
+                              (delete)="removeEmployee($event)"
+                              (create)="addEmployee($event)"
+                              (edit)="editEmployee($event)">
 
                 </custom-table>
             </nb-card-body>

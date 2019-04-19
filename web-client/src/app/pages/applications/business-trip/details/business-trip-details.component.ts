@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {BusinessTripService} from "../service/business-trip.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Subject} from "rxjs";
 import {filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {PathVariableConstant} from "../../../../@core/constants/path-variable.constant";
@@ -19,6 +19,15 @@ import {BusinessTripEmployeeModel} from "../model/business-trip-employee.model";
 import {BusinessTripDetailsEmployeeFromEditComponent} from "./business-trip-details-employee-from-edit.component";
 import {BusinessTripDetailsEmployeeToEditComponent} from "./business-trip-details-employee-to-edit.component";
 import {BusinessTripDetailsEmployeeDaysEditComponent} from "./business-trip-details-employee-days-edit.component";
+import {TableEventDeleteModel} from "../../../../@theme/components/table/table-event-delete.model";
+import {TableEventAddModel} from "../../../../@theme/components/table/table-event-add.model";
+import {TableEventEditModel} from "../../../../@theme/components/table/table-event-edit.model";
+import {RouterClientConstant} from "../../../../@core/constants/router-client.constant";
+import {EmployeeModel} from "../../../../@core/models/employee.model";
+import {FindEmployeeRequestModel} from "../../../../@core/models/employee/request/find-employee-request.model";
+import {EmployeeService} from "../../../../@core/services/employee.service";
+import {BusinessTripCreateRequestModel} from "../model/business-trip-create-request.model";
+import {BusinessTripEditRequestModel} from "../model/business-trip-edit-request.model";
 
 @Component({
     selector: 'business-trip-details',
@@ -47,12 +56,11 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
 
     employeesLoading: boolean = true;
     employeeColumns: Column[] = [];
-
+    employeesResult: EmployeeModel[] = [];
     employeeDataSource: BusinessTripDetailsEmployeeDataSource;
 
-    constructor(private businessTripService: BusinessTripService,
-                private activatedRoute: ActivatedRoute) {
-    }
+    constructor(private businessTripService: BusinessTripService, private activatedRoute: ActivatedRoute,
+        private router: Router, private employeeService: EmployeeService) {}
 
     ngOnInit(): void {
         this.activatedRoute
@@ -77,7 +85,8 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
             businessTripType: new FormControl('', [Validators.required]),
             organizationName: new FormControl('', [Validators.minLength(3)]),
             okpoCode: new FormControl('', [Validators.minLength(3)]),
-            comment: new FormControl('', [])
+            comment: new FormControl('', []),
+            chief: new FormControl('', [])
         });
 
         this.setBusinessTripType(BusinessTripTypeEnum.DIRECTION);
@@ -259,9 +268,15 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
             this.formBusinessTrip.controls['comment'].setValue(businessTripDetails.comment);
             this.formBusinessTrip.controls['documentDate'].setValue(this.currentDocumentDate);
             this.formBusinessTrip.controls['businessTripType'].setValue(this.selectedBusinessTripType);
+            this.formBusinessTrip.controls['chief'].setValue(businessTripDetails.chiefEmployee);
 
             this.initReason(this.hasReason());
         }
+    }
+
+    searchEmployee(event) {
+        this.employeeService.findAllEmployees(FindEmployeeRequestModel.findAll(event.query))
+            .subscribe(employeePage => this.employeesResult = employeePage.data);
     }
 
     private initReason(reason: boolean) {
@@ -353,31 +368,92 @@ export class BusinessTripDetailsComponent implements OnInit, OnDestroy {
     submitBusinessTripForm() {
         const documentDateStructure: NgbDateStruct = this.formBusinessTrip.controls['documentDate'].value;
 
-        this.currentBusinessTripDetailsModel.documentDate = new Date(
+        const documentDate = new Date(
             documentDateStructure.year,
             documentDateStructure.month - 1,
             documentDateStructure.day
         );
 
-        this.currentBusinessTripDetailsModel.documentNumber = this.formBusinessTrip.controls['documentNumber'].value;
-        this.currentBusinessTripDetailsModel.organizationName = this.formBusinessTrip.controls['organizationName'].value;
-        this.currentBusinessTripDetailsModel.okpoCode = this.formBusinessTrip.controls['okpoCode'].value;
-        this.currentBusinessTripDetailsModel.comment = this.formBusinessTrip.controls['comment'].value;
-        this.currentBusinessTripDetailsModel.businessTripType = this.formBusinessTrip.controls['businessTripType'].value.businessTripType;
+        const businessTripType = this.formBusinessTrip.controls['businessTripType'].value.businessTripType;
+        const documentNumber = this.formBusinessTrip.controls['documentNumber'].value;
+        const organizationName = this.formBusinessTrip.controls['organizationName'].value;
+        const okpoCode = this.formBusinessTrip.controls['okpoCode'].value;
+        const comment = this.formBusinessTrip.controls['comment'].value;
 
-        if (this.currentBusinessTripDetailsModel.businessTripType !== BusinessTripTypeEnum.DIRECTION) {
+        const chiefEmployeeId = this.formBusinessTrip.controls['chief'].value ?
+            this.formBusinessTrip.controls['chief'].value.id : null;
+
+        let reasonDocumentDate;
+        let reasonDescription;
+        let reasonDocumentNumber;
+
+        if (businessTripType !== BusinessTripTypeEnum.DIRECTION) {
             const reasonDocumentDateStructure: NgbDateStruct = this.formBusinessTrip.controls['reasonDocumentDate'].value;
 
-            this.currentBusinessTripDetailsModel.reasonDocumentDate = new Date(
+            reasonDocumentDate = new Date(
                 reasonDocumentDateStructure.year,
                 reasonDocumentDateStructure.month - 1,
                 reasonDocumentDateStructure.day
             );
 
-            this.currentBusinessTripDetailsModel.reasonDescription = this.formBusinessTrip.controls['reasonDescription'].value;
-            this.currentBusinessTripDetailsModel.reasonDocumentNumber = this.formBusinessTrip.controls['reasonDocumentNumber'].value;
+            reasonDescription = this.formBusinessTrip.controls['reasonDescription'].value;
+            reasonDocumentNumber = this.formBusinessTrip.controls['reasonDocumentNumber'].value;
         }
 
-        console.log(this.currentBusinessTripDetailsModel);
+        if (this.currentBusinessTripDetailsModel.id) {
+            const updateRequest: BusinessTripEditRequestModel = new BusinessTripEditRequestModel();
+            updateRequest.businessTripType = businessTripType;
+            updateRequest.documentDate = Utils.getDateToSend(documentDate);
+            updateRequest.documentNumber = documentNumber;
+            updateRequest.organizationName = organizationName;
+            updateRequest.okpoCode = okpoCode;
+            updateRequest.comment = comment;
+            updateRequest.chiefEmployeeId = chiefEmployeeId;
+            updateRequest.reasonDocumentDate = Utils.getDateToSend(reasonDocumentDate);
+            updateRequest.reasonDescription = reasonDescription;
+            updateRequest.reasonDocumentNumber = reasonDocumentNumber;
+
+            this.businessTripService.updateBusinessTrip(this.currentBusinessTripDetailsModel.id, updateRequest)
+                .pipe(takeUntil(this.destroySubjects))
+                .subscribe((updatableBusinessTrip: BusinessTripDetailsModel) =>
+                    this.currentBusinessTripDetailsModel = updatableBusinessTrip);
+        } else {
+            const createRequest: BusinessTripCreateRequestModel = new BusinessTripCreateRequestModel();
+            createRequest.businessTripType = businessTripType;
+            createRequest.documentDate = Utils.getDateToSend(documentDate);
+            createRequest.documentNumber = documentNumber;
+            createRequest.organizationName = organizationName;
+            createRequest.okpoCode = okpoCode;
+            createRequest.comment = comment;
+            createRequest.chiefEmployeeId = chiefEmployeeId;
+            createRequest.reasonDocumentDate = Utils.getDateToSend(reasonDocumentDate);
+            createRequest.reasonDescription = reasonDescription;
+            createRequest.reasonDocumentNumber = reasonDocumentNumber;
+
+            this.businessTripService.createBusinessTrip(createRequest)
+                .pipe(takeUntil(this.destroySubjects))
+                .subscribe(businessTripId => {
+                    const url = Utils.createUrlFromUrlTemplate(
+                        RouterClientConstant.BUSINESS_TRIP_ID_URL,
+                        PathVariableConstant.BUSINESS_TRIP_ID,
+                        businessTripId.toString()
+                    );
+
+                    this.router.navigate([url]);
+                });
+        }
     }
+
+    removeEmployee(event: TableEventDeleteModel<BusinessTripEmployeeModel>) {
+        console.log(event);
+    }
+
+    addEmployee(event: TableEventAddModel<BusinessTripEmployeeModel>) {
+        console.log(event.newData);
+    }
+
+    editEmployee(event: TableEventEditModel<BusinessTripEmployeeModel>) {
+        console.log(event);
+    }
+
 }

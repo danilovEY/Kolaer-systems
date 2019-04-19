@@ -12,6 +12,7 @@ import ru.kolaer.server.businesstrip.model.dto.responce.BusinessTripEmployeeInfo
 import ru.kolaer.server.businesstrip.model.entity.BusinessTripEmployeeEntity;
 import ru.kolaer.server.businesstrip.model.entity.BusinessTripEntity;
 import ru.kolaer.server.businesstrip.repository.BusinessTripEmployeeRepository;
+import ru.kolaer.server.employee.converter.EmployeeConverter;
 import ru.kolaer.server.employee.dao.EmployeeDao;
 import ru.kolaer.server.employee.dao.PostDao;
 import ru.kolaer.server.employee.model.entity.DepartmentEntity;
@@ -31,14 +32,16 @@ public class BusinessTripMapper {
     private final EmployeeDao employeeDao;
     private final DepartmentRepository departmentRepository;
     private final PostDao postDao;
+    private final EmployeeConverter employeeConverter;
 
     public BusinessTripMapper(BusinessTripEmployeeRepository businessTripEmployeeRepository, EmployeeDao employeeDao,
-            DepartmentRepository departmentRepository, PostDao postDao
-    ) {
+            DepartmentRepository departmentRepository, PostDao postDao,
+            EmployeeConverter employeeConverter) {
         this.businessTripEmployeeRepository = businessTripEmployeeRepository;
         this.employeeDao = employeeDao;
         this.departmentRepository = departmentRepository;
         this.postDao = postDao;
+        this.employeeConverter = employeeConverter;
     }
 
     public List<BusinessTripDto> mapToBusinessTripDtos(@NotNull List<BusinessTripEntity> entities) {
@@ -86,7 +89,8 @@ public class BusinessTripMapper {
                 .map(businessTrip ->
                         mapToBusinessTripDto(
                                 businessTrip,
-                                businessTripEmployeeMap.get(businessTrip.getId()),
+                                Optional.ofNullable(businessTripEmployeeMap.get(businessTrip.getId()))
+                                        .orElse(Collections.emptyList()),
                                 employeeMap,
                                 departmentMap,
                                 postMap
@@ -164,11 +168,7 @@ public class BusinessTripMapper {
                 postMap.get(writerEmployee.getPostId())
         ));
 
-        businessTripDetailDto.setChiefEmployee(mapToBusinessTripEmployeeInfo(
-                chiefEmployee,
-                departmentMap.get(chiefEmployee.getDepartmentId()),
-                postMap.get(chiefEmployee.getPostId())
-        ));
+        businessTripDetailDto.setChiefEmployee(employeeConverter.convertToDto(chiefEmployee));
 
         return businessTripDetailDto;
     }
@@ -265,6 +265,7 @@ public class BusinessTripMapper {
             @NotNull DepartmentEntity department, @NotNull PostEntity post
     ) {
         BusinessTripEmployeeInfo businessTripEmployeeInfo = new BusinessTripEmployeeInfo();
+        businessTripEmployeeInfo.setId(employee.getId());
         businessTripEmployeeInfo.setInitials(employee.getInitials());
         businessTripEmployeeInfo.setDepartmentName(department.getAbbreviatedName());
         businessTripEmployeeInfo.setPostName(post.getAbbreviatedName());

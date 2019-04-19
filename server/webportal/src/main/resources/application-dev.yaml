@@ -15,7 +15,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     data-username: root
     data-password: root
-    url: jdbc:mysql://localhost:3306/application_db_test?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/application_db_test?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Europe/Moscow
     hikari:
       username: ${spring.datasource.data-username}
       password: ${spring.datasource.data-password}

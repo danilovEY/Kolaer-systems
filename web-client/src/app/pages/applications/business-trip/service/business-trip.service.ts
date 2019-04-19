@@ -10,6 +10,8 @@ import {BusinessTripDetailsModel} from "../model/business-trip-details.model";
 import {Utils} from "../../../../@core/utils/utils";
 import {PathVariableConstant} from "../../../../@core/constants/path-variable.constant";
 import {BusinessTripEmployeeModel} from "../model/business-trip-employee.model";
+import {BusinessTripCreateRequestModel} from "../model/business-trip-create-request.model";
+import {BusinessTripEditRequestModel} from "../model/business-trip-edit-request.model";
 
 @Injectable()
 export class BusinessTripService extends BaseService {
@@ -44,5 +46,21 @@ export class BusinessTripService extends BaseService {
         );
 
         return this.httpClient.get<BusinessTripEmployeeModel[]>(url);
+    }
+
+    createBusinessTrip(createRequest: BusinessTripCreateRequestModel): Observable<number> {
+        const url =  RouterServiceConstant.BUSINESS_TRIP_URL;
+
+        return this.httpClient.post<number>(url, createRequest);
+    }
+
+    updateBusinessTrip(businessTripId: number, updateRequest: BusinessTripEditRequestModel): Observable<BusinessTripDetailsModel> {
+        const url = Utils.createUrlFromUrlTemplate(
+            RouterServiceConstant.BUSINESS_TRIP_ID_URL,
+            PathVariableConstant.BUSINESS_TRIP_ID,
+            businessTripId.toString()
+        );
+
+        return this.httpClient.put<BusinessTripDetailsModel>(url, updateRequest);
     }
 }

@@ -78,7 +78,24 @@ public class BusinessTripService {
 
     @Transactional
     public BusinessTripDetailDto editBusinessTrip(@Min(1) long businessTripId, @NotNull EditBusinessTripRequest request) {
-        return null;
+        AccountAuthorizedDto accountAuthorized = authenticationService.getAccountAuthorized();
+
+        BusinessTripEntity businessTripEntity = businessTripRepository.findById(businessTripId)
+                .orElseThrow(NotFoundDataException::new);
+
+        businessTripEntity.setWriterEmployeeId(accountAuthorized.getEmployeeId());
+        businessTripEntity.setDocumentNumber(request.getDocumentNumber());
+        businessTripEntity.setDocumentDate(request.getDocumentDate());
+        businessTripEntity.setBusinessTripType(request.getBusinessTripType());
+        businessTripEntity.setComment(request.getComment());
+        businessTripEntity.setOkpoCode(request.getOkpoCode());
+        businessTripEntity.setOrganizationName(request.getOrganizationName());
+        businessTripEntity.setChiefEmployeeId(request.getChiefEmployeeId());
+        businessTripEntity.setReasonDescription(request.getReasonDescription());
+        businessTripEntity.setReasonDocumentNumber(request.getReasonDocumentNumber());
+        businessTripEntity.setReasonDocumentDate(request.getReasonDocumentDate());
+
+        return businessTripMapper.mapToBusinessTripDetailDto(businessTripRepository.save(businessTripEntity));
     }
 
     @Transactional

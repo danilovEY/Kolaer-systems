@@ -43,7 +43,7 @@ public class BusinessTripController {
         return businessTripService.createBusinessTrip(request);
     }
 
-    @PatchMapping(RouterConstants.BUSINESS_TRIP_ID)
+    @PutMapping(RouterConstants.BUSINESS_TRIP_ID)
     @PreAuthorize("hasRole('" + BusinessTripAccessConstant.BUSINESS_TRIP_WRITE + "')")
     public BusinessTripDetailDto editBusinessTrip(
             @PathVariable(PathVariableConstants.BUSINESS_TRIP_ID) @Min(1) long businessTripId,

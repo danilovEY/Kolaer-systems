@@ -3,6 +3,7 @@ package ru.kolaer.server.businesstrip.model.dto.responce;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import ru.kolaer.common.dto.DefaultDto;
+import ru.kolaer.common.dto.employee.EmployeeDto;
 import ru.kolaer.server.businesstrip.model.BusinessTripType;
 
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public class BusinessTripDetailDto extends DefaultDto {
     private String reasonDocumentNumber;
     private LocalDate reasonDocumentDate;
 
-    private BusinessTripEmployeeInfo chiefEmployee;
+    private EmployeeDto chiefEmployee;
     private BusinessTripEmployeeInfo writerEmployee;
 
 }

@@ -130,7 +130,11 @@ export class ReportFilterComponent implements OnInit {
     }
 
     searchEmployee(event) {
-        this.employeeService.findAllEmployees(new FindEmployeeRequestModel(event.query, this.getIdsDepartments()))
+        const request: FindEmployeeRequestModel = new FindEmployeeRequestModel();
+        request.findByInitials = event.query;
+        request.departmentIds = this.getIdsDepartments();
+
+        this.employeeService.findAllEmployees(request)
             .subscribe(employeePage => this.employeesResult = employeePage.data);
     }
 

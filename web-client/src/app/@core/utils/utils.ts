@@ -1,5 +1,6 @@
 import {SortTypeEnum} from '../models/sort-type.enum';
 import {DatePipe} from '@angular/common';
+import {RouterServiceConstant} from "../constants/router-service.constant";
 
 export class Utils {
     private static datePipe = new DatePipe('en-US');
@@ -101,7 +102,7 @@ export class Utils {
         return Utils.datePipe.transform(date, 'dd.MM.yyyy HH:mm:ss');
     }
 
-    static getDateTimeToSend(date: Date): any {
+    static getDateTimeToSend(date: Date): string {
         return Utils.datePipe.transform(date, 'yyyy-MM-dd\'T\'HH:mm:ss')
     }
 
@@ -115,6 +116,10 @@ export class Utils {
         } else {
             return Utils.datePipe.transform(date, 'dd.MM.yyyy HH:mm');
         }
+    }
+
+    public static createUrlWithoutRoot(urlTemplate: string) {
+        return urlTemplate.substring(RouterServiceConstant.ROOT_URL.length);
     }
 
     public static createUrlFromUrlTemplate(urlTemplate: string, urlParamName: string, urlParamValue: string) {

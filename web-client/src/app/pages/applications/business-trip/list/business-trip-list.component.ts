@@ -33,13 +33,14 @@ export class BusinessTripListComponent implements OnInit, OnDestroy {
 
     private readonly destroySubjects: Subject<any> = new Subject<any>();
 
+    @ViewChild('businessTripTable')
+    businessTripTable: CustomTableComponent;
+
     businessTripsLoading: boolean = true;
     businessTripColumns: Column[] = [];
     businessTripActions: CustomActionModel[] = [];
 
     businessTripDataSource: BusinessTripListDataSource;
-    @ViewChild('businessTripTable')
-    businessTripTable: CustomTableComponent;
 
     private static getNameOfType(type: BusinessTripTypeEnum): string {
         switch (type) {
@@ -213,7 +214,7 @@ export class BusinessTripListComponent implements OnInit, OnDestroy {
     }
 
     create(event: TableEventAddModel<BusinessTripListDataSource>) {
-        console.log('aa');
+        this.router.navigate([RouterClientConstant.BUSINESS_TRIP_CREATE_URL]);
     }
 
     action(event: CustomActionEventModel<BusinessTripModel>) {

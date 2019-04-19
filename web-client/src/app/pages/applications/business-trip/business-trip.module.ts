@@ -10,11 +10,13 @@ import {BusinessTripWriteGuardService} from "./service/business-trip-write-guard
 import {BusinessTripDetailsEmployeeToEditComponent} from "./details/business-trip-details-employee-to-edit.component";
 import {BusinessTripDetailsEmployeeFromEditComponent} from "./details/business-trip-details-employee-from-edit.component";
 import {BusinessTripDetailsEmployeeDaysEditComponent} from "./details/business-trip-details-employee-days-edit.component";
+import {MultiSelectModule} from "primeng/primeng";
 
 @NgModule({
     imports: [
         ThemeModule,
-        BusinessTripRoutingModule
+        BusinessTripRoutingModule,
+        MultiSelectModule
     ],
     declarations: [
         BusinessTripComponent,

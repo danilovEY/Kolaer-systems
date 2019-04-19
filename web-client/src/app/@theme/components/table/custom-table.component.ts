@@ -16,7 +16,7 @@ import {SmartTableService} from '../../../@core/services/smart-table.service';
     template: `
         
         <ng-container *ngIf="actionAdd">
-            <div class="text-right">
+            <div class="text-left">
                 <button class="btn btn-success btn-semi-round btn-demo" (click)="addNewRow()">Добавить запись</button>
             </div>
             
