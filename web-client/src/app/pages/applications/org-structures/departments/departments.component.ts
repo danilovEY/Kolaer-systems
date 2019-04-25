@@ -42,24 +42,35 @@ export class DepartmentsComponent implements OnInit {
         this.accountService.getCurrentAccount()
             .subscribe(account => this.currentAccount = account);
 
+        const idColumn: Column = new Column('id', {
+            title: 'ID',
+            type: 'number',
+            filter: false,
+            sort: false
+        }, null);
+
         const codeColumn: Column = new Column('code', {
             title: 'Номер',
-            type: 'string'
+            type: 'number',
+            filter: false,
+            sort: false
         }, null);
 
         const nameColumn: Column = new Column('name', {
             title: 'Имя',
-            type: 'string'
+            type: 'string',
+            filter: false,
+            sort: false
         }, null);
 
         const abbreviatedNameColumn: Column = new Column('abbreviatedName', {
             title: 'Сокращение',
-            type: 'string'
+            type: 'string',
+            filter: false,
+            sort: false
         }, null);
 
-
-
-        this.departmentsColumns.push(codeColumn, abbreviatedNameColumn, nameColumn);
+        this.departmentsColumns.push(idColumn, codeColumn, abbreviatedNameColumn, nameColumn);
     }
 
     departmentsEdit(event: TableEventEditModel<DepartmentModel>) {

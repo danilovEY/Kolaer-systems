@@ -120,6 +120,10 @@ public class ContactService {
     public PageDto<ContactDetailsDto> getAllContactsByDepartment(int pageNum, int pageSize, long depId, ContactType type) {
         Set<Long> employeeIds = employeeDao.findByDepartmentById(depId);
 
+        if (employeeIds.isEmpty()) {
+            return PageDto.createPage();
+        }
+
         FindContactPageRequest findContactPageRequest = new FindContactPageRequest();
         findContactPageRequest.setEmployeeIds(employeeIds);
         findContactPageRequest.setType(type);
