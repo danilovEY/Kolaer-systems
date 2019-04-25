@@ -1,4 +1,4 @@
 export class VacationCalculateDateRequestModel {
-    public from: Date;
+    public from: string;
     public days: number;
 }

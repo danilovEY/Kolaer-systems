@@ -52,7 +52,7 @@ host:
 
 path:
   external:
-    photo: \\aerdc02.kolaer.local\e$\SHARE\PHOTO\avatars\
+    photo: \\\\aerdc02.kolaer.local\\\avatars$\\
 
 tickets:
   email: danilovey@kolaer.ru

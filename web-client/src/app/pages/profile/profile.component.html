@@ -21,7 +21,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="login">Логин</label>
-                                    <div class="input-group has-user-icon">
+                                    <div class="input-group">
                                         <input type="text" id="login" formControlName="login"
                                                class="form-control" value="{{ currentAccount?.username }}">
                                     </div>
@@ -32,7 +32,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="chatName">Имя в чате</label>
-                                    <div class="input-group has-smile-icon">
+                                    <div class="input-group">
                                         <input type="text" id="chatName" formControlName="chatName"
                                                class="form-control" value="{{ currentAccount?.chatName }}">
                                     </div>
@@ -244,7 +244,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="oldPasswordInput">Старый пароль</label>
-                        <div class="input-group has-password-icon">
+                        <div class="input-group">
                             <input type="password" id="oldPasswordInput" formControlName="oldPassword"
                                    class="form-control">
                         </div>
@@ -254,7 +254,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="newPasswordInput">Новый пароль</label>
-                        <div class="input-group has-password-icon">
+                        <div class="input-group">
                             <input type="password" id="newPasswordInput" formControlName="newPassword"
                                    class="form-control">
                         </div>
@@ -264,7 +264,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="confirmPasswordInput">Подтверждение пароля</label>
-                        <div class="input-group has-password-icon">
+                        <div class="input-group">
                             <input type="password" id="confirmPasswordInput" formControlName="confirmPassword"
                                    class="form-control"
                                    [ngClass]="{'form-control-danger': changePassForm.get('confirmPassword').touched &&

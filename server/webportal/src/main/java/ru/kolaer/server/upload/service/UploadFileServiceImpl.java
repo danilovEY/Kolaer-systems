@@ -2,7 +2,6 @@ package ru.kolaer.server.upload.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
@@ -210,7 +209,6 @@ public class UploadFileServiceImpl
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value="uploads", key = "{#id}")
     public UploadFileDto getById(Long id) {
         return super.getById(id);
     }

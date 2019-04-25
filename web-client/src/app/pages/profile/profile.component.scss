@@ -1,6 +1,6 @@
 @import '../../@theme/styles/themes';
 @import '~bootstrap/scss/mixins/breakpoints';
-//@import '~@fortawesome/fontawesome-free/scss/_variables';
+@import '~@fortawesome/fontawesome-free/scss/_variables';
 @import '~@nebular/theme/styles/global/breakpoints';
 
 @mixin input-field-icon($content-icon, $padding-text) {

@@ -29,11 +29,15 @@ import ru.kolaer.server.employee.model.entity.EmployeeEntity;
 import ru.kolaer.server.employee.model.entity.PostEntity;
 import ru.kolaer.server.employee.repository.DepartmentRepository;
 import ru.kolaer.server.upload.dao.UploadFileDao;
+import ru.kolaer.server.upload.model.entity.UploadFileEntity;
 
+import javax.persistence.EntityExistsException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -190,20 +194,24 @@ public class UpdateEmployeesServiceImpl implements UpdateEmployeesService {
     }
 
     private EmployeeEntity updatePhoto(EmployeeEntity employee) {
-//        try { TODO refactoring
-//            if (employee.getPhoto() == null) {
-//                UploadFileEntity photoFile = new UploadFileEntity(); //TODO: replace to batch insert
-//                photoFile.setAbsolutePath(true);
-//                photoFile.setFileCreate(LocalDateTime.now());
-//                photoFile.setFileName(employee.getPersonnelNumber() + ".jpg");
-//                photoFile.setPath(utilService.getExternalPhotoPath() + photoFile.getFileName());
-//                photoFile = uploadFileDao.save(photoFile);
-//
-//                employee.setPhoto("/upload/file/" + photoFile.getId() + "/" + photoFile.getFileName()); //TODO: replace to batch insert
-//            }
-//        } catch (EntityExistsException e) {
-//            log.error("Фото для '{}' уже есть.", employee.getInitials());
-//        }
+        try {
+            if (employee.getPhoto() == null) {
+                UploadFileEntity photoFile = new UploadFileEntity();
+                photoFile.setAbsolutePath(true);
+                photoFile.setFileCreate(LocalDateTime.now());
+                photoFile.setFileName(employee.getPersonnelNumber() + ".jpg");
+                photoFile.setPath(utilService.getExternalPhotoPath() +
+                        employee.getInitials() +
+                        new SimpleDateFormat("ddMMyyyy").format(employee.getBirthday()) +
+                        ".jpg"
+                );
+                photoFile = uploadFileDao.save(photoFile);
+
+                employee.setPhoto("/upload/file/" + photoFile.getId() + "/" + photoFile.getFileName()); //TODO: replace to batch insert
+            }
+        } catch (EntityExistsException e) {
+            log.error("Фото для '{}' уже есть.", employee.getInitials());
+        }
 
         return employee;
     }
