@@ -45,6 +45,8 @@ export class DepartmentsComponent implements OnInit {
         const idColumn: Column = new Column('id', {
             title: 'ID',
             type: 'number',
+            editable: false,
+            addable: false,
             filter: false,
             sort: false
         }, null);
