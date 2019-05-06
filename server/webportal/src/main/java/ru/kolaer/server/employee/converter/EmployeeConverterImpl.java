@@ -8,10 +8,10 @@ import ru.kolaer.common.dto.kolaerweb.DepartmentDto;
 import ru.kolaer.common.dto.kolaerweb.typework.TypeWorkDto;
 import ru.kolaer.common.dto.post.PostDto;
 import ru.kolaer.server.contact.service.ContactService;
+import ru.kolaer.server.employee.dao.DepartmentDao;
+import ru.kolaer.server.employee.dao.PostDao;
+import ru.kolaer.server.employee.dao.TypeWorkDao;
 import ru.kolaer.server.employee.model.entity.EmployeeEntity;
-import ru.kolaer.server.employee.service.DepartmentService;
-import ru.kolaer.server.employee.service.PostService;
-import ru.kolaer.server.employee.service.TypeWorkService;
 
 import java.util.*;
 import java.util.function.Function;
@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EmployeeConverterImpl implements EmployeeConverter {
-    private final PostService postService;
+    private final PostDao postDao;
     private final PostConverter postConverter;
-    private final DepartmentService departmentService;
+    private final DepartmentDao departmentDao;
     private final DepartmentConverter departmentConverter;
-    private final TypeWorkService typeWorkService;
+    private final TypeWorkDao typeWorkDao;
     private final TypeWorkConverter typeWorkConverter;
     private final ContactService contactService;
 
@@ -52,16 +52,19 @@ public class EmployeeConverterImpl implements EmployeeConverter {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        Map<Long, PostDto> postMap = postService.getById(postIds)
+        Map<Long, PostDto> postMap = postDao.findById(postIds)
                 .stream()
+                .map(postConverter::convertToDto)
                 .collect(Collectors.toMap(PostDto::getId, Function.identity()));
 
-        Map<Long, DepartmentDto> depMap = departmentService.getById(depIds)
+        Map<Long, DepartmentDto> depMap = departmentDao.findById(depIds)
                 .stream()
+                .map(departmentConverter::convertToDto)
                 .collect(Collectors.toMap(DepartmentDto::getId, Function.identity()));
 
-        Map<Long, TypeWorkDto> typeWorkMap = typeWorkService.getById(typeWordIds)
+        Map<Long, TypeWorkDto> typeWorkMap = typeWorkDao.findById(typeWordIds)
                 .stream()
+                .map(typeWorkConverter::convertToDto)
                 .collect(Collectors.toMap(TypeWorkDto::getId, Function.identity()));
 
         return model.stream()
@@ -99,16 +102,19 @@ public class EmployeeConverterImpl implements EmployeeConverter {
 
         if(model.getPostId() != null) {
             Optional.ofNullable(model.getPostId())
-                    .map(postService::getById)
+                    .map(postDao::findById)
+                    .map(postConverter::convertToDto)
                     .ifPresent(employeeDto::setPost);
         }
 
-        departmentService.getById(model.getDepartmentId())
+        Optional.ofNullable(departmentDao.findById(model.getDepartmentId()))
+                .map(departmentConverter::convertToDto)
                 .ifPresent(employeeDto::setDepartment);
 
         if(model.getTypeWorkId() != null) {
             Optional.ofNullable(model.getTypeWorkId())
-                    .map(typeWorkService::getById)
+                    .map(typeWorkDao::findById)
+                    .map(typeWorkConverter::convertToDto)
                     .ifPresent(employeeDto::setTypeWork);
         }
 
@@ -253,11 +259,11 @@ public class EmployeeConverterImpl implements EmployeeConverter {
 //                .map(EmployeeEntity::getPostId)
 //                .collect(Collectors.toSet());
 //
-//        Map<Long, DepartmentDto> departmentMap = departmentService.getById(departmentIds)
+//        Map<Long, DepartmentDto> departmentMap = departmentDao.getById(departmentIds)
 //                .stream()
 //                .collect(Collectors.toMap(DepartmentDto::getId, Function.identity()));
 //
-//        Map<Long, PostDto> postMap = postService.getById(departmentIds)
+//        Map<Long, PostDto> postMap = postDao.getById(departmentIds)
 //                .stream()
 //                .collect(Collectors.toMap(PostDto::getId, Function.identity()));
 
